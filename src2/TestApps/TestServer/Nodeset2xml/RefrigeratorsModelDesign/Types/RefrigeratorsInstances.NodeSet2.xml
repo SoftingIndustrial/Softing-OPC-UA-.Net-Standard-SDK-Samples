@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" LastModified="2016-04-12T11:47:42.1911902Z" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+  <NamespaceUris>
+    <Uri>http://industrial.softing.com/UA/RefrigeratorsInstances</Uri>
+    <Uri>http://industrial.softing.com/UA/Refrigerators</Uri>
+  </NamespaceUris>
+  <Aliases>
+    <Alias Alias="Boolean">ns=0;i=1</Alias>
+    <Alias Alias="SByte">ns=0;i=2</Alias>
+    <Alias Alias="Byte">ns=0;i=3</Alias>
+    <Alias Alias="Int16">ns=0;i=4</Alias>
+    <Alias Alias="UInt16">ns=0;i=5</Alias>
+    <Alias Alias="Int32">ns=0;i=6</Alias>
+    <Alias Alias="UInt32">ns=0;i=7</Alias>
+    <Alias Alias="Int64">ns=0;i=8</Alias>
+    <Alias Alias="UInt64">ns=0;i=9</Alias>
+    <Alias Alias="Float">ns=0;i=10</Alias>
+    <Alias Alias="Double">ns=0;i=11</Alias>
+    <Alias Alias="DateTime">ns=0;i=13</Alias>
+    <Alias Alias="String">ns=0;i=12</Alias>
+    <Alias Alias="ByteString">ns=0;i=15</Alias>
+    <Alias Alias="Guid">ns=0;i=14</Alias>
+    <Alias Alias="XmlElement">ns=0;i=16</Alias>
+    <Alias Alias="NodeId">ns=0;i=17</Alias>
+    <Alias Alias="ExpandedNodeId">ns=0;i=18</Alias>
+    <Alias Alias="QualifiedName">ns=0;i=20</Alias>
+    <Alias Alias="LocalizedText">ns=0;i=21</Alias>
+    <Alias Alias="StatusCode">ns=0;i=19</Alias>
+    <Alias Alias="Structure">ns=0;i=22</Alias>
+    <Alias Alias="Number">ns=0;i=26</Alias>
+    <Alias Alias="Integer">ns=0;i=27</Alias>
+    <Alias Alias="UInteger">ns=0;i=28</Alias>
+    <Alias Alias="HasComponent">ns=0;i=47</Alias>
+    <Alias Alias="HasProperty">ns=0;i=46</Alias>
+    <Alias Alias="Organizes">ns=0;i=35</Alias>
+    <Alias Alias="HasEventSource">ns=0;i=36</Alias>
+    <Alias Alias="HasNotifier">ns=0;i=48</Alias>
+    <Alias Alias="HasSubtype">ns=0;i=45</Alias>
+    <Alias Alias="HasTypeDefinition">ns=0;i=40</Alias>
+    <Alias Alias="HasModellingRule">ns=0;i=37</Alias>
+    <Alias Alias="HasEncoding">ns=0;i=38</Alias>
+    <Alias Alias="HasDescription">ns=0;i=39</Alias>
+  </Aliases>
+  <UAObject NodeId="ns=1;i=1" BrowseName="1:Refrigerator2">
+    <DisplayName>Refrigerator2</DisplayName>
+    <References>
+      <Reference ReferenceType="HasComponent">ns=1;i=2</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=3</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=4</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=10</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=13</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=16</Reference>
+      <Reference ReferenceType="Organizes" IsForward="false">ns=2;i=35</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=18</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=2" BrowseName="2:State" ParentNodeId="ns=1;i=1" DataType="ns=2;i=2" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>State</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=0;i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1</Reference>
+    </References>
+    <Value>
+      <Int32 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">1</Int32>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=3" BrowseName="2:Status" ParentNodeId="ns=1;i=1" DataType="ns=2;i=1" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>Status</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=0;i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1</Reference>
+    </References>
+    <Value>
+      <ExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+        <TypeId>
+          <Identifier>ns=2;i=53</Identifier>
+        </TypeId>
+        <Body>
+          <RefrigeratorStatusDataType xmlns="http://industrial.softing.com/UA/Refrigerators">
+            <MotorRunning>false</MotorRunning>
+            <MotorTemperature>30.0</MotorTemperature>
+            <ActualTemperature>5.0</ActualTemperature>
+          </RefrigeratorStatusDataType>
+        </Body>
+      </ExtensionObject>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=4" BrowseName="2:SetPoint" ParentNodeId="ns=1;i=1" DataType="Double" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>SetPoint</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty">ns=1;i=8</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=12</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1</Reference>
+    </References>
+    <Value>
+      <Double xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">5</Double>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=8" BrowseName="0:EURange" ParentNodeId="ns=1;i=4" DataType="ns=0;i=884">
+    <DisplayName>EURange</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=0;i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=4</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=10" BrowseName="2:DoorOpened" ParentNodeId="ns=1;i=1" DataType="Boolean">
+    <DisplayName>DoorOpened</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=0;i=2365</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=13" BrowseName="2:LightStatus" ParentNodeId="ns=1;i=1" DataType="Boolean">
+    <DisplayName>LightStatus</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=0;i=2365</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1</Reference>
+    </References>
+  </UAVariable>
+  <UAMethod NodeId="ns=1;i=16" BrowseName="2:OpenCloseDoor" ParentNodeId="ns=1;i=1">
+    <DisplayName>OpenCloseDoor</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty">ns=1;i=17</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=33</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1</Reference>
+    </References>
+  </UAMethod>
+  <UAVariable NodeId="ns=1;i=17" BrowseName="0:InputArguments" ParentNodeId="ns=1;i=16" DataType="ns=0;i=296" ValueRank="1">
+    <DisplayName>InputArguments</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=0;i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=16</Reference>
+    </References>
+    <Value>
+      <ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+        <ExtensionObject>
+          <TypeId>
+            <Identifier>ns=0;i=297</Identifier>
+          </TypeId>
+          <Body>
+            <Argument>
+              <Name>Open/Close Door</Name>
+              <DataType>
+                <Identifier>ns=0;i=1</Identifier>
+              </DataType>
+              <ValueRank>-1</ValueRank>
+              <ArrayDimensions />
+              <Description p5:nil="true" xmlns:p5="http://www.w3.org/2001/XMLSchema-instance" />
+            </Argument>
+          </Body>
+        </ExtensionObject>
+      </ListOfExtensionObject>
+    </Value>
+  </UAVariable>
+</UANodeSet>

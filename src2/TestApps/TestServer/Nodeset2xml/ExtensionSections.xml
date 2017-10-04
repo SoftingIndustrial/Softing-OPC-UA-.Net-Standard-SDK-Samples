@@ -1,0 +1,592 @@
+<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" xmlns:s1="http://yourorganisation.org/HistoryAccess/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  
+  <NamespaceUris>
+    <Uri>http://somecompany.com/Nodeset2xmlModule</Uri>
+  </NamespaceUris>
+  
+    <Aliases>
+        <Alias Alias="Boolean">i=1</Alias>
+        <Alias Alias="Byte">i=3</Alias>
+        <Alias Alias="Int16">i=4</Alias>
+        <Alias Alias="Int32">i=6</Alias>
+        <Alias Alias="UInt32">i=7</Alias>
+        <Alias Alias="UInt64">i=9</Alias>
+        <Alias Alias="Double">i=11</Alias>
+        <Alias Alias="Organizes">i=35</Alias>
+        <Alias Alias="HasTypeDefinition">i=40</Alias>
+        <Alias Alias="HasProperty">i=46</Alias>
+        <Alias Alias="HasComponent">i=47</Alias>
+        <Alias Alias="HasHistoricalConfiguration">i=56</Alias>
+        <Alias Alias="Argument">i=296</Alias>
+    </Aliases>
+    <Extensions>
+        <Extension>
+			<Endpoints>
+				<Endpoint ServerName="Historian">opc.tcp://192.168.150.148:4780</Endpoint>
+				<Endpoint ServerName="SoftingDemoServer">opc.tcp://192.168.150.185:51510</Endpoint>
+				<Endpoint ServerName="UaDemoServer">opc.tcp://192.168.150.185:4841</Endpoint>
+		   </Endpoints>
+        </Extension>
+		
+    </Extensions>
+    <UAObject NodeId="ns=1;i=5003" BrowseName="1:HistorianAccessPoint">
+        <DisplayName>HistorianAccessPoint</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+            <Reference ReferenceType="HasComponent">ns=1;i=7001</Reference>
+        </References>
+    </UAObject>
+    <UAMethod NodeId="ns=1;i=7001" BrowseName="1:retrieveNodesFromEndpoint">
+        <DisplayName>retrieveNodesFromEndpoint</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty">ns=1;i=6007</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5003</Reference>
+        </References>
+        <Extensions>
+            <Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+                <MethodLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" TargetObjectId="ns=2;i=3110" TargetMethodId="ns=2;i=3128" ServerId="opc.tcp://192.168.150.148:4780" SourceObjectId="ns=1;i=5003"/>
+            </Extension>
+        </Extensions>
+    </UAMethod>
+    <UAVariable DataType="Argument" NodeId="ns=1;i=6007" BrowseName="InputArguments" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>InputArguments</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=7001</Reference>
+        </References>
+        <Extensions>
+            <Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+                <VariableLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="opc.tcp://192.168.150.148:4780" NodeId="ns=2;i=7923"/>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+    <UAVariable DataType="UInt32" Historizing="true" NodeId="ns=1;i=6001" BrowseName="1:HistorizedVariable" UserAccessLevel="7" AccessLevel="7">
+        <DisplayName>HistorizedVariable</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="HasHistoricalConfiguration">ns=1;i=5001</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+		 <Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+                <VariableLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="UaDemoServer" NodeId="ns=4;s=Counter1"/>
+            </Extension>
+            <Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+                <HistoryLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="Historian" NodeId="ns=4;s=Counter1" HistorizingEndpointUrl="UaDemoServer"/>
+            </Extension>
+			
+			
+        </Extensions>
+    </UAVariable>
+    <UAObject SymbolicName="HA_Configuration" ParentNodeId="ns=1;i=6001" NodeId="ns=1;i=5001" BrowseName="HA Configuration">
+        <DisplayName>HA Configuration</DisplayName>
+        <References>
+            <Reference ReferenceType="HasComponent">ns=1;i=5002</Reference>
+            <Reference ReferenceType="HasHistoricalConfiguration" IsForward="false">ns=1;i=6001</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=2318</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6006</Reference>
+        </References>
+    </UAObject>
+    <UAObject ParentNodeId="ns=1;i=5001" NodeId="ns=1;i=5002" BrowseName="AggregateConfiguration">
+        <DisplayName>AggregateConfiguration</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=11187</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5001</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6002</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6003</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6004</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6005</Reference>
+        </References>
+    </UAObject>
+    <UAVariable DataType="Byte" ParentNodeId="ns=1;i=5002" NodeId="ns=1;i=6002" BrowseName="PercentDataBad">
+        <DisplayName>PercentDataBad</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5002</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Byte" ParentNodeId="ns=1;i=5002" NodeId="ns=1;i=6003" BrowseName="PercentDataGood">
+        <DisplayName>PercentDataGood</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5002</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5002" NodeId="ns=1;i=6004" BrowseName="TreatUncertainAsBad">
+        <DisplayName>TreatUncertainAsBad</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5002</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5002" NodeId="ns=1;i=6005" BrowseName="UseSlopedExtrapolation">
+        <DisplayName>UseSlopedExtrapolation</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5002</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5001" NodeId="ns=1;i=6006" BrowseName="Stepped">
+        <DisplayName>Stepped</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5001</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" Historizing="true" NodeId="ns=1;i=6008" BrowseName="1:StaticBoolean_on_SoftingDemoServer" UserAccessLevel="7" AccessLevel="7">
+        <DisplayName>StaticBoolean_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="HasHistoricalConfiguration">ns=1;i=5004</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+                <VariableLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="SoftingDemoServer" NodeId="ns=2;s=/Static/All Profiles/Scalar/Boolean"/>
+            </Extension>
+			 <Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+                <HistoryLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="Historian" NodeId="ns=2;s=/Static/All Profiles/Scalar/Boolean"/>
+            </Extension>
+        </Extensions>
+        <Value>
+            <uax:Boolean>false</uax:Boolean>
+        </Value>
+    </UAVariable>
+    <UAObject SymbolicName="HAConfiguration" ParentNodeId="ns=1;i=6008" NodeId="ns=1;i=5004" BrowseName="HA Configuration">
+        <DisplayName>HAConfiguration</DisplayName>
+        <References>
+            <Reference ReferenceType="HasComponent">ns=1;i=5005</Reference>
+            <Reference ReferenceType="HasHistoricalConfiguration" IsForward="false">ns=1;i=6008</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=2318</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6013</Reference>
+        </References>
+    </UAObject>
+    <UAObject ParentNodeId="ns=1;i=5004" NodeId="ns=1;i=5005" BrowseName="AggregateConfiguration">
+        <DisplayName>AggregateConfiguration</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=11187</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5004</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6009</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6010</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6011</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6012</Reference>
+        </References>
+    </UAObject>
+    <UAVariable DataType="Byte" ParentNodeId="ns=1;i=5005" NodeId="ns=1;i=6009" BrowseName="PercentDataBad">
+        <DisplayName>PercentDataBad</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5005</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Byte" ParentNodeId="ns=1;i=5005" NodeId="ns=1;i=6010" BrowseName="PercentDataGood">
+        <DisplayName>PercentDataGood</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5005</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5005" NodeId="ns=1;i=6011" BrowseName="TreatUncertainAsBad">
+        <DisplayName>TreatUncertainAsBad</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5005</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5005" NodeId="ns=1;i=6012" BrowseName="UseSlopedExtrapolation">
+        <DisplayName>UseSlopedExtrapolation</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5005</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5004" NodeId="ns=1;i=6013" BrowseName="Stepped">
+        <DisplayName>Stepped</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5004</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Double" Historizing="true" NodeId="ns=1;i=6014" BrowseName="1:StaticDouble_on_SoftingDemoServer" UserAccessLevel="7" AccessLevel="7">
+        <DisplayName>StaticDouble_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="HasHistoricalConfiguration">ns=1;i=5006</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+                <VariableLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="SoftingDemoServer" NodeId="ns=2;s=/Static/All Profiles/Scalar/Double">
+                    <Conversion xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" a="0" b="2" c="1" d="0"/>
+                </VariableLink>
+				  </Extension>
+				 <Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+                <HistoryLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="Historian" NodeId="ns=2;s=/Static/All Profiles/Scalar/Double"/>
+          
+            </Extension>
+        </Extensions>
+        <Value>
+            <uax:Double>0</uax:Double>
+        </Value>
+    </UAVariable>
+    <UAObject SymbolicName="HAConfiguration" ParentNodeId="ns=1;i=6014" NodeId="ns=1;i=5006" BrowseName="HA Configuration">
+        <DisplayName>HAConfiguration</DisplayName>
+        <References>
+            <Reference ReferenceType="HasComponent">ns=1;i=5007</Reference>
+            <Reference ReferenceType="HasHistoricalConfiguration" IsForward="false">ns=1;i=6014</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=2318</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6019</Reference>
+        </References>
+    </UAObject>
+    <UAObject ParentNodeId="ns=1;i=5006" NodeId="ns=1;i=5007" BrowseName="AggregateConfiguration">
+        <DisplayName>AggregateConfiguration</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=11187</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5006</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6015</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6016</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6017</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6018</Reference>
+        </References>
+    </UAObject>
+    <UAVariable DataType="Byte" ParentNodeId="ns=1;i=5007" NodeId="ns=1;i=6015" BrowseName="PercentDataBad">
+        <DisplayName>PercentDataBad</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5007</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Byte" ParentNodeId="ns=1;i=5007" NodeId="ns=1;i=6016" BrowseName="PercentDataGood">
+        <DisplayName>PercentDataGood</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5007</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5007" NodeId="ns=1;i=6017" BrowseName="TreatUncertainAsBad">
+        <DisplayName>TreatUncertainAsBad</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5007</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5007" NodeId="ns=1;i=6018" BrowseName="UseSlopedExtrapolation">
+        <DisplayName>UseSlopedExtrapolation</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5007</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5006" NodeId="ns=1;i=6019" BrowseName="Stepped">
+        <DisplayName>Stepped</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5006</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Int16" Historizing="true" NodeId="ns=1;i=6020" BrowseName="1:StaticInt16_on_SoftingDemoServer" UserAccessLevel="7" AccessLevel="7">
+        <DisplayName>StaticInt16_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="HasHistoricalConfiguration">ns=1;i=5008</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+                <VariableLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="SoftingDemoServer" NodeId="ns=2;s=/Static/All Profiles/Scalar/Int16">
+                    <Conversion xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" a="0" b="2" c="1" d="0"/>
+                </VariableLink>
+				</Extension>  
+			<Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+			   <HistoryLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="Historian" NodeId="ns=2;s=/Static/All Profiles/Scalar/Int16"/>
+            </Extension>
+        </Extensions>
+        <Value>
+            <uax:Int16>0</uax:Int16>
+        </Value>
+    </UAVariable>
+    <UAObject SymbolicName="HAConfiguration" ParentNodeId="ns=1;i=6020" NodeId="ns=1;i=5008" BrowseName="HA Configuration">
+        <DisplayName>HAConfiguration</DisplayName>
+        <References>
+            <Reference ReferenceType="HasComponent">ns=1;i=5009</Reference>
+            <Reference ReferenceType="HasHistoricalConfiguration" IsForward="false">ns=1;i=6020</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=2318</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6025</Reference>
+        </References>
+    </UAObject>
+    <UAObject ParentNodeId="ns=1;i=5008" NodeId="ns=1;i=5009" BrowseName="AggregateConfiguration">
+        <DisplayName>AggregateConfiguration</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=11187</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5008</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6021</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6022</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6023</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6024</Reference>
+        </References>
+    </UAObject>
+    <UAVariable DataType="Byte" ParentNodeId="ns=1;i=5009" NodeId="ns=1;i=6021" BrowseName="PercentDataBad">
+        <DisplayName>PercentDataBad</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5009</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Byte" ParentNodeId="ns=1;i=5009" NodeId="ns=1;i=6022" BrowseName="PercentDataGood">
+        <DisplayName>PercentDataGood</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5009</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5009" NodeId="ns=1;i=6023" BrowseName="TreatUncertainAsBad">
+        <DisplayName>TreatUncertainAsBad</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5009</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5009" NodeId="ns=1;i=6024" BrowseName="UseSlopedExtrapolation">
+        <DisplayName>UseSlopedExtrapolation</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5009</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5008" NodeId="ns=1;i=6025" BrowseName="Stepped">
+        <DisplayName>Stepped</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5008</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Int32" Historizing="true" NodeId="ns=1;i=6026" BrowseName="1:StaticInt32_on_SoftingDemoServer" UserAccessLevel="7" AccessLevel="7">
+        <DisplayName>StaticInt32_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="HasHistoricalConfiguration">ns=1;i=5010</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+                <VariableLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="SoftingDemoServer" NodeId="ns=2;s=/Static/All Profiles/Scalar/Int32">
+                    <Conversion xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" a="0" b="2" c="1" d="0"/>
+                </VariableLink>
+            </Extension>
+			<Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+			   <HistoryLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="Historian" NodeId="ns=2;s=/Static/All Profiles/Scalar/Int32"/>
+            </Extension>
+        </Extensions>
+        <Value>
+            <uax:Int32>0</uax:Int32>
+        </Value>
+    </UAVariable>
+    <UAObject SymbolicName="HAConfiguration" ParentNodeId="ns=1;i=6026" NodeId="ns=1;i=5010" BrowseName="HA Configuration">
+        <DisplayName>HAConfiguration</DisplayName>
+        <References>
+            <Reference ReferenceType="HasComponent">ns=1;i=5011</Reference>
+            <Reference ReferenceType="HasHistoricalConfiguration" IsForward="false">ns=1;i=6026</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=2318</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6031</Reference>
+        </References>
+    </UAObject>
+    <UAObject ParentNodeId="ns=1;i=5010" NodeId="ns=1;i=5011" BrowseName="AggregateConfiguration">
+        <DisplayName>AggregateConfiguration</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=11187</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5010</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6027</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6028</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6029</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6030</Reference>
+        </References>
+    </UAObject>
+    <UAVariable DataType="Byte" ParentNodeId="ns=1;i=5011" NodeId="ns=1;i=6027" BrowseName="PercentDataBad">
+        <DisplayName>PercentDataBad</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5011</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Byte" ParentNodeId="ns=1;i=5011" NodeId="ns=1;i=6028" BrowseName="PercentDataGood">
+        <DisplayName>PercentDataGood</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5011</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5011" NodeId="ns=1;i=6029" BrowseName="TreatUncertainAsBad">
+        <DisplayName>TreatUncertainAsBad</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5011</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5011" NodeId="ns=1;i=6030" BrowseName="UseSlopedExtrapolation">
+        <DisplayName>UseSlopedExtrapolation</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5011</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5010" NodeId="ns=1;i=6031" BrowseName="Stepped">
+        <DisplayName>Stepped</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5010</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="UInt32" Historizing="true" NodeId="ns=1;i=6032" BrowseName="1:StaticUInt32_on_SoftingDemoServer" UserAccessLevel="7" AccessLevel="7">
+        <DisplayName>StaticUInt32_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="HasHistoricalConfiguration">ns=1;i=5012</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+                <VariableLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="SoftingDemoServer" NodeId="ns=2;s=/Static/All Profiles/Scalar/UInt32">
+                    <Conversion xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" a="0" b="2" c="1" d="0"/>
+                </VariableLink>
+				 </Extension>
+				<Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+			   <HistoryLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="Historian" NodeId="ns=2;s=/Static/All Profiles/Scalar/UInt32" HistorizingEndpointUrl="DemoServer"/>
+            </Extension>
+        </Extensions>
+        <Value>
+            <uax:UInt32>0</uax:UInt32>
+        </Value>
+    </UAVariable>
+    <UAObject SymbolicName="HAConfiguration" ParentNodeId="ns=1;i=6032" NodeId="ns=1;i=5012" BrowseName="HA Configuration">
+        <DisplayName>HAConfiguration</DisplayName>
+        <References>
+            <Reference ReferenceType="HasComponent">ns=1;i=5013</Reference>
+            <Reference ReferenceType="HasHistoricalConfiguration" IsForward="false">ns=1;i=6032</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=2318</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6037</Reference>
+        </References>
+    </UAObject>
+    <UAObject ParentNodeId="ns=1;i=5012" NodeId="ns=1;i=5013" BrowseName="AggregateConfiguration">
+        <DisplayName>AggregateConfiguration</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=11187</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5012</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6033</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6034</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6035</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6036</Reference>
+        </References>
+    </UAObject>
+    <UAVariable DataType="Byte" ParentNodeId="ns=1;i=5013" NodeId="ns=1;i=6033" BrowseName="PercentDataBad">
+        <DisplayName>PercentDataBad</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5013</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Byte" ParentNodeId="ns=1;i=5013" NodeId="ns=1;i=6034" BrowseName="PercentDataGood">
+        <DisplayName>PercentDataGood</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5013</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5013" NodeId="ns=1;i=6035" BrowseName="TreatUncertainAsBad">
+        <DisplayName>TreatUncertainAsBad</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5013</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5013" NodeId="ns=1;i=6036" BrowseName="UseSlopedExtrapolation">
+        <DisplayName>UseSlopedExtrapolation</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5013</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5012" NodeId="ns=1;i=6037" BrowseName="Stepped">
+        <DisplayName>Stepped</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5012</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="UInt64" Historizing="true" NodeId="ns=1;i=6038" BrowseName="1:StaticUInt64_on_SoftingDemoServer" UserAccessLevel="7" AccessLevel="7">
+        <DisplayName>StaticUInt64_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="HasHistoricalConfiguration">ns=1;i=5014</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+                <VariableLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="opc.tcp://192.168.150.185:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/UInt64">
+                    <Conversion xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" a="0" b="2" c="1" d="0"/>
+                </VariableLink>
+            </Extension>
+			<Extension xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+			   <HistoryLink xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" ServerId="Historian" NodeId="ns=2;s=/Static/All Profiles/Scalar/UInt64"/>
+            </Extension>
+        </Extensions>
+        <Value>
+            <uax:UInt64>0</uax:UInt64>
+        </Value>
+    </UAVariable>
+    <UAObject SymbolicName="HAConfiguration" ParentNodeId="ns=1;i=6038" NodeId="ns=1;i=5014" BrowseName="HA Configuration">
+        <DisplayName>HAConfiguration</DisplayName>
+        <References>
+            <Reference ReferenceType="HasComponent">ns=1;i=5015</Reference>
+            <Reference ReferenceType="HasHistoricalConfiguration" IsForward="false">ns=1;i=6038</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=2318</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6043</Reference>
+        </References>
+    </UAObject>
+    <UAObject ParentNodeId="ns=1;i=5014" NodeId="ns=1;i=5015" BrowseName="AggregateConfiguration">
+        <DisplayName>AggregateConfiguration</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=11187</Reference>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5014</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6039</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6040</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6041</Reference>
+            <Reference ReferenceType="HasProperty">ns=1;i=6042</Reference>
+        </References>
+    </UAObject>
+    <UAVariable DataType="Byte" ParentNodeId="ns=1;i=5015" NodeId="ns=1;i=6039" BrowseName="PercentDataBad">
+        <DisplayName>PercentDataBad</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5015</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Byte" ParentNodeId="ns=1;i=5015" NodeId="ns=1;i=6040" BrowseName="PercentDataGood">
+        <DisplayName>PercentDataGood</DisplayName>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5015</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5015" NodeId="ns=1;i=6041" BrowseName="TreatUncertainAsBad">
+        <DisplayName>TreatUncertainAsBad</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5015</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5015" NodeId="ns=1;i=6042" BrowseName="UseSlopedExtrapolation">
+        <DisplayName>UseSlopedExtrapolation</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5015</Reference>
+        </References>
+    </UAVariable>
+    <UAVariable DataType="Boolean" ParentNodeId="ns=1;i=5014" NodeId="ns=1;i=6043" BrowseName="Stepped">
+        <DisplayName>Stepped</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5014</Reference>
+        </References>
+    </UAVariable>
+</UANodeSet>

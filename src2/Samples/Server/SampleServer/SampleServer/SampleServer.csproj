@@ -1,0 +1,75 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="NodeSetImport\NodeSet\**" />
+    <EmbeddedResource Remove="NodeSetImport\NodeSet\**" />
+    <None Remove="NodeSetImport\NodeSet\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="HistoricalDataAccess\Data\Dynamic\Double.txt" />
+    <None Remove="HistoricalDataAccess\Data\Dynamic\Int32.txt" />
+    <None Remove="HistoricalDataAccess\Data\Events.txt" />
+    <None Remove="HistoricalDataAccess\Data\Sample\Historian1.txt" />
+    <None Remove="HistoricalDataAccess\Data\Sample\Historian2.txt" />
+    <None Remove="HistoricalDataAccess\Data\Sample\Historian3.txt" />
+    <None Remove="HistoricalDataAccess\Data\Sample\Historian4.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\..\Include\AssemblyVersionInfo.cs" Link="Properties\AssemblyVersionInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="HistoricalDataAccess\Data\Dynamic\Double.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoricalDataAccess\Data\Dynamic\Int32.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoricalDataAccess\Data\Events.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoricalDataAccess\Data\Sample\Historian1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoricalDataAccess\Data\Sample\Historian2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoricalDataAccess\Data\Sample\Historian3.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoricalDataAccess\Data\Sample\Historian4.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Configuration\Opc.Ua.Configuration.csproj" />
+    <ProjectReference Include="..\..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Server\Opc.Ua.Server.csproj" />
+    <ProjectReference Include="..\..\..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Core\Opc.Ua.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Alarms\" />
+    <Folder Include="DataAccess\" />
+    <Folder Include="FileSystem\" />
+    <Folder Include="Methods\" />
+    <Folder Include="UserAuthentication\" />
+    <Folder Include="NodeSetImport\" />
+    <Folder Include="NodeManagement\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="SampleServer.Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

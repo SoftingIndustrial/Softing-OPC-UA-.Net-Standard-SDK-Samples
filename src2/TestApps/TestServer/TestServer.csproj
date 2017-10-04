@@ -1,0 +1,109 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Nodeset2xml\RefrigeratorsModelDesign\**" />
+    <EmbeddedResource Remove="Nodeset2xml\RefrigeratorsModelDesign\**" />
+    <None Remove="Nodeset2xml\RefrigeratorsModelDesign\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="HistoryData\Byte.txt" />
+    <None Remove="HistoryData\Events.txt" />
+    <None Remove="HistoryData\Historian1.txt" />
+    <None Remove="HistoryData\Historian2.txt" />
+    <None Remove="HistoryData\Historian3.txt" />
+    <None Remove="HistoryData\Historian4.txt" />
+    <None Remove="HistoryData\Int32.txt" />
+    <None Remove="HistoryData\UInt32.txt" />
+    <None Remove="Nodeset2xml\BHI_customer_02.xml" />
+    <None Remove="Nodeset2xml\BHI_customer_03.xml" />
+    <None Remove="Nodeset2xml\BHI_customer_04.xml" />
+    <None Remove="Nodeset2xml\BHI_ServerBaseFixed.xml" />
+    <None Remove="Nodeset2xml\BHI_UserAccessNodeset.xml" />
+    <None Remove="Nodeset2xml\Create_TestClientAPI_xml.bat" />
+    <None Remove="Nodeset2xml\CreatorTestNodeSet2.xml" />
+    <None Remove="Nodeset2xml\CustomTypesNodeSet2.xml" />
+    <None Remove="Nodeset2xml\energistics_uom_uanodeset_V0.9.xml" />
+    <None Remove="Nodeset2xml\ExtensionSections.xml" />
+    <None Remove="Nodeset2xml\kds_opc_ua_server.xml" />
+    <None Remove="Nodeset2xml\ModelCompilerServerModel.NodeSet2.xml" />
+    <None Remove="Nodeset2xml\Nodes3.xml" />
+    <None Remove="Nodeset2xml\NodeSet2.xml" />
+    <None Remove="Nodeset2xml\OPC.ISA95.NodeSet2.Nov52013.xml" />
+    <None Remove="Nodeset2xml\OPC.MDIS.NodeSet2.xml" />
+    <None Remove="Nodeset2xml\Opc.Ua.Di.NodeSet2.xml" />
+    <None Remove="Nodeset2xml\Opc.Ua.NodeSet2.xml" />
+    <None Remove="Nodeset2xml\OPC_UA_ADV_Server_NodeSet.xml" />
+    <None Remove="Nodeset2xml\Refrigerators.NodeSet2.xml" />
+    <None Remove="Nodeset2xml\Refrigerators2.xml" />
+    <None Remove="Nodeset2xml\Sample.DataTypes.Instances.NodeSet2.xml" />
+    <None Remove="Nodeset2xml\Sample.DataTypes.Types.NodeSet2.xml" />
+    <None Remove="Nodeset2xml\SASM_SftDemo_CTT_DA.xml" />
+    <None Remove="Nodeset2xml\UAModeler.NodeSet2.Methods.xml" />
+    <None Remove="Nodeset2xml\UAModeler.NodeSet2.MethodsVariables.xml" />
+    <None Remove="Nodeset2xml\UAModeler.NodeSet2.Objects.xml" />
+    <None Remove="Nodeset2xml\UAModeler.NodeSet2.Properties.xml" />
+    <None Remove="Nodeset2xml\valid_nodeset_2.xml" />
+    <None Remove="Nodeset2xml\valid_nodeset_4.xml" />
+    <None Remove="Nodeset2xml\XMLImportCreatorTest.xml" />
+    <None Remove="Nodeset2xml\XMLImportCustomTypes.xml" />
+    <None Remove="Nodeset2xml\XMLImportDuplicateNodeIds.xml" />
+    <None Remove="packages.config" />
+    <None Remove="TestServer.Config.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Include\AssemblyVersionInfo.cs" Link="Properties\AssemblyVersionInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="HistoryData\Byte.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoryData\Events.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoryData\Historian1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoryData\Historian2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoryData\Historian3.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoryData\Historian4.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoryData\Int32.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoryData\UInt32.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Nodeset2xml\NodeSet2.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestServer.Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Configuration\Opc.Ua.Configuration.csproj" />
+    <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Server\Opc.Ua.Server.csproj" />
+    <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Core\Opc.Ua.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="BolierMonitoringModule\" />
+    <Folder Include="RemoteModule\" />
+  </ItemGroup>
+
+</Project>
