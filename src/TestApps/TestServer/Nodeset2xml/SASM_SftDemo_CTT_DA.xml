@@ -1,0 +1,699 @@
+<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" xmlns:s1="http://yourorganisation.org/BDM/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <NamespaceUris>
+    <Uri>http://somecompany.com/Nodeset2xmlModule</Uri>
+  </NamespaceUris>
+    <Aliases>
+		<Alias Alias="Boolean">i=1</Alias>
+		<Alias Alias="Byte">i=3</Alias>
+		<Alias Alias="ByteString">i=15</Alias>
+		<Alias Alias="DateTime">i=13</Alias>
+		<Alias Alias="Duration">i=290</Alias>
+		<Alias Alias="Enumeration">i=29</Alias>
+		<Alias Alias="Guid">i=14</Alias>
+		<Alias Alias="Image">i=30</Alias>
+		<Alias Alias="ImageBMP">i=2000</Alias>
+		<Alias Alias="ImageGIF">i=2001</Alias>
+		<Alias Alias="ImageJPG">i=2002</Alias>
+		<Alias Alias="ImagePNG">i=2003</Alias>
+        <Alias Alias="Int16">i=4</Alias>
+        <Alias Alias="Int32">i=6</Alias>
+		<Alias Alias="Int64">i=8</Alias>
+		<Alias Alias="Integer">i=27</Alias>
+		<Alias Alias="LocaleId">i=295</Alias>
+		<Alias Alias="LocalizedText">i=21</Alias>
+		<Alias Alias="NodeId">i=17</Alias>
+		<Alias Alias="Number">i=26</Alias>
+		<Alias Alias="QualifiedName">i=20</Alias>
+		<Alias Alias="SByte">i=2</Alias>
+		<Alias Alias="String">i=12</Alias>
+		<Alias Alias="Time">i=292</Alias>
+		<Alias Alias="UInt16">i=5</Alias>
+        <Alias Alias="UInt32">i=7</Alias>
+        <Alias Alias="UInt64">i=9</Alias>
+		<Alias Alias="UInteger">i=28</Alias>
+		<Alias Alias="UtcTime">i=294</Alias>
+		<Alias Alias="Variant">i=24</Alias>
+		<Alias Alias="XmlElement">i=16</Alias>
+		
+        <Alias Alias="Float">i=10</Alias>
+        <Alias Alias="Double">i=11</Alias>
+       
+        <Alias Alias="Organizes">i=35</Alias>
+        <Alias Alias="HasTypeDefinition">i=40</Alias>
+		
+    </Aliases>
+    <Extensions>
+        <Extension>
+            <ModelInfo Tool="UaModeler" Hash="IN2ld/TUD3gQIZmh3IN1gA==" Version="1.3.3"/>
+        </Extension>
+    </Extensions>
+    <UAVariable DataType="UInt32" NodeId="ns=1;i=10001" BrowseName="1:NumOfValuesOnPerformanceServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>NumOfValuesOnPerformanceServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:5555" NodeId="ns=3;s=ServerConfig.NumOfValues"/>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	
+	 <UAVariable DataType="Boolean" NodeId="ns=1;i=6001" BrowseName="1:StaticBoolean_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticBoolean_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Boolean">
+                  
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="Byte" NodeId="ns=1;i=6002" BrowseName="1:StaticByte_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticByte_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Byte">
+                  
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="ByteString" NodeId="ns=1;i=6003" BrowseName="1:StaticByteString_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticByteString_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/ByteString">
+                  
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="DateTime" NodeId="ns=1;i=6004" BrowseName="1:StaticDateTime_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticDateTime_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/DateTime">
+                  
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+    <UAVariable DataType="Double" NodeId="ns=1;i=6005" BrowseName="1:StaticDouble_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticDouble_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Double">
+                  
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="Duration" NodeId="ns=1;i=6006" BrowseName="1:StaticDuration_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticDuration_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Duration">
+                  
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="Enumeration" NodeId="ns=1;i=6007" BrowseName="1:StaticEnumeration_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticEnumeration_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Enumeration">
+                  
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+    <UAVariable DataType="Float" NodeId="ns=1;i=6008" BrowseName="1:StaticFloat_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticFloat_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Float">
+                 
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="Guid" NodeId="ns=1;i=6009" BrowseName="1:StaticGuid_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticGuid_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Guid">
+                 
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="Image" NodeId="ns=1;i=6010" BrowseName="1:StaticImage_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticImage_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Image">
+                 
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="ImageBMP" NodeId="ns=1;i=6011" BrowseName="1:StaticImageBMP_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticImageBMP_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/ImageBMP">
+                 
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="ImageGIF" NodeId="ns=1;i=6012" BrowseName="1:StaticImageGIF_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticImageGIF_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/ImageGIF">
+                 
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="ImageJPG" NodeId="ns=1;i=6013" BrowseName="1:StaticImageJPG_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticImageJPG_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/ImageJPG">
+                 
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="ImagePNG" NodeId="ns=1;i=6014" BrowseName="1:StaticImagePNG_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticImagePNG_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/ImagePNG">
+                 
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	
+    <UAVariable DataType="Int16" NodeId="ns=1;i=6015" BrowseName="1:StaticInt16_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticInt16_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Int16">
+                    
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+    <UAVariable DataType="Int32" NodeId="ns=1;i=6016" BrowseName="1:StaticInt32_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticInt32_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink  ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Int32">
+                    
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+    <UAVariable DataType="Int64" NodeId="ns=1;i=6017" BrowseName="1:StaticInt64_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticInt64_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Int64">
+                 
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	
+	<UAVariable DataType="Integer" NodeId="ns=1;i=6018" BrowseName="1:StaticInteger_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticInteger_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Integer">
+                 
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>	
+	<UAVariable DataType="LocaleId" NodeId="ns=1;i=6019" BrowseName="1:StaticLocaleId_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticLocaleId_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/LocaleId">
+                 
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+		<UAVariable DataType="LocalizedText" NodeId="ns=1;i=6020" BrowseName="1:StaticLocalizedText_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticLocalizedText_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/LocalizedText">
+                 
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	
+	<UAVariable DataType="NodeId" NodeId="ns=1;i=6021" BrowseName="1:StaticNodeId_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticNodeId_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/NodeId">
+                
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+   <UAVariable DataType="Number" NodeId="ns=1;i=6022" BrowseName="1:StaticNumber_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticNumber_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Number">
+                
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+   <UAVariable DataType="QualifiedName" NodeId="ns=1;i=6023" BrowseName="1:StaticQualifiedName_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticQualifiedName_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/QualifiedName">
+                
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+   
+     <UAVariable DataType="SByte" NodeId="ns=1;i=6024" BrowseName="1:StaticSByte_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticSByte_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/SByte">
+                
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	
+	<UAVariable DataType="String" NodeId="ns=1;i=6025" BrowseName="1:StaticString_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticString_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/String">
+                
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="Int32" NodeId="ns=1;i=6026" BrowseName="1:StaticTestInt32_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticTestInt32_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Int32">
+                
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+   <UAVariable DataType="Time" NodeId="ns=1;i=6027" BrowseName="1:StaticTime_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticTime_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Time">
+                
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+   
+    <UAVariable DataType="UInt16" NodeId="ns=1;i=6028" BrowseName="1:StaticUInt16_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticUInt16_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/UInt16">
+                  
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+    <UAVariable DataType="UInt32" NodeId="ns=1;i=6029" BrowseName="1:StaticUInt32_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticUInt32_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/UInt32">
+                   
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+    <UAVariable DataType="UInt64" NodeId="ns=1;i=6030" BrowseName="1:StaticUInt64_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticUInt64_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/UInt64">
+                    
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="UInteger" NodeId="ns=1;i=6031" BrowseName="1:StaticUInteger_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticUInteger_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/UInteger">
+                    
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="UtcTime" NodeId="ns=1;i=6032" BrowseName="1:StaticUtcTime_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticUtcTime_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/UtcTime">
+                    
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="Variant" NodeId="ns=1;i=6033" BrowseName="1:StaticVariant_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticVariant_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/Variant">
+                    
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="XmlElement" NodeId="ns=1;i=6034" BrowseName="1:StaticXmlElement_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticXmlElement_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Scalar/XmlElement">
+                    
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	
+	<UAVariable DataType="UInt64" ValueRank="1" NodeId="ns=1;i=7011" BrowseName="1:StaticUInt64Array_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticUInt64Array_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Arrays/UInt64">
+                
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="Int64" ValueRank="1" NodeId="ns=1;i=7012" BrowseName="1:StaticInt64Array_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticInt64Array_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Arrays/Int64">
+                   
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="Int32" ValueRank="1" NodeId="ns=1;i=7013" BrowseName="1:StaticInt32Array_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticInt32Array_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Arrays/Int32">
+                    
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="UInt32" ValueRank="1" NodeId="ns=1;i=7014" BrowseName="1:StaticUInt32Array_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticUInt32Array_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Arrays/UInt32">
+               
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="UInt16" ValueRank="1" NodeId="ns=1;i=7015" BrowseName="1:StaticUInt16Array_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticUInt16Array_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Arrays/UInt16">
+                  
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="Int16" ValueRank="1" NodeId="ns=1;i=7016" BrowseName="1:StaticInt16Array_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticInt16Array_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Arrays/Int16">
+                
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="Double" ValueRank="1" NodeId="ns=1;i=7017" BrowseName="1:StaticDoubleArray_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticDoubleArray_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Arrays/Double">
+              
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="Float" ValueRank="1" NodeId="ns=1;i=7018" BrowseName="1:StaticFloatArray_on_SoftingDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticFloatArray_on_SoftingDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Arrays/Float">
+             
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	<UAVariable DataType="Float" ValueRank="1" NodeId="ns=1;i=7020" BrowseName="1:StaticFloatArray_on_SoftingDemoServer_NoConversion" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticFloatArray_on_SoftingDemoServer_NoConversion</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+       <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:51510" NodeId="ns=2;s=/Static/All Profiles/Arrays/Float">
+                 
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+		
+	 <UAVariable DataType="NodeId" NodeId="ns=1;i=8001" BrowseName="1:StaticNodeIdOnUnifiedAutomationDemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticNodeIdOnUnifiedAutomationDemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:4841" NodeId="ns=4;s=AllDataTypesStatic/StaticNodeId"/>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+	 <UAVariable DataType="Double" ValueRank="3" NodeId="ns=1;i=9001" BrowseName="1:StaticDoubleMatrix_on_UADemoServer" UserAccessLevel="3" AccessLevel="3">
+        <DisplayName>StaticDoubleMatrix_on_UADemoServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+            <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+        </References>
+        <Extensions>
+            <Extension>
+                <VariableLink ServerId="opc.tcp://192.168.150.47:4841" NodeId="ns=4;s=AllDataTypesStatic/StaticDoubleMatrix">
+            
+                </VariableLink>
+            </Extension>
+        </Extensions>
+    </UAVariable>
+</UANodeSet>

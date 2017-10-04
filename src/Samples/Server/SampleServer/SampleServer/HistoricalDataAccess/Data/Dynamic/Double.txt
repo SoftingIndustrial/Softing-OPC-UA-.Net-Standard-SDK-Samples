@@ -1,0 +1,10 @@
+﻿Double, -1, 10000, 0, 0, 0, 1, 0, 0, 0, 100, 100
+Good, Raw, Double, 10.0
+Good, Raw, Double, 20.0
+Good, Raw, Double, 30.0
+Bad, Raw, Double, 40.0
+Good, Raw, Double, 50.0
+Good, Raw, Double, 60.0
+Uncertain, Raw, Double, 70.0
+Good, Raw, Double, 80.0
+Good, Raw, Double, 90.0

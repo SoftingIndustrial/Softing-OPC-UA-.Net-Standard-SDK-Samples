@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<opc:ModelDesign
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:opc="http://opcfoundation.org/UA/ModelDesign.xsd"
+  xmlns:ua="http://opcfoundation.org/UA/"
+  xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"
+  xmlns:s0="http://industrial.softing.com/UA/Refrigerators"
+	xmlns="http://industrial.softing.com/UA/RefrigeratorsInstances"
+  TargetNamespace="http://industrial.softing.com/UA/RefrigeratorsInstances"
+>
+  <opc:Namespaces>
+    <opc:Namespace Name="OpcUa" Prefix="Softing.Opc.Ua.Sdk" InternalPrefix="Opc.Ua.Server" XmlNamespace="http://opcfoundation.org/UA/2008/02/Types.xsd">http://opcfoundation.org/UA/</opc:Namespace>
+    <opc:Namespace Name="Refrigerators" Prefix="Refrigerators" InternalPrefix="Refrigerators" FilePath="..\Types\ModelDesignRefrigerators.xml">http://industrial.softing.com/UA/Refrigerators</opc:Namespace>
+    <opc:Namespace Name="RefrigeratorsInstances" Prefix="RefrigeratorsInstances" InternalPrefix="RefrigeratorsInstances">http://industrial.softing.com/UA/RefrigeratorsInstances</opc:Namespace>
+  </opc:Namespaces>
+   
+  <opc:Object SymbolicName="Refrigerator2" TypeDefinition="s0:RefrigeratorObjectType">
+	<!-- Link the instance back to the ObjectsFolder -->
+	<opc:References>
+		<opc:Reference IsInverse="true">
+			<opc:ReferenceType>ua:Organizes</opc:ReferenceType>
+			<opc:TargetId>s0:Devices</opc:TargetId>
+		</opc:Reference>
+	</opc:References>
+  </opc:Object>
+    
+</opc:ModelDesign>
