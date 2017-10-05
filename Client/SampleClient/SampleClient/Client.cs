@@ -14,11 +14,11 @@ namespace SampleClient
         private const string m_demoServerUrl = "opc.tcp://localhost:51510/UA/DemoServer";
 
 
-        private Session m_session = null;
+        private ExSession m_session = null;
         private NamespaceTable m_namespaceUris;
-        private Subscription m_subscription = null;
+        private ExSubscription m_subscription = null;
         private Application m_application;
-        private List<MonitoredItem> m_monitoredItems = new List<MonitoredItem>();
+        private List<ExMonitoredItem> m_monitoredItems = new List<ExMonitoredItem>();
         //Browse path: Root\Objects\Server
         private static NodeId m_eventSourceNodeId = new NodeId("ns=0;i=2253");
 
@@ -31,9 +31,9 @@ namespace SampleClient
         private NodeId m_historianNodeId = new NodeId("ns=2;s=StaticHistoricalDataItem_Historian1");
         private static QualifiedName m_eventPropertyName = new QualifiedName("FluidLevel", 5);
         
-        private MonitoredItem m_eventMonitoredItem;
-        private MonitoredItem m_alarmsMonitoredItem;
-        private MonitoredItem m_readWriteMonitoredItem = null;
+        private ExMonitoredItem m_eventMonitoredItem;
+        private ExMonitoredItem m_alarmsMonitoredItem;
+        private ExMonitoredItem m_readWriteMonitoredItem = null;
         private Dictionary<NodeId, EventDetails> m_retainedAlarms = new Dictionary<NodeId, EventDetails>();
         private Random m_randomGenerator = new Random();
         private int m_callIdentifier;
@@ -147,7 +147,7 @@ namespace SampleClient
                 {
                     try
                     {
-                        m_subscription = new Subscription(m_session, "SampleSubscription");
+                        m_subscription = new ExSubscription(m_session, "SampleSubscription");
 
                         // set the Publishing interval for this subscription
                         m_subscription.PublishingInterval = 500;
@@ -213,7 +213,7 @@ namespace SampleClient
         {
             foreach (var dataChangeNotification in e.DataChangeNotifications)
             {
-                Console.WriteLine(" {0} Received data value change for monitored item: '{1}' in subscription '{2}':", dataChangeNotification.SequenceNo, dataChangeNotification.MonitoredItem.DisplayName, ((Subscription)sender).DisplayName);
+                Console.WriteLine(" {0} Received data value change for monitored item: '{1}' in subscription '{2}':", dataChangeNotification.SequenceNo, dataChangeNotification.MonitoredItem.DisplayName, ((ExSubscription)sender).DisplayName);
                 Console.WriteLine("    Value : {0} ", dataChangeNotification.Value);
                 Console.WriteLine("    StatusCode : {0} ", dataChangeNotification.Value.StatusCode);
                 Console.WriteLine("    ServerTimestamp : {0}", dataChangeNotification.Value.ServerTimestamp.ToLocalTime().ToString("hh:mm:ss.fff tt"));
@@ -235,7 +235,7 @@ namespace SampleClient
                     try
                     {
                         NodeId node = new NodeId(m_monitoredItemNodeId);
-                        MonitoredItem monitoredItem = new MonitoredItem(m_subscription, node, AttributeId.Value, null, "Sample Monitored Item" + m_monitoredItems.Count);
+                        ExMonitoredItem monitoredItem = new ExMonitoredItem(m_subscription, node, AttributeId.Value, null, "Sample Monitored Item" + m_monitoredItems.Count);
                         monitoredItem.DataChangesReceived += Monitoreditem_DataChangesReceived;
                         m_monitoredItems.Add(monitoredItem);
 
@@ -388,7 +388,7 @@ namespace SampleClient
                         NodeId readWriteNodeId = new NodeId(m_readWriteNodeId);
                         try
                         {
-                            m_readWriteMonitoredItem = new MonitoredItem(m_subscription, readWriteNodeId, AttributeId.Value, null, "SampleReadWriteMI");
+                            m_readWriteMonitoredItem = new ExMonitoredItem(m_subscription, readWriteNodeId, AttributeId.Value, null, "SampleReadWriteMI");
                             Console.WriteLine("Created Monitored Item for read/write.");
                         }
                         catch (Exception ex)
@@ -435,7 +435,7 @@ namespace SampleClient
                         NodeId readWriteNodeId = new NodeId(m_readWriteNodeId);
                         try
                         {
-                            m_readWriteMonitoredItem = new MonitoredItem(m_subscription, readWriteNodeId, AttributeId.Value, null, "SampleReadWriteMI");
+                            m_readWriteMonitoredItem = new ExMonitoredItem(m_subscription, readWriteNodeId, AttributeId.Value, null, "SampleReadWriteMI");
                             Console.WriteLine("Created Monitored Item for read/write.");
                         }
                         catch (Exception ex)
@@ -484,7 +484,7 @@ namespace SampleClient
             }
             try
             {
-                MonitoredItem monitoredItem = m_monitoredItems[m_monitoredItems.Count - 1];
+                ExMonitoredItem monitoredItem = m_monitoredItems[m_monitoredItems.Count - 1];
                 monitoredItem.DataChangesReceived -= Monitoreditem_DataChangesReceived;
                 Console.WriteLine("Monitored item unsubscribed from receiving data change notifications.");
                 monitoredItem.Delete();
@@ -522,7 +522,7 @@ namespace SampleClient
 
             try
             {
-                m_eventMonitoredItem = new MonitoredItem(m_subscription, m_eventSourceNodeId, "Sample Event Monitored Item", null);
+                m_eventMonitoredItem = new ExMonitoredItem(m_subscription, m_eventSourceNodeId, "Sample Event Monitored Item", null);
                 m_eventMonitoredItem.EventsReceived += m_eventMonitoredItem_EventsReceived;
                 Console.WriteLine("Event Monitored Item is created and connected.");
             }
@@ -543,7 +543,7 @@ namespace SampleClient
                 return;
             }
 
-            ExtendedEventFilter filter = (ExtendedEventFilter)m_eventMonitoredItem.Filter;
+            ExEventFilter filter = (ExEventFilter)m_eventMonitoredItem.Filter;
             if (filter != null)
             {
                 foreach (var selectOperand in filter.SelectOperandList)
@@ -605,7 +605,7 @@ namespace SampleClient
             {
                 Console.WriteLine("Event notification received for {0}.\n", eventNotification.MonitoredItem.DisplayName);
                 string displayNotification = string.Empty;
-                IList<SelectOperand> listOfOperands = ((ExtendedEventFilter)m_eventMonitoredItem.Filter).SelectOperandList;
+                IList<SelectOperand> listOfOperands = ((ExEventFilter)m_eventMonitoredItem.Filter).SelectOperandList;
                 for (int i = 0; i < listOfOperands.Count; i++)
                 {
                     displayNotification += listOfOperands[i].PropertyName.NamespaceIndex + ":" + listOfOperands[i].PropertyName.Name 
@@ -627,7 +627,7 @@ namespace SampleClient
                     if (m_subscription != null)
                     {                     
                         // Configure the event filter
-                        ExtendedEventFilter filter = new ExtendedEventFilter();
+                        ExEventFilter filter = new ExEventFilter();
                         if (filter != null)
                         {
 
@@ -650,7 +650,7 @@ namespace SampleClient
                             filter.WhereClause.Push(FilterOperator.OfType, ObjectTypeIds.ConditionType);
 
                             // Create the MonitoredItem used to receive event notifications
-                            m_alarmsMonitoredItem = new MonitoredItem(m_subscription, m_alarmsModuleNodeId, "Alarms monitor item", filter);
+                            m_alarmsMonitoredItem = new ExMonitoredItem(m_subscription, m_alarmsModuleNodeId, "Alarms monitor item", filter);
                             m_alarmsMonitoredItem.SamplingInterval = 0;
                             m_alarmsMonitoredItem.QueueSize = 1000;
 
@@ -702,7 +702,7 @@ namespace SampleClient
 
                 // Check for event notification
 
-                foreach(EventNotification eventNotification in e.EventNotifications)
+                foreach(ExEventFieldList eventNotification in e.EventNotifications)
                 {
                     INode eventType = m_alarmsMonitoredItem.GetEventType(eventNotification);
 
@@ -877,7 +877,7 @@ namespace SampleClient
             }
         }       
 
-        void Session_CallCompleted(object sender, MethodExecutionArgs e)
+        void Session_CallCompleted(object sender, MethodExecutionEventArgs e)
         {
             Console.WriteLine(string.Format("\nCall returned for: {0}", e.Cookie));
             Console.WriteLine("Output arguments are:");
@@ -1097,7 +1097,7 @@ namespace SampleClient
         /// </summary>
         internal void BrowseWithOptions()
         {
-            BrowseOptions options = new BrowseOptions();
+            ExBrowseDescription options = new ExBrowseDescription();
             options.MaxReferencesReturned = 3;
             try
             {
@@ -1162,7 +1162,7 @@ namespace SampleClient
         /// Browses the specified node id and returns its list of references.
         /// This method uses browse options as an input parameter.
         /// </summary>
-        internal IList<ReferenceDescription> BrowseOptions(NodeId nodeId, BrowseOptions browseOptions, object sender)
+        internal IList<ReferenceDescription> BrowseOptions(NodeId nodeId, ExBrowseDescription browseOptions, object sender)
         {
             if (m_session == null)
             {
@@ -1254,10 +1254,10 @@ namespace SampleClient
             try
             {
                 // define the list of requests.
-                List<SimpleBrowsePath> browsePaths = new List<SimpleBrowsePath>();
+                List<ExBrowsePath> browsePaths = new List<ExBrowsePath>();
 
                 // define the starting node as the "Objects" node.
-                SimpleBrowsePath browsePath = new SimpleBrowsePath();
+                ExBrowsePath browsePath = new ExBrowsePath();
                 browsePath.StartingNode = new NodeId("ns=0;i=85");
 
                 // define the relative browse path to the "Data\Static\Scalar\Int32Value" node.
@@ -1268,7 +1268,7 @@ namespace SampleClient
                 browsePaths.Add(browsePath);
 
                 // define the starting node as the "Objects" node.
-                browsePath = new SimpleBrowsePath();
+                browsePath = new ExBrowsePath();
                 browsePath.StartingNode = new NodeId("ns=0;i=85");
 
                 // define the relative browse path to the "Data\Static\Array\UInt32Value" node.
@@ -1279,12 +1279,12 @@ namespace SampleClient
                 browsePaths.Add(browsePath);
 
                 // invoke the TranslateBrowsePathsToNodeIds service.
-                IList<SimpoleBrowsePathResult> translateResults = m_session.TranslateBrowsePathsToNodeIds(browsePaths);
+                IList<ExBrowsePathResult> translateResults = m_session.TranslateBrowsePathsToNodeIds(browsePaths);
 
                 // display the results.
                 Console.WriteLine("TranslateBrowsePaths returned {0} result(s):", translateResults.Count);
 
-                foreach (SimpoleBrowsePathResult browsePathResult in translateResults)
+                foreach (ExBrowsePathResult browsePathResult in translateResults)
                 {
                     Console.Write("    StatusCode = {0} ; Target Nodes = ", browsePathResult.StatusCode);
 
