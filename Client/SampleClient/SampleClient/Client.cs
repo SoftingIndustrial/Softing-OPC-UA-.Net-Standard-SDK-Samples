@@ -1,6 +1,7 @@
 ﻿using Opc.Ua;
 using Opc.Ua.Toolkit;
 using Opc.Ua.Toolkit.Client;
+using Opc.Ua.Toolkit.Trace;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,7 +32,9 @@ namespace SampleClient
         private static QualifiedName m_eventPropertyName = new QualifiedName("FluidLevel", 5);
         
         private MonitoredItem m_eventMonitoredItem;
+        private MonitoredItem m_alarmsMonitoredItem;
         private MonitoredItem m_readWriteMonitoredItem = null;
+        private Dictionary<NodeId, EventDetails> m_retainedAlarms = new Dictionary<NodeId, EventDetails>();
         private Random m_randomGenerator = new Random();
         private int m_callIdentifier;
 
@@ -40,6 +43,9 @@ namespace SampleClient
 
         //Browse path: Root\Objects\Data\Dynamic\Scalar\ByteValue
         private const string m_monitoredItemNodeId = "ns=3;i=10846";
+
+        // Configured Nodes
+        private string m_alarmsModuleNodeId = "ns=2;i=1"; // Objects\Alarms Module
 
         #endregion
 
@@ -87,7 +93,7 @@ namespace SampleClient
             }
             catch (Exception ex)
             {
-                Console.WriteLine(String.Format("CreateSession Error: {0}", ex.StackTrace));
+                Console.WriteLine(String.Format("CreateSession Error: {0}", ex));
             }
 
            // m_session.ContinuationPointReached += Session_ContinuationPointReached;
@@ -111,6 +117,7 @@ namespace SampleClient
                 m_monitoredItems.Clear();
                 m_readWriteMonitoredItem = null;
                 m_eventMonitoredItem = null;
+                m_alarmsMonitoredItem = null;
 
                 m_session.CallCompleted -= Session_CallCompleted;
                 m_session.ContinuationPointReached -= Session_ContinuationPointReached;
@@ -145,6 +152,7 @@ namespace SampleClient
                         // set the Publishing interval for this subscription
                         m_subscription.PublishingInterval = 500;
                         m_subscription.DataChangesReceived += Subscription_DataChangesReceived;
+                        m_subscription.EventsReceived += Subscription_EventsReceived;
                         Console.WriteLine("Subscription created");
                     }
                     catch (Exception ex)
@@ -161,7 +169,11 @@ namespace SampleClient
             {
                 Console.WriteLine("Session is not created, please use \"c\" command");
             }
-        }        
+        }
+
+        private void Subscription_EventsReceived(object sender, EventsNotificationEventArgs e)
+        {
+        }
 
         /// <summary>
         /// Deletes the current subscription.
@@ -176,8 +188,10 @@ namespace SampleClient
                     m_monitoredItems.Clear();
                     m_readWriteMonitoredItem = null;
                     m_eventMonitoredItem = null;
+                    m_alarmsMonitoredItem = null;
 
                     m_subscription.DataChangesReceived -= Subscription_DataChangesReceived;
+                    m_subscription.EventsReceived -= Subscription_EventsReceived;
                     m_session.DeleteSubscription(m_subscription);
                     m_subscription = null;
                     Console.WriteLine("Subscription deleted");
@@ -226,6 +240,7 @@ namespace SampleClient
                         m_monitoredItems.Add(monitoredItem);
 
                         Console.WriteLine("Monitored item created. Data value changes are shown:");
+                        
                     }
                     catch (Exception ex)
                     {
@@ -244,13 +259,110 @@ namespace SampleClient
         }
 
         /// <summary>
+        /// Invokes the ConditionRefresh method in order to receive all retained conditions
+        /// </summary>
+        public void ConditionRefresh()
+        {
+            try
+            {
+                if (m_session != null && m_alarmsMonitoredItem != null)
+                {
+                    // Clear the local list of alarms
+                    m_retainedAlarms.Clear();
+
+                    // Invoke the ConditionRefresh method on the server passing the sessionId
+                    // After this call the server should send new event notifications for all the retained (active) alarms
+                    IList<object> outputArgs;
+                    m_session.Call(ObjectTypeIds.ConditionType, MethodIds.ConditionType_ConditionRefresh, new List<object>(1) { m_subscription.Id }, out outputArgs);
+
+                    Console.WriteLine("ConditionRefresh method invoked.");
+                }
+                else
+                {
+                    Console.WriteLine("Session not connected or subscription not created!");
+                }
+            }
+            catch (Exception exception)
+            {
+                // Log Error
+                string logMessage = String.Format("ConditionRefresh Error : {0}.", exception.Message);
+                TraceService.Log(TraceMasks.Error,TraceSources.User3, "AlarmsClient.ConditionRefresh", exception);
+                Console.WriteLine(logMessage);
+            }
+        }
+
+        /// <summary>
+        /// Allows user to acknowledge alarm
+        /// </summary>
+        public void AcknowledgeAlarm()
+        {
+            try
+            {
+                if (m_session != null && m_subscription != null)
+                {
+                    if (m_retainedAlarms.Count == 0)
+                    {
+                        Console.WriteLine("The list of active alarms is empty!");
+                        return;
+                    }
+
+                    Dictionary<int, NodeId> alarmsList = new Dictionary<int, NodeId>();
+                    int index = 1;
+
+                    // Prompt the user to select the alarm from the list of active alarms
+                    Console.WriteLine("Please select the alarm to acknowledge:");
+
+                    foreach (EventDetails alarmDetails in m_retainedAlarms.Values)
+                    {
+                        Console.WriteLine(String.Format("{0} - Alarm with SourceName = {1}", index, alarmDetails.SourceName));
+
+                        alarmsList[index] = alarmDetails.SourceNode;
+                        index++;
+                    }
+
+                    int selectedIndex = Convert.ToInt32(Console.ReadLine());
+
+                    if (!alarmsList.ContainsKey(selectedIndex))
+                    {
+                        Console.WriteLine("Invalid option.\r\n");
+                        return;
+                    }
+
+                    EventDetails selectedAlarm = m_retainedAlarms[alarmsList[selectedIndex]];
+
+                    Console.Write("Please insert a comment: ");
+                    string comment = Console.ReadLine();
+
+                    // Invoke Acknowledge method
+                    List<object> inputArgs = new List<object>(2);
+                    inputArgs.Add(selectedAlarm.EventId);
+                    inputArgs.Add(new LocalizedText(comment));
+                    IList<object> outputArgs;
+
+                    m_session.Call(selectedAlarm.EventNode, MethodIds.AcknowledgeableConditionType_Acknowledge,
+                                   inputArgs, out outputArgs);
+                    Console.WriteLine(String.Format("Acknowledge request sent for alarm with SourceName = {0}", selectedAlarm.SourceName));
+                }
+                else
+                {
+                    Console.WriteLine("Session not connected!");
+                }
+            }
+            catch (Exception exception)
+            {
+                // Log Error
+                string logMessage = String.Format("AcknowledgeAlarms Error : {0}.", exception.Message);
+                
+                Console.WriteLine(logMessage);
+            }
+        }
+        /// <summary>
         /// Handles the Notification event of the Monitoreditem.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="Softing.Opc.Ua.Toolkit.Client.MonitoredItemNotificationEventArgs"/> instance containing the event data.</param>
         private void Monitoreditem_DataChangesReceived(object sender, DataChangesNotificationEventArgs e)
         {
-            return;
             foreach (var dataChangeNotification in e.DataChangeNotifications)
             {
                 Console.WriteLine(" {0} Received data value change for monitored item:", dataChangeNotification.SequenceNo);
@@ -505,6 +617,163 @@ namespace SampleClient
         }
         #endregion
 
+        #region Alarms
+        public void CreateAlarmsMonitoredItem()
+        {
+            try
+            {
+                if (m_session != null)
+                {
+                    if (m_subscription != null)
+                    {                     
+                        // Configure the event filter
+                        ExtendedEventFilter filter = new ExtendedEventFilter();
+                        if (filter != null)
+                        {
+
+                            // specify the required fields of the events
+                            filter.AddSelectClause(ObjectTypes.BaseEventType, String.Empty, Attributes.NodeId);
+                            filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.EventId);
+                            filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.EventType);
+                            filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.SourceNode);
+                            filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.SourceName);
+                            filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.Time);
+                            filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.Message);
+                            filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.Severity);
+                            filter.AddSelectClause(ObjectTypeIds.AcknowledgeableConditionType, BrowseNames.EnabledState);
+                            filter.AddSelectClause(ObjectTypeIds.AcknowledgeableConditionType, BrowseNames.ActiveState);
+                            filter.AddSelectClause(ObjectTypeIds.AcknowledgeableConditionType, BrowseNames.AckedState);
+                            filter.AddSelectClause(ObjectTypeIds.AcknowledgeableConditionType, BrowseNames.Comment);
+                            filter.AddSelectClause(ObjectTypeIds.AcknowledgeableConditionType, BrowseNames.Retain);
+
+                            // filter only for condition related events ( e.g in order to avoid audit events)
+                            filter.WhereClause.Push(FilterOperator.OfType, ObjectTypeIds.ConditionType);
+
+                            // Create the MonitoredItem used to receive event notifications
+                            m_alarmsMonitoredItem = new MonitoredItem(m_subscription, m_alarmsModuleNodeId, "Alarms monitor item", filter);
+                            m_alarmsMonitoredItem.SamplingInterval = 0;
+                            m_alarmsMonitoredItem.QueueSize = 1000;
+
+                            m_alarmsMonitoredItem.EventsReceived += m_alarmsMonitoredItem_EventsReceived;
+
+                        }
+                        // Log MonitoredItem Created event
+                        string logMessage = String.Format("New MonitoredItemCreated for NodeId ({0}).", m_alarmsMonitoredItem.NodeId);
+                        TraceService.Log(TraceMasks.Information, TraceSources.User3, "AlarmsClient.CreateMonitoredItems", logMessage);
+                        Console.WriteLine(logMessage);
+
+                        ConditionRefresh();
+                        return;
+                    }
+                }
+                Console.WriteLine("Session not connected or subscription not created!");
+            }
+            catch (Exception exception)
+            {
+                // Log Error
+                TraceService.Log(TraceMasks.Information, TraceSources.User3, "AlarmsClient.CreateMonitoredItems", exception);
+                Console.WriteLine(exception.Message);
+            }
+        }
+
+        public void DeleteAlarmsMonitoredItem()
+        {
+            if (m_alarmsMonitoredItem != null)
+            {
+                m_alarmsMonitoredItem.EventsReceived -= m_alarmsMonitoredItem_EventsReceived;
+                m_alarmsMonitoredItem.Disconnect(true);
+
+                m_alarmsMonitoredItem = null;
+                Console.WriteLine("Alarms monitored item was deleted!");
+            }
+            else
+            {
+                Console.WriteLine("Alarms monitored item is not created!");
+            }
+        }
+        private void m_alarmsMonitoredItem_EventsReceived(object sender, EventsNotificationEventArgs e)
+        {
+            try
+            {
+                if (m_session == null)
+                {
+                    return;
+                }
+
+                // Check for event notification
+
+                foreach(EventNotification eventNotification in e.EventNotifications)
+                {
+                    INode eventType = m_alarmsMonitoredItem.GetEventType(eventNotification);
+
+                    if (eventType.NodeId == ObjectTypeIds.RefreshStartEventType)
+                    {
+                        Console.WriteLine("\r\nRefreshStart event received.");
+                        return;
+                    }
+
+                    if (eventType.NodeId == ObjectTypeIds.RefreshEndEventType)
+                    {
+                        Console.WriteLine("RefreshEnd event received.");
+                        return;
+                    }
+
+                    // Display the list of event fields
+                    string eventFields = "\r\nNew alarm notification received: \r\n" +
+                        String.Format("EventId      = {0}\r\n", eventNotification.EventFields[1]) +
+                        String.Format("EventType    = {0}\r\n", eventType) +
+                        String.Format("SourceNode   = {0}\r\n", eventNotification.EventFields[3]) +
+                        String.Format("SourceName   = {0}\r\n", eventNotification.EventFields[4]) +
+                        String.Format("Time         = {0:HH:mm:ss.fff}\r\n", ((DateTime)eventNotification.EventFields[5].Value).ToLocalTime()) +
+                        String.Format("Message      = {0}\r\n", eventNotification.EventFields[6]) +
+                        String.Format("Severity     = {0}\r\n", (EventSeverity)((ushort)eventNotification.EventFields[7].Value)) +
+                        String.Format("EnabledState = {0}\r\n", eventNotification.EventFields[8]) +
+                        String.Format("ActiveState  = {0}\r\n", eventNotification.EventFields[9]) +
+                        String.Format("AckedState   = {0}\r\n", eventNotification.EventFields[10]) +
+                        String.Format("Comment      = {0}\r\n", eventNotification.EventFields[11]) +
+                        String.Format("Retain       = {0}\r\n", eventNotification.EventFields[12]) +
+                        "\r\n";
+
+                    Console.WriteLine(eventFields);
+                    // check if Retain and SourceNode fields are received
+                    if (eventNotification.EventFields[3] != Variant.Null && eventNotification.EventFields[12] != Variant.Null)
+                    {
+                        bool retain = (bool)eventNotification.EventFields[12].Value;
+                        NodeId sourceNode = (NodeId)eventNotification.EventFields[3].Value;
+
+                        // Update the list of active alarms and store only the events with "retain" bit set to true.
+
+                        if (retain)
+                        {
+                            EventDetails eventDetails = new EventDetails();
+                            eventDetails.EventNode = (NodeId)eventNotification.EventFields[0].Value;
+                            eventDetails.EventId = (byte[])eventNotification.EventFields[1].Value;
+                            eventDetails.SourceNode = sourceNode;
+                            eventDetails.SourceName = eventNotification.EventFields[4].Value.ToString();
+                            eventDetails.Message = (LocalizedText)eventNotification.EventFields[6].Value;
+                            eventDetails.Severity = (EventSeverity)((ushort)eventNotification.EventFields[7].Value);
+                            eventDetails.Comment = (LocalizedText)eventNotification.EventFields[11].Value;
+
+                            m_retainedAlarms[sourceNode] = eventDetails;
+                        }
+                        else
+                        {
+                            m_retainedAlarms.Remove(sourceNode);
+                        }                        
+                    }
+
+                }
+            }
+            catch (Exception exception)
+            {
+                // Log Error
+                string logMessage = String.Format("MonitoredItem Notification Error : {0}.", exception.Message);
+                TraceService.Log(TraceMasks.Error, TraceSources.User3, "AlarmsClient.MonitoredItem_Notification", exception);
+                Console.WriteLine(logMessage);
+            }
+        }
+
+        #endregion
         #region Method Call
 
         /// <summary>
@@ -924,7 +1193,6 @@ namespace SampleClient
         }
         #endregion
 
-
         #region TranslateBrowsePathToNodeIds
 
         /// <summary>
@@ -1034,5 +1302,7 @@ namespace SampleClient
             }
         }
         #endregion
+
+        
     }
 }

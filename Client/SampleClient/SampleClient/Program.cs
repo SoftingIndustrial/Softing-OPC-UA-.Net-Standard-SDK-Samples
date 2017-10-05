@@ -20,6 +20,10 @@ namespace SampleClient
         private const string m_filterEventMonitoredItem = "f";
         private const string m_deleteEventMonitoredItem = "de";
         private const string m_setEventFilter = "f";
+        private const string m_createAlarmsMonitoredItem = "ca";
+        private const string m_deleteAlarmsMonitoredItem = "da";
+        private const string m_callConditionRefresh = "ra";
+        private const string m_acknowledgeAlarm = "aa";
         private const string m_readMonitoredItem = "r";
         private const string m_writeMonitoredItem = "w";
         private const string m_callMethodCommand = "met";
@@ -52,6 +56,10 @@ namespace SampleClient
                                 "e  - Create event monitored item \r\n" +
                                 "f  - Apply filter for event monitored item \r\n" +
                                 "de - Delete event monitored item \r\n" +
+                                "ca - Create alarms monitored item\r\n" +
+                                "da - Delete alarms monitored item\r\n" +
+                                "ra - Refresh active alarms (Call ConditionRefresh method)\r\n" +
+                                "aa - Acknowledge alarm\r\n" +
                                 "r  - Read Command \r\n" +
                                 "w  - Write Command \r\n" +
                                 "met  - Call the method \r\n" +
@@ -109,6 +117,18 @@ namespace SampleClient
                             break;
                         case m_deleteEventMonitoredItem:
                             client.DeleteEventMonitoredItem();
+                            break;
+                        case m_createAlarmsMonitoredItem:
+                            client.CreateAlarmsMonitoredItem();
+                            break;
+                        case m_deleteAlarmsMonitoredItem:
+                            client.DeleteAlarmsMonitoredItem();
+                            break;
+                        case m_callConditionRefresh:
+                            client.ConditionRefresh();
+                            break;
+                        case m_acknowledgeAlarm:
+                            client.AcknowledgeAlarm();
                             break;
                         case m_readMonitoredItem:
                             Console.WriteLine("Read done with DataValue: {0}", client.ReadMonitoredItem());
