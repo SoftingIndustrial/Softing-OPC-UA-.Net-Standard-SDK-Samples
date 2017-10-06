@@ -18,14 +18,14 @@ namespace NetCoreConsoleSimpleApiClient
             Task.Run(async () =>
             {
 
-                Application application = await Application.CreateConfiguredApplication(configFileName: "NetCoreConsoleSimpleApiClient.config");
+                UaApplication application = await UaApplication.CreateConfiguredApplication(configFileName: "NetCoreConsoleSimpleApiClient.config");
 
                 if (application.Configuration.SecurityConfiguration.AutoAcceptUntrustedCertificates)
                 {
                     application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);
                 }
 
-                Application application2 = await CreateApplication();
+                UaApplication application2 = await CreateApplication();
 
 
 
@@ -37,9 +37,9 @@ namespace NetCoreConsoleSimpleApiClient
             Console.ReadKey();
         }
 
-        private static async Task<Application> CreateApplication()
+        private static async Task<UaApplication> CreateApplication()
         {
-            Application application = await Application.CreateConfiguredApplication();   
+            UaApplication application = await UaApplication.CreateConfiguredApplication();   
 
             application.Configuration.ApplicationName = ApplicationName;
             application.Configuration.ApplicationType = ApplicationType.Client;

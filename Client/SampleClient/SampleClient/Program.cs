@@ -40,7 +40,7 @@ namespace SampleClient
 
         static void Main(string[] args)
         {
-            Application application = Application.CreateConfiguredApplication(configFileName: m_configFileName).Result;
+            UaApplication application = UaApplication.CreateConfiguredApplication(configFileName: m_configFileName).Result;
             if (application.Configuration.SecurityConfiguration.AutoAcceptUntrustedCertificates)
             {
                 application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);
