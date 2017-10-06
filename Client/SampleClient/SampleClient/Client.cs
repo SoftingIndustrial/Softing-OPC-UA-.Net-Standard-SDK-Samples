@@ -286,7 +286,7 @@ namespace SampleClient
             {
                 // Log Error
                 string logMessage = String.Format("ConditionRefresh Error : {0}.", exception.Message);
-                TraceService.Log(TraceMasks.Error,TraceSources.User3, "AlarmsClient.ConditionRefresh", exception);
+                TraceService.Log(TraceSources.User3, "AlarmsClient.ConditionRefresh", exception);
                 Console.WriteLine(logMessage);
             }
         }
@@ -671,7 +671,7 @@ namespace SampleClient
             catch (Exception exception)
             {
                 // Log Error
-                TraceService.Log(TraceMasks.Information, TraceSources.User3, "AlarmsClient.CreateMonitoredItems", exception);
+                TraceService.Log(TraceSources.User3, "AlarmsClient.CreateMonitoredItems", exception);
                 Console.WriteLine(exception.Message);
             }
         }
@@ -768,7 +768,7 @@ namespace SampleClient
             {
                 // Log Error
                 string logMessage = String.Format("MonitoredItem Notification Error : {0}.", exception.Message);
-                TraceService.Log(TraceMasks.Error, TraceSources.User3, "AlarmsClient.MonitoredItem_Notification", exception);
+                TraceService.Log(TraceSources.User3, "AlarmsClient.MonitoredItem_Notification", exception);
                 Console.WriteLine(logMessage);
             }
         }
