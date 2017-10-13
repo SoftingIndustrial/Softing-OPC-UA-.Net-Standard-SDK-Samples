@@ -605,7 +605,7 @@ namespace SampleClient
             {
                 Console.WriteLine("Event notification received for {0}.\n", eventNotification.MonitoredItem.DisplayName);
                 string displayNotification = string.Empty;
-                IList<SelectOperand> listOfOperands = ((EventFilterEx)m_eventMonitoredItem.Filter).SelectOperandList;
+                IList<SelectOperandEx> listOfOperands = ((EventFilterEx)m_eventMonitoredItem.Filter).SelectOperandList;
                 for (int i = 0; i < listOfOperands.Count; i++)
                 {
                     displayNotification += listOfOperands[i].PropertyName.NamespaceIndex + ":" + listOfOperands[i].PropertyName.Name 
