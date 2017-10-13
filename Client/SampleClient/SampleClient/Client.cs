@@ -4,6 +4,7 @@ using Opc.Ua.Toolkit.Client;
 using Opc.Ua.Toolkit.Trace;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace SampleClient
@@ -1187,7 +1188,7 @@ namespace SampleClient
         /// This event is raised when a continuation point is reached.
         /// For example if from Browse Options the MaxReferencesReturned is set to x, then when browsing every x references returned this event will be thrown.
         /// </summary>
-        private void Session_ContinuationPointReached(object sender, BrowseEventArgs e)
+        private void Session_ContinuationPointReached(object sender, CancelEventArgs e)
         {
             e.Cancel = true;
         }
