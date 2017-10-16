@@ -13,7 +13,7 @@ namespace SampleClient
     {
 
         #region Private Members
-        private const string m_demoServerUrl = "opc.tcp://localhost:51510/UA/DemoServer";
+        private const string m_demoServerUrl = "opc.tcp://[::1]:51510/UA/DemoServer";
         //Browse path: Root\Objects\Data\Static\Scalar\Int16Value
         private const string m_readWriteNodeId = "ns=3;i=10219";
         //Browse path: Root\Objects\Data\Dynamic\Scalar\ByteValue

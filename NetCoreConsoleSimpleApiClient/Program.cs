@@ -10,7 +10,7 @@ namespace NetCoreConsoleSimpleApiClient
     class Program
     {
         private static string ApplicationName = ".Net Core Sample for Simple API";
-        private static string DemoServerUrl = $"opc.tcp://{Utils.GetHostName()}:51510/UA/DemoServer";
+        private static string DemoServerUrl = $"opc.tcp://[::1]:51510/UA/DemoServer";//$"opc.tcp://{Utils.GetHostName()}:51510/UA/DemoServer";
         static void Main(string[] args)
         {
             Console.WriteLine(DemoServerUrl);
@@ -25,9 +25,13 @@ namespace NetCoreConsoleSimpleApiClient
                     application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);
                 }
 
-                UaApplication application2 = await CreateApplication();
+                //UaApplication application2 = await CreateApplication();
 
+                DiscoveryService discoveryService = new DiscoveryService(application.Configuration);
 
+                var endpoints = discoveryService.GetEndpoints(DemoServerUrl);
+
+                var servers = discoveryService.DiscoverServers("opc.tcp://localhost:4840");
 
 
             }).GetAwaiter().GetResult();
