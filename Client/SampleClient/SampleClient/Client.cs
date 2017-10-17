@@ -1093,7 +1093,7 @@ namespace SampleClient
 
         /// <summary>
         /// The BrowseWithOptions method uses the Browse method with three parameters, in this case the browse options will be given as a parameer.
-        /// A BrowseOptions object is created first, on which browse options can be set, and given as parameter to the Browse method.
+        /// A BrowseDescription object is created first, on which browse options can be set, and given as parameter to the Browse method.
         /// In this case any browse options on the Session object will be ignored.
         /// </summary>
         internal void BrowseWithOptions()
