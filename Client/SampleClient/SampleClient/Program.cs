@@ -55,7 +55,7 @@ namespace SampleClient
             }
 
             SampleClient.DiscoveryClient discoveryClient = new DiscoveryClient(application.Configuration);
-            discoveryClient.DiscoverServers();
+            discoveryClient.DiscoverServers(Constants.ServerDiscoveryUrl);
 
             string commandList = "List of commands: \r\n" +
                                 "c  - Create and Connect the session \r\n" +
