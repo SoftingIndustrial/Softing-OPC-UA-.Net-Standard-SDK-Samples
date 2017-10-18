@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Logs\**" />
     <Compile Remove="pki\**" />
+    <EmbeddedResource Remove="Logs\**" />
     <EmbeddedResource Remove="pki\**" />
+    <None Remove="Logs\**" />
     <None Remove="pki\**" />
   </ItemGroup>
 
