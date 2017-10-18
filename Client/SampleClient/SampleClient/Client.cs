@@ -1058,7 +1058,7 @@ namespace SampleClient
             try
             {                
                 //Using the Browse method with null parameters will return the browse result for the root node.
-                IList<ReferenceDescription> rootReferenceDescriptions = Browse(null, null);
+                IList<ReferenceDescriptionEx> rootReferenceDescriptions = Browse(null, null);
                 if (rootReferenceDescriptions != null)
                 {
                     foreach (ReferenceDescription rootReferenceDescription in rootReferenceDescriptions)
@@ -1066,14 +1066,14 @@ namespace SampleClient
                         Console.WriteLine("  -" + rootReferenceDescription.DisplayName);
                         if (rootReferenceDescription.BrowseName.Name == "Objects")
                         {
-                            IList<ReferenceDescription> objectReferenceDescriptions = new List<ReferenceDescription>();
+                            IList<ReferenceDescriptionEx> objectReferenceDescriptions = new List<ReferenceDescriptionEx>();
                             objectReferenceDescriptions = Browse(ExpandedNodeId.ToNodeId(rootReferenceDescription.NodeId, m_namespaceUris), null);
                             foreach (ReferenceDescription objectReferenceDescription in objectReferenceDescriptions)
                             {
                                 Console.WriteLine("     -" + objectReferenceDescription.DisplayName);
                                 if (objectReferenceDescription.BrowseName.Name == "Server")
                                 {
-                                    IList<ReferenceDescription> serverReferenceDescriptions = new List<ReferenceDescription>();
+                                    IList<ReferenceDescriptionEx> serverReferenceDescriptions = new List<ReferenceDescriptionEx>();
                                     serverReferenceDescriptions = Browse(ExpandedNodeId.ToNodeId(objectReferenceDescription.NodeId, m_namespaceUris), null);
                                     foreach (ReferenceDescription serverReferenceDescription in serverReferenceDescriptions)
                                     {
@@ -1103,26 +1103,26 @@ namespace SampleClient
             try
             {
                 //Using the Browse method with null parameters will return the browse result for the root node.
-                IList<ReferenceDescription> rootReferenceDescriptions = BrowseOptions(null, null, null);
+                IList<ReferenceDescriptionEx> rootReferenceDescriptions = BrowseOptions(null, null, null);
                 if (rootReferenceDescriptions != null)
                 {
-                    foreach (ReferenceDescription rootReferenceDescription in rootReferenceDescriptions)
+                    foreach (var rootReferenceDescription in rootReferenceDescriptions)
                     {
-                        Console.WriteLine("  -" + rootReferenceDescription.DisplayName);
+                        Console.WriteLine("  -" + rootReferenceDescription.DisplayName + " ***** " + rootReferenceDescription.ReferenceTypeName);
                         if (rootReferenceDescription.BrowseName.Name == "Objects")
                         {
-                            IList<ReferenceDescription> objectReferenceDescriptions = new List<ReferenceDescription>();
+                            IList<ReferenceDescriptionEx> objectReferenceDescriptions = new List<ReferenceDescriptionEx>();
                             objectReferenceDescriptions = BrowseOptions(ExpandedNodeId.ToNodeId(rootReferenceDescription.NodeId, m_namespaceUris), options, rootReferenceDescription);
-                            foreach (ReferenceDescription objectReferenceDescription in objectReferenceDescriptions)
+                            foreach (var objectReferenceDescription in objectReferenceDescriptions)
                             {
-                                Console.WriteLine("     -" + objectReferenceDescription.DisplayName);
+                                Console.WriteLine("     -" + objectReferenceDescription.DisplayName + " ***** " + objectReferenceDescription.ReferenceTypeName);
                                 if (objectReferenceDescription.BrowseName.Name == "Server")
                                 {
-                                    IList<ReferenceDescription> serverReferenceDescriptions = new List<ReferenceDescription>();
+                                    IList<ReferenceDescriptionEx> serverReferenceDescriptions = new List<ReferenceDescriptionEx>();
                                     serverReferenceDescriptions = BrowseOptions(ExpandedNodeId.ToNodeId(objectReferenceDescription.NodeId, m_namespaceUris), options, objectReferenceDescription);
-                                    foreach (ReferenceDescription serverReferenceDescription in serverReferenceDescriptions)
+                                    foreach (var serverReferenceDescription in serverReferenceDescriptions)
                                     {
-                                        Console.WriteLine("        -" + serverReferenceDescription.DisplayName);
+                                        Console.WriteLine("        -" + serverReferenceDescription.DisplayName + " ***** " + serverReferenceDescription.ReferenceTypeName);
                                     }
                                 }
                             }
@@ -1139,14 +1139,14 @@ namespace SampleClient
         /// Browses the specified node id and returns its list of references.
         /// This method uses browse options set on the Session object
         /// </summary>
-        internal IList<ReferenceDescription> Browse(NodeId nodeId, object sender)
+        internal IList<ReferenceDescriptionEx> Browse(NodeId nodeId, object sender)
         {
             if (m_session == null)
             {
                 Console.WriteLine("Session is not created, please use \"c\" command");
-                return new List<ReferenceDescription>();
+                return new List<ReferenceDescriptionEx>();
             }
-            IList<ReferenceDescription> results = null;
+            IList<ReferenceDescriptionEx> results = null;
 
             try
             {
@@ -1163,14 +1163,14 @@ namespace SampleClient
         /// Browses the specified node id and returns its list of references.
         /// This method uses browse options as an input parameter.
         /// </summary>
-        internal IList<ReferenceDescription> BrowseOptions(NodeId nodeId, BrowseDescriptionEx browseOptions, object sender)
+        internal IList<ReferenceDescriptionEx> BrowseOptions(NodeId nodeId, BrowseDescriptionEx browseOptions, object sender)
         {
             if (m_session == null)
             {
                 Console.WriteLine("Session is not created, please use \"c\" command");
-                return new List<ReferenceDescription>();
+                return new List<ReferenceDescriptionEx>();
             }
-            IList<ReferenceDescription> results = null;
+            IList<ReferenceDescriptionEx> results = null;
 
             try
             {
