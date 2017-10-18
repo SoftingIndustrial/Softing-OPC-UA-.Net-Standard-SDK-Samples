@@ -10,14 +10,13 @@
  * ======================================================================*/
 
 using System;
-using System.Threading.Tasks;
 using Softing.Opc.Ua;
 
 namespace SampleClient
 {
     class Program
     {
-        private const string m_configFileName = "SampleClient.config";
+        private const string ConfigFileName = "SampleClient.config";
         #region Commands
         private const string m_exitCommand = "x";
         private const string m_createCommand = "c";
@@ -29,7 +28,6 @@ namespace SampleClient
         private const string m_createEventMonitoredItem = "e";
         private const string m_filterEventMonitoredItem = "f";
         private const string m_deleteEventMonitoredItem = "de";
-        private const string m_setEventFilter = "f";
         private const string m_createAlarmsMonitoredItem = "ca";
         private const string m_deleteAlarmsMonitoredItem = "da";
         private const string m_callConditionRefresh = "ra";
@@ -50,11 +48,14 @@ namespace SampleClient
 
         static void Main(string[] args)
         {
-            UaApplication application = UaApplication.CreateConfiguredApplication(configFileName: m_configFileName).Result;
+            UaApplication application = UaApplication.CreateConfiguredApplication(configFileName: ConfigFileName).Result;
             if (application.Configuration.SecurityConfiguration.AutoAcceptUntrustedCertificates)
             {
                 application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);
             }
+
+            SampleClient.DiscoveryClient discoveryClient = new DiscoveryClient(application.Configuration);
+            discoveryClient.DiscoverServers();
 
             string commandList = "List of commands: \r\n" +
                                 "c  - Create and Connect the session \r\n" +

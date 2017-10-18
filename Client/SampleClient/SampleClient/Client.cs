@@ -1,6 +1,4 @@
-﻿using Opc.Ua;
-using System;
-/* ========================================================================
+﻿/* ========================================================================
  * Copyright © 2011-2018 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -10,6 +8,8 @@ using System;
  *  
  * ======================================================================*/
 
+using Opc.Ua;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
