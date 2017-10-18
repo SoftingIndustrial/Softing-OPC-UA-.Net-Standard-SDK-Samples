@@ -3,7 +3,7 @@ using Opc.Ua;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Opc.Ua.Configuration;
-using Opc.Ua.Toolkit;
+using Softing.Opc.Ua;
 
 namespace NetCoreConsoleSimpleApiClient
 {

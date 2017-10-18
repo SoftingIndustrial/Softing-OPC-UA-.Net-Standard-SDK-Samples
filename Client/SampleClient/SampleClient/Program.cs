@@ -1,7 +1,7 @@
 ﻿using Opc.Ua;
-using Opc.Ua.Toolkit;
 using System;
 using System.Threading.Tasks;
+using Softing.Opc.Ua;
 
 namespace SampleClient
 {

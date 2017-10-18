@@ -1,11 +1,12 @@
 ﻿using Opc.Ua;
-using Opc.Ua.Toolkit;
-using Opc.Ua.Toolkit.Client;
-using Opc.Ua.Toolkit.Trace;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using Softing.Opc.Ua;
+using Softing.Opc.Ua.Client;
+using Softing.Opc.Ua.Trace;
+using ClientSession = Softing.Opc.Ua.Client.ClientSession;
 
 namespace SampleClient
 {
