@@ -8,15 +8,28 @@
  *  
  * ======================================================================*/
 
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SampleClient
+namespace SampleClient.StateMachine
 {
-    public class Constants
+    public enum State
     {
-        public const string ServerDiscoveryUrl = "opc.tcp://localhost:4840";
-        public const string SampleServerUrl = "opc.tcp://localhost:62549/SampleServer";
+        Main,
+        Discovery,
+        Terminated
     }
+
+    public enum Command
+    {
+        StartDiscoveryClient,
+        GetEndpoints,
+        FindServers,
+        EndDiscoveryClient,
+        Exit
+    }
+
+
 }
