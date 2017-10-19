@@ -17,6 +17,7 @@ namespace SampleClient
     class Program
     {
         private const string ConfigFileName = "SampleClient.config";
+
         #region Commands
         private const string m_exitCommand = "x";
         private const string m_createCommand = "c";
@@ -192,9 +193,7 @@ namespace SampleClient
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
         }
-
-
-
+        
         private static void CertificateValidator_CertificateValidation(CertificateValidator validator, CertificateValidationEventArgs e)
         {
             Console.WriteLine("Accepted Certificate: {0}", e.Certificate.Subject);
