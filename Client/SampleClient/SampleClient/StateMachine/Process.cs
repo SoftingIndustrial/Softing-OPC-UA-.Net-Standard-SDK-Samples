@@ -10,22 +10,26 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Text;
+using SampleClient.Samples;
 using Softing.Opc.Ua;
 
 namespace SampleClient.StateMachine
 {
     public class Process
     {
+        private const string SessionNameBrowse = "BrowseClientSample Session";
+
         private readonly Dictionary<StateTransition, State> m_transitions;
         private readonly Dictionary<State, IList<CommandDescriptor>> m_processStateCommands;
         public State CurrentState { get; private set; }
 
 
         private readonly UaApplication m_application;
-        private DiscoveryClient m_discoveryClient;
-
+        private DiscoveryClient m_discoveryClientSample;
+        private ConnectClient m_connectClientSample;
+        private BrowseClient m_browseClientSample;
+        private EventsClient m_eventsClient;
 
         /// <summary>
         /// create new instance of Process
@@ -35,25 +39,25 @@ namespace SampleClient.StateMachine
             m_application = application;
 
             CurrentState = State.Main;
+           
             m_transitions = new Dictionary<StateTransition, State>();
-            StateTransition startDiscoveryClient = new StateTransition(State.Main, Command.StartDiscoveryClient, "d", "Enter Discovery Mode");
-            startDiscoveryClient.ExecuteCommand += StartDiscoveryClient_ExecuteCommand;
-            m_transitions.Add(startDiscoveryClient, State.Discovery);
-            StateTransition getEndpoints = new StateTransition(State.Discovery, Command.GetEndpoints, "e", "Get Endpooints");
-            getEndpoints.ExecuteCommand += GetEndpoints_ExecuteCommand;
-            m_transitions.Add(getEndpoints, State.Discovery);
-            StateTransition findServers = new StateTransition(State.Discovery, Command.FindServers, "f", "Find Servers");
-            findServers.ExecuteCommand += FindServers_ExecuteCommand;
-            m_transitions.Add(findServers, State.Discovery);
-            StateTransition endDiscoveryClient = new StateTransition(State.Discovery, Command.EndDiscoveryClient, "a", "Abandon Discovery Mode");
-            endDiscoveryClient.ExecuteCommand += EndDiscoveryClient_ExecuteCommand;
-            m_transitions.Add(endDiscoveryClient, State.Main);
+
+            InitializeDiscoveryTransitions();
+            InitializeConnectTransitions();
+            InitializeBrowseTransitions();
+            InitializeEventsTransitions();
 
 
             //add here all exit commands
-            StateTransition exit = new StateTransition(State.Discovery, Command.Exit, "x", "Exit Client Application");
+            StateTransition exit = new StateTransition(State.Main, Command.Exit, "x", "Exit Client Application");
             m_transitions.Add(exit, State.Terminated);
-            exit = new StateTransition(State.Main, Command.Exit, "x", "Exit Client Application");
+            exit = new StateTransition(State.Browse, Command.Exit, "x", "Exit Client Application");
+            m_transitions.Add(exit, State.Terminated);
+            exit = new StateTransition(State.Discovery, Command.Exit, "x", "Exit Client Application");
+            m_transitions.Add(exit, State.Terminated);
+            exit = new StateTransition(State.Connect, Command.Exit, "x", "Exit Client Application");
+            m_transitions.Add(exit, State.Terminated);
+            exit = new StateTransition(State.Events, Command.Exit, "x", "Exit Client Application");
             m_transitions.Add(exit, State.Terminated);
 
 
@@ -66,35 +70,255 @@ namespace SampleClient.StateMachine
                 }
                 m_processStateCommands[stateStansition.CurrentState].Add(stateStansition.CommandDescriptor);
             }
+
+            DisplayListOfCommands();
         }
 
-        private void EndDiscoveryClient_ExecuteCommand(object sender, EventArgs e)
+        private void InitializeEventsTransitions()
+        {
+            //commaands for events
+            StateTransition startEventsClient = new StateTransition(State.Main, Command.StartEvents, "e", "Enter Events Mode");
+            startEventsClient.ExecuteCommand += StartEventsClient_ExecuteCommand;
+            m_transitions.Add(startEventsClient, State.Events);
+            StateTransition createEventMonitorItem =
+                new StateTransition(State.Events, Command.CreateEventMonitorItem, "e", "Create event monitored item");
+            createEventMonitorItem.ExecuteCommand += CreateEventMonitorItem_ExecuteCommand;
+            m_transitions.Add(createEventMonitorItem, State.Events);
+            StateTransition createEventMonitorItemWithFilter =
+                new StateTransition(State.Events, Command.CreateEventMonitorItemWithFilter, "f",
+                    "Create and set event monitored item filter");
+            createEventMonitorItemWithFilter.ExecuteCommand += CreateEventMonitorItemWithFilter_ExecuteCommand;
+            m_transitions.Add(createEventMonitorItemWithFilter, State.Events);
+            StateTransition endEvents = new StateTransition(State.Events, Command.EndEvents, "a", "Abandon Events Mode");
+            endEvents.ExecuteCommand += EndEvents_ExecuteCommand;
+            m_transitions.Add(endEvents, State.Main);
+        }
+
+        /// <summary>
+        /// Initializes all sub menu transitions for BrowseClient
+        /// </summary>
+        private void InitializeBrowseTransitions()
+        {
+            //commAands for browse
+            StateTransition startBrowseClient = new StateTransition(State.Main, Command.StartBrowse, "b", "Enter Browse Mode");
+            startBrowseClient.ExecuteCommand += StartBrowseClient_ExecuteCommand;
+            m_transitions.Add(startBrowseClient, State.Browse);
+            StateTransition browseServer = new StateTransition(State.Browse, Command.BrowseServer, "b", "Browse server");
+            browseServer.ExecuteCommand += BrowseServer_ExecuteCommand;
+            m_transitions.Add(browseServer, State.Browse);
+            StateTransition browseServerWithOptions =
+                new StateTransition(State.Browse, Command.BrowseServerWithOptions, "o", "Browse server with options");
+            browseServerWithOptions.ExecuteCommand += BrowseServerWithOptions_ExecuteCommand;
+            m_transitions.Add(browseServerWithOptions, State.Browse);
+            StateTransition translate =
+                new StateTransition(State.Browse, Command.Translate, "t", "Translate BrowsePath to NodeIds");
+            translate.ExecuteCommand += Translate_ExecuteCommand;
+            m_transitions.Add(translate, State.Browse);
+            StateTransition translateMultiple =
+                new StateTransition(State.Browse, Command.TranslateMultiple, "m", "Translate multiple Browse Paths");
+            translateMultiple.ExecuteCommand += TranslateMultiple_ExecuteCommand;
+            m_transitions.Add(translateMultiple, State.Browse);
+            StateTransition endBrowseClient = new StateTransition(State.Browse, Command.EndBrowse, "a", "Abandon Browse Mode");
+            endBrowseClient.ExecuteCommand += EndBrowseClient_ExecuteCommand;
+            m_transitions.Add(endBrowseClient, State.Main);
+        }
+
+        /// <summary>
+        /// Initializes all sub menu transitions for ConnectClient
+        /// </summary>
+        private void InitializeConnectTransitions()
+        {
+            //commands for connect
+            StateTransition startConnectClient =
+                new StateTransition(State.Main, Command.StartConnectClient, "c", "Enter Connect Mode");
+            startConnectClient.ExecuteCommand += StartConnectClient_ExecuteCommand;
+            m_transitions.Add(startConnectClient, State.Connect);
+            StateTransition opcTcpWithoutSecurity = new StateTransition(State.Connect, Command.OpcTcpWithoutSecurity, "1",
+                "Create opc.tcp session without security");
+            opcTcpWithoutSecurity.ExecuteCommand += OpcTcpWithoutSecurity_ExecuteCommand;
+            m_transitions.Add(opcTcpWithoutSecurity, State.Connect);
+            StateTransition opcTcpUserIdentity = new StateTransition(State.Connect, Command.OpcTcpUserIdentity, "2",
+                "Create opc.tcp session with user identity");
+            opcTcpUserIdentity.ExecuteCommand += OpcTcpUserIdentity_ExecuteCommand;
+            m_transitions.Add(opcTcpUserIdentity, State.Connect);
+            StateTransition opcTcpUserIdentityAndSecurity = new StateTransition(State.Connect,
+                Command.OpcTcpUserIdentityAndSecurity, "3", "Create opc.tcp session with security and user identity");
+            opcTcpUserIdentityAndSecurity.ExecuteCommand += OpcTcpUserIdentityAndSecurity_ExecuteCommand;
+            m_transitions.Add(opcTcpUserIdentityAndSecurity, State.Connect);
+            StateTransition httpsWithoutUserIdentity = new StateTransition(State.Connect, Command.HttpsWithoutUserIdentity, "4",
+                "Create https session without user identity");
+            httpsWithoutUserIdentity.ExecuteCommand += HttpsWithoutUserIdentity_ExecuteCommand;
+            m_transitions.Add(httpsWithoutUserIdentity, State.Connect);
+            StateTransition httpsWithUserIdentity = new StateTransition(State.Connect, Command.HttpsWithUserIdentity, "5",
+                "Create https session with user identity");
+            httpsWithUserIdentity.ExecuteCommand += HttpsWithUserIdentity_ExecuteCommand;
+            m_transitions.Add(httpsWithUserIdentity, State.Connect);
+            StateTransition sessionWithDiscovery = new StateTransition(State.Connect, Command.SessionWithDiscovery, "6",
+                "Create session using discovery process");
+            sessionWithDiscovery.ExecuteCommand += SessionWithDiscovery_ExecuteCommand;
+            m_transitions.Add(sessionWithDiscovery, State.Connect);
+            StateTransition endConnectClient =
+                new StateTransition(State.Connect, Command.EndConnectClient, "a", "Abandon Connect Mode");
+            endConnectClient.ExecuteCommand += EndConnectClient_ExecuteCommand;
+            m_transitions.Add(endConnectClient, State.Main);
+        }
+
+        /// <summary>
+        /// Initializes all sub menu transitions for DiscoveryClient
+        /// </summary>
+        private void InitializeDiscoveryTransitions()
+        {
+            //Commands for discovery
+            StateTransition startDiscoveryClient =
+                new StateTransition(State.Main, Command.StartDiscoveryClient, "d", "Enter Discovery Mode");
+            startDiscoveryClient.ExecuteCommand += StartDiscoveryClient_ExecuteCommand;
+            m_transitions.Add(startDiscoveryClient, State.Discovery);
+            StateTransition getEndpoints = new StateTransition(State.Discovery, Command.GetEndpoints, "e", "Get Endpooints");
+            getEndpoints.ExecuteCommand += GetEndpoints_ExecuteCommand;
+            m_transitions.Add(getEndpoints, State.Discovery);
+            StateTransition findServers = new StateTransition(State.Discovery, Command.FindServers, "f", "Find Servers");
+            findServers.ExecuteCommand += FindServers_ExecuteCommand;
+            m_transitions.Add(findServers, State.Discovery);
+            StateTransition endDiscoveryClient =
+                new StateTransition(State.Discovery, Command.EndDiscoveryClient, "a", "Abandon Discovery Mode");
+            endDiscoveryClient.ExecuteCommand += EndDiscoveryClient_ExecuteCommand;
+            m_transitions.Add(endDiscoveryClient, State.Main);
+        }
+
+        #region  ExecuteCommand Handlers for Events
+        private void EndEvents_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient != null)
+            {
+                m_eventsClient.DeleteEventMonitoredItem();
+            }
+        }
+
+        private void CreateEventMonitorItemWithFilter_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient != null)
+            {
+                m_eventsClient.ApplyEventMonitoredItemFilter();
+            }
+        }
+
+        private void CreateEventMonitorItem_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient != null)
+            {
+                m_eventsClient.CreateEventMonitoredItem();
+            }
+        }
+
+        private void StartEventsClient_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient == null)
+            {
+                m_eventsClient = new EventsClient(m_application);
+                DisplayListOfCommands();
+            }
+        }
+        #endregion
+
+        #region  ExecuteCommand Handlers for Browse & Translate
+        private void EndBrowseClient_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_browseClientSample != null)
+            {
+                m_browseClientSample.DisconnectSession();
+            }
+            DisplayListOfCommands();
+        }
+
+        private void TranslateMultiple_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_browseClientSample != null)
+            {
+                m_browseClientSample.TranslateBrowsePathsToNodeIds();
+            }
+        }
+
+        private void Translate_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_browseClientSample != null)
+            {
+                m_browseClientSample.TranslateBrowsePathToNodeIds();
+            }
+        }
+
+        private void BrowseServerWithOptions_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_browseClientSample != null)
+            {
+                m_browseClientSample.BrowseWithOptions();
+            }
+        }
+
+        private void BrowseServer_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_browseClientSample != null)
+            {
+                m_browseClientSample.BrowseTheServer();
+            }
+        }
+
+        private void StartBrowseClient_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_browseClientSample == null)
+            {
+                m_browseClientSample = new BrowseClient(m_application);
+                m_browseClientSample.InitializeSession();
+                DisplayListOfCommands();
+            }
+        }
+        #endregion
+
+        #region ExecuteCommand Handlers for Connect
+        private void EndConnectClient_ExecuteCommand(object sender, EventArgs e)
         {
             DisplayListOfCommands();
         }
 
-        private void FindServers_ExecuteCommand(object sender, EventArgs e)
+        private void StartConnectClient_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_discoveryClient != null)
+            if (m_connectClientSample == null)
             {
-                m_discoveryClient.GetEndpoints(Constants.ServerDiscoveryUrl);
+                m_connectClientSample = new ConnectClient(m_application);
             }
+            DisplayListOfCommands();
+        }
+        private void SessionWithDiscovery_ExecuteCommand(object sender, EventArgs e)
+        {
+            m_connectClientSample.CreateSessionUsingDiscovery();
         }
 
-        /// <summary>
-        /// ExeuteCommand handler for GetEndpoints command
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void GetEndpoints_ExecuteCommand(object sender, EventArgs e)
+        private void HttpsWithUserIdentity_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_discoveryClient != null)
-            {
-                m_discoveryClient.GetEndpoints(Constants.SampleServerUrl);
-            }
-           
+           m_connectClientSample.CreateHttpsSessionWithUserId();
         }
 
+        private void HttpsWithoutUserIdentity_ExecuteCommand(object sender, EventArgs e)
+        {
+            m_connectClientSample.CreateHttpsSessionWithAnomymousUserId();
+        }
+
+        private void OpcTcpUserIdentityAndSecurity_ExecuteCommand(object sender, EventArgs e)
+        {
+           m_connectClientSample.CreateOpcTcpSessionWithSecurity();
+        }
+
+        private void OpcTcpUserIdentity_ExecuteCommand(object sender, EventArgs e)
+        {
+            m_connectClientSample.CreateOpcTcpSessionWithUserId();
+        }
+
+        private void OpcTcpWithoutSecurity_ExecuteCommand(object sender, EventArgs e)
+        {
+            m_connectClientSample.CreateOpcTcpSessionWithNoSecurity();
+        }
+        #endregion
+
+        #region ExecuteCommand Handlers for Discovery
         /// <summary>
         /// ExeuteCommand handler for StartDiscoveryClient command
         /// </summary>
@@ -102,12 +326,50 @@ namespace SampleClient.StateMachine
         /// <param name="eventArgs"></param>
         private void StartDiscoveryClient_ExecuteCommand(object sender, EventArgs eventArgs)
         {
-            if (m_discoveryClient == null)
+            if (m_discoveryClientSample == null)
             {
-                m_discoveryClient = new DiscoveryClient(m_application.Configuration);
+                m_discoveryClientSample = new DiscoveryClient(m_application.Configuration);
             }
             DisplayListOfCommands();
         }
+
+        /// <summary>
+        /// ExeuteCommand handler for EndDiscoveryClient
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EndDiscoveryClient_ExecuteCommand(object sender, EventArgs e)
+        {
+            DisplayListOfCommands();
+        }
+
+        /// <summary>
+        /// ExeuteCommand handler for Discovery - FindServers command
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FindServers_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_discoveryClientSample != null)
+            {
+                m_discoveryClientSample.GetEndpoints(Constants.ServerDiscoveryUrl);
+            }
+        }
+
+        /// <summary>
+        /// ExeuteCommand handler for Discovery - GetEndpoints command
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GetEndpoints_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_discoveryClientSample != null)
+            {
+                m_discoveryClientSample.GetEndpoints(Constants.SampleServerUrlOpcTcp);
+            }
+           
+        }
+        #endregion
 
         /// <summary>
         /// Compute next state after the command is applied to current state
@@ -186,11 +448,10 @@ namespace SampleClient.StateMachine
             return new List<CommandDescriptor>();
         }
 
-
         /// <summary>
         /// Computes and prints to console the list of available commands 
         /// </summary>
-        public void DisplayListOfCommands()
+        private void DisplayListOfCommands()
         {
             var commandDescriptors = GetPossibleCommands();
 

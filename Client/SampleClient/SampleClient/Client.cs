@@ -196,7 +196,6 @@ namespace SampleClient
             {
                 if (m_subscription != null)
                 {
-                    m_subscription = null;
                     m_monitoredItems.Clear();
                     m_readWriteMonitoredItem = null;
                     m_eventMonitoredItem = null;
@@ -786,6 +785,7 @@ namespace SampleClient
         }
 
         #endregion
+
         #region Method Call
 
         /// <summary>
@@ -1059,7 +1059,7 @@ namespace SampleClient
         }
         #endregion
 
-        #region Browse
+        #region Browse *
         /// <summary>
         /// The BrowseTheServer method uses the Browse method with two parameters, in this case the browse options will be taken from the Session object.
         /// If there are no browse options on the Session object the browse will be done with the default options.
@@ -1205,7 +1205,7 @@ namespace SampleClient
         }
         #endregion
 
-        #region TranslateBrowsePathToNodeIds
+        #region TranslateBrowsePathToNodeIds *
 
         /// <summary>
         /// Translates the specified browse path to its corresponding NodeId.

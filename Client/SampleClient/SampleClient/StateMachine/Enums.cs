@@ -19,6 +19,9 @@ namespace SampleClient.StateMachine
     {
         Main,
         Discovery,
+        Connect,
+        Browse,
+        Events,
         Terminated
     }
 
@@ -28,6 +31,28 @@ namespace SampleClient.StateMachine
         GetEndpoints,
         FindServers,
         EndDiscoveryClient,
+
+        StartConnectClient,
+        OpcTcpWithoutSecurity,
+        OpcTcpUserIdentity,
+        OpcTcpUserIdentityAndSecurity,
+        HttpsWithoutUserIdentity,
+        HttpsWithUserIdentity,
+        SessionWithDiscovery,
+        EndConnectClient,
+
+        StartBrowse,
+        BrowseServer,
+        BrowseServerWithOptions,
+        Translate,
+        TranslateMultiple,
+        EndBrowse,
+
+        StartEvents,
+        CreateEventMonitorItem,
+        CreateEventMonitorItemWithFilter,
+        EndEvents,
+
         Exit
     }
 

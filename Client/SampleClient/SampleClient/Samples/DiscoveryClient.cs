@@ -11,10 +11,10 @@
 using System;
 using Softing.Opc.Ua;
 
-namespace SampleClient
+namespace SampleClient.Samples
 {
     /// <summary>
-    /// Sample Cleint class that provides discovery functionality
+    /// Sample Client class that provides discovery functionality
     /// </summary>
     public class DiscoveryClient
     {
@@ -39,7 +39,7 @@ namespace SampleClient
         {
             try
             {
-                Console.WriteLine(String.Format("Discovering all available servers and thier endpoints from {0}...\r\n", discoveryUrl));
+                Console.WriteLine("Discovering all available servers and thier endpoints from {0}...\r\n", discoveryUrl);
 
                 //initialize the discovery service
                 DiscoveryService discoveryService = new DiscoveryService(m_applicationConfiguration);
@@ -58,16 +58,16 @@ namespace SampleClient
 
                     foreach (var endpointDescription in endpoins)
                     {
-                        Console.WriteLine(String.Format("       {0} - {1} - {2}", 
+                        Console.WriteLine("       {0} - {1} - {2}", 
                             endpointDescription.EndpointUrl, 
                             endpointDescription.SecurityMode,
-                            endpointDescription.SecurityPolicy));
+                            endpointDescription.SecurityPolicy);
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(String.Format("DiscoverServers Error : {0}.", e.Message));
+                Console.WriteLine("DiscoverServers Error : {0}.", e.Message);
             }
         }
 
@@ -79,7 +79,7 @@ namespace SampleClient
         {
             try
             {
-                Console.WriteLine(String.Format("Discovering available endpoints from {0}...\r\n", serverUrl));
+                Console.WriteLine("Discovering available endpoints from {0}...\r\n", serverUrl);
 
                 //initialize the discovery service
                 DiscoveryService discoveryService = new DiscoveryService(m_applicationConfiguration);
@@ -87,19 +87,19 @@ namespace SampleClient
                 // This method will return all the server endpoints by invoking the GetEndpoints service.
                 var endpoints = discoveryService.GetEndpoints(serverUrl);
 
-                Console.WriteLine(String.Format("GetEndpoints returned {0} endpoints:", endpoints.Count));
+                Console.WriteLine("GetEndpoints returned {0} endpoints:", endpoints.Count);
 
                 foreach (var endpointDescription in endpoints)
                 {
-                    Console.WriteLine(String.Format(" {0} - {1} - {2}",
+                    Console.WriteLine(" {0} - {1} - {2}",
                         endpointDescription.EndpointUrl,
                         endpointDescription.SecurityMode,
-                        endpointDescription.SecurityPolicy));
+                        endpointDescription.SecurityPolicy);
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(String.Format("GetEndpoints Error : {0}.", e.Message));
+                Console.WriteLine("GetEndpoints Error : {0}.", e.Message);
             }
         }
     }

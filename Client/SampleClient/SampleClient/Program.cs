@@ -21,14 +21,6 @@ namespace SampleClient
     {
         private const string ConfigFileName = "SampleClient.config";
 
-        private readonly Dictionary<StateTransition, State> m_transitions;
-        private readonly Dictionary<State, IList<CommandDescriptor>> m_processStateCommands;
-        public State CurrentState { get; private set; }
-
-
-
-
-
         #region Commands
         private const string m_exitCommand = "x";
         private const string m_createCommand = "c";
@@ -67,7 +59,6 @@ namespace SampleClient
             }
 
             Process process = new Process(application);
-            process.DisplayListOfCommands();
             while (process.CurrentState != State.Terminated)
             {
                 // Read commands
