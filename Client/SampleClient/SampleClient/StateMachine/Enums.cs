@@ -22,6 +22,7 @@ namespace SampleClient.StateMachine
         Connect,
         Browse,
         Events,
+        History,
         Terminated
     }
 
@@ -52,6 +53,12 @@ namespace SampleClient.StateMachine
         CreateEventMonitorItem,
         CreateEventMonitorItemWithFilter,
         EndEvents,
+
+        StartHistory, 
+        HistoryReadRaw,
+        HistoryReadAtTime,
+        HistoryReadProcessed,
+        EndHistory,
 
         Exit
     }

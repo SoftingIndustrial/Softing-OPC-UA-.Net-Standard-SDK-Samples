@@ -509,7 +509,7 @@ namespace SampleClient
         }
         #endregion
 
-        #region Event Monitored Items
+        #region Event Monitored Items *
         /// <summary>
         /// Creates the event monitored item.
         /// </summary>

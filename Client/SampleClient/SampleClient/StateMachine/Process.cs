@@ -30,7 +30,7 @@ namespace SampleClient.StateMachine
         private ConnectClient m_connectClientSample;
         private BrowseClient m_browseClientSample;
         private EventsClient m_eventsClient;
-
+        private HistoryClient m_historyClient;
         /// <summary>
         /// create new instance of Process
         /// </summary>
@@ -47,6 +47,22 @@ namespace SampleClient.StateMachine
             InitializeBrowseTransitions();
             InitializeEventsTransitions();
 
+            //commands for history
+            StateTransition startHistory = new StateTransition(State.Main, Command.StartHistory, "h", "Enter Read History Mode");
+            startHistory.ExecuteCommand += StartHistory_ExecuteCommand;
+            m_transitions.Add(startHistory, State.History);
+            StateTransition historyReadRaw = new StateTransition(State.History, Command.HistoryReadRaw, "r", "History read raw");
+            historyReadRaw.ExecuteCommand += HistoryReadRaw_ExecuteCommand;
+            m_transitions.Add(historyReadRaw, State.History);
+            StateTransition historyReadAtTime = new StateTransition(State.History, Command.HistoryReadAtTime, "t", "History read at time");
+            historyReadAtTime.ExecuteCommand += HistoryReadAtTime_ExecuteCommand;
+            m_transitions.Add(historyReadAtTime, State.History);
+            StateTransition historyReadProcessed = new StateTransition(State.History, Command.HistoryReadProcessed, "p", "History read processed");
+            historyReadProcessed.ExecuteCommand += HistoryReadProcessed_ExecuteCommand;
+            m_transitions.Add(historyReadProcessed, State.History);
+            StateTransition endHistory = new StateTransition(State.History, Command.EndHistory, "a", "Abandon Read History Mode");
+            endHistory.ExecuteCommand += EndHistory_ExecuteCommand;
+            m_transitions.Add(endHistory, State.Main);
 
             //add here all exit commands
             StateTransition exit = new StateTransition(State.Main, Command.Exit, "x", "Exit Client Application");
@@ -58,6 +74,8 @@ namespace SampleClient.StateMachine
             exit = new StateTransition(State.Connect, Command.Exit, "x", "Exit Client Application");
             m_transitions.Add(exit, State.Terminated);
             exit = new StateTransition(State.Events, Command.Exit, "x", "Exit Client Application");
+            m_transitions.Add(exit, State.Terminated);
+            exit = new StateTransition(State.History, Command.Exit, "x", "Exit Client Application");
             m_transitions.Add(exit, State.Terminated);
 
 
@@ -72,6 +90,48 @@ namespace SampleClient.StateMachine
             }
 
             DisplayListOfCommands();
+        }
+
+        private void EndHistory_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_historyClient != null)
+            {
+                m_historyClient.DisconnectSession();
+                DisplayListOfCommands();
+            }
+        }
+
+        private void HistoryReadProcessed_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_historyClient != null)
+            {
+                m_historyClient.HistoryReadProcessed();
+            }
+        }
+
+        private void HistoryReadAtTime_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_historyClient != null)
+            {
+                m_historyClient.HistoryReadAtTime();
+            }
+        }
+
+        private void HistoryReadRaw_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_historyClient != null)
+            {
+                m_historyClient.HistoryReadRaw();
+            }
+        }
+
+        private void StartHistory_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_historyClient == null)
+            {
+                m_historyClient = new HistoryClient(m_application);
+                DisplayListOfCommands();
+            }
         }
 
         private void InitializeEventsTransitions()

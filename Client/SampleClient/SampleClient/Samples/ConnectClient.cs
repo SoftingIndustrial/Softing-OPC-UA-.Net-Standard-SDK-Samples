@@ -23,6 +23,10 @@ namespace SampleClient.Samples
     {
         private readonly UaApplication m_application;
 
+        /// <summary>
+        /// Create new instance of ConnectClient
+        /// </summary>
+        /// <param name="application"></param>
         public ConnectClient(UaApplication application)
         {
             m_application = application;

@@ -7,6 +7,7 @@
  * http://www.softing.com/LicenseSIA.pdf
  *  
  * ======================================================================*/
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,7 +33,7 @@ namespace SampleClient.Samples
         #region Constructor
 
         /// <summary>
-        /// Create new instance of BrowseClientSample
+        /// Create new instance of BrowseClient
         /// </summary>
         /// <param name="application"></param>
         public BrowseClient(UaApplication application) 
