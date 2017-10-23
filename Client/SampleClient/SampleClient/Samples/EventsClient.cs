@@ -45,18 +45,6 @@ namespace SampleClient.Samples
         #endregion
 
         #region Initialize & DisconnectSession
-
-        /// <summary>
-        /// Initialize session and subscription objects
-        /// </summary>
-        public void Initialize()
-        {
-            
-
-            
-        }
-
-
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
@@ -94,6 +82,7 @@ namespace SampleClient.Samples
         }
         #endregion
 
+        #region Event Monitored Item Methods
         /// <summary>
         /// Creates the event monitored item.
         /// </summary>
@@ -209,7 +198,9 @@ namespace SampleClient.Samples
                 }
             }
         }
+        #endregion
 
+        #region Event Handlers
         /// <summary>
         /// Handles the Notification event of the eventMonitoredItem.
         /// </summary>
@@ -231,5 +222,6 @@ namespace SampleClient.Samples
                 Console.WriteLine(displayNotification);
             }
         }
+        #endregion
     }
 }

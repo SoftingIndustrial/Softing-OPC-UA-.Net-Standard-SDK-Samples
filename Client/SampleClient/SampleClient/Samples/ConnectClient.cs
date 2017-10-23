@@ -21,8 +21,11 @@ namespace SampleClient.Samples
     /// </summary>
     public class ConnectClient
     {
+        #region Private Fields
         private readonly UaApplication m_application;
+        #endregion
 
+        #region Constructor
         /// <summary>
         /// Create new instance of ConnectClient
         /// </summary>
@@ -31,8 +34,9 @@ namespace SampleClient.Samples
         {
             m_application = application;
         }
-
-
+        #endregion
+        
+        #region Connect Methods
         /// <summary>
         /// Creates and connects a session on opc.tcp protocol with no security and anonymous user identity.
         /// </summary>
@@ -132,9 +136,9 @@ namespace SampleClient.Samples
                 if (selectedEndpoint != null)
                 {
                     // create the session object.
-                    using (ClientSession session = CreateSession("UaDiscoverySession",Constants.SampleServerUrlOpcTcp,
+                    using (ClientSession session = CreateSession("UaDiscoverySession", Constants.SampleServerUrlOpcTcp,
                         selectedEndpoint.SecurityMode,
-                        (SecurityPolicy) Enum.Parse(typeof(SecurityPolicy), 
+                        (SecurityPolicy)Enum.Parse(typeof(SecurityPolicy),
                         selectedEndpoint.SecurityPolicy),
                         selectedEndpoint.Encoding[0],
                         new UserIdentity()))
@@ -194,6 +198,7 @@ namespace SampleClient.Samples
             {
                 Console.WriteLine("ConnectTest Error: {0}", e.Message);
             }
-        }
+        } 
+        #endregion
     }
 }

@@ -18,9 +18,11 @@ namespace SampleClient.Samples
     /// </summary>
     public class DiscoveryClient
     {
-        private readonly ApplicationConfigurationEx m_applicationConfiguration;
+        #region Private Fields
+        private readonly ApplicationConfigurationEx m_applicationConfiguration; 
+        #endregion
         
-
+        #region Constructor
         /// <summary>
         /// Create new instance of DiscoveryClient
         /// </summary>
@@ -30,7 +32,9 @@ namespace SampleClient.Samples
             m_applicationConfiguration = applicationConfiguration;
         }
 
+        #endregion
 
+        #region Discover & GetEndpoints Methods
         /// <summary>
         /// Displays all registered server applications and their available endpoints.
         /// </summary>
@@ -58,8 +62,8 @@ namespace SampleClient.Samples
 
                     foreach (var endpointDescription in endpoins)
                     {
-                        Console.WriteLine("       {0} - {1} - {2}", 
-                            endpointDescription.EndpointUrl, 
+                        Console.WriteLine("       {0} - {1} - {2}",
+                            endpointDescription.EndpointUrl,
                             endpointDescription.SecurityMode,
                             endpointDescription.SecurityPolicy);
                     }
@@ -101,6 +105,7 @@ namespace SampleClient.Samples
             {
                 Console.WriteLine("GetEndpoints Error : {0}.", e.Message);
             }
-        }
+        } 
+        #endregion
     }
 }
