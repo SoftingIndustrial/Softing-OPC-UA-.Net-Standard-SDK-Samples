@@ -30,6 +30,8 @@
     <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
     be used for easy debugging purposes ONLY and turned off for production deployments! -->
     <AutoAcceptUntrustedCertificates>false</AutoAcceptUntrustedCertificates>
+    <RejectSHA1SignedCertificates>true</RejectSHA1SignedCertificates>
+    <MinimumCertificateKeySize>2048</MinimumCertificateKeySize>
   </SecurityConfiguration>
   <TransportConfigurations></TransportConfigurations>
   <TransportQuotas>
@@ -45,7 +47,7 @@
   <ServerConfiguration>
     <BaseAddresses>
       <ua:String>opc.tcp://localhost:62549/SampleServer</ua:String>
-      <ua:String>https://localhost:62550/SampleServer/</ua:String>
+      <!--<ua:String>https://localhost:62550/SampleServer/</ua:String>-->
     </BaseAddresses>
     <SecurityPolicies>
       <ServerSecurityPolicy>
@@ -144,7 +146,6 @@
     <MaxRegistrationInterval>30000</MaxRegistrationInterval>
     <NodeManagerSaveFile>SampleServer.nodes.xml</NodeManagerSaveFile>
   </ServerConfiguration>
-
   <TraceConfiguration>
     <OutputFilePath>%CommonApplicationData%\Softing\SampleServer\logs\SampleServer.log</OutputFilePath>
     <DeleteOnLoad>true</DeleteOnLoad>
