@@ -7,11 +7,7 @@
  * http://www.softing.com/LicenseSIA.pdf
  *  
  * ======================================================================*/
-
-
-using System;
-using System.Collections.Generic;
-using System.Text;
+ 
 
 namespace SampleClient.StateMachine
 {

@@ -48,7 +48,7 @@ namespace SampleClient.StateMachine
             InitializeEventsTransitions();
 
             //commands for history
-            StateTransition startHistory = new StateTransition(State.Main, Command.StartHistory, "h", "Enter Read History Mode");
+            StateTransition startHistory = new StateTransition(State.Main, Command.StartHistory, "h", "Enter Read History Menu");
             startHistory.ExecuteCommand += StartHistory_ExecuteCommand;
             m_transitions.Add(startHistory, State.History);
             StateTransition historyReadRaw = new StateTransition(State.History, Command.HistoryReadRaw, "r", "History read raw");
@@ -60,7 +60,7 @@ namespace SampleClient.StateMachine
             StateTransition historyReadProcessed = new StateTransition(State.History, Command.HistoryReadProcessed, "p", "History read processed");
             historyReadProcessed.ExecuteCommand += HistoryReadProcessed_ExecuteCommand;
             m_transitions.Add(historyReadProcessed, State.History);
-            StateTransition endHistory = new StateTransition(State.History, Command.EndHistory, "a", "Abandon Read History Mode");
+            StateTransition endHistory = new StateTransition(State.History, Command.EndHistory, "a", "Abandon Read History Menu");
             endHistory.ExecuteCommand += EndHistory_ExecuteCommand;
             m_transitions.Add(endHistory, State.Main);
 
@@ -137,7 +137,7 @@ namespace SampleClient.StateMachine
         private void InitializeEventsTransitions()
         {
             //commaands for events
-            StateTransition startEventsClient = new StateTransition(State.Main, Command.StartEvents, "e", "Enter Events Mode");
+            StateTransition startEventsClient = new StateTransition(State.Main, Command.StartEvents, "e", "Enter Events Menu");
             startEventsClient.ExecuteCommand += StartEventsClient_ExecuteCommand;
             m_transitions.Add(startEventsClient, State.Events);
             StateTransition createEventMonitorItem =
@@ -149,7 +149,7 @@ namespace SampleClient.StateMachine
                     "Create and set event monitored item filter");
             createEventMonitorItemWithFilter.ExecuteCommand += CreateEventMonitorItemWithFilter_ExecuteCommand;
             m_transitions.Add(createEventMonitorItemWithFilter, State.Events);
-            StateTransition endEvents = new StateTransition(State.Events, Command.EndEvents, "a", "Abandon Events Mode");
+            StateTransition endEvents = new StateTransition(State.Events, Command.EndEvents, "a", "Abandon Events Menu");
             endEvents.ExecuteCommand += EndEvents_ExecuteCommand;
             m_transitions.Add(endEvents, State.Main);
         }
@@ -160,10 +160,10 @@ namespace SampleClient.StateMachine
         private void InitializeBrowseTransitions()
         {
             //commAands for browse
-            StateTransition startBrowseClient = new StateTransition(State.Main, Command.StartBrowse, "b", "Enter Browse Mode");
+            StateTransition startBrowseClient = new StateTransition(State.Main, Command.StartBrowse, "b", "Enter Browse Menu");
             startBrowseClient.ExecuteCommand += StartBrowseClient_ExecuteCommand;
             m_transitions.Add(startBrowseClient, State.Browse);
-            StateTransition browseServer = new StateTransition(State.Browse, Command.BrowseServer, "b", "Browse server");
+            StateTransition browseServer = new StateTransition(State.Browse, Command.BrowseServer, "s", "Browse server");
             browseServer.ExecuteCommand += BrowseServer_ExecuteCommand;
             m_transitions.Add(browseServer, State.Browse);
             StateTransition browseServerWithOptions =
@@ -171,14 +171,14 @@ namespace SampleClient.StateMachine
             browseServerWithOptions.ExecuteCommand += BrowseServerWithOptions_ExecuteCommand;
             m_transitions.Add(browseServerWithOptions, State.Browse);
             StateTransition translate =
-                new StateTransition(State.Browse, Command.Translate, "t", "Translate BrowsePath to NodeIds");
+                new StateTransition(State.Browse, Command.Translate, "t", "Translate BrowsePaths to NodeIds");
             translate.ExecuteCommand += Translate_ExecuteCommand;
             m_transitions.Add(translate, State.Browse);
             StateTransition translateMultiple =
                 new StateTransition(State.Browse, Command.TranslateMultiple, "m", "Translate multiple Browse Paths");
             translateMultiple.ExecuteCommand += TranslateMultiple_ExecuteCommand;
             m_transitions.Add(translateMultiple, State.Browse);
-            StateTransition endBrowseClient = new StateTransition(State.Browse, Command.EndBrowse, "a", "Abandon Browse Mode");
+            StateTransition endBrowseClient = new StateTransition(State.Browse, Command.EndBrowse, "b", "Back to Main Menu");
             endBrowseClient.ExecuteCommand += EndBrowseClient_ExecuteCommand;
             m_transitions.Add(endBrowseClient, State.Main);
         }
@@ -190,7 +190,7 @@ namespace SampleClient.StateMachine
         {
             //commands for connect
             StateTransition startConnectClient =
-                new StateTransition(State.Main, Command.StartConnectClient, "c", "Enter Connect Mode");
+                new StateTransition(State.Main, Command.StartConnectClient, "c", "Enter Connect Menu");
             startConnectClient.ExecuteCommand += StartConnectClient_ExecuteCommand;
             m_transitions.Add(startConnectClient, State.Connect);
             StateTransition opcTcpWithoutSecurity = new StateTransition(State.Connect, Command.OpcTcpWithoutSecurity, "1",
@@ -205,20 +205,20 @@ namespace SampleClient.StateMachine
                 Command.OpcTcpUserIdentityAndSecurity, "3", "Create opc.tcp session with security and user identity");
             opcTcpUserIdentityAndSecurity.ExecuteCommand += OpcTcpUserIdentityAndSecurity_ExecuteCommand;
             m_transitions.Add(opcTcpUserIdentityAndSecurity, State.Connect);
-            StateTransition httpsWithoutUserIdentity = new StateTransition(State.Connect, Command.HttpsWithoutUserIdentity, "4",
-                "Create https session without user identity");
-            httpsWithoutUserIdentity.ExecuteCommand += HttpsWithoutUserIdentity_ExecuteCommand;
-            m_transitions.Add(httpsWithoutUserIdentity, State.Connect);
-            StateTransition httpsWithUserIdentity = new StateTransition(State.Connect, Command.HttpsWithUserIdentity, "5",
-                "Create https session with user identity");
-            httpsWithUserIdentity.ExecuteCommand += HttpsWithUserIdentity_ExecuteCommand;
-            m_transitions.Add(httpsWithUserIdentity, State.Connect);
-            StateTransition sessionWithDiscovery = new StateTransition(State.Connect, Command.SessionWithDiscovery, "6",
+            //StateTransition httpsWithoutUserIdentity = new StateTransition(State.Connect, Command.HttpsWithoutUserIdentity, "4",
+            //    "Create https session without user identity");
+            //httpsWithoutUserIdentity.ExecuteCommand += HttpsWithoutUserIdentity_ExecuteCommand;
+            //m_transitions.Add(httpsWithoutUserIdentity, State.Connect);
+            //StateTransition httpsWithUserIdentity = new StateTransition(State.Connect, Command.HttpsWithUserIdentity, "5",
+            //    "Create https session with user identity");
+            //httpsWithUserIdentity.ExecuteCommand += HttpsWithUserIdentity_ExecuteCommand;
+            //m_transitions.Add(httpsWithUserIdentity, State.Connect);
+            StateTransition sessionWithDiscovery = new StateTransition(State.Connect, Command.SessionWithDiscovery, "4",
                 "Create session using discovery process");
             sessionWithDiscovery.ExecuteCommand += SessionWithDiscovery_ExecuteCommand;
             m_transitions.Add(sessionWithDiscovery, State.Connect);
             StateTransition endConnectClient =
-                new StateTransition(State.Connect, Command.EndConnectClient, "a", "Abandon Connect Mode");
+                new StateTransition(State.Connect, Command.EndConnectClient, "b", "Back to Main Menu");
             endConnectClient.ExecuteCommand += EndConnectClient_ExecuteCommand;
             m_transitions.Add(endConnectClient, State.Main);
         }
@@ -230,17 +230,17 @@ namespace SampleClient.StateMachine
         {
             //Commands for discovery
             StateTransition startDiscoveryClient =
-                new StateTransition(State.Main, Command.StartDiscoveryClient, "d", "Enter Discovery Mode");
+                new StateTransition(State.Main, Command.StartDiscoveryClient, "d", "Enter Discovery Menu");
             startDiscoveryClient.ExecuteCommand += StartDiscoveryClient_ExecuteCommand;
             m_transitions.Add(startDiscoveryClient, State.Discovery);
-            StateTransition getEndpoints = new StateTransition(State.Discovery, Command.GetEndpoints, "e", "Get Endpooints");
+            StateTransition getEndpoints = new StateTransition(State.Discovery, Command.GetEndpoints, "e", "Find Endpooints for " + Constants.SampleServerUrlOpcTcp);
             getEndpoints.ExecuteCommand += GetEndpoints_ExecuteCommand;
             m_transitions.Add(getEndpoints, State.Discovery);
-            StateTransition findServers = new StateTransition(State.Discovery, Command.FindServers, "f", "Find Servers");
+            StateTransition findServers = new StateTransition(State.Discovery, Command.FindServers, "s", "Find Servers");
             findServers.ExecuteCommand += FindServers_ExecuteCommand;
             m_transitions.Add(findServers, State.Discovery);
             StateTransition endDiscoveryClient =
-                new StateTransition(State.Discovery, Command.EndDiscoveryClient, "a", "Abandon Discovery Mode");
+                new StateTransition(State.Discovery, Command.EndDiscoveryClient, "b", "Back to Main Menu");
             endDiscoveryClient.ExecuteCommand += EndDiscoveryClient_ExecuteCommand;
             m_transitions.Add(endDiscoveryClient, State.Main);
         }
@@ -412,7 +412,7 @@ namespace SampleClient.StateMachine
         {
             if (m_discoveryClientSample != null)
             {
-                m_discoveryClientSample.GetEndpoints(Constants.ServerDiscoveryUrl);
+                m_discoveryClientSample.DiscoverServers(Constants.ServerDiscoveryUrl);
             }
         }
 

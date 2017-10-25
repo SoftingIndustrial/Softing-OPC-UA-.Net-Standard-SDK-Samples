@@ -82,7 +82,7 @@ namespace SampleClient.Samples
             {
                 string value = results[i].Value == null ? "NULL" : results[i].Value.ToString();
                 Console.WriteLine(
-                    "[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r              StatusCode: {4} HistoryInfo: {5}",
+                    "[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r\t\tStatusCode: {4} HistoryInfo: {5}",
                     i, value, results[i].ServerTimestamp, results[i].SourceTimestamp, results[i].StatusCode,
                     results[i].StatusCode.AggregateBits);
             }
@@ -128,7 +128,7 @@ namespace SampleClient.Samples
             {
                 string value = results[i].Value == null ? "NULL" : results[i].Value.ToString();
                 Console.WriteLine(
-                    "[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r              StatusCode: {4} HistoryInfo: {5}",
+                    "[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r\t\tStatusCode: {4} HistoryInfo: {5}",
                     i, value, results[i].ServerTimestamp, results[i].SourceTimestamp, results[i].StatusCode,
                     results[i].StatusCode.AggregateBits);
             }
@@ -176,7 +176,7 @@ namespace SampleClient.Samples
             {
                 string value = results[i].Value == null ? "NULL" : results[i].Value.ToString();
                 Console.WriteLine(
-                    "[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r              StatusCode: {4} HistoryInfo: {5}",
+                    "[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r\t\tStatusCode: {4} HistoryInfo: {5}",
                     i, value, results[i].ServerTimestamp, results[i].SourceTimestamp, results[i].StatusCode,
                     results[i].StatusCode.AggregateBits);
             }
@@ -198,8 +198,10 @@ namespace SampleClient.Samples
 
             try
             {
+                //connect session
                 m_session.Connect(false, true);
 
+                //add handler for HistoryContinuationPointReached event
                 m_session.HistoryContinuationPointReached += HistoryContinuationPointReached;
                 Console.WriteLine("Session is connected.");
             }
@@ -217,22 +219,22 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                Console.WriteLine("Session is not created, please use \"c\" command");
                 return;
             }
 
             try
             {
+                m_session.HistoryContinuationPointReached -= HistoryContinuationPointReached;
+
                 m_session.Disconnect(true);
+                m_session.Dispose();
+                m_session = null;
                 Console.WriteLine("Session is disconnected.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
             }
-
-            m_session.Dispose();
-            m_session = null;
         }
         #endregion
 

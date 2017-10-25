@@ -30,8 +30,8 @@
     <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
     be used for easy debugging purposes ONLY and turned off for production deployments! -->
     <AutoAcceptUntrustedCertificates>false</AutoAcceptUntrustedCertificates>
-    <RejectSHA1SignedCertificates>true</RejectSHA1SignedCertificates>
-    <MinimumCertificateKeySize>2048</MinimumCertificateKeySize>
+    <RejectSHA1SignedCertificates>false</RejectSHA1SignedCertificates>
+    <MinimumCertificateKeySize>1024</MinimumCertificateKeySize>
   </SecurityConfiguration>
   <TransportConfigurations></TransportConfigurations>
   <TransportQuotas>

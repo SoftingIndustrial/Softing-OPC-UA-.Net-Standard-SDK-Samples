@@ -901,7 +901,7 @@ namespace SampleClient
         }
         #endregion
 
-        #region History Read
+        #region History Read *
         public void HistoryReadRaw()
         {
             if (m_session == null)

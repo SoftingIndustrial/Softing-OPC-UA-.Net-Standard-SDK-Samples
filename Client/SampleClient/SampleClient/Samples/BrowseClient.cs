@@ -18,7 +18,7 @@ using Softing.Opc.Ua.Client;
 namespace SampleClient.Samples
 {
     /// <summary>
-    /// Class tat conainbs sample code for browse & translate path functionality
+    /// Class that conains sample code for browse & translate path functionality
     /// </summary>
     public class BrowseClient
     {
@@ -73,11 +73,10 @@ namespace SampleClient.Samples
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
-        public virtual void DisconnectSession()
+        public void DisconnectSession()
         {
             if (m_session == null)
             {
-                Console.WriteLine("Session is not created, please use \"c\" command");
                 return;
             }
 
@@ -109,7 +108,7 @@ namespace SampleClient.Samples
             try
             {
                 //Using the Browse method with null parameters will return the browse result for the root node.
-                IList<ReferenceDescriptionEx> rootReferenceDescriptions = Browse(null, null);
+                IList<ReferenceDescriptionEx> rootReferenceDescriptions = m_session.Browse(null, null);
                 if (rootReferenceDescriptions != null)
                 {
                     foreach (var rootReferenceDescription in rootReferenceDescriptions)
@@ -118,14 +117,14 @@ namespace SampleClient.Samples
                         if (rootReferenceDescription.BrowseName.Name == "Objects")
                         {
                             NodeId nodeId = ExpandedNodeId.ToNodeId(rootReferenceDescription.NodeId, m_namespaceUris);
-                            var objectReferenceDescriptions = Browse(nodeId, null);
+                            var objectReferenceDescriptions = m_session.Browse(nodeId, null);
                             foreach (var objectRefDescription in objectReferenceDescriptions)
                             {
                                 Console.WriteLine("     -" + objectRefDescription.DisplayName);
                                 if (objectRefDescription.BrowseName.Name == "Server")
                                 {
                                     nodeId = ExpandedNodeId.ToNodeId(objectRefDescription.NodeId, m_namespaceUris);
-                                    var serverReferenceDescriptions = Browse(nodeId, null);
+                                    var serverReferenceDescriptions = m_session.Browse(nodeId, null);
                                     foreach (var serverReferenceDescription in serverReferenceDescriptions)
                                     {
                                         Console.WriteLine("        -" + serverReferenceDescription.DisplayName);
@@ -154,34 +153,30 @@ namespace SampleClient.Samples
             try
             {
                 //Using the Browse method with null parameters will return the browse result for the root node.
-                IList<ReferenceDescriptionEx> rootReferenceDescriptions = BrowseOptions(null, null, null);
+                IList<ReferenceDescriptionEx> rootReferenceDescriptions = m_session.Browse(null, null, null);
                 if (rootReferenceDescriptions != null)
                 {
                     foreach (var rootReferenceDescription in rootReferenceDescriptions)
                     {
-                        Console.WriteLine("  -{0} - [{1}]", rootReferenceDescription.DisplayName,
-                            rootReferenceDescription.ReferenceTypeName);
+                        Console.WriteLine("  -{0} - [{1}]", rootReferenceDescription.DisplayName, rootReferenceDescription.ReferenceTypeName);
                         if (rootReferenceDescription.BrowseName.Name == "Objects")
                         {
-                            IList<ReferenceDescriptionEx> objectReferenceDescriptions =
-                                new List<ReferenceDescriptionEx>();
-                            objectReferenceDescriptions =
-                                BrowseOptions(ExpandedNodeId.ToNodeId(rootReferenceDescription.NodeId, m_namespaceUris),
-                                    options, rootReferenceDescription);
+                            NodeId nodeId = ExpandedNodeId.ToNodeId(rootReferenceDescription.NodeId, m_namespaceUris);
+                            IList<ReferenceDescriptionEx> objectReferenceDescriptions = m_session.Browse(nodeId, options, rootReferenceDescription);
                             foreach (var objectReferenceDescription in objectReferenceDescriptions)
                             {
-                                Console.WriteLine("    -{0} - [{1}]", objectReferenceDescription.DisplayName,
+                                Console.WriteLine("    -{0} - [{1}]", 
+                                    objectReferenceDescription.DisplayName,
                                     objectReferenceDescription.ReferenceTypeName);
+
                                 if (objectReferenceDescription.BrowseName.Name == "Server")
                                 {
-                                    IList<ReferenceDescriptionEx> serverReferenceDescriptions =
-                                        new List<ReferenceDescriptionEx>();
-                                    serverReferenceDescriptions = BrowseOptions(
-                                        ExpandedNodeId.ToNodeId(objectReferenceDescription.NodeId, m_namespaceUris),
-                                        options, objectReferenceDescription);
+                                    nodeId = ExpandedNodeId.ToNodeId(objectReferenceDescription.NodeId, m_namespaceUris);
+                                    IList<ReferenceDescriptionEx> serverReferenceDescriptions = m_session.Browse(nodeId, options, objectReferenceDescription);
                                     foreach (var serverReferenceDescription in serverReferenceDescriptions)
                                     {
-                                        Console.WriteLine("      -{0} - [{1}]", serverReferenceDescription.DisplayName,
+                                        Console.WriteLine("      -{0} - [{1}]", 
+                                            serverReferenceDescription.DisplayName,
                                             serverReferenceDescription.ReferenceTypeName);
                                     }
                                 }
@@ -195,80 +190,25 @@ namespace SampleClient.Samples
                 Console.WriteLine("Browse Error: " + ex.Message);
             }
         }
-
-        /// <summary>
-        /// Browses the specified node id and returns its list of references.
-        /// This method uses browse options set on the Session object
-        /// </summary>
-        private IList<ReferenceDescriptionEx> Browse(NodeId nodeId, object sender)
-        {
-            if (m_session == null)
-            {
-                Console.WriteLine("Session is not created, please use \"c\" command");
-                return new List<ReferenceDescriptionEx>();
-            }
-            IList<ReferenceDescriptionEx> results = null;
-
-            try
-            {
-                results = m_session.Browse(nodeId, sender);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Browse error: " + ex.Message);
-            }
-            return results;
-        }
-
-        /// <summary>
-        /// Browses the specified node id and returns its list of references.
-        /// This method uses browse options as an input parameter.
-        /// </summary>
-        private IList<ReferenceDescriptionEx> BrowseOptions(NodeId nodeId, BrowseDescriptionEx browseOptions,
-            object sender)
-        {
-            if (m_session == null)
-            {
-                Console.WriteLine("Session is not created, please use \"c\" command");
-                return new List<ReferenceDescriptionEx>();
-            }
-            IList<ReferenceDescriptionEx> results = null;
-
-            try
-            {
-                results = m_session.Browse(nodeId, browseOptions, sender);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Browse error: " + ex.Message);
-            }
-            return results;
-        }
         #endregion
 
-        #region TranslateBrowsePathToNodeIds
+        #region Translate Methods
 
         /// <summary>
         /// Translates the specified browse path to its corresponding NodeId.
         /// </summary>
         public void TranslateBrowsePathToNodeIds()
         {
-            if (m_session == null)
-            {
-                Console.WriteLine("Session is not created, please use \"c\" command");
-                return;
-            }
-
             try
             {
-                // define the starting node as the "Objects\Data" node.
-                NodeId startingNode = new NodeId("ns=3;i=10157");
-
+                // define the starting node as the "Objects" node.
+                NodeId startingNode = ObjectIds.ObjectsFolder;
+           
                 // define the BrowsePath to the "Static\Scalar\Int32Value" node.
                 List<QualifiedName> browsePath = new List<QualifiedName>();
-                browsePath.Add(new QualifiedName("Static", 3));
-                browsePath.Add(new QualifiedName("Scalar", 3));
-                browsePath.Add(new QualifiedName("Int32Value", 3));
+                browsePath.Add(new QualifiedName("DataAccess", 3));
+                browsePath.Add(new QualifiedName("Refrigerator", 3));
+                browsePath.Add(new QualifiedName("DoorMotor", 3));
 
                 // invoke the TranslateBrowsePath service.
                 IList<NodeId> translateResults = m_session.TranslateBrowsePathToNodeIds(startingNode, browsePath);
@@ -298,12 +238,6 @@ namespace SampleClient.Samples
         /// </summary>
         public void TranslateBrowsePathsToNodeIds()
         {
-            if (m_session == null)
-            {
-                Console.WriteLine("Session is not created, please use \"c\" command");
-                return;
-            }
-
             try
             {
                 // define the list of requests.
@@ -311,24 +245,22 @@ namespace SampleClient.Samples
 
                 // define the starting node as the "Objects" node.
                 BrowsePathEx browsePath = new BrowsePathEx();
-                browsePath.StartingNode = new NodeId("ns=0;i=85");
+                browsePath.StartingNode = ObjectIds.ObjectsFolder;
 
-                // define the relative browse path to the "Data\Static\Scalar\Int32Value" node.
-                browsePath.RelativePath.Add(new QualifiedName("Data", 3));
-                browsePath.RelativePath.Add(new QualifiedName("Static", 3));
-                browsePath.RelativePath.Add(new QualifiedName("Scalar", 3));
-                browsePath.RelativePath.Add(new QualifiedName("Int32Value", 3));
+                // define the relative browse path to the "DataAccess\Refrigerator\DoorMotor" node.
+                browsePath.RelativePath.Add(new QualifiedName("DataAccess", 3));
+                browsePath.RelativePath.Add(new QualifiedName("Refrigerator", 3));
+                browsePath.RelativePath.Add(new QualifiedName("DoorMotor", 3));
                 browsePaths.Add(browsePath);
 
                 // define the starting node as the "Objects" node.
                 browsePath = new BrowsePathEx();
-                browsePath.StartingNode = new NodeId("ns=0;i=85");
+                browsePath.StartingNode = ObjectIds.ObjectsFolder;
 
-                // define the relative browse path to the "Data\Static\Array\UInt32Value" node.
-                browsePath.RelativePath.Add(new QualifiedName("Data", 3));
-                browsePath.RelativePath.Add(new QualifiedName("Static", 3));
-                browsePath.RelativePath.Add(new QualifiedName("Array", 3));
-                browsePath.RelativePath.Add(new QualifiedName("UInt32Value", 3));
+                // define the relative browse path to the "DataAccess\Refrigerator\LightStatus" node.
+                browsePath.RelativePath.Add(new QualifiedName("DataAccess", 3));
+                browsePath.RelativePath.Add(new QualifiedName("Refrigerator", 3));
+                browsePath.RelativePath.Add(new QualifiedName("LightStatus", 3));
                 browsePaths.Add(browsePath);
 
                 // invoke the TranslateBrowsePathsToNodeIds service.
@@ -336,10 +268,10 @@ namespace SampleClient.Samples
 
                 // display the results.
                 Console.WriteLine("TranslateBrowsePaths returned {0} result(s):", translateResults.Count);
-
+                int i = 0;
                 foreach (BrowsePathResultEx browsePathResult in translateResults)
                 {
-                    Console.Write("    StatusCode = {0} ; Target Nodes = ", browsePathResult.StatusCode);
+                    Console.Write("   {0}\n\r           StatusCode = {1}; Target Nodes = ", browsePaths[i++], browsePathResult.StatusCode);
 
                     foreach (NodeId targetNode in browsePathResult.TargetIds)
                     {
@@ -364,6 +296,7 @@ namespace SampleClient.Samples
         /// </summary>
         private void Session_ContinuationPointReached(object sender, CancelEventArgs e)
         {
+           // Console.WriteLine("Session_ContinuationPointReached: Browse will be canceled...");
             e.Cancel = true;
         }
         #endregion

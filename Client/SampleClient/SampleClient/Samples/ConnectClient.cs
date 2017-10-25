@@ -152,7 +152,9 @@ namespace SampleClient.Samples
                 Console.WriteLine("Error: {0}", e.Message);
             }
         }
+        #endregion
 
+        #region Private Helper Methods
         /// <summary>
         /// Creates and connects an new session with the specified parameters.
         /// </summary>        

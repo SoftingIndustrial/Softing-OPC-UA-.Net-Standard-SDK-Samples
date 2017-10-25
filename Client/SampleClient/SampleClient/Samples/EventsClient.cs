@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Opc.Ua;
 using Softing.Opc.Ua;
 using Softing.Opc.Ua.Client;
@@ -44,44 +45,6 @@ namespace SampleClient.Samples
         }
         #endregion
 
-        #region Initialize & DisconnectSession
-        /// <summary>
-        /// Disconnects the current session.
-        /// </summary>
-        public virtual void DisconnectSession()
-        {
-            if (m_session == null)
-            {
-                Console.WriteLine("Session is not created, please use \"c\" command");
-                return;
-            }
-
-            try
-            {
-
-                if (m_subscription != null)
-                {
-                    m_subscription = null;
-                    m_eventMonitoredItem = null;
-
-                    m_session.DeleteSubscription(m_subscription);
-                    m_subscription = null;
-                    Console.WriteLine("Subscription deleted");
-                }
-
-                m_session.Disconnect(true);
-                Console.WriteLine("Session is disconnected.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
-            }
-
-            m_session.Dispose();
-            m_session = null;
-        }
-        #endregion
-
         #region Event Monitored Item Methods
         /// <summary>
         /// Creates the event monitored item.
@@ -93,15 +56,20 @@ namespace SampleClient.Samples
                 Console.WriteLine("EventMonitoredItem is already created.");
                 return;
             }
-
-            UserIdentity userIdentity = new UserIdentity();
+            
             // create the session object.            
-            m_session = m_application.CreateSession(Constants.SampleServerUrlOpcTcp,
-                MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
+            m_session = m_application.CreateSession(
+                Constants.SampleServerUrlOpcTcp,
+                MessageSecurityMode.None, 
+                SecurityPolicy.None, 
+                MessageEncoding.Binary, 
+                new UserIdentity(), 
+                null);
             m_session.SessionName = SessionName;
 
             try
             {
+                //connect session
                 m_session.Connect(false, true);
                 Console.WriteLine("Session is connected.");
             }
@@ -109,6 +77,7 @@ namespace SampleClient.Samples
             {
                 Console.WriteLine("CreateSession Error: {0}", ex);
             }
+
             //create the subscription
             m_subscription = new ClientSubscription(m_session, SubscriptionName);
 
@@ -134,6 +103,7 @@ namespace SampleClient.Samples
         /// </summary>
         public void ApplyEventMonitoredItemFilter()
         {
+            //chek if events monitored item exists and create it if necessary
             if (m_eventMonitoredItem == null)
             {
                 CreateEventMonitoredItem();
@@ -142,6 +112,7 @@ namespace SampleClient.Samples
             EventFilterEx filter = (EventFilterEx) m_eventMonitoredItem.Filter;
             if (filter != null)
             {
+                //check if filter already applied
                 foreach (var selectOperand in filter.SelectOperandList)
                 {
                     //ObjectTypeIds.BaseObjectType - BrowsePath: Root\Types\ObjectTypes\BaseObjectType\BaseEventType
@@ -176,28 +147,32 @@ namespace SampleClient.Samples
         {
             if (m_eventMonitoredItem != null)
             {
-                try
-                {
-                    m_eventMonitoredItem.EventsReceived -= m_eventMonitoredItem_EventsReceived;
-                    m_eventMonitoredItem.Delete();
-                    m_eventMonitoredItem = null;
-                    Console.WriteLine("Event Monitored Item was disconnected and deleted.");
 
-                    m_session.DeleteSubscription(m_subscription);
-                    m_subscription = null;
-                    Console.WriteLine("Subscription deleted");
+                //detele event monitored item
+                m_eventMonitoredItem.EventsReceived -= m_eventMonitoredItem_EventsReceived;
+                m_eventMonitoredItem.Delete();
+                m_eventMonitoredItem = null;
+                Console.WriteLine("Event Monitored Item was disconnected and deleted.");
+            }
+            try
+            {
+                //delete subscription
+                m_session.DeleteSubscription(m_subscription);
+                m_subscription = null;
+                Console.WriteLine("Subscription deleted");
 
-                    m_session.Disconnect(true);
-                    m_session.Dispose();
-                    m_session = null;
-                    Console.WriteLine("Session is disconnected.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+                //disconnect session
+                m_session.Disconnect(true);
+                m_session.Dispose();
+                m_session = null;
+                Console.WriteLine("Session is disconnected.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
+
         #endregion
 
         #region Event Handlers
@@ -211,12 +186,15 @@ namespace SampleClient.Samples
             foreach (var eventNotification in e.EventNotifications)
             {
                 Console.WriteLine("Event notification received for {0}.\n", eventNotification.MonitoredItem.DisplayName);
-                string displayNotification = string.Empty;
+
+                StringBuilder displayNotification = new StringBuilder();
                 IList<SelectOperandEx> listOfOperands = ((EventFilterEx)m_eventMonitoredItem.Filter).SelectOperandList;
                 for (int i = 0; i < listOfOperands.Count; i++)
                 {
-                    displayNotification += listOfOperands[i].PropertyName.NamespaceIndex + ":" + listOfOperands[i].PropertyName.Name
-                        + " : " + eventNotification.EventFields[i].ToString() + "\n";
+                    displayNotification.AppendFormat("{0}:{1}:{2}\n", 
+                        listOfOperands[i].PropertyName.NamespaceIndex , 
+                        listOfOperands[i].PropertyName.Name,
+                        eventNotification.EventFields[i]);
                 }
 
                 Console.WriteLine(displayNotification);
