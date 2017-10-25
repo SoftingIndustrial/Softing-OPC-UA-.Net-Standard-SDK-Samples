@@ -327,8 +327,19 @@ namespace SampleServer.DataAccess
                 lock (Lock)
                 {
                     m_motorTemperature.Value = GetNewValue(0, 100);
-                    m_motorTemperature.ClearChangeMasks(SystemContext, false);                    
+                    m_motorTemperature.Timestamp = DateTime.UtcNow;
+                    m_motorTemperature.ClearChangeMasks(SystemContext, false);
                 }
+
+                // Report an event at Server level
+
+                string eventMessage = String.Format("Motor temperature changed to {0}", m_motorTemperature.Value);
+                BaseEventState temperatureChangeEvent = new BaseEventState(m_motorTemperature);
+
+                temperatureChangeEvent.Initialize(SystemContext, m_motorTemperature, EventSeverity.Medium,
+                    new LocalizedText(eventMessage));
+
+                Server.ReportEvent(temperatureChangeEvent);
             }
             catch (Exception e)
             {
