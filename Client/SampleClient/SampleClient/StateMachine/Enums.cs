@@ -19,6 +19,8 @@ namespace SampleClient.StateMachine
         Browse,
         Events,
         History,
+        MonitoredItem,
+        Alarms,
         Terminated
     }
 
@@ -56,6 +58,20 @@ namespace SampleClient.StateMachine
         HistoryReadProcessed,
         EndHistory,
 
+        StartMonitoredItem,
+        CreateMonitoredItem,
+        DeleteMonitoredItem,
+        ReadMonitoredItem,
+        WriteMonitoredItem,
+        EndMonitoredItem,
+
+        StartAlarms,
+        RefreshAlarms,
+        AcknowledgeAlarms,
+        AddCommentAlarms,
+        EndAlarms,
+
+        CallMethods,
         Exit
     }
 

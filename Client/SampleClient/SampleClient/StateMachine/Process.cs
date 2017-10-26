@@ -18,7 +18,6 @@ namespace SampleClient.StateMachine
 {
     public class Process
     {
-        private const string SessionNameBrowse = "BrowseClientSample Session";
 
         private readonly Dictionary<StateTransition, State> m_transitions;
         private readonly Dictionary<State, IList<CommandDescriptor>> m_processStateCommands;
@@ -31,38 +30,30 @@ namespace SampleClient.StateMachine
         private BrowseClient m_browseClientSample;
         private EventsClient m_eventsClient;
         private HistoryClient m_historyClient;
+        private MethodCallClient m_methodCallClient;
+        private MonitoredItemClient m_monitoredItemClient;
+        private AlarmsClient m_alarmsClient;
         /// <summary>
         /// create new instance of Process
         /// </summary>
         public Process(UaApplication application)
         {
             m_application = application;
-
             CurrentState = State.Main;
            
             m_transitions = new Dictionary<StateTransition, State>();
 
-            InitializeDiscoveryTransitions();
-            InitializeConnectTransitions();
+            InitializeAlarmsTransitions();
             InitializeBrowseTransitions();
+            InitializeConnectTransitions();
+            InitializeDiscoveryTransitions();
             InitializeEventsTransitions();
+            InitializeHistoryTransitions();
+            InitializeMonitoredItemTransitions();
 
-            //commands for history
-            StateTransition startHistory = new StateTransition(State.Main, Command.StartHistory, "h", "Enter Read History Menu");
-            startHistory.ExecuteCommand += StartHistory_ExecuteCommand;
-            m_transitions.Add(startHistory, State.History);
-            StateTransition historyReadRaw = new StateTransition(State.History, Command.HistoryReadRaw, "r", "History read raw");
-            historyReadRaw.ExecuteCommand += HistoryReadRaw_ExecuteCommand;
-            m_transitions.Add(historyReadRaw, State.History);
-            StateTransition historyReadAtTime = new StateTransition(State.History, Command.HistoryReadAtTime, "t", "History read at time");
-            historyReadAtTime.ExecuteCommand += HistoryReadAtTime_ExecuteCommand;
-            m_transitions.Add(historyReadAtTime, State.History);
-            StateTransition historyReadProcessed = new StateTransition(State.History, Command.HistoryReadProcessed, "p", "History read processed");
-            historyReadProcessed.ExecuteCommand += HistoryReadProcessed_ExecuteCommand;
-            m_transitions.Add(historyReadProcessed, State.History);
-            StateTransition endHistory = new StateTransition(State.History, Command.EndHistory, "a", "Abandon Read History Menu");
-            endHistory.ExecuteCommand += EndHistory_ExecuteCommand;
-            m_transitions.Add(endHistory, State.Main);
+            StateTransition callMethods = new StateTransition(State.Main, Command.CallMethods, "m", "Call Methods on Server");
+            callMethods.ExecuteCommand += CallMethods_ExecuteCommand;
+            m_transitions.Add(callMethods, State.Main);
 
             //add here all exit commands
             StateTransition exit = new StateTransition(State.Main, Command.Exit, "x", "Exit Client Application");
@@ -77,7 +68,10 @@ namespace SampleClient.StateMachine
             m_transitions.Add(exit, State.Terminated);
             exit = new StateTransition(State.History, Command.Exit, "x", "Exit Client Application");
             m_transitions.Add(exit, State.Terminated);
-
+            exit = new StateTransition(State.MonitoredItem, Command.Exit, "x", "Exit Client Application");
+            m_transitions.Add(exit, State.Terminated);
+            exit = new StateTransition(State.Alarms, Command.Exit, "x", "Exit Client Application");
+            m_transitions.Add(exit, State.Terminated);
 
             m_processStateCommands = new Dictionary<State, IList<CommandDescriptor>>();
             foreach (var stateStansition in m_transitions.Keys)
@@ -92,48 +86,134 @@ namespace SampleClient.StateMachine
             DisplayListOfCommands();
         }
 
-        private void EndHistory_ExecuteCommand(object sender, EventArgs e)
+        private void InitializeAlarmsTransitions()
         {
-            if (m_historyClient != null)
+//commands for monitored item
+            StateTransition startAlarms = new StateTransition(State.Main, Command.StartAlarms, "a", "Enter Alarms Menu");
+            startAlarms.ExecuteCommand += StartAlarms_ExecuteCommand;
+            m_transitions.Add(startAlarms, State.Alarms);
+            StateTransition refreshAlarms =
+                new StateTransition(State.Alarms, Command.RefreshAlarms, "r", "Refresh active alarms");
+            refreshAlarms.ExecuteCommand += RefreshAlarms_ExecuteCommand;
+            m_transitions.Add(refreshAlarms, State.Alarms);
+            StateTransition acknowledgeAlarms =
+                new StateTransition(State.Alarms, Command.AcknowledgeAlarms, "a", "Acknowledge alarm");
+            acknowledgeAlarms.ExecuteCommand += AcknowledgeAlarms_ExecuteCommand;
+            m_transitions.Add(acknowledgeAlarms, State.Alarms);
+            StateTransition addCommentAllarms =
+                new StateTransition(State.Alarms, Command.AddCommentAlarms, "c", "Add comment to alarm");
+            addCommentAllarms.ExecuteCommand += AddCommentAlarms_ExecuteCommand;
+            m_transitions.Add(addCommentAllarms, State.Alarms);
+            StateTransition endAlarms = new StateTransition(State.Alarms, Command.EndAlarms, "b", "Back to Main Menu");
+            endAlarms.ExecuteCommand += EndAlarms_ExecuteCommand;
+            m_transitions.Add(endAlarms, State.Main);
+        }
+
+        private void EndAlarms_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_alarmsClient != null)
             {
-                m_historyClient.DisconnectSession();
-                DisplayListOfCommands();
+                m_alarmsClient.DisconnectSession();
             }
         }
 
-        private void HistoryReadProcessed_ExecuteCommand(object sender, EventArgs e)
+        private void AddCommentAlarms_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_historyClient != null)
+            if (m_alarmsClient != null)
             {
-                m_historyClient.HistoryReadProcessed();
+                m_alarmsClient.AddCommentToAlarm();
             }
         }
 
-        private void HistoryReadAtTime_ExecuteCommand(object sender, EventArgs e)
+        private void AcknowledgeAlarms_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_historyClient != null)
+            if (m_alarmsClient != null)
             {
-                m_historyClient.HistoryReadAtTime();
+                m_alarmsClient.AcknowledgeAlarm();
             }
         }
 
-        private void HistoryReadRaw_ExecuteCommand(object sender, EventArgs e)
+        private void RefreshAlarms_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_historyClient != null)
+            if (m_alarmsClient != null)
             {
-                m_historyClient.HistoryReadRaw();
+                m_alarmsClient.ConditionRefresh();
             }
         }
 
-        private void StartHistory_ExecuteCommand(object sender, EventArgs e)
+        private void StartAlarms_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_historyClient == null)
+            if (m_alarmsClient == null)
             {
-                m_historyClient = new HistoryClient(m_application);
-                DisplayListOfCommands();
+                m_alarmsClient = new AlarmsClient(m_application);
             }
+            DisplayListOfCommands();
         }
 
+
+
+        /// <summary>
+        /// Initializes all sub menu transitions for MonitoredItem
+        /// </summary>
+        private void InitializeMonitoredItemTransitions()
+        {
+            //commands for monitored item
+            StateTransition startMonitoredItem =
+                new StateTransition(State.Main, Command.StartMonitoredItem, "i", "Enter MonitoredItem Menu");
+            startMonitoredItem.ExecuteCommand += StartMonitoredItem_ExecuteCommand;
+            m_transitions.Add(startMonitoredItem, State.MonitoredItem);
+            StateTransition createMonitoredItem =
+                new StateTransition(State.MonitoredItem, Command.CreateMonitoredItem, "c", "Create new MonitoredItem");
+            createMonitoredItem.ExecuteCommand += CreateMonitoredItem_ExecuteCommand;
+            m_transitions.Add(createMonitoredItem, State.MonitoredItem);
+            StateTransition deleteMonitoredItem =
+                new StateTransition(State.MonitoredItem, Command.DeleteMonitoredItem, "d", "Delete last MonitoredItem");
+            deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItem_ExecuteCommand; 
+            m_transitions.Add(deleteMonitoredItem, State.MonitoredItem);
+            StateTransition readMonitoredItem =
+                new StateTransition(State.MonitoredItem, Command.ReadMonitoredItem, "r", "Read MonitoredItem");
+            readMonitoredItem.ExecuteCommand += ReadMonitoredItem_ExecuteCommand;
+            m_transitions.Add(readMonitoredItem, State.MonitoredItem);
+            StateTransition writeMonitoredItem =
+                new StateTransition(State.MonitoredItem, Command.WriteMonitoredItem, "w", "Write MonoitoredItem");
+            writeMonitoredItem.ExecuteCommand += WriteMonitoredItem_ExecuteCommand;
+            m_transitions.Add(writeMonitoredItem, State.MonitoredItem);
+            StateTransition endMonitoredItem =
+                new StateTransition(State.MonitoredItem, Command.EndMonitoredItem, "b", "Back to Main Menu");
+            endMonitoredItem.ExecuteCommand += EndMonitoredItem_ExecuteCommand; 
+            m_transitions.Add(endMonitoredItem, State.Main);
+        }
+
+        /// <summary>
+        /// Initializes all sub menu transitions for History
+        /// </summary>
+        private void InitializeHistoryTransitions()
+        {
+            //commands for history
+            StateTransition startHistory =
+                new StateTransition(State.Main, Command.StartHistory, "h", "Enter Read History Menu");
+            startHistory.ExecuteCommand += StartHistory_ExecuteCommand;
+            m_transitions.Add(startHistory, State.History);
+            StateTransition historyReadRaw =
+                new StateTransition(State.History, Command.HistoryReadRaw, "r", "History read raw");
+            historyReadRaw.ExecuteCommand += HistoryReadRaw_ExecuteCommand;
+            m_transitions.Add(historyReadRaw, State.History);
+            StateTransition historyReadAtTime =
+                new StateTransition(State.History, Command.HistoryReadAtTime, "t", "History read at time");
+            historyReadAtTime.ExecuteCommand += HistoryReadAtTime_ExecuteCommand;
+            m_transitions.Add(historyReadAtTime, State.History);
+            StateTransition historyReadProcessed =
+                new StateTransition(State.History, Command.HistoryReadProcessed, "p", "History read processed");
+            historyReadProcessed.ExecuteCommand += HistoryReadProcessed_ExecuteCommand;
+            m_transitions.Add(historyReadProcessed, State.History);
+            StateTransition endHistory =
+                new StateTransition(State.History, Command.EndHistory, "b", "Back to Main Menu");
+            endHistory.ExecuteCommand += EndHistory_ExecuteCommand;
+            m_transitions.Add(endHistory, State.Main);
+        }
+        /// <summary>
+        /// Initializes all sub menu transitions for Events
+        /// </summary>
         private void InitializeEventsTransitions()
         {
             //commaands for events
@@ -141,7 +221,7 @@ namespace SampleClient.StateMachine
             startEventsClient.ExecuteCommand += StartEventsClient_ExecuteCommand;
             m_transitions.Add(startEventsClient, State.Events);
             StateTransition createEventMonitorItem =
-                new StateTransition(State.Events, Command.CreateEventMonitorItem, "e", "Create event monitored item");
+                new StateTransition(State.Events, Command.CreateEventMonitorItem, "c", "Create event monitored item");
             createEventMonitorItem.ExecuteCommand += CreateEventMonitorItem_ExecuteCommand;
             m_transitions.Add(createEventMonitorItem, State.Events);
             StateTransition createEventMonitorItemWithFilter =
@@ -149,7 +229,7 @@ namespace SampleClient.StateMachine
                     "Create and set event monitored item filter");
             createEventMonitorItemWithFilter.ExecuteCommand += CreateEventMonitorItemWithFilter_ExecuteCommand;
             m_transitions.Add(createEventMonitorItemWithFilter, State.Events);
-            StateTransition endEvents = new StateTransition(State.Events, Command.EndEvents, "a", "Abandon Events Menu");
+            StateTransition endEvents = new StateTransition(State.Events, Command.EndEvents, "b", "Back to Main Menu");
             endEvents.ExecuteCommand += EndEvents_ExecuteCommand;
             m_transitions.Add(endEvents, State.Main);
         }
@@ -244,6 +324,122 @@ namespace SampleClient.StateMachine
             endDiscoveryClient.ExecuteCommand += EndDiscoveryClient_ExecuteCommand;
             m_transitions.Add(endDiscoveryClient, State.Main);
         }
+
+        #region ExecuteCommand Hanlder for Method Calls
+        /// <summary>
+        /// Call methods on server
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CallMethods_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_methodCallClient == null)
+            {
+                m_methodCallClient = new MethodCallClient(m_application);
+            }
+
+            //call method 
+            m_methodCallClient.CallMethod();
+            //call async method 
+            m_methodCallClient.AsyncCallMethod();
+        }
+        #endregion
+
+        #region  ExecuteCommand Handlers for MonitoredItem
+        private void EndMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                m_monitoredItemClient.DisconnectSession();
+                DisplayListOfCommands();
+            }
+        }
+
+        private void DeleteMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                m_monitoredItemClient.DeleteMonitoredItem();
+            }
+        }
+
+        private void WriteMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                m_monitoredItemClient.WriteMonitoredItem();
+            }
+        }
+
+        private void ReadMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                m_monitoredItemClient.ReadMonitoredItem();
+            }
+        }
+
+        private void CreateMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                m_monitoredItemClient.CreateMonitoredItem();
+            }
+        }
+
+        private void StartMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient == null)
+            {
+                m_monitoredItemClient = new MonitoredItemClient(m_application);
+            }
+            DisplayListOfCommands();
+        }
+        #endregion
+
+        #region  ExecuteCommand Handlers for History
+        private void EndHistory_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_historyClient != null)
+            {
+                m_historyClient.DisconnectSession();
+                DisplayListOfCommands();
+            }
+        }
+
+        private void HistoryReadProcessed_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_historyClient != null)
+            {
+                m_historyClient.HistoryReadProcessed();
+            }
+        }
+
+        private void HistoryReadAtTime_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_historyClient != null)
+            {
+                m_historyClient.HistoryReadAtTime();
+            }
+        }
+
+        private void HistoryReadRaw_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_historyClient != null)
+            {
+                m_historyClient.HistoryReadRaw();
+            }
+        }
+
+        private void StartHistory_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_historyClient == null)
+            {
+                m_historyClient = new HistoryClient(m_application);
+                DisplayListOfCommands();
+            }
+        }
+        #endregion
 
         #region  ExecuteCommand Handlers for Events
         private void EndEvents_ExecuteCommand(object sender, EventArgs e)
@@ -352,15 +548,15 @@ namespace SampleClient.StateMachine
             m_connectClientSample.CreateSessionUsingDiscovery();
         }
 
-        private void HttpsWithUserIdentity_ExecuteCommand(object sender, EventArgs e)
-        {
-           m_connectClientSample.CreateHttpsSessionWithUserId();
-        }
+        //private void HttpsWithUserIdentity_ExecuteCommand(object sender, EventArgs e)
+        //{
+        //   m_connectClientSample.CreateHttpsSessionWithUserId();
+        //}
 
-        private void HttpsWithoutUserIdentity_ExecuteCommand(object sender, EventArgs e)
-        {
-            m_connectClientSample.CreateHttpsSessionWithAnomymousUserId();
-        }
+        //private void HttpsWithoutUserIdentity_ExecuteCommand(object sender, EventArgs e)
+        //{
+        //    m_connectClientSample.CreateHttpsSessionWithAnomymousUserId();
+        //}
 
         private void OpcTcpUserIdentityAndSecurity_ExecuteCommand(object sender, EventArgs e)
         {
@@ -432,40 +628,6 @@ namespace SampleClient.StateMachine
         #endregion
 
         /// <summary>
-        /// Compute next state after the command is applied to current state
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="nextState"></param>
-        /// <returns></returns>
-        public bool TryGetNextState(Command command, out State nextState)
-        {
-            StateTransition transition = new StateTransition(CurrentState, command);
-            if (!m_transitions.TryGetValue(transition, out nextState))
-            {
-                return false;
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Gets the available StateTransition object for current state and a command 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <returns></returns>
-        private StateTransition GetStateTransitionForCommand(Command command)
-        {
-            foreach (var stateTransition in m_transitions.Keys)
-            {
-                if (stateTransition.CurrentState == CurrentState &&
-                    stateTransition.CommandDescriptor.Command == command)
-                {
-                    return stateTransition;
-                }
-            }
-            return null;
-        }
-
-        /// <summary>
         /// Execute provided command keywork and move to nexr state
         /// </summary>
         /// <param name="commandKeyword"></param>
@@ -495,11 +657,30 @@ namespace SampleClient.StateMachine
             return false;
         }
 
+        #region Process Private Methods
+        /// <summary>
+        /// Gets the available StateTransition object for current state and a command 
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        private StateTransition GetStateTransitionForCommand(Command command)
+        {
+            foreach (var stateTransition in m_transitions.Keys)
+            {
+                if (stateTransition.CurrentState == CurrentState &&
+                    stateTransition.CommandDescriptor.Command == command)
+                {
+                    return stateTransition;
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// Get the list of possible command descriptors for current state
         /// </summary>
         /// <returns></returns>
-        public IList<CommandDescriptor> GetPossibleCommands()
+        private IList<CommandDescriptor> GetPossibleCommands()
         {
             if (m_processStateCommands.ContainsKey(CurrentState))
             {
@@ -520,9 +701,10 @@ namespace SampleClient.StateMachine
 
             foreach (var commandDescriptor in commandDescriptors)
             {
-                commandListText.AppendFormat("{0:2} - {1}\r\n", commandDescriptor.Keyword, commandDescriptor.Description);
+                commandListText.AppendFormat("{0} - {1}\r\n", commandDescriptor.Keyword, commandDescriptor.Description);
             }
             Console.WriteLine(commandListText);
-        }
+        } 
+        #endregion
     }
 }

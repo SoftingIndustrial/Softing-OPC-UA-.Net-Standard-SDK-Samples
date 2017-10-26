@@ -233,7 +233,7 @@ namespace SampleClient
         }
         #endregion
 
-        #region MonitoredItem
+        #region MonitoredItem *
         /// <summary>
         /// Creates a monitoredItem. The monitored item is activated in the constructor if the subscription is active as well.
         /// </summary>
@@ -269,104 +269,6 @@ namespace SampleClient
             }
         }
 
-        /// <summary>
-        /// Invokes the ConditionRefresh method in order to receive all retained conditions
-        /// </summary>
-        public void ConditionRefresh()
-        {
-            try
-            {
-                if (m_session != null && m_alarmsMonitoredItem != null)
-                {
-                    // Clear the local list of alarms
-                    m_retainedAlarms.Clear();
-
-                    // Invoke the ConditionRefresh method on the server passing the sessionId
-                    // After this call the server should send new event notifications for all the retained (active) alarms
-                    IList<object> outputArgs;
-                    m_session.Call(ObjectTypeIds.ConditionType, MethodIds.ConditionType_ConditionRefresh, new List<object>(1) { m_subscription.Id }, out outputArgs);
-
-                    Console.WriteLine("ConditionRefresh method invoked.");
-                }
-                else
-                {
-                    Console.WriteLine("Session not connected or subscription not created!");
-                }
-            }
-            catch (Exception exception)
-            {
-                // Log Error
-                string logMessage = String.Format("ConditionRefresh Error : {0}.", exception.Message);
-                TraceService.Log(TraceSources.User3, "AlarmsClient.ConditionRefresh", exception);
-                Console.WriteLine(logMessage);
-            }
-        }
-
-        /// <summary>
-        /// Allows user to acknowledge alarm
-        /// </summary>
-        public void AcknowledgeAlarm()
-        {
-            try
-            {
-                if (m_session != null && m_subscription != null)
-                {
-                    if (m_retainedAlarms.Count == 0)
-                    {
-                        Console.WriteLine("The list of active alarms is empty!");
-                        return;
-                    }
-
-                    Dictionary<int, NodeId> alarmsList = new Dictionary<int, NodeId>();
-                    int index = 1;
-
-                    // Prompt the user to select the alarm from the list of active alarms
-                    Console.WriteLine("Please select the alarm to acknowledge:");
-
-                    foreach (EventDetails alarmDetails in m_retainedAlarms.Values)
-                    {
-                        Console.WriteLine(String.Format("{0} - Alarm with SourceName = {1}", index, alarmDetails.SourceName));
-
-                        alarmsList[index] = alarmDetails.SourceNode;
-                        index++;
-                    }
-
-                    int selectedIndex = Convert.ToInt32(Console.ReadLine());
-
-                    if (!alarmsList.ContainsKey(selectedIndex))
-                    {
-                        Console.WriteLine("Invalid option.\r\n");
-                        return;
-                    }
-
-                    EventDetails selectedAlarm = m_retainedAlarms[alarmsList[selectedIndex]];
-
-                    Console.Write("Please insert a comment: ");
-                    string comment = Console.ReadLine();
-
-                    // Invoke Acknowledge method
-                    List<object> inputArgs = new List<object>(2);
-                    inputArgs.Add(selectedAlarm.EventId);
-                    inputArgs.Add(new LocalizedText(comment));
-                    IList<object> outputArgs;
-
-                    m_session.Call(selectedAlarm.EventNode, MethodIds.AcknowledgeableConditionType_Acknowledge,
-                                   inputArgs, out outputArgs);
-                    Console.WriteLine(String.Format("Acknowledge request sent for alarm with SourceName = {0}", selectedAlarm.SourceName));
-                }
-                else
-                {
-                    Console.WriteLine("Session not connected!");
-                }
-            }
-            catch (Exception exception)
-            {
-                // Log Error
-                string logMessage = String.Format("AcknowledgeAlarms Error : {0}.", exception.Message);
-                
-                Console.WriteLine(logMessage);
-            }
-        }
         /// <summary>
         /// Handles the Notification event of the Monitoreditem.
         /// </summary>
@@ -629,6 +531,104 @@ namespace SampleClient
         #endregion
 
         #region Alarms
+        /// <summary>
+        /// Invokes the ConditionRefresh method in order to receive all retained conditions
+        /// </summary>
+        public void ConditionRefresh()
+        {
+            try
+            {
+                if (m_session != null && m_alarmsMonitoredItem != null)
+                {
+                    // Clear the local list of alarms
+                    m_retainedAlarms.Clear();
+
+                    // Invoke the ConditionRefresh method on the server passing the sessionId
+                    // After this call the server should send new event notifications for all the retained (active) alarms
+                    IList<object> outputArgs;
+                    m_session.Call(ObjectTypeIds.ConditionType, MethodIds.ConditionType_ConditionRefresh, new List<object>(1) { m_subscription.Id }, out outputArgs);
+
+                    Console.WriteLine("ConditionRefresh method invoked.");
+                }
+                else
+                {
+                    Console.WriteLine("Session not connected or subscription not created!");
+                }
+            }
+            catch (Exception exception)
+            {
+                // Log Error
+                string logMessage = String.Format("ConditionRefresh Error : {0}.", exception.Message);
+                TraceService.Log(TraceSources.User3, "AlarmsClient.ConditionRefresh", exception);
+                Console.WriteLine(logMessage);
+            }
+        }
+
+        /// <summary>
+        /// Allows user to acknowledge alarm
+        /// </summary>
+        public void AcknowledgeAlarm()
+        {
+            try
+            {
+                if (m_session != null && m_subscription != null)
+                {
+                    if (m_retainedAlarms.Count == 0)
+                    {
+                        Console.WriteLine("The list of active alarms is empty!");
+                        return;
+                    }
+
+                    Dictionary<int, NodeId> alarmsList = new Dictionary<int, NodeId>();
+                    int index = 1;
+
+                    // Prompt the user to select the alarm from the list of active alarms
+                    Console.WriteLine("Please select the alarm to acknowledge:");
+
+                    foreach (EventDetails alarmDetails in m_retainedAlarms.Values)
+                    {
+                        Console.WriteLine(String.Format("{0} - Alarm with SourceName = {1}", index, alarmDetails.SourceName));
+
+                        alarmsList[index] = alarmDetails.SourceNode;
+                        index++;
+                    }
+
+                    int selectedIndex = Convert.ToInt32(Console.ReadLine());
+
+                    if (!alarmsList.ContainsKey(selectedIndex))
+                    {
+                        Console.WriteLine("Invalid option.\r\n");
+                        return;
+                    }
+
+                    EventDetails selectedAlarm = m_retainedAlarms[alarmsList[selectedIndex]];
+
+                    Console.Write("Please insert a comment: ");
+                    string comment = Console.ReadLine();
+
+                    // Invoke Acknowledge method
+                    List<object> inputArgs = new List<object>(2);
+                    inputArgs.Add(selectedAlarm.EventId);
+                    inputArgs.Add(new LocalizedText(comment));
+                    IList<object> outputArgs;
+
+                    m_session.Call(selectedAlarm.EventNode, MethodIds.AcknowledgeableConditionType_Acknowledge,
+                                   inputArgs, out outputArgs);
+                    Console.WriteLine(String.Format("Acknowledge request sent for alarm with SourceName = {0}", selectedAlarm.SourceName));
+                }
+                else
+                {
+                    Console.WriteLine("Session not connected!");
+                }
+            }
+            catch (Exception exception)
+            {
+                // Log Error
+                string logMessage = String.Format("AcknowledgeAlarms Error : {0}.", exception.Message);
+
+                Console.WriteLine(logMessage);
+            }
+        }
         public void CreateAlarmsMonitoredItem()
         {
             try
@@ -786,7 +786,7 @@ namespace SampleClient
 
         #endregion
 
-        #region Method Call
+        #region Method Call *
 
         /// <summary>
         /// Call the method.
