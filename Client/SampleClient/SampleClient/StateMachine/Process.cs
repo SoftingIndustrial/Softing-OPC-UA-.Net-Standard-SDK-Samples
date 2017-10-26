@@ -313,7 +313,7 @@ namespace SampleClient.StateMachine
                 new StateTransition(State.Main, Command.StartDiscoveryClient, "d", "Enter Discovery Menu");
             startDiscoveryClient.ExecuteCommand += StartDiscoveryClient_ExecuteCommand;
             m_transitions.Add(startDiscoveryClient, State.Discovery);
-            StateTransition getEndpoints = new StateTransition(State.Discovery, Command.GetEndpoints, "e", "Find Endpooints for " + Constants.SampleServerUrlOpcTcp);
+            StateTransition getEndpoints = new StateTransition(State.Discovery, Command.GetEndpoints, "e", "Find Endpoints for " + Constants.SampleServerUrlOpcTcp);
             getEndpoints.ExecuteCommand += GetEndpoints_ExecuteCommand;
             m_transitions.Add(getEndpoints, State.Discovery);
             StateTransition findServers = new StateTransition(State.Discovery, Command.FindServers, "s", "Find Servers");

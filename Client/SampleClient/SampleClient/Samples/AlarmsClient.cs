@@ -18,7 +18,7 @@ using Softing.Opc.Ua.Client;
 namespace SampleClient.Samples
 {
     /// <summary>
-    /// Class that conains sample code foralarms functionality
+    /// Class that contains sample code for alarms functionality
     /// </summary>
     class AlarmsClient
     {

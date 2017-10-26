@@ -138,8 +138,7 @@ namespace SampleClient.Samples
                     // create the session object.
                     using (ClientSession session = CreateSession("UaDiscoverySession", Constants.SampleServerUrlOpcTcp,
                         selectedEndpoint.SecurityMode,
-                        (SecurityPolicy)Enum.Parse(typeof(SecurityPolicy),
-                        selectedEndpoint.SecurityPolicy),
+                        (SecurityPolicy)Enum.Parse(typeof(SecurityPolicy), selectedEndpoint.SecurityPolicy),
                         selectedEndpoint.Encoding[0],
                         new UserIdentity()))
                     {
