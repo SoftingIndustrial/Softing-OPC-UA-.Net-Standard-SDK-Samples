@@ -43,7 +43,7 @@ namespace SampleClient.Samples
         {
             try
             {
-                Console.WriteLine("Discovering all available servers and thier endpoints from {0}...\r\n", discoveryUrl);
+                Console.WriteLine("Discovering all available servers and their endpoints from {0}...\r\n", discoveryUrl);
 
                 //initialize the discovery service
                 DiscoveryService discoveryService = new DiscoveryService(m_applicationConfiguration);

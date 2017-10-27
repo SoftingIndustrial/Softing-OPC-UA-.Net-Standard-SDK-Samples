@@ -17,7 +17,7 @@ using Softing.Opc.Ua.Client;
 namespace SampleClient.Samples
 {
     /// <summary>
-    /// Class providing support for connect operations with different configuration parametes.
+    /// Class providing support for connect operations with different configuration parameters.
     /// </summary>
     public class ConnectClient
     {

@@ -18,7 +18,7 @@ using Softing.Opc.Ua.Client;
 namespace SampleClient.Samples
 {
     /// <summary>
-    /// Class that conains sample code for browse & translate path functionality
+    /// Class that contains sample code for browse & translate path functionality
     /// </summary>
     public class BrowseClient
     {
@@ -142,7 +142,7 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
-        /// The BrowseWithOptions method uses the Browse method with three parameters, in this case the browse options will be given as a parameer.
+        /// The BrowseWithOptions method uses the Browse method with three parameters, in this case the browse options will be given as a parameter.
         /// A BrowseDescription object is created first, on which browse options can be set, and given as parameter to the Browse method.
         /// In this case any browse options on the Session object will be ignored.
         /// </summary>
@@ -288,7 +288,7 @@ namespace SampleClient.Samples
         }
         #endregion
 
-        #region Event Hanlders
+        #region Event Handlers
         /// <summary>
         /// Handle the ContinuationPointReached event.
         /// This event is raised when a continuation point is reached.

@@ -14,7 +14,7 @@ using System.Text;
 namespace SampleClient.StateMachine
 {
     /// <summary>
-    /// Describes the command, provides a keyworkd and the description of current command
+    /// Describes the command, provides a keyword and the description of current command
     /// </summary>
     public class CommandDescriptor
     {

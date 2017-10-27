@@ -17,7 +17,7 @@ using Softing.Opc.Ua.Client;
 namespace SampleClient.Samples
 {
     /// <summary>
-    /// Class that conains sample code for method call functionality
+    /// Class that contains sample code for method call functionality
     /// </summary>
     class MethodCallClient
     {

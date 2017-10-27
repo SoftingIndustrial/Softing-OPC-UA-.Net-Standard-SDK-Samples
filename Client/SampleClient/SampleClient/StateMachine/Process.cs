@@ -147,6 +147,7 @@ namespace SampleClient.StateMachine
             {
                 m_alarmsClient = new AlarmsClient(m_application);
             }
+            m_alarmsClient.Initialize();
             DisplayListOfCommands();
         }
 
@@ -216,7 +217,7 @@ namespace SampleClient.StateMachine
         /// </summary>
         private void InitializeEventsTransitions()
         {
-            //commaands for events
+            //commands for events
             StateTransition startEventsClient = new StateTransition(State.Main, Command.StartEvents, "e", "Enter Events Menu");
             startEventsClient.ExecuteCommand += StartEventsClient_ExecuteCommand;
             m_transitions.Add(startEventsClient, State.Events);
@@ -325,7 +326,7 @@ namespace SampleClient.StateMachine
             m_transitions.Add(endDiscoveryClient, State.Main);
         }
 
-        #region ExecuteCommand Hanlder for Method Calls
+        #region ExecuteCommand Handler for Method Calls
         /// <summary>
         /// Call methods on server
         /// </summary>
@@ -628,7 +629,7 @@ namespace SampleClient.StateMachine
         #endregion
 
         /// <summary>
-        /// Execute provided command keywork and move to nexr state
+        /// Execute provided command keyword and move to next state
         /// </summary>
         /// <param name="commandKeyword"></param>
         /// <returns>true if command was executed</returns>

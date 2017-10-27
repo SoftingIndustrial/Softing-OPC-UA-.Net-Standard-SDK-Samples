@@ -17,7 +17,7 @@ using Softing.Opc.Ua.Client;
 namespace SampleClient.Samples
 {
     /// <summary>
-    /// Class that conains sample code for MonitoredItem functionality
+    /// Class that contains sample code for MonitoredItem functionality
     /// </summary>
     class MonitoredItemClient
     {

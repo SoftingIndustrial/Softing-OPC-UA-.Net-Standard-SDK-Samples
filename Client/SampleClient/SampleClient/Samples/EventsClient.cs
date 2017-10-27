@@ -103,7 +103,7 @@ namespace SampleClient.Samples
         /// </summary>
         public void ApplyEventMonitoredItemFilter()
         {
-            //chek if events monitored item exists and create it if necessary
+            //check if events monitored item exists and create it if necessary
             if (m_eventMonitoredItem == null)
             {
                 CreateEventMonitoredItem();
@@ -148,7 +148,7 @@ namespace SampleClient.Samples
             if (m_eventMonitoredItem != null)
             {
 
-                //detele event monitored item
+                //delete event monitored item
                 m_eventMonitoredItem.EventsReceived -= m_eventMonitoredItem_EventsReceived;
                 m_eventMonitoredItem.Delete();
                 m_eventMonitoredItem = null;

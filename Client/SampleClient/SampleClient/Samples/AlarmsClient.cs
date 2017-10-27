@@ -54,9 +54,9 @@ namespace SampleClient.Samples
         /// </summary>
         public void ConditionRefresh()
         {
-            if (m_session == null)
+            if (m_alarmsMonitoredItem == null)
             {
-                Initialize();
+                InitializeAlarmsMonitoredItem();
             }
             try
             {
@@ -227,36 +227,42 @@ namespace SampleClient.Samples
         /// <summary>
         /// Initialize session and subscription
         /// </summary>
-        private void Initialize()
+        public void Initialize()
         {
-            // create the session object.            
-            m_session = m_application.CreateSession(
-                Constants.SampleServerUrlOpcTcp,
-                //"opc.tcp://localhost:62550/AlarmsServer",
-                MessageSecurityMode.None,
-                SecurityPolicy.None,
-                MessageEncoding.Binary,
-                new UserIdentity(),
-                null);
-            m_session.SessionName = SessionName;
-
-            try
+            if (m_session == null)
             {
-                //connect session
-                m_session.Connect(false, true);
-                Console.WriteLine("Session is connected.");
+                // create the session object.            
+                m_session = m_application.CreateSession(
+                    Constants.SampleServerUrlOpcTcp,
+                    //"opc.tcp://localhost:62550/AlarmsServer",
+                    MessageSecurityMode.None,
+                    SecurityPolicy.None,
+                    MessageEncoding.Binary,
+                    new UserIdentity(),
+                    null);
+                m_session.SessionName = SessionName;
+
+                try
+                {
+                    //connect session
+                    m_session.Connect(false, true);
+                    Console.WriteLine("Session is connected.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("CreateSession Error: {0}", ex);
+                }
             }
-            catch (Exception ex)
+
+            if (m_subscription == null)
             {
-                Console.WriteLine("CreateSession Error: {0}", ex);
+                //create the subscription
+                m_subscription = new ClientSubscription(m_session, SubscriptionName);
+
+                // set the Publishing interval for this subscription
+                m_subscription.PublishingInterval = 500;
+                Console.WriteLine("Subscription created");
             }
-
-            //create the subscription
-            m_subscription = new ClientSubscription(m_session, SubscriptionName);
-
-            // set the Publishing interval for this subscription
-            m_subscription.PublishingInterval = 500;
-            Console.WriteLine("Subscription created");
 
             InitializeAlarmsMonitoredItem();
         }
@@ -264,12 +270,8 @@ namespace SampleClient.Samples
         /// <summary>
         /// Create a MonitoredItem for the alarms node
         /// </summary>
-        private void InitializeAlarmsMonitoredItem()
+        public void InitializeAlarmsMonitoredItem()
         {
-            if (m_session == null)
-            {
-                Initialize();
-            }
             try
             {
                 // Configure the event filter
@@ -301,9 +303,6 @@ namespace SampleClient.Samples
                 m_alarmsMonitoredItem.EventsReceived += m_alarmsMonitoredItem_EventsReceived;
 
                 Console.WriteLine("New MonitoredItem created for NodeId ({0}).", m_alarmsMonitoredItem.NodeId);
-
-                //trigger all retained conditions 
-                ConditionRefresh();
             }
             catch (Exception exception)
             {
