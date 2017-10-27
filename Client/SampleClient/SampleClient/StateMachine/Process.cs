@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using SampleClient.Samples;
 using Softing.Opc.Ua;
 
@@ -670,10 +671,16 @@ namespace SampleClient.StateMachine
                 m_methodCallClient = new MethodCallClient(m_application);
             }
 
+            m_methodCallClient.InitializeSession();
+            // Task.Delay(2000).Wait();
             //call method 
             m_methodCallClient.CallMethod();
             //call async method 
             m_methodCallClient.AsyncCallMethod();
+
+            //wait and close session
+            Task.Delay(1000).Wait();
+            m_methodCallClient.DisconnectSession();
         }
         #endregion
 

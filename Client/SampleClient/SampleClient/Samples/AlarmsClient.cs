@@ -302,7 +302,7 @@ namespace SampleClient.Samples
 
                 m_alarmsMonitoredItem.EventsReceived += m_alarmsMonitoredItem_EventsReceived;
 
-                Console.WriteLine("New MonitoredItem created for NodeId ({0}).", m_alarmsMonitoredItem.NodeId);
+                Console.WriteLine("Alarms MonitoredItem created for NodeId ({0}).", m_alarmsMonitoredItem.NodeId);
             }
             catch (Exception exception)
             {

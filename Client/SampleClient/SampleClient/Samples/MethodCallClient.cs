@@ -57,7 +57,8 @@ namespace SampleClient.Samples
 
             /*Select the method from the address space*/
             //Browse Path: Root\Objects\Server\Methods
-            NodeId parentObjectId = new NodeId(1, 6);
+            NodeId parentObjectId = new NodeId("ns=6;i=1");
+
             //Browse Path: Root\Objects\Server\Methods\Add
             string methodPath = "Root\\Objects\\Server\\Methods\\Add";
             NodeId methodId = new NodeId("ns=6;s=Add");
@@ -78,17 +79,18 @@ namespace SampleClient.Samples
             try
             {
                 statusCode = m_session.Call(parentObjectId, methodId, inputArguments, out output);
+
+                Console.WriteLine("\nOutput arguments are:");
+                for (int i = 0; i < output.Count; i++)
+                {
+                    Console.WriteLine("output[{0}]= {1}", i, output[i]);
+                }
+                Console.WriteLine(string.Format("\nStatus Code is: {0}\n", statusCode));
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Method call exception: " + ex.Message);
             }
-            Console.WriteLine("\nOutput arguments are:");
-            for (int i = 0; i < output.Count; i++)
-            {
-                Console.WriteLine("output[{0}]= {1}", i, output[i]);
-            }
-            Console.WriteLine(string.Format("\nStatus Code is: {0}\n", statusCode));
         }
 
         /// <summary>
@@ -139,23 +141,26 @@ namespace SampleClient.Samples
         /// </summary>
         public void InitializeSession()
         {
-            UserIdentity userIdentity = new UserIdentity();
-            // create the session object.            
-            m_session = m_application.CreateSession(Constants.SampleServerUrlOpcTcp,
-                MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
-            m_session.SessionName = SessionName;
-
-            try
+            if (m_session == null)
             {
-                m_session.Connect(false, true);
+                UserIdentity userIdentity = new UserIdentity();
+                // create the session object.            
+                m_session = m_application.CreateSession(Constants.SampleServerUrlOpcTcp,
+                    MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
+                m_session.SessionName = SessionName;
 
-                //add handler for CallCompleted event
-                m_session.CallCompleted += Session_CallCompleted;
-                Console.WriteLine("Session is connected.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("CreateSession Error: {0}", ex);
+                try
+                {
+                    m_session.Connect(false, true);
+
+                    //add handler for CallCompleted event
+                    m_session.CallCompleted += Session_CallCompleted;
+                    Console.WriteLine("Session is connected.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("CreateSession Error: {0}", ex);
+                }
             }
         }
 
