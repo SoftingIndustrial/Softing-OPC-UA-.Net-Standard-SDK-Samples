@@ -25,7 +25,6 @@ namespace SampleClient.Samples
         #region Private Fields
         private const string SessionName = "EventsClient Session";
         private const string SubscriptionName = "EventsClient Subscription";
-        private static readonly QualifiedName EventPropertyName = new QualifiedName("FluidLevel", 5);
 
         private readonly UaApplication m_application;
         private ClientSession m_session;
@@ -99,55 +98,12 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
-        /// Creates the event monitored item filter.
-        /// </summary>
-        public void ApplyEventMonitoredItemFilter()
-        {
-            //check if events monitored item exists and create it if necessary
-            if (m_eventMonitoredItem == null)
-            {
-                CreateEventMonitoredItem();
-            }
-
-            EventFilterEx filter = (EventFilterEx) m_eventMonitoredItem.Filter;
-            if (filter != null)
-            {
-                //check if filter already applied
-                foreach (var selectOperand in filter.SelectOperandList)
-                {
-                    //ObjectTypeIds.BaseObjectType - BrowsePath: Root\Types\ObjectTypes\BaseObjectType\BaseEventType
-                    if (selectOperand.EventTypeId == ObjectTypeIds.BaseObjectType &&
-                        selectOperand.PropertyName.Equals(EventPropertyName))
-                    {
-                        Console.WriteLine("Filter is already applied.");
-                        return;
-                    }
-                }
-
-                filter.AddSelectClause(ObjectTypeIds.BaseObjectType, EventPropertyName);
-
-                //ObjectTypeIds.BaseEventType BrowsePath: Root\Types\ObjectTypes\BaseObjectType\BaseEventType
-                filter.EventTypeIdFilter = ObjectTypeIds.BaseEventType;
-                try
-                {
-                    m_eventMonitoredItem.ApplyFilter();
-                    Console.WriteLine("Filter is applied on Event Monitored Item.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Filter could not be applied.Error: " + ex.Message);
-                }
-            }
-        }
-
-        /// <summary>
         /// Deletes the event monitored item.
         /// </summary>
         public void DeleteEventMonitoredItem()
         {
             if (m_eventMonitoredItem != null)
             {
-
                 //delete event monitored item
                 m_eventMonitoredItem.EventsReceived -= m_eventMonitoredItem_EventsReceived;
                 m_eventMonitoredItem.Delete();
@@ -156,16 +112,21 @@ namespace SampleClient.Samples
             }
             try
             {
-                //delete subscription
-                m_session.DeleteSubscription(m_subscription);
-                m_subscription = null;
-                Console.WriteLine("Subscription deleted");
-
-                //disconnect session
-                m_session.Disconnect(true);
-                m_session.Dispose();
-                m_session = null;
-                Console.WriteLine("Session is disconnected.");
+                if (m_session != null && m_subscription != null)
+                {
+                    //delete subscription
+                    m_session.DeleteSubscription(m_subscription);
+                    m_subscription = null;
+                    Console.WriteLine("Subscription deleted");
+                }
+                if (m_session != null)
+                {
+                    //disconnect session
+                    m_session.Disconnect(true);
+                    m_session.Dispose();
+                    m_session = null;
+                    Console.WriteLine("Session is disconnected.");
+                }
             }
             catch (Exception ex)
             {

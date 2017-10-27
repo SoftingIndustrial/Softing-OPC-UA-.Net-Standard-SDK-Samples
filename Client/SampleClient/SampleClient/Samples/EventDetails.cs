@@ -13,8 +13,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SampleClient
+namespace SampleClient.Samples
 {
+    /// <summary>
+    /// Holder for event detail properties
+    /// </summary>
     public class EventDetails
     {
         #region Public Interface

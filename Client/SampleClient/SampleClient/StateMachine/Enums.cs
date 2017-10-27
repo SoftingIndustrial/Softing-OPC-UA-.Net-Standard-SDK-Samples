@@ -49,7 +49,7 @@ namespace SampleClient.StateMachine
 
         StartEvents,
         CreateEventMonitorItem,
-        CreateEventMonitorItemWithFilter,
+        DeleteEventMonitorItem,
         EndEvents,
 
         StartHistory, 
