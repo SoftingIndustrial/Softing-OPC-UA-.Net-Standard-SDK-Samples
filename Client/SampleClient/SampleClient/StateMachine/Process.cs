@@ -261,7 +261,7 @@ namespace SampleClient.StateMachine
             createEventMonitorItem.ExecuteCommand += CreateEventMonitorItem_ExecuteCommand;
             m_transitions.Add(createEventMonitorItem, State.Events);
             StateTransition deleteEventMonitorItem = new StateTransition(State.Events, Command.DeleteEventMonitorItem, "d",
-                "Create and set event monitored item filter");
+                "Delete event monitored item");
             deleteEventMonitorItem.ExecuteCommand += DeleteEventMonitorItem_ExecuteCommand;
             m_transitions.Add(deleteEventMonitorItem, State.Events);
             StateTransition endEvents = new StateTransition(State.Events, Command.EndEvents, "b", "Back to Main Menu");

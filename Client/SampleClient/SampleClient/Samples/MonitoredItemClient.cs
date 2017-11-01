@@ -261,7 +261,7 @@ namespace SampleClient.Samples
         {
             foreach (var dataChangeNotification in e.DataChangeNotifications)
             {
-                Console.WriteLine(" {0} Received data value change for monitored item:", dataChangeNotification.SequenceNo);
+                Console.WriteLine(" {0} Received data value change for '{1}':", dataChangeNotification.SequenceNo, dataChangeNotification.MonitoredItem.DisplayName);
                 Console.WriteLine("    Value : {0} ", dataChangeNotification.Value);
                 Console.WriteLine("    StatusCode : {0} ", dataChangeNotification.Value.StatusCode);
                 Console.WriteLine("    ServerTimestamp : {0:hh:mm:ss.fff tt}", dataChangeNotification.Value.ServerTimestamp.ToLocalTime());
