@@ -25,12 +25,12 @@ namespace SampleServer
         {
             ApplicationInstance application = new ApplicationInstance();
             application.ApplicationType = ApplicationType.Server;
-            application.ConfigSectionName = "SampleServer";
+            string configurationFile = "SampleServer.Config.xml";
 
             try
             {
                 // Load the application configuration
-                await application.LoadApplicationConfiguration(false);
+                await application.LoadApplicationConfiguration(configurationFile, false);
 
                 // Check the application certificate
                 await application.CheckApplicationInstanceCertificate(false, 0);
