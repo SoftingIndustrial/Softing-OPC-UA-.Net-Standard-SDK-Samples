@@ -147,7 +147,7 @@
     <NodeManagerSaveFile>SampleServer.nodes.xml</NodeManagerSaveFile>
   </ServerConfiguration>
   <TraceConfiguration>
-    <OutputFilePath>%CommonApplicationData%\Softing\SampleServer\logs\SampleServer.log</OutputFilePath>
+    <OutputFilePath>%CommonApplicationData%\Softing\OpcUaNetStdToolkit\logs\SampleServer.log</OutputFilePath>
     <DeleteOnLoad>true</DeleteOnLoad>
     <!-- Show Only Errors -->
     <!-- <TraceMasks>1</TraceMasks> -->
