@@ -75,11 +75,7 @@ namespace SampleServer.Alarms
                 lowLimit,
                 lowLowLimit);
 
-            //this.StateChanged += ExclusiveLimitMonitor_StateChanged;
-
-            // handle the write requests
-            this.OnSimpleWriteValue = OnWriteVariableValue;
-
+           this.StateChanged += ExclusiveLimitMonitor_StateChanged;
         }
 
         #endregion
@@ -154,15 +150,6 @@ namespace SampleServer.Alarms
             m_alarm.HighHighLimit.Value = highHighLimit;
             m_alarm.LowLimit.Value = lowLimit;
             m_alarm.LowLowLimit.Value = lowLowLimit; 
-        }
-
-        protected ServiceResult OnWriteVariableValue(
-            ISystemContext context,
-            NodeState node,
-            ref object value)
-        {
-            ProcessVariableChanged(context, Value);
-            return StatusCodes.Good;
         }
 
         private void ExclusiveLimitMonitor_StateChanged(ISystemContext context, NodeState node, NodeStateChangeMasks changes)
@@ -263,7 +250,7 @@ namespace SampleServer.Alarms
                     m_alarm.ClearChangeMasks(context, true);
 
                     // Check if events are being monitored for the source
-                    if (AreEventsMonitored)
+                    if (m_alarm.AreEventsMonitored)
                     {
                         // Create a snapshot
                         InstanceStateSnapshot e = new InstanceStateSnapshot();
