@@ -35,7 +35,7 @@ namespace SampleClient
             while (process.CurrentState != State.Terminated)
             {
                 // Read commands
-                string inputCommand = Console.ReadLine();
+                string inputCommand = Console.ReadKey().KeyChar.ToString();
                 //execute command
                 process.ExecuteCommand(inputCommand);
             }

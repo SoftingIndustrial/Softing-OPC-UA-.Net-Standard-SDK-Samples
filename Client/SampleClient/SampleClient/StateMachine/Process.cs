@@ -114,7 +114,7 @@ namespace SampleClient.StateMachine
                     StateTransition stateTransitionToExecute = GetStateTransitionForCommand(commandToExecute);
                     if (stateTransitionToExecute != null)
                     {
-                        Console.WriteLine("Executing command '{0}'...\r\n", commandDescriptor.Description);
+                        Console.WriteLine("\r\nExecuting command '{0}'...\r\n", commandDescriptor.Description);
                         //change current state before execution to have the right current state at execution time
                         CurrentState = m_transitions[stateTransitionToExecute];
                         stateTransitionToExecute.OnExecuteCommand();
@@ -123,7 +123,7 @@ namespace SampleClient.StateMachine
                     return false;
                 }
             }
-            Console.WriteLine("Cannot find command '{0}'. Please choose from the list below:\r\n", commandKeyword);
+            Console.WriteLine("\r\nCannot find command '{0}'. Please choose from the list below:\r\n", commandKeyword);
             DisplayListOfCommands();
             return false;
         }
