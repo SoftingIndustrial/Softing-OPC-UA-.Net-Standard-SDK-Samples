@@ -423,8 +423,8 @@ namespace SampleClient.StateMachine
             {
                 m_browseClientSample = new BrowseClient(m_application);
                 m_browseClientSample.InitializeSession();
-                DisplayListOfCommands();
             }
+            DisplayListOfCommands();
         }
         #endregion
 
@@ -557,8 +557,8 @@ namespace SampleClient.StateMachine
             if (m_eventsClient == null)
             {
                 m_eventsClient = new EventsClient(m_application);
-                DisplayListOfCommands();
             }
+            DisplayListOfCommands();
         }
         #endregion
 
@@ -568,8 +568,8 @@ namespace SampleClient.StateMachine
             if (m_historyClient != null)
             {
                 m_historyClient.DisconnectSession();
-                DisplayListOfCommands();
             }
+            DisplayListOfCommands();
         }
 
         private void HistoryReadProcessed_ExecuteCommand(object sender, EventArgs e)
@@ -601,8 +601,8 @@ namespace SampleClient.StateMachine
             if (m_historyClient == null)
             {
                 m_historyClient = new HistoryClient(m_application);
-                DisplayListOfCommands();
             }
+            DisplayListOfCommands();
         }
         #endregion
 
@@ -612,8 +612,8 @@ namespace SampleClient.StateMachine
             if (m_monitoredItemClient != null)
             {
                 m_monitoredItemClient.DisconnectSession();
-                DisplayListOfCommands();
             }
+            DisplayListOfCommands();
         }
 
         private void DeleteMonitoredItem_ExecuteCommand(object sender, EventArgs e)
@@ -672,7 +672,6 @@ namespace SampleClient.StateMachine
             }
 
             m_methodCallClient.InitializeSession();
-            // Task.Delay(2000).Wait();
             //call method 
             m_methodCallClient.CallMethod();
             //call async method 
@@ -681,6 +680,8 @@ namespace SampleClient.StateMachine
             //wait and close session
             Task.Delay(1000).Wait();
             m_methodCallClient.DisconnectSession();
+
+            DisplayListOfCommands();
         }
         #endregion
 

@@ -234,7 +234,6 @@ namespace SampleClient.Samples
                 // create the session object.            
                 m_session = m_application.CreateSession(
                     Constants.SampleServerUrlOpcTcp,
-                    //"opc.tcp://localhost:62550/AlarmsServer",
                     MessageSecurityMode.None,
                     SecurityPolicy.None,
                     MessageEncoding.Binary,
