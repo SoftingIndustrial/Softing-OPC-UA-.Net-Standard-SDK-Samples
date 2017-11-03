@@ -38,18 +38,18 @@ namespace SampleClient.Samples
         /// <summary>
         /// Displays all registered server applications and their available endpoints.
         /// </summary>
-        /// <param name="discoveryUrl">url of discovery</param>
-        public void DiscoverServers(string discoveryUrl)
+        public void DiscoverServers()
         {
             try
             {
-                Console.WriteLine("Discovering all available servers and their endpoints from {0}...\r\n", discoveryUrl);
+                string discoveryUrl = DiscoveryService.GetDefaultDiscoveryUrl("localhost", TransportProtocols.OpcTcp);
+
+                Console.WriteLine("Discovering all available servers and their endpoints from {0}...", discoveryUrl);
 
                 //initialize the discovery service
                 DiscoveryService discoveryService = new DiscoveryService(m_applicationConfiguration);
 
                 // The method will return all the available server applications from the specified machine
-                discoveryUrl = null;
                 var servers = discoveryService.DiscoverServers(discoveryUrl);
 
                 Console.WriteLine("DiscoverServers returned {0} results:", servers.Count);
@@ -58,10 +58,12 @@ namespace SampleClient.Samples
                 {
                     try
                     {
+                        Console.WriteLine("\r\nCall GetEndpoints for server: {0} ...",
+                            serverApplicationDescription.ApplicationUri);
                         // retrieve endpoints for each running server and display their information
                         var endpoins = discoveryService.GetEndpoints(serverApplicationDescription);
 
-                        Console.WriteLine("Server: {0} has {1} endpoints:", serverApplicationDescription.ApplicationUri,
+                        Console.WriteLine("-Server: {0} has {1} endpoints:", serverApplicationDescription.ApplicationUri,
                             endpoins.Count);
 
                         foreach (var endpointDescription in endpoins)
@@ -74,7 +76,7 @@ namespace SampleClient.Samples
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", serverApplicationDescription.ApplicationUri,
+                        Console.WriteLine("-Server: {0} GetEndpoints Error: {1}", serverApplicationDescription.ApplicationUri,
                             e.Message);
                     }
                 }
@@ -85,37 +87,8 @@ namespace SampleClient.Samples
             }
         }
 
-        /// <summary>
-        /// Displays all the available endpoints by invoking GetEndpoints at the specified serverUrl.
-        /// </summary>
-        /// <param name="serverUrl"></param>
-        public void GetEndpoints(string serverUrl)
-        {
-            try
-            {
-                Console.WriteLine("Discovering available endpoints from {0}...\r\n", serverUrl);
 
-                //initialize the discovery service
-                DiscoveryService discoveryService = new DiscoveryService(m_applicationConfiguration);
-
-                // This method will return all the server endpoints by invoking the GetEndpoints service.
-                var endpoints = discoveryService.GetEndpoints(serverUrl);
-
-                Console.WriteLine("GetEndpoints returned {0} endpoints:", endpoints.Count);
-
-                foreach (var endpointDescription in endpoints)
-                {
-                    Console.WriteLine(" {0} - {1} - {2}",
-                        endpointDescription.EndpointUrl,
-                        endpointDescription.SecurityMode,
-                        endpointDescription.SecurityPolicy);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("GetEndpoints Error : {0}.", e.Message);
-            }
-        } 
+        //todo add FindServersOnNetwork sample
         #endregion
     }
 }

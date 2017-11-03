@@ -81,12 +81,12 @@ namespace SampleClient.Samples
             {
                 statusCode = m_session.Call(parentObjectId, methodId, inputArguments, out output);
 
-                Console.WriteLine("\nOutput arguments are:");
+                Console.WriteLine("Output arguments are:");
                 for (int i = 0; i < output.Count; i++)
                 {
                     Console.WriteLine("output[{0}]= {1}", i, output[i]);
                 }
-                Console.WriteLine(string.Format("\nStatus Code is: {0}\n", statusCode));
+                Console.WriteLine("Status Code is: {0}", statusCode);
             }
             catch (Exception ex)
             {
@@ -117,7 +117,8 @@ namespace SampleClient.Samples
             UInt16 arg2 = 100;
 
             List<object> inputArguments = new List<object> {arg1, arg2};
-            Console.WriteLine("\nMethod '{0}' is called asynchronously with the following arguments:", methodPath);
+            m_callIdentifier++;
+            Console.WriteLine("\nMethod '{0}' (identifier ={1}) is called asynchronously with the following arguments:", methodPath, m_callIdentifier);
             for (int i = 0; i < inputArguments.Count; i++)
             {
                 Console.WriteLine("input[{0}]= {1}", i, inputArguments[i]);
@@ -125,7 +126,6 @@ namespace SampleClient.Samples
 
             try
             {
-                m_callIdentifier++;
                 m_session.CallAsync(parentObjectId, methodId, inputArguments, m_callIdentifier);
             }
             catch (Exception ex)
@@ -164,7 +164,6 @@ namespace SampleClient.Samples
                     Console.WriteLine("CreateSession Error: {0}", ex.Message);
                     m_session.Dispose();
                     m_session = null;
-                    return;
                 }
             }
         }
@@ -187,15 +186,15 @@ namespace SampleClient.Samples
                 m_session.CallCompleted -= Session_CallCompleted;
 
                 m_session.Disconnect(true);
+                m_session.Dispose();
+                m_session = null;
+
                 Console.WriteLine("Session is disconnected.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
             }
-
-            m_session.Dispose();
-            m_session = null;
         }
 
         #endregion
@@ -209,13 +208,13 @@ namespace SampleClient.Samples
         /// <param name="e"></param>
         void Session_CallCompleted(object sender, MethodExecutionEventArgs e)
         {
-            Console.WriteLine(string.Format("\nCall returned for: {0}", e.Cookie));
+            Console.WriteLine("\nCall returned for method with identifier = {0}", e.Cookie);
             Console.WriteLine("Output arguments are:");
             for (int i = 0; i < e.OutputParameters.Count; i++)
             {
                 Console.WriteLine("output[{0}]= {1}", i, e.OutputParameters[i]);
             }
-            Console.WriteLine(string.Format("\nStatus Code is: {0}\n", e.Result));
+            Console.WriteLine("Status Code is: {0}", e.Result);
         }
 
         #endregion

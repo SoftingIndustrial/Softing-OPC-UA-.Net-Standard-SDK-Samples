@@ -14,7 +14,6 @@ namespace SampleClient.StateMachine
     public enum State
     {
         Main,
-        Discovery,
         Connect,
         Browse,
         Events,
@@ -26,10 +25,7 @@ namespace SampleClient.StateMachine
 
     public enum Command
     {
-        StartDiscoveryClient,
-        GetEndpoints,
-        FindServers,
-        EndDiscoveryClient,
+        DiscoveryFindServers,
 
         StartConnectClient,
         OpcTcpWithoutSecurity,
