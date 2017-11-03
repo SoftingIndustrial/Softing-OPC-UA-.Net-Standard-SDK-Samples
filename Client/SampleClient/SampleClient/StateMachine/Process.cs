@@ -315,14 +315,6 @@ namespace SampleClient.StateMachine
                 new StateTransition(State.MonitoredItem, Command.DeleteMonitoredItem, "d", "Delete last MonitoredItem");
             deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItem_ExecuteCommand;
             m_transitions.Add(deleteMonitoredItem, State.MonitoredItem);
-            StateTransition readMonitoredItem =
-                new StateTransition(State.MonitoredItem, Command.ReadMonitoredItem, "r", "Read MonitoredItem");
-            readMonitoredItem.ExecuteCommand += ReadMonitoredItem_ExecuteCommand;
-            m_transitions.Add(readMonitoredItem, State.MonitoredItem);
-            StateTransition writeMonitoredItem =
-                new StateTransition(State.MonitoredItem, Command.WriteMonitoredItem, "w", "Write MonoitoredItem");
-            writeMonitoredItem.ExecuteCommand += WriteMonitoredItem_ExecuteCommand;
-            m_transitions.Add(writeMonitoredItem, State.MonitoredItem);
             StateTransition endMonitoredItem =
                 new StateTransition(State.MonitoredItem, Command.EndMonitoredItem, "b", "Back to Main Menu");
             endMonitoredItem.ExecuteCommand += EndMonitoredItem_ExecuteCommand;
@@ -621,22 +613,6 @@ namespace SampleClient.StateMachine
             if (m_monitoredItemClient != null)
             {
                 m_monitoredItemClient.DeleteMonitoredItem();
-            }
-        }
-
-        private void WriteMonitoredItem_ExecuteCommand(object sender, EventArgs e)
-        {
-            if (m_monitoredItemClient != null)
-            {
-                m_monitoredItemClient.WriteMonitoredItem();
-            }
-        }
-
-        private void ReadMonitoredItem_ExecuteCommand(object sender, EventArgs e)
-        {
-            if (m_monitoredItemClient != null)
-            {
-                m_monitoredItemClient.ReadMonitoredItem();
             }
         }
 

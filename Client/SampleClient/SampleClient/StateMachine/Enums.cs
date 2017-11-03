@@ -58,11 +58,9 @@ namespace SampleClient.StateMachine
         HistoryReadProcessed,
         EndHistory,
 
-        StartMonitoredItem,
+        StartMonitoredItem, 
         CreateMonitoredItem,
         DeleteMonitoredItem,
-        ReadMonitoredItem,
-        WriteMonitoredItem,
         EndMonitoredItem,
 
         StartAlarms,

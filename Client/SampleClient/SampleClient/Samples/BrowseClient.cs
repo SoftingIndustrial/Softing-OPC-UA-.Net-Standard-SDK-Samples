@@ -61,7 +61,6 @@ namespace SampleClient.Samples
                 Console.WriteLine("Session is connected.");
 
                 m_namespaceUris = new NamespaceTable(m_session.NamespaceUris);
-                m_session.ContinuationPointReached += Session_ContinuationPointReached;
             }
             catch (Exception ex)
             {
@@ -84,8 +83,6 @@ namespace SampleClient.Samples
 
             try
             {
-                m_session.ContinuationPointReached -= Session_ContinuationPointReached;
-
                 m_session.Disconnect(true);
                 Console.WriteLine("Session is disconnected.");
             }

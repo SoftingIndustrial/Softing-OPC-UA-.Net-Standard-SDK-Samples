@@ -212,9 +212,7 @@ namespace SampleClient.Samples
             {
                 //connect session
                 m_session.Connect(false, true);
-
-                //add handler for HistoryContinuationPointReached event
-                m_session.HistoryContinuationPointReached += HistoryContinuationPointReached;
+                
                 Console.WriteLine("Session is connected.");
             }
             catch (Exception ex)
@@ -239,8 +237,6 @@ namespace SampleClient.Samples
 
             try
             {
-                m_session.HistoryContinuationPointReached -= HistoryContinuationPointReached;
-
                 m_session.Disconnect(true);
                 m_session.Dispose();
                 m_session = null;
@@ -251,24 +247,6 @@ namespace SampleClient.Samples
                 Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
             }
         }
-        #endregion
-
-        #region Event Handlers
-        /// <summary>
-        /// Handler for HistoryContinuationPointReached
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void HistoryContinuationPointReached(object sender, HistoryReadContinuationEventArgs e)
-        {
-            Console.WriteLine("Continuation point reached.");
-
-            //one can cancel here the history read for new continuation points
-            //e.Cancel = true;
-
-            //one can identify the history read call that raised the continuation point by checking the cookie passed to the method
-            //e.Cookie
-        } 
         #endregion
     }
 }

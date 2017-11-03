@@ -30,12 +30,7 @@ namespace SampleClient.Samples
         // Browse path: Root\\Objects\\DataAccess\Refrigerator\MotorTemperature
         private static readonly string m_monitoredItemNodeId = "ns=3;i=28";
         private static readonly string m_monitoredItemBrowsePath = "Root\\Objects\\DataAccess\\Refrigerator\\MotorTemperature";
-
-        //Browse path: //Objects/DataAccess/Refrigerator/ActualTemperature
-        private static readonly string m_readWriteNodeId = "ns=3;i=23";
-        private static readonly string m_readWriteBrowsePath = "Root\\Objects\\DataAccess\\Refrigerator\\ActualTemperature";
-        private ClientMonitoredItem m_readWriteMonitoredItem;
-
+        
         private readonly UaApplication m_application;
         private readonly List<ClientMonitoredItem> m_monitoredItems;
         private readonly Random m_randomGenerator;
@@ -150,95 +145,10 @@ namespace SampleClient.Samples
                 m_monitoredItems.Add(monitoredItem);
 
                 Console.WriteLine("Monitored item {0} on browse path '{1}' created. Data value changes are shown:", m_monitoredItems.Count, m_monitoredItemBrowsePath);
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Reads the value of a node, using a monitored item.
-        /// </summary>
-        public void ReadMonitoredItem()
-        {
-            if (m_session == null || m_subscription == null)
-            {
-                InitializeSession();
-            }
-            if (m_session == null)
-            {
-                Console.WriteLine("ReadMonitoredItem: The session is not initialized!");
-                return;
-            }
-            if (!m_subscription.MonitoredItems.Contains(m_readWriteMonitoredItem))
-            {
-                NodeId readWriteNodeId = new NodeId(m_readWriteNodeId);
-                try
-                {
-                    m_readWriteMonitoredItem = new ClientMonitoredItem(m_subscription, readWriteNodeId,
-                        AttributeId.Value, null, "SampleReadWriteMI");
-                    Console.WriteLine("Created Monitored Item on browse path '{0}' for read/write.", m_readWriteBrowsePath);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Monitored item could not created: " + ex.Message);
-                }
-            }
-            try
-            {
-                var result = m_readWriteMonitoredItem.Read();
-                Console.WriteLine("'{0}' Read done with DataValue: {1}", m_readWriteBrowsePath, result);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-
-        /// <summary>
-        /// Writes a value to a node, using a monitored item.
-        /// </summary>
-        public void WriteMonitoredItem()
-        {
-            if (m_session == null || m_subscription == null)
-            {
-                InitializeSession();
-            }
-            if (m_session == null)
-            {
-                Console.WriteLine("WriteMonitoredItem: The session is not initialized!");
-                return;
-            }
-            if (!m_subscription.MonitoredItems.Contains(m_readWriteMonitoredItem))
-            {
-                NodeId readWriteNodeId = new NodeId(m_readWriteNodeId);
-                try
-                {
-                    m_readWriteMonitoredItem = new ClientMonitoredItem(m_subscription, readWriteNodeId,
-                        AttributeId.Value, null, "SampleReadWriteMI");
-                    Console.WriteLine("Created Monitored Item on browse path '{0}' for read/write.",
-                        m_readWriteBrowsePath);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Monitored item could not created: " + ex.Message);
-                }
-            }
-            DataValue dataValue = new DataValue();
-            dataValue.Value = (double)m_randomGenerator.Next(10, 90);
-            //  m_dataValue.ValueRank = ValueRanks.Scalar;
-            dataValue.StatusCode = new StatusCode();
-            Console.WriteLine("Generated value: {0} to write.", dataValue.Value);
-            try
-            {
-                StatusCode result = m_readWriteMonitoredItem.Write(dataValue);
-                Console.WriteLine("Write done with StatusCode: {0}", result);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
             }
         }
 

@@ -49,6 +49,7 @@ namespace SampleClient.Samples
                 DiscoveryService discoveryService = new DiscoveryService(m_applicationConfiguration);
 
                 // The method will return all the available server applications from the specified machine
+                discoveryUrl = null;
                 var servers = discoveryService.DiscoverServers(discoveryUrl);
 
                 Console.WriteLine("DiscoverServers returned {0} results:", servers.Count);
