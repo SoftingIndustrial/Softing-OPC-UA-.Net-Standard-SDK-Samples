@@ -74,7 +74,10 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("CreateSession Error: {0}", ex);
+                Console.WriteLine("CreateSession Error: {0}", ex.Message);
+                m_session.Dispose();
+                m_session = null;
+                return;
             }
 
             //create the subscription
@@ -93,7 +96,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("CreateEventMonitoredItem Error: {0}", ex.Message);
             }
         }
 
@@ -102,16 +105,20 @@ namespace SampleClient.Samples
         /// </summary>
         public void DeleteEventMonitoredItem()
         {
-            if (m_eventMonitoredItem != null)
-            {
-                //delete event monitored item
-                m_eventMonitoredItem.EventsReceived -= m_eventMonitoredItem_EventsReceived;
-                m_eventMonitoredItem.Delete();
-                m_eventMonitoredItem = null;
-                Console.WriteLine("Event Monitored Item was disconnected and deleted.");
-            }
             try
             {
+                if (m_eventMonitoredItem != null)
+                {
+                    //delete event monitored item
+                    m_eventMonitoredItem.EventsReceived -= m_eventMonitoredItem_EventsReceived;
+                    m_eventMonitoredItem.Delete();
+                    m_eventMonitoredItem = null;
+                    Console.WriteLine("Event Monitored Item was disconnected and deleted.");
+                }
+                else
+                {
+                    Console.WriteLine("There was no Event Monitored Item to be deleted.");
+                }
                 if (m_session != null && m_subscription != null)
                 {
                     //delete subscription
@@ -130,7 +137,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("DeleteEventMonitoredItem Error: {0}", ex.Message);
             }
         }
 

@@ -55,17 +55,26 @@ namespace SampleClient.Samples
 
                 foreach (var serverApplicationDescription in servers)
                 {
-                    // retrieve endpoints for each running server and display their information
-                    var endpoins = discoveryService.GetEndpoints(serverApplicationDescription);
-
-                    Console.WriteLine("Server: {0} has {1} endpoints:", serverApplicationDescription.ApplicationUri, endpoins.Count);
-
-                    foreach (var endpointDescription in endpoins)
+                    try
                     {
-                        Console.WriteLine("       {0} - {1} - {2}",
-                            endpointDescription.EndpointUrl,
-                            endpointDescription.SecurityMode,
-                            endpointDescription.SecurityPolicy);
+                        // retrieve endpoints for each running server and display their information
+                        var endpoins = discoveryService.GetEndpoints(serverApplicationDescription);
+
+                        Console.WriteLine("Server: {0} has {1} endpoints:", serverApplicationDescription.ApplicationUri,
+                            endpoins.Count);
+
+                        foreach (var endpointDescription in endpoins)
+                        {
+                            Console.WriteLine("       {0} - {1} - {2}",
+                                endpointDescription.EndpointUrl,
+                                endpointDescription.SecurityMode,
+                                endpointDescription.SecurityPolicy);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", serverApplicationDescription.ApplicationUri,
+                            e.Message);
                     }
                 }
             }

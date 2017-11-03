@@ -52,7 +52,8 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                InitializeSession();
+                Console.WriteLine("CallMethod: The session is not initialized!");
+                return;
             }
 
             /*Select the method from the address space*/
@@ -100,7 +101,8 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                InitializeSession();
+                Console.WriteLine("AsyncCallMethod: The session is not initialized!");
+                return;
             }
 
             /*Select the method from the address space*/
@@ -159,7 +161,10 @@ namespace SampleClient.Samples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("CreateSession Error: {0}", ex);
+                    Console.WriteLine("CreateSession Error: {0}", ex.Message);
+                    m_session.Dispose();
+                    m_session = null;
+                    return;
                 }
             }
         }
@@ -172,6 +177,7 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
+                Console.WriteLine("The Session was not created.");
                 return;
             }
 

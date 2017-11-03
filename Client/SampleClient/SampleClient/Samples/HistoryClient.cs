@@ -50,7 +50,11 @@ namespace SampleClient.Samples
             {
                 InitializeSession();
             }
-
+            if (m_session == null)
+            {
+                Console.WriteLine("HistoryReadRaw: The session is not initialized!");
+                return;
+            }
             ReadRawModifiedDetails argument = new ReadRawModifiedDetails()
             {
                 IsReadModified = false,
@@ -96,7 +100,11 @@ namespace SampleClient.Samples
             {
                 InitializeSession();
             }
-
+            if (m_session == null)
+            {
+                Console.WriteLine("HistoryReadAtTime: The session is not initialized!");
+                return;
+            }
             DateTimeCollection requiredTimes = new DateTimeCollection();
             requiredTimes.Add(new DateTime(2011, 1, 1, 12, 0, 0));
             requiredTimes.Add(new DateTime(2011, 7, 1, 12, 1, 0));
@@ -143,7 +151,11 @@ namespace SampleClient.Samples
             {
                 InitializeSession();
             }
-
+            if (m_session == null)
+            {
+                Console.WriteLine("HistoryReadProcessed: The session is not initialized!");
+                return;
+            }
             NodeIdCollection aggregateTypes = new NodeIdCollection();
             aggregateTypes.Add(ObjectIds.AggregateFunction_Average); //aggregate function average           
 
@@ -207,7 +219,10 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("CreateSession Error: {0}", ex);
+                Console.WriteLine("CreateSession Error: {0}", ex.Message);
+                m_session.Dispose();
+                m_session = null;
+                return;
             }
         }
 

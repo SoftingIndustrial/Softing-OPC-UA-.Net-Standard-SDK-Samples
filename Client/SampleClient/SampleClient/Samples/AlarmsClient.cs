@@ -25,18 +25,21 @@ namespace SampleClient.Samples
         #region Private Fields
         private const string SessionName = "AlarmsClient Session";
         private const string SubscriptionName = "AlarmsClient Subscription";
-        // Objects\Alarms
+
+        //Browse name for m_alarmsModuleNodeId: Objects\Alarms
         private static readonly string m_alarmsModuleNodeId = "ns=2;i=2"; 
 
         private readonly UaApplication m_application;
-        private ClientSession m_session;
+        //will keep reference to already notified alarms to be able to acknowledge or add comment
         private readonly Dictionary<NodeId, EventDetails> m_retainedAlarms;
+        private ClientSession m_session;
         private ClientSubscription m_subscription;
         private ClientMonitoredItem m_alarmsMonitoredItem;
        
         #endregion
 
         #region Constructor
+
         /// <summary>
         /// Create new instance of AlarmsClient
         /// </summary>
@@ -49,6 +52,7 @@ namespace SampleClient.Samples
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Invokes the ConditionRefresh method in order to receive all retained conditions
         /// </summary>
@@ -69,10 +73,14 @@ namespace SampleClient.Samples
                     // After this call the server should send new event notifications for all the retained (active) alarms
                     m_session.Call(ObjectTypeIds.ConditionType,
                         MethodIds.ConditionType_ConditionRefresh,
-                        new List<object>(1) { m_subscription.Id },
+                        new List<object>(1) {m_subscription.Id},
                         out var outputArgs);
 
                     Console.WriteLine("ConditionRefresh method invoked.");
+                }
+                else
+                {
+                    Console.WriteLine("ConditionRefresh method could not be invoked. There is no session or subscription.");
                 }
             }
             catch (Exception exception)
@@ -86,19 +94,19 @@ namespace SampleClient.Samples
         /// </summary>
         public void AddCommentToAlarm()
         {
+            //check to see if there are any known alarms 
+            if (m_retainedAlarms.Count == 0)
+            {
+                Console.WriteLine("AddCommentToAlarm: The list of active alarms is empty!");
+                return;
+            }
             if (m_session == null)
             {
-                Initialize();
+                Console.WriteLine("AddCommentToAlarm: The session is not initialized!");
+                return;
             }
             try
             {
-                //check to see if there are any known alarms 
-                if (m_retainedAlarms.Count == 0)
-                {
-                    Console.WriteLine("The list of active alarms is empty!");
-                    return;
-                }
-
                 Dictionary<int, NodeId> alarmsList = new Dictionary<int, NodeId>();
                 int index = 1;
 
@@ -138,7 +146,7 @@ namespace SampleClient.Samples
             }
             catch (Exception exception)
             {
-                Console.WriteLine("AcknowledgeAlarms Error : {0}.", exception);
+                Console.WriteLine("AcknowledgeAlarms Error : {0}.", exception.Message);
             }
         }
 
@@ -147,18 +155,19 @@ namespace SampleClient.Samples
         /// </summary>
         public void AcknowledgeAlarm()
         {
+            //check to see if there are any known alarms 
+            if (m_retainedAlarms.Count == 0)
+            {
+                Console.WriteLine("AcknowledgeAlarm: The list of active alarms is empty!");
+                return;
+            }
             if (m_session == null)
             {
-                Initialize();
+                Console.WriteLine("AcknowledgeAlarm: The session is not initialized!");
+                return;
             }
             try
             {
-                //check to see if there are any known alarms 
-                if (m_retainedAlarms.Count == 0)
-                {
-                    Console.WriteLine("The list of active alarms is empty!");
-                    return;
-                }
 
                 Dictionary<int, NodeId> alarmsList = new Dictionary<int, NodeId>();
                 int index = 1;
@@ -199,7 +208,7 @@ namespace SampleClient.Samples
             }
             catch (Exception exception)
             {
-                Console.WriteLine("AcknowledgeAlarms Error : {0}.", exception);
+                Console.WriteLine("AcknowledgeAlarms Error : {0}.", exception.Message);
             }
         }
 
@@ -249,7 +258,10 @@ namespace SampleClient.Samples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("CreateSession Error: {0}", ex);
+                    Console.WriteLine("CreateSession Error: {0}", ex.Message);
+                    m_session.Dispose();
+                    m_session = null;
+                    return;
                 }
             }
 
@@ -271,6 +283,11 @@ namespace SampleClient.Samples
         /// </summary>
         public void InitializeAlarmsMonitoredItem()
         {
+            if (m_session == null || m_subscription == null)
+            {
+                return;
+            }
+
             try
             {
                 // Configure the event filter
@@ -306,7 +323,7 @@ namespace SampleClient.Samples
             catch (Exception exception)
             {
                 // Log Error
-                Console.WriteLine("Create Alarms MonitoredItem: {0}", exception);
+                Console.WriteLine("Create Alarms MonitoredItem: {0}", exception.Message);
             }
         }
 
@@ -433,7 +450,7 @@ namespace SampleClient.Samples
             }
             catch (Exception exception)
             {
-                Console.WriteLine("MonitoredItem Notification Error : {0}.", exception);
+                Console.WriteLine("MonitoredItem Notification Error : {0}.", exception.Message);
             }
         } 
         #endregion

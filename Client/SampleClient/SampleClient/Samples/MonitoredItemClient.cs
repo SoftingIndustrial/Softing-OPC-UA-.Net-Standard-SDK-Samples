@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua;
 using Softing.Opc.Ua.Client;
@@ -80,7 +81,10 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("CreateSession Error: {0}", ex);
+                Console.WriteLine("CreateSession Error: {0}", ex.Message);
+                m_session.Dispose();
+                m_session = null;
+                return;
             }
 
             //create the subscription
@@ -128,12 +132,15 @@ namespace SampleClient.Samples
         /// </summary>
         internal void CreateMonitoredItem()
         {
-
             if (m_session == null || m_subscription == null)
             {
                 InitializeSession();
             }
-
+            if (m_session == null)
+            {
+                Console.WriteLine("CreateMonitoredItem: The session is not initialized!");
+                return;
+            }
             try
             {
                 NodeId node = new NodeId(m_monitoredItemNodeId);
@@ -159,6 +166,11 @@ namespace SampleClient.Samples
             if (m_session == null || m_subscription == null)
             {
                 InitializeSession();
+            }
+            if (m_session == null)
+            {
+                Console.WriteLine("ReadMonitoredItem: The session is not initialized!");
+                return;
             }
             if (!m_subscription.MonitoredItems.Contains(m_readWriteMonitoredItem))
             {
@@ -193,6 +205,11 @@ namespace SampleClient.Samples
             if (m_session == null || m_subscription == null)
             {
                 InitializeSession();
+            }
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteMonitoredItem: The session is not initialized!");
+                return;
             }
             if (!m_subscription.MonitoredItems.Contains(m_readWriteMonitoredItem))
             {
@@ -232,7 +249,12 @@ namespace SampleClient.Samples
         {
             if (m_monitoredItems.Count == 0)
             {
-                Console.WriteLine("Monitored item is not created, please use \"m\" command");
+                Console.WriteLine("There is no Monitored item to be deleted.");
+                return;
+            }
+            if (m_session == null)
+            {
+                Console.WriteLine("DeleteMonitoredItem: The session is not initialized!");
                 return;
             }
             try
@@ -259,6 +281,7 @@ namespace SampleClient.Samples
         /// <param name="e">The <see cref="DataChangesNotificationEventArgs"/> instance containing the event data.</param>
         private void Monitoreditem_DataChangesReceived(object sender, DataChangesNotificationEventArgs e)
         {
+            Task.Delay(10000).Wait();
             foreach (var dataChangeNotification in e.DataChangeNotifications)
             {
                 Console.WriteLine(" {0} Received data value change for '{1}':", dataChangeNotification.SequenceNo, dataChangeNotification.MonitoredItem.DisplayName);

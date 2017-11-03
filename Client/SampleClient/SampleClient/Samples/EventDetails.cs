@@ -9,9 +9,6 @@
  * ======================================================================*/
 
 using Opc.Ua;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SampleClient.Samples
 {

@@ -65,7 +65,9 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("CreateSession Error: {0}", ex);
+                Console.WriteLine("CreateSession Error: {0}", ex.Message);
+                m_session.Dispose();
+                m_session = null;
             }
         }
 
@@ -105,6 +107,15 @@ namespace SampleClient.Samples
         /// </summary>
         public void BrowseTheServer()
         {
+            if (m_session == null)
+            {
+                InitializeSession();
+            }
+            if (m_session == null)
+            {
+                Console.WriteLine("BrowseTheServer: The session is not initialized!");
+                return;
+            }
             try
             {
                 //Using the Browse method with null parameters will return the browse result for the root node.
@@ -148,6 +159,15 @@ namespace SampleClient.Samples
         /// </summary>
         public void BrowseWithOptions()
         {
+            if (m_session == null)
+            {
+                InitializeSession();
+            }
+            if (m_session == null)
+            {
+                Console.WriteLine("BrowseWithOptions: The session is not initialized!");
+                return;
+            }
             BrowseDescriptionEx options = new BrowseDescriptionEx();
             options.MaxReferencesReturned = 3;
             try
@@ -199,6 +219,15 @@ namespace SampleClient.Samples
         /// </summary>
         public void TranslateBrowsePathToNodeIds()
         {
+            if (m_session == null)
+            {
+                InitializeSession();
+            }
+            if (m_session == null)
+            {
+                Console.WriteLine("TranslateBrowsePathToNodeIds: The session is not initialized!");
+                return;
+            }
             try
             {
                 // define the starting node as the "Objects" node.
@@ -238,6 +267,15 @@ namespace SampleClient.Samples
         /// </summary>
         public void TranslateBrowsePathsToNodeIds()
         {
+            if (m_session == null)
+            {
+                InitializeSession();
+            }
+            if (m_session == null)
+            {
+                Console.WriteLine("TranslateBrowsePathsToNodeIds: The session is not initialized!");
+                return;
+            }
             try
             {
                 // define the list of requests.
