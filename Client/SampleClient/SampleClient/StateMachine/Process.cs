@@ -23,26 +23,19 @@ namespace SampleClient.StateMachine
     /// </summary>
     public class Process
     {
-
         #region Private Fields
         private readonly Dictionary<StateTransition, State> m_transitions;
         private readonly Dictionary<State, IList<CommandDescriptor>> m_processStateCommands;
-        public State CurrentState { get; private set; }
-
-
         private readonly UaApplication m_application;
-        private DiscoveryClient m_discoveryClientSample;
-        private ConnectClient m_connectClientSample;
-        private BrowseClient m_browseClientSample;
+        private BrowseClient m_browseClient;
         private EventsClient m_eventsClient;
         private HistoryClient m_historyClient;
-       
+        private ReadWriteClient m_readWriteClient;
         private MonitoredItemClient m_monitoredItemClient;
         private AlarmsClient m_alarmsClient;
         #endregion
 
         #region Constructor
-
         /// <summary>
         /// create new instance of Process
         /// </summary>
@@ -52,42 +45,57 @@ namespace SampleClient.StateMachine
             CurrentState = State.Main;
 
             m_transitions = new Dictionary<StateTransition, State>();
-            InitializeConnectTransitions();
 
-            StateTransition discoveryFindServers = new StateTransition(State.Main, Command.DiscoveryFindServers, "2", "Execute Discovery Sample");
-            discoveryFindServers.ExecuteCommand += DiscoveryFindServers_ExecuteCommand;
-            m_transitions.Add(discoveryFindServers, State.Main);
-            
+            //add connect menu item
+            StateTransition connectSample = new StateTransition(State.Main, Command.ConnectSample, "1", "Execute Connect Sample");
+            connectSample.ExecuteCommand += ConnectSample_ExecuteCommand;
+            m_transitions.Add(connectSample, State.Main);
+            //add discovery menu item
+            StateTransition discoverySample = new StateTransition(State.Main, Command.DiscoverySample, "2", "Execute Discovery Sample");
+            discoverySample.ExecuteCommand += DiscoverySample_ExecuteCommand;
+            m_transitions.Add(discoverySample, State.Main);
+            //add browse menu item
             InitializeBrowseTransitions();
             //readwrite - 4
+            InitializeReadWriteTransitions();
+            //add monitored item menu
             InitializeMonitoredItemTransitions();
+            //add events menu
             InitializeEventsTransitions();
+            //add alarms menu
             InitializeAlarmsTransitions();
-
+            //add call methods menu
             StateTransition callMethods = new StateTransition(State.Main, Command.CallMethods, "8", "Call Methods on Server");
             callMethods.ExecuteCommand += CallMethods_ExecuteCommand;
             m_transitions.Add(callMethods, State.Main);
-
+            //add history menu
             InitializeHistoryTransitions();
-            
 
-           
-
-            //add here all exit commands
+            //add all exit commands
             StateTransition exit = new StateTransition(State.Main, Command.Exit, "x", "Exit Client Application");
-            m_transitions.Add(exit, State.Terminated);
+            exit.ExecuteCommand += Exit_ExecuteCommand;
+            m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.Browse, Command.Exit, "x", "Exit Client Application");
-            m_transitions.Add(exit, State.Terminated);
+            exit.ExecuteCommand += Exit_ExecuteCommand;
+            m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.Connect, Command.Exit, "x", "Exit Client Application");
-            m_transitions.Add(exit, State.Terminated);
+            exit.ExecuteCommand += Exit_ExecuteCommand;
+            m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.Events, Command.Exit, "x", "Exit Client Application");
-            m_transitions.Add(exit, State.Terminated);
+            exit.ExecuteCommand += Exit_ExecuteCommand;
+            m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.History, Command.Exit, "x", "Exit Client Application");
-            m_transitions.Add(exit, State.Terminated);
+            exit.ExecuteCommand += Exit_ExecuteCommand;
+            m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.MonitoredItem, Command.Exit, "x", "Exit Client Application");
-            m_transitions.Add(exit, State.Terminated);
+            exit.ExecuteCommand += Exit_ExecuteCommand;
+            m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.Alarms, Command.Exit, "x", "Exit Client Application");
-            m_transitions.Add(exit, State.Terminated);
+            exit.ExecuteCommand += Exit_ExecuteCommand;
+            m_transitions.Add(exit, State.Exit);
+            exit = new StateTransition(State.ReadWrite, Command.Exit, "x", "Exit Client Application");
+            exit.ExecuteCommand += Exit_ExecuteCommand;
+            m_transitions.Add(exit, State.Exit);
 
             m_processStateCommands = new Dictionary<State, IList<CommandDescriptor>>();
             foreach (var stateStansition in m_transitions.Keys)
@@ -101,6 +109,13 @@ namespace SampleClient.StateMachine
 
             DisplayListOfCommands();
         }
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// Get current state of process
+        /// </summary>
+        public State CurrentState { get; private set; }
         #endregion
 
         #region Public Method - ExecuteCommand
@@ -120,7 +135,7 @@ namespace SampleClient.StateMachine
                     StateTransition stateTransitionToExecute = GetStateTransitionForCommand(commandToExecute);
                     if (stateTransitionToExecute != null)
                     {
-                        Console.WriteLine("\r\nExecuting command '{0}'...\r\n", commandDescriptor.Description);
+                        Console.WriteLine("\r\nExecuting command '{0}'...", commandDescriptor.Description);
                         //change current state before execution to have the right current state at execution time
                         CurrentState = m_transitions[stateTransitionToExecute];
                         stateTransitionToExecute.OnExecuteCommand();
@@ -164,7 +179,27 @@ namespace SampleClient.StateMachine
             endAlarms.ExecuteCommand += EndAlarms_ExecuteCommand;
             m_transitions.Add(endAlarms, State.Main);
         }
-        
+
+        /// <summary>
+        /// Initializes all sub menu transitions for ReadWriteClient
+        /// </summary>
+        private void InitializeReadWriteTransitions()
+        {
+            //commAands for readWrite
+            StateTransition startReadWrite = new StateTransition(State.Main, Command.StartReadWrite, "4", "Enter Read/Write Menu");
+            startReadWrite.ExecuteCommand += StartReadWrite_ExecuteCommand;
+            m_transitions.Add(startReadWrite, State.ReadWrite);
+            StateTransition read = new StateTransition(State.ReadWrite, Command.Read, "1", "Read Nodes");
+            read.ExecuteCommand += Read_ExecuteCommand;
+            m_transitions.Add(read, State.ReadWrite);
+            StateTransition write =new StateTransition(State.ReadWrite, Command.Write, "2", "Write Nodes");
+            write.ExecuteCommand += Write_ExecuteCommand;
+            m_transitions.Add(write, State.ReadWrite);
+            StateTransition endReadWrite = new StateTransition(State.ReadWrite, Command.EndReadWrite, "0", "Back to Main Menu");
+            endReadWrite.ExecuteCommand += EndReadWrite_ExecuteCommand; ;
+            m_transitions.Add(endReadWrite, State.Main);
+        }
+
         /// <summary>
         /// Initializes all sub menu transitions for BrowseClient
         /// </summary>
@@ -185,53 +220,9 @@ namespace SampleClient.StateMachine
                 new StateTransition(State.Browse, Command.Translate, "3", "Translate BrowsePaths to NodeIds");
             translate.ExecuteCommand += Translate_ExecuteCommand;
             m_transitions.Add(translate, State.Browse);
-            StateTransition translateMultiple =
-                new StateTransition(State.Browse, Command.TranslateMultiple, "4", "Translate multiple Browse Paths");
-            translateMultiple.ExecuteCommand += TranslateMultiple_ExecuteCommand;
-            m_transitions.Add(translateMultiple, State.Browse);
             StateTransition endBrowseClient = new StateTransition(State.Browse, Command.EndBrowse, "0", "Back to Main Menu");
             endBrowseClient.ExecuteCommand += EndBrowseClient_ExecuteCommand;
             m_transitions.Add(endBrowseClient, State.Main);
-        }
-
-        /// <summary>
-        /// Initializes all sub menu transitions for ConnectClient
-        /// </summary>
-        private void InitializeConnectTransitions()
-        {
-            //commands for connect
-            StateTransition startConnectClient =
-                new StateTransition(State.Main, Command.StartConnectClient, "1", "Enter Connect Menu");
-            startConnectClient.ExecuteCommand += StartConnectClient_ExecuteCommand;
-            m_transitions.Add(startConnectClient, State.Connect);
-            StateTransition opcTcpWithoutSecurity = new StateTransition(State.Connect, Command.OpcTcpWithoutSecurity, "1",
-                "Create opc.tcp session without security");
-            opcTcpWithoutSecurity.ExecuteCommand += OpcTcpWithoutSecurity_ExecuteCommand;
-            m_transitions.Add(opcTcpWithoutSecurity, State.Connect);
-            StateTransition opcTcpUserIdentity = new StateTransition(State.Connect, Command.OpcTcpUserIdentity, "2",
-                "Create opc.tcp session with user identity");
-            opcTcpUserIdentity.ExecuteCommand += OpcTcpUserIdentity_ExecuteCommand;
-            m_transitions.Add(opcTcpUserIdentity, State.Connect);
-            StateTransition opcTcpUserIdentityAndSecurity = new StateTransition(State.Connect,
-                Command.OpcTcpUserIdentityAndSecurity, "3", "Create opc.tcp session with security and user identity");
-            opcTcpUserIdentityAndSecurity.ExecuteCommand += OpcTcpUserIdentityAndSecurity_ExecuteCommand;
-            m_transitions.Add(opcTcpUserIdentityAndSecurity, State.Connect);
-            //StateTransition httpsWithoutUserIdentity = new StateTransition(State.Connect, Command.HttpsWithoutUserIdentity, "4",
-            //    "Create https session without user identity");
-            //httpsWithoutUserIdentity.ExecuteCommand += HttpsWithoutUserIdentity_ExecuteCommand;
-            //m_transitions.Add(httpsWithoutUserIdentity, State.Connect);
-            //StateTransition httpsWithUserIdentity = new StateTransition(State.Connect, Command.HttpsWithUserIdentity, "5",
-            //    "Create https session with user identity");
-            //httpsWithUserIdentity.ExecuteCommand += HttpsWithUserIdentity_ExecuteCommand;
-            //m_transitions.Add(httpsWithUserIdentity, State.Connect);
-            StateTransition sessionWithDiscovery = new StateTransition(State.Connect, Command.SessionWithDiscovery, "4",
-                "Create session using discovery process");
-            sessionWithDiscovery.ExecuteCommand += SessionWithDiscovery_ExecuteCommand;
-            m_transitions.Add(sessionWithDiscovery, State.Connect);
-            StateTransition endConnectClient =
-                new StateTransition(State.Connect, Command.EndConnectClient, "b", "Back to Main Menu");
-            endConnectClient.ExecuteCommand += EndConnectClient_ExecuteCommand;
-            m_transitions.Add(endConnectClient, State.Main);
         }
        
         /// <summary>
@@ -314,7 +305,8 @@ namespace SampleClient.StateMachine
         {
             if (m_alarmsClient != null)
             {
-                m_alarmsClient.DisconnectSession();
+                m_alarmsClient.Disconnect();
+                m_alarmsClient = null;
             }
         }
 
@@ -347,102 +339,69 @@ namespace SampleClient.StateMachine
             if (m_alarmsClient == null)
             {
                 m_alarmsClient = new AlarmsClient(m_application);
+                m_alarmsClient.Initialize();
             }
-            m_alarmsClient.Initialize();
+            
         }
         #endregion
 
         #region  ExecuteCommand Handlers for Browse & Translate
-        private void EndBrowseClient_ExecuteCommand(object sender, EventArgs e)
+        private void StartBrowseClient_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_browseClientSample != null)
+            if (m_browseClient == null)
             {
-                m_browseClientSample.DisconnectSession();
+                m_browseClient = new BrowseClient(m_application);
+                m_browseClient.InitializeSession();
             }
         }
-
-        private void TranslateMultiple_ExecuteCommand(object sender, EventArgs e)
+        private void EndBrowseClient_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_browseClientSample != null)
+            if (m_browseClient != null)
             {
-                m_browseClientSample.TranslateBrowsePathsToNodeIds();
+                m_browseClient.DisconnectSession();
+                m_browseClient = null;
             }
         }
 
         private void Translate_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_browseClientSample != null)
+            if (m_browseClient != null)
             {
-                m_browseClientSample.TranslateBrowsePathToNodeIds();
+                //call translate single path
+                m_browseClient.TranslateBrowsePathToNodeIds();
+                //call translate multiple paths
+                m_browseClient.TranslateBrowsePathsToNodeIds();
             }
         }
 
         private void BrowseServerWithOptions_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_browseClientSample != null)
+            if (m_browseClient != null)
             {
-                m_browseClientSample.BrowseWithOptions();
+                m_browseClient.BrowseWithOptions();
             }
         }
 
         private void BrowseServer_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_browseClientSample != null)
+            if (m_browseClient != null)
             {
-                m_browseClientSample.BrowseTheServer();
-            }
-        }
-
-        private void StartBrowseClient_ExecuteCommand(object sender, EventArgs e)
-        {
-            if (m_browseClientSample == null)
-            {
-                m_browseClientSample = new BrowseClient(m_application);
-                m_browseClientSample.InitializeSession();
+                m_browseClient.BrowseTheServer();
             }
         }
         #endregion
 
         #region ExecuteCommand Handlers for Connect
-        private void EndConnectClient_ExecuteCommand(object sender, EventArgs e)
+        private void ConnectSample_ExecuteCommand(object sender, EventArgs e)
         {
-        }
+            ConnectClient connectClient = new ConnectClient(m_application);
 
-        private void StartConnectClient_ExecuteCommand(object sender, EventArgs e)
-        {
-            if (m_connectClientSample == null)
-            {
-                m_connectClientSample = new ConnectClient(m_application);
-            }
-        }
-        private void SessionWithDiscovery_ExecuteCommand(object sender, EventArgs e)
-        {
-            m_connectClientSample.CreateSessionUsingDiscovery();
-        }
-
-        //private void HttpsWithUserIdentity_ExecuteCommand(object sender, EventArgs e)
-        //{
-        //   m_connectClientSample.CreateHttpsSessionWithUserId();
-        //}
-
-        //private void HttpsWithoutUserIdentity_ExecuteCommand(object sender, EventArgs e)
-        //{
-        //    m_connectClientSample.CreateHttpsSessionWithAnomymousUserId();
-        //}
-
-        private void OpcTcpUserIdentityAndSecurity_ExecuteCommand(object sender, EventArgs e)
-        {
-            m_connectClientSample.CreateOpcTcpSessionWithSecurity();
-        }
-
-        private void OpcTcpUserIdentity_ExecuteCommand(object sender, EventArgs e)
-        {
-            m_connectClientSample.CreateOpcTcpSessionWithUserId();
-        }
-
-        private void OpcTcpWithoutSecurity_ExecuteCommand(object sender, EventArgs e)
-        {
-            m_connectClientSample.CreateOpcTcpSessionWithNoSecurity();
+            connectClient.CreateOpcTcpSessionWithNoSecurity();
+            connectClient.CreateOpcTcpSessionWithSecurity();
+            connectClient.CreateOpcTcpSessionWithUserId();
+            //connectClient.CreateHttpsSessionWithAnomymousUserId();
+            //connectClient.CreateHttpsSessionWithUserId();
+            connectClient.CreateSessionUsingDiscovery();
         }
         #endregion
 
@@ -453,21 +412,14 @@ namespace SampleClient.StateMachine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DiscoveryFindServers_ExecuteCommand(object sender, EventArgs e)
+        private void DiscoverySample_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_discoveryClientSample == null)
-            {
-                //initialize discovery sample
-                m_discoveryClientSample = new DiscoveryClient(m_application.Configuration);
-            }
-            if (m_discoveryClientSample != null)
-            {
-                //call sample discovery methods
-                m_discoveryClientSample.DiscoverServers();
-            }
-            m_discoveryClientSample = null;
+            //initialize discovery sample
+            DiscoveryClient discoveryClientSample = new DiscoveryClient(m_application.Configuration);
+            //call sample discovery methods
+            discoveryClientSample.DiscoverServers();
         }
-       
+
         #endregion
 
         #region  ExecuteCommand Handlers for Events
@@ -475,7 +427,8 @@ namespace SampleClient.StateMachine
         {
             if (m_eventsClient != null)
             {
-                m_eventsClient.DeleteEventMonitoredItem();
+                m_eventsClient.Disconnect();
+                m_eventsClient = null;
             }
         }
 
@@ -500,6 +453,7 @@ namespace SampleClient.StateMachine
             if (m_eventsClient == null)
             {
                 m_eventsClient = new EventsClient(m_application);
+                m_eventsClient.Initialize();
             }
         }
         #endregion
@@ -510,6 +464,7 @@ namespace SampleClient.StateMachine
             if (m_historyClient != null)
             {
                 m_historyClient.DisconnectSession();
+                m_historyClient = null;
             }
         }
 
@@ -542,16 +497,25 @@ namespace SampleClient.StateMachine
             if (m_historyClient == null)
             {
                 m_historyClient = new HistoryClient(m_application);
+                m_historyClient.InitializeSession();
             }
         }
         #endregion
 
         #region  ExecuteCommand Handlers for MonitoredItem
-        private void EndMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        private void StartMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient == null)
+            {
+                m_monitoredItemClient = new MonitoredItemClient(m_application);
+                m_monitoredItemClient.Initialize();
+            }
+        }
+        private void CreateMonitoredItem_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_monitoredItemClient != null)
             {
-                m_monitoredItemClient.DisconnectSession();
+                m_monitoredItemClient.CreateMonitoredItem();
             }
         }
 
@@ -562,20 +526,12 @@ namespace SampleClient.StateMachine
                 m_monitoredItemClient.DeleteMonitoredItem();
             }
         }
-
-        private void CreateMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        private void EndMonitoredItem_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_monitoredItemClient != null)
             {
-                m_monitoredItemClient.CreateMonitoredItem();
-            }
-        }
-
-        private void StartMonitoredItem_ExecuteCommand(object sender, EventArgs e)
-        {
-            if (m_monitoredItemClient == null)
-            {
-                m_monitoredItemClient = new MonitoredItemClient(m_application);
+                m_monitoredItemClient.Disconnect();
+                m_monitoredItemClient = null;
             }
         }
         #endregion
@@ -601,6 +557,69 @@ namespace SampleClient.StateMachine
             //wait and close session
             Task.Delay(1000).Wait();
             methodCallClient.DisconnectSession();
+        }
+        #endregion
+
+        #region ExecuteCommand Handler for Read Write 
+        private void EndReadWrite_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_readWriteClient != null)
+            {
+                m_readWriteClient.DisconnectSession();
+                m_readWriteClient = null;
+            }
+        }
+
+        private void Write_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_readWriteClient != null)
+            {
+                
+            }
+        }
+
+        private void Read_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_readWriteClient != null)
+            {
+                m_readWriteClient.ReadVariableNode();
+                m_readWriteClient.ReadObjectNode();
+            }
+        }
+
+        private void StartReadWrite_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_readWriteClient == null)
+            {
+                m_readWriteClient = new ReadWriteClient(m_application);
+                m_readWriteClient.InitializeSession();
+            }
+        }
+        #endregion
+
+        #region ExecuteCommand Handler for Exit
+        private void Exit_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_browseClient != null)
+            {
+                m_browseClient.DisconnectSession();
+            }
+            if (m_monitoredItemClient != null)
+            {
+                m_monitoredItemClient.Disconnect();
+            }
+            if (m_alarmsClient != null)
+            {
+                m_alarmsClient.Disconnect();
+            }
+            if (m_eventsClient != null)
+            {
+                m_eventsClient.Disconnect();
+            }
+            if (m_historyClient != null)
+            {
+                m_historyClient.DisconnectSession();
+            }
         }
         #endregion
 

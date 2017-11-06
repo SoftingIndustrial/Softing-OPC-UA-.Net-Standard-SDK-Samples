@@ -29,7 +29,6 @@ namespace SampleClient.Samples
         #endregion
 
         #region Constructor
-
         /// <summary>
         /// Create new instance of HistoryClient
         /// </summary>
@@ -46,10 +45,6 @@ namespace SampleClient.Samples
         /// </summary>
         public void HistoryReadRaw()
         {
-            if (m_session == null)
-            {
-                InitializeSession();
-            }
             if (m_session == null)
             {
                 Console.WriteLine("HistoryReadRaw: The session is not initialized!");
@@ -91,15 +86,12 @@ namespace SampleClient.Samples
                     results[i].StatusCode.AggregateBits);
             }
         }
+
         /// <summary>
         /// Read history in interval
         /// </summary>
         public void HistoryReadAtTime()
         {
-            if (m_session == null)
-            {
-                InitializeSession();
-            }
             if (m_session == null)
             {
                 Console.WriteLine("HistoryReadAtTime: The session is not initialized!");
@@ -149,10 +141,6 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                InitializeSession();
-            }
-            if (m_session == null)
-            {
                 Console.WriteLine("HistoryReadProcessed: The session is not initialized!");
                 return;
             }
@@ -192,11 +180,10 @@ namespace SampleClient.Samples
                     i, value, results[i].ServerTimestamp, results[i].SourceTimestamp, results[i].StatusCode,
                     results[i].StatusCode.AggregateBits);
             }
-        } 
+        }
         #endregion
 
-        #region Initialize & DisconnectSession
-
+        #region InitializeSession & DisconnectSession
         /// <summary>
         /// Initialize session object
         /// </summary>
@@ -220,7 +207,6 @@ namespace SampleClient.Samples
                 Console.WriteLine("CreateSession Error: {0}", ex.Message);
                 m_session.Dispose();
                 m_session = null;
-                return;
             }
         }
 

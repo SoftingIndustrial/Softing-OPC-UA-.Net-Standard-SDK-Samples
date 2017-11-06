@@ -161,13 +161,14 @@ namespace SampleClient.Samples
         {
             try
             {
+                Console.WriteLine("Creating the session {0} (SecurityMode = {1}, SecurityPolicy = {2})...", sessionName, securityMode, securityPolicy);
                 // Create the Session object.
                 ClientSession session = m_application.CreateSession(serverUrl, securityMode, securityPolicy,
                     messageEncoding, userId, null);
 
                 session.SessionName = sessionName;
 
-                Console.WriteLine("New session object created with url {0}", session.Url);
+                Console.WriteLine("New session object created with url: {0}", session.Url);
                 return session;
             }
             catch (Exception e)
@@ -192,7 +193,7 @@ namespace SampleClient.Samples
                 // Disconnect the session.
                 Console.WriteLine("Disconnecting the session...");
                 session.Disconnect(true);
-                Console.WriteLine("Session state = {0}", session.CurrentState);
+                Console.WriteLine("Session state = {0}\r\n", session.CurrentState);
             }
             catch (Exception e)
             {

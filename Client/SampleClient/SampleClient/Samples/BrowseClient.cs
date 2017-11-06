@@ -10,7 +10,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using Opc.Ua;
 using Softing.Opc.Ua;
 using Softing.Opc.Ua.Client;
@@ -23,7 +22,6 @@ namespace SampleClient.Samples
     public class BrowseClient
     {
         #region Private Fields
-
         private const string SessionName = "BrowseClient Session";
         private readonly UaApplication m_application;
         private ClientSession m_session;
@@ -31,7 +29,6 @@ namespace SampleClient.Samples
         #endregion
 
         #region Constructor
-
         /// <summary>
         /// Create new instance of BrowseClient
         /// </summary>
@@ -43,7 +40,6 @@ namespace SampleClient.Samples
         #endregion
 
         #region Initialize & DisconnectSession
-
         /// <summary>
         /// Initialize session object
         /// </summary>
@@ -84,20 +80,18 @@ namespace SampleClient.Samples
             try
             {
                 m_session.Disconnect(true);
+                m_session.Dispose();
+                m_session = null;
                 Console.WriteLine("Session is disconnected.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
             }
-
-            m_session.Dispose();
-            m_session = null;
         }
         #endregion
 
         #region Browse Methods
-
         /// <summary>
         /// The BrowseTheServer method uses the Browse method with two parameters, in this case the browse options will be taken from the Session object.
         /// If there are no browse options on the Session object the browse will be done with the default options.
@@ -106,15 +100,12 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                InitializeSession();
-            }
-            if (m_session == null)
-            {
                 Console.WriteLine("BrowseTheServer: The session is not initialized!");
                 return;
             }
             try
             {
+                Console.WriteLine("This is the address space of server: {0}", m_session.Url);
                 //Using the Browse method with null parameters will return the browse result for the root node.
                 IList<ReferenceDescriptionEx> rootReferenceDescriptions = m_session.Browse(null, null);
                 if (rootReferenceDescriptions != null)
@@ -158,10 +149,6 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                InitializeSession();
-            }
-            if (m_session == null)
-            {
                 Console.WriteLine("BrowseWithOptions: The session is not initialized!");
                 return;
             }
@@ -169,8 +156,9 @@ namespace SampleClient.Samples
             options.MaxReferencesReturned = 3;
             try
             {
+                Console.WriteLine("Browse server: {0}, with options: MaxReferencesReturned = {1}", m_session.Url, options.MaxReferencesReturned);
                 //Using the Browse method with null parameters will return the browse result for the root node.
-                IList<ReferenceDescriptionEx> rootReferenceDescriptions = m_session.Browse(null, null, null);
+                IList<ReferenceDescriptionEx> rootReferenceDescriptions = m_session.Browse(null, options, null);
                 if (rootReferenceDescriptions != null)
                 {
                     foreach (var rootReferenceDescription in rootReferenceDescriptions)
@@ -210,16 +198,11 @@ namespace SampleClient.Samples
         #endregion
 
         #region Translate Methods
-
         /// <summary>
         /// Translates the specified browse path to its corresponding NodeId.
         /// </summary>
         public void TranslateBrowsePathToNodeIds()
         {
-            if (m_session == null)
-            {
-                InitializeSession();
-            }
             if (m_session == null)
             {
                 Console.WriteLine("TranslateBrowsePathToNodeIds: The session is not initialized!");
@@ -264,10 +247,6 @@ namespace SampleClient.Samples
         /// </summary>
         public void TranslateBrowsePathsToNodeIds()
         {
-            if (m_session == null)
-            {
-                InitializeSession();
-            }
             if (m_session == null)
             {
                 Console.WriteLine("TranslateBrowsePathsToNodeIds: The session is not initialized!");
@@ -320,19 +299,6 @@ namespace SampleClient.Samples
             {
                 Console.WriteLine("TranslateBrowsePaths error: " + ex.Message);
             }
-        }
-        #endregion
-
-        #region Event Handlers
-        /// <summary>
-        /// Handle the ContinuationPointReached event.
-        /// This event is raised when a continuation point is reached.
-        /// For example if from Browse Options the MaxReferencesReturned is set to x, then when browsing every x references returned this event will be thrown.
-        /// </summary>
-        private void Session_ContinuationPointReached(object sender, CancelEventArgs e)
-        {
-           // Console.WriteLine("Session_ContinuationPointReached: Browse will be canceled...");
-            e.Cancel = true;
         }
         #endregion
     }

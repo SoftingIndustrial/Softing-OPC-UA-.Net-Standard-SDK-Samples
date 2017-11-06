@@ -32,7 +32,7 @@ namespace SampleClient
 
             //Create the process object that will execute user commands
             Process process = new Process(application);
-            while (process.CurrentState != State.Terminated)
+            while (process.CurrentState != State.Exit)
             {
                 // Read commands
                 string inputCommand = Console.ReadKey().KeyChar.ToString();
@@ -43,8 +43,6 @@ namespace SampleClient
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
         }
-
-       
 
         private static void CertificateValidator_CertificateValidation(CertificateValidator validator, CertificateValidationEventArgs e)
         {

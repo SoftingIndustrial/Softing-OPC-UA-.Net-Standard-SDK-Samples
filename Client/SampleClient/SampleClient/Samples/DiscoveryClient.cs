@@ -87,7 +87,6 @@ namespace SampleClient.Samples
             }
         }
 
-
         //todo add FindServersOnNetwork sample
         #endregion
     }

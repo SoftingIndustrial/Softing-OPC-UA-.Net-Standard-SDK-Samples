@@ -58,13 +58,14 @@ namespace SampleClient.Samples
         /// </summary>
         public void ConditionRefresh()
         {
-            if (m_alarmsMonitoredItem == null)
+            if (m_session == null)
             {
-                InitializeAlarmsMonitoredItem();
+                Console.WriteLine("The session is not initialized!");
+                return;
             }
             try
             {
-                if (m_session != null && m_alarmsMonitoredItem != null)
+                if (m_alarmsMonitoredItem != null)
                 {
                     // Clear the local list of alarms
                     m_retainedAlarms.Clear();
@@ -78,10 +79,6 @@ namespace SampleClient.Samples
 
                     Console.WriteLine("ConditionRefresh method invoked.");
                 }
-                else
-                {
-                    Console.WriteLine("ConditionRefresh method could not be invoked. There is no session or subscription.");
-                }
             }
             catch (Exception exception)
             {
@@ -94,15 +91,15 @@ namespace SampleClient.Samples
         /// </summary>
         public void AddCommentToAlarm()
         {
+            if (m_session == null)
+            {
+                Console.WriteLine("AddCommentToAlarm: The session is not initialized!");
+                return;
+            }
             //check to see if there are any known alarms 
             if (m_retainedAlarms.Count == 0)
             {
                 Console.WriteLine("AddCommentToAlarm: The list of active alarms is empty!");
-                return;
-            }
-            if (m_session == null)
-            {
-                Console.WriteLine("AddCommentToAlarm: The session is not initialized!");
                 return;
             }
             try
@@ -155,15 +152,15 @@ namespace SampleClient.Samples
         /// </summary>
         public void AcknowledgeAlarm()
         {
+            if (m_session == null)
+            {
+                Console.WriteLine("AcknowledgeAlarm: The session is not initialized!");
+                return;
+            }
             //check to see if there are any known alarms 
             if (m_retainedAlarms.Count == 0)
             {
                 Console.WriteLine("AcknowledgeAlarm: The list of active alarms is empty!");
-                return;
-            }
-            if (m_session == null)
-            {
-                Console.WriteLine("AcknowledgeAlarm: The session is not initialized!");
                 return;
             }
             try
@@ -211,25 +208,6 @@ namespace SampleClient.Samples
                 Console.WriteLine("AcknowledgeAlarms Error : {0}.", exception.Message);
             }
         }
-
-        /// <summary>
-        /// delete the MonitoredItem for the Alarms node
-        /// </summary>
-        public void DeleteAlarmsMonitoredItem()
-        {
-            if (m_alarmsMonitoredItem != null)
-            {
-                m_alarmsMonitoredItem.EventsReceived -= m_alarmsMonitoredItem_EventsReceived;
-                m_alarmsMonitoredItem.Disconnect(true);
-
-                m_alarmsMonitoredItem = null;
-                Console.WriteLine("Alarms monitored item was deleted!");
-            }
-            else
-            {
-                Console.WriteLine("Alarms monitored item is not created!");
-            }
-        } 
         #endregion
 
         #region Initialize & Disconnect Session
@@ -281,10 +259,11 @@ namespace SampleClient.Samples
         /// <summary>
         /// Create a MonitoredItem for the alarms node
         /// </summary>
-        public void InitializeAlarmsMonitoredItem()
+        private void InitializeAlarmsMonitoredItem()
         {
             if (m_session == null || m_subscription == null)
             {
+                Console.WriteLine("The session is not initialized!");
                 return;
             }
 
@@ -330,14 +309,10 @@ namespace SampleClient.Samples
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
-        public virtual void DisconnectSession()
+        public void Disconnect()
         {
             try
             {
-                if (m_alarmsMonitoredItem != null)
-                {
-                    DeleteAlarmsMonitoredItem();
-                }
                 //disconnect subscription
                 if (m_subscription != null)
                 {

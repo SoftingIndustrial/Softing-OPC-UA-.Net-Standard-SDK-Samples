@@ -20,27 +20,19 @@ namespace SampleClient.StateMachine
         History,
         MonitoredItem,
         Alarms,
-        Terminated
+        ReadWrite,
+        Exit
     }
 
     public enum Command
     {
-        DiscoveryFindServers,
-
-        StartConnectClient,
-        OpcTcpWithoutSecurity,
-        OpcTcpUserIdentity,
-        OpcTcpUserIdentityAndSecurity,
-        HttpsWithoutUserIdentity,
-        HttpsWithUserIdentity,
-        SessionWithDiscovery,
-        EndConnectClient,
+        DiscoverySample,
+        ConnectSample,
 
         StartBrowse,
         BrowseServer,
         BrowseServerWithOptions,
         Translate,
-        TranslateMultiple,
         EndBrowse,
 
         StartEvents,
@@ -64,6 +56,11 @@ namespace SampleClient.StateMachine
         AcknowledgeAlarms,
         AddCommentAlarms,
         EndAlarms,
+
+        StartReadWrite,
+        Read,
+        Write,
+        EndReadWrite,
 
         CallMethods,
         Exit

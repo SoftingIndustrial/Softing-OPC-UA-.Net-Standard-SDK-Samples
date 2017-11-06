@@ -9,8 +9,6 @@
  * ======================================================================*/
 
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua;
 using Softing.Opc.Ua.Client;
@@ -23,20 +21,17 @@ namespace SampleClient.Samples
     class MonitoredItemClient
     {
         #region Private Fields
-
         private const string SessionName = "MonitoredItemClient Session";
         private const string SubscriptionName = "MonitoredItemClient Subscription";
 
-        // Browse path: Root\\Objects\\DataAccess\Refrigerator\MotorTemperature
-        private static readonly string m_monitoredItemNodeId = "ns=3;i=28";
-        private static readonly string m_monitoredItemBrowsePath = "Root\\Objects\\DataAccess\\Refrigerator\\MotorTemperature";
+        private static readonly string m_monitoredItemBrowsePath = "Server\\ServerStatus\\CurrentTime";
+        private static readonly NodeId m_monitoredItemNodeId = VariableIds.Server_ServerStatus_CurrentTime;
         
         private readonly UaApplication m_application;
-        private readonly List<ClientMonitoredItem> m_monitoredItems;
-        private readonly Random m_randomGenerator;
 
         private ClientSession m_session;
         private ClientSubscription m_subscription;
+        private ClientMonitoredItem m_monitoredItem;
         #endregion
 
         #region Constructor
@@ -47,8 +42,6 @@ namespace SampleClient.Samples
         public MonitoredItemClient(UaApplication application)
         {
             m_application = application;
-            m_monitoredItems = new List<ClientMonitoredItem>();
-            m_randomGenerator = new Random();
         }
         #endregion
 
@@ -56,7 +49,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Initialize session and subscription
         /// </summary>
-        private void InitializeSession()
+        public void Initialize()
         {
             // create the session object.            
             m_session = m_application.CreateSession(
@@ -73,29 +66,27 @@ namespace SampleClient.Samples
                 //connect session
                 m_session.Connect(false, true);
                 Console.WriteLine("Session is connected.");
+
+                //create the subscription
+                m_subscription = new ClientSubscription(m_session, SubscriptionName);
+
+                // set the Publishing interval for this subscription
+                m_subscription.PublishingInterval = 500;
+                Console.WriteLine("Subscription created");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("CreateSession Error: {0}", ex.Message);
                 m_session.Dispose();
                 m_session = null;
-                return;
             }
-
-            //create the subscription
-            m_subscription = new ClientSubscription(m_session, SubscriptionName);
-
-            // set the Publishing interval for this subscription
-            m_subscription.PublishingInterval = 500;
-            Console.WriteLine("Subscription created");
         }
 
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
-        public virtual void DisconnectSession()
+        public virtual void Disconnect()
         {
-
             try
             {
                 //disconnect subscription
@@ -127,24 +118,23 @@ namespace SampleClient.Samples
         /// </summary>
         internal void CreateMonitoredItem()
         {
-            if (m_session == null || m_subscription == null)
-            {
-                InitializeSession();
-            }
             if (m_session == null)
             {
                 Console.WriteLine("CreateMonitoredItem: The session is not initialized!");
                 return;
             }
+            if (m_monitoredItem != null)
+            {
+                Console.WriteLine("MonitoredItem already created");
+                return;
+            }
             try
             {
-                NodeId node = new NodeId(m_monitoredItemNodeId);
-                ClientMonitoredItem monitoredItem = new ClientMonitoredItem(m_subscription, node, AttributeId.Value,
-                    null, "Sample Monitored Item" + m_monitoredItems.Count);
-                monitoredItem.DataChangesReceived += Monitoreditem_DataChangesReceived;
-                m_monitoredItems.Add(monitoredItem);
+               m_monitoredItem = new ClientMonitoredItem(m_subscription, m_monitoredItemNodeId, AttributeId.Value,
+                    null, "Monitored Item" + m_monitoredItemBrowsePath);
+                m_monitoredItem.DataChangesReceived += Monitoreditem_DataChangesReceived;
 
-                Console.WriteLine("Monitored item {0} on browse path '{1}' created. Data value changes are shown:", m_monitoredItems.Count, m_monitoredItemBrowsePath);
+                Console.WriteLine("Monitored item '{0}' created. Data value changes are shown:", m_monitoredItem.DisplayName);
             }
             catch (Exception ex)
             {
@@ -157,23 +147,22 @@ namespace SampleClient.Samples
         /// </summary>
         internal void DeleteMonitoredItem()
         {
-            if (m_monitoredItems.Count == 0)
-            {
-                Console.WriteLine("There is no Monitored item to be deleted.");
-                return;
-            }
             if (m_session == null)
             {
                 Console.WriteLine("DeleteMonitoredItem: The session is not initialized!");
                 return;
             }
+            if (m_monitoredItem == null)
+            {
+                Console.WriteLine("Monitored item is not created.");
+                return;
+            }
             try
             {
-                ClientMonitoredItem monitoredItem = m_monitoredItems[m_monitoredItems.Count - 1];
-                monitoredItem.DataChangesReceived -= Monitoreditem_DataChangesReceived;
+                m_monitoredItem.DataChangesReceived -= Monitoreditem_DataChangesReceived;
                 Console.WriteLine("Monitored item unsubscribed from receiving data change notifications.");
-                monitoredItem.Delete();
-                m_monitoredItems.Remove(monitoredItem);
+                m_monitoredItem.Delete();
+                m_monitoredItem = null;
                 Console.WriteLine("Monitored item deleted. ");
             }
             catch (Exception ex)
@@ -191,7 +180,6 @@ namespace SampleClient.Samples
         /// <param name="e">The <see cref="DataChangesNotificationEventArgs"/> instance containing the event data.</param>
         private void Monitoreditem_DataChangesReceived(object sender, DataChangesNotificationEventArgs e)
         {
-            Task.Delay(10000).Wait();
             foreach (var dataChangeNotification in e.DataChangeNotifications)
             {
                 Console.WriteLine(" {0} Received data value change for '{1}':", dataChangeNotification.SequenceNo, dataChangeNotification.MonitoredItem.DisplayName);

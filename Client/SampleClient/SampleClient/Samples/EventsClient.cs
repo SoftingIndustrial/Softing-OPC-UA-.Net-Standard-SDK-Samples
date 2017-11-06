@@ -33,7 +33,6 @@ namespace SampleClient.Samples
         #endregion
 
         #region Constructor
-
         /// <summary>
         /// Create new instance of BrowseClientSample
         /// </summary>
@@ -44,25 +43,19 @@ namespace SampleClient.Samples
         }
         #endregion
 
-        #region Event Monitored Item Methods
+        #region Initialize & Disconnect Session
         /// <summary>
-        /// Creates the event monitored item.
+        /// Initialize session and subscription
         /// </summary>
-        public void CreateEventMonitoredItem()
+        public void Initialize()
         {
-            if (m_eventMonitoredItem != null)
-            {
-                Console.WriteLine("EventMonitoredItem is already created.");
-                return;
-            }
-            
             // create the session object.            
             m_session = m_application.CreateSession(
                 Constants.SampleServerUrlOpcTcp,
-                MessageSecurityMode.None, 
-                SecurityPolicy.None, 
-                MessageEncoding.Binary, 
-                new UserIdentity(), 
+                MessageSecurityMode.None,
+                SecurityPolicy.None,
+                MessageEncoding.Binary,
+                new UserIdentity(),
                 null);
             m_session.SessionName = SessionName;
 
@@ -71,21 +64,68 @@ namespace SampleClient.Samples
                 //connect session
                 m_session.Connect(false, true);
                 Console.WriteLine("Session is connected.");
+
+                //create the subscription
+                m_subscription = new ClientSubscription(m_session, SubscriptionName);
+
+                // set the Publishing interval for this subscription
+                m_subscription.PublishingInterval = 500;
+                Console.WriteLine("Subscription created");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("CreateSession Error: {0}", ex.Message);
                 m_session.Dispose();
                 m_session = null;
+            }
+        }
+
+        /// <summary>
+        /// Disconnects the current session.
+        /// </summary>
+        public virtual void Disconnect()
+        {
+            try
+            {
+                //disconnect subscription
+                if (m_subscription != null)
+                {
+                    m_subscription.Disconnect(true);
+                    m_subscription.Delete();
+                    m_subscription = null;
+                    Console.WriteLine("Subscription is deleted.");
+                }
+                if (m_session != null)
+                {
+                    m_session.Disconnect(true);
+                    m_session.Dispose();
+                    m_session = null;
+                    Console.WriteLine("Session is disconnected.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
+            }
+        }
+        #endregion
+
+        #region Event Monitored Item Methods
+        /// <summary>
+        /// Creates the event monitored item.
+        /// </summary>
+        public void CreateEventMonitoredItem()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("The session is not initialized!");
                 return;
             }
-
-            //create the subscription
-            m_subscription = new ClientSubscription(m_session, SubscriptionName);
-
-            // set the Publishing interval for this subscription
-            m_subscription.PublishingInterval = 500;
-            Console.WriteLine("Subscription created");
+            if (m_eventMonitoredItem != null)
+            {
+                Console.WriteLine("EventMonitoredItem is already created.");
+                return;
+            }
 
             try
             {
@@ -105,6 +145,11 @@ namespace SampleClient.Samples
         /// </summary>
         public void DeleteEventMonitoredItem()
         {
+            if (m_session == null)
+            {
+                Console.WriteLine("The session is not initialized!");
+                return;
+            }
             try
             {
                 if (m_eventMonitoredItem != null)
@@ -119,28 +164,12 @@ namespace SampleClient.Samples
                 {
                     Console.WriteLine("There was no Event Monitored Item to be deleted.");
                 }
-                if (m_session != null && m_subscription != null)
-                {
-                    //delete subscription
-                    m_session.DeleteSubscription(m_subscription);
-                    m_subscription = null;
-                    Console.WriteLine("Subscription deleted");
-                }
-                if (m_session != null)
-                {
-                    //disconnect session
-                    m_session.Disconnect(true);
-                    m_session.Dispose();
-                    m_session = null;
-                    Console.WriteLine("Session is disconnected.");
-                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("DeleteEventMonitoredItem Error: {0}", ex.Message);
             }
         }
-
         #endregion
 
         #region Event Handlers
