@@ -43,7 +43,7 @@ namespace SampleClient.Samples
         public void CreateOpcTcpSessionWithNoSecurity()
         {
             // create the session object.
-            using (ClientSession session = CreateSession("UaBinaryNoSecuritySession", Constants.SampleServerUrlOpcTcp,
+            using (ClientSession session = CreateSession("UaBinaryNoSecuritySession", Constants.ServerUrl,
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity()))
             {
                 ConnectTest(session);
@@ -56,7 +56,7 @@ namespace SampleClient.Samples
         public void CreateOpcTcpSessionWithUserId()
         {
             // create the session object.
-            using (ClientSession session = CreateSession("UaBinaryUserIdSession", Constants.SampleServerUrlOpcTcp,
+            using (ClientSession session = CreateSession("UaBinaryUserIdSession", Constants.ServerUrl,
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity("usr", "pwd")))
             {
                 ConnectTest(session);
@@ -69,7 +69,7 @@ namespace SampleClient.Samples
         public void CreateOpcTcpSessionWithSecurity()
         {
             // create the session object.
-            using (ClientSession session = CreateSession("UaBinarySecureSession", Constants.SampleServerUrlOpcTcp,
+            using (ClientSession session = CreateSession("UaBinarySecureSession", Constants.ServerUrl,
                 MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic128Rsa15, MessageEncoding.Binary,
                 new UserIdentity("usr", "pwd")))
             {
@@ -83,7 +83,7 @@ namespace SampleClient.Samples
         public void CreateHttpsSessionWithAnomymousUserId()
         {
             // create the session object.
-            using (ClientSession session = CreateSession("HttpsAnonymousUserIdSession", Constants.SampleServerUrlHttps,
+            using (ClientSession session = CreateSession("HttpsAnonymousUserIdSession", Constants.ServerUrlHttps,
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Xml, new UserIdentity()))
             {
                 ConnectTest(session);
@@ -96,7 +96,7 @@ namespace SampleClient.Samples
         public void CreateHttpsSessionWithUserId()
         {
             // create the session object.
-            using (ClientSession session = CreateSession("HttpsUserIdSession", Constants.SampleServerUrlHttps,
+            using (ClientSession session = CreateSession("HttpsUserIdSession", Constants.ServerUrlHttps,
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity("usr", "pwd")))
             {
                 ConnectTest(session);
@@ -113,7 +113,7 @@ namespace SampleClient.Samples
                 // Retrieve the list of available server connection channels by calling GetEndpoints on the Server's discovery endpoint.
                 Console.WriteLine("Discovering available endpoints...");
                 DiscoveryService discoveryService = new DiscoveryService(m_application.Configuration);
-                IList<EndpointDescriptionEx> endpoints = discoveryService.GetEndpoints(Constants.SampleServerUrlOpcTcp);
+                IList<EndpointDescriptionEx> endpoints = discoveryService.GetEndpoints(Constants.ServerUrl);
 
                 Console.WriteLine("GetEndpoints returned {0} endpoints.", endpoints.Count);
 
@@ -135,7 +135,7 @@ namespace SampleClient.Samples
                 if (selectedEndpoint != null)
                 {
                     // create the session object.
-                    using (ClientSession session = CreateSession("UaDiscoverySession", Constants.SampleServerUrlOpcTcp,
+                    using (ClientSession session = CreateSession("UaDiscoverySession", Constants.ServerUrl,
                         selectedEndpoint.SecurityMode,
                         (SecurityPolicy)Enum.Parse(typeof(SecurityPolicy), selectedEndpoint.SecurityPolicy),
                         selectedEndpoint.Encoding[0],

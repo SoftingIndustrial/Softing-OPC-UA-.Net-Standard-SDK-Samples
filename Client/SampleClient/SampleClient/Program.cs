@@ -21,10 +21,11 @@ namespace SampleClient
 
         static void Main(string[] args)
         {
-            Console.Title = string.Format("SampleClient [ServerUrl: {0}]", Constants.SampleServerUrlOpcTcp);
+            Console.Title = string.Format("SampleClient [ServerUrl: {0}]", Constants.ServerUrl);
 
             //create the UaApplication object from config file
-            UaApplication application = UaApplication.CreateConfiguredApplication(ConfigurationFile).Result;
+            UaApplication application = UaApplication.Create(ConfigurationFile).Result;
+
             if (application.Configuration.SecurityConfiguration.AutoAcceptUntrustedCertificates)
             {
                 application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);

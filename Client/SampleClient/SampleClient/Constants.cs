@@ -17,7 +17,7 @@ namespace SampleClient
     public class Constants
     {
         public const string ServerDiscoveryUrl = "opc.tcp://localhost:4840";   //getdefaultdiscoveryurl???
-        public const string SampleServerUrlOpcTcp = "opc.tcp://localhost:62549/SampleServer";
-        public const string SampleServerUrlHttps = "https://localhost:62550/SampleServer";
+        public const string ServerUrl = "opc.tcp://localhost:61510/SampleServer";
+        public const string ServerUrlHttps = "https://localhost:61511/SampleServer";
     }
 }

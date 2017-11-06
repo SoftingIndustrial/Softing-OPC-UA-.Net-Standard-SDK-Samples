@@ -53,7 +53,7 @@ namespace SampleClient.Samples
         {
             // create the session object.            
             m_session = m_application.CreateSession(
-                Constants.SampleServerUrlOpcTcp,
+                Constants.ServerUrl,
                 MessageSecurityMode.None,
                 SecurityPolicy.None,
                 MessageEncoding.Binary,

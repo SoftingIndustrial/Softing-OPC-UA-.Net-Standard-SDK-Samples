@@ -326,7 +326,7 @@ namespace SampleClient.Samples
         {
             UserIdentity userIdentity = new UserIdentity();
             // create the session object.            
-            m_session = m_application.CreateSession(Constants.SampleServerUrlOpcTcp,
+            m_session = m_application.CreateSession(Constants.ServerUrl,
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
             m_session.SessionName = SessionName;
 

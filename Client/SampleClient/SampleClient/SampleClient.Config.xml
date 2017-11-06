@@ -32,23 +32,20 @@
            In this case the first certificate matching the complete distinguished name is used. localhost is replaced with the hostname.
            If no certificate is found, a new self signed application certificate is created.
            The Thumbprint should be specified if the CN or DN does not uniquely identify a certificate. -->
-      <SubjectName>SoftingOpcUaAlarmsClient</SubjectName>
+      <SubjectName>SoftingOpcUaSampleClient</SubjectName>
     </ApplicationCertificate>
     <TrustedIssuerCertificates>
       <StoreType>Directory</StoreType>
       <StorePath>%CommonApplicationData%\Softing\OpcUaNetStdToolkit\pki\issuer</StorePath>
     </TrustedIssuerCertificates>
-    <!-- The list of trusted certificates. 
-    
+    <!-- The list of trusted certificates.
          Some UA applications will use self-signed certificates (certificates without a CA)
          which means that every application which communicates with it must be configured to 
          trust it.
-         
          Administrators may designate a certificate store that contains trusted UA application 
          instance certificates (this store should not be the same as the store used for CAs 
          certificates). Alternately, Administrators may enter the certificates explicitly in
          this list.
-         
          Note that entries in this list may either reference a certificate in the store or
          may contained the entire certificate encoded as base64 data.
          -->
@@ -65,6 +62,12 @@
       <StoreType>Directory</StoreType>
       <StorePath>%CommonApplicationData%\Softing\OpcUaNetStdToolkit\pki\rejected</StorePath>
     </RejectedCertificateStore>
+
+    <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
+    be used for easy debugging purposes ONLY and turned off for production deployments! -->
+    <AutoAcceptUntrustedCertificates>false</AutoAcceptUntrustedCertificates>
+    <RejectSHA1SignedCertificates>true</RejectSHA1SignedCertificates>
+    <MinimumCertificateKeySize>2048</MinimumCertificateKeySize>
   </SecurityConfiguration>
 
   <TransportConfigurations></TransportConfigurations>
