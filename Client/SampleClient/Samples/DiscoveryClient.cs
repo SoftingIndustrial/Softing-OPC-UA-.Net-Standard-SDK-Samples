@@ -19,22 +19,20 @@ namespace SampleClient.Samples
     public class DiscoveryClient
     {
         #region Private Fields
-        private readonly ApplicationConfigurationEx m_applicationConfiguration; 
+        private readonly UaApplication m_application;
         #endregion
-        
+
         #region Constructor
         /// <summary>
         /// Create new instance of DiscoveryClient
         /// </summary>
-        public DiscoveryClient(ApplicationConfigurationEx applicationConfiguration)
+        public DiscoveryClient(UaApplication application)
         {
-            //keep reference to ApplicationConfigurationEx object
-            m_applicationConfiguration = applicationConfiguration;
+            m_application = application;
         }
-
         #endregion
 
-        #region Discover & GetEndpoints Methods
+        #region Discovery Methods
         /// <summary>
         /// Displays all registered server applications and their available endpoints.
         /// </summary>
@@ -42,29 +40,29 @@ namespace SampleClient.Samples
         {
             try
             {
-                string discoveryUrl = DiscoveryService.GetDefaultDiscoveryUrl("localhost", TransportProtocols.OpcTcp);
+                Console.WriteLine("Discovering all available servers and their endpoints from local host...");
 
-                Console.WriteLine("Discovering all available servers and their endpoints from {0}...", discoveryUrl);
-
-                //initialize the discovery service
-                DiscoveryService discoveryService = new DiscoveryService(m_applicationConfiguration);
-
-                // The method will return all the available server applications from the specified machine
-                var servers = discoveryService.DiscoverServers(discoveryUrl);
-
+                // The method will return all the registered server applications from the specified machine.
+                // If the "discoveryUrl" parameter is null or empty, DiscoverServers() will return the servers from the local machine.
+                var servers = m_application.DiscoverServers(null);
                 Console.WriteLine("DiscoverServers returned {0} results:", servers.Count);
 
-                foreach (var serverApplicationDescription in servers)
+                foreach (var serverDescription in servers)
                 {
                     try
                     {
-                        Console.WriteLine("\r\nCall GetEndpoints for server: {0} ...",
-                            serverApplicationDescription.ApplicationUri);
-                        // retrieve endpoints for each running server and display their information
-                        var endpoins = discoveryService.GetEndpoints(serverApplicationDescription);
+                        if (serverDescription.DiscoveryUrls == null || serverDescription.DiscoveryUrls.Count == 0)
+                        {
+                            // skip servers without DiscoveryUrl information.
+                            continue;
+                        }
 
-                        Console.WriteLine("-Server: {0} has {1} endpoints:", serverApplicationDescription.ApplicationUri,
-                            endpoins.Count);
+                        // retrieve available endpoints for each registered server and display their information.
+                        Console.WriteLine("\r\nCall GetEndpoints for server: {0} ...", serverDescription.ApplicationUri);
+                        string serverDiscoveryUrl = serverDescription.DiscoveryUrls[0];
+                        var endpoins = m_application.GetEndpoints(serverDiscoveryUrl);
+
+                        Console.WriteLine("-Server: {0} has {1} available endpoints:", serverDiscoveryUrl, endpoins.Count);
 
                         foreach (var endpointDescription in endpoins)
                         {
@@ -74,20 +72,70 @@ namespace SampleClient.Samples
                                 endpointDescription.SecurityPolicy);
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception ex)
                     {
-                        Console.WriteLine("-Server: {0} GetEndpoints Error: {1}", serverApplicationDescription.ApplicationUri,
-                            e.Message);
+                        Console.WriteLine("-Server: {0} GetEndpoints Error: {1}", serverDescription.ApplicationUri, ex.Message);
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("DiscoverServers Error : {0}.", e.Message);
+                Console.WriteLine("DiscoverServers Error : {0}.", ex.Message);
             }
         }
 
-        //todo add FindServersOnNetwork sample
+        /// <summary>
+        /// Displays all registered server applications on the network.
+        /// </summary>
+        public void DiscoverServersOnNetwork()
+        {
+            try
+            {
+                Console.WriteLine("Discovering all available servers and their endpoints from local network...");
+
+                // The method will return all the registered server applications from the local network.
+                // DiscoverServersOnNetwork service is supported only by LDS-ME installations.
+                // If the "discoveryUrl" parameter is null or empty, DiscoverServersOnNetwork() will be invoked on the local machine.
+                var serversOnNetwork = m_application.DiscoverServersOnNetwork(null);
+
+                Console.WriteLine("DiscoverServersOnNetwork returned {0} results:", serversOnNetwork.Count);
+
+                foreach (var serverOnNetwork in serversOnNetwork)
+                {
+                    try
+                    {
+                        if (String.IsNullOrEmpty( serverOnNetwork.DiscoveryUrl))
+                        {
+                            // skip servers without DiscoveryUrl information.
+                            continue;
+                        }
+
+                        // retrieve available endpoints for each registered server and display their information.
+                        Console.WriteLine("\r\nCall GetEndpoints for server: {0} ...", serverOnNetwork.ServerName);
+                        string serverDiscoveryUrl = serverOnNetwork.DiscoveryUrl;
+                        var endpoins = m_application.GetEndpoints(serverDiscoveryUrl);
+
+                        Console.WriteLine("-Server: {0} has {1} available endpoints:", serverDiscoveryUrl, endpoins.Count);
+
+                        foreach (var endpointDescription in endpoins)
+                        {
+                            Console.WriteLine("       {0} - {1} - {2}",
+                                endpointDescription.EndpointUrl,
+                                endpointDescription.SecurityMode,
+                                endpointDescription.SecurityPolicy);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("-Server: {0} GetEndpoints Error: {1}", serverOnNetwork.DiscoveryUrl, ex.Message);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("DiscoverServersOnNetwork Error : {0}.", ex.Message);
+            }
+        }
         #endregion
     }
 }

@@ -415,9 +415,10 @@ namespace SampleClient.StateMachine
         private void DiscoverySample_ExecuteCommand(object sender, EventArgs e)
         {
             //initialize discovery sample
-            DiscoveryClient discoveryClientSample = new DiscoveryClient(m_application.Configuration);
+            DiscoveryClient discoveryClientSample = new DiscoveryClient(m_application);
             //call sample discovery methods
             discoveryClientSample.DiscoverServers();
+            discoveryClientSample.DiscoverServersOnNetwork();
         }
 
         #endregion

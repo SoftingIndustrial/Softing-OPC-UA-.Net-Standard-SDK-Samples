@@ -112,8 +112,7 @@ namespace SampleClient.Samples
             {
                 // Retrieve the list of available server connection channels by calling GetEndpoints on the Server's discovery endpoint.
                 Console.WriteLine("Discovering available endpoints...");
-                DiscoveryService discoveryService = new DiscoveryService(m_application.Configuration);
-                IList<EndpointDescriptionEx> endpoints = discoveryService.GetEndpoints(Constants.ServerUrl);
+                IList<EndpointDescriptionEx> endpoints = m_application.GetEndpoints(Constants.ServerUrl);
 
                 Console.WriteLine("GetEndpoints returned {0} endpoints.", endpoints.Count);
 
