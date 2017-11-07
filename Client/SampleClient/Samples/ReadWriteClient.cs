@@ -40,7 +40,6 @@ namespace SampleClient.Samples
             m_application = application;
         }
         #endregion
-
        
         #region Public Methods
         /// <summary>

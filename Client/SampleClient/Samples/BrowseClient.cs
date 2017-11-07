@@ -224,11 +224,14 @@ namespace SampleClient.Samples
 
                 if (translateResults != null)
                 {
-                    Console.WriteLine("TranslateBrowsePath returned {0} result(s):", translateResults.Count);
 
+                    Console.WriteLine("TranslateBrowsePath returned {0} result(s):", translateResults.Count);
+                    //for display reasons create BrowsePathEx
+                    BrowsePathEx sourceBrowsePath = new BrowsePathEx(startingNode, browsePath);
+                    Console.Write("   {0}\n\r           Target Nodes = ", sourceBrowsePath);
                     foreach (NodeId result in translateResults)
                     {
-                        Console.WriteLine("    {0}", result);
+                        Console.WriteLine("{0}; ", result);
                     }
                 }
                 else
@@ -289,7 +292,7 @@ namespace SampleClient.Samples
 
                     foreach (NodeId targetNode in browsePathResult.TargetIds)
                     {
-                        Console.Write("{0} ;", targetNode);
+                        Console.Write("{0}; ", targetNode);
                     }
 
                     Console.WriteLine("\b \b");
