@@ -4,7 +4,8 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <AssemblyName>SampleServer</AssemblyName>
+    <RootNamespace>SampleServer</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -54,7 +55,6 @@
   <ItemGroup>
     <Folder Include="Alarms\" />
     <Folder Include="DataAccess\" />
-    <Folder Include="FileSystem\" />
     <Folder Include="Methods\" />
     <Folder Include="UserAuthentication\" />
     <Folder Include="NodeSetImport\" />

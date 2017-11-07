@@ -32,15 +32,16 @@ namespace SampleServer.HistoricalDataAccess
 
 			try
 			{
-				// Create the root folder
-				BaseObjectState root = new BaseObjectState(null);
+                // Create the root folder
+			    FolderState root = new FolderState(null);
 
 				root.NodeId = new NodeId("HistoricalDataAccess", NamespaceIndex);
 				root.BrowseName = new QualifiedName("HistoricalDataAccess", NamespaceIndex);
 				root.DisplayName = root.BrowseName.Name;
+			    root.TypeDefinitionId = ObjectTypeIds.FolderType;
 
-				// Ensure root can be found via the Objects object
-				IList<IReference> references = null;
+                // Ensure root can be found via the Objects object
+                IList<IReference> references = null;
 				if(!externalReferences.TryGetValue(ObjectIds.ObjectsFolder, out references))
 				{
 					externalReferences[ObjectIds.ObjectsFolder] = references = new List<IReference>();

@@ -77,11 +77,9 @@ namespace SampleServer.Alarms
 
            this.StateChanged += ExclusiveLimitMonitor_StateChanged;
         }
-
         #endregion
 
         #region Private Methods
-
         private void InitializeAlarmMonitor(
             ISystemContext context,
             ushort namespaceIndex,
@@ -307,14 +305,11 @@ namespace SampleServer.Alarms
                 condition.AddReference(ReferenceTypeIds.HasCondition, true, this.NodeId);
             }
         }
-
         #endregion
 
         #region Private Fields
-
         private ExclusiveLimitAlarmState m_alarm;
         private List<ConditionState> m_conditions;
-
         #endregion
     }
 }

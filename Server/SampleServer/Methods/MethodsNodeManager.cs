@@ -59,7 +59,7 @@ namespace SampleServer.Methods
             lock (Lock)
             {
                 // Create the root of the node manager in the AddressSpace
-                BaseObjectState root = new BaseObjectState(null);
+                FolderState root = new FolderState(null);
 
                 // Set root object data 
                 root.NodeId = GenerateNodeId();
@@ -67,7 +67,7 @@ namespace SampleServer.Methods
                 root.DisplayName = root.BrowseName.Name;
                 root.Description = "Methods";
                 root.EventNotifier = EventNotifiers.SubscribeToEvents;
-                root.TypeDefinitionId = ObjectTypeIds.BaseObjectType;
+                root.TypeDefinitionId = ObjectTypeIds.FolderType;
 
                 // Ensure the process object can be found via the server object
                 IList<IReference> references = null;

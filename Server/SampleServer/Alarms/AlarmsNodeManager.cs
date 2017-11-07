@@ -21,7 +21,6 @@ namespace SampleServer.Alarms
     public class AlarmsNodeManager : CustomNodeManager2
     {
         #region Constructors
-
         /// <summary>
         /// Initializes the node manager
         /// </summary>
@@ -29,11 +28,9 @@ namespace SampleServer.Alarms
         {
             SystemContext.NodeIdFactory = this;
         }
-
         #endregion
 
         #region INodeIdFactory Members
-
         /// <summary>
         /// Creates the NodeId for the specified node.
         /// </summary>
@@ -41,11 +38,9 @@ namespace SampleServer.Alarms
         {
             return GenerateNodeId();
         }
-
         #endregion
 
         #region INodeManager Members
-
         /// <summary>
         /// Does any initialization required before the address space can be used.
         /// </summary>
@@ -59,7 +54,7 @@ namespace SampleServer.Alarms
             lock (Lock)
             {
                 // Create the root of the node manager in the AddressSpace
-                BaseObjectState root = new BaseObjectState(null);
+                FolderState root = new FolderState(null);
 
                 // Set root object data 
                 root.NodeId = GenerateNodeId();
@@ -67,7 +62,7 @@ namespace SampleServer.Alarms
                 root.DisplayName = root.BrowseName.Name;
                 root.Description = "Alarms";
                 root.EventNotifier = EventNotifiers.SubscribeToEvents;
-                root.TypeDefinitionId = ObjectTypeIds.BaseObjectType;
+                root.TypeDefinitionId = ObjectTypeIds.FolderType;
 
                 // Ensure the process object can be found via the server object
                 IList<IReference> references = null;
@@ -136,7 +131,6 @@ namespace SampleServer.Alarms
                     2.0);
 
                 // Add Support for Event Notifiers
-
                 // Creating notifier ensures events propogate up the hierarchy when they are produced
                 AddRootNotifier(root);
 
@@ -245,13 +239,10 @@ namespace SampleServer.Alarms
         {
             return new NodeId(++m_nextNodeId, NamespaceIndex);
         }
-
         #endregion
 
         #region Private Fields
-
         private uint m_nextNodeId = 0;
-        
         #endregion
     }
 }

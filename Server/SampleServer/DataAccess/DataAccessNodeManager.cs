@@ -22,19 +22,16 @@ namespace SampleServer.DataAccess
     public class DataAccessNodeManager : CustomNodeManager2
     {
         #region Constructors
-
         /// <summary>
         /// Initializes the node manager
         /// </summary>
         public DataAccessNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration, Namespaces.DataAccess)
         {
-            SystemContext.NodeIdFactory = this;            
+            SystemContext.NodeIdFactory = this;
         }
-
         #endregion
 
         #region INodeIdFactory Members
-
         /// <summary>
         /// Creates the NodeId for the specified node
         /// </summary>
@@ -42,11 +39,9 @@ namespace SampleServer.DataAccess
         {
             return GenerateNodeId();
         }
-
         #endregion
 
         #region INodeManager Members
-
         /// <summary>
         /// Does any initialization required before the address space can be used.
         /// </summary>
@@ -152,11 +147,9 @@ namespace SampleServer.DataAccess
         {
             return new NodeId(++m_nextNodeId, NamespaceIndex);
         }
-
         #endregion
 
         #region Private Methods
-
         /// <summary>
         /// Creates the refrigerator instance with all its components
         /// </summary>
@@ -265,7 +258,7 @@ namespace SampleServer.DataAccess
             inputArguments.ReferenceTypeId = ReferenceTypeIds.HasProperty;
             inputArguments.Value = new Argument[] 
                 {
-                    new Argument() { Name = "OpenCloseDoor", Description = "Opens/closes the door.",  DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar }
+                    new Argument { Name = "OpenCloseDoor", Description = "Opens/closes the door.",  DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar }
                 };
             openCloseDoorMethod.InputArguments = inputArguments;
             openCloseDoorMethod.OnCallMethod = DoOpenCloseDoorCall;
@@ -352,11 +345,9 @@ namespace SampleServer.DataAccess
             Random random = new Random();
             return random.NextDouble() * (maximum - minimum) + minimum;
         }
-
         #endregion
 
         #region Private Fields
-
         private uint m_nextNodeId = 0;
         private DataItemState<bool> m_doorOpened;
         private DataItemState<bool> m_doorClosed;
@@ -365,7 +356,6 @@ namespace SampleServer.DataAccess
         AnalogItemState<double> m_motorTemperature;
 
         private Timer m_simulationTimer;
-
         #endregion
     }
 }

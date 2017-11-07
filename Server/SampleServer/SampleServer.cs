@@ -13,15 +13,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using Opc.Ua;
 using Opc.Ua.Server;
 using SampleServer.Alarms;
 using SampleServer.DataAccess;
-using SampleServer.FileSystem;
 using SampleServer.HistoricalDataAccess;
 using SampleServer.Methods;
 using SampleServer.NodeManagement;
 using SampleServer.NodeSetImport;
+using SampleServer.ReferenceServer;
 using SampleServer.UserAuthentication;
 
 namespace SampleServer
@@ -42,15 +43,22 @@ namespace SampleServer
         {
             Utils.Trace(Utils.TraceMasks.Information, "SampleServer.CreateMasterNodeManager", "Creating the Node Managers.");
 
+            // Get the ShutdownDelay configuration parameter
+            ReferenceServerConfiguration referenceServerConfiguration = configuration.ParseExtension<ReferenceServerConfiguration>();
+            if (referenceServerConfiguration != null)
+            {
+                m_shutdownDelay = referenceServerConfiguration.ShutdownDelay;
+            }
+
             List<INodeManager> nodeManagers = new List<INodeManager>();
 
             nodeManagers.Add(new AlarmsNodeManager(server, configuration));
             nodeManagers.Add(new DataAccessNodeManager(server, configuration));
-            nodeManagers.Add(new FileSystemNodeManager(server, configuration));
             nodeManagers.Add(new SampleHDANodeManager(server, configuration));
             nodeManagers.Add(new MethodsNodeManager(server, configuration));
-            nodeManagers.Add(m_nodeManagementManager = new DynamicASNodeManager(server, configuration));
+            // nodeManagers.Add(m_nodeManagementManager = new DynamicASNodeManager(server, configuration)); // Uncomment this when there is implementation in the client
             nodeManagers.Add(new NodeSetImportNodeManager(server, configuration));
+            nodeManagers.Add(new ReferenceNodeManager(server, configuration));
             nodeManagers.Add(new UserAuthenticationNodeManager(server, configuration));
 
             // Create master node manager
@@ -97,6 +105,46 @@ namespace SampleServer
             server.SessionManager.ImpersonateUser += SessionManager_ImpersonateUser;
 
             #endregion
+        }
+
+        /// <summary>
+        /// Cleans up before the server shuts down.
+        /// </summary>
+        /// <remarks>
+        /// This method is called before any shutdown processing occurs.
+        /// </remarks>
+        protected override void OnServerStopping()
+        {
+            try
+            {
+                // Check for connected clients
+                IList<Session> currentessions = ServerInternal.SessionManager.GetSessions();
+
+                if (currentessions.Count > 0)
+                {
+                    // Provide some time for the connected clients to detect the shutdown state
+                    ServerInternal.Status.Value.ShutdownReason = new LocalizedText("en-US", "Application closed.");
+                    ServerInternal.Status.Variable.ShutdownReason.Value = new LocalizedText("en-US", "Application closed.");
+                    ServerInternal.Status.Value.State = ServerState.Shutdown;
+                    ServerInternal.Status.Variable.State.Value = ServerState.Shutdown;
+                    ServerInternal.Status.Variable.ClearChangeMasks(ServerInternal.DefaultSystemContext, true);
+
+                    for (uint timeTillShutdown = m_shutdownDelay; timeTillShutdown > 0; timeTillShutdown--)
+                    {
+                        ServerInternal.Status.Value.SecondsTillShutdown = timeTillShutdown;
+                        ServerInternal.Status.Variable.SecondsTillShutdown.Value = timeTillShutdown;
+                        ServerInternal.Status.Variable.ClearChangeMasks(ServerInternal.DefaultSystemContext, true);
+
+                        Thread.Sleep(1000);
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore error during shutdown procedure
+            }
+
+            base.OnServerStopping();
         }
 
         #endregion
@@ -480,6 +528,10 @@ namespace SampleServer
             }
         }
 
+        #endregion
+
+        #region Private Members
+        private uint m_shutdownDelay = 5;
         #endregion
     }
 }

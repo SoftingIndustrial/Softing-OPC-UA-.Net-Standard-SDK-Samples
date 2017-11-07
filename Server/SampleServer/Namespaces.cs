@@ -31,6 +31,8 @@ namespace SampleServer
         
         public const string NodeManagement = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/NodeManagementServer";
 
+        public const string ReferenceApplications = "http://opcfoundation.org/Quickstarts/ReferenceApplications";
+
         public const string Refrigerators = "http://industrial.softing.com/UA/Refrigerators";
 
         public const string UserAuthentication = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/UserAuthentication";

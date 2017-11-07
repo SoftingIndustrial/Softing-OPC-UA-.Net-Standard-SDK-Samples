@@ -146,6 +146,15 @@
     <MaxRegistrationInterval>30000</MaxRegistrationInterval>
     <NodeManagerSaveFile>SampleServer.nodes.xml</NodeManagerSaveFile>
   </ServerConfiguration>
+  
+  <Extensions>
+    <ua:XmlElement>
+      <ReferenceServerConfiguration xmlns="http://opcfoundation.org/Quickstarts/ReferenceApplications">
+        <ShutdownDelay>5</ShutdownDelay>
+      </ReferenceServerConfiguration>
+    </ua:XmlElement>
+  </Extensions>
+  
   <TraceConfiguration>
     <OutputFilePath>%CommonApplicationData%\Softing\OpcUaNetStdToolkit\logs\SampleServer.log</OutputFilePath>
     <DeleteOnLoad>true</DeleteOnLoad>

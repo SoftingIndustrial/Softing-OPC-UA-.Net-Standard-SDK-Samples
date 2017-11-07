@@ -75,12 +75,12 @@ namespace SampleServer.UserAuthentication
             lock (Lock)
             {
                 // Create a object to represent the process being controlled
-                BaseObjectState process = new BaseObjectState(null);
+                FolderState process = new FolderState(null);
 
                 process.NodeId = new NodeId(1, NamespaceIndex);
                 process.BrowseName = new QualifiedName("UserAuthentication", NamespaceIndex);
                 process.DisplayName = process.BrowseName.Name;
-                process.TypeDefinitionId = ObjectTypeIds.BaseObjectType;
+                process.TypeDefinitionId = ObjectTypeIds.FolderType;
                 process.Description = new LocalizedText("To test user authentication, try to change the value of LogFilePath. Anonymous will not be able to change the value, while an authenticated user can do this.", "en-US");
 
                 // Ensure the process object can be found via the server object

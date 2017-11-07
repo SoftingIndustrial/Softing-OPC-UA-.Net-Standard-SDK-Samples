@@ -28,12 +28,11 @@ namespace SampleServer.NodeSetImport
         #region Constructors
 
         /// <summary>
-        /// Initializes the node manager.
-        /// 
+        /// Initializes the node manager. 
         /// </summary>
         public NodeSetImportNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration, Namespaces.Refrigerators)
         {
-            SystemContext.NodeIdFactory = this;            
+            SystemContext.NodeIdFactory = this;
         }
 
         #endregion
