@@ -130,7 +130,7 @@ namespace SampleClient.Samples
             }
             try
             {
-               m_monitoredItem = new ClientMonitoredItem(m_subscription, m_monitoredItemNodeId, AttributeId.Value,
+               m_monitoredItem = new ClientMonitoredItem(m_subscription, m_monitoredItemNodeId, Attributes.Value,
                     null, "Monitored Item" + m_monitoredItemBrowsePath);
                 m_monitoredItem.DataChangesReceived += Monitoreditem_DataChangesReceived;
 

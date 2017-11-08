@@ -585,7 +585,11 @@ namespace SampleClient.StateMachine
             {
                 m_readWriteClient.ReadVariableNode();
                 m_readWriteClient.ReadObjectNode();
-            }
+                m_readWriteClient.ReadSimpleNodeValue();
+                m_readWriteClient.ReadArrayValue();
+                m_readWriteClient.ReadComplexValue();
+                m_readWriteClient.ReadEnumValue();
+                m_readWriteClient.ReadMultipleNodesValues();           }
         }
 
         private void StartReadWrite_ExecuteCommand(object sender, EventArgs e)
