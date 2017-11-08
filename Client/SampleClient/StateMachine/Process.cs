@@ -196,7 +196,7 @@ namespace SampleClient.StateMachine
             write.ExecuteCommand += Write_ExecuteCommand;
             m_transitions.Add(write, State.ReadWrite);
             StateTransition endReadWrite = new StateTransition(State.ReadWrite, Command.EndReadWrite, "0", "Back to Main Menu");
-            endReadWrite.ExecuteCommand += EndReadWrite_ExecuteCommand; ;
+            endReadWrite.ExecuteCommand += EndReadWrite_ExecuteCommand;
             m_transitions.Add(endReadWrite, State.Main);
         }
 
@@ -394,7 +394,9 @@ namespace SampleClient.StateMachine
         #region ExecuteCommand Handlers for Connect
         private void ConnectSample_ExecuteCommand(object sender, EventArgs e)
         {
-            ConnectClient connectClient = new ConnectClient(m_application);
+            //ConnectClient sample creates its own UAApplication object with an ApplicationConfigurationEx object created 
+            //programmatically and not loaded from config file
+            ConnectClient connectClient = new ConnectClient();
 
             connectClient.CreateOpcTcpSessionWithNoSecurity();
             connectClient.CreateOpcTcpSessionWithSecurity();

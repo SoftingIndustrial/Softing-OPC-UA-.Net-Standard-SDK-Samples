@@ -17,7 +17,9 @@ using Softing.Opc.Ua.Client;
 namespace SampleClient.Samples
 {
     /// <summary>
-    /// Class providing support for connect operations with different configuration parameters.
+    /// Class providing sample code for connect operations with different configuration parameters.
+    /// 
+    /// THis class also provides sample code for cresting ApplicationConfigurationEx object by code 
     /// </summary>
     public class ConnectClient
     {
@@ -28,11 +30,12 @@ namespace SampleClient.Samples
         #region Constructor
         /// <summary>
         /// Create new instance of ConnectClient
+        /// The constructor will create a new instance of UaApplication with an 
         /// </summary>
-        /// <param name="application"></param>
-        public ConnectClient(UaApplication application)
+        public ConnectClient()
         {
-            m_application = application;
+            ApplicationConfigurationEx configuration = CreateAplicationConfiguration();
+            m_application = UaApplication.Create(configuration).Result;
         }
         #endregion
         
@@ -70,8 +73,8 @@ namespace SampleClient.Samples
         {
             // create the session object.
             using (ClientSession session = CreateSession("UaBinarySecureSession", Constants.ServerUrl,
-                MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic128Rsa15, MessageEncoding.Binary,
-                new UserIdentity("usr", "pwd")))
+                MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic256Sha256, MessageEncoding.Binary,
+                new UserIdentity()))
             {
                 ConnectTest(session);
             }
@@ -152,6 +155,58 @@ namespace SampleClient.Samples
         #endregion
 
         #region Private Helper Methods
+
+        /// <summary>
+        /// Creates Application's ApplicationConfiguration programmatically
+        /// </summary>
+        /// <returns></returns>
+        private ApplicationConfigurationEx CreateAplicationConfiguration()
+        {
+            Console.WriteLine("Creating ApplicationConfigurationEx for current UaApplication...");
+            ApplicationConfigurationEx configuration = new ApplicationConfigurationEx();
+
+            configuration.ApplicationName = "UA Sample Client";
+            configuration.ApplicationType = ApplicationType.Client;
+            configuration.ApplicationUri = $"urn:{Utils.GetHostName()}:OPCFoundation:SampleClient";
+            configuration.TransportConfigurations = new TransportConfigurationCollection();
+            configuration.TransportQuotas = new TransportQuotas {OperationTimeout = 15000};
+            configuration.TransportQuotas = new TransportQuotas {OperationTimeout = 15000};
+            configuration.ClientConfiguration = new ClientConfiguration {DefaultSessionTimeout = 5000};
+
+            configuration.TraceConfiguration = new TraceConfiguration()
+            {
+                OutputFilePath = @"%CommonApplicationData%\Softing\OpcUaNetStdToolkit\logs\SampleClient.log",
+                TraceMasks = 519
+            };
+
+            configuration.SecurityConfiguration = new SecurityConfiguration
+            {
+                ApplicationCertificate = new CertificateIdentifier
+                {
+                    StoreType = CertificateStoreType.Directory,
+                    StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStdToolkit\pki\own"
+                },
+                TrustedPeerCertificates = new CertificateTrustList
+                {
+                    StoreType = CertificateStoreType.Directory,
+                    StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStdToolkit\pki\trusted",
+                },
+                TrustedIssuerCertificates = new CertificateTrustList
+                {
+                    StoreType = CertificateStoreType.Directory,
+                    StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStdToolkit\pki\issuer",
+                },
+                RejectedCertificateStore = new CertificateTrustList
+                {
+                    StoreType = CertificateStoreType.Directory,
+                    StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStdToolkit\pki\rejected",
+                },
+                AutoAcceptUntrustedCertificates = true
+            };
+
+            return configuration;
+        }
+
         /// <summary>
         /// Creates and connects an new session with the specified parameters.
         /// </summary>        
@@ -160,7 +215,7 @@ namespace SampleClient.Samples
         {
             try
             {
-                Console.WriteLine("Creating the session {0} (SecurityMode = {1}, SecurityPolicy = {2})...", sessionName, securityMode, securityPolicy);
+                Console.WriteLine("Creating the session {0} (SecurityMode = {1}, SecurityPolicy = {2}, \r\n\t\t\t\t\t\tUserIdentity = {3})...", sessionName, securityMode, securityPolicy, userId.GetIdentityToken());
                 // Create the Session object.
                 ClientSession session = m_application.CreateSession(serverUrl, securityMode, securityPolicy,
                     messageEncoding, userId, null);
