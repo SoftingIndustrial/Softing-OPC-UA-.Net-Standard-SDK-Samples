@@ -24,18 +24,29 @@ namespace SampleClient.Samples
     class ReadWriteClient
     {
         #region Private Fields
-
         private const string SessionName = "ReadWriteClient Session";
         private readonly UaApplication m_application;
         private ClientSession m_session;
+        private readonly Random m_random = new Random();
 
+        //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Int32
+        const string StaticInt32NodeId = "ns=7;s=Scalar_Static_Int32";
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\UInt32
-        const string StaticValueNodeIdVar = "ns=7;s=Scalar_Static_UInt32";
+        const string StaticUInt32NodeId = "ns=7;s=Scalar_Static_UInt32";
+        //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Guid
+        const string StaticGuidNodeId = "ns=7;s=Scalar_Static_Guid";
+        //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\DateTime 
+        const string StaticDateTimeNodeId = "ns=7;s=Scalar_Static_DateTime";
 
+        //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Arrays\Int64
+        const string StaticInt64ArrayNodeId = "ns=7;s=Scalar_Static_Arrays_Int64";
+        //Browse path: Root\Objects\Refrigerators\Refrigerator #1\State
+        const string StaticEnumNodeId = "ns=10;i=16";
+        //Browse path: Root\Objects\Refrigerators\Refrigerator #1\RefrigeratorStatus
+        const string StaticComplexNodeId = "ns=10;i=13";
         #endregion
 
         #region Constructor
-
         /// <summary>
         /// Create new instance of ReadWriteClient
         /// </summary>
@@ -44,11 +55,9 @@ namespace SampleClient.Samples
         {
             m_application = application;
         }
-
         #endregion
 
-        #region Public Methods
-
+        #region Public Methods - Read
         /// <summary>
         /// Reads a variable node with all its attributes.
         /// </summary>
@@ -59,27 +68,28 @@ namespace SampleClient.Samples
                 Console.WriteLine("ReadVariableNode: The session is not initialized!");
                 return;
             }
-            NodeId nodeId = new NodeId(StaticValueNodeIdVar);
+           
             try
             {
+                NodeId nodeId = new NodeId(StaticUInt32NodeId);
                 BaseNode baseNode = m_session.ReadNode(nodeId);
                 if (baseNode == null)
                 {
-                    Console.WriteLine("\n The NodeId:{0} does not exist in the Address Space", StaticValueNodeIdVar);
+                    Console.WriteLine("\n The NodeId:{0} does not exist in the Address Space", StaticUInt32NodeId);
                     return;
                 }
-                Console.WriteLine("\n Read node with NodeId({0}):", StaticValueNodeIdVar);
+                Console.WriteLine("\n Read node with NodeId({0}):", StaticUInt32NodeId);
                 Console.WriteLine("  DisplayName Name is '{0}'", baseNode.DisplayName.Text);
                 Console.WriteLine("  Browse Name is '{0}'", baseNode.BrowseName.Name);
                 Console.WriteLine("  Description is '{0}'", baseNode.Description.Text);
-                Console.WriteLine("  NodeClass is '{0}'", baseNode.NodeClass.ToString());
+                Console.WriteLine("  NodeClass is '{0}'", baseNode.NodeClass);
                 if (baseNode.NodeClass == NodeClass.Variable)
                 {
                     VariableNodeEx variableNode = baseNode as VariableNodeEx;
                     if (variableNode != null)
                     {
                         Console.WriteLine("  DataType is  {0}", variableNode.DataType);
-                        Console.WriteLine("  Value Rank is  {0}", variableNode.ValueRank.ToString());
+                        Console.WriteLine("  Value Rank is  {0}", variableNode.ValueRank);
                         DisplayInformationForDataValue(variableNode.Value);
                         Console.WriteLine("  Value is  {0}", variableNode.UserAccessLevelText);
                         Console.WriteLine("  Value is Historizing: {0}", variableNode.Historizing);
@@ -100,13 +110,14 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                Console.WriteLine("ReadVariableNode: The session is not initialized!");
+                Console.WriteLine("ReadObjectNode: The session is not initialized!");
                 return;
             }
-            //Browse path: Root\Objects\Server
-            NodeId nodeId = ObjectIds.Server;
+
             try
             {
+                //Browse path: Root\Objects\Server
+                NodeId nodeId = ObjectIds.Server;
                 BaseNode baseNode = m_session.ReadNode(nodeId);
                 if (baseNode == null)
                 {
@@ -117,7 +128,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("  DisplayName Name is '{0}'", baseNode.DisplayName.Text);
                 Console.WriteLine("  Browse Name is '{0}'", baseNode.BrowseName.Name);
                 Console.WriteLine("  Description is '{0}'", baseNode.Description.Text);
-                Console.WriteLine("  NodeClass is '{0}'", baseNode.NodeClass.ToString());
+                Console.WriteLine("  NodeClass is '{0}'", baseNode.NodeClass);
                 if (baseNode.NodeClass == NodeClass.Object)
                 {
                     ObjectNodeEx variableNode = baseNode as ObjectNodeEx;
@@ -136,18 +147,19 @@ namespace SampleClient.Samples
         /// <summary>
         /// Reads value for an uint node providing the NodeID and without read the whole node information.
         /// </summary>
-        public void ReadSimpleNodeValue()
+        public void ReadValueForNode ()
         {
             if (m_session == null)
             {
-                Console.WriteLine("ReadVariableNode: The session is not initialized!");
+                Console.WriteLine("ReadSimpleNodeValue: The session is not initialized!");
                 return;
             }
+
             ReadValueId readValueId = new ReadValueId();
-            readValueId.NodeId = new NodeId(StaticValueNodeIdVar);
+            readValueId.NodeId = new NodeId(StaticUInt32NodeId);
             readValueId.AttributeId = Attributes.Value;
 
-            Console.WriteLine("\n Read value for NodeId:{0}", StaticValueNodeIdVar);
+            Console.WriteLine("\n Read value for NodeId:{0}", StaticUInt32NodeId);
             try
             {
                 DataValue dataValue = m_session.Read(readValueId);
@@ -166,30 +178,28 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                Console.WriteLine("ReadVariableNode: The session is not initialized!");
+                Console.WriteLine("ReadArrayValue: The session is not initialized!");
                 return;
             }
-            //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Arrays\Int64
-            const string staticValueNodeIdArray = "ns=7;s=Scalar_Static_Arrays_Int64";
 
             ReadValueId readValueId = new ReadValueId();
-            readValueId.NodeId = new NodeId(staticValueNodeIdArray);
+            readValueId.NodeId = new NodeId(StaticInt64ArrayNodeId);
             readValueId.AttributeId = Attributes.Value;
 
-            Console.WriteLine("\n Read array value for NodeId:{0}", staticValueNodeIdArray);
+            Console.WriteLine("\n Read array value for NodeId:{0}", StaticInt64ArrayNodeId);
             try
             {
                 DataValue dataValue = m_session.Read(readValueId);
 
                 //display read information
-                Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode.ToString());
+                Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
                 if (dataValue.Value is Array)
                 {
                     Console.WriteLine("  Value is an array with values:");
                     Array array = dataValue.Value as Array;
                     foreach (object obj in array)
                     {
-                        Console.WriteLine("   {0}", obj.ToString());
+                        Console.WriteLine("   {0}", obj);
                     }
                 }
             }
@@ -199,7 +209,6 @@ namespace SampleClient.Samples
             }
         }
 
-
         /// <summary>
         ///  Reads value for a complex node providing the NodeID and without read the whole node information.
         /// </summary>
@@ -207,23 +216,21 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                Console.WriteLine("ReadVariableNode: The session is not initialized!");
+                Console.WriteLine("ReadComplexValue: The session is not initialized!");
                 return;
             }
-            //Browse path: Root\Objects\Refrigerators\Refrigerator #1\RefrigeratorStatus
-            const string staticValueNodeIdComplex = "ns=10;i=13";
-
+            //todo after complex type implementation
             ReadValueId readValueId = new ReadValueId();
-            readValueId.NodeId = new NodeId(staticValueNodeIdComplex);
+            readValueId.NodeId = new NodeId(StaticComplexNodeId);
             readValueId.AttributeId = Attributes.Value;
 
-            Console.WriteLine("\n Read complex value for NodeId:{0}", staticValueNodeIdComplex);
+            Console.WriteLine("\n Read complex value for NodeId:{0}", StaticComplexNodeId);
             try
             {
                 DataValue dataValue = m_session.Read(readValueId);
 
                 //display information for read value
-                Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode.ToString());
+                Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
 
                 if (dataValue.Value is StructuredValue)
                 {
@@ -249,18 +256,16 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                Console.WriteLine("ReadVariableNode: The session is not initialized!");
+                Console.WriteLine("ReadEnumValue: The session is not initialized!");
                 return;
             }
-            //Browse path: Root\Objects\Refrigerators\Refrigerator #1\State
-            const string hardcodedValueNodeId = "ns=10;i=16";
-
-            Console.WriteLine("\n Read enum value for NodeId:{0}", hardcodedValueNodeId);
-            NodeId nodeId = new NodeId(hardcodedValueNodeId);
+            //todo after complex type implementation
+            Console.WriteLine("\n Read enum value for NodeId:{0}", StaticEnumNodeId);
+            NodeId nodeId = new NodeId(StaticEnumNodeId);
             try
             {
                 BaseNode baseNode = m_session.ReadNode(nodeId);
-
+                
                 if (baseNode.NodeClass == NodeClass.Variable)
                 {
                     VariableNodeEx variableNode = baseNode as VariableNodeEx;
@@ -271,14 +276,14 @@ namespace SampleClient.Samples
                         readValueId.AttributeId = Attributes.Value;
 
                         Console.WriteLine("\n Read enum value for Node: {0} (NodeId:{1})", variableNode.DisplayName,
-                            hardcodedValueNodeId);
+                            StaticEnumNodeId);
                     }
 
                     DataValue dataValue = m_session.Read(readValueId);
                     //  dataValue.TryConvertToEnumValue(variableNode.DataTypeId, variableNode.ValueRank, session);
 
                     //display information for read value
-                    Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode.ToString());
+                    Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
                     if (dataValue.Value is EnumValue)
                     {
                         EnumValue enumValue = dataValue.Value as EnumValue;
@@ -306,31 +311,25 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                Console.WriteLine("ReadVariableNode: The session is not initialized!");
+                Console.WriteLine("ReadMultipleNodesValues: The session is not initialized!");
                 return;
             }
-            //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\UInt32
-            const string staticValueNodeId = "ns=7;s=Scalar_Static_Int32";
-            //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Guid
-            const string staticValueNodeId1 = "ns=7;s=Scalar_Static_Guid";
-            //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\DateTime 
-            const string staticValueNodeId2 = "ns=7;s=Scalar_Static_DateTime";
 
             List<ReadValueId> listOfNodes = new List<ReadValueId>()
             {
                 new ReadValueId()
                 {
-                    NodeId = new NodeId(staticValueNodeId),
+                    NodeId = new NodeId(StaticInt32NodeId),
                     AttributeId = Attributes.Value
                 },
                 new ReadValueId()
                 {
-                    NodeId = new NodeId(staticValueNodeId1),
+                    NodeId = new NodeId(StaticGuidNodeId),
                     AttributeId = Attributes.Value
                 },
                 new ReadValueId()
                 {
-                    NodeId = new NodeId(staticValueNodeId2),
+                    NodeId = new NodeId(StaticDateTimeNodeId),
                     AttributeId = Attributes.Value
                 }
             };
@@ -350,7 +349,208 @@ namespace SampleClient.Samples
                 Console.WriteLine(e.Message);
             }
         }
+        #endregion
 
+        #region Public Methods - Write
+        /// <summary>
+        /// Writes a value for an uint node providing the NodeID. The written value is random generated for a nice output.
+        /// </summary>
+        public void WriteValueForNode()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteValueForNode: The session is not initialized!");
+                return;
+            }
+
+            //first value to write
+            WriteValue writeValue = new WriteValue();
+            writeValue.AttributeId = Attributes.Value;
+            writeValue.NodeId = new NodeId(StaticUInt32NodeId);
+
+            DataValue valueToWrite = new DataValue();
+            valueToWrite.Value = (uint)m_random.Next(1, 1975109192);
+
+            writeValue.Value = valueToWrite;
+            try
+            {
+                StatusCode statusCode = m_session.Write(writeValue);
+                Console.WriteLine("\n The NodeId:{0} was written with the value {1} ", StaticUInt32NodeId, writeValue.Value.Value);
+                Console.WriteLine(" Status code is {0}", statusCode);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Writes a value for an array node providing the NodeID. The written values in array are random generated for a nice output.
+        /// </summary>
+        public void WriteArrayValueForNode()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteArrayValueForNode: The session is not initialized!");
+                return;
+            }
+
+            WriteValue writeValue = new WriteValue();
+            writeValue.AttributeId = Attributes.Value;
+            writeValue.NodeId = new NodeId(StaticInt64ArrayNodeId);
+
+            DataValue valueToWrite = new DataValue();
+            long[] value = new long[2];
+            value[0] = m_random.Next(1, 100000);
+            value[1] = m_random.Next(1, 200000);
+            valueToWrite.Value = value;
+
+            writeValue.Value = valueToWrite;
+            try
+            {
+                StatusCode statusCode = m_session.Write(writeValue);
+                Console.WriteLine("\n The NodeId:{0} was written with the array value {1} ", StaticInt64ArrayNodeId, writeValue.Value.ToString());
+                Console.WriteLine(" Status code is {0}", statusCode);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Writes a value for a complex node providing the NodeID. Some written values are random generated for a nice output.
+        /// </summary>
+        public void WriteComplexValueForNode()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteComplexValueForNode: The session is not initialized!");
+                return;
+            }
+
+            WriteValue writeValue = new WriteValue();
+            writeValue.AttributeId = Attributes.Value;
+            writeValue.NodeId = new NodeId(StaticComplexNodeId);
+
+            DataValue valueToWrite = new DataValue();
+            //todo after complex type implementation
+            //ExpandedNodeId binaryEncodingId = new ExpandedNodeId("nsu=http://industrial.softing.com/UA/Refrigerator;ns=0;i=444");
+            //ExpandedNodeId typeId = new ExpandedNodeId("nsu=http://industrial.softing.com/UA/Refrigerator;ns=0;i=435");
+            //ExpandedNodeId xmlEncodingId = new ExpandedNodeId("nsu=http://industrial.softing.com/UA/Refrigerator;ns=0;i=437");
+            //XmlQualifiedName xmlQualifiedName = new XmlQualifiedName("RefrigeratorStatusType", typeId.NamespaceUri);
+
+            //StructuredValue complexData = StructuredValue.CreateNew(xmlQualifiedName, typeId, binaryEncodingId, xmlEncodingId);
+
+            //complexData.AddField("CondensorMotorRunning", true, new XmlQualifiedName("Boolean", "http://opcfoundation.org/BinarySchema/"));
+            //complexData.AddField("PreasureBeforePump", (double)m_random.Next(1, 110), new XmlQualifiedName("Double", "http://opcfoundation.org/BinarySchema/"));
+            //complexData.AddField("PreasureAfterPump", (double)m_random.Next(1, 70), new XmlQualifiedName("Double", "http://opcfoundation.org/BinarySchema/"));
+            //valueToWrite.Value = complexData;
+            //valueToWrite.ValueRank = ValueRanks.OneOrMoreDimensions;
+
+            writeValue.Value = valueToWrite;
+            try
+            {
+                StatusCode statusCode = m_session.Write(writeValue);
+                Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticComplexNodeId, writeValue.Value.ToString());
+                Console.WriteLine(" Status code is {0}", statusCode);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Writes a value for an enum node providing the NodeID. Written value is random generated for a nice output.
+        /// </summary>
+        public void WriteEnumValueForNode()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteEnumValueForNode: The session is not initialized!");
+                return;
+            }
+
+            //todo after complex type implementation
+            WriteValue writeValue = new WriteValue();
+            writeValue.AttributeId = Attributes.Value;
+            writeValue.NodeId = new NodeId(StaticEnumNodeId);
+
+            DataValue valueToWrite = new DataValue();
+            valueToWrite.Value = m_random.Next(0, 3);
+
+            writeValue.Value = valueToWrite;
+            try
+            {
+                StatusCode statusCode = m_session.Write(writeValue);
+                Console.WriteLine("\n The NodeId:{0} was written with the enum value {1} ", StaticEnumNodeId, writeValue.Value.ToString());
+                Console.WriteLine(" Status code is {0}", statusCode);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Writes values for a list of nodes providing the NodeIDs.The list of nodes contains a uint, an GUID and a datetime node. Written values are random generated for a nice output.
+        /// </summary>
+        public void WriteMultipleNodesValues()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteMultipleNodesValues: The session is not initialized!");
+                return;
+            }
+
+            List<WriteValue> listOfNodes = new List<WriteValue>()
+            {
+                new WriteValue()
+                {
+                    NodeId = new NodeId(StaticInt32NodeId),
+                    AttributeId = Attributes.Value
+                },
+                new WriteValue()
+                {
+                    NodeId = new NodeId(StaticGuidNodeId),
+                    AttributeId = Attributes.Value
+                },
+                new WriteValue()
+                {
+                    NodeId = new NodeId(StaticDateTimeNodeId),
+                    AttributeId = Attributes.Value
+                }
+            };
+
+            DataValue valueToWrite = new DataValue();
+            valueToWrite.Value = m_random.Next(1, 1975109192);
+            listOfNodes[0].Value = valueToWrite;
+
+            DataValue valueToWrite1 = new DataValue();
+            valueToWrite1.Value = Guid.NewGuid();
+            listOfNodes[1].Value = valueToWrite1;
+
+            DataValue valueToWrite2 = new DataValue();
+            valueToWrite2.Value = DateTime.Now;
+            listOfNodes[2].Value = valueToWrite2;
+
+            Console.WriteLine("\n Write value for multiple nodes: ");
+            try
+            {
+                IList<StatusCode> statusCodes = m_session.Write(listOfNodes);
+                for (int i = 0; i < listOfNodes.Count; i++)
+                {
+                    Console.WriteLine(" \n {0}. Write value for node {1}.", i, listOfNodes[i].NodeId);
+                    Console.WriteLine(" Written value is {0} ", listOfNodes[i].Value.ToString());
+                    Console.WriteLine(" Status code is {0}", statusCodes[i]);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
         #endregion
 
         #region InitializeSession & DisconnectSession
@@ -407,14 +607,16 @@ namespace SampleClient.Samples
 
         #endregion
 
+        #region Private Methods
         /// <summary>
         /// Displays information at console for a read DataValue.
         /// </summary>
         /// <param name="dataValue">Value that is provided for displaying information </param>
         private void DisplayInformationForDataValue(DataValue dataValue)
         {
-            Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode.ToString());
+            Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
             Console.WriteLine("  Data Value is {0}.", dataValue.Value);
-        }
+        } 
+        #endregion
     }
 }
