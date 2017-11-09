@@ -56,7 +56,9 @@ namespace SampleServer
             nodeManagers.Add(new DataAccessNodeManager(server, configuration));
             nodeManagers.Add(new SampleHDANodeManager(server, configuration));
             nodeManagers.Add(new MethodsNodeManager(server, configuration));
-            // nodeManagers.Add(m_nodeManagementManager = new DynamicASNodeManager(server, configuration)); // Uncomment this when there is implementation in the client
+            // Uncomment this when there is implementation in the client
+            // NodeManagement support missing from ClientAPI
+            // nodeManagers.Add(m_nodeManagementManager = new DynamicASNodeManager(server, configuration)); 
             nodeManagers.Add(new NodeSetImportNodeManager(server, configuration));
             nodeManagers.Add(new ReferenceNodeManager(server, configuration));
             nodeManagers.Add(new UserAuthenticationNodeManager(server, configuration));
