@@ -10,8 +10,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Xml;
+using System.IO;
+using System.Linq;
 using System.Threading;
+using System.Xml;
 using Opc.Ua;
 using Opc.Ua.Server;
 
@@ -150,6 +152,8 @@ namespace SampleServer.ReferenceServer
         {
             lock (Lock)
             {
+                base.CreateAddressSpace(externalReferences);
+
                 IList<IReference> references = null;
 
                 if (!externalReferences.TryGetValue(ObjectIds.ObjectsFolder, out references))
@@ -1323,6 +1327,9 @@ namespace SampleServer.ReferenceServer
 
                 AddPredefinedNode(SystemContext, root);
                 m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
+
+                // Import a node set file containing structured data types.
+                Import(SystemContext, @"..\SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml");
             }
         }
 
@@ -2611,6 +2618,195 @@ namespace SampleServer.ReferenceServer
             // TBD
 
             return null;
+        }
+
+        /// <summary>
+        /// Imports into the address space an xml file containing the model structure
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="filePath">The path of the NodeSet XML file</param>
+        private ServiceResult Import(ISystemContext context, string filePath)
+        {
+            try
+            {
+                XmlElement[] extensions = ImportNodeSet(context, filePath);
+            }
+            catch (Exception ex)
+            {
+                Utils.Trace(Utils.TraceMasks.Error, "ReferenceNodeManager.Import", "Error loading node set: {0}", ex.Message);
+                throw new ServiceResultException(ex, StatusCodes.Bad);
+            }
+
+            return ServiceResult.Good;
+        }
+
+        private XmlElement[] ImportNodeSet(ISystemContext context, string filePath)
+        {
+            NodeStateCollection predefinedNodes = new NodeStateCollection();
+            List<string> newNamespaceUris = new List<string>();
+
+            XmlElement[] extensions = LoadFromNodeSet2Xml(context, filePath, true, newNamespaceUris, predefinedNodes);
+
+            // Add the node set to the node manager
+            for (int ii = 0; ii < predefinedNodes.Count; ii++)
+            {
+                AddPredefinedNode(context, predefinedNodes[ii]);
+            }
+
+            foreach (var item in NamespaceUris)
+            {
+                if (newNamespaceUris.Contains(item))
+                {
+                    newNamespaceUris.Remove(item);
+                }
+            }
+
+            if (newNamespaceUris.Count > 0)
+            {
+                List<string> allNamespaceUris = newNamespaceUris.ToList();
+                allNamespaceUris.AddRange(NamespaceUris);
+
+                SetNamespaces(allNamespaceUris.ToArray());
+            }
+
+            UpdateRegistration(this, newNamespaceUris);
+
+            // Ensure the reverse references exist
+            Dictionary<NodeId, IList<IReference>> externalReferences = new Dictionary<NodeId, IList<IReference>>();
+            AddReverseReferences(externalReferences);
+
+            foreach (var item in externalReferences)
+            {
+                Server.NodeManager.AddReferences(item.Key, item.Value);
+            }
+
+            return extensions;
+        }
+
+        /// <summary>
+        /// Loads the NodeSet2.xml file and returns the Extensions data of the node set
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="updateTables">if set to <c>true</c> the namespace and server tables are updated with any new URIs.</param>
+        /// <param name="namespaceUris">Returns the NamespaceUris defined in the node set.</param>
+        /// <param name="predefinedNodes">The required NodeStateCollection</param>
+        /// <returns>The collection of global extensions of the NodeSet2.xml file.</returns>
+        private XmlElement[] LoadFromNodeSet2Xml(ISystemContext context, string filePath, bool updateTables, List<string> namespaceUris, NodeStateCollection predefinedNodes)
+        {
+            if (filePath == null) throw new ArgumentNullException("filePath");
+
+            byte[] readAllBytes = File.ReadAllBytes(filePath);
+            MemoryStream istrm = new MemoryStream(readAllBytes);
+
+            if (istrm == null)
+            {
+                throw ServiceResultException.Create(StatusCodes.BadDecodingError, "Could not load nodes from resource: {0}", filePath);
+            }
+
+            return LoadFromNodeSet2(context, istrm, updateTables, namespaceUris, predefinedNodes);
+        }
+
+        /// <summary>
+        /// Reads the schema information from a NodeSet2 XML document
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="istrm">The data stream containing a UANodeSet file.</param>
+        /// <param name="updateTables">If set to <c>true</c> the namespace and server tables are updated with any new URIs.</param>
+        /// <param name="namespaceUris">Returns the NamespaceUris defined in the node set.</param>
+        /// /// <param name="predefinedNodes">The required NodeStateCollection</param>
+        /// <returns>The collection of global extensions of the node set.</returns>
+        private XmlElement[] LoadFromNodeSet2(ISystemContext context, Stream istrm, bool updateTables, List<string> namespaceUris, NodeStateCollection predefinedNodes)
+        {
+            Opc.Ua.Export.UANodeSet nodeSet = Opc.Ua.Export.UANodeSet.Read(istrm);
+
+            if (nodeSet != null)
+            {
+                // Update namespace table
+                if (updateTables)
+                {
+                    if (nodeSet.NamespaceUris != null && context.NamespaceUris != null)
+                    {
+                        for (int ii = 0; ii < nodeSet.NamespaceUris.Length; ii++)
+                        {
+                            context.NamespaceUris.GetIndexOrAppend(nodeSet.NamespaceUris[ii]);
+                            namespaceUris.Add(nodeSet.NamespaceUris[ii]);
+                        }
+                    }
+                }
+
+                // Update server table
+                if (updateTables)
+                {
+                    if (nodeSet.ServerUris != null && context.ServerUris != null)
+                    {
+                        for (int ii = 0; ii < nodeSet.ServerUris.Length; ii++)
+                        {
+                            context.ServerUris.GetIndexOrAppend(nodeSet.ServerUris[ii]);
+                        }
+                    }
+                }
+
+                // Load nodes
+                nodeSet.Import(context, predefinedNodes);
+
+                return nodeSet.Extensions;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Updates the registration of the node manager in case of nodeset2.xml import
+        /// </summary>
+        /// <param name="nodeManager">The node manager that performed the import.</param>
+        /// <param name="newNamespaceUris">The new namespace uris that were imported.</param>
+        private void UpdateRegistration(INodeManager nodeManager, List<string> newNamespaceUris)
+        {
+            if (nodeManager == null || newNamespaceUris == null)
+            {
+                return;
+            }
+
+            int index = -1;
+            int arrayLength = 0;
+            foreach (var namespaceUri in newNamespaceUris)
+            {
+                index = Server.NamespaceUris.GetIndex(namespaceUri);
+                if (index == -1)
+                {
+                    // Something bad happened
+                    Utils.Trace(Utils.TraceMasks.Error, "Nodeset2xmlNodeManager.UpdateRegistration", "Namespace uri: " + namespaceUri + " was not found in the server's namespace table.");
+
+                    continue;
+                }
+
+                // m_namespaceManagers is declared Private in MasterNodeManager, therefore we must use Reflection to access it
+                System.Reflection.FieldInfo fieldInfo = Server.NodeManager.GetType().GetField("m_namespaceManagers",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.GetField);
+
+                if (fieldInfo != null)
+                {
+                    var namespaceManagers = fieldInfo.GetValue(Server.NodeManager) as INodeManager[][];
+
+                    if (namespaceManagers != null)
+                    {
+                        if (index <= namespaceManagers.Length - 1)
+                        {
+                            arrayLength = namespaceManagers[index].Length;
+                            Array.Resize(ref namespaceManagers[index], arrayLength + 1);
+                            namespaceManagers[index][arrayLength] = nodeManager;
+                        }
+                        else
+                        {
+                            Array.Resize(ref namespaceManagers, namespaceManagers.Length + 1);
+                            namespaceManagers[namespaceManagers.Length - 1] = new INodeManager[] { nodeManager };
+                        }
+
+                        fieldInfo.SetValue(Server.NodeManager, namespaceManagers);
+                    }
+                }
+            }
         }
         #endregion
 
