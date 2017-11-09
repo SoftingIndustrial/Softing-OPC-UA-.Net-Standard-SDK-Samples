@@ -64,7 +64,7 @@ namespace SampleClient.Samples
             List<DataValue> results = null;
             try
             {
-                results = m_session.HistoryReadRaw(m_historianNodeId, argument, timestampsToReturn, null);
+                results = m_session.HistoryReadRaw(m_historianNodeId, argument, timestampsToReturn);
             }
             catch (Exception ex)
             {
@@ -111,7 +111,7 @@ namespace SampleClient.Samples
             List<DataValue> results = null;
             try
             {
-                results = m_session.HistoryReadAtTime(m_historianNodeId, argument, timestampsToReturn, null);
+                results = m_session.HistoryReadAtTime(m_historianNodeId, argument, timestampsToReturn);
             }
             catch (Exception ex)
             {
@@ -159,7 +159,7 @@ namespace SampleClient.Samples
             List<DataValue> results = null;
             try
             {
-                results = m_session.HistoryReadProcessed(m_historianNodeId, argument, timestampsToReturn, null);
+                results = m_session.HistoryReadProcessed(m_historianNodeId, argument, timestampsToReturn);
             }
             catch (Exception ex)
             {
