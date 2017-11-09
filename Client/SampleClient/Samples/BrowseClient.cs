@@ -158,7 +158,7 @@ namespace SampleClient.Samples
             {
                 Console.WriteLine("Browse server: {0}, with options: MaxReferencesReturned = {1}", m_session.Url, options.MaxReferencesReturned);
                 //Using the Browse method with null parameters will return the browse result for the root node.
-                IList<ReferenceDescriptionEx> rootReferenceDescriptions = m_session.Browse(null, options, null);
+                IList<ReferenceDescriptionEx> rootReferenceDescriptions = m_session.Browse(null, options);
                 if (rootReferenceDescriptions != null)
                 {
                     foreach (var rootReferenceDescription in rootReferenceDescriptions)
@@ -167,7 +167,7 @@ namespace SampleClient.Samples
                         if (rootReferenceDescription.BrowseName.Name == "Objects")
                         {
                             NodeId nodeId = ExpandedNodeId.ToNodeId(rootReferenceDescription.NodeId, m_namespaceUris);
-                            IList<ReferenceDescriptionEx> objectReferenceDescriptions = m_session.Browse(nodeId, options, rootReferenceDescription);
+                            IList<ReferenceDescriptionEx> objectReferenceDescriptions = m_session.Browse(nodeId, options);
                             foreach (var objectReferenceDescription in objectReferenceDescriptions)
                             {
                                 Console.WriteLine("    -{0} - [{1}]", 
@@ -177,7 +177,7 @@ namespace SampleClient.Samples
                                 if (objectReferenceDescription.BrowseName.Name == "Server")
                                 {
                                     nodeId = ExpandedNodeId.ToNodeId(objectReferenceDescription.NodeId, m_namespaceUris);
-                                    IList<ReferenceDescriptionEx> serverReferenceDescriptions = m_session.Browse(nodeId, options, objectReferenceDescription);
+                                    IList<ReferenceDescriptionEx> serverReferenceDescriptions = m_session.Browse(nodeId, options);
                                     foreach (var serverReferenceDescription in serverReferenceDescriptions)
                                     {
                                         Console.WriteLine("      -{0} - [{1}]", 
