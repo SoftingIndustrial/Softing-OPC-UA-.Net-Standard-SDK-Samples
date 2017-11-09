@@ -5,7 +5,7 @@
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
  * http://www.softing.com/LicenseSIA.pdf
- *  
+ * 
  * ======================================================================*/
 
 using System;
@@ -21,7 +21,6 @@ namespace SampleServer.NodeManagement
     public class NodeManagementNodeManager : CustomNodeManager2
     {
         #region Constructors
-
         /// <summary>
         /// Initializes the node manager
         /// </summary>
@@ -29,11 +28,9 @@ namespace SampleServer.NodeManagement
         {
             SystemContext.NodeIdFactory = this;
         }
-
         #endregion
         
         #region IDisposable Members
-
         /// <summary>
         /// An overrideable version of the Dispose.
         /// </summary>
@@ -44,11 +41,9 @@ namespace SampleServer.NodeManagement
                 // TBD
             }
         }
-
         #endregion
 
         #region INodeIdFactory Members
-
         /// <summary>
         /// Creates the NodeId for the specified node.
         /// </summary>
@@ -56,11 +51,9 @@ namespace SampleServer.NodeManagement
         {
             return node.NodeId;
         }
-
         #endregion
 
         #region AddNodes Service
-
         /// Handle AddNodes service request
         public void AddNodes(OperationContext context, AddNodesItemCollection nodesToAdd, out AddNodesResultCollection results, out DiagnosticInfoCollection diagnosticInfos)
         {
@@ -469,11 +462,9 @@ namespace SampleServer.NodeManagement
 
             return variableToAdd.NodeId;
         }
-
         #endregion
 
         #region DeleteNodes Service
-
         /// Handle DeleteNodes service request
         public void DeleteNodes(OperationContext context, DeleteNodesItemCollection nodesToDelete, out StatusCodeCollection results, out DiagnosticInfoCollection diagnosticInfos)
         {
@@ -672,11 +663,9 @@ namespace SampleServer.NodeManagement
                 }
             }
         }
-
         #endregion
 
         #region AddReferences Service
-
         /// <summary>
         /// Handle AddReferences service request
         /// </summary>
@@ -851,11 +840,9 @@ namespace SampleServer.NodeManagement
             // This method should be overriden in the derived class in order to allow clients to use use the AddReferences service
             return new ServiceResult(StatusCodes.BadNotSupported, "Server does not allow references to be added by client.");
         }
-
         #endregion
 
         #region DeleteReferences Service
-
         /// <summary>
         /// Handle DeleteReferences service request
         /// </summary>
@@ -1018,7 +1005,6 @@ namespace SampleServer.NodeManagement
             // This method should be overriden in the derived class in order to allow clients to use use the AddReferences service
             return new ServiceResult(StatusCodes.BadNotSupported, "Server does not allow references to be deleted by client.");
         }
-        
         #endregion
     }
 }

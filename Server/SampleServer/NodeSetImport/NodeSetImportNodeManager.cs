@@ -5,7 +5,7 @@
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
  * http://www.softing.com/LicenseSIA.pdf
- *  
+ * 
  * ======================================================================*/
 
 using System;
@@ -26,7 +26,6 @@ namespace SampleServer.NodeSetImport
     public class NodeSetImportNodeManager : CustomNodeManager2
     {
         #region Constructors
-
         /// <summary>
         /// Initializes the node manager. 
         /// </summary>
@@ -34,11 +33,9 @@ namespace SampleServer.NodeSetImport
         {
             SystemContext.NodeIdFactory = this;
         }
-
         #endregion
 
         #region INodeIdFactory Members
-
         /// <summary>
         /// Creates the NodeId for the specified node.
         /// </summary>
@@ -46,11 +43,9 @@ namespace SampleServer.NodeSetImport
         {
             return node.NodeId;
         }
-
         #endregion
 
         #region INodeManager Members
-
         /// <summary>
         /// Does any initialization required before the address space can be used.
         /// </summary>
@@ -64,7 +59,7 @@ namespace SampleServer.NodeSetImport
             lock (Lock)
             {
                 // Import the initial data model from a NodeSet file
-                Import(SystemContext, m_initialModelFilePath);
+                Import(SystemContext, m_InitialModelFilePath);
 
                 try
                 {
@@ -133,7 +128,7 @@ namespace SampleServer.NodeSetImport
                 }
             }
         }
-        
+
         protected override NodeState AddBehaviourToPredefinedNode(ISystemContext context, NodeState predefinedNode)
         {
             // This override will receive a calback every time a new node is added
@@ -204,7 +199,6 @@ namespace SampleServer.NodeSetImport
         #endregion
 
         #region Private Methods
-
         /// <summary>
         /// Imports into the address space an xml file containing the model structure
         /// </summary>
@@ -230,7 +224,7 @@ namespace SampleServer.NodeSetImport
         /// </summary>
         private ServiceResult OnAddRefrigerator(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
-            return Import(context, m_secondaryModelFilePath);
+            return Import(context, m_SecondaryModelFilePath);
         }
 
         private ServiceResult OnImportNodeSet(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
@@ -406,14 +400,11 @@ namespace SampleServer.NodeSetImport
                 }
             }
         }
-        
         #endregion
 
-        #region Private Fields
-
-        private string m_initialModelFilePath = @"..\SampleServer\NodeSetImport\NodeSet\Refrigerators.NodeSet2.xml";
-        private string m_secondaryModelFilePath = @"..\SampleServer\NodeSetImport\NodeSet\Refrigerators2.NodeSet2.xml";
-
+        #region Private Members
+        private string m_InitialModelFilePath = @"..\SampleServer\NodeSetImport\NodeSet\Refrigerators.NodeSet2.xml";
+        private string m_SecondaryModelFilePath = @"..\SampleServer\NodeSetImport\NodeSet\Refrigerators2.NodeSet2.xml";
         #endregion
     }
 }

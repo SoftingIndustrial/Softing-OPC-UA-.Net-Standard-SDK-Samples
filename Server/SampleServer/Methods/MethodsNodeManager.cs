@@ -5,7 +5,7 @@
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
  * http://www.softing.com/LicenseSIA.pdf
- *  
+ * 
  * ======================================================================*/
 
 using System;
@@ -21,7 +21,6 @@ namespace SampleServer.Methods
     public class MethodsNodeManager : CustomNodeManager2
     {
         #region Constructors
-
         /// <summary>
         /// Initializes the node manager
         /// </summary>
@@ -29,11 +28,9 @@ namespace SampleServer.Methods
         {
             SystemContext.NodeIdFactory = this;            
         }
-
         #endregion
 
         #region INodeIdFactory Members
-
         /// <summary>
         /// Creates the NodeId for the specified node.
         /// </summary>
@@ -41,11 +38,9 @@ namespace SampleServer.Methods
         {
             return GenerateNodeId();
         }
-
         #endregion
 
         #region INodeManager Members
-
         /// <summary>
         /// Does any initialization required before the address space can be used.
         /// </summary>
@@ -154,11 +149,9 @@ namespace SampleServer.Methods
         {
             return new NodeId(++m_nextNodeId, NamespaceIndex);
         }
-
         #endregion
 
         #region Private Methods
-
         /// <summary>
         /// Adds a method in the address space
         /// </summary>
@@ -318,13 +311,10 @@ namespace SampleServer.Methods
                 return new ServiceResult(StatusCodes.BadInvalidArgument);
             }
         }
-
         #endregion
 
-        #region Private Fields
-
+        #region Private Members
         private uint m_nextNodeId = 0;
-
         #endregion
     }
 }

@@ -5,7 +5,7 @@
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
  * http://www.softing.com/LicenseSIA.pdf
- *  
+ * 
  * ======================================================================*/
 
 using System;
@@ -93,17 +93,13 @@ namespace SampleServer
             base.OnServerStarted(server);
 
             #region NodeManagement
-
             RegisterKnownVariableTypes();
             RegisterKnownObjectTypes();
-
             #endregion
 
             #region UserAuthentication
-
             // Request notifications when the user identity is changed. All valid users are accepted by default.
             server.SessionManager.ImpersonateUser += SessionManager_ImpersonateUser;
-
             #endregion
         }
 
@@ -146,11 +142,9 @@ namespace SampleServer
 
             base.OnServerStopping();
         }
-
         #endregion
 
         #region NodeManagement
-
         /// <summary>
         /// Registers all known variable types in NodeStateFactory.
         /// </summary>
@@ -444,17 +438,9 @@ namespace SampleServer
                 OnRequestComplete(context);
             }
         }
-
-        #region Private Fields
-
-        private NodeManagementNodeManager m_nodeManagementManager; // The sample node manager able to handle UA Node management services
-
-        #endregion
-
         #endregion
 
         #region UserAuthentication
-        
         /// <summary>
         /// Called when a client tries to change its user identity
         /// </summary>
@@ -527,11 +513,11 @@ namespace SampleServer
                 throw new ServiceResultException(new ServiceResult(e, StatusCodes.BadUserAccessDenied, "InvalidCertificate", "http://opcfoundation.org/UA/Sample/", new LocalizedText(info)));
             }
         }
-
         #endregion
 
         #region Private Members
         private uint m_shutdownDelay = 5;
+        private NodeManagementNodeManager m_nodeManagementManager; // The sample node manager able to handle UA Node management services
         #endregion
     }
 }

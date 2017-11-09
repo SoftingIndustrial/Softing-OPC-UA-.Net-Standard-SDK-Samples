@@ -5,7 +5,7 @@
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
  * http://www.softing.com/LicenseSIA.pdf
- *  
+ * 
  * ======================================================================*/
 
 using System;
@@ -2614,7 +2614,7 @@ namespace SampleServer.ReferenceServer
         }
         #endregion
 
-        #region Private Fields
+        #region Private Members
         private ReferenceServerConfiguration m_configuration;
         private Opc.Ua.Test.DataGenerator m_generator;
         private Timer m_simulationTimer;

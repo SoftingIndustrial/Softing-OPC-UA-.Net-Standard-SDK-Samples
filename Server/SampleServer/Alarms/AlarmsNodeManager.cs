@@ -5,7 +5,7 @@
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
  * http://www.softing.com/LicenseSIA.pdf
- *  
+ * 
  * ======================================================================*/
 
 using System;
@@ -241,7 +241,7 @@ namespace SampleServer.Alarms
         }
         #endregion
 
-        #region Private Fields
+        #region Private Members
         private uint m_nextNodeId = 0;
         #endregion
     }

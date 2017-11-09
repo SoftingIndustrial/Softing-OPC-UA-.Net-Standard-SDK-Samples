@@ -5,7 +5,7 @@
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
  * http://www.softing.com/LicenseSIA.pdf
- *  
+ * 
  * ======================================================================*/
 
 namespace SampleServer
@@ -20,7 +20,7 @@ namespace SampleServer
         public const string OpcUaXsd = "http://opcfoundation.org/UA/2008/02/Types.xsd";
 
         public const string Alarms = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/AlarmsServer";
-        
+
         public const string DataAccess = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/DataAccessServer";
 
         public const string FileSystem = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/FileSystemServer";

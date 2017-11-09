@@ -5,7 +5,7 @@
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
  * http://www.softing.com/LicenseSIA.pdf
- *  
+ * 
  * ======================================================================*/
 
 using System;
@@ -21,7 +21,6 @@ namespace SampleServer.NodeManagement
     class DynamicASNodeManager : NodeManagementNodeManager
     {
         #region Constructors
-
         /// <summary>
         /// Initializes the node manager
         /// </summary>
@@ -29,11 +28,9 @@ namespace SampleServer.NodeManagement
         {
             SystemContext.NodeIdFactory = this;
         }
-
         #endregion
 
         #region INodeIdFactory Members
-
         /// <summary>
         /// Creates the NodeId for the specified node.
         /// </summary>
@@ -41,11 +38,9 @@ namespace SampleServer.NodeManagement
         {
             return GenerateNodeId();
         }
-
         #endregion
 
         #region INodeManager Members
-
         /// <summary>
         /// Does any initialization required before the address space can be used.
         /// </summary>
@@ -83,14 +78,14 @@ namespace SampleServer.NodeManagement
                 FolderState node1 = AddFolder(root, "Node1");
 
                 FolderState node1_1 = AddFolder(node1, "Node1_1");
-                BaseDataVariableState variable1_1_1 = AddVariable(node1_1, "Variable1_1_1", BuiltInType.Int32, ValueRanks.Scalar);
+                BaseDataVariableState variable111 = AddVariable(node1_1, "Variable1_1_1", BuiltInType.Int32, ValueRanks.Scalar);
 
                 FolderState node1_2 = AddFolder(node1, "Node1_2");
-                BaseDataVariableState variable1_2_1 = AddVariable(node1_2, "Variable1_2_1", BuiltInType.Int32, ValueRanks.Scalar);
+                BaseDataVariableState variable121 = AddVariable(node1_2, "Variable1_2_1", BuiltInType.Int32, ValueRanks.Scalar);
 
                 FolderState node1_3 = AddFolder(node1, "Node1_3");
-                BaseDataVariableState variable1_3_1 = AddVariable(node1_3, "Variable1_3_1", BuiltInType.Int32, ValueRanks.Scalar);
-                BaseDataVariableState variable1_3_2 = AddVariable(node1_3, "Variable1_3_2", BuiltInType.Int32, ValueRanks.Scalar);
+                BaseDataVariableState variable131 = AddVariable(node1_3, "Variable1_3_1", BuiltInType.Int32, ValueRanks.Scalar);
+                BaseDataVariableState variable132 = AddVariable(node1_3, "Variable1_3_2", BuiltInType.Int32, ValueRanks.Scalar);
 
                 // Save the node for later lookup (all tightly coupled children are added with this call)
                 AddPredefinedNode(SystemContext, root);
@@ -226,11 +221,9 @@ namespace SampleServer.NodeManagement
         {
             return new NodeId(++m_nextNodeId, NamespaceIndex);
         }
-
         #endregion
 
         #region NodeManagement Methods
-
         // Validates an AddNodesItem request
         public override ServiceResult ValidateAddNodeRequest(OperationContext context, AddNodesItem nodeToAdd)
         {
@@ -301,13 +294,10 @@ namespace SampleServer.NodeManagement
             // Allow DeleteReferences service requests
             return ServiceResult.Good;
         }
-
         #endregion
 
-        #region Private Fields
-
+        #region Private Members
         private uint m_nextNodeId = 0;
-
         #endregion
     }
 }

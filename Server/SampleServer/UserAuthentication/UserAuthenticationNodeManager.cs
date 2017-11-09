@@ -5,7 +5,7 @@
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
  * http://www.softing.com/LicenseSIA.pdf
- *  
+ * 
  * ======================================================================*/
 
 using System;
@@ -22,7 +22,6 @@ namespace SampleServer.UserAuthentication
     public class UserAuthenticationNodeManager : CustomNodeManager2
     {
         #region Constructors
-
         /// <summary>
         /// Initializes the node manager
         /// </summary>
@@ -30,11 +29,9 @@ namespace SampleServer.UserAuthentication
         {
             SystemContext.NodeIdFactory = this;
         }
-
         #endregion
         
         #region IDisposable Members
-
         /// <summary>
         /// An overrideable version of the Dispose
         /// </summary>
@@ -45,11 +42,9 @@ namespace SampleServer.UserAuthentication
                 // TBD
             }
         }
-
         #endregion
 
         #region INodeIdFactory Members
-
         /// <summary>
         /// Creates the NodeId for the specified node.
         /// </summary>
@@ -57,11 +52,9 @@ namespace SampleServer.UserAuthentication
         {
             return node.NodeId;
         }
-
         #endregion
 
         #region INodeManager Members
-
         /// <summary>
         /// Does any initialization required before the address space can be used.
         /// </summary>
@@ -237,7 +230,6 @@ namespace SampleServer.UserAuthentication
 
             return null;
         }
-        
         #endregion
     }
 }
