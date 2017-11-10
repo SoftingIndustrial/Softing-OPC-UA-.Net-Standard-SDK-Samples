@@ -42,9 +42,13 @@ namespace SampleClient.Samples
             {
                 Console.WriteLine("Discovering all available servers and their endpoints from local host...");
 
-                // The method will return all the registered server applications from the specified machine.
-                // If the "discoveryUrl" parameter is null or empty, DiscoverServers() will return the servers from the local machine.
-                var servers = m_application.DiscoverServers(null);
+                // the method will return all the registered server applications from the specified machine.
+                // if the "discoveryUrl" parameter is null or empty, DiscoverServers() will return the servers from the local machine.
+                // use the default discovery url of the local machine
+                string hostname = System.Net.Dns.GetHostName();
+                string discoveryUrl = Opc.Ua.Utils.Format(Opc.Ua.Utils.DiscoveryUrls[0], hostname);
+
+                var servers = m_application.DiscoverServers(discoveryUrl);
                 Console.WriteLine("DiscoverServers returned {0} results:", servers.Count);
 
                 foreach (var serverDescription in servers)
