@@ -30,6 +30,7 @@ namespace SampleClient.Samples
         private ClientSession m_session;
         private ClientSubscription m_subscription;
         private ClientMonitoredItem m_eventMonitoredItem;
+        private ServerState m_currentServerState = ServerState.Unknown;
         #endregion
 
         #region Constructor
@@ -61,6 +62,7 @@ namespace SampleClient.Samples
 
             try
             {
+                m_session.KeepAlive += Session_KeepAlive;
                 //connect session
                 m_session.Connect(false, true);
                 Console.WriteLine("Session is connected.");
@@ -77,6 +79,17 @@ namespace SampleClient.Samples
                 Console.WriteLine("CreateSession Error: {0}", ex.Message);
                 m_session.Dispose();
                 m_session = null;
+            }
+        }
+
+       
+
+        private void Session_KeepAlive(object sender, Opc.Ua.Client.KeepAliveEventArgs e)
+        {
+            if (e.CurrentState != m_currentServerState)
+            {
+                m_currentServerState = e.CurrentState;
+                Console.WriteLine("Session KeepAlive Server state changed to: {0}", m_currentServerState);
             }
         }
 

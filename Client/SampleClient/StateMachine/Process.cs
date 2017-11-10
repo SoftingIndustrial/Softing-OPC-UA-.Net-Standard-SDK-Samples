@@ -286,11 +286,11 @@ namespace SampleClient.StateMachine
             startMonitoredItem.ExecuteCommand += StartMonitoredItem_ExecuteCommand;
             m_transitions.Add(startMonitoredItem, State.MonitoredItem);
             StateTransition createMonitoredItem =
-                new StateTransition(State.MonitoredItem, Command.CreateMonitoredItem, "1", "Create MonitoredItem");
+                new StateTransition(State.MonitoredItem, Command.CreateMonitoredItem, "1", "Create Monitored Items");
             createMonitoredItem.ExecuteCommand += CreateMonitoredItem_ExecuteCommand;
             m_transitions.Add(createMonitoredItem, State.MonitoredItem);
             StateTransition deleteMonitoredItem =
-                new StateTransition(State.MonitoredItem, Command.DeleteMonitoredItem, "2", "Delete MonitoredItem");
+                new StateTransition(State.MonitoredItem, Command.DeleteMonitoredItem, "2", "Delete Monitored Items");
             deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItem_ExecuteCommand;
             m_transitions.Add(deleteMonitoredItem, State.MonitoredItem);
             StateTransition endMonitoredItem =

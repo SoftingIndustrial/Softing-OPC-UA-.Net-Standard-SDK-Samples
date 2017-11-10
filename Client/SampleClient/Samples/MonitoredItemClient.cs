@@ -24,14 +24,18 @@ namespace SampleClient.Samples
         private const string SessionName = "MonitoredItemClient Session";
         private const string SubscriptionName = "MonitoredItemClient Subscription";
 
-        private static readonly string m_monitoredItemBrowsePath = "Server\\ServerStatus\\CurrentTime";
-        private static readonly NodeId m_monitoredItemNodeId = VariableIds.Server_ServerStatus_CurrentTime;
-        
+       //"Server\\ServerStatus\\CurrentTime";
+        private readonly NodeId m_miCurrentTimeNodeId = VariableIds.Server_ServerStatus_CurrentTime;
+
+        // "CTT\\Scalar\\Simulation\\Int64";
+        private readonly NodeId m_miInt64NodeId = new NodeId("ns=7;s=Scalar_Simulation_Int64");
+
         private readonly UaApplication m_application;
 
         private ClientSession m_session;
         private ClientSubscription m_subscription;
-        private ClientMonitoredItem m_monitoredItem;
+        private ClientMonitoredItem m_miCurrentTime;
+        private ClientMonitoredItem m_miInt64;
         #endregion
 
         #region Constructor
@@ -123,18 +127,29 @@ namespace SampleClient.Samples
                 Console.WriteLine("CreateMonitoredItem: The session is not initialized!");
                 return;
             }
-            if (m_monitoredItem != null)
+            if (m_miInt64 != null)
             {
                 Console.WriteLine("MonitoredItem already created");
                 return;
             }
             try
             {
-               m_monitoredItem = new ClientMonitoredItem(m_subscription, m_monitoredItemNodeId, Attributes.Value,
-                    null, "Monitored Item" + m_monitoredItemBrowsePath);
-                m_monitoredItem.DataChangesReceived += Monitoreditem_DataChangesReceived;
+                //create monitored item for server CurrentTime
+                m_miCurrentTime = new ClientMonitoredItem(m_subscription, m_miCurrentTimeNodeId, Attributes.Value,
+                    null, "Monitored Item Server CurrentTime");
+                m_miCurrentTime.DataChangesReceived += Monitoreditem_DataChangesReceived;
+                //set sampling interval to 1 second
+                m_miCurrentTime.SamplingInterval = 1000;
+                Console.WriteLine("Monitored item '{0}' created. Data value changes are shown:",
+                    m_miCurrentTime.DisplayName);
 
-                Console.WriteLine("Monitored item '{0}' created. Data value changes are shown:", m_monitoredItem.DisplayName);
+                //creaqte monitored item for Int64 variable
+                m_miInt64 = new ClientMonitoredItem(m_subscription, m_miInt64NodeId, Attributes.Value, null,
+                    "Monitored Item Int64");
+                m_miInt64.DataChangesReceived += Monitoreditem_DataChangesReceived;
+                //set sampling interval to 3 seconds
+                m_miInt64.SamplingInterval = 3000;
+                Console.WriteLine("Monitored item '{0}' created. Data value changes are shown:", m_miInt64.DisplayName);
             }
             catch (Exception ex)
             {
@@ -152,22 +167,28 @@ namespace SampleClient.Samples
                 Console.WriteLine("DeleteMonitoredItem: The session is not initialized!");
                 return;
             }
-            if (m_monitoredItem == null)
+            if (m_miCurrentTime == null || m_miInt64 == null)
             {
-                Console.WriteLine("Monitored item is not created.");
+                Console.WriteLine("Monitored items are not created.");
                 return;
             }
             try
             {
-                m_monitoredItem.DataChangesReceived -= Monitoreditem_DataChangesReceived;
-                Console.WriteLine("Monitored item unsubscribed from receiving data change notifications.");
-                m_monitoredItem.Delete();
-                m_monitoredItem = null;
-                Console.WriteLine("Monitored item deleted. ");
+                m_miCurrentTime.DataChangesReceived -= Monitoreditem_DataChangesReceived;
+                Console.WriteLine("Monitored item '{0}' unsubscribed from receiving data change notifications.", m_miCurrentTime.DisplayName);
+                m_miCurrentTime.Delete();
+                Console.WriteLine("Monitored item '{0}' deleted.", m_miCurrentTime.DisplayName);
+                m_miCurrentTime = null;
+
+                m_miInt64.DataChangesReceived -= Monitoreditem_DataChangesReceived;
+                Console.WriteLine("Monitored item '{0}' unsubscribed from receiving data change notifications.", m_miInt64.DisplayName);
+                m_miInt64.Delete();
+                Console.WriteLine("Monitored item '{0}' deleted.", m_miInt64.DisplayName);
+                m_miInt64 = null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Monitored deleted error: " + ex.Message);
+                Console.WriteLine("Monitored item delete error: " + ex.Message);
             }
         }
         #endregion
