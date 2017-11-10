@@ -280,7 +280,7 @@ namespace SampleClient.Samples
                     }
 
                     DataValue dataValue = m_session.Read(readValueId);
-                    //  dataValue.TryConvertToEnumValue(variableNode.DataTypeId, variableNode.ValueRank, session);
+                   // m_session.TryConvertToEnumValue(dataValue, variableNode.DataTypeId, variableNode.ValueRank);
 
                     //display information for read value
                     Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
@@ -303,6 +303,8 @@ namespace SampleClient.Samples
             }
         }
 
+
+       
         /// <summary>
         /// Reads a list of values for a list of nodes providing the NodeIDs and without read the whole node information.
         /// The list of values contains values for an uint node, a GUID node and a datetime node.

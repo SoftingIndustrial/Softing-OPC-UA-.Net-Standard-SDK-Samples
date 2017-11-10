@@ -169,5 +169,5 @@
   <DefaultMiSamplingInterval>1000</DefaultMiSamplingInterval>
   <DefaultMiQueueSize>1</DefaultMiQueueSize>
   <DefaultEventMiQueueSize>0</DefaultEventMiQueueSize>
-  <DecodeCustomDataTypes>true</DecodeCustomDataTypes>
+  <DecodeCustomDataTypes>false</DecodeCustomDataTypes>
 </ApplicationConfigurationEx>

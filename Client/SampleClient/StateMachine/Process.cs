@@ -286,11 +286,11 @@ namespace SampleClient.StateMachine
             startMonitoredItem.ExecuteCommand += StartMonitoredItem_ExecuteCommand;
             m_transitions.Add(startMonitoredItem, State.MonitoredItem);
             StateTransition createMonitoredItem =
-                new StateTransition(State.MonitoredItem, Command.CreateMonitoredItem, "1", "Create new MonitoredItem");
+                new StateTransition(State.MonitoredItem, Command.CreateMonitoredItem, "1", "Create MonitoredItem");
             createMonitoredItem.ExecuteCommand += CreateMonitoredItem_ExecuteCommand;
             m_transitions.Add(createMonitoredItem, State.MonitoredItem);
             StateTransition deleteMonitoredItem =
-                new StateTransition(State.MonitoredItem, Command.DeleteMonitoredItem, "2", "Delete last MonitoredItem");
+                new StateTransition(State.MonitoredItem, Command.DeleteMonitoredItem, "2", "Delete MonitoredItem");
             deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItem_ExecuteCommand;
             m_transitions.Add(deleteMonitoredItem, State.MonitoredItem);
             StateTransition endMonitoredItem =
@@ -589,13 +589,13 @@ namespace SampleClient.StateMachine
         {
             if (m_readWriteClient != null)
             {
-                //m_readWriteClient.ReadVariableNode();
-                //m_readWriteClient.ReadObjectNode();
-                //m_readWriteClient.ReadValueForNode();
-                //m_readWriteClient.ReadArrayValue();
+                m_readWriteClient.ReadVariableNode();
+                m_readWriteClient.ReadObjectNode();
+                m_readWriteClient.ReadValueForNode();
+                m_readWriteClient.ReadArrayValue();
                 m_readWriteClient.ReadComplexValue();
                 m_readWriteClient.ReadEnumValue();
-                //m_readWriteClient.ReadMultipleNodesValues();           
+                m_readWriteClient.ReadMultipleNodesValues();
             }
         }
 
