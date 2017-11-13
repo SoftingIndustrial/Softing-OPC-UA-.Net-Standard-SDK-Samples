@@ -25,7 +25,7 @@ namespace SampleServer
 
         public const string FileSystem = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/FileSystemServer";
 
-        public const string HistoricalDataAccess = "http://opcfoundation.org/Quickstarts/HistoricalDataAccess";
+        public const string HistoricalDataAccess = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/HistoricalDataAccess";
 
         public const string Methods = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/MethodsServer";
         
@@ -33,7 +33,7 @@ namespace SampleServer
 
         public const string ReferenceApplications = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications";
 
-        public const string Refrigerators = "http://industrial.softing.com/UA/Refrigerators";
+        public const string Refrigerators = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/Refrigerators";
 
         public const string UserAuthentication = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/UserAuthentication";
     }
