@@ -25,7 +25,7 @@ namespace SampleClient.Samples
         private const string SessionName = "HistoryClient Session";
         private readonly UaApplication m_application;
         private ClientSession m_session;
-        private readonly NodeId m_historianNodeId = new NodeId("ns=5;s=StaticHistoricalDataItem_Historian2"); 
+        private readonly NodeId m_historianNodeId = new NodeId("ns=4;s=StaticHistoricalDataItem_Historian2"); 
         #endregion
 
         #region Constructor
