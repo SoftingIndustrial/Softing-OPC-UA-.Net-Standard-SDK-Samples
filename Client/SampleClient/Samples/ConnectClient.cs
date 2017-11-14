@@ -170,7 +170,6 @@ namespace SampleClient.Samples
             configuration.ApplicationUri = $"urn:{Utils.GetHostName()}:OPCFoundation:SampleClient";
             configuration.TransportConfigurations = new TransportConfigurationCollection();
             configuration.TransportQuotas = new TransportQuotas {OperationTimeout = 15000};
-            configuration.TransportQuotas = new TransportQuotas {OperationTimeout = 15000};
             configuration.ClientConfiguration = new ClientConfiguration {DefaultSessionTimeout = 5000};
 
             configuration.TraceConfiguration = new TraceConfiguration()
