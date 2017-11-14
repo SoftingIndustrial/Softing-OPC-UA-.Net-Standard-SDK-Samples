@@ -114,7 +114,7 @@ namespace SampleClient.Samples
             try
             {
                 // Retrieve the list of available server connection channels by calling GetEndpoints on the Server's discovery endpoint.
-                Console.WriteLine("Discovering available endpoints...");
+                Console.WriteLine("\r\nDiscovering available endpoints...");
                 IList<EndpointDescriptionEx> endpoints = m_application.GetEndpoints(Constants.ServerUrl);
 
                 Console.WriteLine("GetEndpoints returned {0} endpoints.", endpoints.Count);
@@ -215,14 +215,12 @@ namespace SampleClient.Samples
         {
             try
             {
-                Console.WriteLine("Creating the session {0} (SecurityMode = {1}, SecurityPolicy = {2}, \r\n\t\t\t\t\t\tUserIdentity = {3})...", sessionName, securityMode, securityPolicy, userId.GetIdentityToken());
+                Console.WriteLine("\r\nCreating the session {0} (SecurityMode = {1}, SecurityPolicy = {2}, \r\n\t\t\t\t\t\tUserIdentity = {3})...", sessionName, securityMode, securityPolicy, userId.GetIdentityToken());
                 // Create the Session object.
                 ClientSession session = m_application.CreateSession(serverUrl, securityMode, securityPolicy,
                     messageEncoding, userId, null);
 
                 session.SessionName = sessionName;
-
-                Console.WriteLine("New session object created with url: {0}", session.Url);
                 return session;
             }
             catch (Exception e)
@@ -240,14 +238,12 @@ namespace SampleClient.Samples
             try
             {
                 // Attempt to connect to server.
-                Console.WriteLine("Connecting the session {0}...", session.SessionName);
+                Console.WriteLine("Connecting session {0}...", session.SessionName);
                 session.Connect(false, true);
-                Console.WriteLine("Session state = {0}", session.CurrentState);
+                Console.WriteLine("Session state = {0}. Success!", session.CurrentState);
 
                 // Disconnect the session.
-                Console.WriteLine("Disconnecting the session...");
                 session.Disconnect(true);
-                Console.WriteLine("Session state = {0}\r\n", session.CurrentState);
             }
             catch (Exception e)
             {
