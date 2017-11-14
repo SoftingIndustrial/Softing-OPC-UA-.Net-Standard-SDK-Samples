@@ -40,7 +40,7 @@ namespace SampleClient.Samples
         {
             try
             {
-                Console.WriteLine("Discovering all available servers and their endpoints from local host...");
+                Console.WriteLine("\r\nDiscovering all available servers and their endpoints from local host...");
 
                 // the method will return all the registered server applications from the specified machine.
                 // if the "discoveryUrl" parameter is null or empty, DiscoverServers() will return the servers from the local machine.
@@ -62,11 +62,11 @@ namespace SampleClient.Samples
                         }
 
                         // retrieve available endpoints for each registered server and display their information.
-                        Console.WriteLine("\r\nCall GetEndpoints for server: {0} ...", serverDescription.ApplicationUri);
+                        Console.WriteLine("\r\nGet available endpoints for server: {0} ...", serverDescription.ApplicationUri);
                         string serverDiscoveryUrl = serverDescription.DiscoveryUrls[0];
                         var endpoins = m_application.GetEndpoints(serverDiscoveryUrl);
 
-                        Console.WriteLine("-Server: {0} has {1} available endpoints:", serverDiscoveryUrl, endpoins.Count);
+                        Console.WriteLine("Server: {0} returned {1} available endpoints:", serverDiscoveryUrl, endpoins.Count);
 
                         foreach (var endpointDescription in endpoins)
                         {
@@ -78,7 +78,7 @@ namespace SampleClient.Samples
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("-Server: {0} GetEndpoints Error: {1}", serverDescription.ApplicationUri, ex.Message);
+                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", serverDescription.ApplicationUri, ex.Message);
                     }
                 }
             }
@@ -95,7 +95,7 @@ namespace SampleClient.Samples
         {
             try
             {
-                Console.WriteLine("Discovering all available servers and their endpoints from local network...");
+                Console.WriteLine("\r\nDiscovering all available servers and their endpoints from local network...");
 
                 // The method will return all the registered server applications from the local network.
                 // DiscoverServersOnNetwork service is supported only by LDS-ME installations.
@@ -108,18 +108,24 @@ namespace SampleClient.Samples
                 {
                     try
                     {
+                        // skip servers without DiscoveryUrl information.
                         if (String.IsNullOrEmpty( serverOnNetwork.DiscoveryUrl))
                         {
-                            // skip servers without DiscoveryUrl information.
+                            continue;
+                        }
+
+                        // ignore Urls with unsuported transport profiles.
+                        if (!serverOnNetwork.DiscoveryUrl.StartsWith(Opc.Ua.Utils.UriSchemeOpcTcp))
+                        {
                             continue;
                         }
 
                         // retrieve available endpoints for each registered server and display their information.
-                        Console.WriteLine("\r\nCall GetEndpoints for server: {0} ...", serverOnNetwork.ServerName);
                         string serverDiscoveryUrl = serverOnNetwork.DiscoveryUrl;
+                        Console.WriteLine("\r\nGet available endpoints for : {0} ...", serverDiscoveryUrl);
                         var endpoins = m_application.GetEndpoints(serverDiscoveryUrl);
 
-                        Console.WriteLine("-Server: {0} has {1} available endpoints:", serverDiscoveryUrl, endpoins.Count);
+                        Console.WriteLine("Server: {0} returned {1} available endpoints:", serverOnNetwork.ServerName, endpoins.Count);
 
                         foreach (var endpointDescription in endpoins)
                         {
@@ -131,7 +137,7 @@ namespace SampleClient.Samples
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("-Server: {0} GetEndpoints Error: {1}", serverOnNetwork.DiscoveryUrl, ex.Message);
+                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", serverOnNetwork.DiscoveryUrl, ex.Message);
                     }
                 }
             }
