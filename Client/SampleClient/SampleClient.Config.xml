@@ -5,14 +5,14 @@
   schemaLocation="./Schema/ApplicationConfiguration.xsd"
 >
   <!-- A human readable but not necessarily unique name for the application instance -->
-  <ApplicationName>UA Sample Client</ApplicationName>
+  <ApplicationName>Softing NET Standard Sample Client</ApplicationName>
 
   <!-- A globally unique identifier for the application instance.
        This is overridden with the value contained in the application certificate. -->
-  <ApplicationUri>urn:localhost:OPCFoundation:SampleClient</ApplicationUri>
+  <ApplicationUri>urn:localhost:Softing:UANETStandardToolkit:SampleClient</ApplicationUri>
 
   <!-- A globally unique URI for the product (usually assigned by the product vendor) -->
-  <ProductUri>http://opcfoundation.org/UA/SampleClient/</ProductUri>
+  <ProductUri>http://industrial.softing.com/OpcUaNetStandardToolkit/SampleClient</ProductUri>
 
   <!-- Indicates the type of application (Client, Server or ClientServer). -->
   <ApplicationType>Client_1</ApplicationType>
