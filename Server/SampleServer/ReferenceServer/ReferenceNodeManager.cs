@@ -1329,7 +1329,7 @@ namespace SampleServer.ReferenceServer
                 m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
 
                 // Import a node set file containing structured data types.
-                Import(SystemContext, @"..\SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml");
+                ImportNodeSet();
             }
         }
 
@@ -2623,13 +2623,12 @@ namespace SampleServer.ReferenceServer
         /// <summary>
         /// Imports into the address space an xml file containing the model structure
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="filePath">The path of the NodeSet XML file</param>
-        private ServiceResult Import(ISystemContext context, string filePath)
+        private ServiceResult ImportNodeSet()
         {
             try
             {
-                XmlElement[] extensions = ImportNodeSet(context, filePath);
+                string resourceName = "SampleServer.ReferenceServer.Model.ReferenceServer.NodeSet2.xml";
+                XmlElement[] extensions = ImportNodeSetFromResource(SystemContext, resourceName);
             }
             catch (Exception ex)
             {
@@ -2640,12 +2639,12 @@ namespace SampleServer.ReferenceServer
             return ServiceResult.Good;
         }
 
-        private XmlElement[] ImportNodeSet(ISystemContext context, string filePath)
+        private XmlElement[] ImportNodeSetFromResource(ISystemContext context, string resourceName)
         {
             NodeStateCollection predefinedNodes = new NodeStateCollection();
             List<string> newNamespaceUris = new List<string>();
 
-            XmlElement[] extensions = LoadFromNodeSet2Xml(context, filePath, true, newNamespaceUris, predefinedNodes);
+            XmlElement[] extensions = LoadFromNodeSet2XmlFromResource(context, resourceName, true, newNamespaceUris, predefinedNodes);
 
             // Add the node set to the node manager
             for (int ii = 0; ii < predefinedNodes.Count; ii++)
@@ -2692,19 +2691,19 @@ namespace SampleServer.ReferenceServer
         /// <param name="namespaceUris">Returns the NamespaceUris defined in the node set.</param>
         /// <param name="predefinedNodes">The required NodeStateCollection</param>
         /// <returns>The collection of global extensions of the NodeSet2.xml file.</returns>
-        private XmlElement[] LoadFromNodeSet2Xml(ISystemContext context, string filePath, bool updateTables, List<string> namespaceUris, NodeStateCollection predefinedNodes)
+        private XmlElement[] LoadFromNodeSet2XmlFromResource(ISystemContext context, string resourceName, bool updateTables, List<string> namespaceUris, NodeStateCollection predefinedNodes)
         {
-            if (filePath == null) throw new ArgumentNullException("filePath");
+            if (resourceName == null) throw new ArgumentNullException("resourceName");
 
-            byte[] readAllBytes = File.ReadAllBytes(filePath);
-            MemoryStream istrm = new MemoryStream(readAllBytes);
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            Stream stream = assembly.GetManifestResourceStream(resourceName);
 
-            if (istrm == null)
+            if (stream == null)
             {
-                throw ServiceResultException.Create(StatusCodes.BadDecodingError, "Could not load nodes from resource: {0}", filePath);
+                throw ServiceResultException.Create(StatusCodes.BadDecodingError, "Could not load nodes from resource: {0}", resourceName);
             }
 
-            return LoadFromNodeSet2(context, istrm, updateTables, namespaceUris, predefinedNodes);
+            return LoadFromNodeSet2(context, stream, updateTables, namespaceUris, predefinedNodes);
         }
 
         /// <summary>

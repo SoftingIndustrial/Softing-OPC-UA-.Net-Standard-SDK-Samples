@@ -10,8 +10,11 @@
 
   <ItemGroup>
     <Compile Remove="NodeSetImport\NodeSet\**" />
+    <Compile Remove="ReferenceServer\Model\**" />
     <EmbeddedResource Remove="NodeSetImport\NodeSet\**" />
+    <EmbeddedResource Remove="ReferenceServer\Model\**" />
     <None Remove="NodeSetImport\NodeSet\**" />
+    <None Remove="ReferenceServer\Model\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,6 +53,8 @@
     <Content Include="HistoricalDataAccess\Data\Sample\Historian4.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="ReferenceServer\Model\ModelDesign.xml" />
+    <EmbeddedResource Include="ReferenceServer\Model\ReferenceServer.NodeSet2.xml" />
   </ItemGroup>
 
   <ItemGroup>
