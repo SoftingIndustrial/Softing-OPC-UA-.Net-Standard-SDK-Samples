@@ -43,7 +43,7 @@ namespace SampleClient.Samples
         //Browse path: Root\Objects\Refrigerators\Refrigerator #1\State
         const string StaticEnumNodeId = "ns=10;i=16";
         //Browse path: Root\Objects\Refrigerators\Refrigerator #1\RefrigeratorStatus
-        const string StaticComplexNodeId = "ns=10;i=13";
+        const string StaticComplexNodeId = "ns=7;i=6";
         #endregion
 
         #region Constructor
@@ -231,15 +231,21 @@ namespace SampleClient.Samples
 
                 //display information for read value
                 Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
-
-                if (dataValue.Value is StructuredValue)
+                if (dataValue.Value == null)
                 {
-                    StructuredValue complexData = dataValue.Value as StructuredValue;
-                    Console.WriteLine("  Value is 'Structured Value' with fields: ");
-                    foreach (StructuredField field in complexData.Fields)
+                    Console.WriteLine(" 'Structured Value' is null ");
+                }
+                else if (dataValue.Value is ExtensionObject)
+                {
+                    StructuredValue complexData = ((ExtensionObject)dataValue.Value).Body as StructuredValue;
+                    if (complexData != null)
                     {
-                        Console.WriteLine("   Field: {0} Value:{1} Type:{2} ", field.Name, complexData[field.Name],
-                            complexData[field.Name].GetType().Name);
+                        Console.WriteLine("  Value is 'Structured Value' with fields: ");
+                        foreach (StructuredField field in complexData.Fields)
+                        {
+                            Console.WriteLine("   Field: {0} Value:{1} Type:{2} ", field.Name, complexData[field.Name],
+                                complexData[field.Name].GetType().Name);
+                        }
                     }
                 }
             }
