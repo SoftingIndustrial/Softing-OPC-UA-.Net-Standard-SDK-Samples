@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Xml;
 using Opc.Ua;
 using Softing.Opc.Ua;
 using Softing.Opc.Ua.Client;
@@ -441,26 +442,31 @@ namespace SampleClient.Samples
             writeValue.AttributeId = Attributes.Value;
             writeValue.NodeId = new NodeId(StaticComplexNodeId);
 
+            //ExpandedNodeId binaryEncodingId = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=29");
+            //ExpandedNodeId typeId = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=1");
+            //ExpandedNodeId xmlEncodingId = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=10");
+            //XmlQualifiedName xmlQualifiedName = new XmlQualifiedName("DataType1", typeId.NamespaceUri);
+
+            //StructuredValue complexData = new StructuredValue(xmlQualifiedName, typeId, binaryEncodingId, xmlEncodingId);
+            //complexData.AddField("Int32Field", 12, new XmlQualifiedName("Int32", "http://opcfoundation.org/BinarySchema/"));
+            //complexData.AddField("FloatField", (float)m_random.Next(1, 110), new XmlQualifiedName("Float", "http://opcfoundation.org/BinarySchema/"));
+            
+
+            //simplified version of write
+            ExpandedNodeId typeId = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=1");
+            StructuredValue complexData = new StructuredValue(typeId);
+
+            complexData.Fields[0].Value = (int)m_random.Next(1, 110);
+            complexData.Fields[1].Value = (float) m_random.Next(1, 110);
+
             DataValue valueToWrite = new DataValue();
-            //todo after complex type implementation
-            //ExpandedNodeId binaryEncodingId = new ExpandedNodeId("nsu=http://industrial.softing.com/UA/Refrigerator;ns=0;i=444");
-            //ExpandedNodeId typeId = new ExpandedNodeId("nsu=http://industrial.softing.com/UA/Refrigerator;ns=0;i=435");
-            //ExpandedNodeId xmlEncodingId = new ExpandedNodeId("nsu=http://industrial.softing.com/UA/Refrigerator;ns=0;i=437");
-            //XmlQualifiedName xmlQualifiedName = new XmlQualifiedName("RefrigeratorStatusType", typeId.NamespaceUri);
-
-            //StructuredValue complexData = StructuredValue.CreateNew(xmlQualifiedName, typeId, binaryEncodingId, xmlEncodingId);
-
-            //complexData.AddField("CondensorMotorRunning", true, new XmlQualifiedName("Boolean", "http://opcfoundation.org/BinarySchema/"));
-            //complexData.AddField("PreasureBeforePump", (double)m_random.Next(1, 110), new XmlQualifiedName("Double", "http://opcfoundation.org/BinarySchema/"));
-            //complexData.AddField("PreasureAfterPump", (double)m_random.Next(1, 70), new XmlQualifiedName("Double", "http://opcfoundation.org/BinarySchema/"));
-            //valueToWrite.Value = complexData;
-            //valueToWrite.ValueRank = ValueRanks.OneOrMoreDimensions;
+            valueToWrite.Value = complexData;
 
             writeValue.Value = valueToWrite;
             try
             {
                 StatusCode statusCode = m_session.Write(writeValue);
-                Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticComplexNodeId, writeValue.Value.ToString());
+                Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticComplexNodeId, complexData);
                 Console.WriteLine(" Status code is {0}", statusCode);
             }
             catch (Exception e)
