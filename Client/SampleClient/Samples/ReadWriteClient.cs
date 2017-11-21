@@ -10,7 +10,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Xml;
 using Opc.Ua;
 using Softing.Opc.Ua;
 using Softing.Opc.Ua.Client;
@@ -43,7 +42,7 @@ namespace SampleClient.Samples
         const string StaticInt64ArrayNodeId = "ns=7;s=Scalar_Static_Arrays_Int64";
         //Browse path: Root\Objects\Refrigerators\Refrigerator #1\State
         const string StaticEnumNodeId = "ns=10;i=16";
-        //Browse path: Root\Objects\Refrigerators\Refrigerator #1\RefrigeratorStatus
+        //Browse path: Root\Objects\CTT\StructuredTypeVariables\DataType1Variable
         const string StaticComplexNodeId = "ns=7;i=6";
         #endregion
 
@@ -163,7 +162,7 @@ namespace SampleClient.Samples
             Console.WriteLine("\n Read value for NodeId:{0}", StaticUInt32NodeId);
             try
             {
-                DataValue dataValue = m_session.Read(readValueId);
+                DataValueEx dataValue = m_session.Read(readValueId);
                 DisplayInformationForDataValue(dataValue);
             }
             catch (Exception e)
@@ -190,7 +189,7 @@ namespace SampleClient.Samples
             Console.WriteLine("\n Read array value for NodeId:{0}", StaticInt64ArrayNodeId);
             try
             {
-                DataValue dataValue = m_session.Read(readValueId);
+                DataValueEx dataValue = m_session.Read(readValueId);
 
                 //display read information
                 Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
@@ -220,33 +219,32 @@ namespace SampleClient.Samples
                 Console.WriteLine("ReadComplexValue: The session is not initialized!");
                 return;
             }
-            //todo after complex type implementation
+
             ReadValueId readValueId = new ReadValueId();
             readValueId.NodeId = new NodeId(StaticComplexNodeId);
             readValueId.AttributeId = Attributes.Value;
+            //readValueId.DataEncoding =  Opc.Ua.EncodeableObject.
 
             Console.WriteLine("\n Read complex value for NodeId:{0}", StaticComplexNodeId);
             try
             {
-                DataValue dataValue = m_session.Read(readValueId);
+                DataValueEx dataValue = m_session.Read(readValueId);
 
                 //display information for read value
                 Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
-                if (dataValue.Value == null)
+                if (dataValue.ProcessedValue == null)
                 {
                     Console.WriteLine(" 'Structured Value' is null ");
                 }
-                else if (dataValue.Value is ExtensionObject)
+                else if (dataValue.ProcessedValue is StructuredValue)
                 {
-                    StructuredValue complexData = ((ExtensionObject)dataValue.Value).Body as StructuredValue;
-                    if (complexData != null)
+                    StructuredValue complexData = dataValue.ProcessedValue as StructuredValue;
+
+                    Console.WriteLine("  Value is 'Structured Value' with fields: ");
+                    foreach (StructuredField field in complexData.Fields)
                     {
-                        Console.WriteLine("  Value is 'Structured Value' with fields: ");
-                        foreach (StructuredField field in complexData.Fields)
-                        {
-                            Console.WriteLine("   Field: {0} Value:{1} Type:{2} ", field.Name, complexData[field.Name],
-                                complexData[field.Name].GetType().Name);
-                        }
+                        Console.WriteLine("   Field: {0} Value:{1} Type:{2} ", field.Name, complexData[field.Name],
+                            complexData[field.Name].GetType().Name);
                     }
                 }
             }
@@ -266,7 +264,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("ReadEnumValue: The session is not initialized!");
                 return;
             }
-            //todo after complex type implementation
+
             Console.WriteLine("\n Read enum value for NodeId:{0}", StaticEnumNodeId);
             NodeId nodeId = new NodeId(StaticEnumNodeId);
             try
@@ -284,22 +282,22 @@ namespace SampleClient.Samples
 
                         Console.WriteLine("\n Read enum value for Node: {0} (NodeId:{1})", variableNode.DisplayName,
                             StaticEnumNodeId);
-                    }
 
-                    DataValue dataValue = m_session.Read(readValueId);
-                   // m_session.TryConvertToEnumValue(dataValue, variableNode.DataTypeId, variableNode.ValueRank);
+                        DataValueEx dataValue = m_session.Read(readValueId);
+                        m_session.TryConvertToEnumValue(dataValue, variableNode.DataTypeId, variableNode.ValueRank);
 
-                    //display information for read value
-                    Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
-                    if (dataValue.Value is EnumValue)
-                    {
-                        EnumValue enumValue = dataValue.Value as EnumValue;
-                        Console.WriteLine("  Value is an enum with value: {0}", enumValue.ValueString);
-                        Console.WriteLine("  All possible values for this Enum are :");
-                        List<string> allPossibleVals = new List<string>(enumValue.ValueStrings);
-                        for (int i = 0; i < allPossibleVals.Count; i++)
+                        //display information for read value
+                        Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
+                        EnumValue enumValue = dataValue.ProcessedValue as EnumValue;
+                        if (enumValue != null)
                         {
-                            Console.WriteLine("   {0}   ", allPossibleVals[i]);
+                            Console.WriteLine("  Value is an enum with value: {0}", enumValue.ValueString);
+                            Console.WriteLine("  All possible values for this Enum are:");
+                            List<string> allPossibleVals = new List<string>(enumValue.ValueStrings);
+                            for (int i = 0; i < allPossibleVals.Count; i++)
+                            {
+                                Console.WriteLine("   {0}   ", allPossibleVals[i]);
+                            }
                         }
                     }
                 }
@@ -346,7 +344,7 @@ namespace SampleClient.Samples
             Console.WriteLine("\n Read value for multiple nodes: ");
             try
             {
-                IList<DataValue> dataValues = m_session.Read(listOfNodes, 0, TimestampsToReturn.Both);
+                IList<DataValueEx> dataValues = m_session.Read(listOfNodes, 0, TimestampsToReturn.Both);
                 for (int i = 0; i < listOfNodes.Count; i++)
                 {
                     Console.WriteLine(" \n {0}. Read value for node {1}.", i, listOfNodes[i].NodeId);
@@ -441,32 +439,26 @@ namespace SampleClient.Samples
             WriteValue writeValue = new WriteValue();
             writeValue.AttributeId = Attributes.Value;
             writeValue.NodeId = new NodeId(StaticComplexNodeId);
-
-            //ExpandedNodeId binaryEncodingId = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=29");
-            //ExpandedNodeId typeId = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=1");
-            //ExpandedNodeId xmlEncodingId = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=10");
-            //XmlQualifiedName xmlQualifiedName = new XmlQualifiedName("DataType1", typeId.NamespaceUri);
-
-            //StructuredValue complexData = new StructuredValue(xmlQualifiedName, typeId, binaryEncodingId, xmlEncodingId);
-            //complexData.AddField("Int32Field", 12, new XmlQualifiedName("Int32", "http://opcfoundation.org/BinarySchema/"));
-            //complexData.AddField("FloatField", (float)m_random.Next(1, 110), new XmlQualifiedName("Float", "http://opcfoundation.org/BinarySchema/"));
             
-
-            //simplified version of write
+            //define node id for complex type id
             ExpandedNodeId typeId = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=1");
-            StructuredValue complexData = new StructuredValue(typeId);
-
-            complexData.Fields[0].Value = (int)m_random.Next(1, 110);
-            complexData.Fields[1].Value = (float) m_random.Next(1, 110);
-
-            DataValue valueToWrite = new DataValue();
-            valueToWrite.Value = complexData;
-
-            writeValue.Value = valueToWrite;
+            //create structured value instance
             try
             {
+                StructuredValue structuredValue = new StructuredValue();
+                structuredValue.InitializeTypeInformation(typeId, m_session.Factory);
+
+                structuredValue.Fields[0].Value = (int) m_random.Next(1, 110);
+                structuredValue.Fields[1].Value = (float) m_random.Next(1, 110);
+
+                DataValue valueToWrite = new DataValue();
+                valueToWrite.Value = structuredValue;
+
+                writeValue.Value = valueToWrite;
+
                 StatusCode statusCode = m_session.Write(writeValue);
-                Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticComplexNodeId, complexData);
+                Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticComplexNodeId,
+                    structuredValue);
                 Console.WriteLine(" Status code is {0}", statusCode);
             }
             catch (Exception e)
@@ -485,8 +477,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("WriteEnumValueForNode: The session is not initialized!");
                 return;
             }
-
-            //todo after complex type implementation
+            
             WriteValue writeValue = new WriteValue();
             writeValue.AttributeId = Attributes.Value;
             writeValue.NodeId = new NodeId(StaticEnumNodeId);
@@ -626,7 +617,7 @@ namespace SampleClient.Samples
         /// Displays information at console for a read DataValue.
         /// </summary>
         /// <param name="dataValue">Value that is provided for displaying information </param>
-        private void DisplayInformationForDataValue(DataValue dataValue)
+        private void DisplayInformationForDataValue(DataValueEx dataValue)
         {
             Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
             Console.WriteLine("  Data Value is {0}.", dataValue.Value);

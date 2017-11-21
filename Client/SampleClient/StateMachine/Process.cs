@@ -577,11 +577,11 @@ namespace SampleClient.StateMachine
         {
             if (m_readWriteClient != null)
             {
-                m_readWriteClient.WriteValueForNode();
-                m_readWriteClient.WriteArrayValueForNode();
+                //m_readWriteClient.WriteValueForNode();
+                //m_readWriteClient.WriteArrayValueForNode();
                 m_readWriteClient.WriteComplexValueForNode();
                 m_readWriteClient.WriteEnumValueForNode();
-                m_readWriteClient.WriteMultipleNodesValues();
+                //m_readWriteClient.WriteMultipleNodesValues();
             }
         }
 
@@ -589,13 +589,13 @@ namespace SampleClient.StateMachine
         {
             if (m_readWriteClient != null)
             {
-                m_readWriteClient.ReadVariableNode();
-                m_readWriteClient.ReadObjectNode();
-                m_readWriteClient.ReadValueForNode();
-                m_readWriteClient.ReadArrayValue();
+                //m_readWriteClient.ReadVariableNode();
+                //m_readWriteClient.ReadObjectNode();
+                //m_readWriteClient.ReadValueForNode();
+                //m_readWriteClient.ReadArrayValue();
                 m_readWriteClient.ReadComplexValue();
                 m_readWriteClient.ReadEnumValue();
-                m_readWriteClient.ReadMultipleNodesValues();
+                //m_readWriteClient.ReadMultipleNodesValues();
             }
         }
 

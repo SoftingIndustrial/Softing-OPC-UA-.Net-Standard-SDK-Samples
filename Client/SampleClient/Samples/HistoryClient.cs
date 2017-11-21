@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Opc.Ua;
 using Softing.Opc.Ua;
 using Softing.Opc.Ua.Client;
@@ -61,7 +62,7 @@ namespace SampleClient.Samples
 
             TimestampsToReturn timestampsToReturn = TimestampsToReturn.Both;
 
-            List<DataValue> results = null;
+            List<DataValueEx> results = null;
             try
             {
                 results = m_session.HistoryReadRaw(m_historianNodeId, argument, timestampsToReturn);
@@ -108,7 +109,7 @@ namespace SampleClient.Samples
 
             TimestampsToReturn timestampsToReturn = TimestampsToReturn.Both;
 
-            List<DataValue> results = null;
+            List<DataValueEx> results = null;
             try
             {
                 results = m_session.HistoryReadAtTime(m_historianNodeId, argument, timestampsToReturn);
@@ -156,7 +157,7 @@ namespace SampleClient.Samples
             };
             TimestampsToReturn timestampsToReturn = TimestampsToReturn.Both;
 
-            List<DataValue> results = null;
+            List<DataValueEx> results = null;
             try
             {
                 results = m_session.HistoryReadProcessed(m_historianNodeId, argument, timestampsToReturn);
