@@ -52,9 +52,28 @@
       <opc:Field Name="ByteField" DataType="ua:Byte" />
     </opc:Fields>
   </opc:DataType>
+  
+  <!--EnumerationType1 containing a custom enumeration type-->
+  <opc:DataType SymbolicName="EnumerationType1" BaseType="ua:Enumeration">
+    <opc:Fields>
+      <opc:Field Name="Stopped" Identifier="0"></opc:Field>
+      <opc:Field Name="Starting" Identifier="1"></opc:Field>      
+      <opc:Field Name="Running" Identifier="2"></opc:Field>
+	  <opc:Field Name="Faule" Identifier="3"></opc:Field>
+    </opc:Fields>
+  </opc:DataType>
+  
+  <!--DataType5 containing numeric fields and one enumeration field-->
+  <opc:DataType SymbolicName="DataType5" BaseType="ua:Structure">
+    <opc:Fields>
+      <opc:Field Name="Int32Field" DataType="ua:Int32" />
+      <opc:Field Name="FloatField" DataType="ua:Float" />
+      <opc:Field Name="ByteField" DataType="ua:Byte" />
+	  <opc:Field Name="EnumerationType1Field" DataType="EnumerationType1" />
+    </opc:Fields>
+  </opc:DataType>
 
-  <!--A folder contaiing instances of variable nodes with above defined custom data types.-->
-
+  <!--A folder containing instances of variable nodes with above defined custom data types.-->
   <opc:Object SymbolicName="StructuredTypeVariables" TypeDefinition="ua:FolderType" >
     <opc:BrowseName>StructuredTypeVariables</opc:BrowseName>
     <opc:Children>
@@ -69,6 +88,12 @@
       </opc:Variable>
       <opc:Variable SymbolicName="DataType4Variable" DataType="DataType4" ValueRank="Scalar" TypeDefinition="ua:BaseDataVariableType" AccessLevel="ReadWrite">
         <opc:Description>Instance of a variable node with DataType4 type.</opc:Description>
+      </opc:Variable>
+	  <opc:Variable SymbolicName="DataType5Variable" DataType="DataType5" ValueRank="Scalar" TypeDefinition="ua:BaseDataVariableType" AccessLevel="ReadWrite">
+        <opc:Description>Instance of a variable node with DataType5 type.</opc:Description>
+      </opc:Variable>
+	  <opc:Variable SymbolicName="EnumerationType1Variable" DataType="EnumerationType1" ValueRank="Scalar" TypeDefinition="ua:BaseDataVariableType" AccessLevel="ReadWrite">
+        <opc:Description>Instance of a variable node with EnumerationType1 type.</opc:Description>
       </opc:Variable>
     </opc:Children>
     <!-- Link the instance back to the ObjectsFolder -->
