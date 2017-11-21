@@ -40,10 +40,10 @@ namespace SampleClient.Samples
 
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Arrays\Int64
         const string StaticInt64ArrayNodeId = "ns=7;s=Scalar_Static_Arrays_Int64";
-        //Browse path: Root\Objects\Refrigerators\Refrigerator #1\State
-        const string StaticEnumNodeId = "ns=10;i=16";
-        //Browse path: Root\Objects\CTT\StructuredTypeVariables\DataType1Variable
-        const string StaticComplexNodeId = "ns=7;i=6";
+        //Browse path: Root\Objects\CTT\StructuredTypeVariables\EnumerationType1Variable
+        const string StaticEnumNodeId = "ns=7;i=14";
+        //Browse path: Root\Objects\CTT\StructuredTypeVariables\DataType5Variable
+        const string StaticComplexNodeId = "ns=7;i=13";
         #endregion
 
         #region Constructor
@@ -266,7 +266,7 @@ namespace SampleClient.Samples
             }
 
             Console.WriteLine("\n Read enum value for NodeId:{0}", StaticEnumNodeId);
-            NodeId nodeId = new NodeId(StaticEnumNodeId);
+            NodeId nodeId =  new NodeId(StaticEnumNodeId);
             try
             {
                 BaseNode baseNode = m_session.ReadNode(nodeId);
@@ -284,7 +284,8 @@ namespace SampleClient.Samples
                             StaticEnumNodeId);
 
                         DataValueEx dataValue = m_session.Read(readValueId);
-                        m_session.TryConvertToEnumValue(dataValue, variableNode.DataTypeId, variableNode.ValueRank);
+                        //convert int32 value read from node to a well known enumeration type
+                        dataValue.TryConvertToEnumValue(m_session, variableNode.DataTypeId, variableNode.ValueRank);
 
                         //display information for read value
                         Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
@@ -441,15 +442,17 @@ namespace SampleClient.Samples
             writeValue.NodeId = new NodeId(StaticComplexNodeId);
             
             //define node id for complex type id
-            ExpandedNodeId typeId = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=1");
+            ExpandedNodeId typeId = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=7");
             //create structured value instance
             try
             {
                 StructuredValue structuredValue = new StructuredValue();
-                structuredValue.InitializeTypeInformation(typeId, m_session.Factory);
+                structuredValue.TypeId = typeId;
+                structuredValue.Initialize(m_session.Factory);
 
                 structuredValue.Fields[0].Value = (int) m_random.Next(1, 110);
                 structuredValue.Fields[1].Value = (float) m_random.Next(1, 110);
+                structuredValue.Fields[3].Value = (int)m_random.Next(0, 3);
 
                 DataValue valueToWrite = new DataValue();
                 valueToWrite.Value = structuredValue;
