@@ -17,9 +17,25 @@ namespace SampleClient.StateMachine
     /// </summary>
     class StateTransition
     {
+        #region Fields
+
+        /// <summary>
+        /// Current state of StateTransition 
+        /// </summary>
         public readonly State CurrentState;
         public readonly CommandDescriptor CommandDescriptor;
+
+        #endregion
+
+        #region Events 
+        /// <summary>
+        /// Event that is raised when a command is executed
+        /// </summary>
         public event EventHandler ExecuteCommand;
+
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Create new instance of StateTransition
@@ -34,17 +50,22 @@ namespace SampleClient.StateMachine
             CommandDescriptor = new CommandDescriptor(command, keyword, description);
         }
 
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
-        /// Execute the command
+        /// Raise ExecuteCommand event
         /// </summary>
         public virtual void OnExecuteCommand()
         {
             ExecuteCommand?.Invoke(this, EventArgs.Empty);
         }
 
+        #endregion
 
         #region Equals & GetHashCode
+
         /// <summary>Serves as the default hash function.</summary>
         /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode()
@@ -58,8 +79,10 @@ namespace SampleClient.StateMachine
         public override bool Equals(object obj)
         {
             StateTransition other = obj as StateTransition;
-            return other != null && CurrentState == other.CurrentState && CommandDescriptor.Command == other.CommandDescriptor.Command;
-        } 
+            return other != null && CurrentState == other.CurrentState &&
+                   CommandDescriptor.Command == other.CommandDescriptor.Command;
+        }
+
         #endregion
     }
 }

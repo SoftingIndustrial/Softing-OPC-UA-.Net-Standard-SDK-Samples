@@ -11,6 +11,9 @@
 
 namespace SampleClient.StateMachine
 {
+    /// <summary>
+    /// State of the <see cref="Process"/> state machine
+    /// </summary>
     public enum State
     {
         Main,
@@ -24,6 +27,9 @@ namespace SampleClient.StateMachine
         Exit
     }
 
+    /// <summary>
+    /// Enumeration for Command that applies to <see cref="Process"/> state machine
+    /// </summary>
     public enum Command
     {
         DiscoverySample,
@@ -65,6 +71,4 @@ namespace SampleClient.StateMachine
         CallMethods,
         Exit
     }
-
-
 }

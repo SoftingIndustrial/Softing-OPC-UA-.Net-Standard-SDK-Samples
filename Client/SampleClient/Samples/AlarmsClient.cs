@@ -23,19 +23,21 @@ namespace SampleClient.Samples
     class AlarmsClient
     {
         #region Private Fields
+
         private const string SessionName = "AlarmsClient Session";
         private const string SubscriptionName = "AlarmsClient Subscription";
 
-        //Browse name for m_alarmsModuleNodeId: Objects\Alarms
-        private static readonly string m_alarmsModuleNodeId = "ns=2;i=2"; 
-
         private readonly UaApplication m_application;
-        //will keep reference to already notified alarms to be able to acknowledge or add comment
-        private readonly Dictionary<NodeId, EventDetails> m_retainedAlarms;
         private ClientSession m_session;
         private ClientSubscription m_subscription;
         private ClientMonitoredItem m_alarmsMonitoredItem;
-       
+
+        //Browse name for m_alarmsModuleNodeId: Objects\Alarms
+        private static readonly string m_alarmsModuleNodeId = "ns=2;i=2";
+
+        //will keep reference to already notified alarms to be able to acknowledge or add comment
+        private readonly Dictionary<NodeId, EventDetails> m_retainedAlarms;
+
         #endregion
 
         #region Constructor
@@ -49,6 +51,7 @@ namespace SampleClient.Samples
             m_application = application;
             m_retainedAlarms = new Dictionary<NodeId, EventDetails>();
         }
+
         #endregion
 
         #region Public Methods
@@ -137,8 +140,10 @@ namespace SampleClient.Samples
                 inputArgs.Add(selectedAlarm.EventId);
                 inputArgs.Add(new LocalizedText(comment));
 
-                m_session.Call(selectedAlarm.EventNode, MethodIds.ConditionType_AddComment,
-                    inputArgs, out var outputArgs);
+                m_session.Call(selectedAlarm.EventNode,
+                    MethodIds.ConditionType_AddComment,
+                    inputArgs,
+                    out var outputArgs);
                 Console.WriteLine("AddComment request sent for alarm with SourceName = {0}", selectedAlarm.SourceName);
             }
             catch (Exception exception)
@@ -165,7 +170,6 @@ namespace SampleClient.Samples
             }
             try
             {
-
                 Dictionary<int, NodeId> alarmsList = new Dictionary<int, NodeId>();
                 int index = 1;
 
@@ -208,9 +212,11 @@ namespace SampleClient.Samples
                 Console.WriteLine("AcknowledgeAlarms Error : {0}.", exception.Message);
             }
         }
+
         #endregion
 
         #region Initialize & Disconnect Session
+
         /// <summary>
         /// Initialize session and subscription
         /// </summary>
@@ -218,39 +224,44 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                // create the session object.            
-                m_session = m_application.CreateSession(
-                    Constants.ServerUrl,
-                    MessageSecurityMode.None,
-                    SecurityPolicy.None,
-                    MessageEncoding.Binary,
-                    new UserIdentity(),
-                    null);
-                m_session.SessionName = SessionName;
-
                 try
                 {
+                    // create the session object.            
+                    m_session = m_application.CreateSession(
+                        Constants.ServerUrl,
+                        MessageSecurityMode.None,
+                        SecurityPolicy.None,
+                        MessageEncoding.Binary,
+                        new UserIdentity(),
+                        null);
+                    m_session.SessionName = SessionName;
+
                     //connect session
                     m_session.Connect(false, true);
                     Console.WriteLine("Session is connected.");
+
+                    if (m_subscription == null)
+                    {
+                        //create the subscription
+                        m_subscription = new ClientSubscription(m_session, SubscriptionName);
+
+                        // set the Publishing interval for this subscription
+                        m_subscription.PublishingInterval = 500;
+                        Console.WriteLine("Subscription created");
+                    }
+
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("CreateSession Error: {0}", ex.Message);
-                    m_session.Dispose();
-                    m_session = null;
+                    if (m_session != null)
+                    {
+                        m_session.Dispose();
+                        m_session = null;
+                    }
+                    m_subscription = null;
                     return;
                 }
-            }
-
-            if (m_subscription == null)
-            {
-                //create the subscription
-                m_subscription = new ClientSubscription(m_session, SubscriptionName);
-
-                // set the Publishing interval for this subscription
-                m_subscription.PublishingInterval = 500;
-                Console.WriteLine("Subscription created");
             }
 
             InitializeAlarmsMonitoredItem();
@@ -291,11 +302,12 @@ namespace SampleClient.Samples
                 filter.WhereClause.Push(FilterOperator.OfType, ObjectTypeIds.ConditionType);
 
                 // Create the MonitoredItem used to receive event notifications and pass the filter object
-                m_alarmsMonitoredItem = new ClientMonitoredItem(m_subscription, m_alarmsModuleNodeId, "Alarms monitor item", filter);
+                m_alarmsMonitoredItem =
+                    new ClientMonitoredItem(m_subscription, m_alarmsModuleNodeId, "Alarms monitor item", filter);
                 m_alarmsMonitoredItem.SamplingInterval = 100;
                 m_alarmsMonitoredItem.QueueSize = 1000;
 
-                m_alarmsMonitoredItem.EventsReceived += m_alarmsMonitoredItem_EventsReceived;
+                m_alarmsMonitoredItem.EventsReceived += AlarmsMonitoredItem_EventsReceived;
 
                 Console.WriteLine("Alarms MonitoredItem created for NodeId ({0}).", m_alarmsMonitoredItem.NodeId);
             }
@@ -334,15 +346,17 @@ namespace SampleClient.Samples
                 Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
             }
         }
+
         #endregion
 
         #region Event Handlers
+
         /// <summary>
         /// Handle EventsReceived event for alarms MonitoredItem
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void m_alarmsMonitoredItem_EventsReceived(object sender, EventsNotificationEventArgs e)
+        private void AlarmsMonitoredItem_EventsReceived(object sender, EventsNotificationEventArgs e)
         {
             try
             {
@@ -393,26 +407,27 @@ namespace SampleClient.Samples
                     eventFields.AppendFormat("AckedState   = {0}\r\n", eventNotification.EventFields[10]);
                     eventFields.AppendFormat("Comment      = {0}\r\n", eventNotification.EventFields[11]);
                     eventFields.AppendFormat("Retain       = {0}\r\n", eventNotification.EventFields[12]);
-                      
+
                     //Display alarm information
                     Console.WriteLine(eventFields);
                     // check if Retain and SourceNode fields are received
-                    if (eventNotification.EventFields[3] != Variant.Null && eventNotification.EventFields[12] != Variant.Null)
+                    if (eventNotification.EventFields[3] != Variant.Null &&
+                        eventNotification.EventFields[12] != Variant.Null)
                     {
-                        bool retain = (bool)eventNotification.EventFields[12].Value;
-                        NodeId sourceNode = (NodeId)eventNotification.EventFields[3].Value;
+                        bool retain = (bool) eventNotification.EventFields[12].Value;
+                        NodeId sourceNode = (NodeId) eventNotification.EventFields[3].Value;
 
                         // Update the list of active alarms and store only the events with "retain" bit set to true.
                         if (retain)
                         {
                             EventDetails eventDetails = new EventDetails();
-                            eventDetails.EventNode = (NodeId)eventNotification.EventFields[0].Value;
-                            eventDetails.EventId = (byte[])eventNotification.EventFields[1].Value;
+                            eventDetails.EventNode = (NodeId) eventNotification.EventFields[0].Value;
+                            eventDetails.EventId = (byte[]) eventNotification.EventFields[1].Value;
                             eventDetails.SourceNode = sourceNode;
                             eventDetails.SourceName = eventNotification.EventFields[4].Value.ToString();
-                            eventDetails.Message = (LocalizedText)eventNotification.EventFields[6].Value;
-                            eventDetails.Severity = (EventSeverity)((ushort)eventNotification.EventFields[7].Value);
-                            eventDetails.Comment = (LocalizedText)eventNotification.EventFields[11].Value;
+                            eventDetails.Message = (LocalizedText) eventNotification.EventFields[6].Value;
+                            eventDetails.Severity = (EventSeverity) ((ushort) eventNotification.EventFields[7].Value);
+                            eventDetails.Comment = (LocalizedText) eventNotification.EventFields[11].Value;
 
                             m_retainedAlarms[sourceNode] = eventDetails;
                         }
@@ -427,7 +442,8 @@ namespace SampleClient.Samples
             {
                 Console.WriteLine("MonitoredItem Notification Error : {0}.", exception.Message);
             }
-        } 
+        }
+
         #endregion
     }
 }

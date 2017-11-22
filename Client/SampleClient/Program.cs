@@ -17,14 +17,16 @@ namespace SampleClient
 {
     class Program
     {
-        private const string ConfigurationFile = "SampleClient.Config.xml";
-
+       /// <summary>
+       /// Entry point for application
+       /// </summary>
+       /// <param name="args"></param>
         static void Main(string[] args)
         {
             Console.Title = string.Format("SampleClient [ServerUrl: {0}]", Constants.ServerUrl);
 
             //create the UaApplication object from config file
-            UaApplication application = UaApplication.Create(ConfigurationFile).Result;
+            UaApplication application = UaApplication.Create(Constants.ConfigurationFile).Result;
 
             if (application.Configuration.SecurityConfiguration.AutoAcceptUntrustedCertificates)
             {
@@ -45,6 +47,11 @@ namespace SampleClient
             Console.ReadKey();
         }
 
+        /// <summary>
+        /// Event handler for CertificateValidator CertificateValidation event
+        /// </summary>
+        /// <param name="validator"></param>
+        /// <param name="e"></param>
         private static void CertificateValidator_CertificateValidation(CertificateValidator validator, CertificateValidationEventArgs e)
         {
             Console.WriteLine("Accepted Certificate: {0}", e.Certificate.Subject);

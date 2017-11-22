@@ -24,10 +24,13 @@ namespace SampleClient.Samples
     public class ConnectClient
     {
         #region Private Fields
+
         private readonly UaApplication m_application;
+
         #endregion
 
         #region Constructor
+
         /// <summary>
         /// Create new instance of ConnectClient
         /// The constructor will create a new instance of UaApplication with an 
@@ -37,9 +40,11 @@ namespace SampleClient.Samples
             ApplicationConfigurationEx configuration = CreateAplicationConfiguration();
             m_application = UaApplication.Create(configuration).Result;
         }
+
         #endregion
-        
+
         #region Connect Methods
+
         /// <summary>
         /// Creates and connects a session on opc.tcp protocol with no security and anonymous user identity.
         /// </summary>
@@ -139,7 +144,7 @@ namespace SampleClient.Samples
                     // create the session object.
                     using (ClientSession session = CreateSession("UaDiscoverySession", Constants.ServerUrl,
                         selectedEndpoint.SecurityMode,
-                        (SecurityPolicy)Enum.Parse(typeof(SecurityPolicy), selectedEndpoint.SecurityPolicy),
+                        (SecurityPolicy) Enum.Parse(typeof(SecurityPolicy), selectedEndpoint.SecurityPolicy),
                         selectedEndpoint.Encoding[0],
                         new UserIdentity()))
                     {
@@ -152,6 +157,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("Error: {0}", e.Message);
             }
         }
+
         #endregion
 
         #region Private Helper Methods
@@ -214,7 +220,9 @@ namespace SampleClient.Samples
         {
             try
             {
-                Console.WriteLine("\r\nCreating the session {0} (SecurityMode = {1}, SecurityPolicy = {2}, \r\n\t\t\t\t\t\tUserIdentity = {3})...", sessionName, securityMode, securityPolicy, userId.GetIdentityToken());
+                Console.WriteLine(
+                    "\r\nCreating the session {0} (SecurityMode = {1}, SecurityPolicy = {2}, \r\n\t\t\t\t\t\tUserIdentity = {3})...",
+                    sessionName, securityMode, securityPolicy, userId.GetIdentityToken());
                 // Create the Session object.
                 ClientSession session = m_application.CreateSession(serverUrl, securityMode, securityPolicy,
                     messageEncoding, userId, null);
@@ -248,7 +256,8 @@ namespace SampleClient.Samples
             {
                 Console.WriteLine("ConnectTest Error: {0}", e.Message);
             }
-        } 
+        }
+
         #endregion
     }
 }

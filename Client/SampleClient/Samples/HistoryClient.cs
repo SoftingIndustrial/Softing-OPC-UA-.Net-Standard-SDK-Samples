@@ -23,13 +23,16 @@ namespace SampleClient.Samples
     class HistoryClient
     {
         #region Private Fields
+
         private const string SessionName = "HistoryClient Session";
         private readonly UaApplication m_application;
         private ClientSession m_session;
-        private readonly NodeId m_historianNodeId = new NodeId("ns=4;s=StaticHistoricalDataItem_Historian2"); 
+        private readonly NodeId m_historianNodeId = new NodeId("ns=4;s=StaticHistoricalDataItem_Historian2");
+
         #endregion
 
         #region Constructor
+
         /// <summary>
         /// Create new instance of HistoryClient
         /// </summary>
@@ -38,9 +41,11 @@ namespace SampleClient.Samples
         {
             m_application = application;
         }
+
         #endregion
 
         #region Read History
+
         /// <summary>
         /// Read history Raw
         /// </summary>
@@ -182,25 +187,27 @@ namespace SampleClient.Samples
                     results[i].StatusCode.AggregateBits);
             }
         }
+
         #endregion
 
         #region InitializeSession & DisconnectSession
+
         /// <summary>
         /// Initialize session object
         /// </summary>
         public void InitializeSession()
         {
-            UserIdentity userIdentity = new UserIdentity();
-            // create the session object.            
-            m_session = m_application.CreateSession(Constants.ServerUrl,
-                MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
-            m_session.SessionName = SessionName;
-
             try
             {
+                UserIdentity userIdentity = new UserIdentity();
+                // create the session object.            
+                m_session = m_application.CreateSession(Constants.ServerUrl,
+                    MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
+                m_session.SessionName = SessionName;
+
                 //connect session
                 m_session.Connect(false, true);
-                
+
                 Console.WriteLine("Session is connected.");
             }
             catch (Exception ex)
@@ -234,6 +241,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
             }
         }
+
         #endregion
     }
 }

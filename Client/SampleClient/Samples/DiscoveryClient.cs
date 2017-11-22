@@ -19,10 +19,13 @@ namespace SampleClient.Samples
     public class DiscoveryClient
     {
         #region Private Fields
+
         private readonly UaApplication m_application;
+
         #endregion
 
         #region Constructor
+
         /// <summary>
         /// Create new instance of DiscoveryClient
         /// </summary>
@@ -30,9 +33,11 @@ namespace SampleClient.Samples
         {
             m_application = application;
         }
+
         #endregion
 
         #region Discovery Methods
+
         /// <summary>
         /// Displays all registered server applications and their available endpoints.
         /// </summary>
@@ -62,11 +67,13 @@ namespace SampleClient.Samples
                         }
 
                         // retrieve available endpoints for each registered server and display their information.
-                        Console.WriteLine("\r\nGet available endpoints for server: {0} ...", serverDescription.ApplicationUri);
+                        Console.WriteLine("\r\nGet available endpoints for server: {0} ...",
+                            serverDescription.ApplicationUri);
                         string serverDiscoveryUrl = serverDescription.DiscoveryUrls[0];
                         var endpoins = m_application.GetEndpoints(serverDiscoveryUrl);
 
-                        Console.WriteLine("Server: {0} returned {1} available endpoints:", serverDiscoveryUrl, endpoins.Count);
+                        Console.WriteLine("Server: {0} returned {1} available endpoints:", serverDiscoveryUrl,
+                            endpoins.Count);
 
                         foreach (var endpointDescription in endpoins)
                         {
@@ -78,7 +85,8 @@ namespace SampleClient.Samples
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", serverDescription.ApplicationUri, ex.Message);
+                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", serverDescription.ApplicationUri,
+                            ex.Message);
                     }
                 }
             }
@@ -109,7 +117,7 @@ namespace SampleClient.Samples
                     try
                     {
                         // skip servers without DiscoveryUrl information.
-                        if (String.IsNullOrEmpty( serverOnNetwork.DiscoveryUrl))
+                        if (String.IsNullOrEmpty(serverOnNetwork.DiscoveryUrl))
                         {
                             continue;
                         }
@@ -125,7 +133,8 @@ namespace SampleClient.Samples
                         Console.WriteLine("\r\nGet available endpoints for : {0} ...", serverDiscoveryUrl);
                         var endpoins = m_application.GetEndpoints(serverDiscoveryUrl);
 
-                        Console.WriteLine("Server: {0} returned {1} available endpoints:", serverOnNetwork.ServerName, endpoins.Count);
+                        Console.WriteLine("Server: {0} returned {1} available endpoints:", serverOnNetwork.ServerName,
+                            endpoins.Count);
 
                         foreach (var endpointDescription in endpoins)
                         {
@@ -137,7 +146,8 @@ namespace SampleClient.Samples
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", serverOnNetwork.DiscoveryUrl, ex.Message);
+                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", serverOnNetwork.DiscoveryUrl,
+                            ex.Message);
                     }
                 }
             }
@@ -146,6 +156,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("DiscoverServersOnNetwork Error : {0}.", ex.Message);
             }
         }
+
         #endregion
     }
 }

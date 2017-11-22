@@ -21,10 +21,11 @@ namespace SampleClient.Samples
     class MonitoredItemClient
     {
         #region Private Fields
+
         private const string SessionName = "MonitoredItemClient Session";
         private const string SubscriptionName = "MonitoredItemClient Subscription";
 
-       //"Server\\ServerStatus\\CurrentTime";
+        //"Server\\ServerStatus\\CurrentTime";
         private readonly NodeId m_miCurrentTimeNodeId = VariableIds.Server_ServerStatus_CurrentTime;
 
         // "CTT\\Scalar\\Simulation\\Int64";
@@ -36,9 +37,11 @@ namespace SampleClient.Samples
         private ClientSubscription m_subscription;
         private ClientMonitoredItem m_miCurrentTime;
         private ClientMonitoredItem m_miInt64;
+
         #endregion
 
         #region Constructor
+
         /// <summary>
         /// Create new instance of MonitoredItemClient
         /// </summary>
@@ -47,26 +50,28 @@ namespace SampleClient.Samples
         {
             m_application = application;
         }
+
         #endregion
 
         #region Initialize & Disconnect Session
+
         /// <summary>
         /// Initialize session and subscription
         /// </summary>
         public void Initialize()
         {
-            // create the session object.            
-            m_session = m_application.CreateSession(
-                Constants.ServerUrl,
-                MessageSecurityMode.None,
-                SecurityPolicy.None,
-                MessageEncoding.Binary,
-                new UserIdentity(),
-                null);
-            m_session.SessionName = SessionName;
-
             try
             {
+                // create the session object.            
+                m_session = m_application.CreateSession(
+                    Constants.ServerUrl,
+                    MessageSecurityMode.None,
+                    SecurityPolicy.None,
+                    MessageEncoding.Binary,
+                    new UserIdentity(),
+                    null);
+                m_session.SessionName = SessionName;
+
                 //connect session
                 m_session.Connect(false, true);
                 Console.WriteLine("Session is connected.");
@@ -81,8 +86,12 @@ namespace SampleClient.Samples
             catch (Exception ex)
             {
                 Console.WriteLine("CreateSession Error: {0}", ex.Message);
-                m_session.Dispose();
-                m_session = null;
+                if (m_session != null)
+                {
+                    m_session.Dispose();
+                    m_session = null;
+                }
+                m_subscription = null;
             }
         }
 
@@ -114,9 +123,11 @@ namespace SampleClient.Samples
                 Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
             }
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Creates a monitoredItem. The monitored item is activated in the constructor if the subscription is active as well.
         /// </summary>
@@ -175,13 +186,15 @@ namespace SampleClient.Samples
             try
             {
                 m_miCurrentTime.DataChangesReceived -= Monitoreditem_DataChangesReceived;
-                Console.WriteLine("Monitored item '{0}' unsubscribed from receiving data change notifications.", m_miCurrentTime.DisplayName);
+                Console.WriteLine("Monitored item '{0}' unsubscribed from receiving data change notifications.",
+                    m_miCurrentTime.DisplayName);
                 m_miCurrentTime.Delete();
                 Console.WriteLine("Monitored item '{0}' deleted.", m_miCurrentTime.DisplayName);
                 m_miCurrentTime = null;
 
                 m_miInt64.DataChangesReceived -= Monitoreditem_DataChangesReceived;
-                Console.WriteLine("Monitored item '{0}' unsubscribed from receiving data change notifications.", m_miInt64.DisplayName);
+                Console.WriteLine("Monitored item '{0}' unsubscribed from receiving data change notifications.",
+                    m_miInt64.DisplayName);
                 m_miInt64.Delete();
                 Console.WriteLine("Monitored item '{0}' deleted.", m_miInt64.DisplayName);
                 m_miInt64 = null;
@@ -191,9 +204,11 @@ namespace SampleClient.Samples
                 Console.WriteLine("Monitored item delete error: " + ex.Message);
             }
         }
+
         #endregion
 
         #region Event Handlers
+
         /// <summary>
         /// Handles the Notification event of the Monitoreditem.
         /// </summary>
@@ -203,13 +218,17 @@ namespace SampleClient.Samples
         {
             foreach (var dataChangeNotification in e.DataChangeNotifications)
             {
-                Console.WriteLine(" {0} Received data value change for '{1}':", dataChangeNotification.SequenceNo, dataChangeNotification.MonitoredItem.DisplayName);
+                Console.WriteLine(" {0} Received data value change for '{1}':", dataChangeNotification.SequenceNo,
+                    dataChangeNotification.MonitoredItem.DisplayName);
                 Console.WriteLine("    Value : {0} ", dataChangeNotification.Value);
                 Console.WriteLine("    StatusCode : {0} ", dataChangeNotification.Value.StatusCode);
-                Console.WriteLine("    ServerTimestamp : {0:hh:mm:ss.fff tt}", dataChangeNotification.Value.ServerTimestamp.ToLocalTime());
-                Console.WriteLine("    SourceTimestamp : {0:hh:mm:ss.fff tt}", dataChangeNotification.Value.SourceTimestamp.ToLocalTime());
+                Console.WriteLine("    ServerTimestamp : {0:hh:mm:ss.fff tt}",
+                    dataChangeNotification.Value.ServerTimestamp.ToLocalTime());
+                Console.WriteLine("    SourceTimestamp : {0:hh:mm:ss.fff tt}",
+                    dataChangeNotification.Value.SourceTimestamp.ToLocalTime());
             }
-        } 
+        }
+
         #endregion
     }
 }

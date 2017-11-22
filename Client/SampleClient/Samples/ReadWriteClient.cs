@@ -219,11 +219,14 @@ namespace SampleClient.Samples
                 Console.WriteLine("ReadComplexValue: The session is not initialized!");
                 return;
             }
-
+            if (!m_session.AreTypeDictionariesLoaded)
+            {
+                Console.WriteLine("ReadComplexValue: The session did not complete loading the type dictionaries!");
+                return;
+            }
             ReadValueId readValueId = new ReadValueId();
-            readValueId.NodeId = new NodeId(StaticComplexNodeId);
+            readValueId.NodeId = new NodeId(StaticComplexNodeId); 
             readValueId.AttributeId = Attributes.Value;
-            //readValueId.DataEncoding =  Opc.Ua.EncodeableObject.
 
             Console.WriteLine("\n Read complex value for NodeId:{0}", StaticComplexNodeId);
             try
@@ -236,15 +239,17 @@ namespace SampleClient.Samples
                 {
                     Console.WriteLine(" 'Structured Value' is null ");
                 }
-                else if (dataValue.ProcessedValue is StructuredValue)
+                else
                 {
                     StructuredValue complexData = dataValue.ProcessedValue as StructuredValue;
-
-                    Console.WriteLine("  Value is 'Structured Value' with fields: ");
-                    foreach (StructuredField field in complexData.Fields)
+                    if (complexData != null)
                     {
-                        Console.WriteLine("   Field: {0} Value:{1} Type:{2} ", field.Name, complexData[field.Name],
-                            complexData[field.Name].GetType().Name);
+                        Console.WriteLine("  Value is 'Structured Value' with fields: ");
+                        foreach (StructuredField field in complexData.Fields)
+                        {
+                            Console.WriteLine("   Field: {0} Value:{1} Type:{2} ", field.Name, complexData[field.Name],
+                                complexData[field.Name].GetType().Name);
+                        }
                     }
                 }
             }
@@ -265,6 +270,11 @@ namespace SampleClient.Samples
                 return;
             }
 
+            if (!m_session.AreTypeDictionariesLoaded)
+            {
+                Console.WriteLine("ReadComplexValue: The session did not complete loading the type dictionaries!");
+                return;
+            }
             Console.WriteLine("\n Read enum value for NodeId:{0}", StaticEnumNodeId);
             NodeId nodeId =  new NodeId(StaticEnumNodeId);
             try
@@ -308,8 +318,6 @@ namespace SampleClient.Samples
                 Console.WriteLine(e.Message);
             }
         }
-
-
        
         /// <summary>
         /// Reads a list of values for a list of nodes providing the NodeIDs and without read the whole node information.
@@ -436,32 +444,46 @@ namespace SampleClient.Samples
                 Console.WriteLine("WriteComplexValueForNode: The session is not initialized!");
                 return;
             }
-
-            WriteValue writeValue = new WriteValue();
-            writeValue.AttributeId = Attributes.Value;
-            writeValue.NodeId = new NodeId(StaticComplexNodeId);
-            
-            //define node id for complex type id
-            ExpandedNodeId typeId = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=7");
-            //create structured value instance
+           
             try
             {
-                StructuredValue structuredValue = new StructuredValue();
-                structuredValue.TypeId = typeId;
-                structuredValue.Initialize(m_session.Factory);
+                //define node id for complex type id
+                ExpandedNodeId typeIdDataType5 = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=7");
 
-                structuredValue.Fields[0].Value = (int) m_random.Next(1, 110);
-                structuredValue.Fields[1].Value = (float) m_random.Next(1, 110);
-                structuredValue.Fields[3].Value = (int)m_random.Next(0, 3);
+                //create structured value instance
+                StructuredValue dataType5Variable = new StructuredValue();
+                dataType5Variable.TypeId = typeIdDataType5;
+                dataType5Variable.Initialize(m_session.Factory);
+
+                dataType5Variable.Fields[0].Value = (int) m_random.Next(1, 110);
+                dataType5Variable.Fields[1].Value = (float) m_random.Next(1, 110);
+                dataType5Variable.Fields[2].Value = "String " + m_random.Next(0, 10);
+
+                //define node id for complex type id that is field[3] in dataType5Variable
+                ExpandedNodeId typeIdDataType2 = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=2");
+                StructuredValue dataType2Variable = new StructuredValue();
+                dataType2Variable.TypeId = typeIdDataType2;
+                dataType2Variable.Initialize(m_session.Factory);
+                dataType2Variable.Fields[0].Value = (int)m_random.Next(1, 110);
+                dataType2Variable.Fields[1].Value = (float)m_random.Next(1, 110);
+                dataType2Variable.Fields[2].Value = "String " + m_random.Next(10, 100);
+
+
+                dataType5Variable.Fields[3].Value = dataType2Variable;
+                dataType5Variable.Fields[4].Value = (int)m_random.Next(0, 3);
 
                 DataValue valueToWrite = new DataValue();
-                valueToWrite.Value = structuredValue;
+                valueToWrite.Value = dataType5Variable;
 
+                //create WriteValue that will be sent to the ClientSession instance 
+                WriteValue writeValue = new WriteValue();
+                writeValue.AttributeId = Attributes.Value;
+                writeValue.NodeId = new NodeId(StaticComplexNodeId);
                 writeValue.Value = valueToWrite;
 
                 StatusCode statusCode = m_session.Write(writeValue);
                 Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticComplexNodeId,
-                    structuredValue);
+                    dataType5Variable);
                 Console.WriteLine(" Status code is {0}", statusCode);
             }
             catch (Exception e)
@@ -568,14 +590,14 @@ namespace SampleClient.Samples
         /// </summary>
         public void InitializeSession()
         {
-            UserIdentity userIdentity = new UserIdentity();
-            // create the session object.            
-            m_session = m_application.CreateSession(Constants.ServerUrl,
-                MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
-            m_session.SessionName = SessionName;
-
             try
             {
+                UserIdentity userIdentity = new UserIdentity();
+                // create the session object.            
+                m_session = m_application.CreateSession(Constants.ServerUrl,
+                    MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
+                m_session.SessionName = SessionName;
+
                 //connect session
                 m_session.Connect(false, true);
 
@@ -584,8 +606,11 @@ namespace SampleClient.Samples
             catch (Exception ex)
             {
                 Console.WriteLine("CreateSession Error: {0}", ex.Message);
-                m_session.Dispose();
-                m_session = null;
+                if (m_session != null)
+                {
+                    m_session.Dispose();
+                    m_session = null;
+                }
             }
         }
 
