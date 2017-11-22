@@ -96,7 +96,7 @@
       <Field Name="Stopped" Value="0" />
       <Field Name="Starting" Value="1" />
       <Field Name="Running" Value="2" />
-      <Field Name="Faule" Value="3" />
+      <Field Name="Fault" Value="3" />
     </Definition>
   </UADataType>
   <UAVariable NodeId="ns=1;i=6" BrowseName="EnumStrings" ParentNodeId="ns=1;i=5" DataType="LocalizedText" ValueRank="1">
@@ -126,7 +126,7 @@
         <LocalizedText>
           <Locale>
           </Locale>
-          <Text>Faule</Text>
+          <Text>Fault</Text>
         </LocalizedText>
       </ListOfLocalizedText>
     </Value>
@@ -139,7 +139,8 @@
     <Definition Name="DataType5">
       <Field Name="Int32Field" DataType="i=6" />
       <Field Name="FloatField" DataType="i=10" />
-      <Field Name="ByteField" DataType="i=3" />
+      <Field Name="StringField" DataType="i=12" />
+      <Field Name="DataType2Field" DataType="ns=1;i=2" />
       <Field Name="EnumerationType1Field" DataType="ns=1;i=5" />
     </Definition>
   </UADataType>
@@ -315,7 +316,7 @@ ICA8eHM6c2ltcGxlVHlwZSAgbmFtZT0iRW51bWVyYXRpb25UeXBlMSI+DQogICAgPHhzOnJlc3Ry
 aWN0aW9uIGJhc2U9InhzOnN0cmluZyI+DQogICAgICA8eHM6ZW51bWVyYXRpb24gdmFsdWU9IlN0
 b3BwZWRfMCIgLz4NCiAgICAgIDx4czplbnVtZXJhdGlvbiB2YWx1ZT0iU3RhcnRpbmdfMSIgLz4N
 CiAgICAgIDx4czplbnVtZXJhdGlvbiB2YWx1ZT0iUnVubmluZ18yIiAvPg0KICAgICAgPHhzOmVu
-dW1lcmF0aW9uIHZhbHVlPSJGYXVsZV8zIiAvPg0KICAgIDwveHM6cmVzdHJpY3Rpb24+DQogIDwv
+dW1lcmF0aW9uIHZhbHVlPSJGYXVsdF8zIiAvPg0KICAgIDwveHM6cmVzdHJpY3Rpb24+DQogIDwv
 eHM6c2ltcGxlVHlwZT4NCiAgPHhzOmVsZW1lbnQgbmFtZT0iRW51bWVyYXRpb25UeXBlMSIgdHlw
 ZT0idG5zOkVudW1lcmF0aW9uVHlwZTEiIC8+DQoNCiAgPHhzOmNvbXBsZXhUeXBlIG5hbWU9Ikxp
 c3RPZkVudW1lcmF0aW9uVHlwZTEiPg0KICAgIDx4czpzZXF1ZW5jZT4NCiAgICAgIDx4czplbGVt
@@ -327,17 +328,19 @@ ZSI+PC94czplbGVtZW50Pg0KDQogIDx4czpjb21wbGV4VHlwZSBuYW1lPSJEYXRhVHlwZTUiPg0K
 ICAgIDx4czpzZXF1ZW5jZT4NCiAgICAgIDx4czplbGVtZW50IG5hbWU9IkludDMyRmllbGQiIHR5
 cGU9InhzOmludCIgbWluT2NjdXJzPSIwIiAvPg0KICAgICAgPHhzOmVsZW1lbnQgbmFtZT0iRmxv
 YXRGaWVsZCIgdHlwZT0ieHM6ZmxvYXQiIG1pbk9jY3Vycz0iMCIgLz4NCiAgICAgIDx4czplbGVt
-ZW50IG5hbWU9IkJ5dGVGaWVsZCIgdHlwZT0ieHM6dW5zaWduZWRCeXRlIiBtaW5PY2N1cnM9IjAi
-IC8+DQogICAgICA8eHM6ZWxlbWVudCBuYW1lPSJFbnVtZXJhdGlvblR5cGUxRmllbGQiIHR5cGU9
-InRuczpFbnVtZXJhdGlvblR5cGUxIiBtaW5PY2N1cnM9IjAiIC8+DQogICAgPC94czpzZXF1ZW5j
-ZT4NCiAgPC94czpjb21wbGV4VHlwZT4NCiAgPHhzOmVsZW1lbnQgbmFtZT0iRGF0YVR5cGU1IiB0
-eXBlPSJ0bnM6RGF0YVR5cGU1IiAvPg0KDQogIDx4czpjb21wbGV4VHlwZSBuYW1lPSJMaXN0T2ZE
-YXRhVHlwZTUiPg0KICAgIDx4czpzZXF1ZW5jZT4NCiAgICAgIDx4czplbGVtZW50IG5hbWU9IkRh
-dGFUeXBlNSIgdHlwZT0idG5zOkRhdGFUeXBlNSIgbWluT2NjdXJzPSIwIiBtYXhPY2N1cnM9InVu
-Ym91bmRlZCIgbmlsbGFibGU9InRydWUiIC8+DQogICAgPC94czpzZXF1ZW5jZT4NCiAgPC94czpj
-b21wbGV4VHlwZT4NCiAgPHhzOmVsZW1lbnQgbmFtZT0iTGlzdE9mRGF0YVR5cGU1IiB0eXBlPSJ0
-bnM6TGlzdE9mRGF0YVR5cGU1IiBuaWxsYWJsZT0idHJ1ZSI+PC94czplbGVtZW50Pg0KDQo8L3hz
-OnNjaGVtYT4=</ByteString>
+ZW50IG5hbWU9IlN0cmluZ0ZpZWxkIiB0eXBlPSJ4czpzdHJpbmciIG1pbk9jY3Vycz0iMCIgbmls
+bGFibGU9InRydWUiIC8+DQogICAgICA8eHM6ZWxlbWVudCBuYW1lPSJEYXRhVHlwZTJGaWVsZCIg
+dHlwZT0idG5zOkRhdGFUeXBlMiIgbWluT2NjdXJzPSIwIiBuaWxsYWJsZT0idHJ1ZSIgLz4NCiAg
+ICAgIDx4czplbGVtZW50IG5hbWU9IkVudW1lcmF0aW9uVHlwZTFGaWVsZCIgdHlwZT0idG5zOkVu
+dW1lcmF0aW9uVHlwZTEiIG1pbk9jY3Vycz0iMCIgLz4NCiAgICA8L3hzOnNlcXVlbmNlPg0KICA8
+L3hzOmNvbXBsZXhUeXBlPg0KICA8eHM6ZWxlbWVudCBuYW1lPSJEYXRhVHlwZTUiIHR5cGU9InRu
+czpEYXRhVHlwZTUiIC8+DQoNCiAgPHhzOmNvbXBsZXhUeXBlIG5hbWU9Ikxpc3RPZkRhdGFUeXBl
+NSI+DQogICAgPHhzOnNlcXVlbmNlPg0KICAgICAgPHhzOmVsZW1lbnQgbmFtZT0iRGF0YVR5cGU1
+IiB0eXBlPSJ0bnM6RGF0YVR5cGU1IiBtaW5PY2N1cnM9IjAiIG1heE9jY3Vycz0idW5ib3VuZGVk
+IiBuaWxsYWJsZT0idHJ1ZSIgLz4NCiAgICA8L3hzOnNlcXVlbmNlPg0KICA8L3hzOmNvbXBsZXhU
+eXBlPg0KICA8eHM6ZWxlbWVudCBuYW1lPSJMaXN0T2ZEYXRhVHlwZTUiIHR5cGU9InRuczpMaXN0
+T2ZEYXRhVHlwZTUiIG5pbGxhYmxlPSJ0cnVlIj48L3hzOmVsZW1lbnQ+DQoNCjwveHM6c2NoZW1h
+Pg==</ByteString>
     </Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=22" BrowseName="NamespaceUri" ParentNodeId="ns=1;i=20" DataType="String">
@@ -486,14 +489,15 @@ bWVyYXRpb25UeXBlMSIgTGVuZ3RoSW5CaXRzPSIzMiI+DQogICAgPG9wYzpFbnVtZXJhdGVkVmFs
 dWUgTmFtZT0iU3RvcHBlZCIgVmFsdWU9IjAiIC8+DQogICAgPG9wYzpFbnVtZXJhdGVkVmFsdWUg
 TmFtZT0iU3RhcnRpbmciIFZhbHVlPSIxIiAvPg0KICAgIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5h
 bWU9IlJ1bm5pbmciIFZhbHVlPSIyIiAvPg0KICAgIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hbWU9
-IkZhdWxlIiBWYWx1ZT0iMyIgLz4NCiAgPC9vcGM6RW51bWVyYXRlZFR5cGU+DQoNCiAgPG9wYzpT
+IkZhdWx0IiBWYWx1ZT0iMyIgLz4NCiAgPC9vcGM6RW51bWVyYXRlZFR5cGU+DQoNCiAgPG9wYzpT
 dHJ1Y3R1cmVkVHlwZSBOYW1lPSJEYXRhVHlwZTUiIEJhc2VUeXBlPSJ1YTpFeHRlbnNpb25PYmpl
 Y3QiPg0KICAgIDxvcGM6RmllbGQgTmFtZT0iSW50MzJGaWVsZCIgVHlwZU5hbWU9Im9wYzpJbnQz
 MiIgLz4NCiAgICA8b3BjOkZpZWxkIE5hbWU9IkZsb2F0RmllbGQiIFR5cGVOYW1lPSJvcGM6Rmxv
-YXQiIC8+DQogICAgPG9wYzpGaWVsZCBOYW1lPSJCeXRlRmllbGQiIFR5cGVOYW1lPSJvcGM6Qnl0
-ZSIgLz4NCiAgICA8b3BjOkZpZWxkIE5hbWU9IkVudW1lcmF0aW9uVHlwZTFGaWVsZCIgVHlwZU5h
-bWU9InRuczpFbnVtZXJhdGlvblR5cGUxIiAvPg0KICA8L29wYzpTdHJ1Y3R1cmVkVHlwZT4NCg0K
-PC9vcGM6VHlwZURpY3Rpb25hcnk+</ByteString>
+YXQiIC8+DQogICAgPG9wYzpGaWVsZCBOYW1lPSJTdHJpbmdGaWVsZCIgVHlwZU5hbWU9Im9wYzpT
+dHJpbmciIC8+DQogICAgPG9wYzpGaWVsZCBOYW1lPSJEYXRhVHlwZTJGaWVsZCIgVHlwZU5hbWU9
+InRuczpEYXRhVHlwZTIiIC8+DQogICAgPG9wYzpGaWVsZCBOYW1lPSJFbnVtZXJhdGlvblR5cGUx
+RmllbGQiIFR5cGVOYW1lPSJ0bnM6RW51bWVyYXRpb25UeXBlMSIgLz4NCiAgPC9vcGM6U3RydWN0
+dXJlZFR5cGU+DQoNCjwvb3BjOlR5cGVEaWN0aW9uYXJ5Pg==</ByteString>
     </Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=45" BrowseName="NamespaceUri" ParentNodeId="ns=1;i=43" DataType="String">
