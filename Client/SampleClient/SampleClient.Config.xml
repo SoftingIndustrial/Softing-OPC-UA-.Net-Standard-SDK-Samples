@@ -23,7 +23,7 @@
     <!-- The location of the application instance certificate in the Windows certificate store -->
     <ApplicationCertificate>
       <StoreType>Directory</StoreType>
-      <StorePath>%CommonApplicationData%\Softing\OpcUaNetStdToolkit\pki\own</StorePath>
+      <StorePath>%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\own</StorePath>
 
       <!-- The subject for the certificate 
            Note that subject names are complex structures. Only text that appears here is treated as the CommonName component.
@@ -36,7 +36,7 @@
     </ApplicationCertificate>
     <TrustedIssuerCertificates>
       <StoreType>Directory</StoreType>
-      <StorePath>%CommonApplicationData%\Softing\OpcUaNetStdToolkit\pki\issuer</StorePath>
+      <StorePath>%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\issuer</StorePath>
     </TrustedIssuerCertificates>
     <!-- The list of trusted certificates.
          Some UA applications will use self-signed certificates (certificates without a CA)
@@ -51,7 +51,7 @@
          -->
     <TrustedPeerCertificates>
       <StoreType>Directory</StoreType>
-      <StorePath>%CommonApplicationData%\Softing\OpcUaNetStdToolkit\pki\trusted</StorePath>
+      <StorePath>%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\trusted</StorePath>
     </TrustedPeerCertificates>
 
     <!-- Applications exchange Nonces during the CreateSession. This value specifies the length. Must be >= 32 -->
@@ -138,7 +138,7 @@
   </Extensions>
 
   <TraceConfiguration>
-    <OutputFilePath>%CommonApplicationData%\Softing\OpcUaNetStdToolkit\logs\SampleClient.log</OutputFilePath>
+    <OutputFilePath>%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\logs\SampleClient.log</OutputFilePath>
     <DeleteOnLoad>true</DeleteOnLoad>
     <!-- Show Only Errors -->
     <!-- <TraceMasks>1</TraceMasks> -->
