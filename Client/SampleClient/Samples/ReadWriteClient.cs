@@ -219,7 +219,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("ReadComplexValue: The session is not initialized!");
                 return;
             }
-            if (!m_session.AreTypeDictionariesLoaded)
+            if (!m_session.TypeDictionariesLoaded)
             {
                 Console.WriteLine("ReadComplexValue: The session did not complete loading the type dictionaries!");
                 return;
@@ -270,7 +270,7 @@ namespace SampleClient.Samples
                 return;
             }
 
-            if (!m_session.AreTypeDictionariesLoaded)
+            if (!m_session.TypeDictionariesLoaded)
             {
                 Console.WriteLine("ReadComplexValue: The session did not complete loading the type dictionaries!");
                 return;
@@ -388,6 +388,7 @@ namespace SampleClient.Samples
             valueToWrite.Value = (uint)m_random.Next(1, 1975109192);
 
             writeValue.Value = valueToWrite;
+
             try
             {
                 StatusCode statusCode = m_session.Write(writeValue);
@@ -447,7 +448,12 @@ namespace SampleClient.Samples
            
             try
             {
+                //read datatype id for node
+               // get defaqlt value
+               //write default value
                 //define node id for complex type id
+
+
                 ExpandedNodeId typeIdDataType5 = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=7");
 
                 //create structured value instance
