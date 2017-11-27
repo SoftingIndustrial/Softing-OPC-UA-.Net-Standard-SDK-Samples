@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua;
 using Softing.Opc.Ua.Client;
@@ -219,11 +220,6 @@ namespace SampleClient.Samples
                 Console.WriteLine("ReadComplexValue: The session is not initialized!");
                 return;
             }
-            if (!m_session.TypeDictionariesLoaded)
-            {
-                Console.WriteLine("ReadComplexValue: The session did not complete loading the type dictionaries!");
-                return;
-            }
             ReadValueId readValueId = new ReadValueId();
             readValueId.NodeId = new NodeId(StaticComplexNodeId); 
             readValueId.AttributeId = Attributes.Value;
@@ -267,12 +263,6 @@ namespace SampleClient.Samples
             if (m_session == null)
             {
                 Console.WriteLine("ReadEnumValue: The session is not initialized!");
-                return;
-            }
-
-            if (!m_session.TypeDictionariesLoaded)
-            {
-                Console.WriteLine("ReadComplexValue: The session did not complete loading the type dictionaries!");
                 return;
             }
             Console.WriteLine("\n Read enum value for NodeId:{0}", StaticEnumNodeId);
@@ -448,49 +438,47 @@ namespace SampleClient.Samples
            
             try
             {
-                //read datatype id for node
-               // get defaqlt value
-               //write default value
-                //define node id for complex type id
+                //read data type id for node StaticComplexNodeId
+                ReadValueId readValueId = new ReadValueId();
+                readValueId.NodeId = new NodeId(StaticComplexNodeId);
+                readValueId.AttributeId = Attributes.DataType;
 
+                Console.WriteLine("\n Read DataType Id for NodeId:{0}", StaticComplexNodeId);
+               
+                DataValueEx dataValuetypeId = m_session.Read(readValueId);
 
-                ExpandedNodeId typeIdDataType5 = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=7");
+                //Get Default value for data type
+                StructuredValue defaultValue = m_session.GetDefaultValueForDatatype(dataValuetypeId.Value as NodeId, ValueRanks.Scalar) as StructuredValue;
 
-                //create structured value instance
-                StructuredValue dataType5Variable = new StructuredValue();
-                dataType5Variable.TypeId = typeIdDataType5;
-                dataType5Variable.Initialize(m_session.Factory);
+                if (defaultValue != null)
+                {
+                    //change some fields for default object
+                    foreach (var field in defaultValue.Fields)
+                    {
+                        if (field.Value is string)
+                        {
+                            field.Value = "new string value";
+                        }
+                        else if (field.Value is int)
+                        {
+                            field.Value = 100;
+                        }
+                    }
+                    //write new value to node StaticComplexNodeId
+                    DataValue valueToWrite = new DataValue();
+                    valueToWrite.Value = defaultValue;
 
-                dataType5Variable.Fields[0].Value = (int) m_random.Next(1, 110);
-                dataType5Variable.Fields[1].Value = (float) m_random.Next(1, 110);
-                dataType5Variable.Fields[2].Value = "String " + m_random.Next(0, 10);
+                    //create WriteValue that will be sent to the ClientSession instance 
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(StaticComplexNodeId);
+                    writeValue.Value = valueToWrite;
 
-                //define node id for complex type id that is field[3] in dataType5Variable
-                ExpandedNodeId typeIdDataType2 = ExpandedNodeId.Parse("nsu=http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications;i=2");
-                StructuredValue dataType2Variable = new StructuredValue();
-                dataType2Variable.TypeId = typeIdDataType2;
-                dataType2Variable.Initialize(m_session.Factory);
-                dataType2Variable.Fields[0].Value = (int)m_random.Next(1, 110);
-                dataType2Variable.Fields[1].Value = (float)m_random.Next(1, 110);
-                dataType2Variable.Fields[2].Value = "String " + m_random.Next(10, 100);
-
-
-                dataType5Variable.Fields[3].Value = dataType2Variable;
-                dataType5Variable.Fields[4].Value = (int)m_random.Next(0, 3);
-
-                DataValue valueToWrite = new DataValue();
-                valueToWrite.Value = dataType5Variable;
-
-                //create WriteValue that will be sent to the ClientSession instance 
-                WriteValue writeValue = new WriteValue();
-                writeValue.AttributeId = Attributes.Value;
-                writeValue.NodeId = new NodeId(StaticComplexNodeId);
-                writeValue.Value = valueToWrite;
-
-                StatusCode statusCode = m_session.Write(writeValue);
-                Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticComplexNodeId,
-                    dataType5Variable);
-                Console.WriteLine(" Status code is {0}", statusCode);
+                    StatusCode statusCode = m_session.Write(writeValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticComplexNodeId,
+                        defaultValue);
+                    Console.WriteLine(" Status code is {0}", statusCode);
+                }
             }
             catch (Exception e)
             {
@@ -608,6 +596,16 @@ namespace SampleClient.Samples
                 m_session.Connect(false, true);
 
                 Console.WriteLine("Session is connected.");
+
+                //wait until type dictionaries are loaded
+                if (m_application.Configuration.DecodeCustomDataTypes)
+                {
+                    while (!m_session.TypeDictionariesLoaded)
+                    {
+                        Task.Delay(500).Wait();
+                    }
+                }
+                Console.WriteLine("Session - TypeDictionariesLoaded.");
             }
             catch (Exception ex)
             {
