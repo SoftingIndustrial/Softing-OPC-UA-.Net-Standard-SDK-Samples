@@ -19,24 +19,17 @@
 using System.Reflection;
 
 [assembly: AssemblyCopyright(AssemblyVersionInfo.Copyright)]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion(AssemblyVersionInfo.CurrentVersion)]
 [assembly: AssemblyFileVersion(AssemblyVersionInfo.CurrentFileVersion)]
 [assembly: AssemblyCompany(AssemblyVersionInfo.AssemblyCompany)]
 [assembly: AssemblyProduct(AssemblyVersionInfo.AssemblyProduct)]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyConfiguration("")]
+#if DEBUG
+[assembly: AssemblyConfiguration("Debug")]
+#else
+[assembly: AssemblyConfiguration("Release")]
+#endif
 
 /// <summary>
 /// Defines string constants for Toolkit version information.
