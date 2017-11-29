@@ -26,7 +26,7 @@ namespace SampleClient
         {
             Console.Title = string.Format("SampleClient [ServerUrl: {0}]", Constants.ServerUrl);
 
-            //create the UaApplication object from config file
+            // Create the UaApplication object from config file
             UaApplication application = UaApplication.Create(Constants.ConfigurationFile).Result;
 
             if (application.Configuration.SecurityConfiguration.AutoAcceptUntrustedCertificates)
@@ -43,13 +43,13 @@ namespace SampleClient
                 return;
             }
 
-            //Create the process object that will execute user commands
+            // Create the process object that will execute user commands
             Process process = new Process(application);
             while (process.CurrentState != State.Exit)
             {
                 // Read commands
                 string inputCommand = Console.ReadKey().KeyChar.ToString();
-                //execute command
+                // Execute command
                 process.ExecuteCommand(inputCommand);
             }
 
