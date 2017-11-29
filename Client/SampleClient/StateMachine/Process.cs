@@ -48,17 +48,17 @@ namespace SampleClient.StateMachine
             CurrentState = State.Main;
 
             m_transitions = new Dictionary<StateTransition, State>();
-
-            //add connect menu item
-            StateTransition connectSample =
-                new StateTransition(State.Main, Command.ConnectSample, "1", "Execute Connect Sample");
-            connectSample.ExecuteCommand += ConnectSample_ExecuteCommand;
-            m_transitions.Add(connectSample, State.Main);
+            
             //add discovery menu item
             StateTransition discoverySample =
-                new StateTransition(State.Main, Command.DiscoverySample, "2", "Execute Discovery Sample");
+                new StateTransition(State.Main, Command.DiscoverySample, "1", "Execute Discovery Sample");
             discoverySample.ExecuteCommand += DiscoverySample_ExecuteCommand;
             m_transitions.Add(discoverySample, State.Main);
+            //add connect menu item
+            StateTransition connectSample =
+                new StateTransition(State.Main, Command.ConnectSample, "2", "Execute Connect Sample");
+            connectSample.ExecuteCommand += ConnectSample_ExecuteCommand;
+            m_transitions.Add(connectSample, State.Main);
             //add browse menu item
             InitializeBrowseTransitions();
             //readwrite - 4

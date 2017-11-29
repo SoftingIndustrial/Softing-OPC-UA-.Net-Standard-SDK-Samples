@@ -212,30 +212,30 @@ namespace SampleClient.Samples
             return configuration;
         }
 
-        /// <summary>
-        /// Creates and connects an new session with the specified parameters.
-        /// </summary>        
-        private ClientSession CreateSession(string sessionName, string serverUrl, MessageSecurityMode securityMode,
-            SecurityPolicy securityPolicy, MessageEncoding messageEncoding, UserIdentity userId)
-        {
-            try
-            {
-                Console.WriteLine(
-                    "\r\nCreating the session {0} (SecurityMode = {1}, SecurityPolicy = {2}, \r\n\t\t\t\t\t\tUserIdentity = {3})...",
-                    sessionName, securityMode, securityPolicy, userId.GetIdentityToken());
-                // Create the Session object.
-                ClientSession session = m_application.CreateSession(serverUrl, securityMode, securityPolicy,
-                    messageEncoding, userId, null);
+/// <summary>
+/// Creates and connects an new session with the specified parameters.
+/// </summary>        
+private ClientSession CreateSession(string sessionName, string serverUrl, MessageSecurityMode securityMode,
+    SecurityPolicy securityPolicy, MessageEncoding messageEncoding, UserIdentity userId)
+{
+    try
+    {
+        Console.WriteLine(
+            "\r\nCreating the session {0} (SecurityMode = {1}, SecurityPolicy = {2}, \r\n\t\t\t\t\t\tUserIdentity = {3})...",
+            sessionName, securityMode, securityPolicy, userId.GetIdentityToken());
+        // Create the Session object.
+        ClientSession session = m_application.CreateSession(serverUrl, securityMode, securityPolicy,
+            messageEncoding, userId, null);
 
-                session.SessionName = sessionName;
-                return session;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("CreateSession Error: {0}", e.Message);
-                return null;
-            }
-        }
+        session.SessionName = sessionName;
+        return session;
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine("CreateSession Error: {0}", e.Message);
+        return null;
+    }
+}
 
         /// <summary>
         /// Performs a Connect/Disconnect test for the specified session.
