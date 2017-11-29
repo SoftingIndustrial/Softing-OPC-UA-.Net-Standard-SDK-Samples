@@ -5,13 +5,14 @@
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
  * http://www.softing.com/LicenseSIA.pdf
- *  
+ * 
  * ======================================================================*/
- 
+
 using Opc.Ua;
 using SampleClient.StateMachine;
 using Softing.Opc.Ua;
 using System;
+using Softing.Opc.Ua.Private;
 
 namespace SampleClient
 {
@@ -31,6 +32,15 @@ namespace SampleClient
             if (application.Configuration.SecurityConfiguration.AutoAcceptUntrustedCertificates)
             {
                 application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);
+            }
+
+            bool result = true;
+            // TODO - design time license activation
+            // Fill in your design time license activation keys here
+            // result = application.ActivateLicense(LicenseFeature.Client, "XXXX-XXXX-XXXX-XXXX-XXXX");
+            if (!result)
+            {
+                return;
             }
 
             //Create the process object that will execute user commands
