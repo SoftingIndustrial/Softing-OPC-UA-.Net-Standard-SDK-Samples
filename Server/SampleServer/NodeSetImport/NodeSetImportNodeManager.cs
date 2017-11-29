@@ -403,8 +403,8 @@ namespace SampleServer.NodeSetImport
         #endregion
 
         #region Private Members
-        private string m_InitialModelFilePath = @"..\SampleServer\NodeSetImport\NodeSet\Refrigerators.NodeSet2.xml";
-        private string m_SecondaryModelFilePath = @"..\SampleServer\NodeSetImport\NodeSet\Refrigerators2.NodeSet2.xml";
+        private string m_InitialModelFilePath = @"NodeSetImport\Refrigerators.NodeSet2.xml";
+        private string m_SecondaryModelFilePath = @"NodeSetImport\Refrigerators2.NodeSet2.xml";
         #endregion
     }
 }

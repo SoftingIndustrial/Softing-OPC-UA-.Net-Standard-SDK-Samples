@@ -9,11 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="NodeSetImport\NodeSet\**" />
     <Compile Remove="ReferenceServer\Model\**" />
-    <EmbeddedResource Remove="NodeSetImport\NodeSet\**" />
     <EmbeddedResource Remove="ReferenceServer\Model\**" />
-    <None Remove="NodeSetImport\NodeSet\**" />
     <None Remove="ReferenceServer\Model\**" />
   </ItemGroup>
 
@@ -73,6 +70,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="NodeSetImport\NodeSet\Refrigerators.NodeSet2.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="NodeSetImport\NodeSet\Refrigerators2.NodeSet2.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="NodeSetImport\Refrigerators.NodeSet2.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="NodeSetImport\Refrigerators2.NodeSet2.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="SampleServer.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
