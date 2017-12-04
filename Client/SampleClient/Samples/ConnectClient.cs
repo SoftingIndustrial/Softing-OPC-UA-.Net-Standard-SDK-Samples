@@ -19,7 +19,7 @@ namespace SampleClient.Samples
     /// <summary>
     /// Class providing sample code for connect operations with different configuration parameters.
     /// 
-    /// THis class also provides sample code for cresting ApplicationConfigurationEx object by code 
+    /// THis class also provides sample code for creating ApplicationConfigurationEx object by code 
     /// </summary>
     public class ConnectClient
     {

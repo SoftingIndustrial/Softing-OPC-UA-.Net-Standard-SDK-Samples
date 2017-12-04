@@ -220,40 +220,40 @@ namespace SampleClient.Samples
                 Console.WriteLine("ReadComplexValue: The session is not initialized!");
                 return;
             }
-            ReadValueId readValueId = new ReadValueId();
-            readValueId.NodeId = new NodeId(StaticComplexNodeId); 
-            readValueId.AttributeId = Attributes.Value;
+ReadValueId readValueId = new ReadValueId();
+readValueId.NodeId = new NodeId(StaticComplexNodeId); 
+readValueId.AttributeId = Attributes.Value;
 
-            Console.WriteLine("\n Read complex value for NodeId:{0}", StaticComplexNodeId);
-            try
-            {
-                DataValueEx dataValue = m_session.Read(readValueId);
+Console.WriteLine("\n Read complex value for NodeId:{0}", StaticComplexNodeId);
+try
+{
+    DataValueEx dataValue = m_session.Read(readValueId);
 
-                //display information for read value
-                Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
-                if (dataValue.ProcessedValue == null)
-                {
-                    Console.WriteLine(" 'Structured Value' is null ");
-                }
-                else
-                {
-                    StructuredValue complexData = dataValue.ProcessedValue as StructuredValue;
-                    if (complexData != null)
-                    {
-                        Console.WriteLine("  Value is 'Structured Value' with fields: ");
-                        foreach (StructuredField field in complexData.Fields)
-                        {
-                            Console.WriteLine("   Field: {0} Value:{1} Type:{2} ", field.Name, complexData[field.Name],
-                                complexData[field.Name].GetType().Name);
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
+    //display information for read value
+    Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
+    if (dataValue.ProcessedValue == null)
+    {
+        Console.WriteLine(" 'Structured Value' is null ");
+    }
+    else
+    {
+        StructuredValue complexData = dataValue.ProcessedValue as StructuredValue;
+        if (complexData != null)
+        {
+            Console.WriteLine("  Value is 'Structured Value' with fields: ");
+            foreach (StructuredField field in complexData.Fields)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine("   Field: {0} Value:{1} Type:{2} ", field.Name, complexData[field.Name],
+                    complexData[field.Name].GetType().Name);
             }
         }
+    }
+}
+catch (Exception e)
+{
+    Console.WriteLine(e.Message);
+}
+}
 
         /// <summary>
         ///  Reads value for an enum node providing the NodeID and without read the whole node information.
@@ -436,54 +436,54 @@ namespace SampleClient.Samples
                 return;
             }
            
-            try
-            {
-                //read data type id for node StaticComplexNodeId
-                ReadValueId readValueId = new ReadValueId();
-                readValueId.NodeId = new NodeId(StaticComplexNodeId);
-                readValueId.AttributeId = Attributes.DataType;
+try
+{
+    //read data type id for node StaticComplexNodeId
+    ReadValueId readValueId = new ReadValueId();
+    readValueId.NodeId = new NodeId(StaticComplexNodeId);
+    readValueId.AttributeId = Attributes.DataType;
 
-                Console.WriteLine("\n Read DataType Id for NodeId:{0}", StaticComplexNodeId);
+    Console.WriteLine("\n Read DataType Id for NodeId:{0}", StaticComplexNodeId);
                
-                DataValueEx dataValuetypeId = m_session.Read(readValueId);
+    DataValueEx dataValuetypeId = m_session.Read(readValueId);
 
-                //Get Default value for data type
-                StructuredValue defaultValue = m_session.GetDefaultValueForDatatype(dataValuetypeId.Value as NodeId, ValueRanks.Scalar) as StructuredValue;
+    //Get Default value for data type
+    StructuredValue defaultValue = m_session.GetDefaultValueForDatatype(dataValuetypeId.Value as NodeId, ValueRanks.Scalar) as StructuredValue;
 
-                if (defaultValue != null)
-                {
-                    //change some fields for default object
-                    foreach (var field in defaultValue.Fields)
-                    {
-                        if (field.Value is string)
-                        {
-                            field.Value = "new string value";
-                        }
-                        else if (field.Value is int)
-                        {
-                            field.Value = 100;
-                        }
-                    }
-                    //write new value to node StaticComplexNodeId
-                    DataValue valueToWrite = new DataValue();
-                    valueToWrite.Value = defaultValue;
-
-                    //create WriteValue that will be sent to the ClientSession instance 
-                    WriteValue writeValue = new WriteValue();
-                    writeValue.AttributeId = Attributes.Value;
-                    writeValue.NodeId = new NodeId(StaticComplexNodeId);
-                    writeValue.Value = valueToWrite;
-
-                    StatusCode statusCode = m_session.Write(writeValue);
-                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticComplexNodeId,
-                        defaultValue);
-                    Console.WriteLine(" Status code is {0}", statusCode);
-                }
-            }
-            catch (Exception e)
+    if (defaultValue != null)
+    {
+        //change some fields for default object
+        foreach (var field in defaultValue.Fields)
+        {
+            if (field.Value is string)
             {
-                Console.WriteLine(e.Message);
+                field.Value = "new string value";
             }
+            else if (field.Value is int)
+            {
+                field.Value = 100;
+            }
+        }
+        //write new value to node StaticComplexNodeId
+        DataValue valueToWrite = new DataValue();
+        valueToWrite.Value = defaultValue;
+
+        //create WriteValue that will be sent to the ClientSession instance 
+        WriteValue writeValue = new WriteValue();
+        writeValue.AttributeId = Attributes.Value;
+        writeValue.NodeId = new NodeId(StaticComplexNodeId);
+        writeValue.Value = valueToWrite;
+
+        StatusCode statusCode = m_session.Write(writeValue);
+        Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticComplexNodeId,
+            defaultValue);
+        Console.WriteLine(" Status code is {0}", statusCode);
+    }
+}
+catch (Exception e)
+{
+    Console.WriteLine(e.Message);
+}
         }
 
         /// <summary>
@@ -597,14 +597,14 @@ namespace SampleClient.Samples
 
                 Console.WriteLine("Session is connected.");
 
-                //wait until type dictionaries are loaded
-                if (m_application.Configuration.DecodeCustomDataTypes)
-                {
-                    while (!m_session.TypeDictionariesLoaded)
-                    {
-                        Task.Delay(500).Wait();
-                    }
-                }
+//wait until type dictionaries are loaded
+if (m_application.Configuration.DecodeCustomDataTypes)
+{
+    while (!m_session.TypeDictionariesLoaded)
+    {
+        Task.Delay(500).Wait();
+    }
+}
                 Console.WriteLine("Session - TypeDictionariesLoaded.");
             }
             catch (Exception ex)
