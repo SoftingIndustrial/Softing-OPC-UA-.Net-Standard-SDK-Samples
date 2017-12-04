@@ -141,8 +141,8 @@ namespace SampleClient.Samples
                 // perform a connect test for the selected endpoint.
                 if (selectedEndpoint != null)
                 {
-                    // create the session object.
-                    using (ClientSession session = CreateSession("UaDiscoverySession", Constants.ServerUrl,
+                    // create the session object for selectedEndpoint
+                    using (ClientSession session = CreateSession("UaDiscoverySession", selectedEndpoint.DiscoveryEndpointUrl,
                         selectedEndpoint.SecurityMode,
                         (SecurityPolicy) Enum.Parse(typeof(SecurityPolicy), selectedEndpoint.SecurityPolicy),
                         selectedEndpoint.Encoding[0],
