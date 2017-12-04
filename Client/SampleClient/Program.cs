@@ -29,10 +29,8 @@ namespace SampleClient
             // Create the UaApplication object from config file
             UaApplication application = UaApplication.Create(Constants.ConfigurationFile).Result;
 
-            if (application.Configuration.SecurityConfiguration.AutoAcceptUntrustedCertificates)
-            {
-                application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);
-            }
+            // Subscribe to certificate validation error event
+            application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);
 
             bool result = true;
             // TODO - design time license activation
@@ -58,7 +56,7 @@ namespace SampleClient
         }
 
         /// <summary>
-        /// Event handler for CertificateValidator CertificateValidation event
+        /// Event handler received when a certificate validation error occurs.
         /// </summary>
         /// <param name="validator"></param>
         /// <param name="e"></param>
