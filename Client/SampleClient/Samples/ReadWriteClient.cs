@@ -280,8 +280,7 @@ namespace SampleClient.Samples
                         readValueId.NodeId = variableNode.NodeId;
                         readValueId.AttributeId = Attributes.Value;
 
-                        Console.WriteLine("\n Read enum value for Node: {0} (NodeId:{1})", variableNode.DisplayName,
-                            StaticEnumNodeId);
+                        Console.WriteLine("\n Read enum value for Node: {0} (NodeId:{1})", variableNode.DisplayName, StaticEnumNodeId);
 
                         DataValueEx dataValue = m_session.Read(readValueId);
                         //convert int32 value read from node to a well known enumeration type
@@ -475,8 +474,7 @@ namespace SampleClient.Samples
                     writeValue.Value = valueToWrite;
 
                     StatusCode statusCode = m_session.Write(writeValue);
-                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticComplexNodeId,
-                        defaultValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticComplexNodeId, defaultValue);
                     Console.WriteLine(" Status code is {0}", statusCode);
                 }
             }
@@ -588,8 +586,7 @@ namespace SampleClient.Samples
             {
                 UserIdentity userIdentity = new UserIdentity();
                 // create the session object.            
-                m_session = m_application.CreateSession(Constants.ServerUrl,
-                    MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
+                m_session = m_application.CreateSession(Constants.ServerUrl, MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
                 m_session.SessionName = SessionName;
 
                 //connect session

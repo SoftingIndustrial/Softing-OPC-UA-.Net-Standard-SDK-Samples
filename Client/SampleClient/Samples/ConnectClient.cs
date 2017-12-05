@@ -130,7 +130,7 @@ namespace SampleClient.Samples
 
                 foreach (var endpoint in endpoints)
                 {
-                    if ((endpoint.EndpointUrl.StartsWith("opc.tcp://") &&
+                    if ((endpoint.EndpointUrl.StartsWith("opc.tcp://") && 
                          endpoint.SecurityMode == MessageSecurityMode.None))
                     {
                         selectedEndpoint = endpoint;
@@ -220,12 +220,10 @@ private ClientSession CreateSession(string sessionName, string serverUrl, Messag
 {
     try
     {
-        Console.WriteLine(
-            "\r\nCreating the session {0} (SecurityMode = {1}, SecurityPolicy = {2}, \r\n\t\t\t\t\t\tUserIdentity = {3})...",
+        Console.WriteLine("\r\nCreating the session {0} (SecurityMode = {1}, SecurityPolicy = {2}, \r\n\t\t\t\t\t\tUserIdentity = {3})...",
             sessionName, securityMode, securityPolicy, userId.GetIdentityToken());
         // Create the Session object.
-        ClientSession session = m_application.CreateSession(serverUrl, securityMode, securityPolicy,
-            messageEncoding, userId, null);
+        ClientSession session = m_application.CreateSession(serverUrl, securityMode, securityPolicy, messageEncoding, userId, null);
 
         session.SessionName = sessionName;
         return session;

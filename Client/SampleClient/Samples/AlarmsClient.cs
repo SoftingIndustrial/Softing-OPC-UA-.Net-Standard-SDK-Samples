@@ -142,10 +142,7 @@ namespace SampleClient.Samples
                 inputArgs.Add(new LocalizedText(comment));
                 IList<object> outputArgs;
 
-                m_session.Call(selectedAlarm.EventNode,
-                    MethodIds.ConditionType_AddComment,
-                    inputArgs,
-                    out outputArgs);
+                m_session.Call(selectedAlarm.EventNode, MethodIds.ConditionType_AddComment, inputArgs, out outputArgs);
                 Console.WriteLine("AddComment request sent for alarm with SourceName = {0}", selectedAlarm.SourceName);
             }
             catch (Exception exception)
@@ -206,8 +203,7 @@ namespace SampleClient.Samples
                 inputArgs.Add(new LocalizedText(comment));
                 IList<object> outputArgs;
 
-                m_session.Call(selectedAlarm.EventNode, MethodIds.AcknowledgeableConditionType_Acknowledge,
-                    inputArgs, out outputArgs);
+                m_session.Call(selectedAlarm.EventNode, MethodIds.AcknowledgeableConditionType_Acknowledge, inputArgs, out outputArgs);
                 Console.WriteLine("Acknowledge request sent for alarm with SourceName = {0}", selectedAlarm.SourceName);
             }
             catch (Exception exception)
@@ -305,8 +301,7 @@ namespace SampleClient.Samples
                 filter.WhereClause.Push(FilterOperator.OfType, ObjectTypeIds.ConditionType);
 
                 // Create the MonitoredItem used to receive event notifications and pass the filter object
-                m_alarmsMonitoredItem =
-                    new ClientMonitoredItem(m_subscription, m_alarmsModuleNodeId, "Alarms monitor item", filter);
+                m_alarmsMonitoredItem = new ClientMonitoredItem(m_subscription, m_alarmsModuleNodeId, "Alarms monitor item", filter);
                 m_alarmsMonitoredItem.SamplingInterval = 100;
                 m_alarmsMonitoredItem.QueueSize = 1000;
 
@@ -400,11 +395,9 @@ namespace SampleClient.Samples
                     eventFields.AppendFormat("SourceNode   = {0}\r\n", eventNotification.EventFields[3]);
                     eventFields.AppendFormat("SourceName   = {0}\r\n", eventNotification.EventFields[4]);
                     eventFields.AppendFormat("SourceName   = {0}\r\n", eventNotification.EventFields[4]);
-                    eventFields.AppendFormat("Time         = {0:HH:mm:ss.fff}\r\n",
-                        ((DateTime) eventNotification.EventFields[5].Value).ToLocalTime());
+                    eventFields.AppendFormat("Time         = {0:HH:mm:ss.fff}\r\n", ((DateTime) eventNotification.EventFields[5].Value).ToLocalTime());
                     eventFields.AppendFormat("Message      = {0}\r\n", eventNotification.EventFields[6]);
-                    eventFields.AppendFormat("Severity     = {0}\r\n",
-                        (EventSeverity) ((ushort) eventNotification.EventFields[7].Value));
+                    eventFields.AppendFormat("Severity     = {0}\r\n", (EventSeverity) ((ushort) eventNotification.EventFields[7].Value));
                     eventFields.AppendFormat("EnabledState = {0}\r\n", eventNotification.EventFields[8]);
                     eventFields.AppendFormat("ActiveState  = {0}\r\n", eventNotification.EventFields[9]);
                     eventFields.AppendFormat("AckedState   = {0}\r\n", eventNotification.EventFields[10]);

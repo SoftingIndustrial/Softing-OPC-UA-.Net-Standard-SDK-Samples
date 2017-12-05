@@ -86,8 +86,7 @@ namespace SampleClient.Samples
             for (int i = 0; i < results.Count; i++)
             {
                 string value = results[i].Value == null ? "NULL" : results[i].Value.ToString();
-                Console.WriteLine(
-                    "[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r\t\tStatusCode: {4} HistoryInfo: {5}",
+                Console.WriteLine("[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r\t\tStatusCode: {4} HistoryInfo: {5}",
                     i, value, results[i].ServerTimestamp, results[i].SourceTimestamp, results[i].StatusCode,
                     results[i].StatusCode.AggregateBits);
             }
@@ -133,8 +132,7 @@ namespace SampleClient.Samples
             for (int i = 0; i < results.Count; i++)
             {
                 string value = results[i].Value == null ? "NULL" : results[i].Value.ToString();
-                Console.WriteLine(
-                    "[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r\t\tStatusCode: {4} HistoryInfo: {5}",
+                Console.WriteLine("[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r\t\tStatusCode: {4} HistoryInfo: {5}",
                     i, value, results[i].ServerTimestamp, results[i].SourceTimestamp, results[i].StatusCode,
                     results[i].StatusCode.AggregateBits);
             }
@@ -181,8 +179,7 @@ namespace SampleClient.Samples
             for (int i = 0; i < results.Count; i++)
             {
                 string value = results[i].Value == null ? "NULL" : results[i].Value.ToString();
-                Console.WriteLine(
-                    "[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r\t\tStatusCode: {4} HistoryInfo: {5}",
+                Console.WriteLine("[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r\t\tStatusCode: {4} HistoryInfo: {5}",
                     i, value, results[i].ServerTimestamp, results[i].SourceTimestamp, results[i].StatusCode,
                     results[i].StatusCode.AggregateBits);
             }
@@ -201,8 +198,7 @@ namespace SampleClient.Samples
             {
                 UserIdentity userIdentity = new UserIdentity();
                 // create the session object.            
-                m_session = m_application.CreateSession(Constants.ServerUrl,
-                    MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
+                m_session = m_application.CreateSession(Constants.ServerUrl, MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
                 m_session.SessionName = SessionName;
 
                 //connect session

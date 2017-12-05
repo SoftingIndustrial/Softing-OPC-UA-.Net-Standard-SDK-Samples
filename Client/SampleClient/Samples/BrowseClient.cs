@@ -54,8 +54,7 @@ namespace SampleClient.Samples
             {
                 UserIdentity userIdentity = new UserIdentity();
                 // create the session object.            
-                m_session = m_application.CreateSession(Constants.ServerUrl,
-                    MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
+                m_session = m_application.CreateSession(Constants.ServerUrl, MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
                 m_session.SessionName = SessionName;
 
                 m_session.Connect(false, true);
@@ -163,21 +162,18 @@ namespace SampleClient.Samples
             options.MaxReferencesReturned = 3;
             try
             {
-                Console.WriteLine("Browse server: {0}, with options: MaxReferencesReturned = {1}", m_session.Url,
-                    options.MaxReferencesReturned);
+                Console.WriteLine("Browse server: {0}, with options: MaxReferencesReturned = {1}", m_session.Url, options.MaxReferencesReturned);
                 //Using the Browse method with null parameters will return the browse result for the root node.
                 IList<ReferenceDescriptionEx> rootReferenceDescriptions = m_session.Browse(null, options);
                 if (rootReferenceDescriptions != null)
                 {
                     foreach (var rootReferenceDescription in rootReferenceDescriptions)
                     {
-                        Console.WriteLine("  -{0} - [{1}]", rootReferenceDescription.DisplayName,
-                            rootReferenceDescription.ReferenceTypeName);
+                        Console.WriteLine("  -{0} - [{1}]", rootReferenceDescription.DisplayName, rootReferenceDescription.ReferenceTypeName);
                         if (rootReferenceDescription.BrowseName.Name == "Objects")
                         {
                             NodeId nodeId = ExpandedNodeId.ToNodeId(rootReferenceDescription.NodeId, m_namespaceUris);
-                            IList<ReferenceDescriptionEx> objectReferenceDescriptions =
-                                m_session.Browse(nodeId, options);
+                            IList<ReferenceDescriptionEx> objectReferenceDescriptions = m_session.Browse(nodeId, options);
                             foreach (var objectReferenceDescription in objectReferenceDescriptions)
                             {
                                 Console.WriteLine("    -{0} - [{1}]",
@@ -186,10 +182,8 @@ namespace SampleClient.Samples
 
                                 if (objectReferenceDescription.BrowseName.Name == "Server")
                                 {
-                                    nodeId = ExpandedNodeId.ToNodeId(objectReferenceDescription.NodeId,
-                                        m_namespaceUris);
-                                    IList<ReferenceDescriptionEx> serverReferenceDescriptions =
-                                        m_session.Browse(nodeId, options);
+                                    nodeId = ExpandedNodeId.ToNodeId(objectReferenceDescription.NodeId, m_namespaceUris);
+                                    IList<ReferenceDescriptionEx> serverReferenceDescriptions = m_session.Browse(nodeId, options);
                                     foreach (var serverReferenceDescription in serverReferenceDescriptions)
                                     {
                                         Console.WriteLine("      -{0} - [{1}]",
@@ -302,8 +296,7 @@ namespace SampleClient.Samples
                 int i = 0;
                 foreach (BrowsePathResultEx browsePathResult in translateResults)
                 {
-                    Console.Write("   {0}\n\r           StatusCode = {1}; Target Nodes = ", browsePaths[i++],
-                        browsePathResult.StatusCode);
+                    Console.Write("   {0}\n\r           StatusCode = {1}; Target Nodes = ", browsePaths[i++], browsePathResult.StatusCode);
 
                     foreach (NodeId targetNode in browsePathResult.TargetIds)
                     {

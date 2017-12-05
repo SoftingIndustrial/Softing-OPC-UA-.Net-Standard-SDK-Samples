@@ -139,8 +139,7 @@ namespace SampleClient.Samples
             try
             {
                 //ObjectIds.Server BrowsePath: Root\Objects\Server
-                m_eventMonitoredItem = new ClientMonitoredItem(m_subscription, ObjectIds.Server,
-                    "Sample Event Monitored Item", null);
+                m_eventMonitoredItem = new ClientMonitoredItem(m_subscription, ObjectIds.Server, "Sample Event Monitored Item", null);
                 m_eventMonitoredItem.EventsReceived += EventMonitoredItem_EventsReceived;
                 Console.WriteLine("Event Monitored Item is created and connected.");
             }
@@ -208,8 +207,7 @@ namespace SampleClient.Samples
         {
             foreach (var eventNotification in e.EventNotifications)
             {
-                Console.WriteLine("Event notification received for {0}.\n",
-                    eventNotification.MonitoredItem.DisplayName);
+                Console.WriteLine("Event notification received for {0}.\n", eventNotification.MonitoredItem.DisplayName);
 
                 StringBuilder displayNotification = new StringBuilder();
                 IList<SelectOperandEx> listOfOperands = ((EventFilterEx) m_eventMonitoredItem.Filter).SelectOperandList;

@@ -67,13 +67,11 @@ namespace SampleClient.Samples
                         }
 
                         // retrieve available endpoints for each registered server and display their information.
-                        Console.WriteLine("\r\nGet available endpoints for server: {0} ...",
-                            serverDescription.ApplicationUri);
+                        Console.WriteLine("\r\nGet available endpoints for server: {0} ...", serverDescription.ApplicationUri);
                         string serverDiscoveryUrl = serverDescription.DiscoveryUrls[0];
                         var endpoins = m_application.GetEndpoints(serverDiscoveryUrl);
 
-                        Console.WriteLine("Server: {0} returned {1} available endpoints:", serverDiscoveryUrl,
-                            endpoins.Count);
+                        Console.WriteLine("Server: {0} returned {1} available endpoints:", serverDiscoveryUrl, endpoins.Count);
 
                         foreach (var endpointDescription in endpoins)
                         {
@@ -85,8 +83,7 @@ namespace SampleClient.Samples
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", serverDescription.ApplicationUri,
-                            ex.Message);
+                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", serverDescription.ApplicationUri, ex.Message);
                     }
                 }
             }
@@ -146,8 +143,7 @@ namespace SampleClient.Samples
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", serverOnNetwork.DiscoveryUrl,
-                            ex.Message);
+                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", serverOnNetwork.DiscoveryUrl, ex.Message);
                     }
                 }
             }

@@ -48,15 +48,13 @@ namespace SampleClient.StateMachine
             CurrentState = State.Main;
 
             m_transitions = new Dictionary<StateTransition, State>();
-            
+
             //add discovery menu item
-            StateTransition discoverySample =
-                new StateTransition(State.Main, Command.DiscoverySample, "1", "Execute Discovery Sample");
+            StateTransition discoverySample = new StateTransition(State.Main, Command.DiscoverySample, "1", "Execute Discovery Sample");
             discoverySample.ExecuteCommand += DiscoverySample_ExecuteCommand;
             m_transitions.Add(discoverySample, State.Main);
             //add connect menu item
-            StateTransition connectSample =
-                new StateTransition(State.Main, Command.ConnectSample, "2", "Execute Connect Sample");
+            StateTransition connectSample = new StateTransition(State.Main, Command.ConnectSample, "2", "Execute Connect Sample");
             connectSample.ExecuteCommand += ConnectSample_ExecuteCommand;
             m_transitions.Add(connectSample, State.Main);
             //add browse menu item
@@ -70,8 +68,7 @@ namespace SampleClient.StateMachine
             //add alarms menu
             InitializeAlarmsTransitions();
             //add call methods menu
-            StateTransition callMethods =
-                new StateTransition(State.Main, Command.CallMethods, "8", "Call Methods on Server");
+            StateTransition callMethods = new StateTransition(State.Main, Command.CallMethods, "8", "Call Methods on Server");
             callMethods.ExecuteCommand += CallMethods_ExecuteCommand;
             m_transitions.Add(callMethods, State.Main);
             //add history menu
@@ -172,20 +169,16 @@ namespace SampleClient.StateMachine
         private void InitializeAlarmsTransitions()
         {
             //commands for alarms
-            StateTransition startAlarms =
-                new StateTransition(State.Main, Command.StartAlarms, "7", "Enter Alarms Menu");
+            StateTransition startAlarms = new StateTransition(State.Main, Command.StartAlarms, "7", "Enter Alarms Menu");
             startAlarms.ExecuteCommand += StartAlarms_ExecuteCommand;
             m_transitions.Add(startAlarms, State.Alarms);
-            StateTransition refreshAlarms =
-                new StateTransition(State.Alarms, Command.RefreshAlarms, "1", "Refresh active alarms");
+            StateTransition refreshAlarms = new StateTransition(State.Alarms, Command.RefreshAlarms, "1", "Refresh active alarms");
             refreshAlarms.ExecuteCommand += RefreshAlarms_ExecuteCommand;
             m_transitions.Add(refreshAlarms, State.Alarms);
-            StateTransition acknowledgeAlarms =
-                new StateTransition(State.Alarms, Command.AcknowledgeAlarms, "2", "Acknowledge alarm");
+            StateTransition acknowledgeAlarms = new StateTransition(State.Alarms, Command.AcknowledgeAlarms, "2", "Acknowledge alarm");
             acknowledgeAlarms.ExecuteCommand += AcknowledgeAlarms_ExecuteCommand;
             m_transitions.Add(acknowledgeAlarms, State.Alarms);
-            StateTransition addCommentAllarms =
-                new StateTransition(State.Alarms, Command.AddCommentAlarms, "3", "Add comment to alarm");
+            StateTransition addCommentAllarms = new StateTransition(State.Alarms, Command.AddCommentAlarms, "3", "Add comment to alarm");
             addCommentAllarms.ExecuteCommand += AddCommentAlarms_ExecuteCommand;
             m_transitions.Add(addCommentAllarms, State.Alarms);
             StateTransition endAlarms = new StateTransition(State.Alarms, Command.EndAlarms, "0", "Back to Main Menu");
@@ -199,8 +192,7 @@ namespace SampleClient.StateMachine
         private void InitializeReadWriteTransitions()
         {
             //commAands for readWrite
-            StateTransition startReadWrite =
-                new StateTransition(State.Main, Command.StartReadWrite, "4", "Enter Read/Write Menu");
+            StateTransition startReadWrite = new StateTransition(State.Main, Command.StartReadWrite, "4", "Enter Read/Write Menu");
             startReadWrite.ExecuteCommand += StartReadWrite_ExecuteCommand;
             m_transitions.Add(startReadWrite, State.ReadWrite);
             StateTransition read = new StateTransition(State.ReadWrite, Command.Read, "1", "Read Nodes");
@@ -209,8 +201,7 @@ namespace SampleClient.StateMachine
             StateTransition write = new StateTransition(State.ReadWrite, Command.Write, "2", "Write Nodes");
             write.ExecuteCommand += Write_ExecuteCommand;
             m_transitions.Add(write, State.ReadWrite);
-            StateTransition endReadWrite =
-                new StateTransition(State.ReadWrite, Command.EndReadWrite, "0", "Back to Main Menu");
+            StateTransition endReadWrite = new StateTransition(State.ReadWrite, Command.EndReadWrite, "0", "Back to Main Menu");
             endReadWrite.ExecuteCommand += EndReadWrite_ExecuteCommand;
             m_transitions.Add(endReadWrite, State.Main);
         }
@@ -221,24 +212,19 @@ namespace SampleClient.StateMachine
         private void InitializeBrowseTransitions()
         {
             //commAands for browse
-            StateTransition startBrowseClient =
-                new StateTransition(State.Main, Command.StartBrowse, "3", "Enter Browse Menu");
+            StateTransition startBrowseClient = new StateTransition(State.Main, Command.StartBrowse, "3", "Enter Browse Menu");
             startBrowseClient.ExecuteCommand += StartBrowseClient_ExecuteCommand;
             m_transitions.Add(startBrowseClient, State.Browse);
-            StateTransition browseServer =
-                new StateTransition(State.Browse, Command.BrowseServer, "1", "Browse server");
+            StateTransition browseServer = new StateTransition(State.Browse, Command.BrowseServer, "1", "Browse server");
             browseServer.ExecuteCommand += BrowseServer_ExecuteCommand;
             m_transitions.Add(browseServer, State.Browse);
-            StateTransition browseServerWithOptions =
-                new StateTransition(State.Browse, Command.BrowseServerWithOptions, "2", "Browse server with options");
+            StateTransition browseServerWithOptions = new StateTransition(State.Browse, Command.BrowseServerWithOptions, "2", "Browse server with options");
             browseServerWithOptions.ExecuteCommand += BrowseServerWithOptions_ExecuteCommand;
             m_transitions.Add(browseServerWithOptions, State.Browse);
-            StateTransition translate =
-                new StateTransition(State.Browse, Command.Translate, "3", "Translate BrowsePaths to NodeIds");
+            StateTransition translate = new StateTransition(State.Browse, Command.Translate, "3", "Translate BrowsePaths to NodeIds");
             translate.ExecuteCommand += Translate_ExecuteCommand;
             m_transitions.Add(translate, State.Browse);
-            StateTransition endBrowseClient =
-                new StateTransition(State.Browse, Command.EndBrowse, "0", "Back to Main Menu");
+            StateTransition endBrowseClient = new StateTransition(State.Browse, Command.EndBrowse, "0", "Back to Main Menu");
             endBrowseClient.ExecuteCommand += EndBrowseClient_ExecuteCommand;
             m_transitions.Add(endBrowseClient, State.Main);
         }
@@ -249,12 +235,10 @@ namespace SampleClient.StateMachine
         private void InitializeEventsTransitions()
         {
             //commands for events
-            StateTransition startEventsClient =
-                new StateTransition(State.Main, Command.StartEvents, "6", "Enter Events Menu");
+            StateTransition startEventsClient = new StateTransition(State.Main, Command.StartEvents, "6", "Enter Events Menu");
             startEventsClient.ExecuteCommand += StartEventsClient_ExecuteCommand;
             m_transitions.Add(startEventsClient, State.Events);
-            StateTransition createEventMonitorItem =
-                new StateTransition(State.Events, Command.CreateEventMonitorItem, "1", "Create event monitored item");
+            StateTransition createEventMonitorItem = new StateTransition(State.Events, Command.CreateEventMonitorItem, "1", "Create event monitored item");
             createEventMonitorItem.ExecuteCommand += CreateEventMonitorItem_ExecuteCommand;
             m_transitions.Add(createEventMonitorItem, State.Events);
             StateTransition deleteEventMonitorItem = new StateTransition(State.Events, Command.DeleteEventMonitorItem,
@@ -273,24 +257,19 @@ namespace SampleClient.StateMachine
         private void InitializeHistoryTransitions()
         {
             //commands for history
-            StateTransition startHistory =
-                new StateTransition(State.Main, Command.StartHistory, "9", "Enter Read History Menu");
+            StateTransition startHistory = new StateTransition(State.Main, Command.StartHistory, "9", "Enter Read History Menu");
             startHistory.ExecuteCommand += StartHistory_ExecuteCommand;
             m_transitions.Add(startHistory, State.History);
-            StateTransition historyReadRaw =
-                new StateTransition(State.History, Command.HistoryReadRaw, "1", "History read raw");
+            StateTransition historyReadRaw = new StateTransition(State.History, Command.HistoryReadRaw, "1", "History read raw");
             historyReadRaw.ExecuteCommand += HistoryReadRaw_ExecuteCommand;
             m_transitions.Add(historyReadRaw, State.History);
-            StateTransition historyReadAtTime =
-                new StateTransition(State.History, Command.HistoryReadAtTime, "2", "History read at time");
+            StateTransition historyReadAtTime = new StateTransition(State.History, Command.HistoryReadAtTime, "2", "History read at time");
             historyReadAtTime.ExecuteCommand += HistoryReadAtTime_ExecuteCommand;
             m_transitions.Add(historyReadAtTime, State.History);
-            StateTransition historyReadProcessed =
-                new StateTransition(State.History, Command.HistoryReadProcessed, "3", "History read processed");
+            StateTransition historyReadProcessed = new StateTransition(State.History, Command.HistoryReadProcessed, "3", "History read processed");
             historyReadProcessed.ExecuteCommand += HistoryReadProcessed_ExecuteCommand;
             m_transitions.Add(historyReadProcessed, State.History);
-            StateTransition endHistory =
-                new StateTransition(State.History, Command.EndHistory, "0", "Back to Main Menu");
+            StateTransition endHistory = new StateTransition(State.History, Command.EndHistory, "0", "Back to Main Menu");
             endHistory.ExecuteCommand += EndHistory_ExecuteCommand;
             m_transitions.Add(endHistory, State.Main);
         }
@@ -301,20 +280,16 @@ namespace SampleClient.StateMachine
         private void InitializeMonitoredItemTransitions()
         {
             //commands for monitored item
-            StateTransition startMonitoredItem =
-                new StateTransition(State.Main, Command.StartMonitoredItem, "5", "Enter MonitoredItem Menu");
+            StateTransition startMonitoredItem = new StateTransition(State.Main, Command.StartMonitoredItem, "5", "Enter MonitoredItem Menu");
             startMonitoredItem.ExecuteCommand += StartMonitoredItem_ExecuteCommand;
             m_transitions.Add(startMonitoredItem, State.MonitoredItem);
-            StateTransition createMonitoredItem =
-                new StateTransition(State.MonitoredItem, Command.CreateMonitoredItem, "1", "Create Monitored Items");
+            StateTransition createMonitoredItem = new StateTransition(State.MonitoredItem, Command.CreateMonitoredItem, "1", "Create Monitored Items");
             createMonitoredItem.ExecuteCommand += CreateMonitoredItem_ExecuteCommand;
             m_transitions.Add(createMonitoredItem, State.MonitoredItem);
-            StateTransition deleteMonitoredItem =
-                new StateTransition(State.MonitoredItem, Command.DeleteMonitoredItem, "2", "Delete Monitored Items");
+            StateTransition deleteMonitoredItem = new StateTransition(State.MonitoredItem, Command.DeleteMonitoredItem, "2", "Delete Monitored Items");
             deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItem_ExecuteCommand;
             m_transitions.Add(deleteMonitoredItem, State.MonitoredItem);
-            StateTransition endMonitoredItem =
-                new StateTransition(State.MonitoredItem, Command.EndMonitoredItem, "0", "Back to Main Menu");
+            StateTransition endMonitoredItem = new StateTransition(State.MonitoredItem, Command.EndMonitoredItem, "0", "Back to Main Menu");
             endMonitoredItem.ExecuteCommand += EndMonitoredItem_ExecuteCommand;
             m_transitions.Add(endMonitoredItem, State.Main);
         }

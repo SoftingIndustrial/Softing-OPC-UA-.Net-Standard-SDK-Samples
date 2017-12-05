@@ -146,17 +146,14 @@ namespace SampleClient.Samples
             try
             {
                 //create monitored item for server CurrentTime
-                m_miCurrentTime = new ClientMonitoredItem(m_subscription, m_miCurrentTimeNodeId, Attributes.Value,
-                    null, "Monitored Item Server CurrentTime");
+                m_miCurrentTime = new ClientMonitoredItem(m_subscription, m_miCurrentTimeNodeId, "Monitored Item Server CurrentTime");
                 m_miCurrentTime.DataChangesReceived += Monitoreditem_DataChangesReceived;
                 //set sampling interval to 1 second
                 m_miCurrentTime.SamplingInterval = 1000;
-                Console.WriteLine("Monitored item '{0}' created. Data value changes are shown:",
-                    m_miCurrentTime.DisplayName);
+                Console.WriteLine("Monitored item '{0}' created. Data value changes are shown:", m_miCurrentTime.DisplayName);
 
                 //creaqte monitored item for Int64 variable
-                m_miInt64 = new ClientMonitoredItem(m_subscription, m_miInt64NodeId, Attributes.Value, null,
-                    "Monitored Item Int64");
+                m_miInt64 = new ClientMonitoredItem(m_subscription, m_miInt64NodeId, "Monitored Item Int64");
                 m_miInt64.DataChangesReceived += Monitoreditem_DataChangesReceived;
                 //set sampling interval to 3 seconds
                 m_miInt64.SamplingInterval = 3000;
@@ -186,15 +183,13 @@ namespace SampleClient.Samples
             try
             {
                 m_miCurrentTime.DataChangesReceived -= Monitoreditem_DataChangesReceived;
-                Console.WriteLine("Monitored item '{0}' unsubscribed from receiving data change notifications.",
-                    m_miCurrentTime.DisplayName);
+                Console.WriteLine("Monitored item '{0}' unsubscribed from receiving data change notifications.", m_miCurrentTime.DisplayName);
                 m_miCurrentTime.Delete();
                 Console.WriteLine("Monitored item '{0}' deleted.", m_miCurrentTime.DisplayName);
                 m_miCurrentTime = null;
 
                 m_miInt64.DataChangesReceived -= Monitoreditem_DataChangesReceived;
-                Console.WriteLine("Monitored item '{0}' unsubscribed from receiving data change notifications.",
-                    m_miInt64.DisplayName);
+                Console.WriteLine("Monitored item '{0}' unsubscribed from receiving data change notifications.", m_miInt64.DisplayName);
                 m_miInt64.Delete();
                 Console.WriteLine("Monitored item '{0}' deleted.", m_miInt64.DisplayName);
                 m_miInt64 = null;
@@ -218,14 +213,11 @@ namespace SampleClient.Samples
         {
             foreach (var dataChangeNotification in e.DataChangeNotifications)
             {
-                Console.WriteLine(" {0} Received data value change for '{1}':", dataChangeNotification.SequenceNo,
-                    dataChangeNotification.MonitoredItem.DisplayName);
+                Console.WriteLine(" {0} Received data value change for '{1}':", dataChangeNotification.SequenceNo, dataChangeNotification.MonitoredItem.DisplayName);
                 Console.WriteLine("    Value : {0} ", dataChangeNotification.Value);
                 Console.WriteLine("    StatusCode : {0} ", dataChangeNotification.Value.StatusCode);
-                Console.WriteLine("    ServerTimestamp : {0:hh:mm:ss.fff tt}",
-                    dataChangeNotification.Value.ServerTimestamp.ToLocalTime());
-                Console.WriteLine("    SourceTimestamp : {0:hh:mm:ss.fff tt}",
-                    dataChangeNotification.Value.SourceTimestamp.ToLocalTime());
+                Console.WriteLine("    ServerTimestamp : {0:hh:mm:ss.fff tt}", dataChangeNotification.Value.ServerTimestamp.ToLocalTime());
+                Console.WriteLine("    SourceTimestamp : {0:hh:mm:ss.fff tt}", dataChangeNotification.Value.SourceTimestamp.ToLocalTime());
             }
         }
 
