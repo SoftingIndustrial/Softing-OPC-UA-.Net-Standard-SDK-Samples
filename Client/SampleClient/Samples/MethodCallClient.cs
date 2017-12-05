@@ -145,9 +145,8 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                UserIdentity userIdentity = new UserIdentity();
-                // create the session object.            
-                m_session = m_application.CreateSession(Constants.ServerUrl, MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, userIdentity, null);
+                // create the session object with no security and anonymous login    
+                m_session = m_application.CreateSession(Constants.ServerUrl);
                 m_session.SessionName = SessionName;
 
                 try
