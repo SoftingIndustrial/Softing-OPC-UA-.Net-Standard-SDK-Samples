@@ -25,10 +25,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Client\Opc.Ua.Client.csproj" />
-    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Configuration\Opc.Ua.Configuration.csproj" />
-    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Core\Opc.Ua.Core.csproj" />
-    <ProjectReference Include="..\..\..\Toolkit\Softing.Opc.Ua_2017.csproj" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="0.4.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Softing.Opc.Ua">
+      <HintPath>..\..\..\..\bin\Release\netstandard2.0\Softing.Opc.Ua.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

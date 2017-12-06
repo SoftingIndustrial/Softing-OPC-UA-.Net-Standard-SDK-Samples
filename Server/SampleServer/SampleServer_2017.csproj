@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="app.config" />
     <None Remove="HistoricalDataAccess\Data\Dynamic\Double.txt" />
     <None Remove="HistoricalDataAccess\Data\Dynamic\Int32.txt" />
     <None Remove="HistoricalDataAccess\Data\Events.txt" />
@@ -64,9 +65,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Configuration\Opc.Ua.Configuration.csproj" />
-    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Server\Opc.Ua.Server.csproj" />
-    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Core\Opc.Ua.Core.csproj" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="0.4.5" />
   </ItemGroup>
 
   <ItemGroup>
