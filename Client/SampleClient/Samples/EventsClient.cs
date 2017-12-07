@@ -19,6 +19,8 @@ namespace SampleClient.Samples
 {
     /// <summary>
     /// Sample Client class that provides events functionality
+    /// 
+    /// This sample also demonstrates handling for ClientSession.KeepAlive event
     /// </summary>
     public class EventsClient
     {
