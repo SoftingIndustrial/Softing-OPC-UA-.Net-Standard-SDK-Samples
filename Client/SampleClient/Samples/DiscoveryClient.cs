@@ -9,6 +9,8 @@
  * ======================================================================*/
 
 using System;
+using System.Collections.Generic;
+using Opc.Ua;
 using Softing.Opc.Ua;
 
 namespace SampleClient.Samples
@@ -46,30 +48,30 @@ namespace SampleClient.Samples
             try
             {
                 Console.WriteLine("\r\nDiscovering all available servers and their endpoints from local host...");
+                
+                string hostname = System.Net.Dns.GetHostName();
+                string discoveryUrl = Utils.Format(Utils.DiscoveryUrls[0], hostname);
 
                 // the method will return all the registered server applications from the specified machine.
                 // if the "discoveryUrl" parameter is null or empty, DiscoverServers() will return the servers from the local machine.
                 // use the default discovery url of the local machine
-                string hostname = System.Net.Dns.GetHostName();
-                string discoveryUrl = Opc.Ua.Utils.Format(Opc.Ua.Utils.DiscoveryUrls[0], hostname);
+                IList<ApplicationDescription> appDescriptions = m_application.DiscoverServers(discoveryUrl);
+                Console.WriteLine("DiscoverServers returned {0} results:", appDescriptions.Count);
 
-                var servers = m_application.DiscoverServers(discoveryUrl);
-                Console.WriteLine("DiscoverServers returned {0} results:", servers.Count);
-
-                foreach (var serverDescription in servers)
+                foreach (var applicationDescription in appDescriptions)
                 {
                     try
                     {
-                        if (serverDescription.DiscoveryUrls == null || serverDescription.DiscoveryUrls.Count == 0)
+                        if (applicationDescription.DiscoveryUrls == null || applicationDescription.DiscoveryUrls.Count == 0)
                         {
                             // skip servers without DiscoveryUrl information.
                             continue;
                         }
 
                         // retrieve available endpoints for each registered server and display their information.
-                        Console.WriteLine("\r\nGet available endpoints for server: {0} ...", serverDescription.ApplicationUri);
-                        string serverDiscoveryUrl = serverDescription.DiscoveryUrls[0];
-                        var endpoins = m_application.GetEndpoints(serverDiscoveryUrl);
+                        Console.WriteLine("\r\nGet available endpoints for server: {0} ...", applicationDescription.ApplicationUri);
+                        string serverDiscoveryUrl = applicationDescription.DiscoveryUrls[0];
+                        IList<EndpointDescriptionEx> endpoins = m_application.GetEndpoints(serverDiscoveryUrl);
 
                         Console.WriteLine("Server: {0} returned {1} available endpoints:", serverDiscoveryUrl, endpoins.Count);
 
@@ -83,7 +85,7 @@ namespace SampleClient.Samples
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", serverDescription.ApplicationUri, ex.Message);
+                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", applicationDescription.ApplicationUri, ex.Message);
                     }
                 }
             }

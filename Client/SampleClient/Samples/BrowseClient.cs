@@ -26,7 +26,6 @@ namespace SampleClient.Samples
         private const string SessionName = "BrowseClient Session";
         private readonly UaApplication m_application;
         private ClientSession m_session;
-        private NamespaceTable m_namespaceUris;
 
         #endregion
 
@@ -58,8 +57,6 @@ namespace SampleClient.Samples
 
                 m_session.Connect(false, true);
                 Console.WriteLine("Session is connected.");
-
-                m_namespaceUris = new NamespaceTable(m_session.NamespaceUris);
             }
             catch (Exception ex)
             {
@@ -112,7 +109,7 @@ namespace SampleClient.Samples
             {
                 Console.WriteLine("This is the address space of server: {0}", m_session.Url);
                 //Using the Browse method with null parameters will return the browse result for the root node.
-                IList<ReferenceDescriptionEx> rootReferenceDescriptions = m_session.Browse(null, null);
+                IList<ReferenceDescriptionEx> rootReferenceDescriptions = m_session.Browse(null);
                 if (rootReferenceDescriptions != null)
                 {
                     foreach (var rootReferenceDescription in rootReferenceDescriptions)
@@ -120,15 +117,15 @@ namespace SampleClient.Samples
                         Console.WriteLine("  -" + rootReferenceDescription.DisplayName);
                         if (rootReferenceDescription.BrowseName.Name == "Objects")
                         {
-                            NodeId nodeId = ExpandedNodeId.ToNodeId(rootReferenceDescription.NodeId, m_namespaceUris);
-                            var objectReferenceDescriptions = m_session.Browse(nodeId, null);
+                            NodeId nodeId = new NodeId(rootReferenceDescription.NodeId.Identifier, rootReferenceDescription.NodeId.NamespaceIndex);
+                            var objectReferenceDescriptions = m_session.Browse(nodeId);
                             foreach (var objectRefDescription in objectReferenceDescriptions)
                             {
                                 Console.WriteLine("     -" + objectRefDescription.DisplayName);
                                 if (objectRefDescription.BrowseName.Name == "Server")
                                 {
-                                    nodeId = ExpandedNodeId.ToNodeId(objectRefDescription.NodeId, m_namespaceUris);
-                                    var serverReferenceDescriptions = m_session.Browse(nodeId, null);
+                                    nodeId = new NodeId(objectRefDescription.NodeId.Identifier, objectRefDescription.NodeId.NamespaceIndex);
+                                    var serverReferenceDescriptions = m_session.Browse(nodeId);
                                     foreach (var serverReferenceDescription in serverReferenceDescriptions)
                                     {
                                         Console.WriteLine("        -" + serverReferenceDescription.DisplayName);
@@ -171,7 +168,7 @@ namespace SampleClient.Samples
                         Console.WriteLine("  -{0} - [{1}]", rootReferenceDescription.DisplayName, rootReferenceDescription.ReferenceTypeName);
                         if (rootReferenceDescription.BrowseName.Name == "Objects")
                         {
-                            NodeId nodeId = ExpandedNodeId.ToNodeId(rootReferenceDescription.NodeId, m_namespaceUris);
+                            NodeId nodeId = new NodeId(rootReferenceDescription.NodeId.Identifier, rootReferenceDescription.NodeId.NamespaceIndex);
                             IList<ReferenceDescriptionEx> objectReferenceDescriptions = m_session.Browse(nodeId, options);
                             foreach (var objectReferenceDescription in objectReferenceDescriptions)
                             {
@@ -181,7 +178,7 @@ namespace SampleClient.Samples
 
                                 if (objectReferenceDescription.BrowseName.Name == "Server")
                                 {
-                                    nodeId = ExpandedNodeId.ToNodeId(objectReferenceDescription.NodeId, m_namespaceUris);
+                                    nodeId = new NodeId(objectReferenceDescription.NodeId.Identifier, objectReferenceDescription.NodeId.NamespaceIndex);
                                     IList<ReferenceDescriptionEx> serverReferenceDescriptions = m_session.Browse(nodeId, options);
                                     foreach (var serverReferenceDescription in serverReferenceDescriptions)
                                     {
