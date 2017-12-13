@@ -86,7 +86,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
-        public virtual void Disconnect()
+        public void Disconnect()
         {
             try
             {

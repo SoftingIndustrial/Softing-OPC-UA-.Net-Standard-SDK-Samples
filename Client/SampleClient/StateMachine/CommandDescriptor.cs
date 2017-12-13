@@ -16,8 +16,8 @@ namespace SampleClient.StateMachine
     public class CommandDescriptor
     {
         public readonly Command Command;
-        public string Keyword;
-        public string Description;
+        public readonly string Keyword;
+        public readonly string Description;
 
         /// <summary>
         /// Create new instance of CommandDescriptor

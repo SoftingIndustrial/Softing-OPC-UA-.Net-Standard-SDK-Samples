@@ -14,7 +14,7 @@ namespace SampleClient
     /// <summary>
     /// Collection of constants used by the application
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         public const string ServerUrl = "opc.tcp://localhost:61510/SampleServer";
         public const string ServerUrlHttps = "https://localhost:61511/SampleServer";

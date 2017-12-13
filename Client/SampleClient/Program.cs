@@ -16,13 +16,12 @@ using Softing.Opc.Ua.Private;
 
 namespace SampleClient
 {
-    class Program
+    static class Program
     {
-       /// <summary>
-       /// Entry point for application
-       /// </summary>
-       /// <param name="args"></param>
-        static void Main(string[] args)
+        /// <summary>
+        /// Entry point for application
+        /// </summary>
+        static void Main()
         {
             Console.Title = string.Format("SampleClient [ServerUrl: {0}]", Constants.ServerUrl);
 

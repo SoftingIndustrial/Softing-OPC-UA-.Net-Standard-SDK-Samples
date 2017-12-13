@@ -92,7 +92,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
-        public virtual void Disconnect()
+        public void Disconnect()
         {
             try
             {
@@ -146,7 +146,7 @@ namespace SampleClient.Samples
                 m_miCurrentTime.SamplingInterval = 1000;
                 Console.WriteLine("Monitored item '{0}' created. Data value changes are shown:", m_miCurrentTime.DisplayName);
 
-                //creaqte monitored item for Int64 variable
+                //create monitored item for Int64 variable
                 m_miInt64 = new ClientMonitoredItem(m_subscription, m_miInt64NodeId, "Monitored Item Int64");
                 m_miInt64.DataChangesReceived += Monitoreditem_DataChangesReceived;
                 //set sampling interval to 3 seconds

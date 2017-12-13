@@ -194,10 +194,10 @@ namespace SampleClient.Samples
 
                 //display read information
                 Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
-                if (dataValue.Value is Array)
+                Array array = dataValue.Value as Array;
+                if (array != null)
                 {
                     Console.WriteLine("  Value is an array with values:");
-                    Array array = dataValue.Value as Array;
                     foreach (object obj in array)
                     {
                         Console.WriteLine("   {0}", obj);
@@ -618,7 +618,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
-        public virtual void DisconnectSession()
+        public void DisconnectSession()
         {
             if (m_session == null)
             {

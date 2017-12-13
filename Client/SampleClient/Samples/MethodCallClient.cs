@@ -74,12 +74,11 @@ namespace SampleClient.Samples
             {
                 Console.WriteLine("input[{0}]= {1}", i, inputArguments[i]);
             }
-
-            IList<object> output = new List<object>();
+            
             StatusCode statusCode = new StatusCode();
             try
             {
-                statusCode = m_session.Call(parentObjectId, methodId, inputArguments, out output);
+                statusCode = m_session.Call(parentObjectId, methodId, inputArguments, out var output);
 
                 Console.WriteLine("Output arguments are:");
                 for (int i = 0; i < output.Count; i++)

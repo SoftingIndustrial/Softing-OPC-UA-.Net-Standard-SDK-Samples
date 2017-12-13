@@ -57,7 +57,7 @@ namespace SampleClient.StateMachine
         /// <summary>
         /// Raise ExecuteCommand event
         /// </summary>
-        public virtual void OnExecuteCommand()
+        public void OnExecuteCommand()
         {
             ExecuteCommand?.Invoke(this, EventArgs.Empty);
         }

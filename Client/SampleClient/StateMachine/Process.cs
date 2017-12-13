@@ -131,7 +131,7 @@ namespace SampleClient.StateMachine
         /// </summary>
         /// <param name="commandKeyword"></param>
         /// <returns>true if command was executed</returns>
-        public bool ExecuteCommand(string commandKeyword)
+        public void ExecuteCommand(string commandKeyword)
         {
             IList<CommandDescriptor> possibleCommands = GetPossibleCommands();
             foreach (var commandDescriptor in possibleCommands)
@@ -149,14 +149,14 @@ namespace SampleClient.StateMachine
 
                         Console.WriteLine("'{0}' execution ended.", commandDescriptor.Description);
                         DisplayListOfCommands();
-                        return true;
+                        return;
                     }
-                    return false;
+                    return;
                 }
             }
             Console.WriteLine("\r\nCannot find command '{0}'. Please choose from the list below:\r\n", commandKeyword);
             DisplayListOfCommands();
-            return false;
+            return;
         }
 
         #endregion

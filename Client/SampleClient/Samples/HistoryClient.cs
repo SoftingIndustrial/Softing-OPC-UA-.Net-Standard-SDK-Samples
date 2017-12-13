@@ -10,7 +10,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Opc.Ua;
 using Softing.Opc.Ua;
 using Softing.Opc.Ua.Client;
@@ -217,7 +216,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
-        public virtual void DisconnectSession()
+        public void DisconnectSession()
         {
             if (m_session == null)
             {
