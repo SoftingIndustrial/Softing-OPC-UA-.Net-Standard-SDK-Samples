@@ -180,7 +180,7 @@ namespace SampleClient.Samples
 
             configuration.TraceConfiguration = new TraceConfiguration()
             {
-                OutputFilePath = @"%CommonApplicationData%\Softing\OpcUaNetStdToolkit\logs\SampleClient.log",
+                OutputFilePath = @"%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\logs\SampleClient.log",
                 TraceMasks = 519
             };
 
@@ -189,22 +189,22 @@ namespace SampleClient.Samples
                 ApplicationCertificate = new CertificateIdentifier
                 {
                     StoreType = CertificateStoreType.Directory,
-                    StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStdToolkit\pki\own"
+                    StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\own"
                 },
                 TrustedPeerCertificates = new CertificateTrustList
                 {
                     StoreType = CertificateStoreType.Directory,
-                    StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStdToolkit\pki\trusted",
+                    StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\trusted",
                 },
                 TrustedIssuerCertificates = new CertificateTrustList
                 {
                     StoreType = CertificateStoreType.Directory,
-                    StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStdToolkit\pki\issuer",
+                    StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\issuer",
                 },
                 RejectedCertificateStore = new CertificateTrustList
                 {
                     StoreType = CertificateStoreType.Directory,
-                    StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStdToolkit\pki\rejected",
+                    StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\rejected",
                 },
                 AutoAcceptUntrustedCertificates = true
             };
