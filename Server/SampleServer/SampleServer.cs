@@ -232,6 +232,11 @@ namespace SampleServer
             out AddNodesResultCollection results,
             out DiagnosticInfoCollection diagnosticInfos)
         {
+            if (m_nodeManagementManager == null)
+            {
+                throw new ServiceResultException(StatusCodes.BadServiceUnsupported);
+            }
+
             OperationContext context = ValidateRequest(requestHeader, RequestType.AddNodes);
 
             try
@@ -284,6 +289,11 @@ namespace SampleServer
             out StatusCodeCollection results,
             out DiagnosticInfoCollection diagnosticInfos)
         {
+            if (m_nodeManagementManager == null)
+            {
+                throw new ServiceResultException(StatusCodes.BadServiceUnsupported);
+            }
+
             results = null;
             diagnosticInfos = null;
 
@@ -344,6 +354,11 @@ namespace SampleServer
             out StatusCodeCollection results,
             out DiagnosticInfoCollection diagnosticInfos)
         {
+            if (m_nodeManagementManager == null)
+            {
+                throw new ServiceResultException(StatusCodes.BadServiceUnsupported);
+            }
+
             OperationContext context = ValidateRequest(requestHeader, RequestType.AddReferences);
 
             try
@@ -400,6 +415,11 @@ namespace SampleServer
             out StatusCodeCollection results,
             out DiagnosticInfoCollection diagnosticInfos)
         {
+            if (m_nodeManagementManager == null)
+            {
+                throw new ServiceResultException(StatusCodes.BadServiceUnsupported);
+            }
+
             OperationContext context = ValidateRequest(requestHeader, RequestType.DeleteReferences);
 
             try
