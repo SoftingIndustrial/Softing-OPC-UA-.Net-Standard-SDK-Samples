@@ -21,6 +21,17 @@ namespace SampleServer.DataAccess
     /// </summary>
     public class DataAccessNodeManager : CustomNodeManager2
     {
+        #region Private Members
+        private uint m_nextNodeId;
+        private DataItemState<bool> m_doorOpened;
+        private DataItemState<bool> m_doorClosed;
+        private DataItemState<bool> m_lightStatus;
+
+        AnalogItemState<double> m_motorTemperature;
+
+        private Timer m_simulationTimer;
+        #endregion
+
         #region Constructors
         /// <summary>
         /// Initializes the node manager
@@ -61,8 +72,7 @@ namespace SampleServer.DataAccess
                 folder.DisplayName = folder.BrowseName.Name;
                 folder.TypeDefinitionId = ObjectTypeIds.FolderType;
 
-                IList<IReference> references = null;
-
+                IList<IReference> references;
                 if (!externalReferences.TryGetValue(ObjectIds.ObjectsFolder, out references))
                 {
                     externalReferences[ObjectIds.ObjectsFolder] = references = new List<IReference>();
@@ -345,17 +355,6 @@ namespace SampleServer.DataAccess
             Random random = new Random();
             return random.NextDouble() * (maximum - minimum) + minimum;
         }
-        #endregion
-
-        #region Private Members
-        private uint m_nextNodeId = 0;
-        private DataItemState<bool> m_doorOpened;
-        private DataItemState<bool> m_doorClosed;
-        private DataItemState<bool> m_lightStatus;
-
-        AnalogItemState<double> m_motorTemperature;
-
-        private Timer m_simulationTimer;
         #endregion
     }
 }

@@ -20,7 +20,14 @@ namespace SampleServer.NodeManagement
     /// </summary>
     class DynamicASNodeManager : NodeManagementNodeManager
     {
+        #region Private Members
+
+        private uint m_nextNodeId;
+
+        #endregion
+
         #region Constructors
+
         /// <summary>
         /// Initializes the node manager
         /// </summary>
@@ -28,9 +35,11 @@ namespace SampleServer.NodeManagement
         {
             SystemContext.NodeIdFactory = this;
         }
+
         #endregion
 
         #region INodeIdFactory Members
+
         /// <summary>
         /// Creates the NodeId for the specified node.
         /// </summary>
@@ -38,9 +47,11 @@ namespace SampleServer.NodeManagement
         {
             return GenerateNodeId();
         }
+
         #endregion
 
         #region INodeManager Members
+
         /// <summary>
         /// Does any initialization required before the address space can be used.
         /// </summary>
@@ -64,28 +75,27 @@ namespace SampleServer.NodeManagement
                 root.TypeDefinitionId = ObjectTypeIds.FolderType;
 
                 // Ensure the process object can be found via the server object. 
-                IList<IReference> references = null;
-
+                IList<IReference> references;
                 if (!externalReferences.TryGetValue(ObjectIds.ObjectsFolder, out references))
                 {
                     externalReferences[ObjectIds.ObjectsFolder] = references = new List<IReference>();
                 }
-                
+
                 root.AddReference(ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder);
                 references.Add(new NodeStateReference(ReferenceTypeIds.Organizes, false, root.NodeId));
 
-                // Add some inital nodes
+                // Add some initial nodes
                 FolderState node1 = AddFolder(root, "Node1");
 
-                FolderState node1_1 = AddFolder(node1, "Node1_1");
-                BaseDataVariableState variable111 = AddVariable(node1_1, "Variable1_1_1", BuiltInType.Int32, ValueRanks.Scalar);
+                FolderState node11 = AddFolder(node1, "Node1_1");
+                AddVariable(node11, "Variable1_1_1", BuiltInType.Int32, ValueRanks.Scalar);
 
-                FolderState node1_2 = AddFolder(node1, "Node1_2");
-                BaseDataVariableState variable121 = AddVariable(node1_2, "Variable1_2_1", BuiltInType.Int32, ValueRanks.Scalar);
+                FolderState node12 = AddFolder(node1, "Node1_2");
+                AddVariable(node12, "Variable1_2_1", BuiltInType.Int32, ValueRanks.Scalar);
 
-                FolderState node1_3 = AddFolder(node1, "Node1_3");
-                BaseDataVariableState variable131 = AddVariable(node1_3, "Variable1_3_1", BuiltInType.Int32, ValueRanks.Scalar);
-                BaseDataVariableState variable132 = AddVariable(node1_3, "Variable1_3_2", BuiltInType.Int32, ValueRanks.Scalar);
+                FolderState node13 = AddFolder(node1, "Node1_3");
+                AddVariable(node13, "Variable1_3_1", BuiltInType.Int32, ValueRanks.Scalar);
+                AddVariable(node13, "Variable1_3_2", BuiltInType.Int32, ValueRanks.Scalar);
 
                 // Save the node for later lookup (all tightly coupled children are added with this call)
                 AddPredefinedNode(SystemContext, root);
@@ -122,7 +132,7 @@ namespace SampleServer.NodeManagement
         /// <summary>
         /// Creates a new variable and adds it to the specified parent.
         /// </summary>
-        private BaseDataVariableState AddVariable(NodeState parent, string name, BuiltInType dataType, int valueRank)
+        private void AddVariable(NodeState parent, string name, BuiltInType dataType, int valueRank)
         {
             BaseDataVariableState variable = new BaseDataVariableState(parent);
 
@@ -131,7 +141,7 @@ namespace SampleServer.NodeManagement
             variable.DisplayName = variable.BrowseName.Name;
             variable.Description = String.Empty;
             variable.Value = new Variant(0);
-            variable.DataType = (uint)dataType;
+            variable.DataType = (uint) dataType;
             variable.ValueRank = valueRank;
             variable.AccessLevel = AccessLevels.CurrentReadOrWrite;
             variable.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
@@ -152,8 +162,6 @@ namespace SampleServer.NodeManagement
                 parent.AddReference(ReferenceTypeIds.Organizes, false, variable.NodeId);
                 variable.AddReference(ReferenceTypeIds.Organizes, true, parent.NodeId);
             }
-
-            return variable;
         }
 
         /// <summary>
@@ -221,9 +229,11 @@ namespace SampleServer.NodeManagement
         {
             return new NodeId(++m_nextNodeId, NamespaceIndex);
         }
+
         #endregion
 
         #region NodeManagement Methods
+
         // Validates an AddNodesItem request
         public override ServiceResult ValidateAddNodeRequest(OperationContext context, AddNodesItem nodeToAdd)
         {
@@ -234,13 +244,13 @@ namespace SampleServer.NodeManagement
                 return new ServiceResult(StatusCodes.BadUserAccessDenied, "User cannot add nodes.");
             }
 
-            if(!nodeToAdd.RequestedNewNodeId.IsNull && nodeToAdd.RequestedNewNodeId.ServerIndex != 0)
+            if (!nodeToAdd.RequestedNewNodeId.IsNull && nodeToAdd.RequestedNewNodeId.ServerIndex != 0)
             {
-                // Do not allow remote nodes to be addes
+                // Do not allow remote nodes to be added
                 return new ServiceResult(StatusCodes.BadNodeIdRejected, "Remote nodes not allowed.");
             }
 
-            if(!nodeToAdd.RequestedNewNodeId.IsNull)
+            if (!nodeToAdd.RequestedNewNodeId.IsNull)
             {
                 if ((ExpandedNodeId.ToNodeId(nodeToAdd.RequestedNewNodeId, null).NamespaceIndex != NamespaceIndex))
                 {
@@ -264,7 +274,7 @@ namespace SampleServer.NodeManagement
             }
 
             // Allow DeleteNodes service requests
-            return ServiceResult.Good; 
+            return ServiceResult.Good;
         }
 
         // Validates an AddReferencesItem request
@@ -294,10 +304,7 @@ namespace SampleServer.NodeManagement
             // Allow DeleteReferences service requests
             return ServiceResult.Good;
         }
-        #endregion
 
-        #region Private Members
-        private uint m_nextNodeId = 0;
         #endregion
     }
 }

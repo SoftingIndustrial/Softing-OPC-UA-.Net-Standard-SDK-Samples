@@ -131,7 +131,7 @@ namespace SampleServer.NodeSetImport
 
         protected override NodeState AddBehaviourToPredefinedNode(ISystemContext context, NodeState predefinedNode)
         {
-            // This override will receive a calback every time a new node is added
+            // This override will receive a callback every time a new node is added
             // e.g. The extension data can be received in predefinedNode.Extensions
             return predefinedNode;
         }
@@ -208,7 +208,7 @@ namespace SampleServer.NodeSetImport
         {
             try
             {
-                XmlElement[] extensions = ImportNodeSet(context, filePath);
+                ImportNodeSet(context, filePath);
             }
             catch (Exception ex)
             {
@@ -287,7 +287,7 @@ namespace SampleServer.NodeSetImport
         /// <returns>The collection of global extensions of the NodeSet2.xml file.</returns>
         private XmlElement[] LoadFromNodeSet2Xml(ISystemContext context, string filePath, bool updateTables, List<string> namespaceUris, NodeStateCollection predefinedNodes)
         {
-            if (filePath == null) throw new ArgumentNullException("filePath");
+            if (filePath == null) throw new ArgumentNullException(nameof(filePath));
 
             byte[] readAllBytes = File.ReadAllBytes(filePath);
             MemoryStream istrm = new MemoryStream(readAllBytes);
@@ -353,7 +353,7 @@ namespace SampleServer.NodeSetImport
         /// Updates the registration of the node manager in case of nodeset2.xml import
         /// </summary>
         /// <param name="nodeManager">The node manager that performed the import.</param>
-        /// <param name="newNamespaceUris">The new namespace uris that were imported.</param>
+        /// <param name="newNamespaceUris">The new namespace Uris that were imported.</param>
         private void UpdateRegistration(INodeManager nodeManager, List<string> newNamespaceUris)
         {
             if (nodeManager == null || newNamespaceUris == null)

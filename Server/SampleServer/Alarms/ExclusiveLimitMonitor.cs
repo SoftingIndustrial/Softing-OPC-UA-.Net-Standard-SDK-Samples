@@ -19,7 +19,16 @@ namespace SampleServer.Alarms
     /// </summary>
     class ExclusiveLimitMonitor : BaseDataVariableState<double>
     {
+
+        #region Private Members
+
+        private ExclusiveLimitAlarmState m_alarm;
+        private List<ConditionState> m_conditions;
+
+        #endregion
+
         #region Constructors
+
         /// <summary>
         /// Initializes the item and attaches an alarm monitor.
         /// </summary>
@@ -28,7 +37,7 @@ namespace SampleServer.Alarms
         /// <param name="namespaceIndex">Index of the namespace.</param>
         /// <param name="name">The DisplayName and BrowseName of the node.</param>
         /// <param name="alarmName">The DisplayName and BrowseName of the alarm node.</param>
-        /// <param name="initialValue">The initlal value of the node.</param>
+        /// <param name="initialValue">The initial value of the node.</param>
         /// <param name="highLimit">The High limit of the alarm.</param>
         /// <param name="highHighLimit">The HighHigh limit of the alarm.</param>
         /// <param name="lowLimit">The Low limit of the alarm.</param>
@@ -48,12 +57,12 @@ namespace SampleServer.Alarms
             : base(parent)
         {
             // Initialize the item and assign a NodeId.
-            this.Create(context, null, new QualifiedName(name, namespaceIndex), null, true);
+            Create(context, null, new QualifiedName(name, namespaceIndex), null, true);
 
-            this.ReferenceTypeId = ReferenceTypeIds.HasComponent;
-            this.Value = initialValue;
-            this.StatusCode = StatusCodes.Good;
-            this.Timestamp = DateTime.UtcNow;
+            ReferenceTypeId = ReferenceTypeIds.HasComponent;
+            Value = initialValue;
+            StatusCode = StatusCodes.Good;
+            Timestamp = DateTime.UtcNow;
 
             if (parent != null)
             {
@@ -61,9 +70,9 @@ namespace SampleServer.Alarms
 
                 // Define event source.
                 parent.AddNotifier(context, ReferenceTypeIds.HasEventSource, false, this);
-                this.AddNotifier(context, ReferenceTypeIds.HasEventSource, true, parent);                
+                AddNotifier(context, ReferenceTypeIds.HasEventSource, true, parent);
             }
-            
+
             // Attach the alarm monitor.
             InitializeAlarmMonitor(
                 context,
@@ -75,11 +84,13 @@ namespace SampleServer.Alarms
                 lowLimit,
                 lowLowLimit);
 
-           this.StateChanged += ExclusiveLimitMonitor_StateChanged;
+            StateChanged += ExclusiveLimitMonitor_StateChanged;
         }
+
         #endregion
 
         #region Private Methods
+
         private void InitializeAlarmMonitor(
             ISystemContext context,
             ushort namespaceIndex,
@@ -122,13 +133,13 @@ namespace SampleServer.Alarms
 
             // Add the variable as source node of the alarm
             AddCondition(m_alarm);
-                
+
             // Set input node
-            m_alarm.InputNode.Value = this.NodeId;
-            
+            m_alarm.InputNode.Value = NodeId;
+
             // Initialize alarm information
             m_alarm.SymbolicName = alarmName;
-            m_alarm.EventType.Value = m_alarm.TypeDefinitionId;            
+            m_alarm.EventType.Value = m_alarm.TypeDefinitionId;
             m_alarm.ConditionName.Value = m_alarm.SymbolicName;
             m_alarm.AutoReportStateChanges = true;
             m_alarm.Time.Value = DateTime.UtcNow;
@@ -147,7 +158,7 @@ namespace SampleServer.Alarms
             m_alarm.HighLimit.Value = highLimit;
             m_alarm.HighHighLimit.Value = highHighLimit;
             m_alarm.LowLimit.Value = lowLimit;
-            m_alarm.LowLowLimit.Value = lowLowLimit; 
+            m_alarm.LowLowLimit.Value = lowLowLimit;
         }
 
         private void ExclusiveLimitMonitor_StateChanged(ISystemContext context, NodeState node, NodeStateChangeMasks changes)
@@ -157,7 +168,7 @@ namespace SampleServer.Alarms
                 ProcessVariableChanged(context, Value);
             }
         }
-        
+
         private void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
@@ -179,43 +190,43 @@ namespace SampleServer.Alarms
                     && newValue <= m_alarm.LowLowLimit.Value)
                 {
                     m_alarm.SetLimitState(context, LimitAlarmStates.LowLow);
-                    m_alarm.SetComment(context, new LocalizedText("en-US", "LowLowLimit exceded."), currentUserId);
+                    m_alarm.SetComment(context, new LocalizedText("en-US", "LowLowLimit exceeded."), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", m_alarm.LimitState.CurrentState.Value.Text));
                     m_alarm.SetSeverity(context, EventSeverity.Max);
                     updateRequired = true;
                 }
                 else if (m_alarm.LowLimit != null && m_alarm.LimitState.CurrentState.Id.Value != ObjectIds.ExclusiveLimitStateMachineType_Low
-                    && newValue > m_alarm.LowLowLimit.Value
-                    && newValue <= m_alarm.LowLimit.Value)
+                         && newValue > m_alarm.LowLowLimit.Value
+                         && newValue <= m_alarm.LowLimit.Value)
                 {
                     m_alarm.SetLimitState(context, LimitAlarmStates.Low);
-                    m_alarm.SetComment(context, new LocalizedText("en-US", "LowLimit exceded."), currentUserId);
+                    m_alarm.SetComment(context, new LocalizedText("en-US", "LowLimit exceeded."), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", m_alarm.LimitState.CurrentState.Value.Text));
                     m_alarm.SetSeverity(context, EventSeverity.High);
                     updateRequired = true;
                 }
                 else if (m_alarm.HighHighLimit != null && m_alarm.LimitState.CurrentState.Id.Value != ObjectIds.ExclusiveLimitStateMachineType_HighHigh
-                    && newValue >= m_alarm.HighHighLimit.Value)
+                         && newValue >= m_alarm.HighHighLimit.Value)
                 {
                     m_alarm.SetLimitState(context, LimitAlarmStates.HighHigh);
-                    m_alarm.SetComment(context, new LocalizedText("en-US", "HighHighLimit exceded."), currentUserId);
+                    m_alarm.SetComment(context, new LocalizedText("en-US", "HighHighLimit exceeded."), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", m_alarm.LimitState.CurrentState.Value.Text));
                     m_alarm.SetSeverity(context, EventSeverity.Max);
                     updateRequired = true;
                 }
                 else if (m_alarm.HighLimit != null && m_alarm.LimitState.CurrentState.Id.Value != ObjectIds.ExclusiveLimitStateMachineType_High
-                    && newValue < m_alarm.HighHighLimit.Value
-                    && newValue >= m_alarm.HighLimit.Value)
+                         && newValue < m_alarm.HighHighLimit.Value
+                         && newValue >= m_alarm.HighLimit.Value)
                 {
                     m_alarm.SetLimitState(context, LimitAlarmStates.High);
-                    m_alarm.SetComment(context, new LocalizedText("en-US", "HighLimit exceded."), currentUserId);
+                    m_alarm.SetComment(context, new LocalizedText("en-US", "HighLimit exceeded."), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", m_alarm.LimitState.CurrentState.Value.Text));
                     m_alarm.SetSeverity(context, EventSeverity.High);
                     updateRequired = true;
                 }
                 else if (m_alarm.ActiveState.Id.Value != false
-                    && m_alarm.LowLimit != null && newValue > m_alarm.LowLimit.Value
-                    && m_alarm.HighLimit != null && newValue < m_alarm.HighLimit.Value)
+                         && m_alarm.LowLimit != null && newValue > m_alarm.LowLimit.Value
+                         && m_alarm.HighLimit != null && newValue < m_alarm.HighLimit.Value)
                 {
                     m_alarm.SetLimitState(context, LimitAlarmStates.Inactive);
                     m_alarm.SetComment(context, new LocalizedText("en-US", "Alarm inactive."), currentUserId);
@@ -302,14 +313,10 @@ namespace SampleServer.Alarms
                 m_conditions.Add(condition);
 
                 AddReference(ReferenceTypeIds.HasCondition, false, condition.NodeId);
-                condition.AddReference(ReferenceTypeIds.HasCondition, true, this.NodeId);
+                condition.AddReference(ReferenceTypeIds.HasCondition, true, NodeId);
             }
         }
-        #endregion
 
-        #region Private Members
-        private ExclusiveLimitAlarmState m_alarm;
-        private List<ConditionState> m_conditions;
         #endregion
     }
 }

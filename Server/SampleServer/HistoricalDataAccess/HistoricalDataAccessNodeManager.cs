@@ -17,51 +17,18 @@ using Opc.Ua;
 
 namespace SampleServer.HistoricalDataAccess
 {
-    abstract class HistoricalDataAccessNodeManager : CustomNodeManager2
+    public abstract class HistoricalDataAccessNodeManager : CustomNodeManager2
     {
-        #region Constructors
+        #region Constructor
         /// <summary>
         /// Initializes the node manager
         /// </summary>
-        public HistoricalDataAccessNodeManager(IServerInternal server, ApplicationConfiguration configuration, params string[] namespaceUris) : base(server, configuration, namespaceUris)
+        protected HistoricalDataAccessNodeManager(IServerInternal server, ApplicationConfiguration configuration, params string[] namespaceUris) : base(server, configuration, namespaceUris)
         {
             SystemContext.NodeIdFactory = this;
         }
         #endregion
-
-        /// <summary>
-        /// Revises the aggregate configuration
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="item"></param>
-        /// <param name="configurationToUse"></param>
-        private void ReviseAggregateConfiguration(ServerSystemContext context, ArchiveItemState item, AggregateConfiguration configurationToUse)
-        {
-            // Set configuration from defaults
-            if(configurationToUse.UseServerCapabilitiesDefaults)
-            {
-                AggregateConfiguration configuration = item.ArchiveItem.AggregateConfiguration;
-
-                if(configuration == null || configuration.UseServerCapabilitiesDefaults)
-                {
-                    configuration = Server.AggregateManager.GetDefaultConfiguration(null);
-                }
-
-                configurationToUse.UseSlopedExtrapolation = configuration.UseSlopedExtrapolation;
-                configurationToUse.TreatUncertainAsBad = configuration.TreatUncertainAsBad;
-                configurationToUse.PercentDataBad = configuration.PercentDataBad;
-                configurationToUse.PercentDataGood = configuration.PercentDataGood;
-            }
-
-            // Override configuration when it does not make sense for the item
-            configurationToUse.UseServerCapabilitiesDefaults = false;
-
-            if(item.ArchiveItem.Stepped)
-            {
-                configurationToUse.UseSlopedExtrapolation = false;
-            }
-        }
-
+        
         #region INodeIdFactory Members
         /// <summary>
         /// Creates the NodeId for the specified node.
@@ -106,7 +73,7 @@ namespace SampleServer.HistoricalDataAccess
         }
         #endregion
 
-        #region Overridden Methods
+        #region Public Methods - Overrides
         public override void CreateAddressSpace(IDictionary<NodeId, IList<IReference>> externalReferences)
         {
             base.CreateAddressSpace(externalReferences);
@@ -162,7 +129,7 @@ namespace SampleServer.HistoricalDataAccess
                         continue;
                     }
 
-                    // Load an exising request
+                    // Load an existing request
                     if(nodeToRead.ContinuationPoint != null)
                     {
                         request = LoadContinuationPoint(context, nodeToRead.ContinuationPoint);
@@ -271,7 +238,7 @@ namespace SampleServer.HistoricalDataAccess
                         continue;
                     }
 
-                    // Load an exising request
+                    // Load an existing request
                     if(nodeToRead.ContinuationPoint != null)
                     {
                         request = LoadContinuationPoint(context, nodeToRead.ContinuationPoint);
@@ -370,7 +337,7 @@ namespace SampleServer.HistoricalDataAccess
                         continue;
                     }
 
-                    // Load an exising request
+                    // Load an existing request
                     if(nodeToRead.ContinuationPoint != null)
                     {
                         request = LoadContinuationPoint(context, nodeToRead.ContinuationPoint);
@@ -403,7 +370,7 @@ namespace SampleServer.HistoricalDataAccess
 
                     errors[handle.Index] = ServiceResult.Good;
 
-                    // Check if a continuation point is requred
+                    // Check if a continuation point is required
                     if(request.Values.Count > 0)
                     {
                         result.ContinuationPoint = SaveContinuationPoint(context, request);
@@ -657,7 +624,7 @@ namespace SampleServer.HistoricalDataAccess
         }
         #endregion
 
-        #region History Helpers
+        #region Private Methods - History Helpers
         /// <summary>
         /// Loads the archive item state from the underlying source
         /// </summary>
@@ -686,11 +653,7 @@ namespace SampleServer.HistoricalDataAccess
         /// <summary>
         /// Creates a new history request
         /// </summary>
-        private HistoryReadRequest CreateHistoryReadRequest(
-            ServerSystemContext context,
-            ReadRawModifiedDetails details,
-            NodeHandle handle,
-            HistoryReadValueId nodeToRead)
+        private HistoryReadRequest CreateHistoryReadRequest(ServerSystemContext context,ReadRawModifiedDetails details,NodeHandle handle,HistoryReadValueId nodeToRead)
         {
             bool sizeLimited = (details.StartTime == DateTime.MinValue || details.EndTime == DateTime.MinValue);
             bool applyIndexRangeOrEncoding = (nodeToRead.ParsedIndexRange != NumericRange.Empty || !QualifiedName.IsNull(nodeToRead.DataEncoding));
@@ -1080,7 +1043,7 @@ namespace SampleServer.HistoricalDataAccess
                 }
 
                 DataValue before = (DataValue) view[index].Row[2];
-                // Init data value with dummy value
+                // Initialize data value with dummy value
                 DataValue value = new DataValue();
 
                 // Find the value after the time
@@ -1222,18 +1185,6 @@ namespace SampleServer.HistoricalDataAccess
         }
 
         /// <summary>
-        /// Stores a read history request
-        /// </summary>
-        private class HistoryReadRequest
-        {
-            public byte[] ContinuationPoint;
-            public LinkedList<DataValue> Values;
-            public LinkedList<ModificationInfo> ModificationInfos;
-            public uint NumValuesPerNode;
-            public AggregateFilter Filter;
-        }
-
-        /// <summary>
         /// Releases the history continuation point
         /// </summary>
         protected override void HistoryReleaseContinuationPoints(
@@ -1300,6 +1251,55 @@ namespace SampleServer.HistoricalDataAccess
             session.SaveHistoryContinuationPoint(id, request);
             request.ContinuationPoint = id.ToByteArray();
             return request.ContinuationPoint;
+        }
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Revises the aggregate configuration
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="item"></param>
+        /// <param name="configurationToUse"></param>
+        private void ReviseAggregateConfiguration(ServerSystemContext context, ArchiveItemState item, AggregateConfiguration configurationToUse)
+        {
+            // Set configuration from defaults
+            if (configurationToUse.UseServerCapabilitiesDefaults)
+            {
+                AggregateConfiguration configuration = item.ArchiveItem.AggregateConfiguration;
+
+                if (configuration == null || configuration.UseServerCapabilitiesDefaults)
+                {
+                    configuration = Server.AggregateManager.GetDefaultConfiguration(null);
+                }
+
+                configurationToUse.UseSlopedExtrapolation = configuration.UseSlopedExtrapolation;
+                configurationToUse.TreatUncertainAsBad = configuration.TreatUncertainAsBad;
+                configurationToUse.PercentDataBad = configuration.PercentDataBad;
+                configurationToUse.PercentDataGood = configuration.PercentDataGood;
+            }
+
+            // Override configuration when it does not make sense for the item
+            configurationToUse.UseServerCapabilitiesDefaults = false;
+
+            if (item.ArchiveItem.Stepped)
+            {
+                configurationToUse.UseSlopedExtrapolation = false;
+            }
+        }
+        #endregion
+
+        #region HistoryReadRequest Private Class
+        /// <summary>
+        /// Stores a read history request
+        /// </summary>
+        private class HistoryReadRequest
+        {
+            public byte[] ContinuationPoint;
+            public LinkedList<DataValue> Values;
+            public LinkedList<ModificationInfo> ModificationInfos;
+            public uint NumValuesPerNode;
+            public AggregateFilter Filter;
         }
         #endregion
     }

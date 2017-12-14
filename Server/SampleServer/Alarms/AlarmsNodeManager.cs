@@ -20,7 +20,14 @@ namespace SampleServer.Alarms
     /// </summary>
     public class AlarmsNodeManager : CustomNodeManager2
     {
+        #region Private Members
+
+        private uint m_nextNodeId;
+
+        #endregion
+
         #region Constructors
+
         /// <summary>
         /// Initializes the node manager
         /// </summary>
@@ -28,9 +35,11 @@ namespace SampleServer.Alarms
         {
             SystemContext.NodeIdFactory = this;
         }
+
         #endregion
 
         #region INodeIdFactory Members
+
         /// <summary>
         /// Creates the NodeId for the specified node.
         /// </summary>
@@ -38,9 +47,11 @@ namespace SampleServer.Alarms
         {
             return GenerateNodeId();
         }
+
         #endregion
 
         #region INodeManager Members
+
         /// <summary>
         /// Does any initialization required before the address space can be used.
         /// </summary>
@@ -65,8 +76,7 @@ namespace SampleServer.Alarms
                 root.TypeDefinitionId = ObjectTypeIds.FolderType;
 
                 // Ensure the process object can be found via the server object
-                IList<IReference> references = null;
-
+                IList<IReference> references;
                 if (!externalReferences.TryGetValue(ObjectIds.ObjectsFolder, out references))
                 {
                     externalReferences[ObjectIds.ObjectsFolder] = references = new List<IReference>();
@@ -116,7 +126,7 @@ namespace SampleServer.Alarms
                     15.0,
                     2.0,
                     1.0);
-                
+
                 // Create an alarm monitor for a pressure sensor 2.
                 ExclusiveLimitMonitor pressureMonitor2 = new ExclusiveLimitMonitor(
                     SystemContext,
@@ -131,7 +141,7 @@ namespace SampleServer.Alarms
                     2.0);
 
                 // Add Support for Event Notifiers
-                // Creating notifier ensures events propogate up the hierarchy when they are produced
+                // Creating notifier ensures events propagate up the hierarchy when they are produced
                 AddRootNotifier(root);
 
                 // Add link to server object
@@ -239,10 +249,8 @@ namespace SampleServer.Alarms
         {
             return new NodeId(++m_nextNodeId, NamespaceIndex);
         }
+
         #endregion
 
-        #region Private Members
-        private uint m_nextNodeId = 0;
-        #endregion
     }
 }

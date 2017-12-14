@@ -21,6 +21,8 @@ namespace SampleServer.HistoricalDataAccess
     /// </summary>
     public class ArchiveItem
     {
+        #region Constructor
+
         /// <summary>
         /// Creates a new instance.
         /// </summary>
@@ -30,36 +32,27 @@ namespace SampleServer.HistoricalDataAccess
             FileInfo = file;
             Name = string.Empty;
 
-            if(FileInfo != null)
+            if (FileInfo != null)
             {
                 Name = FileInfo.Name;
 
                 int index = Name.LastIndexOf('.');
 
-                if(index > 0)
+                if (index > 0)
                 {
                     Name = Name.Substring(0, index);
                 }
             }
         }
 
-        /// <summary>
-        /// Returns a stream that can be used to read the archive
-        /// </summary>
-        public StreamReader OpenArchive()
-        {
-            if(FileInfo != null)
-            {
-                return new StreamReader(FileInfo.FullName, Encoding.UTF8);
-            }
+        #endregion
 
-            return null;
-        }
+        #region Properties
 
         /// <summary>
         /// A name for the item
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// The unique path to the item in the archive
@@ -117,7 +110,7 @@ namespace SampleServer.HistoricalDataAccess
         public DateTime LastLoadTime { get; set; }
 
         /// <summary>
-        /// Whether the source is perisistent and needs to be reloaded
+        /// Whether the source is persistent and needs to be reloaded
         /// </summary>
         public bool Persistent { get; set; }
 
@@ -129,6 +122,25 @@ namespace SampleServer.HistoricalDataAccess
         /// <summary>
         /// The physical file containing the item history
         /// </summary>
-        private FileInfo FileInfo { get; set; }
+        private FileInfo FileInfo { get; }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Returns a stream that can be used to read the archive
+        /// </summary>
+        public StreamReader OpenArchive()
+        {
+            if (FileInfo != null)
+            {
+                return new StreamReader(FileInfo.FullName, Encoding.UTF8);
+            }
+
+            return null;
+        }
+
+        #endregion
     }
 }

@@ -29,6 +29,176 @@ namespace SampleServer.HistoricalDataAccess
             Annotation
         }
 
+        #region Public Methods
+
+        /// <summary>
+        ///  Loads the item configuration
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public bool LoadConfiguration(ISystemContext context, ArchiveItem item)
+        {
+            using (StreamReader reader = item.OpenArchive())
+            {
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine();
+
+                    // check for end or error.
+                    if (line == null)
+                    {
+                        break;
+                    }
+
+                    // ignore blank lines.
+                    line = line.Trim();
+
+                    if (String.IsNullOrEmpty(line))
+                    {
+                        continue;
+                    }
+
+                    // ignore commented out lines.
+                    if (line.StartsWith("//"))
+                    {
+                        continue;
+                    }
+
+                    int valueRank = ValueRanks.Scalar;
+                    int samplingInterval = 0;
+                    int simulationType = 0;
+                    int amplitude = 0;
+                    int period = 0;
+                    int archiving = 0;
+                    int stepped = 0;
+                    int useSlopedExtrapolation = 0;
+                    int treatUncertainAsBad = 0;
+                    int percentDataBad = 0;
+                    int percentDataGood = 0;
+                    string nodeIdName;
+
+                    // get data type.
+                    if (!ExtractField(1, ref line, out BuiltInType dataType))
+                    {
+                        return false;
+                    }
+
+                    // get value rank.
+                    if (!ExtractField(1, ref line, out valueRank))
+                    {
+                        return false;
+                    }
+
+                    // get sampling interval.
+                    if (!ExtractField(1, ref line, out samplingInterval))
+                    {
+                        return false;
+                    }
+
+                    // get simulation type.
+                    if (!ExtractField(1, ref line, out simulationType))
+                    {
+                        return false;
+                    }
+
+                    // get simulation amplitude.
+                    if (!ExtractField(1, ref line, out amplitude))
+                    {
+                        return false;
+                    }
+
+                    // get simulation period.
+                    if (!ExtractField(1, ref line, out period))
+                    {
+                        return false;
+                    }
+
+                    // get flag indicating whether new data is generated.
+                    if (!ExtractField(1, ref line, out archiving))
+                    {
+                        return false;
+                    }
+
+                    // get flag indicating whether stepped interpolation is used.
+                    if (!ExtractField(1, ref line, out stepped))
+                    {
+                        return false;
+                    }
+
+                    // get flag indicating whether sloped interpolation should be used.
+                    if (!ExtractField(1, ref line, out useSlopedExtrapolation))
+                    {
+                        return false;
+                    }
+
+                    // get flag indicating whether sloped interpolation should be used.
+                    if (!ExtractField(1, ref line, out treatUncertainAsBad))
+                    {
+                        return false;
+                    }
+
+                    // get the maximum permitted of bad data in an interval.
+                    if (!ExtractField(1, ref line, out percentDataBad))
+                    {
+                        return false;
+                    }
+
+                    // get the minimum amount of good data in an interval.
+                    if (!ExtractField(1, ref line, out percentDataGood))
+                    {
+                        return false;
+                    }
+
+                    // get the nodeId identifier.
+                    if (!ExtractField(1, ref line, out nodeIdName))
+                    {
+                        return false;
+                    }
+
+                    // update the item.
+                    item.DataType = dataType;
+                    item.ValueRank = valueRank;
+                    item.SimulationType = simulationType;
+                    item.Amplitude = amplitude;
+                    item.Period = period;
+                    item.SamplingInterval = samplingInterval;
+                    item.Archiving = archiving != 0;
+                    item.Stepped = stepped != 0;
+                    item.AggregateConfiguration = new AggregateConfiguration();
+                    item.AggregateConfiguration.UseServerCapabilitiesDefaults = false;
+                    item.AggregateConfiguration.UseSlopedExtrapolation = useSlopedExtrapolation != 0;
+                    item.AggregateConfiguration.TreatUncertainAsBad = treatUncertainAsBad != 0;
+                    item.AggregateConfiguration.PercentDataBad = (byte) percentDataBad;
+                    item.AggregateConfiguration.PercentDataGood = (byte) percentDataGood;
+                    item.NodeIdName = nodeIdName;
+                    break;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Loads the history for the item.
+        /// </summary>
+        public void LoadHistoryData(ISystemContext context, ArchiveItem item)
+        {
+            using (StreamReader reader = item.OpenArchive())
+            {
+                // skip configuration line.
+                reader.ReadLine();
+                item.DataSet = LoadData(context, reader, item.Archiving, item.SamplingInterval);
+            }
+
+            // update the timestamp.
+            item.LastLoadTime = DateTime.UtcNow;
+        }
+
+        #endregion
+
+        #region Private Methods
+
         /// <summary>
         /// Creates a new data set
         /// </summary>
@@ -73,168 +243,6 @@ namespace SampleServer.HistoricalDataAccess
         }
 
         /// <summary>
-        /// Loads the item configuaration
-        /// </summary>
-        public bool LoadConfiguration(ISystemContext context, ArchiveItem item)
-        {
-            using(StreamReader reader = item.OpenArchive())
-            {
-                while(!reader.EndOfStream)
-                {
-                    string line = reader.ReadLine();
-
-                    // check for end or error.
-                    if(line == null)
-                    {
-                        break;
-                    }
-
-                    // ignore blank lines.
-                    line = line.Trim();
-
-                    if(String.IsNullOrEmpty(line))
-                    {
-                        continue;
-                    }
-
-                    // ignore commented out lines.
-                    if(line.StartsWith("//"))
-                    {
-                        continue;
-                    }
-
-                    BuiltInType dataType = BuiltInType.String;
-                    int valueRank = ValueRanks.Scalar;
-                    int samplingInterval = 0;
-                    int simulationType = 0;
-                    int amplitude = 0;
-                    int period = 0;
-                    int archiving = 0;
-                    int stepped = 0;
-                    int useSlopedExtrapolation = 0;
-                    int treatUncertainAsBad = 0;
-                    int percentDataBad = 0;
-                    int percentDataGood = 0;
-                    string nodeIdName;
-
-                    // get data type.
-                    if(!ExtractField(1, ref line, out dataType))
-                    {
-                        return false;
-                    }
-
-                    // get value rank.
-                    if(!ExtractField(1, ref line, out valueRank))
-                    {
-                        return false;
-                    }
-
-                    // get sampling interval.
-                    if(!ExtractField(1, ref line, out samplingInterval))
-                    {
-                        return false;
-                    }
-
-                    // get simulation type.
-                    if(!ExtractField(1, ref line, out simulationType))
-                    {
-                        return false;
-                    }
-
-                    // get simulation amplitude.
-                    if(!ExtractField(1, ref line, out amplitude))
-                    {
-                        return false;
-                    }
-
-                    // get simulation period.
-                    if(!ExtractField(1, ref line, out period))
-                    {
-                        return false;
-                    }
-
-                    // get flag indicating whether new data is generated.
-                    if(!ExtractField(1, ref line, out archiving))
-                    {
-                        return false;
-                    }
-
-                    // get flag indicating whether stepped interpolation is used.
-                    if(!ExtractField(1, ref line, out stepped))
-                    {
-                        return false;
-                    }
-
-                    // get flag indicating whether sloped interpolation should be used.
-                    if(!ExtractField(1, ref line, out useSlopedExtrapolation))
-                    {
-                        return false;
-                    }
-
-                    // get flag indicating whether sloped interpolation should be used.
-                    if(!ExtractField(1, ref line, out treatUncertainAsBad))
-                    {
-                        return false;
-                    }
-
-                    // get the maximum permitted of bad data in an interval.
-                    if(!ExtractField(1, ref line, out percentDataBad))
-                    {
-                        return false;
-                    }
-
-                    // get the minimum amount of good data in an interval.
-                    if(!ExtractField(1, ref line, out percentDataGood))
-                    {
-                        return false;
-                    }
-
-                    // get the nodeId identifier.
-                    if(!ExtractField(1, ref line, out nodeIdName))
-                    {
-                        return false;
-                    }
-
-                    // update the item.
-                    item.DataType = dataType;
-                    item.ValueRank = valueRank;
-                    item.SimulationType = simulationType;
-                    item.Amplitude = amplitude;
-                    item.Period = period;
-                    item.SamplingInterval = samplingInterval;
-                    item.Archiving = archiving != 0;
-                    item.Stepped = stepped != 0;
-                    item.AggregateConfiguration = new AggregateConfiguration();
-                    item.AggregateConfiguration.UseServerCapabilitiesDefaults = false;
-                    item.AggregateConfiguration.UseSlopedExtrapolation = useSlopedExtrapolation != 0;
-                    item.AggregateConfiguration.TreatUncertainAsBad = treatUncertainAsBad != 0;
-                    item.AggregateConfiguration.PercentDataBad = (byte) percentDataBad;
-                    item.AggregateConfiguration.PercentDataGood = (byte) percentDataGood;
-                    item.NodeIdName = nodeIdName;
-                    break;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Loads the history for the item.
-        /// </summary>
-        public void LoadHistoryData(ISystemContext context, ArchiveItem item)
-        {
-            using(StreamReader reader = item.OpenArchive())
-            {
-                // skip configuration line.
-                reader.ReadLine();
-                item.DataSet = LoadData(context, reader, item.Archiving, item.SamplingInterval);
-            }
-
-            // update the timestamp.
-            item.LastLoadTime = DateTime.UtcNow;
-        }
-
-        /// <summary>
         /// Loads the history data from a stream.
         /// </summary>
         private DataSet LoadData(ISystemContext context, StreamReader reader, bool archiving, double samplingRate)
@@ -242,7 +250,7 @@ namespace SampleServer.HistoricalDataAccess
             DataSet dataset = CreateDataSet();
             ServiceMessageContext messageContext = new ServiceMessageContext();
 
-            if(context != null)
+            if (context != null)
             {
                 messageContext.NamespaceUris = context.NamespaceUris;
                 messageContext.ServerUris = context.ServerUris;
@@ -257,7 +265,6 @@ namespace SampleServer.HistoricalDataAccess
 
             string sourceDateTime = string.Empty;
             string serverDateTime = string.Empty;
-            StatusCode status = StatusCodes.Good;
             HistoryDataValueType recordType;
             int modificationTimeOffet = 0;
             string modificationUser = String.Empty;
@@ -267,14 +274,14 @@ namespace SampleServer.HistoricalDataAccess
             string annotationUser = String.Empty;
             string annotationMessage = String.Empty;
             int lineCount = 0;
-            DateTime nextValueTime = DateTime.UtcNow;    //used for generating values
+            DateTime nextValueTime = DateTime.UtcNow; //used for generating values
 
-            while(!reader.EndOfStream)
+            while (!reader.EndOfStream)
             {
                 string line = reader.ReadLine();
 
                 // check for end or error.
-                if(line == null)
+                if (line == null)
                 {
                     break;
                 }
@@ -283,90 +290,91 @@ namespace SampleServer.HistoricalDataAccess
                 line = line.Trim();
                 lineCount++;
 
-                if(String.IsNullOrEmpty(line))
+                if (String.IsNullOrEmpty(line))
                 {
                     continue;
                 }
 
                 // ignore commented out lines.
-                if(line.StartsWith("//"))
+                if (line.StartsWith("//"))
                 {
                     continue;
                 }
 
                 //if the item is archiving we generate the values at each sample rate
-                if(!archiving)
+                if (!archiving)
                 {
                     // get source time.
-                    if(!ExtractField(lineCount, ref line, out sourceDateTime))
+                    if (!ExtractField(lineCount, ref line, out sourceDateTime))
                     {
                         continue;
                     }
 
                     // get server time.
-                    if(!ExtractField(lineCount, ref line, out serverDateTime))
+                    if (!ExtractField(lineCount, ref line, out serverDateTime))
                     {
                         continue;
                     }
                 }
 
                 // get status code.
-                if(!ExtractField(lineCount, ref line, out status))
+                StatusCode status = StatusCodes.Good;
+                if (!ExtractField(lineCount, ref line, out status))
                 {
                     continue;
                 }
 
                 // get modification type.
-                if(!ExtractField(lineCount, ref line, out recordType))
+                if (!ExtractField(lineCount, ref line, out recordType))
                 {
                     continue;
                 }
 
-                if(recordType == HistoryDataValueType.Modified)
+                if (recordType == HistoryDataValueType.Modified)
                 {
                     // get modification time.
-                    if(!ExtractField(lineCount, ref line, out modificationTimeOffet))
+                    if (!ExtractField(lineCount, ref line, out modificationTimeOffet))
                     {
                         continue;
                     }
 
                     // get modification user.
-                    if(!ExtractField(lineCount, ref line, out modificationUser))
+                    if (!ExtractField(lineCount, ref line, out modificationUser))
                     {
                         continue;
                     }
                 }
 
-                if(recordType == HistoryDataValueType.Raw || recordType == HistoryDataValueType.Modified)
+                if (recordType == HistoryDataValueType.Raw || recordType == HistoryDataValueType.Modified)
                 {
                     // get value type.
-                    if(!ExtractField(lineCount, ref line, out valueType))
+                    if (!ExtractField(lineCount, ref line, out valueType))
                     {
                         continue;
                     }
 
                     // get value.
-                    if(!ExtractField(lineCount, ref line, messageContext, valueType, out value))
+                    if (!ExtractField(lineCount, ref line, messageContext, valueType, out value))
                     {
                         continue;
                     }
                 }
-                else if(recordType == HistoryDataValueType.Annotation)
+                else if (recordType == HistoryDataValueType.Annotation)
                 {
                     // get annotation time.
-                    if(!ExtractField(lineCount, ref line, out annotationDateTime))
+                    if (!ExtractField(lineCount, ref line, out annotationDateTime))
                     {
                         continue;
                     }
 
                     // get annotation user.
-                    if(!ExtractField(lineCount, ref line, out annotationUser))
+                    if (!ExtractField(lineCount, ref line, out annotationUser))
                     {
                         continue;
                     }
 
                     // get annotation message.
-                    if(!ExtractField(lineCount, ref line, out annotationMessage))
+                    if (!ExtractField(lineCount, ref line, out annotationMessage))
                     {
                         continue;
                     }
@@ -375,8 +383,8 @@ namespace SampleServer.HistoricalDataAccess
                 // add values to data table.
                 DataValue dataValue = new DataValue();
                 dataValue.WrappedValue = value;
-                
-                if(!archiving)
+
+                if (!archiving)
                 {
                     dataValue.SourceTimestamp = DateTime.Parse(sourceDateTime).ToUniversalTime();
                     dataValue.ServerTimestamp = DateTime.Parse(serverDateTime).ToUniversalTime();
@@ -388,12 +396,12 @@ namespace SampleServer.HistoricalDataAccess
 
                     nextValueTime = nextValueTime.AddMilliseconds(samplingRate);
                 }
-                
+
                 dataValue.StatusCode = status;
 
                 DataRow row = null;
 
-                if(recordType == HistoryDataValueType.Raw)
+                if (recordType == HistoryDataValueType.Raw)
                 {
                     row = dataset.Tables[0].NewRow();
 
@@ -405,7 +413,7 @@ namespace SampleServer.HistoricalDataAccess
 
                     dataset.Tables[0].Rows.Add(row);
                 }
-                else if(recordType== HistoryDataValueType.Modified)
+                else if (recordType == HistoryDataValueType.Modified)
                 {
                     row = dataset.Tables[1].NewRow();
 
@@ -425,7 +433,7 @@ namespace SampleServer.HistoricalDataAccess
                     dataset.Tables[1].Rows.Add(row);
                 }
 
-                else if(recordType == HistoryDataValueType.Annotation)
+                else if (recordType == HistoryDataValueType.Annotation)
                 {
                     row = dataset.Tables[2].NewRow();
 
@@ -451,16 +459,19 @@ namespace SampleServer.HistoricalDataAccess
             return dataset;
         }
 
+        #endregion
+
         #region Parsing Functions
+
         /// <summary>
-        /// Extracts the next comma seperated field from the line.
+        /// Extracts the next comma separated field from the line.
         /// </summary>
         private string ExtractField(ref string line)
         {
             string field = line;
             int index = field.IndexOf(',');
 
-            if(index >= 0)
+            if (index >= 0)
             {
                 field = field.Substring(0, index);
                 line = line.Substring(index + 1);
@@ -468,7 +479,7 @@ namespace SampleServer.HistoricalDataAccess
 
             field = field.Trim();
 
-            if(String.IsNullOrEmpty(field))
+            if (String.IsNullOrEmpty(field))
             {
                 return null;
             }
@@ -477,14 +488,18 @@ namespace SampleServer.HistoricalDataAccess
         }
 
         /// <summary>
-        /// Extracts an integer value from the line.
+        ///  Extracts an integer value from the line.
         /// </summary>
+        /// <param name="lineCount"></param>
+        /// <param name="line"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         private bool ExtractField(int lineCount, ref string line, out string value)
         {
             value = String.Empty;
             string field = ExtractField(ref line);
 
-            if(field == null)
+            if (field == null)
             {
                 return true;
             }
@@ -496,21 +511,25 @@ namespace SampleServer.HistoricalDataAccess
         /// <summary>
         /// Extracts an integer value from the line.
         /// </summary>
+        /// <param name="lineCount"></param>
+        /// <param name="line"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         private bool ExtractField(int lineCount, ref string line, out int value)
         {
             value = 0;
             string field = ExtractField(ref line);
 
-            if(field == null)
+            if (field == null)
             {
                 return true;
             }
 
             try
             {
-                value = System.Convert.ToInt32(field);
+                value = Convert.ToInt32(field);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Utils.Trace(Utils.TraceMasks.Error, "HistoricalAccess.HistoricalDataAccess.DataFileReader.ExtractField", string.Format("PARSE ERROR [Line:{0}] - '{1}': {2}", lineCount, field, e.Message));
                 return false;
@@ -527,22 +546,22 @@ namespace SampleServer.HistoricalDataAccess
             value = 0;
             string field = ExtractField(ref line);
 
-            if(field == null)
+            if (field == null)
             {
                 return true;
             }
 
-            if(field.StartsWith("0x"))
+            if (field.StartsWith("0x"))
             {
                 field = field.Substring(2);
-                uint code = System.Convert.ToUInt32(field, 16);
+                uint code = Convert.ToUInt32(field, 16);
                 value = new StatusCode(code);
             }
             else
             {
                 uint code = StatusCodes.GetIdentifier(field);
 
-                if(code == 0 && field != "Good")
+                if (code == 0 && field != "Good")
                     throw new ApplicationException("Error parsing StatusCode");
 
                 value = code;
@@ -558,7 +577,7 @@ namespace SampleServer.HistoricalDataAccess
             value = 0;
             string field = ExtractField(ref line);
 
-            if(field == null)
+            if (field == null)
             {
                 return true;
             }
@@ -575,7 +594,7 @@ namespace SampleServer.HistoricalDataAccess
             value = BuiltInType.String;
             string field = ExtractField(ref line);
 
-            if(field == null)
+            if (field == null)
             {
                 return true;
             }
@@ -584,7 +603,7 @@ namespace SampleServer.HistoricalDataAccess
             {
                 value = (BuiltInType) Enum.Parse(typeof(BuiltInType), field);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Utils.Trace(Utils.TraceMasks.Error, "HistoricalAccess.HistoricalDataAccess.DataFileReader.ExtractField", string.Format("PARSE ERROR [Line:{0}] - '{1}': {2}", lineCount, field, e.Message));
                 return false;
@@ -626,7 +645,7 @@ namespace SampleServer.HistoricalDataAccess
                 XmlDecoder decoder = new XmlDecoder(document.DocumentElement, context);
                 value = decoder.ReadVariant(null);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Utils.Trace(Utils.TraceMasks.Error, "HistoricalAccess.HistoricalDataAccess.DataFileReader.ExtractField", string.Format("PARSE ERROR [Line:{0}] - '{1}': {2}", lineCount, field, e.Message));
                 return false;
@@ -634,6 +653,7 @@ namespace SampleServer.HistoricalDataAccess
 
             return true;
         }
+
         #endregion
     }
 }

@@ -21,7 +21,19 @@ namespace SampleServer.ReferenceServer
 {
     public class ReferenceNodeManager : CustomNodeManager2
     {
+        #region Private Members
+
+        private readonly ReferenceServerConfiguration m_configuration;
+        private Opc.Ua.Test.DataGenerator m_generator;
+        private Timer m_simulationTimer;
+        private UInt16 m_simulationInterval = 1000;
+        private bool m_simulationEnabled = true;
+        private readonly List<BaseDataVariableState> m_dynamicNodes;
+
+        #endregion
+
         #region Constructors
+
         /// <summary>
         /// Initializes the node manager.
         /// </summary>
@@ -40,9 +52,11 @@ namespace SampleServer.ReferenceServer
 
             m_dynamicNodes = new List<BaseDataVariableState>();
         }
+
         #endregion
 
         #region IDisposable Members
+
         /// <summary>
         /// An overrideable version of the Dispose.
         /// </summary>
@@ -53,9 +67,11 @@ namespace SampleServer.ReferenceServer
                 // TBD
             }
         }
+
         #endregion
 
         #region INodeIdFactory Members
+
         /// <summary>
         /// Creates the NodeId for the specified node.
         /// </summary>
@@ -75,9 +91,11 @@ namespace SampleServer.ReferenceServer
 
             return node.NodeId;
         }
+
         #endregion
 
         #region Private Helper Functions
+
         private static bool IsUnsignedAnalogType(BuiltInType builtInType)
         {
             if (builtInType == BuiltInType.Byte ||
@@ -137,9 +155,11 @@ namespace SampleServer.ReferenceServer
                     return new Range(System.SByte.MaxValue, System.SByte.MinValue);
             }
         }
+
         #endregion
 
         #region INodeManager Members
+
         /// <summary>
         /// Does any initialization required before the address space can be used.
         /// </summary>
@@ -172,6 +192,7 @@ namespace SampleServer.ReferenceServer
                 try
                 {
                     #region Scalar_Static
+
                     FolderState scalarFolder = CreateFolder(root, "Scalar", "Scalar");
                     BaseDataVariableState scalarInstructions = CreateVariable(scalarFolder, "Scalar_Instructions", "Scalar_Instructions", DataTypeIds.String, ValueRanks.Scalar);
                     scalarInstructions.Value = "A library of Read/Write Variables of all supported data-types.";
@@ -206,9 +227,11 @@ namespace SampleServer.ReferenceServer
                     variables.Add(CreateVariable(staticFolder, scalarStatic + "UtcTime", "UtcTime", DataTypeIds.UtcTime, ValueRanks.Scalar));
                     variables.Add(CreateVariable(staticFolder, scalarStatic + "Variant", "Variant", BuiltInType.Variant, ValueRanks.Scalar));
                     variables.Add(CreateVariable(staticFolder, scalarStatic + "XmlElement", "XmlElement", DataTypeIds.XmlElement, ValueRanks.Scalar));
+
                     #endregion
 
                     #region Scalar_Static_Arrays
+
                     FolderState arraysFolder = CreateFolder(staticFolder, "Scalar_Static_Arrays", "Arrays");
                     const string staticArrays = "Scalar_Static_Arrays_";
 
@@ -250,17 +273,19 @@ namespace SampleServer.ReferenceServer
                     variables.Add(CreateVariable(arraysFolder, staticArrays + "SByte", "SByte", DataTypeIds.SByte, ValueRanks.OneDimension));
 
                     BaseDataVariableState stringArrayVar = CreateVariable(arraysFolder, staticArrays + "String", "String", DataTypeIds.String, ValueRanks.OneDimension);
-                    stringArrayVar.Value = new string[] {
+                    stringArrayVar.Value = new string[]
+                    {
                         "Лошадь_ Пурпурово( Змейка( Слон",
                         "猪 绿色 绵羊 大象~ 狗 菠萝 猪鼠",
                         "Лошадь Овцы Голубика Овцы Змейка",
                         "Чернота` Дракон Бело Дракон",
                         "Horse# Black Lemon Lemon Grape",
                         "猫< パイナップル; ドラゴン 犬 モモ",
-                        "레몬} 빨간% 자주색 쥐 백색; 들" ,
+                        "레몬} 빨간% 자주색 쥐 백색; 들",
                         "Yellow Sheep Peach Elephant Cow",
                         "Крыса Корова Свинья Собака Кот",
-                        "龙_ 绵羊 大象 芒果; 猫'" };
+                        "龙_ 绵羊 大象 芒果; 猫'"
+                    };
                     variables.Add(stringArrayVar);
 
                     variables.Add(CreateVariable(arraysFolder, staticArrays + "Time", "Time", DataTypeIds.Time, ValueRanks.OneDimension));
@@ -271,9 +296,11 @@ namespace SampleServer.ReferenceServer
                     variables.Add(CreateVariable(arraysFolder, staticArrays + "UtcTime", "UtcTime", DataTypeIds.UtcTime, ValueRanks.OneDimension));
                     variables.Add(CreateVariable(arraysFolder, staticArrays + "Variant", "Variant", BuiltInType.Variant, ValueRanks.OneDimension));
                     variables.Add(CreateVariable(arraysFolder, staticArrays + "XmlElement", "XmlElement", DataTypeIds.XmlElement, ValueRanks.OneDimension));
+
                     #endregion
 
                     #region Scalar_Static_Arrays2D
+
                     FolderState arrays2DFolder = CreateFolder(staticFolder, "Scalar_Static_Arrays2D", "Arrays2D");
                     const string staticArrays2D = "Scalar_Static_Arrays2D_";
                     variables.Add(CreateVariable(arrays2DFolder, staticArrays2D + "Boolean", "Boolean", DataTypeIds.Boolean, ValueRanks.TwoDimensions));
@@ -303,9 +330,11 @@ namespace SampleServer.ReferenceServer
                     variables.Add(CreateVariable(arrays2DFolder, staticArrays2D + "UtcTime", "UtcTime", DataTypeIds.UtcTime, ValueRanks.TwoDimensions));
                     variables.Add(CreateVariable(arrays2DFolder, staticArrays2D + "Variant", "Variant", BuiltInType.Variant, ValueRanks.TwoDimensions));
                     variables.Add(CreateVariable(arrays2DFolder, staticArrays2D + "XmlElement", "XmlElement", DataTypeIds.XmlElement, ValueRanks.TwoDimensions));
+
                     #endregion
 
                     #region Scalar_Static_ArrayDynamic
+
                     FolderState arrayDymnamicFolder = CreateFolder(staticFolder, "Scalar_Static_ArrayDymamic", "ArrayDymamic");
                     const string staticArraysDynamic = "Scalar_Static_ArrayDynamic_";
                     variables.Add(CreateVariable(arrayDymnamicFolder, staticArraysDynamic + "Boolean", "Boolean", DataTypeIds.Boolean, ValueRanks.OneOrMoreDimensions));
@@ -335,9 +364,11 @@ namespace SampleServer.ReferenceServer
                     variables.Add(CreateVariable(arrayDymnamicFolder, staticArraysDynamic + "UtcTime", "UtcTime", DataTypeIds.UtcTime, ValueRanks.OneOrMoreDimensions));
                     variables.Add(CreateVariable(arrayDymnamicFolder, staticArraysDynamic + "Variant", "Variant", BuiltInType.Variant, ValueRanks.OneOrMoreDimensions));
                     variables.Add(CreateVariable(arrayDymnamicFolder, staticArraysDynamic + "XmlElement", "XmlElement", DataTypeIds.XmlElement, ValueRanks.OneOrMoreDimensions));
+
                     #endregion
 
                     #region Scalar_Static_Mass
+
                     // create 100 instances of each static scalar type
                     FolderState massFolder = CreateFolder(staticFolder, "Scalar_Static_Mass", "Mass");
                     const string staticMass = "Scalar_Static_Mass_";
@@ -366,9 +397,11 @@ namespace SampleServer.ReferenceServer
                     variables.AddRange(CreateVariables(massFolder, staticMass + "UtcTime", "UtcTime", DataTypeIds.UtcTime, ValueRanks.Scalar, 100));
                     variables.AddRange(CreateVariables(massFolder, staticMass + "Variant", "Variant", BuiltInType.Variant, ValueRanks.Scalar, 100));
                     variables.AddRange(CreateVariables(massFolder, staticMass + "XmlElement", "XmlElement", DataTypeIds.XmlElement, ValueRanks.Scalar, 100));
+
                     #endregion
 
                     #region Scalar_Simulation
+
                     FolderState simulationFolder = CreateFolder(scalarFolder, "Scalar_Simulation", "Simulation");
                     const string scalarSimulation = "Scalar_Simulation_";
                     CreateDynamicVariable(simulationFolder, scalarSimulation + "Boolean", "Boolean", DataTypeIds.Boolean, ValueRanks.Scalar);
@@ -406,9 +439,11 @@ namespace SampleServer.ReferenceServer
                     BaseDataVariableState enabledVariable = CreateVariable(simulationFolder, scalarSimulation + "Enabled", "Enabled", DataTypeIds.Boolean, ValueRanks.Scalar);
                     enabledVariable.Value = m_simulationEnabled;
                     enabledVariable.OnSimpleWriteValue = OnWriteEnabled;
+
                     #endregion
 
                     #region Scalar_Simulation_Arrays
+
                     FolderState arraysSimulationFolder = CreateFolder(simulationFolder, "Scalar_Simulation_Arrays", "Arrays");
                     const string simulationArrays = "Scalar_Simulation_Arrays_";
                     CreateDynamicVariable(arraysSimulationFolder, simulationArrays + "Boolean", "Boolean", DataTypeIds.Boolean, ValueRanks.OneDimension);
@@ -438,9 +473,11 @@ namespace SampleServer.ReferenceServer
                     CreateDynamicVariable(arraysSimulationFolder, simulationArrays + "UtcTime", "UtcTime", DataTypeIds.UtcTime, ValueRanks.OneDimension);
                     CreateDynamicVariable(arraysSimulationFolder, simulationArrays + "Variant", "Variant", BuiltInType.Variant, ValueRanks.OneDimension);
                     CreateDynamicVariable(arraysSimulationFolder, simulationArrays + "XmlElement", "XmlElement", DataTypeIds.XmlElement, ValueRanks.OneDimension);
+
                     #endregion
 
                     #region Scalar_Simulation_Mass
+
                     FolderState massSimulationFolder = CreateFolder(simulationFolder, "Scalar_Simulation_Mass", "Mass");
                     const string massSimulation = "Scalar_Simulation_Mass_";
                     CreateDynamicVariables(massSimulationFolder, massSimulation + "Boolean", "Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, 100);
@@ -470,9 +507,11 @@ namespace SampleServer.ReferenceServer
                     CreateDynamicVariables(massSimulationFolder, massSimulation + "UtcTime", "UtcTime", DataTypeIds.UtcTime, ValueRanks.Scalar, 100);
                     CreateDynamicVariables(massSimulationFolder, massSimulation + "Variant", "Variant", BuiltInType.Variant, ValueRanks.Scalar, 100);
                     CreateDynamicVariables(massSimulationFolder, massSimulation + "XmlElement", "XmlElement", DataTypeIds.XmlElement, ValueRanks.Scalar, 100);
+
                     #endregion
 
                     #region DataAccess_DataItem
+
                     FolderState daFolder = CreateFolder(root, "DataAccess", "DataAccess");
                     BaseDataVariableState daInstructions = CreateVariable(daFolder, "DataAccess_Instructions", "Instructions", DataTypeIds.String, ValueRanks.Scalar);
                     daInstructions.Value = "A library of Read/Write Variables of all supported data-types.";
@@ -483,7 +522,7 @@ namespace SampleServer.ReferenceServer
 
                     foreach (string name in Enum.GetNames(typeof(BuiltInType)))
                     {
-                        DataItemState item = CreateDataItemVariable(dataItemFolder, daDataItem + name, name, (BuiltInType)Enum.Parse(typeof(BuiltInType), name), ValueRanks.Scalar);
+                        DataItemState item = CreateDataItemVariable(dataItemFolder, daDataItem + name, name, (BuiltInType) Enum.Parse(typeof(BuiltInType), name), ValueRanks.Scalar);
 
                         // set initial value to String.Empty for String node.
                         if (name == BuiltInType.String.ToString())
@@ -491,15 +530,17 @@ namespace SampleServer.ReferenceServer
                             item.Value = String.Empty;
                         }
                     }
+
                     #endregion
 
                     #region DataAccess_AnalogType
+
                     FolderState analogItemFolder = CreateFolder(daFolder, "DataAccess_AnalogType", "AnalogType");
                     const string daAnalogItem = "DataAccess_AnalogType_";
 
                     foreach (string name in Enum.GetNames(typeof(BuiltInType)))
                     {
-                        BuiltInType builtInType = (BuiltInType)Enum.Parse(typeof(BuiltInType), name);
+                        BuiltInType builtInType = (BuiltInType) Enum.Parse(typeof(BuiltInType), name);
                         if (IsAnalogType(builtInType))
                         {
                             AnalogItemState item = CreateAnalogItemVariable(analogItemFolder, daAnalogItem + name, name, builtInType, ValueRanks.Scalar);
@@ -518,43 +559,79 @@ namespace SampleServer.ReferenceServer
                             }
                         }
                     }
+
                     #endregion
 
                     #region DataAccess_AnalogType_Array
+
                     FolderState analogArrayFolder = CreateFolder(analogItemFolder, "DataAccess_AnalogType_Array", "Array");
                     const string daAnalogArray = "DataAccess_AnalogType_Array_";
 
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Boolean", "Boolean", BuiltInType.Boolean, ValueRanks.OneDimension, new Boolean[] { true, false, true, false, true, false, true, false, true });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Byte", "Byte", BuiltInType.Byte, ValueRanks.OneDimension, new Byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "ByteString", "ByteString", BuiltInType.ByteString, ValueRanks.OneDimension, new Byte[][] { new Byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, new Byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, new Byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, new Byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, new Byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, new Byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, new Byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, new Byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, new Byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, new Byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 } });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "DateTime", "DateTime", BuiltInType.DateTime, ValueRanks.OneDimension, new DateTime[] { DateTime.MinValue, DateTime.MaxValue, DateTime.MinValue, DateTime.MaxValue, DateTime.MinValue, DateTime.MaxValue, DateTime.MinValue, DateTime.MaxValue, DateTime.MinValue });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Double", "Double", BuiltInType.Double, ValueRanks.OneDimension, new double[] { 9.00001d, 9.0002d, 9.003d, 9.04d, 9.5d, 9.06d, 9.007d, 9.008d, 9.0009d });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Duration", "Duration", DataTypeIds.Duration, ValueRanks.OneDimension, new double[] { 9.00001d, 9.0002d, 9.003d, 9.04d, 9.5d, 9.06d, 9.007d, 9.008d, 9.0009d }, null);
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Float", "Float", BuiltInType.Float, ValueRanks.OneDimension, new float[] { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 1.1f, 2.2f, 3.3f, 4.4f, 5.5f });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Guid", "Guid", BuiltInType.Guid, ValueRanks.OneDimension, new Guid[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Int16", "Int16", BuiltInType.Int16, ValueRanks.OneDimension, new Int16[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Int32", "Int32", BuiltInType.Int32, ValueRanks.OneDimension, new Int32[] { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Int64", "Int64", BuiltInType.Int64, ValueRanks.OneDimension, new Int64[] { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Integer", "Integer", BuiltInType.Integer, ValueRanks.OneDimension, new Int64[] { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "LocaleId", "LocaleId", DataTypeIds.LocaleId, ValueRanks.OneDimension, new String[] { "en", "fr", "de", "en", "fr", "de", "en", "fr", "de", "en" }, null);
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "LocalizedText", "LocalizedText", BuiltInType.LocalizedText, ValueRanks.OneDimension, new LocalizedText[] { new LocalizedText("en", "Hello World1"), new LocalizedText("en", "Hello World2"), new LocalizedText("en", "Hello World3"), new LocalizedText("en", "Hello World4"), new LocalizedText("en", "Hello World5"), new LocalizedText("en", "Hello World6"), new LocalizedText("en", "Hello World7"), new LocalizedText("en", "Hello World8"), new LocalizedText("en", "Hello World9"), new LocalizedText("en", "Hello World10") });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "NodeId", "NodeId", BuiltInType.NodeId, ValueRanks.OneDimension, new NodeId[] { new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()) });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Number", "Number", BuiltInType.Number, ValueRanks.OneDimension, new Int16[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "QualifiedName", "QualifiedName", BuiltInType.QualifiedName, ValueRanks.OneDimension, new Int16[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "SByte", "SByte", BuiltInType.SByte, ValueRanks.OneDimension, new SByte[] { 10, 20, 30, 40, 50, 60, 70, 80, 90 });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "String", "String", BuiltInType.String, ValueRanks.OneDimension, new String[] { "a00", "b10", "c20", "d30", "e40", "f50", "g60", "h70", "i80", "j90" });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Time", "Time", DataTypeIds.Time, ValueRanks.OneDimension, new String[] { DateTime.MinValue.ToString(), DateTime.MaxValue.ToString(), DateTime.MinValue.ToString(), DateTime.MaxValue.ToString(), DateTime.MinValue.ToString(), DateTime.MaxValue.ToString(), DateTime.MinValue.ToString(), DateTime.MaxValue.ToString(), DateTime.MinValue.ToString(), DateTime.MaxValue.ToString() }, null);
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "UInt16", "UInt16", BuiltInType.UInt16, ValueRanks.OneDimension, new UInt16[] { 20, 21, 22, 23, 24, 25, 26, 27, 28, 29 });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "UInt32", "UInt32", BuiltInType.UInt32, ValueRanks.OneDimension, new UInt32[] { 30, 31, 32, 33, 34, 35, 36, 37, 38, 39 });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "UInt64", "UInt64", BuiltInType.UInt64, ValueRanks.OneDimension, new UInt64[] { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "UInteger", "UInteger", BuiltInType.UInteger, ValueRanks.OneDimension, new UInt64[] { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 });
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "UtcTime", "UtcTime", DataTypeIds.UtcTime, ValueRanks.OneDimension, new DateTime[] { DateTime.MinValue.ToUniversalTime(), DateTime.MaxValue.ToUniversalTime(), DateTime.MinValue.ToUniversalTime(), DateTime.MaxValue.ToUniversalTime(), DateTime.MinValue.ToUniversalTime(), DateTime.MaxValue.ToUniversalTime(), DateTime.MinValue.ToUniversalTime(), DateTime.MaxValue.ToUniversalTime(), DateTime.MinValue.ToUniversalTime() }, null);
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Variant", "Variant", BuiltInType.Variant, ValueRanks.OneDimension, new Variant[] { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 });
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Boolean", "Boolean", BuiltInType.Boolean, ValueRanks.OneDimension, new Boolean[] {true, false, true, false, true, false, true, false, true});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Byte", "Byte", BuiltInType.Byte, ValueRanks.OneDimension, new Byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "ByteString", "ByteString", BuiltInType.ByteString, ValueRanks.OneDimension,
+                        new Byte[][]
+                        {
+                            new Byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, new Byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, new Byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, new Byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, new Byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+                            new Byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, new Byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, new Byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, new Byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, new Byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+                        });
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "DateTime", "DateTime", BuiltInType.DateTime, ValueRanks.OneDimension,
+                        new DateTime[] {DateTime.MinValue, DateTime.MaxValue, DateTime.MinValue, DateTime.MaxValue, DateTime.MinValue, DateTime.MaxValue, DateTime.MinValue, DateTime.MaxValue, DateTime.MinValue});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Double", "Double", BuiltInType.Double, ValueRanks.OneDimension, new double[] {9.00001d, 9.0002d, 9.003d, 9.04d, 9.5d, 9.06d, 9.007d, 9.008d, 9.0009d});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Duration", "Duration", DataTypeIds.Duration, ValueRanks.OneDimension, new double[] {9.00001d, 9.0002d, 9.003d, 9.04d, 9.5d, 9.06d, 9.007d, 9.008d, 9.0009d}, null);
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Float", "Float", BuiltInType.Float, ValueRanks.OneDimension, new float[] {0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 1.1f, 2.2f, 3.3f, 4.4f, 5.5f});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Guid", "Guid", BuiltInType.Guid, ValueRanks.OneDimension,
+                        new Guid[] {Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Int16", "Int16", BuiltInType.Int16, ValueRanks.OneDimension, new Int16[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Int32", "Int32", BuiltInType.Int32, ValueRanks.OneDimension, new Int32[] {10, 11, 12, 13, 14, 15, 16, 17, 18, 19});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Int64", "Int64", BuiltInType.Int64, ValueRanks.OneDimension, new Int64[] {10, 11, 12, 13, 14, 15, 16, 17, 18, 19});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Integer", "Integer", BuiltInType.Integer, ValueRanks.OneDimension, new Int64[] {10, 11, 12, 13, 14, 15, 16, 17, 18, 19});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "LocaleId", "LocaleId", DataTypeIds.LocaleId, ValueRanks.OneDimension, new String[] {"en", "fr", "de", "en", "fr", "de", "en", "fr", "de", "en"}, null);
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "LocalizedText", "LocalizedText", BuiltInType.LocalizedText, ValueRanks.OneDimension,
+                        new LocalizedText[]
+                        {
+                            new LocalizedText("en", "Hello World1"), new LocalizedText("en", "Hello World2"), new LocalizedText("en", "Hello World3"), new LocalizedText("en", "Hello World4"), new LocalizedText("en", "Hello World5"),
+                            new LocalizedText("en", "Hello World6"), new LocalizedText("en", "Hello World7"), new LocalizedText("en", "Hello World8"), new LocalizedText("en", "Hello World9"), new LocalizedText("en", "Hello World10")
+                        });
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "NodeId", "NodeId", BuiltInType.NodeId, ValueRanks.OneDimension,
+                        new NodeId[]
+                        {
+                            new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()),
+                            new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid()), new NodeId(Guid.NewGuid())
+                        });
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Number", "Number", BuiltInType.Number, ValueRanks.OneDimension, new Int16[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "QualifiedName", "QualifiedName", BuiltInType.QualifiedName, ValueRanks.OneDimension, new Int16[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "SByte", "SByte", BuiltInType.SByte, ValueRanks.OneDimension, new SByte[] {10, 20, 30, 40, 50, 60, 70, 80, 90});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "String", "String", BuiltInType.String, ValueRanks.OneDimension, new String[] {"a00", "b10", "c20", "d30", "e40", "f50", "g60", "h70", "i80", "j90"});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Time", "Time", DataTypeIds.Time, ValueRanks.OneDimension,
+                        new String[]
+                        {
+                            DateTime.MinValue.ToString(), DateTime.MaxValue.ToString(), DateTime.MinValue.ToString(), DateTime.MaxValue.ToString(), DateTime.MinValue.ToString(), DateTime.MaxValue.ToString(), DateTime.MinValue.ToString(),
+                            DateTime.MaxValue.ToString(), DateTime.MinValue.ToString(), DateTime.MaxValue.ToString()
+                        }, null);
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "UInt16", "UInt16", BuiltInType.UInt16, ValueRanks.OneDimension, new UInt16[] {20, 21, 22, 23, 24, 25, 26, 27, 28, 29});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "UInt32", "UInt32", BuiltInType.UInt32, ValueRanks.OneDimension, new UInt32[] {30, 31, 32, 33, 34, 35, 36, 37, 38, 39});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "UInt64", "UInt64", BuiltInType.UInt64, ValueRanks.OneDimension, new UInt64[] {10, 11, 12, 13, 14, 15, 16, 17, 18, 19});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "UInteger", "UInteger", BuiltInType.UInteger, ValueRanks.OneDimension, new UInt64[] {10, 11, 12, 13, 14, 15, 16, 17, 18, 19});
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "UtcTime", "UtcTime", DataTypeIds.UtcTime, ValueRanks.OneDimension,
+                        new DateTime[]
+                        {
+                            DateTime.MinValue.ToUniversalTime(), DateTime.MaxValue.ToUniversalTime(), DateTime.MinValue.ToUniversalTime(), DateTime.MaxValue.ToUniversalTime(), DateTime.MinValue.ToUniversalTime(), DateTime.MaxValue.ToUniversalTime(),
+                            DateTime.MinValue.ToUniversalTime(), DateTime.MaxValue.ToUniversalTime(), DateTime.MinValue.ToUniversalTime()
+                        }, null);
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "Variant", "Variant", BuiltInType.Variant, ValueRanks.OneDimension, new Variant[] {10, 11, 12, 13, 14, 15, 16, 17, 18, 19});
                     XmlDocument doc1 = new XmlDocument();
-                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "XmlElement", "XmlElement", BuiltInType.XmlElement, ValueRanks.OneDimension, new XmlElement[] { doc1.CreateElement("tag1"), doc1.CreateElement("tag2"), doc1.CreateElement("tag3"), doc1.CreateElement("tag4"), doc1.CreateElement("tag5"), doc1.CreateElement("tag6"), doc1.CreateElement("tag7"), doc1.CreateElement("tag8"), doc1.CreateElement("tag9"), doc1.CreateElement("tag10") });
+                    CreateAnalogItemVariable(analogArrayFolder, daAnalogArray + "XmlElement", "XmlElement", BuiltInType.XmlElement, ValueRanks.OneDimension,
+                        new XmlElement[]
+                        {
+                            doc1.CreateElement("tag1"), doc1.CreateElement("tag2"), doc1.CreateElement("tag3"), doc1.CreateElement("tag4"), doc1.CreateElement("tag5"), doc1.CreateElement("tag6"), doc1.CreateElement("tag7"),
+                            doc1.CreateElement("tag8"), doc1.CreateElement("tag9"), doc1.CreateElement("tag10")
+                        });
+
                     #endregion
 
                     #region DataAccess_DiscreteType
+
                     FolderState discreteTypeFolder = CreateFolder(daFolder, "DataAccess_DiscreteType", "DiscreteType");
                     FolderState twoStateDiscreteFolder = CreateFolder(discreteTypeFolder, "DataAccess_TwoStateDiscreteType", "TwoStateDiscreteType");
                     const string daTwoStateDiscrete = "DataAccess_TwoStateDiscreteType_";
@@ -575,32 +652,35 @@ namespace SampleServer.ReferenceServer
                     CreateMultiStateDiscreteItemVariable(multiStateDiscreteFolder, daMultiStateDiscrete + "003", "003", "lolo", "lo", "normal", "hi", "hihi");
                     CreateMultiStateDiscreteItemVariable(multiStateDiscreteFolder, daMultiStateDiscrete + "004", "004", "left", "right", "center");
                     CreateMultiStateDiscreteItemVariable(multiStateDiscreteFolder, daMultiStateDiscrete + "005", "005", "circle", "cross", "triangle");
+
                     #endregion
 
                     #region DataAccess_MultiStateValueDiscreteType
+
                     FolderState multiStateValueDiscreteFolder = CreateFolder(discreteTypeFolder, "DataAccess_MultiStateValueDiscreteType", "MultiStateValueDiscreteType");
                     const string daMultiStateValueDiscrete = "DataAccess_MultiStateValueDiscreteType_";
 
                     // Add our Nodes to the folder, and specify their customized discrete enumerations
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "001", "001", new string[] { "open", "closed", "jammed" });
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "002", "002", new string[] { "red", "green", "blue", "cyan" });
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "003", "003", new string[] { "lolo", "lo", "normal", "hi", "hihi" });
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "004", "004", new string[] { "left", "right", "center" });
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "005", "005", new string[] { "circle", "cross", "triangle" });
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "001", "001", new string[] {"open", "closed", "jammed"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "002", "002", new string[] {"red", "green", "blue", "cyan"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "003", "003", new string[] {"lolo", "lo", "normal", "hi", "hihi"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "004", "004", new string[] {"left", "right", "center"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "005", "005", new string[] {"circle", "cross", "triangle"});
 
                     // Add our Nodes to the folder and specify varying data types
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "Byte", "Byte", DataTypeIds.Byte, new string[] { "open", "closed", "jammed" });
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "Int16", "Int16", DataTypeIds.Int16, new string[] { "red", "green", "blue", "cyan" });
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "Int32", "Int32", DataTypeIds.Int32, new string[] { "lolo", "lo", "normal", "hi", "hihi" });
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "Int64", "Int64", DataTypeIds.Int64, new string[] { "left", "right", "center" });
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "SByte", "SByte", DataTypeIds.SByte, new string[] { "open", "closed", "jammed" });
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "UInt16", "UInt16", DataTypeIds.UInt16, new string[] { "red", "green", "blue", "cyan" });
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "UInt32", "UInt32", DataTypeIds.UInt32, new string[] { "lolo", "lo", "normal", "hi", "hihi" });
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "UInt64", "UInt64", DataTypeIds.UInt64, new string[] { "left", "right", "center" });
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "Byte", "Byte", DataTypeIds.Byte, new string[] {"open", "closed", "jammed"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "Int16", "Int16", DataTypeIds.Int16, new string[] {"red", "green", "blue", "cyan"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "Int32", "Int32", DataTypeIds.Int32, new string[] {"lolo", "lo", "normal", "hi", "hihi"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "Int64", "Int64", DataTypeIds.Int64, new string[] {"left", "right", "center"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "SByte", "SByte", DataTypeIds.SByte, new string[] {"open", "closed", "jammed"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "UInt16", "UInt16", DataTypeIds.UInt16, new string[] {"red", "green", "blue", "cyan"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "UInt32", "UInt32", DataTypeIds.UInt32, new string[] {"lolo", "lo", "normal", "hi", "hihi"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "UInt64", "UInt64", DataTypeIds.UInt64, new string[] {"left", "right", "center"});
 
                     #endregion
 
                     #region References
+
                     FolderState referencesFolder = CreateFolder(root, "References", "References");
                     const string referencesPrefix = "References_";
 
@@ -642,11 +722,14 @@ namespace SampleServer.ReferenceServer
                     has3InverseReferences.AddReference(ReferenceTypes.HasEffect, true, variables[2].NodeId);
                     variables.Add(has3InverseReferences);
 
-                    BaseDataVariableState hasForwardAndInverseReferences = CreateMeshVariable(referencesFolder, referencesPrefix + "HasForwardAndInverseReference", "HasForwardAndInverseReference", hasForwardReference, hasInverseReference, has3InverseReference, has3InverseReferences, variables[0]);
+                    BaseDataVariableState hasForwardAndInverseReferences = CreateMeshVariable(referencesFolder, referencesPrefix + "HasForwardAndInverseReference", "HasForwardAndInverseReference", hasForwardReference, hasInverseReference,
+                        has3InverseReference, has3InverseReferences, variables[0]);
                     variables.Add(hasForwardAndInverseReferences);
+
                     #endregion
 
                     #region AccessRights
+
                     FolderState folderAccessRights = CreateFolder(root, "AccessRights", "AccessRights");
                     const string accessRights = "AccessRights_";
 
@@ -724,9 +807,11 @@ namespace SampleServer.ReferenceServer
                     arGroupRW.AccessLevel = AccessLevels.CurrentReadOrWrite;
                     arGroupRW.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
                     variables.Add(arGroupRW);
+
                     #endregion
 
                     #region NodeIds
+
                     FolderState nodeIdsFolder = CreateFolder(root, "NodeIds", "NodeIds");
                     const string nodeIds = "NodeIds_";
 
@@ -735,7 +820,7 @@ namespace SampleServer.ReferenceServer
                     variables.Add(nodeIdsInstructions);
 
                     BaseDataVariableState integerNodeId = CreateVariable(nodeIdsFolder, nodeIds + "Int16Integer", "Int16Integer", DataTypeIds.Int16, ValueRanks.Scalar);
-                    integerNodeId.NodeId = new NodeId((uint)9202, NamespaceIndex);
+                    integerNodeId.NodeId = new NodeId((uint) 9202, NamespaceIndex);
                     variables.Add(integerNodeId);
 
                     variables.Add(CreateVariable(nodeIdsFolder, nodeIds + "Int16String", "Int16String", DataTypeIds.Int16, ValueRanks.Scalar));
@@ -745,11 +830,13 @@ namespace SampleServer.ReferenceServer
                     variables.Add(guidNodeId);
 
                     BaseDataVariableState opaqueNodeId = CreateVariable(nodeIdsFolder, nodeIds + "Int16Opaque", "Int16Opaque", DataTypeIds.Int16, ValueRanks.Scalar);
-                    opaqueNodeId.NodeId = new NodeId(new byte[] { 9, 2, 0, 5 }, NamespaceIndex);
+                    opaqueNodeId.NodeId = new NodeId(new byte[] {9, 2, 0, 5}, NamespaceIndex);
                     variables.Add(opaqueNodeId);
+
                     #endregion
 
                     #region Methods
+
                     FolderState methodsFolder = CreateFolder(root, "Methods", "Methods");
                     const string methods = "Methods_";
 
@@ -761,6 +848,7 @@ namespace SampleServer.ReferenceServer
                     voidMethod.OnCallMethod = new GenericMethodCalledEventHandler(OnVoidCall);
 
                     #region Add Method
+
                     MethodState addMethod = CreateMethod(methodsFolder, methods + "Add", "Add");
                     // set input arguments
                     addMethod.InputArguments = new PropertyState<Argument[]>(addMethod);
@@ -774,8 +862,8 @@ namespace SampleServer.ReferenceServer
 
                     addMethod.InputArguments.Value = new Argument[]
                     {
-                        new Argument() { Name = "Float value", Description = "Float value",  DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar },
-                        new Argument() { Name = "UInt32 value", Description = "UInt32 value",  DataType = DataTypeIds.UInt32, ValueRank = ValueRanks.Scalar }
+                        new Argument() {Name = "Float value", Description = "Float value", DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar},
+                        new Argument() {Name = "UInt32 value", Description = "UInt32 value", DataType = DataTypeIds.UInt32, ValueRank = ValueRanks.Scalar}
                     };
 
                     // set output arguments
@@ -790,13 +878,15 @@ namespace SampleServer.ReferenceServer
 
                     addMethod.OutputArguments.Value = new Argument[]
                     {
-                        new Argument() { Name = "Add Result", Description = "Add Result",  DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar }
+                        new Argument() {Name = "Add Result", Description = "Add Result", DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar}
                     };
 
                     addMethod.OnCallMethod = new GenericMethodCalledEventHandler(OnAddCall);
+
                     #endregion
 
                     #region Multiply Method
+
                     MethodState multiplyMethod = CreateMethod(methodsFolder, methods + "Multiply", "Multiply");
                     // set input arguments
                     multiplyMethod.InputArguments = new PropertyState<Argument[]>(multiplyMethod);
@@ -810,8 +900,8 @@ namespace SampleServer.ReferenceServer
 
                     multiplyMethod.InputArguments.Value = new Argument[]
                     {
-                        new Argument() { Name = "Int16 value", Description = "Int16 value",  DataType = DataTypeIds.Int16, ValueRank = ValueRanks.Scalar },
-                        new Argument() { Name = "UInt16 value", Description = "UInt16 value",  DataType = DataTypeIds.UInt16, ValueRank = ValueRanks.Scalar }
+                        new Argument() {Name = "Int16 value", Description = "Int16 value", DataType = DataTypeIds.Int16, ValueRank = ValueRanks.Scalar},
+                        new Argument() {Name = "UInt16 value", Description = "UInt16 value", DataType = DataTypeIds.UInt16, ValueRank = ValueRanks.Scalar}
                     };
 
                     // set output arguments
@@ -826,13 +916,15 @@ namespace SampleServer.ReferenceServer
 
                     multiplyMethod.OutputArguments.Value = new Argument[]
                     {
-                        new Argument() { Name = "Multiply Result", Description = "Multiply Result",  DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar }
+                        new Argument() {Name = "Multiply Result", Description = "Multiply Result", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar}
                     };
 
                     multiplyMethod.OnCallMethod = new GenericMethodCalledEventHandler(OnMultiplyCall);
+
                     #endregion
 
                     #region Divide Method
+
                     MethodState divideMethod = CreateMethod(methodsFolder, methods + "Divide", "Divide");
                     // set input arguments
                     divideMethod.InputArguments = new PropertyState<Argument[]>(divideMethod);
@@ -846,8 +938,8 @@ namespace SampleServer.ReferenceServer
 
                     divideMethod.InputArguments.Value = new Argument[]
                     {
-                        new Argument() { Name = "Int32 value", Description = "Int32 value",  DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar },
-                        new Argument() { Name = "UInt16 value", Description = "UInt16 value",  DataType = DataTypeIds.UInt16, ValueRank = ValueRanks.Scalar }
+                        new Argument() {Name = "Int32 value", Description = "Int32 value", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
+                        new Argument() {Name = "UInt16 value", Description = "UInt16 value", DataType = DataTypeIds.UInt16, ValueRank = ValueRanks.Scalar}
                     };
 
                     // set output arguments
@@ -862,13 +954,15 @@ namespace SampleServer.ReferenceServer
 
                     divideMethod.OutputArguments.Value = new Argument[]
                     {
-                        new Argument() { Name = "Divide Result", Description = "Divide Result",  DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar }
+                        new Argument() {Name = "Divide Result", Description = "Divide Result", DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar}
                     };
 
                     divideMethod.OnCallMethod = new GenericMethodCalledEventHandler(OnDivideCall);
+
                     #endregion
 
                     #region Substract Method
+
                     MethodState substractMethod = CreateMethod(methodsFolder, methods + "Substract", "Substract");
                     // set input arguments
                     substractMethod.InputArguments = new PropertyState<Argument[]>(substractMethod);
@@ -882,8 +976,8 @@ namespace SampleServer.ReferenceServer
 
                     substractMethod.InputArguments.Value = new Argument[]
                     {
-                        new Argument() { Name = "Int16 value", Description = "Int16 value",  DataType = DataTypeIds.Int16, ValueRank = ValueRanks.Scalar },
-                        new Argument() { Name = "Byte value", Description = "Byte value",  DataType = DataTypeIds.Byte, ValueRank = ValueRanks.Scalar }
+                        new Argument() {Name = "Int16 value", Description = "Int16 value", DataType = DataTypeIds.Int16, ValueRank = ValueRanks.Scalar},
+                        new Argument() {Name = "Byte value", Description = "Byte value", DataType = DataTypeIds.Byte, ValueRank = ValueRanks.Scalar}
                     };
 
                     // set output arguments
@@ -898,13 +992,15 @@ namespace SampleServer.ReferenceServer
 
                     substractMethod.OutputArguments.Value = new Argument[]
                     {
-                        new Argument() { Name = "Substract Result", Description = "Substract Result",  DataType = DataTypeIds.Int16, ValueRank = ValueRanks.Scalar }
+                        new Argument() {Name = "Substract Result", Description = "Substract Result", DataType = DataTypeIds.Int16, ValueRank = ValueRanks.Scalar}
                     };
 
                     substractMethod.OnCallMethod = new GenericMethodCalledEventHandler(OnSubstractCall);
+
                     #endregion
 
                     #region Hello Method
+
                     MethodState helloMethod = CreateMethod(methodsFolder, methods + "Hello", "Hello");
                     // set input arguments
                     helloMethod.InputArguments = new PropertyState<Argument[]>(helloMethod);
@@ -918,7 +1014,7 @@ namespace SampleServer.ReferenceServer
 
                     helloMethod.InputArguments.Value = new Argument[]
                     {
-                        new Argument() { Name = "String value", Description = "String value",  DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar }
+                        new Argument() {Name = "String value", Description = "String value", DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar}
                     };
 
                     // set output arguments
@@ -933,13 +1029,15 @@ namespace SampleServer.ReferenceServer
 
                     helloMethod.OutputArguments.Value = new Argument[]
                     {
-                        new Argument() { Name = "Hello Result", Description = "Hello Result",  DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar }
+                        new Argument() {Name = "Hello Result", Description = "Hello Result", DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar}
                     };
 
                     helloMethod.OnCallMethod = new GenericMethodCalledEventHandler(OnHelloCall);
+
                     #endregion
 
                     #region Input Method
+
                     MethodState inputMethod = CreateMethod(methodsFolder, methods + "Input", "Input");
                     // set input arguments
                     inputMethod.InputArguments = new PropertyState<Argument[]>(inputMethod);
@@ -953,13 +1051,15 @@ namespace SampleServer.ReferenceServer
 
                     inputMethod.InputArguments.Value = new Argument[]
                     {
-                        new Argument() { Name = "String value", Description = "String value",  DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar }
+                        new Argument() {Name = "String value", Description = "String value", DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar}
                     };
 
                     inputMethod.OnCallMethod = new GenericMethodCalledEventHandler(OnInputCall);
+
                     #endregion
 
                     #region Output Method
+
                     MethodState outputMethod = CreateMethod(methodsFolder, methods + "Output", "Output");
 
                     // set output arguments
@@ -974,22 +1074,27 @@ namespace SampleServer.ReferenceServer
 
                     outputMethod.OutputArguments.Value = new Argument[]
                     {
-                        new Argument() { Name = "Output Result", Description = "Output Result",  DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar }
+                        new Argument() {Name = "Output Result", Description = "Output Result", DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar}
                     };
 
                     outputMethod.OnCallMethod = new GenericMethodCalledEventHandler(OnOutputCall);
+
                     #endregion
+
                     #endregion
 
                     #region Views
+
                     FolderState viewsFolder = CreateFolder(root, "Views", "Views");
                     const string views = "Views_";
 
                     ViewState viewStateOperations = CreateView(viewsFolder, externalReferences, views + "Operations", "Operations");
                     ViewState viewStateEngineering = CreateView(viewsFolder, externalReferences, views + "Engineering", "Engineering");
+
                     #endregion
 
                     #region Locales
+
                     FolderState localesFolder = CreateFolder(root, "Locales", "Locales");
                     const string locales = "Locales_";
 
@@ -1073,12 +1178,15 @@ namespace SampleServer.ReferenceServer
                     ltKlingonVariable.Description = new LocalizedText("en", "Klingon");
                     ltKlingonVariable.Value = new LocalizedText("ko", "qo' vIvan");
                     variables.Add(ltKlingonVariable);
+
                     #endregion
 
                     #region Attributes
+
                     FolderState folderAttributes = CreateFolder(root, "Attributes", "Attributes");
 
                     #region AccessAll
+
                     FolderState folderAttributesAccessAll = CreateFolder(folderAttributes, "Attributes_AccessAll", "AccessAll");
                     const string attributesAccessAll = "Attributes_AccessAll_";
 
@@ -1184,17 +1292,23 @@ namespace SampleServer.ReferenceServer
 
                     BaseDataVariableState allAccessLevel = CreateVariable(folderAttributesAccessAll, attributesAccessAll + "All", "All", DataTypeIds.Double, ValueRanks.Scalar);
                     allAccessLevel.WriteMask = AttributeWriteMask.AccessLevel | AttributeWriteMask.ArrayDimensions | AttributeWriteMask.BrowseName | AttributeWriteMask.ContainsNoLoops | AttributeWriteMask.DataType |
-                            AttributeWriteMask.Description | AttributeWriteMask.DisplayName | AttributeWriteMask.EventNotifier | AttributeWriteMask.Executable | AttributeWriteMask.Historizing | AttributeWriteMask.InverseName | AttributeWriteMask.IsAbstract |
-                            AttributeWriteMask.MinimumSamplingInterval | AttributeWriteMask.NodeClass | AttributeWriteMask.NodeId | AttributeWriteMask.Symmetric | AttributeWriteMask.UserAccessLevel | AttributeWriteMask.UserExecutable |
-                            AttributeWriteMask.UserWriteMask | AttributeWriteMask.ValueForVariableType | AttributeWriteMask.ValueRank | AttributeWriteMask.WriteMask;
+                                               AttributeWriteMask.Description | AttributeWriteMask.DisplayName | AttributeWriteMask.EventNotifier | AttributeWriteMask.Executable | AttributeWriteMask.Historizing | AttributeWriteMask.InverseName |
+                                               AttributeWriteMask.IsAbstract |
+                                               AttributeWriteMask.MinimumSamplingInterval | AttributeWriteMask.NodeClass | AttributeWriteMask.NodeId | AttributeWriteMask.Symmetric | AttributeWriteMask.UserAccessLevel |
+                                               AttributeWriteMask.UserExecutable |
+                                               AttributeWriteMask.UserWriteMask | AttributeWriteMask.ValueForVariableType | AttributeWriteMask.ValueRank | AttributeWriteMask.WriteMask;
                     allAccessLevel.UserWriteMask = AttributeWriteMask.AccessLevel | AttributeWriteMask.ArrayDimensions | AttributeWriteMask.BrowseName | AttributeWriteMask.ContainsNoLoops | AttributeWriteMask.DataType |
-                            AttributeWriteMask.Description | AttributeWriteMask.DisplayName | AttributeWriteMask.EventNotifier | AttributeWriteMask.Executable | AttributeWriteMask.Historizing | AttributeWriteMask.InverseName | AttributeWriteMask.IsAbstract |
-                            AttributeWriteMask.MinimumSamplingInterval | AttributeWriteMask.NodeClass | AttributeWriteMask.NodeId | AttributeWriteMask.Symmetric | AttributeWriteMask.UserAccessLevel | AttributeWriteMask.UserExecutable |
-                            AttributeWriteMask.UserWriteMask | AttributeWriteMask.ValueForVariableType | AttributeWriteMask.ValueRank | AttributeWriteMask.WriteMask;
+                                                   AttributeWriteMask.Description | AttributeWriteMask.DisplayName | AttributeWriteMask.EventNotifier | AttributeWriteMask.Executable | AttributeWriteMask.Historizing | AttributeWriteMask.InverseName |
+                                                   AttributeWriteMask.IsAbstract |
+                                                   AttributeWriteMask.MinimumSamplingInterval | AttributeWriteMask.NodeClass | AttributeWriteMask.NodeId | AttributeWriteMask.Symmetric | AttributeWriteMask.UserAccessLevel |
+                                                   AttributeWriteMask.UserExecutable |
+                                                   AttributeWriteMask.UserWriteMask | AttributeWriteMask.ValueForVariableType | AttributeWriteMask.ValueRank | AttributeWriteMask.WriteMask;
                     variables.Add(allAccessLevel);
+
                     #endregion
 
                     #region AccessUser1
+
                     FolderState folderAttributesAccessUser1 = CreateFolder(folderAttributes, "Attributes_AccessUser1", "AccessUser1");
                     const string attributesAccessUser1 = "Attributes_AccessUser1_";
 
@@ -1300,24 +1414,32 @@ namespace SampleServer.ReferenceServer
 
                     BaseDataVariableState allAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "All", "All", DataTypeIds.Double, ValueRanks.Scalar);
                     allAccessUser1.WriteMask = AttributeWriteMask.AccessLevel | AttributeWriteMask.ArrayDimensions | AttributeWriteMask.BrowseName | AttributeWriteMask.ContainsNoLoops | AttributeWriteMask.DataType |
-                            AttributeWriteMask.Description | AttributeWriteMask.DisplayName | AttributeWriteMask.EventNotifier | AttributeWriteMask.Executable | AttributeWriteMask.Historizing | AttributeWriteMask.InverseName | AttributeWriteMask.IsAbstract |
-                            AttributeWriteMask.MinimumSamplingInterval | AttributeWriteMask.NodeClass | AttributeWriteMask.NodeId | AttributeWriteMask.Symmetric | AttributeWriteMask.UserAccessLevel | AttributeWriteMask.UserExecutable |
-                            AttributeWriteMask.UserWriteMask | AttributeWriteMask.ValueForVariableType | AttributeWriteMask.ValueRank | AttributeWriteMask.WriteMask;
+                                               AttributeWriteMask.Description | AttributeWriteMask.DisplayName | AttributeWriteMask.EventNotifier | AttributeWriteMask.Executable | AttributeWriteMask.Historizing | AttributeWriteMask.InverseName |
+                                               AttributeWriteMask.IsAbstract |
+                                               AttributeWriteMask.MinimumSamplingInterval | AttributeWriteMask.NodeClass | AttributeWriteMask.NodeId | AttributeWriteMask.Symmetric | AttributeWriteMask.UserAccessLevel |
+                                               AttributeWriteMask.UserExecutable |
+                                               AttributeWriteMask.UserWriteMask | AttributeWriteMask.ValueForVariableType | AttributeWriteMask.ValueRank | AttributeWriteMask.WriteMask;
                     allAccessUser1.UserWriteMask = AttributeWriteMask.AccessLevel | AttributeWriteMask.ArrayDimensions | AttributeWriteMask.BrowseName | AttributeWriteMask.ContainsNoLoops | AttributeWriteMask.DataType |
-                            AttributeWriteMask.Description | AttributeWriteMask.DisplayName | AttributeWriteMask.EventNotifier | AttributeWriteMask.Executable | AttributeWriteMask.Historizing | AttributeWriteMask.InverseName | AttributeWriteMask.IsAbstract |
-                            AttributeWriteMask.MinimumSamplingInterval | AttributeWriteMask.NodeClass | AttributeWriteMask.NodeId | AttributeWriteMask.Symmetric | AttributeWriteMask.UserAccessLevel | AttributeWriteMask.UserExecutable |
-                            AttributeWriteMask.UserWriteMask | AttributeWriteMask.ValueForVariableType | AttributeWriteMask.ValueRank | AttributeWriteMask.WriteMask;
+                                                   AttributeWriteMask.Description | AttributeWriteMask.DisplayName | AttributeWriteMask.EventNotifier | AttributeWriteMask.Executable | AttributeWriteMask.Historizing | AttributeWriteMask.InverseName |
+                                                   AttributeWriteMask.IsAbstract |
+                                                   AttributeWriteMask.MinimumSamplingInterval | AttributeWriteMask.NodeClass | AttributeWriteMask.NodeId | AttributeWriteMask.Symmetric | AttributeWriteMask.UserAccessLevel |
+                                                   AttributeWriteMask.UserExecutable |
+                                                   AttributeWriteMask.UserWriteMask | AttributeWriteMask.ValueForVariableType | AttributeWriteMask.ValueRank | AttributeWriteMask.WriteMask;
                     variables.Add(allAccessUser1);
+
                     #endregion
+
                     #endregion
 
                     #region MyCompany
+
                     FolderState myCompanyFolder = CreateFolder(root, "MyCompany", "MyCompany");
                     const string myCompany = "MyCompany_";
 
                     BaseDataVariableState myCompanyInstructions = CreateVariable(myCompanyFolder, myCompany + "Instructions", "Instructions", DataTypeIds.String, ValueRanks.Scalar);
                     myCompanyInstructions.Value = "A place for the vendor to describe their address-space.";
                     variables.Add(myCompanyInstructions);
+
                     #endregion
                 }
                 catch (Exception e)
@@ -1337,11 +1459,11 @@ namespace SampleServer.ReferenceServer
         {
             try
             {
-                m_simulationInterval = (UInt16)value;
+                m_simulationInterval = (UInt16) value;
 
                 if (m_simulationEnabled)
                 {
-                    m_simulationTimer.Change(100, (int)m_simulationInterval);
+                    m_simulationTimer.Change(100, (int) m_simulationInterval);
                 }
 
                 return ServiceResult.Good;
@@ -1357,11 +1479,11 @@ namespace SampleServer.ReferenceServer
         {
             try
             {
-                m_simulationEnabled = (bool)value;
+                m_simulationEnabled = (bool) value;
 
                 if (m_simulationEnabled)
                 {
-                    m_simulationTimer.Change(100, (int)m_simulationInterval);
+                    m_simulationTimer.Change(100, (int) m_simulationInterval);
                 }
                 else
                 {
@@ -1506,22 +1628,22 @@ namespace SampleServer.ReferenceServer
             variable.DisplayName = new LocalizedText("en", name);
             variable.WriteMask = AttributeWriteMask.None;
             variable.UserWriteMask = AttributeWriteMask.None;
-            variable.DataType = (uint)dataType;
+            variable.DataType = (uint) dataType;
             variable.ValueRank = valueRank;
             variable.AccessLevel = AccessLevels.CurrentReadOrWrite;
             variable.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
             variable.Historizing = false;
-            variable.Value = Opc.Ua.TypeInfo.GetDefaultValue((uint)dataType, valueRank, Server.TypeTree);
+            variable.Value = Opc.Ua.TypeInfo.GetDefaultValue((uint) dataType, valueRank, Server.TypeTree);
             variable.StatusCode = StatusCodes.Good;
             variable.Timestamp = DateTime.UtcNow;
 
             if (valueRank == ValueRanks.OneDimension)
             {
-                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> { 0 });
+                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> {0});
             }
             else if (valueRank == ValueRanks.TwoDimensions)
             {
-                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> { 0, 0 });
+                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> {0, 0});
             }
 
             variable.ValuePrecision.Value = 2;
@@ -1550,7 +1672,7 @@ namespace SampleServer.ReferenceServer
                 string newName = string.Format("{0}{1}", name, i.ToString("000"));
                 string newPath = string.Format("{0}/Mass/{1}", path, newName);
                 itemsCreated.Add(CreateDataItemVariable(parent, newPath, newName, dataType, valueRank));
-            }//for i
+            } //for i
             return (itemsCreated.ToArray());
         }
 
@@ -1581,7 +1703,7 @@ namespace SampleServer.ReferenceServer
             if (typeInfo.BuiltInType != BuiltInType.DateTime)
             {
                 double number = Convert.ToDouble(value);
-                number = Math.Round(number, (int)variable.ValuePrecision.Value);
+                number = Math.Round(number, (int) variable.ValuePrecision.Value);
                 value = Opc.Ua.TypeInfo.Cast(number, typeInfo.BuiltInType);
             }
 
@@ -1603,7 +1725,7 @@ namespace SampleServer.ReferenceServer
 
         private AnalogItemState CreateAnalogItemVariable(NodeState parent, string path, string name, BuiltInType dataType, int valueRank, object initialValues, Range customRange)
         {
-            return CreateAnalogItemVariable(parent, path, name, (uint)dataType, valueRank, initialValues, customRange);
+            return CreateAnalogItemVariable(parent, path, name, (uint) dataType, valueRank, initialValues, customRange);
         }
 
         private AnalogItemState CreateAnalogItemVariable(NodeState parent, string path, string name, NodeId dataType, int valueRank, object initialValues, Range customRange)
@@ -1634,11 +1756,11 @@ namespace SampleServer.ReferenceServer
 
             if (valueRank == ValueRanks.OneDimension)
             {
-                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> { 0 });
+                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> {0});
             }
             else if (valueRank == ValueRanks.TwoDimensions)
             {
-                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> { 0, 0 });
+                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> {0, 0});
             }
 
             BuiltInType builtInType = Opc.Ua.TypeInfo.GetBuiltInType(dataType, Server.TypeTree);
@@ -1721,7 +1843,7 @@ namespace SampleServer.ReferenceServer
             variable.AccessLevel = AccessLevels.CurrentReadOrWrite;
             variable.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
             variable.Historizing = false;
-            variable.Value = (bool)GetNewValue(variable);
+            variable.Value = (bool) GetNewValue(variable);
             variable.StatusCode = StatusCodes.Good;
             variable.Timestamp = DateTime.UtcNow;
 
@@ -1768,7 +1890,7 @@ namespace SampleServer.ReferenceServer
             variable.AccessLevel = AccessLevels.CurrentReadOrWrite;
             variable.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
             variable.Historizing = false;
-            variable.Value = (uint)0;
+            variable.Value = (uint) 0;
             variable.StatusCode = StatusCodes.Good;
             variable.Timestamp = DateTime.UtcNow;
             variable.OnWriteValue = OnWriteDiscrete;
@@ -1827,7 +1949,7 @@ namespace SampleServer.ReferenceServer
             variable.AccessLevel = AccessLevels.CurrentReadOrWrite;
             variable.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
             variable.Historizing = false;
-            variable.Value = (uint)0;
+            variable.Value = (uint) 0;
             variable.StatusCode = StatusCodes.Good;
             variable.Timestamp = DateTime.UtcNow;
             variable.OnWriteValue = OnWriteValueDiscrete;
@@ -2058,7 +2180,7 @@ namespace SampleServer.ReferenceServer
         /// </summary>
         private BaseDataVariableState CreateVariable(NodeState parent, string path, string name, BuiltInType dataType, int valueRank)
         {
-            return CreateVariable(parent, path, name, (uint)dataType, valueRank);
+            return CreateVariable(parent, path, name, (uint) dataType, valueRank);
         }
 
         /// <summary>
@@ -2087,11 +2209,11 @@ namespace SampleServer.ReferenceServer
 
             if (valueRank == ValueRanks.OneDimension)
             {
-                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> { 0 });
+                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> {0});
             }
             else if (valueRank == ValueRanks.TwoDimensions)
             {
-                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> { 0, 0 });
+                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> {0, 0});
             }
 
             if (parent != null)
@@ -2104,7 +2226,7 @@ namespace SampleServer.ReferenceServer
 
         private BaseDataVariableState[] CreateVariables(NodeState parent, string path, string name, BuiltInType dataType, int valueRank, UInt16 numVariables)
         {
-            return CreateVariables(parent, path, name, (uint)dataType, valueRank, numVariables);
+            return CreateVariables(parent, path, name, (uint) dataType, valueRank, numVariables);
         }
 
         private BaseDataVariableState[] CreateVariables(NodeState parent, string path, string name, NodeId dataType, int valueRank, UInt16 numVariables)
@@ -2128,7 +2250,7 @@ namespace SampleServer.ReferenceServer
         /// </summary>
         private BaseDataVariableState CreateDynamicVariable(NodeState parent, string path, string name, BuiltInType dataType, int valueRank)
         {
-            return CreateDynamicVariable(parent, path, name, (uint)dataType, valueRank);
+            return CreateDynamicVariable(parent, path, name, (uint) dataType, valueRank);
         }
 
         /// <summary>
@@ -2143,7 +2265,7 @@ namespace SampleServer.ReferenceServer
 
         private BaseDataVariableState[] CreateDynamicVariables(NodeState parent, string path, string name, BuiltInType dataType, int valueRank, uint numVariables)
         {
-            return CreateDynamicVariables(parent, path, name, (uint)dataType, valueRank, numVariables);
+            return CreateDynamicVariables(parent, path, name, (uint) dataType, valueRank, numVariables);
 
         }
 
@@ -2159,7 +2281,7 @@ namespace SampleServer.ReferenceServer
                 string newName = string.Format("{0}_{1}", name, i.ToString("00"));
                 string newPath = string.Format("{0}_{1}", path, newName);
                 itemsCreated.Add(CreateDynamicVariable(newParentFolder, newPath, newName, dataType, valueRank));
-            }//for i
+            } //for i
             return (itemsCreated.ToArray());
         }
 
@@ -2178,7 +2300,7 @@ namespace SampleServer.ReferenceServer
             type.WriteMask = AttributeWriteMask.None;
             type.UserWriteMask = AttributeWriteMask.None;
             type.IsAbstract = false;
-            type.DataType = (uint)dataType;
+            type.DataType = (uint) dataType;
             type.ValueRank = valueRank;
             type.Value = null;
 
@@ -2357,11 +2479,11 @@ namespace SampleServer.ReferenceServer
 
             try
             {
-                float floatValue = (float)inputArguments[0];
-                UInt32 uintValue = (UInt32)inputArguments[1];
+                float floatValue = (float) inputArguments[0];
+                UInt32 uintValue = (UInt32) inputArguments[1];
 
                 // set output parameter
-                outputArguments[0] = (float)(floatValue + uintValue);
+                outputArguments[0] = (float) (floatValue + uintValue);
                 return ServiceResult.Good;
             }
             catch
@@ -2385,11 +2507,11 @@ namespace SampleServer.ReferenceServer
 
             try
             {
-                Int16 op1 = (Int16)inputArguments[0];
-                UInt16 op2 = (UInt16)inputArguments[1];
+                Int16 op1 = (Int16) inputArguments[0];
+                UInt16 op2 = (UInt16) inputArguments[1];
 
                 // set output parameter
-                outputArguments[0] = (Int32)(op1 * op2);
+                outputArguments[0] = (Int32) (op1 * op2);
                 return ServiceResult.Good;
             }
             catch
@@ -2413,11 +2535,11 @@ namespace SampleServer.ReferenceServer
 
             try
             {
-                Int32 op1 = (Int32)inputArguments[0];
-                UInt16 op2 = (UInt16)inputArguments[1];
+                Int32 op1 = (Int32) inputArguments[0];
+                UInt16 op2 = (UInt16) inputArguments[1];
 
                 // set output parameter
-                outputArguments[0] = (float)((float)op1 / (float)op2);
+                outputArguments[0] = (float) ((float) op1 / (float) op2);
                 return ServiceResult.Good;
             }
             catch
@@ -2441,11 +2563,11 @@ namespace SampleServer.ReferenceServer
 
             try
             {
-                Int16 op1 = (Int16)inputArguments[0];
-                Byte op2 = (Byte)inputArguments[1];
+                Int16 op1 = (Int16) inputArguments[0];
+                Byte op2 = (Byte) inputArguments[1];
 
                 // set output parameter
-                outputArguments[0] = (Int16)(op1 - op2);
+                outputArguments[0] = (Int16) (op1 - op2);
                 return ServiceResult.Good;
             }
             catch
@@ -2469,10 +2591,10 @@ namespace SampleServer.ReferenceServer
 
             try
             {
-                string op1 = (string)inputArguments[0];
+                string op1 = (string) inputArguments[0];
 
                 // set output parameter
-                outputArguments[0] = (string)("hello " + op1);
+                outputArguments[0] = (string) ("hello " + op1);
                 return ServiceResult.Good;
             }
             catch
@@ -2507,7 +2629,7 @@ namespace SampleServer.ReferenceServer
             try
             {
                 // set output parameter
-                outputArguments[0] = (string)("Output");
+                outputArguments[0] = (string) ("Output");
                 return ServiceResult.Good;
             }
             catch
@@ -2528,7 +2650,7 @@ namespace SampleServer.ReferenceServer
 
             while (value == null)
             {
-                value = m_generator.GetRandom(variable.DataType, variable.ValueRank, new uint[] { 10 }, Server.TypeTree);
+                value = m_generator.GetRandom(variable.DataType, variable.ValueRank, new uint[] {10}, Server.TypeTree);
             }
 
             return value;
@@ -2599,9 +2721,9 @@ namespace SampleServer.ReferenceServer
         /// Verifies that the specified node exists.
         /// </summary>
         protected override NodeState ValidateNode(
-           ServerSystemContext context,
-           NodeHandle handle,
-           IDictionary<NodeId, NodeState> cache)
+            ServerSystemContext context,
+            NodeHandle handle,
+            IDictionary<NodeId, NodeState> cache)
         {
             // not valid if no root.
             if (handle == null)
@@ -2686,14 +2808,14 @@ namespace SampleServer.ReferenceServer
         /// Loads the NodeSet2.xml file and returns the Extensions data of the node set
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <param name="filePath">The file path.</param>
+        /// <param name="resourceName"></param>
         /// <param name="updateTables">if set to <c>true</c> the namespace and server tables are updated with any new URIs.</param>
         /// <param name="namespaceUris">Returns the NamespaceUris defined in the node set.</param>
         /// <param name="predefinedNodes">The required NodeStateCollection</param>
         /// <returns>The collection of global extensions of the NodeSet2.xml file.</returns>
         private XmlElement[] LoadFromNodeSet2XmlFromResource(ISystemContext context, string resourceName, bool updateTables, List<string> namespaceUris, NodeStateCollection predefinedNodes)
         {
-            if (resourceName == null) throw new ArgumentNullException("resourceName");
+            if (resourceName == null) throw new ArgumentNullException(nameof(resourceName));
 
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             Stream stream = assembly.GetManifestResourceStream(resourceName);
@@ -2799,7 +2921,7 @@ namespace SampleServer.ReferenceServer
                         else
                         {
                             Array.Resize(ref namespaceManagers, namespaceManagers.Length + 1);
-                            namespaceManagers[namespaceManagers.Length - 1] = new INodeManager[] { nodeManager };
+                            namespaceManagers[namespaceManagers.Length - 1] = new INodeManager[] {nodeManager};
                         }
 
                         fieldInfo.SetValue(Server.NodeManager, namespaceManagers);
@@ -2807,15 +2929,7 @@ namespace SampleServer.ReferenceServer
                 }
             }
         }
-        #endregion
 
-        #region Private Members
-        private ReferenceServerConfiguration m_configuration;
-        private Opc.Ua.Test.DataGenerator m_generator;
-        private Timer m_simulationTimer;
-        private UInt16 m_simulationInterval = 1000;
-        private bool m_simulationEnabled = true;
-        private List<BaseDataVariableState> m_dynamicNodes;
         #endregion
     }
 }

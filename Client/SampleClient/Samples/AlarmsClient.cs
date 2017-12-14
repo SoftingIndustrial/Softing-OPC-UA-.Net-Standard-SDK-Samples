@@ -73,12 +73,12 @@ namespace SampleClient.Samples
                     // Clear the local list of alarms
                     m_retainedAlarms.Clear();
 
+                    IList<object> outputArgs;
                     // Invoke the ConditionRefresh method on the server passing the sessionId
                     // After this call the server should send new event notifications for all the retained (active) alarms
                     m_session.Call(ObjectTypeIds.ConditionType,
                         MethodIds.ConditionType_ConditionRefresh,
-                        new List<object>(1) {m_subscription.Id},
-                        out _);
+                        new List<object>(1) {m_subscription.Id}, out outputArgs);
 
                     Console.WriteLine("ConditionRefresh method invoked.");
                 }
@@ -140,7 +140,8 @@ namespace SampleClient.Samples
                 inputArgs.Add(selectedAlarm.EventId);
                 inputArgs.Add(new LocalizedText(comment));
 
-                m_session.Call(selectedAlarm.EventNode, MethodIds.ConditionType_AddComment, inputArgs, out _);
+                IList<object> outputArgs;
+                m_session.Call(selectedAlarm.EventNode, MethodIds.ConditionType_AddComment, inputArgs, out outputArgs);
                 Console.WriteLine("AddComment request sent for alarm with SourceName = {0}", selectedAlarm.SourceName);
             }
             catch (Exception exception)
@@ -200,7 +201,8 @@ namespace SampleClient.Samples
                 inputArgs.Add(selectedAlarm.EventId);
                 inputArgs.Add(new LocalizedText(comment));
 
-                m_session.Call(selectedAlarm.EventNode, MethodIds.AcknowledgeableConditionType_Acknowledge, inputArgs, out _);
+                IList<object> outputArgs;
+                m_session.Call(selectedAlarm.EventNode, MethodIds.AcknowledgeableConditionType_Acknowledge, inputArgs, out outputArgs);
                 Console.WriteLine("Acknowledge request sent for alarm with SourceName = {0}", selectedAlarm.SourceName);
             }
             catch (Exception exception)

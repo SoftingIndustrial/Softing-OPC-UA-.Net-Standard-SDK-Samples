@@ -21,6 +21,7 @@ namespace SampleServer.NodeManagement
     public class NodeManagementNodeManager : CustomNodeManager2
     {
         #region Constructors
+
         /// <summary>
         /// Initializes the node manager
         /// </summary>
@@ -28,22 +29,26 @@ namespace SampleServer.NodeManagement
         {
             SystemContext.NodeIdFactory = this;
         }
+
         #endregion
-        
+
         #region IDisposable Members
+
         /// <summary>
         /// An overrideable version of the Dispose.
         /// </summary>
         protected override void Dispose(bool disposing)
-        {  
+        {
             if (disposing)
             {
                 // TBD
             }
         }
+
         #endregion
 
         #region INodeIdFactory Members
+
         /// <summary>
         /// Creates the NodeId for the specified node.
         /// </summary>
@@ -51,9 +56,11 @@ namespace SampleServer.NodeManagement
         {
             return node.NodeId;
         }
+
         #endregion
 
         #region AddNodes Service
+
         /// Handle AddNodes service request
         public void AddNodes(OperationContext context, AddNodesItemCollection nodesToAdd, out AddNodesResultCollection results, out DiagnosticInfoCollection diagnosticInfos)
         {
@@ -65,7 +72,7 @@ namespace SampleServer.NodeManagement
 
             // Create result lists
             results = new AddNodesResultCollection(nodesToAdd.Count);
-            diagnosticInfos = new DiagnosticInfoCollection(nodesToAdd.Count);         
+            diagnosticInfos = new DiagnosticInfoCollection(nodesToAdd.Count);
 
             Utils.Trace(Utils.TraceMasks.Information, "NodeManagementNodeManager.AddNodes", string.Format("NodeManagementNodeManager.AddNodes - Count={0}", nodesToAdd.Count));
 
@@ -78,7 +85,7 @@ namespace SampleServer.NodeManagement
                 AddNode(context, nodesToAdd[ii], out addResult, out diagnosticInfo);
 
                 results.Add(addResult);
-                diagnosticInfos.Add(diagnosticInfo); 
+                diagnosticInfos.Add(diagnosticInfo);
             }
         }
 
@@ -201,7 +208,7 @@ namespace SampleServer.NodeManagement
             {
                 // ReferenceTypeId not found in address space
                 return new ServiceResult(StatusCodes.BadReferenceTypeIdInvalid, "The specified referenceTypeId not found in address space.");
-            }            
+            }
 
             // Check BrowseName
             if (nodeToAdd.BrowseName == null)
@@ -228,7 +235,7 @@ namespace SampleServer.NodeManagement
         public virtual ServiceResult ValidateAddNodeRequest(OperationContext context, AddNodesItem nodeToAdd)
         {
             // Return BadNotSupported
-            // This method should be overriden in the derived class in order to allow clients to use use the AddNodes service
+            // This method should be overriden in the derived class in order to allow clients to use the AddNodes service
             return new ServiceResult(StatusCodes.BadNotSupported, "Server does not allow nodes to be added by client.");
         }
 
@@ -273,39 +280,39 @@ namespace SampleServer.NodeManagement
 
             // Assign the requested NodeId if specified
             if (!nodeToAdd.RequestedNewNodeId.IsNull)
-            {                
+            {
                 objectToAdd.NodeId = ExpandedNodeId.ToNodeId(nodeToAdd.RequestedNewNodeId, null);
             }
 
             // DisplayName
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.DisplayName) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.DisplayName) != 0)
             {
                 objectToAdd.DisplayName = attributes.DisplayName;
             }
 
             // Description
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.Description) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.Description) != 0)
             {
                 objectToAdd.Description = attributes.Description;
             }
 
             // EventNotifier
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.EventNotifier) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.EventNotifier) != 0)
             {
                 objectToAdd.EventNotifier = attributes.EventNotifier;
             }
 
             // WriteMask
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.WriteMask) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.WriteMask) != 0)
             {
-                objectToAdd.WriteMask = (AttributeWriteMask)attributes.WriteMask;
+                objectToAdd.WriteMask = (AttributeWriteMask) attributes.WriteMask;
             }
 
             // UserWriteMask
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.UserWriteMask) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.UserWriteMask) != 0)
             {
-                objectToAdd.UserWriteMask = (AttributeWriteMask)attributes.UserWriteMask;
-            }           
+                objectToAdd.UserWriteMask = (AttributeWriteMask) attributes.UserWriteMask;
+            }
 
             objectToAdd.TypeDefinitionId = ExpandedNodeId.ToNodeId(nodeToAdd.TypeDefinition, null);
             objectToAdd.ReferenceTypeId = nodeToAdd.ReferenceTypeId;
@@ -340,7 +347,7 @@ namespace SampleServer.NodeManagement
                 throw new ServiceResultException(StatusCodes.BadTypeDefinitionInvalid, "The TypeDefinition parameter is required for variable nodes.");
             }
 
-            if(!Server.TypeTree.IsKnown(nodeToAdd.TypeDefinition))
+            if (!Server.TypeTree.IsKnown(nodeToAdd.TypeDefinition))
             {
                 throw new ServiceResultException(StatusCodes.BadTypeDefinitionInvalid, "The TypeDefinition parameter is not valid.");
             }
@@ -369,7 +376,7 @@ namespace SampleServer.NodeManagement
             }
 
             // DisplayName
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.DisplayName) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.DisplayName) != 0)
             {
                 variableToAdd.DisplayName = attributes.DisplayName;
             }
@@ -379,69 +386,69 @@ namespace SampleServer.NodeManagement
             }
 
             // Description
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.Description) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.Description) != 0)
             {
                 variableToAdd.Description = attributes.Description;
             }
 
             // Value
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.Value) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.Value) != 0)
             {
                 variableToAdd.Value = attributes.Value;
             }
 
             // DataType
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.DataType) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.DataType) != 0)
             {
                 variableToAdd.DataType = attributes.DataType;
             }
 
             // ValueRank
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.ValueRank) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.ValueRank) != 0)
             {
                 variableToAdd.ValueRank = attributes.ValueRank;
             }
 
             // ArrayDimensions
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.ArrayDimensions) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.ArrayDimensions) != 0)
             {
                 variableToAdd.ArrayDimensions = new ReadOnlyList<uint>(attributes.ArrayDimensions);
             }
 
             // AccessLevel
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.AccessLevel) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.AccessLevel) != 0)
             {
                 variableToAdd.AccessLevel = attributes.AccessLevel;
             }
 
             // UserAccessLevel
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.UserAccessLevel) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.UserAccessLevel) != 0)
             {
                 variableToAdd.UserAccessLevel = attributes.UserAccessLevel;
             }
 
             // MinimumSamplingInterval
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.MinimumSamplingInterval) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.MinimumSamplingInterval) != 0)
             {
                 variableToAdd.MinimumSamplingInterval = attributes.MinimumSamplingInterval;
             }
 
             // Historizing
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.Historizing) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.Historizing) != 0)
             {
                 variableToAdd.Historizing = attributes.Historizing;
             }
 
             // WriteMask
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.WriteMask) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.WriteMask) != 0)
             {
-                variableToAdd.WriteMask = (AttributeWriteMask)attributes.WriteMask;
+                variableToAdd.WriteMask = (AttributeWriteMask) attributes.WriteMask;
             }
 
             // UserWriteMask
-            if (attributes != null && (attributes.SpecifiedAttributes & (uint)NodeAttributesMask.UserWriteMask) != 0)
+            if ((attributes.SpecifiedAttributes & (uint) NodeAttributesMask.UserWriteMask) != 0)
             {
-                variableToAdd.UserWriteMask = (AttributeWriteMask)attributes.UserWriteMask;
+                variableToAdd.UserWriteMask = (AttributeWriteMask) attributes.UserWriteMask;
             }
 
             variableToAdd.StatusCode = StatusCodes.Good;
@@ -462,9 +469,11 @@ namespace SampleServer.NodeManagement
 
             return variableToAdd.NodeId;
         }
+
         #endregion
 
         #region DeleteNodes Service
+
         /// Handle DeleteNodes service request
         public void DeleteNodes(OperationContext context, DeleteNodesItemCollection nodesToDelete, out StatusCodeCollection results, out DiagnosticInfoCollection diagnosticInfos)
         {
@@ -490,7 +499,7 @@ namespace SampleServer.NodeManagement
 
                 results.Add(deleteResult);
                 diagnosticInfos.Add(diagnosticInfo);
-            }            
+            }
         }
 
         // Validates the DeleteNode request and deletes the node from address space
@@ -560,7 +569,7 @@ namespace SampleServer.NodeManagement
                             instance.Parent.RemoveChild(instance);
                         }
 
-                        // Retreive node references
+                        // Retrieve node references
                         List<IReference> references = new List<IReference>();
                         node.GetReferences(SystemContext, references);
 
@@ -579,7 +588,7 @@ namespace SampleServer.NodeManagement
                             }
 
                             LocalReference referenceToRemove = new LocalReference(
-                                (NodeId)reference.TargetId,
+                                (NodeId) reference.TargetId,
                                 reference.ReferenceTypeId,
                                 reference.IsInverse,
                                 node.NodeId);
@@ -597,7 +606,7 @@ namespace SampleServer.NodeManagement
                     }
 
                     result = StatusCodes.Good;
-                }                
+                }
             }
             catch (Exception e)
             {
@@ -608,7 +617,7 @@ namespace SampleServer.NodeManagement
                 result = error.StatusCode;
             }
         }
-        
+
         // Validates if a DeleteNodesItem request structure respects the specification of the DeleteNodesItem service
         private ServiceResult ValidateDeleteNodesItem(OperationContext context, DeleteNodesItem nodeToDelete)
         {
@@ -626,15 +635,16 @@ namespace SampleServer.NodeManagement
                 return new ServiceResult(StatusCodes.BadNodeIdInvalid, "The specified NodeId was not found in address space.");
             }
 
-            return ServiceResult.Good;  
+            return ServiceResult.Good;
         }
+
         /// <summary>
         /// Validates an DeleteNodesItem request
         /// </summary>
         public virtual ServiceResult ValidateDeleteNodesRequest(OperationContext context, DeleteNodesItem nodeToDelete)
         {
             // Return BadNotSupported
-            // This method should be overriden in the derived class in order to allow clients to use use the DeleteNodes service
+            // This method should be overriden in the derived class in order to allow clients to use the DeleteNodes service
             return new ServiceResult(StatusCodes.BadNotSupported, "Server does not allow nodes to be deleted by client.");
         }
 
@@ -657,15 +667,17 @@ namespace SampleServer.NodeManagement
                     variableNode.Value = Variant.Null;
                     variableNode.Timestamp = DateTime.Now;
                     variableNode.StatusCode = StatusCodes.BadNodeIdUnknown;
-                    
+
                     // The call back pushes the updated values into the monitored items.
                     variableNode.ClearChangeMasks(SystemContext, true);
                 }
             }
         }
+
         #endregion
 
         #region AddReferences Service
+
         /// <summary>
         /// Handle AddReferences service request
         /// </summary>
@@ -771,7 +783,7 @@ namespace SampleServer.NodeManagement
             if (referenceToAdd.SourceNodeId.IsNullNodeId)
             {
                 return new ServiceResult(StatusCodes.BadSourceNodeIdInvalid, "The specified SourceNodeId is null.");
-            }           
+            }
 
             NodeState node = null;
 
@@ -812,9 +824,9 @@ namespace SampleServer.NodeManagement
             {
                 // NodeClass of the targetNode does not match the specified TargetNodeClass
                 return new ServiceResult(StatusCodes.BadNodeClassInvalid, "The specified TargetNodeClass does not match the NodeClass of TargetNodeId.");
-            }            
+            }
 
-            // Retreive node references
+            // Retrieve node references
             List<IReference> references = new List<IReference>();
             node.GetReferences(SystemContext, references);
 
@@ -827,7 +839,7 @@ namespace SampleServer.NodeManagement
                 {
                     // The requested reference already exists
                     return new ServiceResult(StatusCodes.BadDuplicateReferenceNotAllowed, "The specified reference already exists.");
-                }                
+                }
             }
 
             return ServiceResult.Good;
@@ -837,12 +849,14 @@ namespace SampleServer.NodeManagement
         public virtual ServiceResult ValidateAddReferencesRequest(OperationContext context, AddReferencesItem referenceToAdd)
         {
             // Return BadNotSupported
-            // This method should be overriden in the derived class in order to allow clients to use use the AddReferences service
+            // This method should be overriden in the derived class in order to allow clients to use the AddReferences service
             return new ServiceResult(StatusCodes.BadNotSupported, "Server does not allow references to be added by client.");
         }
+
         #endregion
 
         #region DeleteReferences Service
+
         /// <summary>
         /// Handle DeleteReferences service request
         /// </summary>
@@ -929,8 +943,8 @@ namespace SampleServer.NodeManagement
 
                     if (referenceToDelete.DeleteBidirectional && referenceToDelete.TargetNodeId.ServerIndex == 0)
                     {
-                        // Delete also the oposite reference if required
-                        node.RemoveReference(referenceToDelete.ReferenceTypeId, referenceToDelete.IsForward, referenceToDelete.TargetNodeId); 
+                        // Delete also the opposite reference if required
+                        node.RemoveReference(referenceToDelete.ReferenceTypeId, referenceToDelete.IsForward, referenceToDelete.TargetNodeId);
                     }
 
                     result = StatusCodes.Good;
@@ -989,7 +1003,7 @@ namespace SampleServer.NodeManagement
             }
 
             // Check if the reference exists
-            if(!node.ReferenceExists(referenceToDelete.ReferenceTypeId, !referenceToDelete.IsForward, referenceToDelete.TargetNodeId))
+            if (!node.ReferenceExists(referenceToDelete.ReferenceTypeId, !referenceToDelete.IsForward, referenceToDelete.TargetNodeId))
             {
                 // The specified reference does not exist
                 return new ServiceResult(StatusCodes.BadNoEntryExists, "The specified reference does not exist.");
@@ -1002,9 +1016,10 @@ namespace SampleServer.NodeManagement
         public virtual ServiceResult ValidateDeleteReferencesRequest(OperationContext context, DeleteReferencesItem referenceToDelete)
         {
             // Return BadNotSupported
-            // This method should be overriden in the derived class in order to allow clients to use use the AddReferences service
+            // This method should be overriden in the derived class in order to allow clients to use the AddReferences service
             return new ServiceResult(StatusCodes.BadNotSupported, "Server does not allow references to be deleted by client.");
         }
+
         #endregion
     }
 }

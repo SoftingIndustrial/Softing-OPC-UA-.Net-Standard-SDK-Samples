@@ -78,12 +78,13 @@ namespace SampleClient.Samples
             StatusCode statusCode = new StatusCode();
             try
             {
-                statusCode = m_session.Call(parentObjectId, methodId, inputArguments, out var output);
+                IList<object> outputArgs;
+                statusCode = m_session.Call(parentObjectId, methodId, inputArguments, out outputArgs);
 
                 Console.WriteLine("Output arguments are:");
-                for (int i = 0; i < output.Count; i++)
+                for (int i = 0; i < outputArgs.Count; i++)
                 {
-                    Console.WriteLine("output[{0}]= {1}", i, output[i]);
+                    Console.WriteLine("output[{0}]= {1}", i, outputArgs[i]);
                 }
                 Console.WriteLine("Status Code is: {0}", statusCode);
             }

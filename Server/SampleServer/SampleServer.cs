@@ -29,6 +29,11 @@ namespace SampleServer
 {
     public class SampleServer : StandardServer
     {
+        #region Private Members
+        private uint m_shutdownDelay = 5;
+        private NodeManagementNodeManager m_nodeManagementManager; // The sample node manager able to handle UA Node management services
+        #endregion
+
         #region Overridden Methods
 
         /// <summary>
@@ -276,7 +281,7 @@ namespace SampleServer
 
         /// <summary>
         /// Overrides the DeleteNodes UA service implementation handler.
-        /// NOTE: implementation of this method will become part of the Toolkit implementatio
+        /// NOTE: implementation of this method will become part of the Toolkit implementation
         /// and will be extended to handle all node managers defined by the server.
         /// </summary>
         /// <param name="requestHeader">The requestHeader parameter.</param>
@@ -341,7 +346,7 @@ namespace SampleServer
 
         /// <summary>
         /// Overrides the AdReference UA service implementation handler.
-        /// NOTE: implementation of this method will become part of the Toolkit implementatio
+        /// NOTE: implementation of this method will become part of the Toolkit implementation
         /// and will be extended to handle all node managers defined by the server.
         /// </summary>
         /// <param name="requestHeader">The requestHeader parameter.</param>
@@ -402,7 +407,7 @@ namespace SampleServer
 
         /// <summary>
         /// Overrides the DeleteReferences UA service implementation handler. 
-        /// NOTE: implementation of this method will become part of the Toolkit implementatio
+        /// NOTE: implementation of this method will become part of the Toolkit implementation
         /// and will be extended to handle all node managers defined by the server.
         /// </summary>
         /// <param name="requestHeader">The requestHeader parameter.</param>
@@ -537,9 +542,5 @@ namespace SampleServer
         }
         #endregion
 
-        #region Private Members
-        private uint m_shutdownDelay = 5;
-        private NodeManagementNodeManager m_nodeManagementManager; // The sample node manager able to handle UA Node management services
-        #endregion
     }
 }

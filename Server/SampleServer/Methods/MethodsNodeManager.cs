@@ -20,17 +20,26 @@ namespace SampleServer.Methods
     /// </summary>
     public class MethodsNodeManager : CustomNodeManager2
     {
+        #region Private Members
+
+        private uint m_nextNodeId;
+
+        #endregion
+
         #region Constructors
+
         /// <summary>
         /// Initializes the node manager
         /// </summary>
         public MethodsNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration, Namespaces.Methods)
         {
-            SystemContext.NodeIdFactory = this;            
+            SystemContext.NodeIdFactory = this;
         }
+
         #endregion
 
         #region INodeIdFactory Members
+
         /// <summary>
         /// Creates the NodeId for the specified node.
         /// </summary>
@@ -38,9 +47,11 @@ namespace SampleServer.Methods
         {
             return GenerateNodeId();
         }
+
         #endregion
 
         #region INodeManager Members
+
         /// <summary>
         /// Does any initialization required before the address space can be used.
         /// </summary>
@@ -78,12 +89,12 @@ namespace SampleServer.Methods
                 // Add method nodes
                 CreateAddMethod(root);
                 CreateMultiplyMethod(root);
-               
+
                 // Save the node for later lookup (all tightly coupled children are added with this call)
                 AddPredefinedNode(SystemContext, root);
             }
         }
-        
+
         /// <summary>
         /// Frees any resources allocated for the address space
         /// </summary>
@@ -141,7 +152,7 @@ namespace SampleServer.Methods
             {
                 return handle.Node;
             }
-            
+
             return null;
         }
 
@@ -149,9 +160,11 @@ namespace SampleServer.Methods
         {
             return new NodeId(++m_nextNodeId, NamespaceIndex);
         }
+
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Adds a method in the address space
         /// </summary>
@@ -177,8 +190,8 @@ namespace SampleServer.Methods
 
             addMethod.InputArguments.Value = new Argument[]
             {
-                new Argument() { Name = "Float value", Description = "Float value",  DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar },
-                new Argument() { Name = "UInt32 value", Description = "UInt32 value",  DataType = DataTypeIds.UInt32, ValueRank = ValueRanks.Scalar }
+                new Argument() {Name = "Float value", Description = "Float value", DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar},
+                new Argument() {Name = "UInt32 value", Description = "UInt32 value", DataType = DataTypeIds.UInt32, ValueRank = ValueRanks.Scalar}
             };
 
             // Set output arguments
@@ -193,7 +206,7 @@ namespace SampleServer.Methods
 
             addMethod.OutputArguments.Value = new Argument[]
             {
-                new Argument() { Name = "Add Result", Description = "Add Result",  DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar }
+                new Argument() {Name = "Add Result", Description = "Add Result", DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar}
             };
 
             addMethod.OnCallMethod = OnAddCall;
@@ -219,11 +232,11 @@ namespace SampleServer.Methods
 
             try
             {
-                float floatValue = (float)inputArguments[0];
-                UInt32 uintValue = (UInt32)inputArguments[1];
+                float floatValue = (float) inputArguments[0];
+                UInt32 uintValue = (UInt32) inputArguments[1];
 
                 // Set output parameter
-                outputArguments[0] = (float)(floatValue + uintValue);
+                outputArguments[0] = (float) (floatValue + uintValue);
                 return ServiceResult.Good;
             }
             catch
@@ -257,8 +270,8 @@ namespace SampleServer.Methods
 
             multiplyMethod.InputArguments.Value = new Argument[]
             {
-                new Argument() { Name = "Int16 value", Description = "Int16 value",  DataType = DataTypeIds.Int16, ValueRank = ValueRanks.Scalar },
-                new Argument() { Name = "UInt16 value", Description = "UInt16 value",  DataType = DataTypeIds.UInt16, ValueRank = ValueRanks.Scalar }
+                new Argument() {Name = "Int16 value", Description = "Int16 value", DataType = DataTypeIds.Int16, ValueRank = ValueRanks.Scalar},
+                new Argument() {Name = "UInt16 value", Description = "UInt16 value", DataType = DataTypeIds.UInt16, ValueRank = ValueRanks.Scalar}
             };
 
             // Set output arguments
@@ -273,7 +286,7 @@ namespace SampleServer.Methods
 
             multiplyMethod.OutputArguments.Value = new Argument[]
             {
-                new Argument() { Name = "Multiply Result", Description = "Multiply Result",  DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar }
+                new Argument() {Name = "Multiply Result", Description = "Multiply Result", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar}
             };
 
             multiplyMethod.OnCallMethod = OnMultiplyCall;
@@ -299,11 +312,11 @@ namespace SampleServer.Methods
 
             try
             {
-                Int16 op1 = (Int16)inputArguments[0];
-                UInt16 op2 = (UInt16)inputArguments[1];
+                Int16 op1 = (Int16) inputArguments[0];
+                UInt16 op2 = (UInt16) inputArguments[1];
 
                 // Set output parameter
-                outputArguments[0] = (Int32)(op1 * op2);
+                outputArguments[0] = (Int32) (op1 * op2);
                 return ServiceResult.Good;
             }
             catch
@@ -311,10 +324,8 @@ namespace SampleServer.Methods
                 return new ServiceResult(StatusCodes.BadInvalidArgument);
             }
         }
+
         #endregion
 
-        #region Private Members
-        private uint m_nextNodeId = 0;
-        #endregion
     }
 }

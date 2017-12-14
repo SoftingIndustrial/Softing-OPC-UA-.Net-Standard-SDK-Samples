@@ -19,10 +19,17 @@ namespace SampleServer.HistoricalDataAccess
 {
     class SampleHDANodeManager : HistoricalDataAccessNodeManager
     {
+        #region Private Members
+        private Timer m_simulationTimer;
+        readonly List<ArchiveItemState> m_simulatedNodes;
+        #endregion
+
+        #region Constructor
         public SampleHDANodeManager(IServerInternal server, ApplicationConfiguration configuration): base(server, configuration, Namespaces.HistoricalDataAccess)
         {
-            m_SimulatedNodes = new List<ArchiveItemState>();
+            m_simulatedNodes = new List<ArchiveItemState>();
         }
+        #endregion
 
         #region Overridden Methods
         public override void CreateAddressSpace(IDictionary<NodeId, IList<IReference>> externalReferences)
@@ -140,7 +147,7 @@ namespace SampleServer.HistoricalDataAccess
             nodeDouble.AddReference(ReferenceTypeIds.Organizes, true, root.NodeId);
 
             AddPredefinedNode(SystemContext, nodeDouble);
-            m_SimulatedNodes.Add(nodeDouble);
+            m_simulatedNodes.Add(nodeDouble);
 
             ArchiveItem itemInt32 = new ArchiveItem("StaticHistoricalDataItem_Int32", new FileInfo("HistoricalDataAccess\\Data\\Dynamic\\Int32.txt"));
             ArchiveItemState nodeInt32 = new ArchiveItemState(SystemContext, itemInt32, NamespaceIndex);
@@ -150,7 +157,7 @@ namespace SampleServer.HistoricalDataAccess
             nodeInt32.AddReference(ReferenceTypeIds.Organizes, true, root.NodeId);
 
             AddPredefinedNode(SystemContext, nodeInt32);
-            m_SimulatedNodes.Add(nodeInt32);
+            m_simulatedNodes.Add(nodeInt32);
         }
 
         /// <summary>
@@ -160,12 +167,12 @@ namespace SampleServer.HistoricalDataAccess
         {
             int freq = int.MaxValue;
 
-            if (m_SimulatedNodes.Count == 0)
+            if (m_simulatedNodes.Count == 0)
             {
                 return;
             }
 
-            foreach(ArchiveItemState item in m_SimulatedNodes)
+            foreach(ArchiveItemState item in m_simulatedNodes)
             {
                 if (freq > item.HistoricalDataConfiguration.MinTimeInterval.Value)
                 {
@@ -185,7 +192,7 @@ namespace SampleServer.HistoricalDataAccess
             {
                 lock(Lock)
                 {
-                    foreach(ArchiveItemState item in m_SimulatedNodes)
+                    foreach(ArchiveItemState item in m_simulatedNodes)
                     {
                         if(item.ArchiveItem.LastLoadTime.AddSeconds(10) < DateTime.UtcNow)
                         {
@@ -207,11 +214,6 @@ namespace SampleServer.HistoricalDataAccess
                 Utils.Trace(Utils.TraceMasks.Error, "HistoricalAccess.HistoricalDataAccess.SampleHDANodeManager.DoSimulation", "Unexpected error during simulation", ex);
             }
         }
-        #endregion
-
-        #region Private Members
-        private Timer m_simulationTimer;
-        List<ArchiveItemState> m_SimulatedNodes;
         #endregion
     }
 }

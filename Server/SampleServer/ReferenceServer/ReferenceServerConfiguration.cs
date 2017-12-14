@@ -28,7 +28,7 @@ namespace SampleServer.ReferenceServer
         }
 
         /// <summary>
-        /// Initializes the object during deserialization.
+        /// Initializes the object during de-serialization.
         /// </summary>
         [OnDeserializing()]
         private void Initialize(StreamingContext context)
