@@ -49,9 +49,6 @@ namespace SampleClient
                 // Execute command
                 process.ExecuteCommand(inputCommand);
             }
-
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
         }
 
         /// <summary>
