@@ -5,6 +5,7 @@
     <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>SampleClient</RootNamespace>
+    <AssemblyName>SampleClient</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
