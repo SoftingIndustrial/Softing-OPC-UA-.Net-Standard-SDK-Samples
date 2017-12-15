@@ -61,11 +61,14 @@ namespace SampleClient.Samples
             catch (Exception ex)
             {
                 Console.WriteLine("CreateSession Error: {0}", ex.Message);
-                m_session.Dispose();
-                m_session = null;
+
+                if (m_session != null)
+                {
+                    m_session.Dispose();
+                    m_session = null;
+                }
             }
         }
-
 
         /// <summary>
         /// Disconnects the current session.
