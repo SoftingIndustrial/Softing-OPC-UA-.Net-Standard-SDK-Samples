@@ -145,12 +145,12 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                // create the session object with no security and anonymous login    
-                m_session = m_application.CreateSession(Constants.ServerUrl);
-                m_session.SessionName = SessionName;
-
                 try
                 {
+                    // create the session object with no security and anonymous login    
+                    m_session = m_application.CreateSession(Constants.ServerUrl);
+                    m_session.SessionName = SessionName;
+
                     m_session.Connect(false, true);
 
                     //add handler for CallCompleted event
