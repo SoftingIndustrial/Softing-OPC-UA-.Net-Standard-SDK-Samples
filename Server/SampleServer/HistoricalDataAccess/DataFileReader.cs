@@ -77,9 +77,10 @@ namespace SampleServer.HistoricalDataAccess
                     int percentDataBad = 0;
                     int percentDataGood = 0;
                     string nodeIdName;
+                    BuiltInType dataType;
 
                     // get data type.
-                    if (!ExtractField(1, ref line, out BuiltInType dataType))
+                    if (!ExtractField(1, ref line, out dataType))
                     {
                         return false;
                     }
