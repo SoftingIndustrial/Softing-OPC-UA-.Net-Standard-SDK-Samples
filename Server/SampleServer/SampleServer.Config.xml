@@ -93,13 +93,13 @@
     <MaxQueryContinuationPoints>10</MaxQueryContinuationPoints>
     <MaxHistoryContinuationPoints>100</MaxHistoryContinuationPoints>
     <MaxRequestAge>600000</MaxRequestAge>
-    <MinPublishingInterval>10</MinPublishingInterval>
+    <MinPublishingInterval>100</MinPublishingInterval>
     <MaxPublishingInterval>3600000</MaxPublishingInterval>
-    <PublishingResolution>20</PublishingResolution>
+    <PublishingResolution>50</PublishingResolution>
     <MaxSubscriptionLifetime>3600000</MaxSubscriptionLifetime>
-    <MaxMessageQueueSize>10</MaxMessageQueueSize>
+    <MaxMessageQueueSize>100</MaxMessageQueueSize>
     <MaxNotificationQueueSize>100</MaxNotificationQueueSize>
-    <MaxNotificationsPerPublish>10000</MaxNotificationsPerPublish>
+    <MaxNotificationsPerPublish>1000</MaxNotificationsPerPublish>
     <MinMetadataSamplingInterval>1000</MinMetadataSamplingInterval>
     <AvailableSamplingRates>
       <SamplingRateGroup>
@@ -125,6 +125,15 @@
     </AvailableSamplingRates>
     <MaxRegistrationInterval>30000</MaxRegistrationInterval>
     <NodeManagerSaveFile>SampleServer.nodes.xml</NodeManagerSaveFile>
+    <MinSubscriptionLifetime>10000</MinSubscriptionLifetime>
+    <MaxPublishRequestCount>20</MaxPublishRequestCount>
+    <MaxSubscriptionCount>100</MaxSubscriptionCount>
+    <MaxEventQueueSize>10000</MaxEventQueueSize>
+    <ServerProfileArray>
+      <ua:String>Standard UA Server Profile</ua:String>
+      <ua:String>Data Access Server Facet</ua:String>
+      <ua:String>Method Server Facet</ua:String>
+    </ServerProfileArray>
   </ServerConfiguration>
   
   <Extensions>

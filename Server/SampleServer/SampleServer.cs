@@ -500,13 +500,13 @@ namespace SampleServer
         /// </summary>
         private void VerifyPassword(string userName, string password)
         {
-            if (string.IsNullOrWhiteSpace(userName))
+            if (String.IsNullOrEmpty(userName))
             {
                 // An empty username is not accepted
                 throw ServiceResultException.Create(StatusCodes.BadIdentityTokenInvalid, "Security token is not a valid username token. An empty username is not accepted.");
             }
 
-            if (string.IsNullOrWhiteSpace(password))
+            if (String.IsNullOrEmpty(password))
             {
                 // An empty password is not accepted
                 throw ServiceResultException.Create(StatusCodes.BadIdentityTokenRejected, "Security token is not a valid username token. An empty password is not accepted.");
@@ -530,14 +530,48 @@ namespace SampleServer
             try
             {
                 CertificateValidator.Validate(certificate);
+
+                // determine if self-signed.
+                bool isSelfSigned = Utils.CompareDistinguishedName(certificate.Subject, certificate.Issuer);
+
+                // do not allow self signed application certs as user token
+                if (isSelfSigned && Utils.HasApplicationURN(certificate))
+                {
+                    throw new ServiceResultException(StatusCodes.BadCertificateUseNotAllowed);
+                }
             }
             catch (Exception e)
             {
-                // construct translation object with default text.
-                TranslationInfo info = new TranslationInfo("InvalidCertificate", "en-US", "'{0}' is not a trusted user certificate.", certificate.Subject);
+                TranslationInfo info;
+                StatusCode result = StatusCodes.BadIdentityTokenRejected;
+                ServiceResultException se = e as ServiceResultException;
+
+                if (se != null && se.StatusCode == StatusCodes.BadCertificateUseNotAllowed)
+                {
+                    info = new TranslationInfo(
+                        "InvalidCertificate",
+                        "en-US",
+                        "'{0}' is an invalid user certificate.",
+                        certificate.Subject);
+
+                    result = StatusCodes.BadIdentityTokenInvalid;
+                }
+                else
+                {
+                    // construct translation object with default text.
+                    info = new TranslationInfo(
+                        "UntrustedCertificate",
+                        "en-US",
+                        "'{0}' is not a trusted user certificate.",
+                        certificate.Subject);
+                }
 
                 // create an exception with a vendor defined sub-code.
-                throw new ServiceResultException(new ServiceResult(e, StatusCodes.BadUserAccessDenied, "InvalidCertificate", "http://opcfoundation.org/UA/Sample/", new LocalizedText(info)));
+                throw new ServiceResultException(new ServiceResult(
+                    result,
+                    info.Key,
+                    LoadServerProperties().ProductUri,
+                    new LocalizedText(info)));
             }
         }
         #endregion
