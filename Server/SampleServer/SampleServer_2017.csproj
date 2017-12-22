@@ -65,7 +65,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.3.349" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.3.350.4" />
   </ItemGroup>
 
   <ItemGroup>
