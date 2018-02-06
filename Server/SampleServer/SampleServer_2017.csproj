@@ -6,6 +6,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>SampleServer</AssemblyName>
     <RootNamespace>SampleServer</RootNamespace>
+    <RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
@@ -65,7 +66,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.3.350.4" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.3.350.6" />
   </ItemGroup>
 
   <ItemGroup>

@@ -6,6 +6,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>SampleClient</RootNamespace>
     <AssemblyName>SampleClient</AssemblyName>
+    <RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.3.350.4" />
-    <PackageReference Include="System.ServiceModel.Primitives" Version="4.4.0" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.3.350.6" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.4.1" />
   </ItemGroup>
 
   <ItemGroup>
