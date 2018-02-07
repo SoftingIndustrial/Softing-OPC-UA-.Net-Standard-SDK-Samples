@@ -12,7 +12,6 @@ using Opc.Ua;
 using SampleClient.StateMachine;
 using Softing.Opc.Ua;
 using System;
-using Softing.Opc.Ua.Private;
 
 namespace SampleClient
 {
@@ -23,10 +22,10 @@ namespace SampleClient
         /// </summary>
         static void Main()
         {
-            Console.Title = string.Format("SampleClient [ServerUrl: {0}]", Constants.ServerUrl);
-
             // Create the UaApplication object from config file
-            UaApplication application = UaApplication.Create(Constants.ConfigurationFile).Result;
+            UaApplication application = UaApplication.Create("SampleClient.Config.xml").Result;
+
+            Console.Title = string.Format("SampleClient [ServerUrl: {0}]", application.Configuration.ServerUrl);
 
             // Subscribe to certificate validation error event
             application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);

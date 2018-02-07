@@ -497,7 +497,7 @@ namespace SampleServer.HistoricalDataAccess
         /// <returns></returns>
         private bool ExtractField(int lineCount, ref string line, out string value)
         {
-            value = String.Empty;
+            value = string.Empty;
             string field = ExtractField(ref line);
 
             if (field == null)

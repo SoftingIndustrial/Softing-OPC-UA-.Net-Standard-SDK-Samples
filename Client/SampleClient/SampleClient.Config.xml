@@ -125,9 +125,6 @@
     <!-- EndpointDescriptions for system wide discovery servers -->
     <DiscoveryServers></DiscoveryServers>
 
-    <!-- The file used to save the EndpointDescriptions for servers known to the Client -->
-    <EndpointCacheFilePath>Opc.Ua.SampleClient.Endpoints.xml</EndpointCacheFilePath>
-
     <!-- The minimum subscription lifetime.
   This ensures subscriptions are not set to expire too quickly. The requested lifetime count
   and keep alive count are calculated using this value and the request publishing interval -->
@@ -170,4 +167,7 @@
   <DefaultMiQueueSize>1</DefaultMiQueueSize>
   <DefaultEventMiQueueSize>0</DefaultEventMiQueueSize>
   <DecodeCustomDataTypes>true</DecodeCustomDataTypes>
+  <!-- Configurable URL of the OPC UA Server where this OPC UA Client will connect -->
+  <ServerUrl>opc.tcp://192.168.150.162:61510/SampleServer</ServerUrl>
+  <ServerUrlHttps>https://localhost:61511/SampleServer</ServerUrlHttps>
 </ApplicationConfigurationEx>

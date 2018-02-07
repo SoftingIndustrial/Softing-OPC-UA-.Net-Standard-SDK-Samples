@@ -5,7 +5,7 @@
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
  * http://www.softing.com/LicenseSIA.pdf
- *  
+ * 
  * ======================================================================*/
 
 using System;
@@ -37,8 +37,10 @@ namespace SampleClient.Samples
         /// </summary>
         public ConnectClient()
         {
-            ApplicationConfigurationEx configuration = CreateAplicationConfiguration();
-            m_application = UaApplication.Create(configuration).Result;
+            // Alternatively, instead of providing a config XML file, we can provide instead, the custom configuration set below
+            // ApplicationConfigurationEx configuration = CreateAplicationConfiguration();
+            // m_application = UaApplication.Create(configuration).Result;
+            m_application = UaApplication.Create("SampleClient.Config.xml").Result;
         }
 
         #endregion
@@ -51,7 +53,7 @@ namespace SampleClient.Samples
         public void CreateOpcTcpSessionWithNoSecurity()
         {
             // create the session object.
-            using (ClientSession session = CreateSession("UaBinaryNoSecuritySession", Constants.ServerUrl,
+            using (ClientSession session = CreateSession("UaBinaryNoSecuritySession", m_application.Configuration.ServerUrl,
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity()))
             {
                 ConnectTest(session);
@@ -64,7 +66,7 @@ namespace SampleClient.Samples
         public void CreateOpcTcpSessionWithUserId()
         {
             // create the session object.
-            using (ClientSession session = CreateSession("UaBinaryUserIdSession", Constants.ServerUrl,
+            using (ClientSession session = CreateSession("UaBinaryUserIdSession", m_application.Configuration.ServerUrl,
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity("usr", "pwd")))
             {
                 ConnectTest(session);
@@ -77,7 +79,7 @@ namespace SampleClient.Samples
         public void CreateOpcTcpSessionWithSecurity()
         {
             // create the session object.
-            using (ClientSession session = CreateSession("UaBinarySecureSession", Constants.ServerUrl,
+            using (ClientSession session = CreateSession("UaBinarySecureSession", m_application.Configuration.ServerUrl,
                 MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic256Sha256, MessageEncoding.Binary,
                 new UserIdentity()))
             {
@@ -91,7 +93,7 @@ namespace SampleClient.Samples
         public void CreateHttpsSessionWithAnomymousUserId()
         {
             // create the session object.
-            using (ClientSession session = CreateSession("HttpsAnonymousUserIdSession", Constants.ServerUrlHttps,
+            using (ClientSession session = CreateSession("HttpsAnonymousUserIdSession", m_application.Configuration.ServerUrlHttps,
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Xml, new UserIdentity()))
             {
                 ConnectTest(session);
@@ -104,7 +106,7 @@ namespace SampleClient.Samples
         public void CreateHttpsSessionWithUserId()
         {
             // create the session object.
-            using (ClientSession session = CreateSession("HttpsUserIdSession", Constants.ServerUrlHttps,
+            using (ClientSession session = CreateSession("HttpsUserIdSession", m_application.Configuration.ServerUrlHttps,
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity("usr", "pwd")))
             {
                 ConnectTest(session);
@@ -120,7 +122,7 @@ namespace SampleClient.Samples
             {
                 // Retrieve the list of available server connection channels by calling GetEndpoints on the Server's discovery endpoint.
                 Console.WriteLine("\r\nDiscovering available endpoints...");
-                IList<EndpointDescriptionEx> endpoints = m_application.GetEndpoints(Constants.ServerUrl);
+                IList<EndpointDescriptionEx> endpoints = m_application.GetEndpoints(m_application.Configuration.ServerUrl);
 
                 Console.WriteLine("GetEndpoints returned {0} endpoints.", endpoints.Count);
 

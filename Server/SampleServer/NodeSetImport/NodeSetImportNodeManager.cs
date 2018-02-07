@@ -59,7 +59,7 @@ namespace SampleServer.NodeSetImport
             lock (Lock)
             {
                 // Import the initial data model from a NodeSet file
-                Import(SystemContext, m_InitialModelFilePath);
+                Import(SystemContext, Path.Combine(m_InitialModelFilePath));
 
                 try
                 {
@@ -224,7 +224,7 @@ namespace SampleServer.NodeSetImport
         /// </summary>
         private ServiceResult OnAddRefrigerator(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
-            return Import(context, m_SecondaryModelFilePath);
+            return Import(context, Path.Combine(m_SecondaryModelFilePath));
         }
 
         private ServiceResult OnImportNodeSet(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
@@ -403,8 +403,8 @@ namespace SampleServer.NodeSetImport
         #endregion
 
         #region Private Members
-        private string m_InitialModelFilePath = @"NodeSetImport\Refrigerators.NodeSet2.xml";
-        private string m_SecondaryModelFilePath = @"NodeSetImport\Refrigerators2.NodeSet2.xml";
+        private readonly string[] m_InitialModelFilePath = { "NodeSetImport","Refrigerators.NodeSet2.xml" };
+        private readonly string[] m_SecondaryModelFilePath = { "NodeSetImport","Refrigerators2.NodeSet2.xml" };
         #endregion
     }
 }

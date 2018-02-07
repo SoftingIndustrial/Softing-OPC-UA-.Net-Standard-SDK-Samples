@@ -96,7 +96,7 @@ namespace SampleServer.HistoricalDataAccess
         private void CreateStaticHistoricalVariables(BaseObjectState root)
         {
             // Historian nodes
-            ArchiveItem itemHistorian1 = new ArchiveItem("StaticHistoricalDataItem_Historian1", new FileInfo("HistoricalDataAccess\\Data\\Sample\\Historian1.txt"));
+            ArchiveItem itemHistorian1 = new ArchiveItem("StaticHistoricalDataItem_Historian1", new FileInfo(Path.Combine("HistoricalDataAccess","Data","Sample","Historian1.txt")));
             ArchiveItemState nodeHistorian1 = new ArchiveItemState(SystemContext, itemHistorian1, NamespaceIndex);
             nodeHistorian1.ReloadFromSource(SystemContext);
 
@@ -106,7 +106,7 @@ namespace SampleServer.HistoricalDataAccess
             AddPredefinedNode(SystemContext, nodeHistorian1);
 
 
-            ArchiveItem itemHistorian2 = new ArchiveItem("StaticHistoricalDataItem_Historian2", new FileInfo("HistoricalDataAccess\\Data\\Sample\\Historian2.txt"));
+            ArchiveItem itemHistorian2 = new ArchiveItem("StaticHistoricalDataItem_Historian2", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "Historian2.txt")));
             ArchiveItemState nodeHistorian2 = new ArchiveItemState(SystemContext, itemHistorian2, NamespaceIndex);
             nodeHistorian2.ReloadFromSource(SystemContext);
 
@@ -116,7 +116,7 @@ namespace SampleServer.HistoricalDataAccess
             AddPredefinedNode(SystemContext, nodeHistorian2);
 
 
-            ArchiveItem itemHistorian3 = new ArchiveItem("StaticHistoricalDataItem_Historian3", new FileInfo("HistoricalDataAccess\\Data\\Sample\\Historian3.txt"));
+            ArchiveItem itemHistorian3 = new ArchiveItem("StaticHistoricalDataItem_Historian3", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "Historian3.txt")));
             ArchiveItemState nodeHistorian3 = new ArchiveItemState(SystemContext, itemHistorian3, NamespaceIndex);
             nodeHistorian3.ReloadFromSource(SystemContext);
 
@@ -126,7 +126,7 @@ namespace SampleServer.HistoricalDataAccess
             AddPredefinedNode(SystemContext, nodeHistorian3);
 
 
-            ArchiveItem itemHistorian4 = new ArchiveItem("StaticHistoricalDataItem_Historian4", new FileInfo("HistoricalDataAccess\\Data\\Sample\\Historian4.txt"));
+            ArchiveItem itemHistorian4 = new ArchiveItem("StaticHistoricalDataItem_Historian4", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "Historian4.txt")));
             ArchiveItemState nodeHistorian4 = new ArchiveItemState(SystemContext, itemHistorian4, NamespaceIndex);
             nodeHistorian4.ReloadFromSource(SystemContext);
 
@@ -139,7 +139,7 @@ namespace SampleServer.HistoricalDataAccess
         private void CreateDynamicHistoricalVariables(BaseObjectState root)
         {
             // Historian nodes
-            ArchiveItem itemDouble = new ArchiveItem("StaticHistoricalDataItem_Double", new FileInfo("HistoricalDataAccess\\Data\\Dynamic\\Double.txt"));
+            ArchiveItem itemDouble = new ArchiveItem("StaticHistoricalDataItem_Double", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Dynamic", "Double.txt")));
             ArchiveItemState nodeDouble = new ArchiveItemState(SystemContext, itemDouble, NamespaceIndex);
             nodeDouble.ReloadFromSource(SystemContext);
 
@@ -149,7 +149,7 @@ namespace SampleServer.HistoricalDataAccess
             AddPredefinedNode(SystemContext, nodeDouble);
             m_simulatedNodes.Add(nodeDouble);
 
-            ArchiveItem itemInt32 = new ArchiveItem("StaticHistoricalDataItem_Int32", new FileInfo("HistoricalDataAccess\\Data\\Dynamic\\Int32.txt"));
+            ArchiveItem itemInt32 = new ArchiveItem("StaticHistoricalDataItem_Int32", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Dynamic", "Int32.txt")));
             ArchiveItemState nodeInt32 = new ArchiveItemState(SystemContext, itemInt32, NamespaceIndex);
             nodeInt32.ReloadFromSource(SystemContext);
 
