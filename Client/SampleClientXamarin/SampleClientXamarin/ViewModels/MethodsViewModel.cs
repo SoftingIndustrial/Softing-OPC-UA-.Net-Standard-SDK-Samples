@@ -46,7 +46,7 @@ namespace SampleClientXamarin.ViewModels
         public MethodsViewModel()
         {
             Title = "Method calls sample";
-            SampleServerUrl = "opc.tcp://wboaw10:61510/SampleServer";
+            SampleServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
             ThreadPool.QueueUserWorkItem(o => InitializeSession());
             FloatValue = 10.77f;
             UInt32Value = 100;

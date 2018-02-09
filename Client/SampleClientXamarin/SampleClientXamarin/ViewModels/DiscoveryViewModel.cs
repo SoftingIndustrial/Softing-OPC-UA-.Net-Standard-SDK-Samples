@@ -35,8 +35,8 @@ namespace SampleClientXamarin.ViewModels
         {
             Title = "Discovery sample";
             m_results = new ObservableCollection<string>();
-            ServerUrlEndpoints = "opc.tcp://wboaw10:61510/SampleServer";
-            ServerUrlNetwork = "opc.tcp://wboaw10:4840";
+            ServerUrlEndpoints = "opc.tcp://192.168.150.166:61510/SampleServer";
+            ServerUrlNetwork = "opc.tcp://192.168.150.166:4840";
         }
         #endregion
 

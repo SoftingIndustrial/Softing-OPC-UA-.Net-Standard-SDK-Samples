@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Content.PM;
+using Android.Net;
 using Android.OS;
 
 namespace SampleClientXamarin.Droid
@@ -9,6 +10,25 @@ namespace SampleClientXamarin.Droid
     {
         protected override void OnCreate(Bundle bundle)
         {
+            #region force usage of wifi
+
+            try
+            {
+                ConnectivityManager connectivityManager = ConnectivityManager.FromContext(Application.Context);
+                var networks = connectivityManager.GetAllNetworks();
+                foreach (Network network in networks)
+                {
+                    NetworkInfo networkInfo = connectivityManager.GetNetworkInfo(network);
+                    if (networkInfo.Type == ConnectivityType.Wifi)
+                    {
+                        connectivityManager.BindProcessToNetwork(network);
+                        break;
+                    }
+                }
+            }
+            catch { }
+
+            #endregion
             // Name of the MainActivity theme you had there before.
             // Or you can use global::Android.Resource.Style.ThemeHoloLight
             base.SetTheme(Resource.Style.MyTheme);

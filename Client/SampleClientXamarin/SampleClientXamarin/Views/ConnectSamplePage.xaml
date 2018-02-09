@@ -22,53 +22,58 @@
                 </Grid.ColumnDefinitions>
                 <!--Server URL-->
                 <Label Grid.Row="0" Grid.Column="0"
-                    Margin="8,8, 0, 0" 
+                    Margin="2,2, 0, 0" 
                     Text="Server URL:" 
                        VerticalOptions="Center"/>
                 <Entry Grid.Row="1" Grid.ColumnSpan="2"
                        Placeholder="Enter server URL..." 
+                       FontSize="Small"
                        Text="{Binding ServerUrl}" Keyboard="Url"
                        HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
                 <!--MessageSecurityMode-->
                 <Label Grid.Row="2" Grid.Column="0"
-                       Margin="8" 
+                       Margin="2" 
                        Text="Security mode:" 
                        VerticalOptions="Center"/>
                 <Picker Grid.Row="2" Grid.Column="1"
+                       Title="Select security mode"
                     HorizontalOptions="FillAndExpand" 
                         ItemsSource="{Binding MessageSecurityModes}"
                         SelectedItem="{Binding SelectedMessageSecurityMode, Mode=TwoWay}"/>
                 <!--SecurityPolicy-->
                 <Label Grid.Row="3" Grid.Column="0"
-                       Margin="8" 
+                       Margin="2" 
                        Text="Security policy:" 
                        VerticalOptions="Center"/>
                 <Picker Grid.Row="3" Grid.Column="1"
                          HorizontalOptions="FillAndExpand" 
+                        Title="Select security policy"
                         ItemsSource="{Binding SecurityPolicies}"
                         SelectedItem="{Binding SelectedSecurityPolicy, Mode=TwoWay}"/>
                 <!--MessageEncoding-->
                 <Label Grid.Row="4" Grid.Column="0"
-                       Margin="8" 
+                       Margin="2" 
                        Text="Message encoding:" 
                        VerticalOptions="Center"/>
                 <Picker Grid.Row="4" Grid.Column="1"
                         HorizontalOptions="FillAndExpand" 
+                        Title="Select message encoding"
                         ItemsSource="{Binding MessageEncodings}"
                         SelectedItem="{Binding SelectedMessageEncoding, Mode=TwoWay}"/>
                 <!--User identity-->
                 <Label Grid.Row="5" Grid.Column="0"
-                       Margin="8" 
+                       Margin="2" 
                        Text="User identity:" 
                        VerticalOptions="Center"/>
                 <Picker Grid.Row="5" Grid.Column="1"
                         HorizontalOptions="FillAndExpand" 
+                        Title="Select user identity"
                         ItemsSource="{Binding UserIdentities}"
                         SelectedItem="{Binding SelectedUserIdentity, Mode=TwoWay}"
                         ItemDisplayBinding="{Binding TokenType}"/>
                 <!--User name-->
                 <Label Grid.Row="6" Grid.Column="0"
-                        Margin="8" 
+                        Margin="2" 
                         Text="User name:" 
                         VerticalOptions="Center"/>
                 <Entry Grid.Row="6" Grid.Column="1"
@@ -77,7 +82,7 @@
                         Text="{Binding UserName}" Placeholder="Enter user name..."/>
                 <!--Password-->
                 <Label Grid.Row="7" Grid.Column="0"
-                        Margin="8" 
+                        Margin="2" 
                         Text="Password:" 
                         VerticalOptions="Center"/>
                 <Entry Grid.Row="7" Grid.Column="1"

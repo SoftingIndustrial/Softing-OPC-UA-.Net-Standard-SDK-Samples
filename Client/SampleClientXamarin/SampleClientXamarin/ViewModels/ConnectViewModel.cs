@@ -42,7 +42,7 @@ namespace SampleClientXamarin.ViewModels
         public ConnectViewModel()
         {
             Title = "Connect sample";
-            ServerUrl = "opc.tcp://wboaw10:61510/SampleServer";
+            ServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
             MessageSecurityModes = new List<MessageSecurityMode>() {MessageSecurityMode.None, MessageSecurityMode.Sign, MessageSecurityMode.SignAndEncrypt};
             SelectedMessageSecurityMode = MessageSecurityModes[0];
 
