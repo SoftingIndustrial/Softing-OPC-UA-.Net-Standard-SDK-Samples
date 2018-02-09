@@ -21,8 +21,13 @@ namespace SampleClientXamarin.Views
 		    BindingContext = m_viewModel = new DiscoveryViewModel();
         }
 
-	    private void DiscoverEndpoints_OnClicked(object sender, EventArgs e)
+	    private async void DiscoverEndpoints_OnClicked(object sender, EventArgs e)
 	    {
+	        if (string.IsNullOrEmpty(m_viewModel.ServerUrlEndpoints))
+	        {
+	            await DisplayAlert("Warning", "Please enter a value for 'Server URL for endpoints discovery'", null, "OK");
+	            return;
+            }
 	        ThreadPool.QueueUserWorkItem(o =>
 	        {
 	            Device.BeginInvokeOnMainThread(() =>
@@ -39,9 +44,14 @@ namespace SampleClientXamarin.Views
 	        });
         }
 
-	    private void DiscoverServers_OnClicked(object sender, EventArgs e)
+	    private async void DiscoverServers_OnClicked(object sender, EventArgs e)
 	    {
-	        ThreadPool.QueueUserWorkItem(o =>
+	        if (string.IsNullOrEmpty(m_viewModel.ServerUrlNetwork))
+	        {
+	            await DisplayAlert("Warning", "Please enter a value for 'Server URL for network discovery'", null, "OK");
+	            return;
+	        }
+            ThreadPool.QueueUserWorkItem(o =>
 	        {
 	            Device.BeginInvokeOnMainThread(() =>
 	            {

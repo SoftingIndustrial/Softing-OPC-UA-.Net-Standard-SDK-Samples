@@ -98,7 +98,7 @@ namespace SampleClientXamarin.ViewModels
             try
             {
                 Results.Clear();
-                ResultsText = string.Format("Endpoints for {0}:", ServerUrlEndpoints);
+                ResultsText = string.Format("Endpoint results for '{0}':", ServerUrlEndpoints);
 
                 // the method will return all the registered server applications from the specified machine.
                 // if the "discoveryUrl" parameter is null or empty, DiscoverServers() will return the servers from the local machine.
@@ -144,7 +144,7 @@ namespace SampleClientXamarin.ViewModels
             try
             {
                 Results.Clear();
-                ResultsText = string.Format("Network {0} results:", ServerUrlNetwork);
+                ResultsText = string.Format("Network results for '{0}':", ServerUrlNetwork);
                 // The method will return all the registered server applications from the local network.
                 // DiscoverServersOnNetwork service is supported only by LDS-ME installations.
                 // If the "discoveryUrl" parameter is null or empty, DiscoverServersOnNetwork() will be invoked on the local machine.

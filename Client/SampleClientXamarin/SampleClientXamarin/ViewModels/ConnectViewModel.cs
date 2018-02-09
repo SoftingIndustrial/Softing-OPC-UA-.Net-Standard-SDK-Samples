@@ -9,9 +9,7 @@
  * ======================================================================*/
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using Opc.Ua;
 using SampleClientXamarin.Helpers;
 using Softing.Opc.Ua;
@@ -31,6 +29,9 @@ namespace SampleClientXamarin.ViewModels
         private SecurityPolicy m_selectedSecurityPolicy;
         private MessageEncoding m_selectedMessageEncoding;
         private UserIdentity m_selectedUserIdentity;
+        private bool m_isEditUserCredentials;
+        private string m_userName;
+        private string m_password;
         #endregion
 
         #region Constructors
@@ -51,7 +52,9 @@ namespace SampleClientXamarin.ViewModels
             MessageEncodings = new List<MessageEncoding>(){MessageEncoding.Binary};
             SelectedMessageEncoding = MessageEncodings[0];
 
-            UserIdentities = new List<UserIdentity>(){new UserIdentity(), new UserIdentity("usr", "pwd") };
+            UserName = "usr";
+            Password = "pwd";
+            UserIdentities = new List<UserIdentity>(){new UserIdentity(), new UserIdentity(UserName, Password) };
             SelectedUserIdentity = UserIdentities[0];
         }
 
@@ -151,10 +154,51 @@ namespace SampleClientXamarin.ViewModels
             {
                 SetProperty(ref m_selectedUserIdentity, value);
                 Result = "";
+                IsEditUserCredentials = (value.TokenType == UserTokenType.UserName);
+            }
+        }
+
+        /// <summary>
+        /// Indicator if username and password are editable
+        /// </summary>
+        public bool IsEditUserCredentials
+        {
+            get { return m_isEditUserCredentials; }
+            set { SetProperty(ref m_isEditUserCredentials, value); }
+        }
+
+        /// <summary>
+        /// Username
+        /// </summary>
+        public string UserName
+        {
+            get { return m_userName; }
+            set
+            {
+                if (value == null)
+                {
+                    value = string.Empty;
+                }
+                SetProperty(ref m_userName, value);
+            }
+        }
+
+        /// <summary>
+        /// Password
+        /// </summary>
+        public string Password
+        {
+            get { return m_password; }
+            set
+            {
+                if (value == null)
+                {
+                    value = string.Empty;
+                }
+                SetProperty(ref m_password, value);
             }
         }
         #endregion
-
 
         #region Methods
 
@@ -166,15 +210,22 @@ namespace SampleClientXamarin.ViewModels
             // create the session object.
             try
             {
+                //create user identity used to connect
+                UserIdentity userIdentity= SelectedUserIdentity;
+                if (SelectedUserIdentity.TokenType == UserTokenType.UserName)
+                {
+                    userIdentity = new UserIdentity(UserName, Password);
+                }
+
                 // Create the Session object.
                 using (ClientSession session = SampleApplication.UaApplication.CreateSession(ServerUrl,
                     SelectedMessageSecurityMode,
                     SelectedSecurityPolicy,
-                    SelectedMessageEncoding, 
-                    SelectedUserIdentity))
+                    SelectedMessageEncoding,
+                    userIdentity))
                 {
 
-                    Result += "\nSession created...";
+                    Result = "\nSession created...";
                     session.SessionName = "Connect sample";
                     session.Connect(false, true);
                     Result += "\nSession connected...";

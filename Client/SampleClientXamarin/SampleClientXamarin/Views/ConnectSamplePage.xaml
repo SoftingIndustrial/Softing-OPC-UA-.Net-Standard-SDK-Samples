@@ -13,6 +13,8 @@
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -63,11 +65,26 @@
                         HorizontalOptions="FillAndExpand" 
                         ItemsSource="{Binding UserIdentities}"
                         SelectedItem="{Binding SelectedUserIdentity, Mode=TwoWay}"
-                        ItemDisplayBinding="{Binding TokenType}">
-                    <!--Picker.ItemDisplayBinding>
-                        <TemplateBinding></TemplateBinding>
-                    </Picker.ItemDisplayBinding>-->
-                </Picker>
+                        ItemDisplayBinding="{Binding TokenType}"/>
+                <!--User name-->
+                <Label Grid.Row="6" Grid.Column="0"
+                        Margin="8" 
+                        Text="User name:" 
+                        VerticalOptions="Center"/>
+                <Entry Grid.Row="6" Grid.Column="1"
+                        HorizontalOptions="FillAndExpand"
+                        IsEnabled="{Binding IsEditUserCredentials}"
+                        Text="{Binding UserName}" Placeholder="Enter user name..."/>
+                <!--Password-->
+                <Label Grid.Row="7" Grid.Column="0"
+                        Margin="8" 
+                        Text="Password:" 
+                        VerticalOptions="Center"/>
+                <Entry Grid.Row="7" Grid.Column="1"
+                    HorizontalOptions="FillAndExpand" 
+                    IsPassword="True"
+                    IsEnabled="{Binding IsEditUserCredentials}"
+                    Text="{Binding Password}" Placeholder="Enter password..."/>
             </Grid>
             <Button Clicked="Button_OnClicked" Text="Connect"/>
 
