@@ -86,7 +86,7 @@
                     IsEnabled="{Binding IsEditUserCredentials}"
                     Text="{Binding Password}" Placeholder="Enter password..."/>
             </Grid>
-            <Button Clicked="Button_OnClicked" Text="Connect"/>
+            <Button Clicked="ConnectButton_OnClicked" Text="Connect"/>
 
             <Label
                    Margin="10" 

@@ -1,10 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿/* ========================================================================
+ * Copyright © 2011-2018 Softing Industrial Automation GmbH. 
+ * All rights reserved.
+ * 
+ * The Software is subject to the Softing Industrial Automation GmbH’s 
+ * license agreement, which can be found here:
+ * http://www.softing.com/LicenseSIA.pdf
+ * 
+ * ======================================================================*/
 
-namespace SampleClientXamarin.Models
+ namespace SampleClientXamarin.Models
 {
+    /// <summary>
+    /// Model class for one sample available in this application
+    /// </summary>
     class SampleItem
     {
         /// <summary>
@@ -20,7 +28,6 @@ namespace SampleClientXamarin.Models
         /// <summary>
         /// Sample descriptive text
         /// </summary>
-        [DefaultValue("blalalalalala")]
         public string Description { get; set; }
     }
 }

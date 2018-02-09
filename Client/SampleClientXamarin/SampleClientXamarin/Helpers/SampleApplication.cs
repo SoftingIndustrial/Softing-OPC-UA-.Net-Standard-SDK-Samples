@@ -62,7 +62,7 @@ namespace SampleClientXamarin.Helpers
             configuration.ApplicationUri = $"urn:{Utils.GetHostName()}:OPCFoundation:SampleClient";
             configuration.TransportConfigurations = new TransportConfigurationCollection();
             configuration.TransportQuotas = new TransportQuotas { OperationTimeout = 15000 };
-            configuration.ClientConfiguration = new ClientConfiguration { DefaultSessionTimeout = 5000 };
+            configuration.ClientConfiguration = new ClientConfiguration { DefaultSessionTimeout = 15000 };
 
             string myDocsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             configuration.TraceConfiguration = new TraceConfiguration()

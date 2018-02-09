@@ -20,7 +20,7 @@ namespace SampleClientXamarin.Views
 		    BindingContext = m_viewModel = new ConnectViewModel();
 		}
 
-	    private void Button_OnClicked(object sender, EventArgs e)
+	    private void ConnectButton_OnClicked(object sender, EventArgs e)
 	    {
 	        m_viewModel.CreateAndTestSession();
         }

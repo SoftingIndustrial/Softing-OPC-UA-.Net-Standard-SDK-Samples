@@ -18,14 +18,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviours\UInt32ValidationBehaviour.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\InverseBoolConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enums.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ObservableObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SampleApplication.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\BaseDataObject.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\DiscoveryResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\SampleItem.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\OpcDataStore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BrowseViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConnectViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\DiscoveryViewModel.cs" />
@@ -50,9 +48,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BaseViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\MockDataStore.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\IDataStore.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\Item.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\AboutViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\EventsSamplePage.xaml.cs">
       <DependentUpon>EventsSamplePage.xaml</DependentUpon>

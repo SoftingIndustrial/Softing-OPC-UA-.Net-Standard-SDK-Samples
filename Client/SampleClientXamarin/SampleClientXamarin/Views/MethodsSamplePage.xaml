@@ -3,10 +3,87 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SampleClientXamarin.Views.MethodsSamplePage"
              BackgroundColor="{StaticResource view_background}"
+             xmlns:behaviours="clr-namespace:SampleClientXamarin.Behaviours"
              Title="{Binding Title}">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin Forms!" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Grid.ColumnSpan="2"
+                       Margin="8,8, 0, 0" 
+                       Text="SampleServer URL:" 
+                       VerticalOptions="Center"/>
+                <Entry Grid.Row="1" Grid.ColumnSpan="2"
+                       Placeholder="Enter SampleServer URL..." 
+                       Text="{Binding SampleServerUrl}" Keyboard="Url"
+                       HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                <Label Grid.Row="2" Grid.ColumnSpan="2"
+                       Margin="8,8, 0, 0" 
+                       Text="Parameters for 'Server\Methods\Add' method:" 
+                       VerticalOptions="Center"/>
+                <Label Grid.Row="3" Grid.Column="0"
+                       Margin="8,8, 0, 0" 
+                       Text="Float value:"/>
+                <Entry Grid.Row="3" Grid.Column="1"
+                       Placeholder="Provide Float value..." 
+                       Text="{Binding FloatValue}" Keyboard="Numeric"
+                       HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                <Label Grid.Row="4" Grid.Column="0"
+                       Margin="8,8, 0, 0" 
+                       Text="UInt32 value:"/>
+                <Entry Grid.Row="4" Grid.Column="1"
+                       Placeholder="Provide UInt32 value..." 
+                       Text="{Binding UInt32Value}" Keyboard="Numeric"
+                       HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+                    <Entry.Behaviors>
+                        <behaviours:UInt32ValidationBehaviour />
+                    </Entry.Behaviors>
+                </Entry>
+            </Grid>
+            <Button Clicked="CallMethod_OnClicked" Text="Call method"/>
+            <Button Clicked="CallMethodAsync_OnClicked" Text="Call method asynchronously"/>
+            <ActivityIndicator 
+                VerticalOptions="Center" HorizontalOptions="Center"
+                IsVisible="{Binding IsBusy}"
+                IsRunning="{Binding IsBusy}"
+                Color="{StaticResource softing_secondary_dark_gray}" />
+            <Frame>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"  Grid.Column="0"
+                        Text="Session status:" Style="{StaticResource BoldLabel}"/>
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Text="{Binding SessionStatusText}"/>
+                    <Label Grid.Row="1"  Grid.Column="0"
+                           Text="Result value:"/>
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Text="{Binding ResultValue}"/>
+                    <Label Grid.Row="2"  Grid.Column="0"
+                           Text="Status code:"/>
+                    <Label Grid.Row="2" Grid.Column="1"
+                           Text="{Binding StatusCode}"/>
+                </Grid>
+            </Frame>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
