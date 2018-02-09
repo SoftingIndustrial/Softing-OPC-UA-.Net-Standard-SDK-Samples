@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SampleClientXamarin.Views.ConnectSamplePage"
+             BackgroundColor="{StaticResource view_background}"
+             Title="{Binding Title}">
+    <ContentPage.Content>
+        <StackLayout>
+            <Grid  VerticalOptions="Start">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <!--Server URL-->
+                <Label Grid.Row="0" Grid.Column="0"
+                    Margin="8,8, 0, 0" 
+                    Text="Server URL:" 
+                       VerticalOptions="Center"/>
+                <Entry Grid.Row="1" Grid.ColumnSpan="2"
+                       Placeholder="Enter server URL..." 
+                       Text="{Binding ServerUrl}" Keyboard="Url"
+                       HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                <!--MessageSecurityMode-->
+                <Label Grid.Row="2" Grid.Column="0"
+                       Margin="8" 
+                       Text="Security mode:" 
+                       VerticalOptions="Center"/>
+                <Picker Grid.Row="2" Grid.Column="1"
+                    HorizontalOptions="FillAndExpand" 
+                        ItemsSource="{Binding MessageSecurityModes}"
+                        SelectedItem="{Binding SelectedMessageSecurityMode, Mode=TwoWay}"/>
+                <!--SecurityPolicy-->
+                <Label Grid.Row="3" Grid.Column="0"
+                       Margin="8" 
+                       Text="Security policy:" 
+                       VerticalOptions="Center"/>
+                <Picker Grid.Row="3" Grid.Column="1"
+                         HorizontalOptions="FillAndExpand" 
+                        ItemsSource="{Binding SecurityPolicies}"
+                        SelectedItem="{Binding SelectedSecurityPolicy, Mode=TwoWay}"/>
+                <!--MessageEncoding-->
+                <Label Grid.Row="4" Grid.Column="0"
+                       Margin="8" 
+                       Text="Message encoding:" 
+                       VerticalOptions="Center"/>
+                <Picker Grid.Row="4" Grid.Column="1"
+                        HorizontalOptions="FillAndExpand" 
+                        ItemsSource="{Binding MessageEncodings}"
+                        SelectedItem="{Binding SelectedMessageEncoding, Mode=TwoWay}"/>
+                <!--User identity-->
+                <Label Grid.Row="5" Grid.Column="0"
+                       Margin="8" 
+                       Text="User identity:" 
+                       VerticalOptions="Center"/>
+                <Picker Grid.Row="5" Grid.Column="1"
+                        HorizontalOptions="FillAndExpand" 
+                        ItemsSource="{Binding UserIdentities}"
+                        SelectedItem="{Binding SelectedUserIdentity, Mode=TwoWay}"
+                        ItemDisplayBinding="{Binding TokenType}">
+                    <!--Picker.ItemDisplayBinding>
+                        <TemplateBinding></TemplateBinding>
+                    </Picker.ItemDisplayBinding>-->
+                </Picker>
+            </Grid>
+            <Button Clicked="Button_OnClicked" Text="Connect"/>
+
+            <Label
+                   Margin="10" 
+                   Text="{Binding Result}" 
+                   VerticalOptions="Center"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

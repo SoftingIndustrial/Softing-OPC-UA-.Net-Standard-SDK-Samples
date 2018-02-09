@@ -34,7 +34,7 @@ namespace SampleServer
 
                 // Check the application certificate
                 await application.CheckApplicationInstanceCertificate(false, 0);
-
+                application.ApplicationConfiguration.CertificateValidator.CertificateValidation += CertificateValidator_CertificateValidation;
                 // Start the server
                 await application.Start(new SampleServer());
 
@@ -65,6 +65,11 @@ namespace SampleServer
             {
                 application.Stop();
             }
+        }
+
+        private static void CertificateValidator_CertificateValidation(CertificateValidator sender, CertificateValidationEventArgs e)
+        {
+            e.Accept = true;
         }
     }
 }

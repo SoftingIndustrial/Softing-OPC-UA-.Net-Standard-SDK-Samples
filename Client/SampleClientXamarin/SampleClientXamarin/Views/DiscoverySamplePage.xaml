@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SampleClientXamarin.Views.DiscoverySamplePage"
+             BackgroundColor="{StaticResource view_background}"
+             Title="{Binding Title}">
+    <ContentPage.Content>
+        <StackLayout>
+            <!--Server URL-->
+            <Frame Margin="2" Padding="2" CornerRadius="3" OutlineColor="{StaticResource softing_secondary_dark_gray}">
+                <StackLayout Margin="0">
+                    <Label  Margin="2"
+                            Text="Server URL for endpoints discovery:" 
+                            VerticalOptions="Center" VerticalTextAlignment="Center"/>
+                    <Entry 
+                            Placeholder="Enter server URL..." 
+                            Text="{Binding ServerUrlEndpoints}" 
+                            HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                    <Button
+                            Clicked="DiscoverEndpoints_OnClicked" 
+                            Text="Discover endpoints"/>
+                </StackLayout>
+            </Frame>
+            <Frame Margin="3" Padding="2" CornerRadius="3" OutlineColor="{StaticResource softing_secondary_dark_gray}">
+                <StackLayout Margin="0">
+                    <Label  Margin="2"
+                            Text="Server URL for network discovery:" 
+                            VerticalOptions="Center" VerticalTextAlignment="Center"/>
+                    <Entry 
+                            Placeholder="Enter server URL..." 
+                            Text="{Binding ServerUrlNetwork}" 
+                            HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                    <Button 
+                            Clicked="DiscoverServers_OnClicked" 
+                            Text="Discover servers on network"/>
+                </StackLayout>
+            </Frame>
+            <!-- Results label -->
+            <Label Margin="4" Text="{Binding ResultsText}" Style="{StaticResource BoldLabel}" />
+            <Grid>
+                <!-- Results list -->
+                <ListView Margin="0,4,0,0"
+                        ItemsSource="{Binding Results}"
+                        CachingStrategy="RecycleElement"
+                        HasUnevenRows="True"
+                        IsPullToRefreshEnabled="false">
+                    <!--Built in Cells-->
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Label Text="{Binding}" Margin="2"/>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <ActivityIndicator 
+                        VerticalOptions="Center" HorizontalOptions="Center"
+                        IsVisible="{Binding IsBusy}"
+                        IsRunning="{Binding IsBusy}"
+                        Color="{StaticResource softing_secondary_dark_gray}" />
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
