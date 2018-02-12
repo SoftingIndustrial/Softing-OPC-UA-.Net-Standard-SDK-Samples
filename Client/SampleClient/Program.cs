@@ -25,7 +25,14 @@ namespace SampleClient
             // Create the UaApplication object from config file
             UaApplication application = UaApplication.Create("SampleClient.Config.xml").Result;
 
-            Console.Title = string.Format("SampleClient [ServerUrl: {0}]", application.Configuration.ServerUrl);
+            // Get the Sample Client custom parameters
+            SampleClientConfiguration sampleClientConfiguration = application.Configuration.ParseExtension<SampleClientConfiguration>();
+            if (sampleClientConfiguration != null)
+            {
+                ServerUrl = sampleClientConfiguration.ServerUrl;
+            }
+
+            Console.Title = string.Format("SampleClient [ServerUrl: {0}]", ServerUrl);
 
             // Subscribe to certificate validation error event
             application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);
@@ -60,5 +67,7 @@ namespace SampleClient
             Console.WriteLine("Accepted Certificate: {0}", e.Certificate.Subject);
             e.Accept = (e.Error.StatusCode == StatusCodes.BadCertificateUntrusted);
         }
+
+        public static string ServerUrl { get; private set; }
     }
 }

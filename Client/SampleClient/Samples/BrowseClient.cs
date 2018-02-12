@@ -52,7 +52,7 @@ namespace SampleClient.Samples
             try
             {
                 // create the session object with no security and anonymous login    
-                m_session = m_application.CreateSession(m_application.Configuration.ServerUrl);
+                m_session = m_application.CreateSession(Program.ServerUrl);
                 m_session.SessionName = SessionName;
 
                 m_session.Connect(false, true);
