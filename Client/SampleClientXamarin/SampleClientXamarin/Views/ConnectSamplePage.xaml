@@ -5,7 +5,8 @@
              BackgroundColor="{StaticResource view_background}"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <StackLayout>
+        <Grid>
+            <StackLayout>
             <Grid  VerticalOptions="Start">
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
@@ -29,6 +30,7 @@
                        Placeholder="Enter server URL..." 
                        FontSize="Small"
                        Text="{Binding ServerUrl}" Keyboard="Url"
+                       IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                        HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
                 <!--MessageSecurityMode-->
                 <Label Grid.Row="2" Grid.Column="0"
@@ -38,6 +40,7 @@
                 <Picker Grid.Row="2" Grid.Column="1"
                        Title="Select security mode"
                     HorizontalOptions="FillAndExpand" 
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                         ItemsSource="{Binding MessageSecurityModes}"
                         SelectedItem="{Binding SelectedMessageSecurityMode, Mode=TwoWay}"/>
                 <!--SecurityPolicy-->
@@ -48,6 +51,7 @@
                 <Picker Grid.Row="3" Grid.Column="1"
                          HorizontalOptions="FillAndExpand" 
                         Title="Select security policy"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                         ItemsSource="{Binding SecurityPolicies}"
                         SelectedItem="{Binding SelectedSecurityPolicy, Mode=TwoWay}"/>
                 <!--MessageEncoding-->
@@ -58,6 +62,7 @@
                 <Picker Grid.Row="4" Grid.Column="1"
                         HorizontalOptions="FillAndExpand" 
                         Title="Select message encoding"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                         ItemsSource="{Binding MessageEncodings}"
                         SelectedItem="{Binding SelectedMessageEncoding, Mode=TwoWay}"/>
                 <!--User identity-->
@@ -69,6 +74,7 @@
                         HorizontalOptions="FillAndExpand" 
                         Title="Select user identity"
                         ItemsSource="{Binding UserIdentities}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                         SelectedItem="{Binding SelectedUserIdentity, Mode=TwoWay}"
                         ItemDisplayBinding="{Binding TokenType}"/>
                 <!--User name-->
@@ -91,12 +97,17 @@
                     IsEnabled="{Binding IsEditUserCredentials}"
                     Text="{Binding Password}" Placeholder="Enter password..."/>
             </Grid>
-            <Button Clicked="ConnectButton_OnClicked" Text="Connect"/>
-
+            <Button 
+                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                Clicked="ConnectButton_OnClicked" Text="Connect"/>
             <Label
                    Margin="10" 
                    Text="{Binding Result}" 
                    VerticalOptions="Center"/>
         </StackLayout>
+            <ActivityIndicator 
+                IsVisible="{Binding IsBusy}"
+                IsRunning="{Binding IsBusy}"/>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

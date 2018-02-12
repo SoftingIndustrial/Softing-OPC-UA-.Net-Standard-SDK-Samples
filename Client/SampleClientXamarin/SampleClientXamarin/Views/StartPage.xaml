@@ -1,15 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:converters="clr-namespace:SampleClientXamarin.Converters;assembly=SampleClientXamarin.Android"
              x:Class="SampleClientXamarin.Views.StartPage"
              BackgroundColor="{StaticResource view_background}"
              Title="{Binding Title}">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
+   
 
     <StackLayout Orientation="Vertical">
         <StackLayout IsVisible="{Binding IsBusy}" Orientation="Vertical">
@@ -20,10 +15,8 @@
                    HorizontalTextAlignment="Center"
                    VerticalTextAlignment="Center"/>
             <ActivityIndicator 
-                VerticalOptions="Center" HorizontalOptions="Center"
                 IsVisible="{Binding IsBusy}"
-                IsRunning="{Binding IsBusy}"
-                Color="{StaticResource softing_secondary_dark_gray}" />
+                IsRunning="{Binding IsBusy}"/>
         </StackLayout>
     
     <ListView ItemsSource="{Binding Samples}"

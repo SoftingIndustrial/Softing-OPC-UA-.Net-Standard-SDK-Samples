@@ -35,7 +35,7 @@ namespace SampleClientXamarin.ViewModels
         {
             Title = "Discovery sample";
             m_results = new ObservableCollection<string>();
-            ServerUrlEndpoints = "opc.tcp://192.168.150.166:61510/SampleServer";
+            ServerUrlEndpoints = "opc.tcp://192.168.150.166:52640/Softing/THScopeOPCUAServer";
             ServerUrlNetwork = "opc.tcp://192.168.150.166:4840";
         }
         #endregion
@@ -103,19 +103,23 @@ namespace SampleClientXamarin.ViewModels
                 // the method will return all the registered server applications from the specified machine.
                 // if the "discoveryUrl" parameter is null or empty, DiscoverServers() will return the servers from the local machine.
                 // use the default discovery url of the local machine
-                var servers = SampleApplication.UaApplication.DiscoverServers(ServerUrlEndpoints);
+                var servers = SampleApplication.UaApplication.DiscoverServers("opc.tcp://192.168.150.166:52640/Softing/THScopeOPCUAServer");
+                 servers = SampleApplication.UaApplication.DiscoverServers("opc.tcp://192.168.150.166:61510/SampleServer");
                 foreach (var applicationDescription in servers)
                 {
                     try
                     {
+                        string serverDiscoveryUrl;
                         if (applicationDescription.DiscoveryUrls == null || applicationDescription.DiscoveryUrls.Count == 0)
                         {
-                            // skip servers without DiscoveryUrl information.
-                            continue;
+                            serverDiscoveryUrl = ServerUrlEndpoints;
                         }
-
-                        // retrieve available endpoints for each registered server and display their information.
-                        string serverDiscoveryUrl = applicationDescription.DiscoveryUrls[0];
+                        else
+                        {
+                            // retrieve available endpoints for each registered server and display their information.
+                            serverDiscoveryUrl = applicationDescription.DiscoveryUrls[0];
+                        }
+                        
                         Results.Add(serverDiscoveryUrl);
                         IList<EndpointDescriptionEx> endpoins = SampleApplication.UaApplication.GetEndpoints(serverDiscoveryUrl);
 

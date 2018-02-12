@@ -163,8 +163,22 @@ namespace SampleClientXamarin.ViewModels
         /// </summary>
         public bool IsEditUserCredentials
         {
-            get { return m_isEditUserCredentials; }
+            get { return m_isEditUserCredentials && !IsBusy; }
             set { SetProperty(ref m_isEditUserCredentials, value); }
+        }
+
+
+        /// <summary>
+        /// Public property to set and get indicator if item is busy
+        /// </summary>
+        public new bool IsBusy
+        {
+            get { return base.IsBusy; }
+            set
+            {
+                base.IsBusy = value; 
+                OnPropertyChanged("IsEditUserCredentials");
+            }
         }
 
         /// <summary>
@@ -236,7 +250,7 @@ namespace SampleClientXamarin.ViewModels
             }
             catch (Exception e)
             {
-                Result = string.Format("CreateSession Error: {0}", e.Message);
+                Result += string.Format("Error: {0}", e.Message);
             }
         }
 

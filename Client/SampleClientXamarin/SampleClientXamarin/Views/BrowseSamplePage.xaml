@@ -1,12 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviours="clr-namespace:SampleClientXamarin.Behaviours;assembly=SampleClientXamarin.Android"
              x:Class="SampleClientXamarin.Views.BrowseSamplePage"
              BackgroundColor="{StaticResource view_background}"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin Forms!" />
-        </StackLayout>
+        <Grid>
+            <StackLayout>
+                <Label 
+                       Margin="8,8, 0, 0" 
+                       Text="SampleServer URL:" 
+                       VerticalOptions="Center"/>
+                <Entry 
+                       Placeholder="Enter SampleServer URL..." 
+                       IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                       Text="{Binding SampleServerUrl}" Keyboard="Url"
+                       HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                <Button 
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                    Clicked="Browse_OnClicked" Text="Browse"/>
+                <StackLayout Orientation="Horizontal">
+                    <Label 
+                        Margin="8,8, 8, 0" 
+                        Text="Max references returned:" 
+                        VerticalOptions="Center"/>
+                    <Entry 
+                        Placeholder="maximum references returned..." 
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                        Text="{Binding MaxReferencesReturned}" Keyboard="Numeric"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+                        <Entry.Behaviors>
+                            <behaviours:UInt32ValidationBehaviour />
+                        </Entry.Behaviors>
+                    </Entry>
+                </StackLayout>
+                <Button 
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                    Clicked="BrowseWithOptions_OnClicked" Text="Browse with options"/>
+
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Session status:" Style="{StaticResource BoldLabel}"/>
+                    <Label Text="{Binding SessionStatusText}"/>
+                </StackLayout>
+
+                <Label Text="Results:"/>
+                <!-- Results list -->
+                <ListView 
+                    Margin="0,4,0,0"
+                    ItemsSource="{Binding Results}"
+                    CachingStrategy="RecycleElement"
+                    HasUnevenRows="True"
+                    IsPullToRefreshEnabled="false">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label  Margin="1" Text="{Binding Text}"/>
+                                    <Label IsVisible="{Binding Info, Converter={StaticResource NullToFalseConverter}}"
+                                        Margin="1" Text="{Binding Info, StringFormat='[{0}]'}"/>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+            
+            <ActivityIndicator 
+                IsVisible="{Binding IsBusy}"
+                IsRunning="{Binding IsBusy}"/>
+            </Grid>
     </ContentPage.Content>
 </ContentPage>

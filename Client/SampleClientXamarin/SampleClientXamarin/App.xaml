@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Application xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="SampleClientXamarin.App">
+<Application xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:converters="clr-namespace:SampleClientXamarin.Converters;assembly=SampleClientXamarin.Android"
+             x:Class="SampleClientXamarin.App">
   <Application.Resources>
         <ResourceDictionary>
-
+            <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <converters:NullToFalseConverter x:Key="NullToFalseConverter" />
+            
+            
             <Color x:Key="softing_primary_color">#009ee3</Color>
             <Color x:Key="softing_industrial_color">#005591</Color>
             <Color x:Key="softing_secondary_light_gray">#D8E0E8</Color>
@@ -30,6 +35,18 @@
             <Style TargetType="Label">
                 <Setter Property="FontFamily" Value="Calibri Regular" />
                 <Setter Property="TextColor" Value="{StaticResource MediumGrayTextColor}" />
+            </Style>
+
+            <Style TargetType="Entry">
+                <Setter Property="FontSize" Value="Small" />
+                <Setter Property="FontFamily" Value="Calibri Regular" />
+                <Setter Property="TextColor" Value="{StaticResource MediumGrayTextColor}" />
+            </Style>
+
+            <Style TargetType="ActivityIndicator">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Color" Value="{StaticResource softing_secondary_dark_gray}" />
             </Style>
 
             <Style x:Key="HeaderLabel" TargetType="Label">
