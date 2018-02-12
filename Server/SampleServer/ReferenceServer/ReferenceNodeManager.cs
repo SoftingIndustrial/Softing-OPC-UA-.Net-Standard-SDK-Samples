@@ -23,7 +23,7 @@ namespace SampleServer.ReferenceServer
     {
         #region Private Members
 
-        private readonly ReferenceServerConfiguration m_configuration;
+        private readonly SampleServerConfiguration m_configuration;
         private Opc.Ua.Test.DataGenerator m_generator;
         private Timer m_simulationTimer;
         private UInt16 m_simulationInterval = 1000;
@@ -42,12 +42,12 @@ namespace SampleServer.ReferenceServer
             SystemContext.NodeIdFactory = this;
 
             // get the configuration for the node manager.
-            m_configuration = configuration.ParseExtension<ReferenceServerConfiguration>();
+            m_configuration = configuration.ParseExtension<SampleServerConfiguration>();
 
             // use suitable defaults if no configuration exists.
             if (m_configuration == null)
             {
-                m_configuration = new ReferenceServerConfiguration();
+                m_configuration = new SampleServerConfiguration();
             }
 
             m_dynamicNodes = new List<BaseDataVariableState>();

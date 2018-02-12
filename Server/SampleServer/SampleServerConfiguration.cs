@@ -10,25 +10,25 @@
 
 using System.Runtime.Serialization;
 
-namespace SampleServer.ReferenceServer
+namespace SampleServer
 {
     /// <summary>
-    /// Stores the configuration the data access node manager.
+    /// Stores custom configuration parameters
     /// </summary>
-    [DataContract(Namespace = Namespaces.ReferenceApplications)]
-    public class ReferenceServerConfiguration
+    [DataContract(Namespace = Namespaces.OpcUaConfig)]
+    public class SampleServerConfiguration
     {
         #region Constructors
         /// <summary>
-        /// The default constructor.
+        /// The default constructor
         /// </summary>
-        public ReferenceServerConfiguration()
+        public SampleServerConfiguration()
         {
             Initialize();
         }
 
         /// <summary>
-        /// Initializes the object during de-serialization.
+        /// Initializes the object during de-serialization
         /// </summary>
         [OnDeserializing()]
         private void Initialize(StreamingContext context)
@@ -46,7 +46,7 @@ namespace SampleServer.ReferenceServer
 
         #region Public Properties
         /// <summary>
-        /// The delay in seconds to allow a graceful shutdown.
+        /// The delay in seconds to allow a graceful shutdown
         /// </summary>
         [DataMember(Order = 1)]
         public uint ShutdownDelay

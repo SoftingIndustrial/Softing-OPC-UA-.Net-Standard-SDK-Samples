@@ -17,6 +17,8 @@ namespace SampleServer
     {
         public const string OpcUa = "http://opcfoundation.org/UA/";
 
+        public const string OpcUaConfig = "http://opcfoundation.org/UA/SDK/Configuration.xsd";
+
         public const string OpcUaXsd = "http://opcfoundation.org/UA/2008/02/Types.xsd";
 
         public const string Alarms = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/AlarmsServer";

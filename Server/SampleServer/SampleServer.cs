@@ -49,10 +49,10 @@ namespace SampleServer
             Utils.Trace(Utils.TraceMasks.Information, "SampleServer.CreateMasterNodeManager", "Creating the Node Managers.");
 
             // Get the ShutdownDelay configuration parameter
-            ReferenceServerConfiguration referenceServerConfiguration = configuration.ParseExtension<ReferenceServerConfiguration>();
-            if (referenceServerConfiguration != null)
+            SampleServerConfiguration sampleServerConfiguration = configuration.ParseExtension<SampleServerConfiguration>();
+            if (sampleServerConfiguration != null)
             {
-                m_shutdownDelay = referenceServerConfiguration.ShutdownDelay;
+                m_shutdownDelay = sampleServerConfiguration.ShutdownDelay;
             }
 
             List<INodeManager> nodeManagers = new List<INodeManager>();
