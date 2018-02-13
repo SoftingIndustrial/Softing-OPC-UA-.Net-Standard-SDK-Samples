@@ -11,21 +11,21 @@
   <SecurityConfiguration>
     <ApplicationCertificate>
       <StoreType>Directory</StoreType>
-      <StorePath>%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\own</StorePath>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
       <SubjectName>SoftingOpcUaSampleServer</SubjectName>
     </ApplicationCertificate>
     <TrustedIssuerCertificates>
       <StoreType>Directory</StoreType>
-      <StorePath>%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\issuer</StorePath>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/issuer</StorePath>
     </TrustedIssuerCertificates>
     <TrustedPeerCertificates>
       <StoreType>Directory</StoreType>
-      <StorePath>%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\trusted</StorePath>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/trusted</StorePath>
     </TrustedPeerCertificates>
     <NonceLength>32</NonceLength>
     <RejectedCertificateStore>
       <StoreType>Directory</StoreType>
-      <StorePath>%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\rejected</StorePath>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/rejected</StorePath>
     </RejectedCertificateStore>
     <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
     be used for easy debugging purposes ONLY and turned off for production deployments! -->
@@ -145,7 +145,7 @@
   </Extensions>
   
   <TraceConfiguration>
-    <OutputFilePath>%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\logs\SampleServer.log</OutputFilePath>
+    <OutputFilePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleServer.log</OutputFilePath>
     <DeleteOnLoad>true</DeleteOnLoad>
     <!-- Show Only Errors -->
     <!-- <TraceMasks>1</TraceMasks> -->
