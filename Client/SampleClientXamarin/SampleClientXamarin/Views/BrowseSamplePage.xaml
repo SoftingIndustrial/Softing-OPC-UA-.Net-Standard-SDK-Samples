@@ -24,7 +24,7 @@
                     <Label 
                         Margin="8,8, 8, 0" 
                         Text="Max references returned:" 
-                        VerticalOptions="Center"/>
+                        VerticalOptions="Center" LineBreakMode="NoWrap"/>
                     <Entry 
                         Placeholder="maximum references returned..." 
                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
@@ -39,15 +39,17 @@
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                     Clicked="BrowseWithOptions_OnClicked" Text="Browse with options"/>
 
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Session status:" Style="{StaticResource BoldLabel}"/>
-                    <Label Text="{Binding SessionStatusText}"/>
+                <StackLayout Orientation="Horizontal" Margin="4, 4, 0, 0">
+                    <Label Text="Session status:" Style="{StaticResource BoldLabel}" VerticalTextAlignment="Center"/>
+                    <Label Text="{Binding SessionStatusText}" VerticalTextAlignment="Center"/>
                 </StackLayout>
 
-                <Label Text="Results:"/>
+                <Label  Margin="4,4, 0, 0" 
+                        Text="Results:"
+                        Style="{StaticResource BoldLabel}"/>
                 <!-- Results list -->
                 <ListView 
-                    Margin="0,4,0,0"
+                    Margin="4,0,0,0"
                     ItemsSource="{Binding Results}"
                     CachingStrategy="RecycleElement"
                     HasUnevenRows="True"

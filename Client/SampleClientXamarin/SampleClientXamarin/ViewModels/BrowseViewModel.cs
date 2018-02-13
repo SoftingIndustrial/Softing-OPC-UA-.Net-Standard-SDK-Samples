@@ -116,7 +116,7 @@ namespace SampleClientXamarin.ViewModels
                     {
                         Results.Add(new BrowseResultNode()
                         {
-                            Text = "  -" + rootReferenceDescription.DisplayName
+                            Text = rootReferenceDescription.DisplayName.Text
                         });
                         if (rootReferenceDescription.BrowseName.Name == "Objects")
                         {
@@ -126,7 +126,7 @@ namespace SampleClientXamarin.ViewModels
                             {
                                 Results.Add(new BrowseResultNode()
                                 {
-                                    Text = "     -" + objectRefDescription.DisplayName
+                                    Text = "----- " + objectRefDescription.DisplayName
                                 });
                                 if (objectRefDescription.BrowseName.Name == "Server")
                                 {
@@ -136,7 +136,7 @@ namespace SampleClientXamarin.ViewModels
                                     {
                                         Results.Add(new BrowseResultNode()
                                         {
-                                            Text = "        -" + serverReferenceDescription.DisplayName
+                                            Text = "---------- " + serverReferenceDescription.DisplayName
                                         });
                                     }
                                 }
@@ -183,7 +183,7 @@ namespace SampleClientXamarin.ViewModels
                     {
                         Results.Add(new BrowseResultNode()
                         {
-                            Text = "  -" + rootReferenceDescription.DisplayName, 
+                            Text = rootReferenceDescription.DisplayName.Text, 
                             Info = rootReferenceDescription.ReferenceTypeName
                         });
                         
@@ -195,7 +195,7 @@ namespace SampleClientXamarin.ViewModels
                             {
                                 Results.Add(new BrowseResultNode()
                                 {
-                                    Text = "  -" + objectReferenceDescription.DisplayName,
+                                    Text = "----- " + objectReferenceDescription.DisplayName,
                                     Info = objectReferenceDescription.ReferenceTypeName
                                 });
                                 if (objectReferenceDescription.BrowseName.Name == "Server")
@@ -206,7 +206,7 @@ namespace SampleClientXamarin.ViewModels
                                     {
                                         Results.Add(new BrowseResultNode()
                                         {
-                                            Text = "        -" + serverReferenceDescription.DisplayName,
+                                            Text = "---------- " + serverReferenceDescription.DisplayName,
                                             Info = serverReferenceDescription.ReferenceTypeName
                                         });
                                     }

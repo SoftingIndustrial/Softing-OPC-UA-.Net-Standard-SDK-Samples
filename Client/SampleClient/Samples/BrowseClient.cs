@@ -98,7 +98,7 @@ namespace SampleClient.Samples
         #region Browse Methods
 
         /// <summary>
-        /// The BrowseTheServer method uses the Browse method with two parameters, in this case the browse options will be taken from the Session object.
+        /// The BrowseTheServer method uses the Browse method with one parameter, in this case the browse options will be taken from the Session object.
         /// If there are no browse options on the Session object the browse will be done with the default options.
         /// </summary>
         public void BrowseTheServer()
@@ -146,7 +146,7 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
-        /// The BrowseWithOptions method uses the Browse method with three parameters, in this case the browse options will be given as a parameter.
+        /// The BrowseWithOptions method uses the Browse method with two parameters, in this case the browse options will be given as a parameter.
         /// A BrowseDescription object is created first, on which browse options can be set, and given as parameter to the Browse method.
         /// In this case any browse options on the Session object will be ignored.
         /// </summary>
