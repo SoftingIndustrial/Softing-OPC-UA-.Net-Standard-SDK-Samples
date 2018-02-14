@@ -21,14 +21,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)Behaviours\UInt32ValidationBehaviour.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\InverseBoolConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\NullToFalseConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\AreObjectsEqualConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enums.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ObservableObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SampleApplication.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\BrowseResultNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Int64Item.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\SampleItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BrowseViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConnectViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\DiscoveryViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Enums.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\EventsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MethodsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MonitoredItemViewModel.cs" />

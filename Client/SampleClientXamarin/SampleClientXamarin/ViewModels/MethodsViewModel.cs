@@ -284,7 +284,6 @@ namespace SampleClientXamarin.ViewModels
             {
                 StatusCode = "Unexpected result. Output parameters in wrong format";
             }
-            Thread.Sleep(3000);
             IsBusy = false;
         }
 

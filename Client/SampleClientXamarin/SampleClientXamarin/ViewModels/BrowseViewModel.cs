@@ -34,14 +34,7 @@ namespace SampleClientXamarin.ViewModels
         #endregion
 
         #region Constructors
-        /// <summary>
-        /// Results list
-        /// </summary>
-        public ObservableCollection<BrowseResultNode> Results
-        {
-            get { return m_results; }
-        }
-
+        
         /// <summary>
         /// Create new instance of BrowseViewModel
         /// </summary>
@@ -57,6 +50,7 @@ namespace SampleClientXamarin.ViewModels
         #endregion
 
         #region Properties
+
         /// <summary>
         /// SampleServer Url
         /// </summary>
@@ -78,6 +72,14 @@ namespace SampleClientXamarin.ViewModels
         {
             get { return m_sessionStatusText; }
             set { SetProperty(ref m_sessionStatusText, value); }
+        }
+
+        /// <summary>
+        /// Results list
+        /// </summary>
+        public ObservableCollection<BrowseResultNode> Results
+        {
+            get { return m_results; }
         }
 
         /// <summary>

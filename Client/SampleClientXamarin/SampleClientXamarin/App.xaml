@@ -6,6 +6,7 @@
         <ResourceDictionary>
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
             <converters:NullToFalseConverter x:Key="NullToFalseConverter" />
+            <converters:AreObjectsEqualConverter x:Key="AreObjectsEqualConverter"/>
             
             
             <Color x:Key="softing_primary_color">#009ee3</Color>
