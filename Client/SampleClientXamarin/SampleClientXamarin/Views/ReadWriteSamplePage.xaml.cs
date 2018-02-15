@@ -35,14 +35,19 @@ namespace SampleClientXamarin.Views
 
 	    private void AddArrayItem_OnClicked(object sender, EventArgs e)
 	    {
-	        m_viewModel.ArrayValue.Add(new Int64Item());
-	    }
+	        Int64Item newItem = new Int64Item();
+
+            m_viewModel.ArrayValue.Add(newItem);
+	        ArrayValueList.ScrollTo(newItem, ScrollToPosition.MakeVisible, true);
+        }
 
 	    private void RemoveArrayItem_OnClicked(object sender, EventArgs e)
 	    {
 	        if (m_viewModel.ArrayValue.Count > 0)
 	        {
 	            m_viewModel.ArrayValue.RemoveAt(m_viewModel.ArrayValue.Count-1);
+
+	            ArrayValueList.ScrollTo(m_viewModel.ArrayValue[m_viewModel.ArrayValue.Count-1], ScrollToPosition.MakeVisible, true);
             }
 	    }
 	}

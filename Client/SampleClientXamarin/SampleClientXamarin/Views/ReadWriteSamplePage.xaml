@@ -8,6 +8,7 @@
     <ContentPage.Content>
         <Grid Margin="4">
             <StackLayout>
+                <!--Header -->
                 <Label 
                        Margin="8,8, 0, 0" 
                        Text="SampleServer URL:" 
@@ -29,10 +30,10 @@
                             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                             SelectedItem="{Binding SelectedOperationTarget, Mode=TwoWay}"/>
                 </StackLayout>
-
-                <StackLayout Margin="4" Padding="1" BackgroundColor="{StaticResource softing_primary_color}">
+                <!--Content-->
+                <StackLayout Margin="4" Padding="1" BackgroundColor="{StaticResource softing_primary_color}"  VerticalOptions="FillAndExpand">
                     <StackLayout BackgroundColor="{StaticResource view_background}"
-                                 Padding="4">
+                                 Padding="4"  VerticalOptions="FillAndExpand">
                         <Label Text="Operation data" Style="{StaticResource BoldLabel}"/>
                         <!--VariableNodePanel-->
                         <Grid x:Name="VariableNodePanel"
@@ -173,8 +174,95 @@
                                 </ListView.ItemTemplate>
                             </ListView>
                         </Grid>
+
+                        <!--ComplexValuePanel-->
+                        <Grid x:Name="ComplexValuePanel"
+                              IsVisible="{Binding SelectedOperationTarget, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Static viewModels:OperationTarget.ComplexValue}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
+                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding ComplexNodeId}"/>
+
+                                <Grid  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                                                IsVisible="{Binding IsVisible, Source={x:Reference ComplexValueNullLabel}, Converter={StaticResource InverseBoolConverter}}"
+                                                VerticalOptions="FillAndExpand">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0" Text="Name" Style="{StaticResource BoldLabel}"/>
+                                        <Label Grid.Column="1" Text="Value" Style="{StaticResource BoldLabel}"/>
+                                        <Label Grid.Column="2" Text="Type" Style="{StaticResource BoldLabel}"/>
+                                    </Grid>
+                                    <ListView Grid.Row="1"
+                                        Margin="0" VerticalOptions="FillAndExpand"
+                                        ItemsSource="{Binding ComplexValue.Fields}" 
+                                        CachingStrategy="RetainElement"
+                                        HasUnevenRows="True"
+                                        IsPullToRefreshEnabled="false">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <ViewCell>
+                                                    <Grid VerticalOptions="Center" Margin="0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition/>
+                                                            <ColumnDefinition/>
+                                                            <ColumnDefinition/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Label Grid.Column="0" Text="{Binding FieldName}" VerticalTextAlignment="Center"/>
+                                                        <Label Grid.Column="1" Text="{Binding Value}" VerticalTextAlignment="Center" IsVisible="{Binding IsEditable, Converter={StaticResource InverseBoolConverter}}"/>
+                                                        <Entry Grid.Column="1" Text="{Binding Value}" IsVisible="{Binding IsEditable}"/>
+                                                        <Label Grid.Column="2" Text="{Binding TypeName}" VerticalTextAlignment="Center" />
+                                                    </Grid>
+                                                </ViewCell>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </Grid>
+
+                                <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                                        x:Name="ComplexValueNullLabel"
+                                        Text="Complex value object is null." 
+                                       VerticalTextAlignment="Start"
+                                        IsVisible="{Binding ComplexValue, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Null}}"/>
+                            </Grid>
+                        </Grid>
+
+                        <!--EnumerationValuePanel-->
+                        <Grid x:Name="EnumerationValuePanel"
+                              IsVisible="{Binding SelectedOperationTarget, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Static viewModels:OperationTarget.EnumerationValue}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding EnumNodeId}"/>
+                            <Label Grid.Row="1" Grid.Column="0" Text="Enum value:" VerticalTextAlignment="End" Margin="0,0,0,2"/>
+                            <Picker Grid.Row="1" Grid.Column="1" 
+                                    ItemsSource="{Binding EnumValue.ValueStrings}" SelectedItem="{Binding EnumValue.ValueString}"
+                                    Title="Select enum value"/>
+                        </Grid>
                     </StackLayout>
                 </StackLayout>
+                <!--Actions-->
                 <Grid  Margin="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -183,7 +271,7 @@
                     <Button  Grid.Column="0" Text="Read" Clicked="Read_OnClicked" Margin="0"/>
                     <Button  Grid.Column="1" Text="Write" Clicked="Write_OnClicked" Margin="0" IsEnabled="{Binding CanWrite}"/>
                 </Grid>
-                
+                <!--Status information-->
                 <Grid Margin="4, 4, 0, 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>

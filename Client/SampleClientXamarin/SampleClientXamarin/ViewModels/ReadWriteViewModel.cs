@@ -13,12 +13,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Java.Lang;
 using Opc.Ua;
 using SampleClientXamarin.Helpers;
 using SampleClientXamarin.Models;
 using Softing.Opc.Ua.Client;
 using Softing.Opc.Ua.Client.Nodes;
+using Softing.Opc.Ua.Types;
+using Xamarin.Forms;
 using Exception = System.Exception;
 
 namespace SampleClientXamarin.ViewModels
@@ -38,13 +41,8 @@ namespace SampleClientXamarin.ViewModels
         const string StaticGuidNodeId = "ns=7;s=Scalar_Static_Guid";
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\DateTime 
         const string StaticDateTimeNodeId = "ns=7;s=Scalar_Static_DateTime";
-
+        
        
-        //Browse path: Root\Objects\CTT\StructuredTypeVariables\EnumerationType1Variable
-        const string StaticEnumNodeId = "ns=7;i=14";
-        //Browse path: Root\Objects\CTT\StructuredTypeVariables\DataType5Variable
-        const string StaticComplexNodeId = "ns=7;i=13";
-
         private const string SessionName = "BrowseClient Session";
         private ClientSession m_session;
         private string m_sessionStatusText;
@@ -55,6 +53,8 @@ namespace SampleClientXamarin.ViewModels
         private UInt32 m_uint32NodeValue;
         private BaseNode m_baseNode;
         private ObservableCollection<Int64Item> m_arrayValue;
+        private ComplexValueItem m_complexValue;
+        private EnumValue m_enumValue;
         #endregion
 
         #region Constructors
@@ -112,6 +112,23 @@ namespace SampleClientXamarin.ViewModels
             get { return "ns=7;s=Scalar_Static_Arrays_Int64"; }
         }
 
+        /// <summary>
+        /// Node id for complex value node
+        /// Browse path: Root\Objects\CTT\StructuredTypeVariables\DataType5Variable
+        /// </summary>
+        public string ComplexNodeId
+        {
+            get { return "ns=7;i=13"; }
+        }
+
+        /// <summary>
+        /// Node id for enumeration node
+        /// Browse path: Root\Objects\CTT\StructuredTypeVariables\EnumerationType1Variable
+        /// </summary>
+        public string EnumNodeId
+        {
+            get { return "ns=7;i=14"; }
+        }
 
         /// <summary>
         /// SampleServer Url
@@ -162,6 +179,8 @@ namespace SampleClientXamarin.ViewModels
                 OnPropertyChanged("CanWrite");
                 BaseNode = null;
                 m_arrayValue.Clear();
+                ComplexValue = null;
+                EnumValue = null;
             }
         }
 
@@ -193,6 +212,27 @@ namespace SampleClientXamarin.ViewModels
         }
 
         /// <summary>
+        /// Complex value for read write complex values
+        /// </summary>
+        public ComplexValueItem ComplexValue
+        {
+            get { return m_complexValue; }
+            set { SetProperty(ref m_complexValue, value); }
+        }
+
+        /// <summary>
+        /// Enum value object read from the server
+        /// </summary>
+        public EnumValue EnumValue
+        {
+            get { return m_enumValue; }
+            set
+            {
+                SetProperty(ref m_enumValue, value); 
+                OnPropertyChanged("EnumValue.ValueString");
+            }
+        }
+        /// <summary>
         /// Decide if write operation is available
         /// </summary>
         public bool CanWrite
@@ -203,6 +243,8 @@ namespace SampleClientXamarin.ViewModels
                 {
                     case OperationTarget.ValueForNode:
                     case OperationTarget.ArrayValue:
+                    case OperationTarget.ComplexValue:
+                    case OperationTarget.EnumerationValue:
                         return true;
                     default:
                         return false;
@@ -217,21 +259,38 @@ namespace SampleClientXamarin.ViewModels
         /// </summary>
         public void Read()
         {
-            switch (SelectedOperationTarget)
+            ThreadPool.QueueUserWorkItem(o =>
             {
-                case OperationTarget.VariableNode:
-                    ReadVariableNode();
-                    break;
-                case OperationTarget.ObjectNode:
-                    ReadObjectNode();
-                    break;
-                case OperationTarget.ValueForNode:
-                    ReadValueForNode();
-                    break;
-                case OperationTarget.ArrayValue:
-                    ReadArrayValue();
-                    break;
-            }
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    IsBusy = true;
+                });
+                switch (SelectedOperationTarget)
+                {
+                    case OperationTarget.VariableNode:
+                        ReadVariableNode();
+                        break;
+                    case OperationTarget.ObjectNode:
+                        ReadObjectNode();
+                        break;
+                    case OperationTarget.ValueForNode:
+                        ReadValueForNode();
+                        break;
+                    case OperationTarget.ArrayValue:
+                        ReadArrayValue();
+                        break;
+                    case OperationTarget.ComplexValue:
+                        ReadComplexValue();
+                        break;
+                    case OperationTarget.EnumerationValue:
+                        ReadEnumValue();
+                        break;
+                }
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    IsBusy = false;
+                });
+            });
         }
 
         /// <summary>
@@ -239,15 +298,32 @@ namespace SampleClientXamarin.ViewModels
         /// </summary>
         public void Write()
         {
-            switch (SelectedOperationTarget)
+            ThreadPool.QueueUserWorkItem(o =>
             {
-                case OperationTarget.ValueForNode:
-                    WriteValueForNode();
-                    break;
-                case OperationTarget.ArrayValue:
-                    WriteArrayValueForNode();
-                    break;
-            }
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    IsBusy = true;
+                });
+                switch (SelectedOperationTarget)
+                {
+                    case OperationTarget.ValueForNode:
+                        WriteValueForNode();
+                        break;
+                    case OperationTarget.ArrayValue:
+                        WriteArrayValueForNode();
+                        break;
+                    case OperationTarget.ComplexValue:
+                        WriteComplexValueForNode();
+                        break;
+                    case OperationTarget.EnumerationValue:
+                        WriteEnumValueForNode();
+                        break;
+                }
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    IsBusy = false;
+                });
+            });
         }
         #endregion
 
@@ -320,7 +396,6 @@ namespace SampleClientXamarin.ViewModels
         /// </summary>
         public void ReadVariableNode()
         {
-            IsBusy = true;
             if (m_session == null)
             {
                 //try to initialize session
@@ -342,14 +417,13 @@ namespace SampleClientXamarin.ViewModels
                 }
                 else
                 {
-                    OperationStatusText = "ReadVariableNode status code: Good";
+                    OperationStatusText = "Good";
                 }
             }
             catch (Exception e)
             {
                 OperationStatusText = "ReadVariableNode error:" + e.Message;
             }
-            IsBusy = false;
         }
 
         /// <summary>
@@ -357,7 +431,6 @@ namespace SampleClientXamarin.ViewModels
         /// </summary>
         public void ReadObjectNode()
         {
-            IsBusy = true;
             if (m_session == null)
             {
                 //try to initialize session
@@ -379,14 +452,13 @@ namespace SampleClientXamarin.ViewModels
                 }
                 else
                 {
-                    OperationStatusText = "ReadVariableNode status code: Good";
+                    OperationStatusText = "Good";
                 }
             }
             catch (Exception e)
             {
                 OperationStatusText = "ReadObjectNode error:" + e.Message;
             }
-            IsBusy = false;
         }
 
         /// <summary>
@@ -394,7 +466,6 @@ namespace SampleClientXamarin.ViewModels
         /// </summary>
         public void ReadValueForNode()
         {
-            IsBusy = true;
             if (m_session == null)
             {
                 //try to initialize session
@@ -414,13 +485,12 @@ namespace SampleClientXamarin.ViewModels
             {
                 DataValueEx dataValue = m_session.Read(readValueId);
                 UInt32NodeValue = (uint) dataValue.Value;
-                OperationStatusText = "ReadValueForNode status code: " + dataValue.StatusCode;
+                OperationStatusText = dataValue.StatusCode.ToString();
             }
             catch (Exception e)
             {
                 OperationStatusText = "ReadValueForNode error:" +  e.Message;
             }
-            IsBusy = false;
         }
 
         /// <summary>
@@ -428,14 +498,13 @@ namespace SampleClientXamarin.ViewModels
         /// </summary>
         public void ReadArrayValue()
         {
-            IsBusy = true;
             if (m_session == null)
             {
                 //try to initialize session
                 InitializeSession();
                 if (m_session == null)
                 {
-                    OperationStatusText = "ReadValueForNode no session available.";
+                    OperationStatusText = "ReadArrayValue no session available.";
                     return;
                 }
             }
@@ -459,14 +528,137 @@ namespace SampleClientXamarin.ViewModels
                 }
                 else
                 {
-                    OperationStatusText = "ReadArrayValue status code: " + dataValue.StatusCode;
+                    OperationStatusText = dataValue.StatusCode.ToString();
                 }
             }
             catch (Exception e)
             {
                 OperationStatusText = "ReadArrayValue error:" + e.Message;
             }
-            IsBusy = false;
+        }
+
+        /// <summary>
+        ///  Reads value for a complex node providing the NodeID and without read the whole node information.
+        /// </summary>
+        public void ReadComplexValue()
+        {
+            if (m_session == null)
+            {
+                //try to initialize session
+                InitializeSession();
+                if (m_session == null)
+                {
+                    OperationStatusText = "ReadComplexValue no session available.";
+                    return;
+                }
+            }
+            //ensure type dictionaries are loaded
+            if (SampleApplication.UaApplication.Configuration.DecodeCustomDataTypes)
+            {
+                while (!m_session.TypeDictionariesLoaded)
+                {
+                    Task.Delay(500).Wait();
+                }
+            }
+            ReadValueId readValueId = new ReadValueId();
+            readValueId.NodeId = new NodeId(ComplexNodeId);
+            readValueId.AttributeId = Attributes.Value;
+            
+            try
+            {
+                DataValueEx dataValue = m_session.Read(readValueId);
+
+                //display information for read value
+                OperationStatusText = dataValue.StatusCode.ToString();
+
+                StructuredValue structuredValue = dataValue.ProcessedValue as StructuredValue;
+                if (structuredValue == null)
+                {
+                    ComplexValue = null;
+                }
+                else
+                {
+                    ComplexValue = new ComplexValueItem();
+                    foreach (StructuredField field in structuredValue.Fields)
+                    {
+                        ComplexValueFieldItem item = null;
+                        object value = structuredValue[field.Name];
+                        if ((value is EnumValue) || (value is StructuredValue))
+                        {
+                            item = new ComplexValueFieldItem(field.Name,
+                                structuredValue[field.Name].GetType().Name,
+                                value.ToString());
+                        }
+                        else
+                        {
+                            item = new ComplexValueFieldItem(field.Name,
+                                structuredValue[field.Name].GetType().Name,
+                                value);
+                            item.IsEditable = true;
+                        }
+                        ComplexValue.Fields.Add(item);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                OperationStatusText = "ReadComplexValue error:" + e.Message;
+            }
+        }
+
+        /// <summary>
+        ///  Reads value for an enum node providing the NodeID and without read the whole node information.
+        /// </summary>
+        public void ReadEnumValue()
+        {
+            if (m_session == null)
+            {
+                //try to initialize session
+                InitializeSession();
+                if (m_session == null)
+                {
+                    OperationStatusText = "ReadEnumValue no session available.";
+                    return;
+                }
+            }
+            //ensure type dictionaries are loaded
+            if (SampleApplication.UaApplication.Configuration.DecodeCustomDataTypes)
+            {
+                while (!m_session.TypeDictionariesLoaded)
+                {
+                    Task.Delay(500).Wait();
+                }
+            }
+
+            NodeId nodeId = new NodeId(EnumNodeId);
+            try
+            {
+                BaseNode baseNode = m_session.ReadNode(nodeId);
+
+                if (baseNode.NodeClass == NodeClass.Variable)
+                {
+                    VariableNodeEx variableNode = baseNode as VariableNodeEx;
+                    ReadValueId readValueId = new ReadValueId();
+                    if (variableNode != null)
+                    {
+                        readValueId.NodeId = variableNode.NodeId;
+                        readValueId.AttributeId = Attributes.Value;
+
+                        DataValueEx dataValue = m_session.Read(readValueId);
+                        //convert int32 value read from node to a well known enumeration type
+                        dataValue.TryConvertToEnumValue(m_session, variableNode.DataTypeId, variableNode.ValueRank);
+                        
+                        EnumValue = dataValue.ProcessedValue as EnumValue;
+                        
+                        //display information for read value
+                        OperationStatusText = dataValue.StatusCode.ToString();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                OperationStatusText = "ReadEnumValue error:" + e.Message;
+            }
         }
         #endregion
 
@@ -476,7 +668,6 @@ namespace SampleClientXamarin.ViewModels
         /// </summary>
         private void WriteValueForNode()
         {
-            IsBusy = true;
             if (m_session == null)
             {
                 //try to initialize session
@@ -501,13 +692,12 @@ namespace SampleClientXamarin.ViewModels
             try
             {
                 StatusCode statusCode = m_session.Write(writeValue);
-                OperationStatusText = "WriteValueForNode status code: " + statusCode;
+                OperationStatusText = statusCode.ToString();
             }
             catch (Exception e)
             {
                 OperationStatusText = "WriteValueForNode error:" + e.Message;
             }
-            IsBusy = false;
         }
 
         /// <summary>
@@ -515,7 +705,6 @@ namespace SampleClientXamarin.ViewModels
         /// </summary>
         public void WriteArrayValueForNode()
         {
-            IsBusy = true;
             if (m_session == null)
             {
                 //try to initialize session
@@ -544,14 +733,162 @@ namespace SampleClientXamarin.ViewModels
             try
             {
                 StatusCode statusCode = m_session.Write(writeValue);
-                OperationStatusText = "WriteArrayValueForNode status code: " + statusCode;
+                OperationStatusText = statusCode.ToString();
             }
             catch (Exception e)
             {
                 OperationStatusText = "WriteArrayValueForNode error:" + e.Message;
             }
-            IsBusy = false;
         }
+
+        /// <summary>
+        /// Writes a value for a complex node providing the NodeID. Some written values are random generated for a nice output.
+        /// </summary>
+        public void WriteComplexValueForNode()
+        {
+            if (m_session == null)
+            {
+                //try to initialize session
+                InitializeSession();
+                if (m_session == null)
+                {
+                    OperationStatusText = "WriteComplexValueForNode no session available.";
+                    return;
+                }
+            }
+            //ensure type dictionaries are loaded
+            if (SampleApplication.UaApplication.Configuration.DecodeCustomDataTypes)
+            {
+                while (!m_session.TypeDictionariesLoaded)
+                {
+                    Task.Delay(500).Wait();
+                }
+            }
+            try
+            {
+                //read data type id for node StaticComplexNodeId
+                ReadValueId readValueId = new ReadValueId();
+                readValueId.NodeId = new NodeId(ComplexNodeId);
+                readValueId.AttributeId = Attributes.DataType;
+
+                DataValueEx dataValuetypeId = m_session.Read(readValueId);
+
+                //Get Default value for data type
+                StructuredValue defaultValue = m_session.GetDefaultValueForDatatype(dataValuetypeId.Value as NodeId, ValueRanks.Scalar) as StructuredValue;
+
+                if (defaultValue != null)
+                {
+                    if (ComplexValue == null)
+                    {
+                        //change some fields for default object
+                        foreach (var field in defaultValue.Fields)
+                        {
+                            if (field.Value is string)
+                            {
+                                field.Value = "dummy string value";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //copy edited values to object to be written
+                        foreach (var field in ComplexValue.Fields)
+                        {
+                            if (field.IsEditable)
+                            {
+                                switch (field.TypeName)
+                                {
+                                    case "String":
+                                    defaultValue[field.FieldName] = field.Value;
+                                        break;
+                                    case "Int32":
+                                        int intValue = 0;
+                                        int.TryParse(field.Value.ToString(), out intValue);
+                                        defaultValue[field.FieldName] = intValue;
+                                        break;
+                                    case "Single":
+                                        Single singleValue = 0;
+                                        Single.TryParse(field.Value.ToString(), out singleValue);
+                                        defaultValue[field.FieldName] = singleValue;
+                                        break;
+                                }
+                               
+                            }
+                        }
+                    }
+                    //write new value to node StaticComplexNodeId
+                    DataValue valueToWrite = new DataValue();
+                    valueToWrite.Value = defaultValue;
+
+                    //create WriteValue that will be sent to the ClientSession instance 
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(ComplexNodeId);
+                    writeValue.Value = valueToWrite;
+
+                    StatusCode statusCode = m_session.Write(writeValue);
+
+                    OperationStatusText = statusCode.ToString();
+                }
+            }
+            catch (Exception e)
+            {
+                OperationStatusText = "WriteComplexValueForNode error:" + e.Message;
+            }
+        }
+
+        /// <summary>
+        /// Writes a value for an enum node providing the NodeID. Written value is random generated for a nice output.
+        /// </summary>
+        public void WriteEnumValueForNode()
+        {
+            if (m_session == null)
+            {
+                //try to initialize session
+                InitializeSession();
+                if (m_session == null)
+                {
+                    OperationStatusText = "WriteComplexValueForNode no session available.";
+                    return;
+                }
+            }
+            //ensure type dictionaries are loaded
+            if (SampleApplication.UaApplication.Configuration.DecodeCustomDataTypes)
+            {
+                while (!m_session.TypeDictionariesLoaded)
+                {
+                    Task.Delay(500).Wait();
+                }
+            }
+
+            WriteValue writeValue = new WriteValue();
+            writeValue.AttributeId = Attributes.Value;
+            writeValue.NodeId = new NodeId(EnumNodeId);
+
+            DataValue valueToWrite = new DataValue();
+            if (EnumValue != null)
+            {
+                valueToWrite.Value = EnumValue.Value;
+            }
+            else
+            {
+                Random random = new Random();
+                valueToWrite.Value = random.Next(0, 3);
+            }
+
+            writeValue.Value = valueToWrite;
+            try
+            {
+                StatusCode statusCode = m_session.Write(writeValue);
+
+                OperationStatusText = statusCode.ToString();
+            }
+            catch (Exception e)
+            {
+                OperationStatusText = "WriteEnumValueForNode error:" + e.Message;
+            }
+        }
+
         #endregion
     }
 }

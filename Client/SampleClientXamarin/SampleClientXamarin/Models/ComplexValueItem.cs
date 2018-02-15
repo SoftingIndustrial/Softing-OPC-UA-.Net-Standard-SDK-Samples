@@ -7,25 +7,31 @@
  * http://www.softing.com/LicenseSIA.pdf
  * 
  * ======================================================================*/
- 
+
+using System.Collections.Generic;
+using SampleClientXamarin.Helpers;
+
 namespace SampleClientXamarin.Models
 {
     /// <summary>
-    /// Model class for the Browse result
+    /// Display object for a Complex value object read from server
     /// </summary>
-    class BrowseResultNode
+    class ComplexValueItem : ObservableObject
     {
-        #region Public Properties
+        /// <summary>
+        /// Create new instance of ComplexValueItem
+        /// </summary>
+        public ComplexValueItem()
+        {
+            Fields = new List<ComplexValueFieldItem>();
+        }
+
+        #region Properties
 
         /// <summary>
-        /// Text property
+        /// List of fields
         /// </summary>
-        public string Text { get; set; }
-
-        /// <summary>
-        /// Additional information
-        /// </summary>
-        public string Info { get; set; }
+        public List<ComplexValueFieldItem> Fields { get; }
 
         #endregion
     }

@@ -61,10 +61,12 @@ namespace SampleClientXamarin.Helpers
             configuration.ApplicationType = ApplicationType.Client;
             configuration.ApplicationUri = $"urn:{Utils.GetHostName()}:OPCFoundation:SampleClient";
             configuration.TransportConfigurations = new TransportConfigurationCollection();
-            configuration.TransportQuotas = new TransportQuotas { OperationTimeout = 15000 };
+            configuration.TransportQuotas = new TransportQuotas { OperationTimeout = 15000, MaxByteStringLength = 4194304 , MaxMessageSize = 4194304 };
             configuration.ClientConfiguration = new ClientConfiguration { DefaultSessionTimeout = 15000 };
             configuration.DefaultSessionTimeout = 15000;
             configuration.DiscoveryOperationTimeout = 65000;
+            //enable read/write complex types
+            configuration.DecodeCustomDataTypes = true;
 
             string myDocsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             configuration.TraceConfiguration = new TraceConfiguration()
