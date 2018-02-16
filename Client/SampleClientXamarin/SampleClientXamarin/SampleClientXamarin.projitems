@@ -28,7 +28,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\BrowseResultNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ComplexValueFieldItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ComplexValueItem.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\Int64Item.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\NodeValueItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\SampleItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BrowseViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConnectViewModel.cs" />

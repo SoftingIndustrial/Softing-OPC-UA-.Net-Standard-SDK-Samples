@@ -260,6 +260,47 @@
                                     ItemsSource="{Binding EnumValue.ValueStrings}" SelectedItem="{Binding EnumValue.ValueString}"
                                     Title="Select enum value"/>
                         </Grid>
+
+                        <!--MultipleNodesPanel-->
+                        <Grid x:Name="MultipleNodesPanel"
+                              IsVisible="{Binding SelectedOperationTarget, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Static viewModels:OperationTarget.MultipleNodes}}">
+                            <ScrollView>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <!--int32 node-->
+                                    <Label Grid.Column="0" Text="Int32 NodeId:" Style="{StaticResource BoldLabel}"/>
+                                    <Label Grid.Column="1" Text="{Binding Int32NodeValue.NodeId}"/>
+
+                                    <Label Grid.Row="1" Grid.Column="0" Text="Value:" VerticalTextAlignment="Center"/>
+                                    <Entry  Grid.Row="1" Grid.Column="1" Text="{Binding Int32NodeValue.Value}"/>
+
+                                    <!--guid node-->
+                                    <Label  Grid.Row="2"  Grid.Column="0" Text="Guid NodeId:" Style="{StaticResource BoldLabel}"/>
+                                    <Label  Grid.Row="2"  Grid.Column="1" Text="{Binding GuidNodeValue.NodeId}"/>
+
+                                    <Label Grid.Row="3" Grid.Column="0" Text="Value:" VerticalTextAlignment="Center"/>
+                                    <Entry  Grid.Row="3" Grid.Column="1" Text="{Binding GuidNodeValue.Value}"/>
+                                    <!--datetime node-->
+                                    <Label Grid.Row="4" Grid.Column="0" Text="DateTime NodeId:" Style="{StaticResource BoldLabel}"/>
+                                    <Label Grid.Row="4" Grid.Column="1" Text="{Binding DateTimeNodeValue.NodeId}"/>
+
+                                    <Label Grid.Row="5" Grid.Column="0" Text="Value:" VerticalTextAlignment="Center"/>
+                                    <DatePicker  Grid.Row="5" Grid.Column="1" Date="{Binding DateTimeNodeValue.Value}"/>
+
+                                </Grid>
+                            </ScrollView>
+                        </Grid>
                     </StackLayout>
                 </StackLayout>
                 <!--Actions-->

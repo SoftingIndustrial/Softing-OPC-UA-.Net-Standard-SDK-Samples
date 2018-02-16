@@ -34,15 +34,12 @@ namespace SampleClientXamarin.ViewModels
         #region Private fields
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Int32
         const string StaticInt32NodeId = "ns=7;s=Scalar_Static_Int32";
-
-
-       
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Guid
         const string StaticGuidNodeId = "ns=7;s=Scalar_Static_Guid";
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\DateTime 
         const string StaticDateTimeNodeId = "ns=7;s=Scalar_Static_DateTime";
-        
-       
+
+        Random m_random = new Random();
         private const string SessionName = "BrowseClient Session";
         private ClientSession m_session;
         private string m_sessionStatusText;
@@ -52,9 +49,12 @@ namespace SampleClientXamarin.ViewModels
 
         private UInt32 m_uint32NodeValue;
         private BaseNode m_baseNode;
-        private ObservableCollection<Int64Item> m_arrayValue;
+        private ObservableCollection<NodeValueItem> m_arrayValue;
         private ComplexValueItem m_complexValue;
         private EnumValue m_enumValue;
+        private NodeValueItem m_dateTimeNodeValue;
+        private NodeValueItem m_guidNodeValue;
+        private NodeValueItem m_in32NodeValue;
         #endregion
 
         #region Constructors
@@ -65,7 +65,7 @@ namespace SampleClientXamarin.ViewModels
         public ReadWriteViewModel()
         {
             Title = "Read and write sample";
-            m_arrayValue = new ObservableCollection<Int64Item>();
+            m_arrayValue = new ObservableCollection<NodeValueItem>();
             SampleServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
             ThreadPool.QueueUserWorkItem(o => InitializeSession());
 
@@ -181,6 +181,9 @@ namespace SampleClientXamarin.ViewModels
                 m_arrayValue.Clear();
                 ComplexValue = null;
                 EnumValue = null;
+                DateTimeNodeValue = null;
+                Int32NodeValue = null;
+                GuidNodeValue = null;
             }
         }
 
@@ -205,7 +208,7 @@ namespace SampleClientXamarin.ViewModels
         /// <summary>
         /// Array value for read and write
         /// </summary>
-        public ObservableCollection<Int64Item> ArrayValue
+        public ObservableCollection<NodeValueItem> ArrayValue
         {
             get { return m_arrayValue; }
             set{SetProperty(ref m_arrayValue, value);}
@@ -232,6 +235,33 @@ namespace SampleClientXamarin.ViewModels
                 OnPropertyChanged("EnumValue.ValueString");
             }
         }
+       
+        /// <summary>
+        /// NodeValueItem for date time node
+        /// </summary>
+        public NodeValueItem DateTimeNodeValue
+        {
+            get { return m_dateTimeNodeValue; }
+            set { SetProperty(ref m_dateTimeNodeValue, value); }
+        }
+
+        /// <summary>
+        /// NodeValueItem for guid node
+        /// </summary>
+        public NodeValueItem GuidNodeValue
+        {
+            get { return m_guidNodeValue; }
+            set { SetProperty(ref m_guidNodeValue, value); }
+        }
+
+        /// <summary>
+        /// NodeValueItem for int32 node
+        /// </summary>
+        public NodeValueItem Int32NodeValue
+        {
+            get { return m_in32NodeValue; }
+            set { SetProperty(ref m_in32NodeValue, value); }
+        }
         /// <summary>
         /// Decide if write operation is available
         /// </summary>
@@ -245,6 +275,7 @@ namespace SampleClientXamarin.ViewModels
                     case OperationTarget.ArrayValue:
                     case OperationTarget.ComplexValue:
                     case OperationTarget.EnumerationValue:
+                    case OperationTarget.MultipleNodes:
                         return true;
                     default:
                         return false;
@@ -285,6 +316,9 @@ namespace SampleClientXamarin.ViewModels
                     case OperationTarget.EnumerationValue:
                         ReadEnumValue();
                         break;
+                    case OperationTarget.MultipleNodes:
+                        ReadMultipleNodesValues();
+                        break;
                 }
                 Device.BeginInvokeOnMainThread(() =>
                 {
@@ -317,6 +351,9 @@ namespace SampleClientXamarin.ViewModels
                         break;
                     case OperationTarget.EnumerationValue:
                         WriteEnumValueForNode();
+                        break;
+                    case OperationTarget.MultipleNodes:
+                        WriteMultipleNodesValues();
                         break;
                 }
                 Device.BeginInvokeOnMainThread(() =>
@@ -519,7 +556,7 @@ namespace SampleClientXamarin.ViewModels
                 ArrayValue.Clear();
                 foreach (long item in array)
                 {
-                    ArrayValue.Add(new Int64Item(){Value = item});
+                    ArrayValue.Add(new NodeValueItem(){Value = item});
                 }
                 
                 if (ArrayValue == null)
@@ -660,6 +697,76 @@ namespace SampleClientXamarin.ViewModels
                 OperationStatusText = "ReadEnumValue error:" + e.Message;
             }
         }
+        
+        /// <summary>
+        /// Reads a list of values for a list of nodes providing the NodeIDs and without read the whole node information.
+        /// The list of values contains values for an uint node, a GUID node and a datetime node.
+        /// </summary>
+        public void ReadMultipleNodesValues()
+        {
+            if (m_session == null)
+            {
+                //try to initialize session
+                InitializeSession();
+                if (m_session == null)
+                {
+                    OperationStatusText = "ReadMultipleNodesValues no session available.";
+                    return;
+                }
+            }
+
+            List<ReadValueId> listOfNodes = new List<ReadValueId>()
+            {
+                new ReadValueId()
+                {
+                    NodeId = new NodeId(StaticInt32NodeId),
+                    AttributeId = Attributes.Value
+                },
+                new ReadValueId()
+                {
+                    NodeId = new NodeId(StaticGuidNodeId),
+                    AttributeId = Attributes.Value
+                },
+                new ReadValueId()
+                {
+                    NodeId = new NodeId(StaticDateTimeNodeId),
+                    AttributeId = Attributes.Value
+                }
+            };
+            
+            try
+            {
+                OperationStatusText = "";
+                IList<DataValueEx> dataValues = m_session.Read(listOfNodes, 0, TimestampsToReturn.Both);
+                for (int i = 0; i < listOfNodes.Count; i++)
+                {
+                    NodeValueItem nodeValueItem = new NodeValueItem();
+                    nodeValueItem.NodeId = listOfNodes[i].NodeId.ToString();
+                    nodeValueItem.Value = dataValues[i].Value;
+                    nodeValueItem.TypeName = dataValues[i].Value.GetType().Name;
+                    
+                    switch (listOfNodes[i].NodeId.ToString())
+                    {
+                        case StaticDateTimeNodeId:
+                            DateTimeNodeValue = nodeValueItem;
+                            break;
+                        case StaticGuidNodeId:
+                            GuidNodeValue = nodeValueItem;
+                            GuidNodeValue.Value = dataValues[i].Value.ToString();
+                            break;
+                        case StaticInt32NodeId:
+                            Int32NodeValue = nodeValueItem;
+                            break;
+                    }
+                    
+                    OperationStatusText += dataValues[i].StatusCode + ",";
+                }
+            }
+            catch (Exception e)
+            {
+                OperationStatusText = "ReadMultipleNodesValues error:" + e.Message;
+            }
+        }
         #endregion
 
         #region Private Methods - Write
@@ -722,9 +829,11 @@ namespace SampleClientXamarin.ViewModels
 
             DataValue valueToWrite = new DataValue();
             List<long> values = new List<long>();
-            foreach (Int64Item item in ArrayValue)
+            foreach (NodeValueItem item in ArrayValue)
             {
-                values.Add(item.Value);
+                long value = 0;
+                long.TryParse(item.Value.ToString(), out value);
+                values.Add(value);
             }
 
             valueToWrite.Value = values.ToArray();
@@ -838,7 +947,7 @@ namespace SampleClientXamarin.ViewModels
         }
 
         /// <summary>
-        /// Writes a value for an enum node providing the NodeID. Written value is random generated for a nice output.
+        /// Writes a value for an enum node providing the NodeID. If no value available the written value is random generated for a nice output.
         /// </summary>
         public void WriteEnumValueForNode()
         {
@@ -872,8 +981,7 @@ namespace SampleClientXamarin.ViewModels
             }
             else
             {
-                Random random = new Random();
-                valueToWrite.Value = random.Next(0, 3);
+                valueToWrite.Value = m_random.Next(0, 3);
             }
 
             writeValue.Value = valueToWrite;
@@ -889,6 +997,97 @@ namespace SampleClientXamarin.ViewModels
             }
         }
 
+
+        /// <summary>
+        /// Writes values for a list of nodes providing the NodeIDs.The list of nodes contains a uint, an GUID and a datetime node. 
+        /// If no values available random values are generated 
+        /// </summary>
+        public void WriteMultipleNodesValues()
+        {
+            if (m_session == null)
+            {
+                //try to initialize session
+                InitializeSession();
+                if (m_session == null)
+                {
+                    OperationStatusText = "WriteMultipleNodesValues no session available.";
+                    return;
+                }
+            }
+
+            List<WriteValue> listOfNodes = new List<WriteValue>()
+            {
+                new WriteValue()
+                {
+                    NodeId = new NodeId(StaticInt32NodeId),
+                    AttributeId = Attributes.Value
+                },
+                new WriteValue()
+                {
+                    NodeId = new NodeId(StaticGuidNodeId),
+                    AttributeId = Attributes.Value
+                },
+                new WriteValue()
+                {
+                    NodeId = new NodeId(StaticDateTimeNodeId),
+                    AttributeId = Attributes.Value
+                }
+            };
+
+            DataValue valueToWrite = new DataValue();
+            if (Int32NodeValue == null)
+            {
+                valueToWrite.Value = m_random.Next(1, 1975109192);
+            }
+            else
+            {
+                int value = 0;
+                int.TryParse(Int32NodeValue.Value.ToString(), out value);
+                valueToWrite.Value = value;
+            }
+            listOfNodes[0].Value = valueToWrite;
+
+            DataValue valueToWrite1 = new DataValue();
+            if (GuidNodeValue == null)
+            {
+                valueToWrite1.Value = Guid.NewGuid();
+            }
+            else
+            {
+                Guid guid = Guid.NewGuid();
+                Guid.TryParse(GuidNodeValue.Value.ToString(), out guid);
+                valueToWrite1.Value = guid;
+            }
+            listOfNodes[1].Value = valueToWrite1;
+
+            DataValue valueToWrite2 = new DataValue();
+            if (DateTimeNodeValue == null)
+            {
+                valueToWrite2.Value = DateTime.Now;
+            }
+            else
+            {
+                DateTime dateTime = DateTime.Now;
+                DateTime.TryParse(DateTimeNodeValue.Value.ToString(), out dateTime);
+                valueToWrite2.Value = dateTime;
+            }
+
+            listOfNodes[2].Value = valueToWrite2;
+            
+            try
+            {
+                IList<StatusCode> statusCodes = m_session.Write(listOfNodes);
+                OperationStatusText = "";
+                for (int i = 0; i < listOfNodes.Count; i++)
+                {
+                     OperationStatusText += statusCodes[i] + ",";
+                }
+            }
+            catch (Exception e)
+            {
+                OperationStatusText = "WriteMultipleNodesValues error:" + e.Message;
+            }
+        }
         #endregion
     }
 }

@@ -35,8 +35,8 @@ namespace SampleClientXamarin.Views
 
 	    private void AddArrayItem_OnClicked(object sender, EventArgs e)
 	    {
-	        Int64Item newItem = new Int64Item();
-
+	        NodeValueItem newItem = new NodeValueItem();
+	        newItem.Value = 0;
             m_viewModel.ArrayValue.Add(newItem);
 	        ArrayValueList.ScrollTo(newItem, ScrollToPosition.MakeVisible, true);
         }
@@ -47,7 +47,10 @@ namespace SampleClientXamarin.Views
 	        {
 	            m_viewModel.ArrayValue.RemoveAt(m_viewModel.ArrayValue.Count-1);
 
-	            ArrayValueList.ScrollTo(m_viewModel.ArrayValue[m_viewModel.ArrayValue.Count-1], ScrollToPosition.MakeVisible, true);
+	            if (m_viewModel.ArrayValue.Count > 0)
+	            {
+	                ArrayValueList.ScrollTo(m_viewModel.ArrayValue[m_viewModel.ArrayValue.Count-1], ScrollToPosition.MakeVisible, true);
+	            }
             }
 	    }
 	}

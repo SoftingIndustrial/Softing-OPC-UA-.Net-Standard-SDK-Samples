@@ -9,27 +9,41 @@
  * ======================================================================*/
 
 using System;
+using System.Collections.Generic;
+using System.Text;
 using SampleClientXamarin.Helpers;
 
 namespace SampleClientXamarin.Models
 {
     /// <summary>
-    /// Model class for an Int64 item
+    /// Model class for an node value item
     /// </summary>
-    class Int64Item : ObservableObject
+    class NodeValueItem : ObservableObject
     {
         #region Private Fields
-
-        private Int64 m_value;
+        private object m_value;
 
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Node Id
+        /// </summary>
+        public string NodeId { get; set; }
 
         /// <summary>
-        /// Value propertu
+        /// Type name
         /// </summary>
-        public long Value
+        public string TypeName { get; set; }
+
+        /// <summary>
+        /// Flag that indicates if field is editable
+        /// </summary>
+        public bool IsEditable { get; set; }
+        /// <summary>
+        /// Value property
+        /// </summary>
+        public object Value
         {
             get { return m_value; }
             set { SetProperty(ref m_value, value); }
