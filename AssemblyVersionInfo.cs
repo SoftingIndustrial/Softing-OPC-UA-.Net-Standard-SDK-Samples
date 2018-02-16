@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2017 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -37,14 +37,14 @@ using System.Reflection;
 internal static class AssemblyVersionInfo
 {
     /// <summary> The current copy right notice. </summary>
-    public const string Copyright = "© 2018 Softing Industrial Automation GmbH";
+    public const string Copyright = "© 2017 Softing Industrial Automation GmbH";
     
     /// BEWARE THAT IN VS 2017 THE USAGE OF * PLACEHOLDER IS NOT ALLOWED
     /// <summary> The current build version. </summary>
-    public const string CurrentVersion = "1.1.0.370";
+    public const string CurrentVersion = "1.0.0.396";
 
     /// <summary> The current build file version. </summary>
-    public const string CurrentFileVersion = "1.1.0.370";
+    public const string CurrentFileVersion = "1.0.0.396";
 
     /// <summary>The assembly copyright owner.</summary>
     public const string AssemblyCompany = "Softing Industrial Automation GmbH";
