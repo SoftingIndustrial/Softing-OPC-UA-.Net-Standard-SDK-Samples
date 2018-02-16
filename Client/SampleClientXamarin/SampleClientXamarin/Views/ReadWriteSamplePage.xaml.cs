@@ -23,7 +23,16 @@ namespace SampleClientXamarin.Views
 		    BindingContext = m_viewModel = new ReadWriteViewModel();
 		}
 
-	    private void Read_OnClicked(object sender, EventArgs e)
+	    /// <summary>When overridden, allows the application developer to customize behavior as the <see cref="T:Xamarin.Forms.Page" /> disappears.</summary>
+	    /// <remarks>To be added.</remarks>
+	    protected override void OnDisappearing()
+	    {
+	        //ensure the session is disconnected 
+	        m_viewModel.DisconnectSession();
+
+	        base.OnDisappearing();
+	    }
+        private void Read_OnClicked(object sender, EventArgs e)
 	    {
 	        m_viewModel.Read();
 	    }

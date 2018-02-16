@@ -5,8 +5,97 @@
              BackgroundColor="{StaticResource view_background}"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin Forms!" />
-        </StackLayout>
+        <Grid Margin="4">
+            <StackLayout>
+                <!--Header -->
+                <Label 
+                    Margin="8,8, 0, 0" 
+                    Text="SampleServer URL:" 
+                    VerticalOptions="Center"/>
+                <Entry 
+                    Placeholder="Enter SampleServer URL..." 
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                    Text="{Binding SampleServerUrl}" Keyboard="Url"
+                    HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                <!--Commands-->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0"  Text="Create MI" Clicked="CreateMi_OnClicked"
+                            IsEnabled="{Binding CanCreate}"/>
+                    <Button Grid.Column="1"  Text="Delete MI" Clicked="DeleteMi_OnClicked"
+                            IsEnabled="{Binding CanDelete}}"/>
+                </Grid>
+                <!--Results-->
+                <ListView 
+                    Margin="4,0,0,0"
+                    HorizontalOptions="Fill" 
+                    VerticalOptions="FillAndExpand"
+                    ItemsSource="{Binding EventDataList}"
+                    CachingStrategy="RecycleElement"
+                    HasUnevenRows="True"
+                    IsPullToRefreshEnabled="false">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout  Padding="2" BackgroundColor="{StaticResource softing_secondary_medium_gray}">
+                                    <StackLayout BackgroundColor="{StaticResource view_background}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <StackLayout Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                                                <Label Text="{Binding SequenceNumber}" />
+                                                <Label Text="{Binding MonitoredItemName}" Style="{StaticResource BoldLabel}"/>
+                                            </StackLayout>
+                                            <Label Grid.Row="1" Grid.Column="0" Text="Value:"/>
+                                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding Value}"/>
+                                            <Label Grid.Row="2" Grid.Column="0" Text="StatusCiode:"/>
+                                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding StatusCode}"/>
+                                            <Label Grid.Row="3" Grid.Column="0" Text="ServerTimeStamp:"/>
+                                            <Label Grid.Row="3" Grid.Column="1" Text="{Binding ServerTimeStamp}"/>
+                                            <Label Grid.Row="4" Grid.Column="0" Text="SourceTimestamp:"/>
+                                            <Label Grid.Row="4" Grid.Column="1" Text="{Binding SourceTimestamp}"/>
+                                        </Grid>
+                                    </StackLayout>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!--Status information-->
+                <Grid Margin="4, 4, 0, 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"  Grid.Column="0"
+                           Text="Session status:" Style="{StaticResource BoldLabel}"/>
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Text="{Binding SessionStatusText}"/>
+                    <Label Grid.Row="1"  Grid.Column="0"
+                           Text="Operation status:"/>
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Text="{Binding OperationStatusText}"/>
+                </Grid>
+            </StackLayout>
+            <ActivityIndicator 
+                IsVisible="{Binding IsBusy}"
+                IsRunning="{Binding IsBusy}"/>
+            </Grid>
     </ContentPage.Content>
 </ContentPage>

@@ -46,7 +46,7 @@ namespace SampleClientXamarin.ViewModels
         public MethodsViewModel()
         {
             Title = "Method calls sample";
-            SampleServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
+            m_sampleServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
             ThreadPool.QueueUserWorkItem(o => InitializeSession());
             FloatValue = 10.77f;
             UInt32Value = 100;
@@ -63,9 +63,12 @@ namespace SampleClientXamarin.ViewModels
             get { return m_sampleServerUrl; }
             set
             {
+                if (value != m_sampleServerUrl)
+                {
+                    //disconnect existing session
+                    DisconnectSession();
+                }
                 SetProperty(ref m_sampleServerUrl, value);
-                //disconnect existing session
-                DisconnectSession();
             }
         }
 

@@ -59,9 +59,12 @@ namespace SampleClientXamarin.ViewModels
             get { return m_sampleServerUrl; }
             set
             {
+                if (value != m_sampleServerUrl)
+                {
+                    //disconnect existing session
+                    DisconnectSession();
+                }
                 SetProperty(ref m_sampleServerUrl, value);
-                //disconnect existing session
-                DisconnectSession();
             }
         }
 

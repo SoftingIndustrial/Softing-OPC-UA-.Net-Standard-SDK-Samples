@@ -39,7 +39,7 @@ namespace SampleClientXamarin.ViewModels
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\DateTime 
         const string StaticDateTimeNodeId = "ns=7;s=Scalar_Static_DateTime";
 
-        Random m_random = new Random();
+        private Random m_random = new Random();
         private const string SessionName = "BrowseClient Session";
         private ClientSession m_session;
         private string m_sessionStatusText;
@@ -66,7 +66,7 @@ namespace SampleClientXamarin.ViewModels
         {
             Title = "Read and write sample";
             m_arrayValue = new ObservableCollection<NodeValueItem>();
-            SampleServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
+            m_sampleServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
             ThreadPool.QueueUserWorkItem(o => InitializeSession());
 
             OperationTargets = new List<OperationTarget>()
@@ -138,9 +138,12 @@ namespace SampleClientXamarin.ViewModels
             get { return m_sampleServerUrl; }
             set
             {
+                if (value != m_sampleServerUrl)
+                {
+                    //disconnect existing session
+                    DisconnectSession();
+                }
                 SetProperty(ref m_sampleServerUrl, value);
-                //disconnect existing session
-                DisconnectSession();
             }
         }
 
@@ -444,7 +447,7 @@ namespace SampleClientXamarin.ViewModels
         /// <summary>
         /// Reads a variable node with all its attributes.
         /// </summary>
-        public void ReadVariableNode()
+        private void ReadVariableNode()
         {
             if (m_session == null)
             {
@@ -479,7 +482,7 @@ namespace SampleClientXamarin.ViewModels
         /// <summary>
         /// Reads an object node with all its attributes.
         /// </summary>
-        public void ReadObjectNode()
+        private void ReadObjectNode()
         {
             if (m_session == null)
             {
@@ -514,7 +517,7 @@ namespace SampleClientXamarin.ViewModels
         /// <summary>
         /// Reads value for an uint node providing the NodeID and without read the whole node information.
         /// </summary>
-        public void ReadValueForNode()
+        private void ReadValueForNode()
         {
             if (m_session == null)
             {
@@ -546,7 +549,7 @@ namespace SampleClientXamarin.ViewModels
         /// <summary>
         ///  Reads value for an array node providing the NodeID and without read the whole node information.
         /// </summary>
-        public void ReadArrayValue()
+        private void ReadArrayValue()
         {
             if (m_session == null)
             {
@@ -590,7 +593,7 @@ namespace SampleClientXamarin.ViewModels
         /// <summary>
         ///  Reads value for a complex node providing the NodeID and without read the whole node information.
         /// </summary>
-        public void ReadComplexValue()
+        private void ReadComplexValue()
         {
             if (m_session == null)
             {
@@ -659,7 +662,7 @@ namespace SampleClientXamarin.ViewModels
         /// <summary>
         ///  Reads value for an enum node providing the NodeID and without read the whole node information.
         /// </summary>
-        public void ReadEnumValue()
+        private void ReadEnumValue()
         {
             if (m_session == null)
             {
@@ -710,12 +713,12 @@ namespace SampleClientXamarin.ViewModels
                 OperationStatusText = "ReadEnumValue error:" + e.Message;
             }
         }
-        
+
         /// <summary>
         /// Reads a list of values for a list of nodes providing the NodeIDs and without read the whole node information.
         /// The list of values contains values for an uint node, a GUID node and a datetime node.
         /// </summary>
-        public void ReadMultipleNodesValues()
+        private void ReadMultipleNodesValues()
         {
             if (m_session == null)
             {
@@ -823,7 +826,7 @@ namespace SampleClientXamarin.ViewModels
         /// <summary>
         /// Writes a value for an array node providing the NodeID. The written values in array are random generated for a nice output.
         /// </summary>
-        public void WriteArrayValueForNode()
+        private void WriteArrayValueForNode()
         {
             if (m_session == null)
             {
@@ -866,7 +869,7 @@ namespace SampleClientXamarin.ViewModels
         /// <summary>
         /// Writes a value for a complex node providing the NodeID. Some written values are random generated for a nice output.
         /// </summary>
-        public void WriteComplexValueForNode()
+        private void WriteComplexValueForNode()
         {
             if (m_session == null)
             {
@@ -962,7 +965,7 @@ namespace SampleClientXamarin.ViewModels
         /// <summary>
         /// Writes a value for an enum node providing the NodeID. If no value available the written value is random generated for a nice output.
         /// </summary>
-        public void WriteEnumValueForNode()
+        private void WriteEnumValueForNode()
         {
             if (m_session == null)
             {
@@ -1010,12 +1013,11 @@ namespace SampleClientXamarin.ViewModels
             }
         }
 
-
         /// <summary>
         /// Writes values for a list of nodes providing the NodeIDs.The list of nodes contains a uint, an GUID and a datetime node. 
         /// If no values available random values are generated 
         /// </summary>
-        public void WriteMultipleNodesValues()
+        private void WriteMultipleNodesValues()
         {
             if (m_session == null)
             {
