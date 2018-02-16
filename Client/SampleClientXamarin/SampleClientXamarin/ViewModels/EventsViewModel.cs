@@ -7,14 +7,42 @@
  * http://www.softing.com/LicenseSIA.pdf
  * 
  * ======================================================================*/
- 
- namespace SampleClientXamarin.ViewModels
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text;
+using System.Threading;
+using Opc.Ua;
+using SampleClientXamarin.Helpers;
+using SampleClientXamarin.Models;
+using Softing.Opc.Ua.Client;
+
+namespace SampleClientXamarin.ViewModels
 {
     /// <summary>
     /// View Model for EventsPage
     /// </summary>
     class EventsViewModel : BaseViewModel
     {
+
+        #region Private Fields
+        private const string SessionName = "EventsClient Session";
+        private const string SubscriptionName = "EventsClient Subscription";
+
+        private string m_sampleServerUrl;
+        private ClientSession m_session;
+        private string m_sessionStatusText;
+        private string m_operationStatusText;
+
+        private ClientSubscription m_subscription;
+        private ClientMonitoredItem m_eventMonitoredItem;
+        private readonly ObservableCollection<string> m_eventDataList;
+
+        private bool m_canCreate;
+        private bool m_canDelete;
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -23,6 +51,272 @@
         public EventsViewModel()
         {
             Title = "Events sample";
+            m_sampleServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
+            ThreadPool.QueueUserWorkItem(o => InitializeSession());
+
+            m_eventDataList = new ObservableCollection<string>();
+            CanCreate = true;
+        }
+
+        #endregion
+
+        #region Public Properties
+        /// <summary>
+        /// SampleServer Url
+        /// </summary>
+        public string SampleServerUrl
+        {
+            get { return m_sampleServerUrl; }
+            set
+            {
+                if (value != m_sampleServerUrl)
+                {
+                    //disconnect existing session
+                    DisconnectSession();
+                }
+                SetProperty(ref m_sampleServerUrl, value);
+            }
+        }
+
+        /// <summary>
+        /// Text that indicates session status
+        /// </summary>
+        public string SessionStatusText
+        {
+            get { return m_sessionStatusText; }
+            set { SetProperty(ref m_sessionStatusText, value); }
+        }
+
+        /// <summary>
+        /// Text that indicates operation status
+        /// </summary>
+        public string OperationStatusText
+        {
+            get { return m_operationStatusText; }
+            set { SetProperty(ref m_operationStatusText, value); }
+        }
+
+        /// <summary>
+        /// List of event data received
+        /// </summary>
+        public ObservableCollection<string> EventDataList
+        {
+            get { return m_eventDataList; }
+        }
+
+        /// <summary>
+        /// Flag that indicates if Monitored item can be created
+        /// </summary>
+        public bool CanCreate
+        {
+            get { return m_canCreate && !IsBusy; }
+            set { SetProperty(ref m_canCreate, value); }
+        }
+
+        /// <summary>
+        /// Flag that indicates if Monitored item can be deleted
+        /// </summary>
+        public bool CanDelete
+        {
+            get { return m_canDelete && !IsBusy; }
+            set { SetProperty(ref m_canDelete, value); }
+        }
+        /// <summary>
+        /// Flag that indicates if view is busy
+        /// </summary>
+        public new bool IsBusy
+        {
+            get { return base.IsBusy; }
+            set
+            {
+                base.IsBusy = value;
+                OnPropertyChanged("CanCreate");
+                OnPropertyChanged("CanDelete");
+            }
+        }
+
+        #endregion
+
+        #region Event Monitored Item Methods
+
+        /// <summary>
+        /// Creates the event monitored item.
+        /// </summary>
+        public void CreateEventMonitoredItem()
+        {
+            EventDataList.Clear();
+            if (m_session == null)
+            {
+                InitializeSession();
+                //try to initialize session
+                InitializeSession();
+                if (m_session == null)
+                {
+                    OperationStatusText = "CreateEventMonitoredItem no session available.";
+                    return;
+                }
+            }
+            if (m_eventMonitoredItem != null)
+            {
+                OperationStatusText = "EventMonitoredItem already created";
+                return;
+            }
+
+            try
+            {
+                //ObjectIds.Server BrowsePath: Root\Objects\Server
+                m_eventMonitoredItem = new ClientMonitoredItem(m_subscription, ObjectIds.Server, "Sample Event Monitored Item", null);
+                m_eventMonitoredItem.EventsReceived += EventMonitoredItem_EventsReceived;
+                OperationStatusText = "Event mi is created.";
+
+                CanCreate = false;
+                CanDelete = true;
+            }
+            catch (Exception e)
+            {
+                OperationStatusText = "CreateEventMonitoredItem error:" + e.Message;
+            }
+        }
+
+        /// <summary>
+        /// Deletes the event monitored item.
+        /// </summary>
+        public void DeleteEventMonitoredItem()
+        {
+            if (m_session == null)
+            {
+                InitializeSession();
+                //try to initialize session
+                InitializeSession();
+                if (m_session == null)
+                {
+                    OperationStatusText = "DeleteEventMonitoredItem no session available.";
+                    return;
+                }
+            }
+            if (m_eventMonitoredItem == null)
+            {
+                OperationStatusText = "EventMonitoredItem already deleted";
+                return;
+            }
+            try
+            {
+                //delete event monitored item
+                m_eventMonitoredItem.EventsReceived -= EventMonitoredItem_EventsReceived;
+                m_eventMonitoredItem.Delete();
+                m_eventMonitoredItem = null;
+                OperationStatusText = "Event mi was deleted.";
+
+                CanCreate = true;
+                CanDelete = false;
+            }
+            catch (Exception ex)
+            {
+                OperationStatusText = "DeleteEventMonitoredItem Error: {0}" + ex.Message;
+            }
+        }
+
+        #endregion
+
+        #region Initialize & DisconnectSession
+
+        /// <summary>
+        /// Initialize session object
+        /// </summary>
+        public void InitializeSession()
+        {
+            IsBusy = true;
+            if (m_session == null)
+            {
+                try
+                {
+                    // create the session object with no security and anonymous login    
+                    m_session = SampleApplication.UaApplication.CreateSession(SampleServerUrl);
+                    m_session.SessionName = SessionName;
+
+                    m_session.Connect(false, true);
+
+                    //create the subscription
+                    m_subscription = new ClientSubscription(m_session, SubscriptionName);
+
+                    // set the Publishing interval for this subscription
+                    m_subscription.PublishingInterval = 500;
+                    SessionStatusText = "Connected";
+                }
+                catch (Exception ex)
+                {
+                    SessionStatusText = "Not connected - CreateSession Error: " + ex.Message;
+
+                    if (m_session != null)
+                    {
+                        m_session.Dispose();
+                        m_session = null;
+                    }
+                    m_subscription = null;
+                }
+            }
+            IsBusy = false;
+        }
+
+
+        /// <summary>
+        /// Disconnects the current session.
+        /// </summary>
+        public void DisconnectSession()
+        {
+            SessionStatusText = "";
+            //disconnect subscription
+
+            if (m_session == null)
+            {
+                SessionStatusText = "The Session was not created.";
+                return;
+            }
+            try
+            {
+                if (m_subscription != null)
+                {
+                    m_subscription.Disconnect(true);
+                    m_subscription.Delete();
+                    m_subscription = null;
+                }
+                m_session.Disconnect(true);
+                m_session.Dispose();
+                m_session = null;
+
+                SessionStatusText = "Disconnected";
+            }
+            catch (Exception ex)
+            {
+                SessionStatusText = "DisconnectSession Error: " + ex.Message;
+            }
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Handles the Notification event of the eventMonitoredItem.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventsNotificationEventArgs"/> instance containing the event data.</param>
+        private void EventMonitoredItem_EventsReceived(object sender, EventsNotificationEventArgs e)
+        {
+            foreach (var eventNotification in e.EventNotifications)
+            {
+                IList<SelectOperandEx> listOfOperands = ((EventFilterEx)m_eventMonitoredItem.Filter).SelectOperandList;
+                
+                StringBuilder displayNotification = new StringBuilder();
+                for (int i = 0; i < listOfOperands.Count; i++)
+                {
+                    displayNotification.AppendFormat("{0}:{1}:{2}\n",
+                        listOfOperands[i].PropertyName.NamespaceIndex,
+                        listOfOperands[i].PropertyName.Name,
+                        eventNotification.EventFields[i]);
+                }
+                EventDataList.Insert(0, displayNotification.ToString().Trim());
+            }
         }
 
         #endregion

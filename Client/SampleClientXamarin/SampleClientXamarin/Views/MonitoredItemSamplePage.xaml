@@ -26,7 +26,7 @@
                     <Button Grid.Column="0"  Text="Create MI" Clicked="CreateMi_OnClicked"
                             IsEnabled="{Binding CanCreate}"/>
                     <Button Grid.Column="1"  Text="Delete MI" Clicked="DeleteMi_OnClicked"
-                            IsEnabled="{Binding CanDelete}}"/>
+                            IsEnabled="{Binding CanDelete}"/>
                 </Grid>
                 <!--Results-->
                 <ListView 
@@ -40,7 +40,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <StackLayout  Padding="2" BackgroundColor="{StaticResource softing_secondary_medium_gray}">
+                                <StackLayout Margin="1" Padding="2" BackgroundColor="{StaticResource softing_secondary_medium_gray}">
                                     <StackLayout BackgroundColor="{StaticResource view_background}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -73,6 +73,11 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+                <!--list count-->
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Events count:"/>
+                    <Label Text="{Binding EventDataList.Count}"/>
+                </StackLayout>
                 <!--Status information-->
                 <Grid Margin="4, 4, 0, 0">
                     <Grid.ColumnDefinitions>

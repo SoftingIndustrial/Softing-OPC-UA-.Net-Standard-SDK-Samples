@@ -5,8 +5,78 @@
              BackgroundColor="{StaticResource view_background}"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin Forms!" />
-        </StackLayout>
+        <Grid Margin="4">
+            <StackLayout>
+                <!--Header -->
+                <Label 
+                    Margin="8,8, 0, 0" 
+                    Text="SampleServer URL:" 
+                    VerticalOptions="Center"/>
+                <Entry 
+                    Placeholder="Enter SampleServer URL..." 
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                    Text="{Binding SampleServerUrl}" Keyboard="Url"
+                    HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                <!--Commands-->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0"  Text="Create MI" Clicked="CreateEventMi_OnClicked"
+                            IsEnabled="{Binding CanCreate}"/>
+                    <Button Grid.Column="1"  Text="Delete MI" Clicked="DeleteEventMi_OnClicked"
+                            IsEnabled="{Binding CanDelete}"/>
+                </Grid>
+                <!--Results-->
+                <ListView 
+                    Margin="4,0,0,0"
+                    HorizontalOptions="Fill" 
+                    VerticalOptions="Fill"
+                    ItemsSource="{Binding EventDataList}"
+                    CachingStrategy="RecycleElement"
+                    HasUnevenRows="True"
+                    IsPullToRefreshEnabled="false">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Margin="1" Padding="2" BackgroundColor="{StaticResource softing_secondary_medium_gray}">
+                                    <StackLayout BackgroundColor="{StaticResource view_background}">
+                                        <Label Text="{Binding}"/>
+                                    </StackLayout>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!--list count-->
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Events count:"/>
+                    <Label Text="{Binding EventDataList.Count}"/>
+                </StackLayout>
+                <!--Status information-->
+                <Grid Margin="4, 4, 0, 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"  Grid.Column="0"
+                           Text="Session status:" Style="{StaticResource BoldLabel}"/>
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Text="{Binding SessionStatusText}"/>
+                    <Label Grid.Row="1"  Grid.Column="0"
+                           Text="Operation status:"/>
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Text="{Binding OperationStatusText}"/>
+                </Grid>
+            </StackLayout>
+            <ActivityIndicator 
+                IsVisible="{Binding IsBusy}"
+                IsRunning="{Binding IsBusy}"/>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

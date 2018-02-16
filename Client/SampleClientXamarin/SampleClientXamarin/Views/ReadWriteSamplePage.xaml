@@ -165,7 +165,6 @@
                                 Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                                 ItemsSource="{Binding ArrayValue, Mode=TwoWay}"
                                       CachingStrategy="RetainElement"
-                                HeightRequest="200"
                                 IsPullToRefreshEnabled="false">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
@@ -311,7 +310,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button  Grid.Column="0" Text="Read" Clicked="Read_OnClicked" Margin="0" HeightRequest="20"
+                    <Button  Grid.Column="0" Text="Read" Clicked="Read_OnClicked" Margin="0" 
                              IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"/>
                     <Button  Grid.Column="1" Text="Write" Clicked="Write_OnClicked" Margin="0" IsEnabled="{Binding CanWrite}"/>
                 </Grid>

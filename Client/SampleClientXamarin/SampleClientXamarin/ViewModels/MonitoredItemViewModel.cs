@@ -332,7 +332,8 @@ namespace SampleClientXamarin.ViewModels
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     //add event data at top of the list
-                    EventDataList.Insert(0, miEventData);
+                    // EventDataList.Insert(0, miEventData);
+                    EventDataList.Add( miEventData);
                 });
             }
         }
