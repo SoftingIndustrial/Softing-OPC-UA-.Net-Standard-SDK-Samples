@@ -276,10 +276,23 @@ namespace SampleClientXamarin.ViewModels
                     case OperationTarget.ComplexValue:
                     case OperationTarget.EnumerationValue:
                     case OperationTarget.MultipleNodes:
-                        return true;
+                        return IsBusy;
                     default:
                         return false;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Flag that indicates if view is busy
+        /// </summary>
+        public new bool IsBusy
+        {
+            get { return base.IsBusy; }
+            set
+            {
+                base.IsBusy = value;
+                OnPropertyChanged("CanWrite");
             }
         }
         #endregion

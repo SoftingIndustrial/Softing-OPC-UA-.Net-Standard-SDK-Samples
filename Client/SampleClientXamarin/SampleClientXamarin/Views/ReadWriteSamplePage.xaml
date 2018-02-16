@@ -155,8 +155,10 @@
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Column="0" Text="{Binding ArrayValue.Count, StringFormat='Items count: {0}'}"
                                        VerticalTextAlignment="Center"/>
-                                <Button  Grid.Column="1"  Text="Add" Clicked="AddArrayItem_OnClicked"/>
-                                <Button Grid.Column="2"  Text="Remove" Clicked="RemoveArrayItem_OnClicked"/>
+                                <Button  Grid.Column="1"  Text="Add" Clicked="AddArrayItem_OnClicked"
+                                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"/>
+                                <Button Grid.Column="2"  Text="Remove" Clicked="RemoveArrayItem_OnClicked"
+                                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"/>
                             </Grid>
                            
                             <ListView x:Name="ArrayValueList"
@@ -309,7 +311,8 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button  Grid.Column="0" Text="Read" Clicked="Read_OnClicked" Margin="0"/>
+                    <Button  Grid.Column="0" Text="Read" Clicked="Read_OnClicked" Margin="0" HeightRequest="20"
+                             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"/>
                     <Button  Grid.Column="1" Text="Write" Clicked="Write_OnClicked" Margin="0" IsEnabled="{Binding CanWrite}"/>
                 </Grid>
                 <!--Status information-->
