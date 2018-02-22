@@ -31,26 +31,26 @@ namespace SampleClientXamarin.ViewModels
 
             Title = "OPC UA sample client";
             Samples = new List<SampleItem>();
-            Samples.Add(new SampleItem() { SampleName = "Discovery sample",
-                Description = "This sample demonstrates the Discovery functionality",
+            Samples.Add(new SampleItem() { SampleName = "Discover",
+                Description = "Sample code for discovering endpoints of a server or discovering the servers on network.",
                 Command = SampleCommand.DiscoverySample});
-            Samples.Add(new SampleItem() { SampleName = "Connect sample",
-                Description = "This sample demonstrates the Connect functionality",
+            Samples.Add(new SampleItem() { SampleName = "Connect",
+                Description = "Sample code for connecting to a server using various security modes, security policies, encodings or user identities.",
                 Command = SampleCommand.ConnectSample});
-            Samples.Add(new SampleItem() { SampleName = "Browse sample",
-                Description = "This sample demonstrates the Browse functionality",
+            Samples.Add(new SampleItem() { SampleName = "Browse",
+                Description = "Sample code for browse methods on an OPC UA server.",
                 Command = SampleCommand.BrowseSample });
-            Samples.Add(new SampleItem() { SampleName = "Read/Write sample",
-                Description = "This sample demonstrates the Read and Write functionality",
+            Samples.Add(new SampleItem() { SampleName = "Read/Write",
+                Description = "Sample code for read and write nodes, node attributes, various node values (array, complex or enum values).",
                 Command = SampleCommand.ReadWriteSample });
-            Samples.Add(new SampleItem() { SampleName = "MonitoredItem sample",
-                Description = "This sample demonstrates the Monitored item functionality",
+            Samples.Add(new SampleItem() { SampleName = "Monitored item",
+                Description = "Sample code for creating and consuming a monitored item on an OPC UA server.",
                 Command = SampleCommand.MonitoredItemSample });
-            Samples.Add(new SampleItem() { SampleName = "Events sample",
-                Description = "This sample demonstrates the Events functionality",
+            Samples.Add(new SampleItem() { SampleName = "Events",
+                Description = "Sample code for creating and consuming an event monitored item on an OPC UA server.",
                 Command = SampleCommand.EventsSample });
-            Samples.Add(new SampleItem() { SampleName = "Call methods sample",
-                Description = "This sample demonstrates the Method call functionality",
+            Samples.Add(new SampleItem() { SampleName = "Call methods",
+                Description = "Sample code for calling methods synchronously and asynchronously on an OPC UA server.",
                 Command = SampleCommand.CallMethodsSample });
         }
         #endregion

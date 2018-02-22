@@ -68,10 +68,10 @@ namespace SampleClientXamarin.Helpers
             //enable read/write complex types
             configuration.DecodeCustomDataTypes = true;
 
-            string myDocsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string myDocsFolder =  Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);//"//storage/emulated//0//softing";//
             configuration.TraceConfiguration = new TraceConfiguration()
             {
-                OutputFilePath = myDocsFolder + @"\logs\SampleClient.log",
+                OutputFilePath = myDocsFolder + @"//logs//SampleClient.log",
                 TraceMasks = 519
             };
 
@@ -80,22 +80,22 @@ namespace SampleClientXamarin.Helpers
                 ApplicationCertificate = new CertificateIdentifier
                 {
                     StoreType = CertificateStoreType.Directory,
-                    StorePath = myDocsFolder + @"\pki\own"
+                    StorePath = myDocsFolder + @"//pki//own"
                 },
                 TrustedPeerCertificates = new CertificateTrustList
                 {
                     StoreType = CertificateStoreType.Directory,
-                    StorePath = myDocsFolder + @"\pki\trusted",
+                    StorePath = myDocsFolder + @"//pki//trusted",
                 },
                 TrustedIssuerCertificates = new CertificateTrustList
                 {
                     StoreType = CertificateStoreType.Directory,
-                    StorePath = myDocsFolder + @"\pki\issuer",
+                    StorePath = myDocsFolder + @"//pki//issuer",
                 },
                 RejectedCertificateStore = new CertificateTrustList
                 {
                     StoreType = CertificateStoreType.Directory,
-                    StorePath = myDocsFolder + @"\pki\rejected",
+                    StorePath = myDocsFolder + @"//pki//rejected",
                 },
                 AutoAcceptUntrustedCertificates = true
             };

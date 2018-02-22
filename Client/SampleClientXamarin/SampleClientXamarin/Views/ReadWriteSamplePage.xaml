@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SampleClientXamarin.Views.ReadWriteSamplePage"
              xmlns:viewModels="clr-namespace:SampleClientXamarin.ViewModels;assembly=SampleClientXamarin.Android"
-             BackgroundColor="{StaticResource view_background}"
              Title="{Binding Title}">
     <ContentPage.Content>
         <Grid Margin="4">

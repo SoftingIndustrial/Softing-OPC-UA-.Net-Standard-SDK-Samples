@@ -28,6 +28,11 @@
             <Color x:Key="MediumGrayTextColor">#4d4d4d</Color>
             <Color x:Key="LightTextColor">#999999</Color>
 
+
+            <Style TargetType="ContentPage">
+                <Setter Property="BackgroundColor" Value="{StaticResource view_background}" />
+            </Style>
+            
             <Style TargetType="NavigationPage">
                 <Setter Property="BarBackgroundColor" Value="{StaticResource Primary}" />
                 <Setter Property="BarTextColor" Value="White" />
@@ -36,6 +41,8 @@
             <Style TargetType="Label">
                 <Setter Property="FontFamily" Value="Calibri Regular" />
                 <Setter Property="TextColor" Value="{StaticResource MediumGrayTextColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <Style TargetType="Entry">

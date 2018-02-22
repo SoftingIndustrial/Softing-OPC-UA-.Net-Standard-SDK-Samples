@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviours="clr-namespace:SampleClientXamarin.Behaviours;assembly=SampleClientXamarin.Android"
              x:Class="SampleClientXamarin.Views.BrowseSamplePage"
-             BackgroundColor="{StaticResource view_background}"
              Title="{Binding Title}">
     <ContentPage.Content>
         <Grid>
@@ -49,11 +48,11 @@
                         Style="{StaticResource BoldLabel}"/>
                 <!-- Results list -->
                 <ListView 
-                    Margin="4,0,0,0"
-                    ItemsSource="{Binding Results}"
-                    CachingStrategy="RecycleElement"
-                    HasUnevenRows="True"
-                    IsPullToRefreshEnabled="false">
+                        Margin="4,0,0,0"
+                        ItemsSource="{Binding Results}"
+                        CachingStrategy="RecycleElement"
+                        HasUnevenRows="True"
+                        IsPullToRefreshEnabled="false">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
@@ -67,7 +66,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </StackLayout>
-            
+            <!--IsBusy indicator-->
             <ActivityIndicator 
                 IsVisible="{Binding IsBusy}"
                 IsRunning="{Binding IsBusy}"/>

@@ -279,7 +279,7 @@ namespace SampleClientXamarin.ViewModels
                     case OperationTarget.ComplexValue:
                     case OperationTarget.EnumerationValue:
                     case OperationTarget.MultipleNodes:
-                        return IsBusy;
+                        return !IsBusy;
                     default:
                         return false;
                 }

@@ -2,9 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SampleClientXamarin.Views.DiscoverySamplePage"
-             BackgroundColor="{StaticResource view_background}"
              Title="{Binding Title}">
-   
     <ContentPage.Content>
         <Grid>
             <StackLayout>
@@ -45,8 +43,7 @@
             </Frame>
             <!-- Results label -->
             <Label Margin="4" Text="{Binding ResultsText}" Style="{StaticResource BoldLabel}" />
-            
-                <!-- Results list -->
+            <!-- Results list -->
                 <ListView Margin="0,4,0,0"
                     ItemsSource="{Binding Results}"
                     CachingStrategy="RecycleElement"
@@ -61,7 +58,8 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-        </StackLayout>
+            </StackLayout>
+            <!--IsBusy indicator-->
             <ActivityIndicator 
                 IsVisible="{Binding IsBusy}"
                 IsRunning="{Binding IsBusy}"/>
