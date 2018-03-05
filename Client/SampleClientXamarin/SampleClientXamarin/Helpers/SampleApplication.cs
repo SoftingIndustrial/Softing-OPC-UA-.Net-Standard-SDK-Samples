@@ -9,6 +9,7 @@
  * ======================================================================*/
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua;
@@ -64,11 +65,11 @@ namespace SampleClientXamarin.Helpers
             configuration.TransportQuotas = new TransportQuotas { OperationTimeout = 15000, MaxByteStringLength = 4194304 , MaxMessageSize = 4194304 };
             configuration.ClientConfiguration = new ClientConfiguration { DefaultSessionTimeout = 15000 };
             configuration.DefaultSessionTimeout = 15000;
-            configuration.DiscoveryOperationTimeout = 65000;
+            configuration.DiscoveryOperationTimeout = 6500;
             //enable read/write complex types
             configuration.DecodeCustomDataTypes = true;
 
-            string myDocsFolder =  Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);//"//storage/emulated//0//softing";//
+            string myDocsFolder =  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "1");//"//storage/emulated//0//softing";//
             configuration.TraceConfiguration = new TraceConfiguration()
             {
                 OutputFilePath = myDocsFolder + @"//logs//SampleClient.log",

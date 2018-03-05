@@ -43,25 +43,25 @@ namespace SampleClientXamarin.Views
             switch (tappedItem.Command)
             {
                 case SampleCommand.DiscoverySample:
-                    await Navigation.PushAsync(new NavigationPage(new DiscoverySamplePage()));
+                    await Navigation.PushAsync(new DiscoverySamplePage());
                     break;
                 case SampleCommand.BrowseSample:
-                    await Navigation.PushAsync(new NavigationPage(new BrowseSamplePage()));
+                    await Navigation.PushAsync(new BrowseSamplePage());
                     break;
                 case SampleCommand.CallMethodsSample:
-                    await Navigation.PushAsync(new NavigationPage(new MethodsSamplePage()));
+                    await Navigation.PushAsync(new MethodsSamplePage());
                     break;
                 case SampleCommand.ConnectSample:
-                    await Navigation.PushAsync(new NavigationPage(new ConnectSamplePage()));
+                    await Navigation.PushAsync(new ConnectSamplePage());
                     break;
                 case SampleCommand.EventsSample:
-                    await Navigation.PushAsync(new NavigationPage(new EventsSamplePage()));
+                    await Navigation.PushAsync(new EventsSamplePage());
                     break;
                 case SampleCommand.MonitoredItemSample:
-                    await Navigation.PushAsync(new NavigationPage(new MonitoredItemSamplePage()));
+                    await Navigation.PushAsync(new MonitoredItemSamplePage());
                     break;
                 case SampleCommand.ReadWriteSample:
-                    await Navigation.PushAsync(new NavigationPage(new ReadWriteSamplePage()));
+                    await Navigation.PushAsync(new ReadWriteSamplePage());
                     break;
                 default:
                         break;
