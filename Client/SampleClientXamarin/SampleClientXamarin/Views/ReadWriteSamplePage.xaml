@@ -6,18 +6,26 @@
              Title="{Binding Title}">
     <ContentPage.Content>
         <Grid Margin="4">
-            <StackLayout>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 <!--Header -->
-                <Label 
+                <Label Grid.Row="0"
                        Margin="8,8, 0, 0" 
                        Text="SampleServer URL:" 
                        VerticalOptions="Center"/>
-                <Entry 
+                <Entry Grid.Row="1"
                        Placeholder="Enter SampleServer URL..." 
                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                        Text="{Binding SampleServerUrl}" Keyboard="Url"
                        HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                <StackLayout Orientation="Horizontal">
+                <StackLayout Grid.Row="2" Orientation="Horizontal" >
                     <Label 
                         Margin="8,8, 0, 0" 
                         Text="Operation target:" 
@@ -30,7 +38,8 @@
                             SelectedItem="{Binding SelectedOperationTarget, Mode=TwoWay}"/>
                 </StackLayout>
                 <!--Content-->
-                <StackLayout Margin="4" Padding="1" BackgroundColor="{StaticResource softing_primary_color}"  VerticalOptions="FillAndExpand">
+                <StackLayout Grid.Row="3"
+                    Margin="4" Padding="1" BackgroundColor="{StaticResource softing_primary_color}"  VerticalOptions="FillAndExpand">
                     <StackLayout BackgroundColor="{StaticResource view_background}"
                                  Padding="4"  VerticalOptions="FillAndExpand">
                         <Label Text="Operation data" Style="{StaticResource BoldLabel}"/>
@@ -304,7 +313,7 @@
                     </StackLayout>
                 </StackLayout>
                 <!--Actions-->
-                <Grid  Margin="0">
+                <Grid Grid.Row="4" Margin="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -314,7 +323,7 @@
                     <Button  Grid.Column="1" Text="Write" Clicked="Write_OnClicked" Margin="0" IsEnabled="{Binding CanWrite}"/>
                 </Grid>
                 <!--Status information-->
-                <Grid Margin="4, 4, 0, 0">
+                <Grid Grid.Row="5" Margin="4, 4, 0, 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
@@ -332,7 +341,7 @@
                     <Label Grid.Row="1" Grid.Column="1"
                            Text="{Binding OperationStatusText}"/>
                 </Grid>
-            </StackLayout>
+            </Grid>
             <ActivityIndicator 
                 IsVisible="{Binding IsBusy}"
                 IsRunning="{Binding IsBusy}"/>

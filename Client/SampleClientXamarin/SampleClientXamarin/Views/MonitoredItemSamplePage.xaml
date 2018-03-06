@@ -5,19 +5,27 @@
              Title="{Binding Title}">
     <ContentPage.Content>
         <Grid Margin="4">
-            <StackLayout>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 <!--Header -->
-                <Label 
-                    Margin="8,8, 0, 0" 
+                <Label Grid.Row="0"
+                    Margin="8,0, 0, 0" 
                     Text="SampleServer URL:" 
-                    VerticalOptions="Center"/>
-                <Entry 
+                    VerticalOptions="Start"/>
+                <Entry Grid.Row="1"
                     Placeholder="Enter SampleServer URL..." 
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                     Text="{Binding SampleServerUrl}" Keyboard="Url"
-                    HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                    HorizontalOptions="FillAndExpand" VerticalOptions="Start"/>
                 <!--Commands-->
-                <Grid>
+                <Grid Grid.Row="2"  VerticalOptions="Start">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -28,10 +36,10 @@
                             IsEnabled="{Binding CanDelete}"/>
                 </Grid>
                 <!--Results-->
-                <ListView 
+                <ListView Grid.Row="3"
                     Margin="4,0,0,0"
                     HorizontalOptions="Fill" 
-                    VerticalOptions="FillAndExpand"
+                    VerticalOptions="Fill"
                     ItemsSource="{Binding EventDataList}"
                     CachingStrategy="RecycleElement"
                     HasUnevenRows="True"
@@ -73,12 +81,12 @@
                     </ListView.ItemTemplate>
                 </ListView>
                 <!--list count-->
-                <StackLayout Orientation="Horizontal">
+                <StackLayout Grid.Row="4" Margin="8,0, 0, 0" Orientation="Horizontal" VerticalOptions="End">
                     <Label Text="Events count:"/>
                     <Label Text="{Binding EventDataList.Count}"/>
                 </StackLayout>
                 <!--Status information-->
-                <Grid Margin="4, 4, 0, 0">
+                <Grid Grid.Row="5" Margin="8,0, 0, 0"  VerticalOptions="End">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
@@ -96,7 +104,7 @@
                     <Label Grid.Row="1" Grid.Column="1"
                            Text="{Binding OperationStatusText}"/>
                 </Grid>
-            </StackLayout>
+            </Grid>
             <ActivityIndicator 
                 IsVisible="{Binding IsBusy}"
                 IsRunning="{Binding IsBusy}"/>

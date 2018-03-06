@@ -43,23 +43,22 @@ namespace SampleClientXamarin.ViewModels
         {
             Title = "Connect sample";
             ServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
-            MessageSecurityModes = new List<MessageSecurityMode>() {MessageSecurityMode.None, MessageSecurityMode.Sign, MessageSecurityMode.SignAndEncrypt};
+            MessageSecurityModes = new List<MessageSecurityMode>() { MessageSecurityMode.None, MessageSecurityMode.Sign, MessageSecurityMode.SignAndEncrypt };
             SelectedMessageSecurityMode = MessageSecurityModes[0];
 
             SecurityPolicies = new List<SecurityPolicy>() { SecurityPolicy.None, SecurityPolicy.Basic256, SecurityPolicy.Basic128Rsa15, SecurityPolicy.Basic256Sha256 };
             SelectedSecurityPolicy = SecurityPolicies[0];
 
-            MessageEncodings = new List<MessageEncoding>(){MessageEncoding.Binary};
+            MessageEncodings = new List<MessageEncoding>() { MessageEncoding.Binary };
             SelectedMessageEncoding = MessageEncodings[0];
 
             UserName = "usr";
             Password = "pwd";
-            UserIdentities = new List<UserIdentity>(){new UserIdentity(), new UserIdentity(UserName, Password) };
+            UserIdentities = new List<UserIdentity>() { new UserIdentity(), new UserIdentity(UserName, Password) };
             SelectedUserIdentity = UserIdentities[0];
         }
 
         #endregion
-
 
         #region Properties
         /// <summary>
@@ -176,7 +175,7 @@ namespace SampleClientXamarin.ViewModels
             get { return base.IsBusy; }
             set
             {
-                base.IsBusy = value; 
+                base.IsBusy = value;
                 OnPropertyChanged("IsEditUserCredentials");
             }
         }
@@ -225,7 +224,7 @@ namespace SampleClientXamarin.ViewModels
             try
             {
                 //create user identity used to connect
-                UserIdentity userIdentity= SelectedUserIdentity;
+                UserIdentity userIdentity = SelectedUserIdentity;
                 if (SelectedUserIdentity.TokenType == UserTokenType.UserName)
                 {
                     userIdentity = new UserIdentity(UserName, Password);
@@ -239,13 +238,13 @@ namespace SampleClientXamarin.ViewModels
                     userIdentity))
                 {
 
-                    Result = "\nSession created...";
+                    Result = "Session created...";
                     session.SessionName = "Connect sample";
                     session.Connect(false, true);
-                    Result += "\nSession connected...";
+                    Result += " Session connected...";
                     // Disconnect the session.
                     session.Disconnect(true);
-                    Result += "\nSession disconnected.";
+                    Result += "Session disconnected.";
                 }
             }
             catch (Exception e)

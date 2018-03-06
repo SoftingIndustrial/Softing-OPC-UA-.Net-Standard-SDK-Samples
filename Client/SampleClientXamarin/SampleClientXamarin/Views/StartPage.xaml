@@ -14,7 +14,8 @@
                 Style="{StaticResource BoldLabel}"
                 Margin="4"
                 Text="Please select a sample from the list below:" 
-                HorizontalTextAlignment="Center"/>
+                HorizontalTextAlignment="Center"
+                   HorizontalOptions="Fill"/>
             <ListView Grid.Row="1"
                 ItemsSource="{Binding Samples}"
                 ItemTapped="Samples_ItemTapped"
@@ -44,8 +45,9 @@
                      IsVisible="{Binding IsBusy}" Orientation="Vertical">
             <Label Style="{StaticResource HeaderLabel}"
                    Text="Initializing the application..." 
-                   Margin="50"
-                   VerticalOptions="Fill" 
+                   Margin="5,20" 
+                   VerticalOptions="Start" 
+                   HorizontalOptions="Fill"
                    HorizontalTextAlignment="Center"/>
             <ActivityIndicator 
                 IsVisible="{Binding IsBusy}"
