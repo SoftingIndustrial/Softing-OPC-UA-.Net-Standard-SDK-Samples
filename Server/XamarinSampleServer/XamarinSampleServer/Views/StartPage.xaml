@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamarinSampleServer.Views.StartPage"
+             Title="{Binding Title}">
+    <ContentPage.Content>
+        <Grid>
+            <StackLayout>
+                <!--Server URL-->
+                <Frame Margin="2" Padding="2" CornerRadius="3" OutlineColor="{StaticResource softing_secondary_dark_gray}">
+                    <StackLayout Margin="0">
+                        <Label  Margin="2"
+                            Text="{Binding ServerUrl, StringFormat='Server Url: {0}'}" 
+                            VerticalOptions="Center" VerticalTextAlignment="Center" HorizontalOptions="FillAndExpand"/>
+                        
+                        <Grid >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                IsEnabled="{Binding CanStartServer}"
+                                Clicked="StartServer_OnClicked" 
+                                Text="Start Server"/>
+                            <Button Grid.Column="1"
+                                IsEnabled="{Binding CanStopServer}"
+                                Clicked="StopServer_OnClicked" 
+                                Text="Stop Server"/>
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+                <!-- Results label -->
+                <Label Margin="4" Text="{Binding ResultsText}" Style="{StaticResource BoldLabel}" />
+            </StackLayout>
+            <!--IsBusy indicator-->
+            <ActivityIndicator 
+                IsVisible="{Binding IsBusy}"
+                IsRunning="{Binding IsBusy}"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

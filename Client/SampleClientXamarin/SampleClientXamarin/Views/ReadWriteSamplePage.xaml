@@ -177,7 +177,7 @@
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <ViewCell >
-                                                <Entry Text="{Binding Value, Mode=TwoWay}"/>
+                                                <Entry Text="{Binding Value, Mode=TwoWay}" Keyboard="Numeric"/>
                                         </ViewCell>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>

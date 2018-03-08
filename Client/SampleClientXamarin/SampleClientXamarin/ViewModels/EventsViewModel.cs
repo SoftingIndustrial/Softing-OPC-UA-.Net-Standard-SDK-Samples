@@ -52,7 +52,6 @@ namespace SampleClientXamarin.ViewModels
         {
             Title = "Events sample";
             m_sampleServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
-            ThreadPool.QueueUserWorkItem(o => InitializeSession());
 
             m_eventDataList = new ObservableCollection<string>();
             CanCreate = true;

@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{4d08c07a-27ee-47a3-805a-670fb8b70706}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>XamarinSampleServer</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\AboutPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IAssetService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IPathService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\Alarms\ExclusiveLimitMonitor.cs" Link="_SampleServer\Alarms\ExclusiveLimitMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\Alarms\AlarmsNodeManager.cs" Link="_SampleServer\Alarms\AlarmsNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\DataAccess\DataAccessNodeManager.cs" Link="_SampleServer\DataAccess\DataAccessNodeManager.cs" />
+    <!--  <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\HistoricalDataAccess\ArchiveItem.cs" Link="_SampleServer\HistoricalDataAccess\ArchiveItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\HistoricalDataAccess\ArchiveItemState.cs" Link="_SampleServer\HistoricalDataAccess\ArchiveItemState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\HistoricalDataAccess\DataFileReader.cs" Link="_SampleServer\HistoricalDataAccess\DataFileReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\HistoricalDataAccess\HistoricalDataAccessNodeManager.cs" Link="_SampleServer\HistoricalDataAccess\HistoricalDataAccessNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\HistoricalDataAccess\SampleHDANodeManager.cs" Link="_SampleServer\HistoricalDataAccess\SampleHDANodeManager.cs" />
+	-->
+    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\Methods\MethodsNodeManager.cs" Link="_SampleServer\Methods\MethodsNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\NodeManagement\DynamicASNodeManager.cs" Link="_SampleServer\NodeManagement\DynamicASNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\NodeManagement\NodeMangementNodeManager.cs" Link="_SampleServer\NodeManagement\NodeMangementNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\NodeSetImport\NodeSetImportNodeManager.cs" Link="_SampleServer\NodeSetImport\NodeSetImportNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\ReferenceServer\ReferenceNodeManager.cs" Link="_SampleServer\ReferenceServer\ReferenceNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\UserAuthentication\UserAuthenticationNodeManager.cs" Link="_SampleServer\UserAuthentication\UserAuthenticationNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\Namespaces.cs" Link="_SampleServer\Namespaces.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ObservableObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StartPageViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\AboutPage.xaml.cs">
+      <DependentUpon>AboutPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\StartPage.xaml.cs">
+      <DependentUpon>StartPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BaseViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\AboutViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_SampleServer\HistoricalDataAccess\SampleHDANodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)_SampleServer\SampleServer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\StartPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\HistoricalDataAccess\Data\Dynamic\Double.txt" Link="_SampleServer\HistoricalDataAccess\Data\Dynamic\Double.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <Content Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\HistoricalDataAccess\Data\Dynamic\Int32.txt" Link="_SampleServer\HistoricalDataAccess\Data\Dynamic\Int32.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\HistoricalDataAccess\Data\Events.txt" Link="_SampleServer\HistoricalDataAccess\Data\Events.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\HistoricalDataAccess\Data\Sample\Historian1.txt" Link="_SampleServer\HistoricalDataAccess\Data\Sample\Historian1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\HistoricalDataAccess\Data\Sample\Historian2.txt" Link="_SampleServer\HistoricalDataAccess\Data\Sample\Historian2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\HistoricalDataAccess\Data\Sample\Historian3.txt" Link="_SampleServer\HistoricalDataAccess\Data\Sample\Historian3.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\HistoricalDataAccess\Data\Sample\Historian4.txt" Link="_SampleServer\HistoricalDataAccess\Data\Sample\Historian4.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\ReferenceServer\Model\ModelDesign.xml" Link="_SampleServer\ReferenceServer\Model\ModelDesign.xml" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" Link="_SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" />
+    <None Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\NodeSetImport\Refrigerators2.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators2.NodeSet2.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

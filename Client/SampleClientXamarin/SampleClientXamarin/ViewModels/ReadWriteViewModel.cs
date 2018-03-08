@@ -67,7 +67,6 @@ namespace SampleClientXamarin.ViewModels
             Title = "Read and write sample";
             m_arrayValue = new ObservableCollection<NodeValueItem>();
             m_sampleServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
-            ThreadPool.QueueUserWorkItem(o => InitializeSession());
 
             OperationTargets = new List<OperationTarget>()
             {

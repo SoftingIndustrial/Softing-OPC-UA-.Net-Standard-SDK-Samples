@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using SampleClientXamarin.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -26,13 +27,39 @@ namespace SampleClientXamarin.Views
 	        base.OnDisappearing();
 	    }
         private void Browse_OnClicked(object sender, EventArgs e)
-	    {
-	        m_viewModel.BrowseTheServer();
-	    }
+	    {	        
+            ThreadPool.QueueUserWorkItem(o =>
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    m_viewModel.IsBusy = true;
+                });
+
+                m_viewModel.BrowseTheServer();
+
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    m_viewModel.IsBusy = false;
+                });
+            });
+        }
 
 	    private void BrowseWithOptions_OnClicked(object sender, EventArgs e)
 	    {
-	        m_viewModel.BrowseWithOptions();
+            ThreadPool.QueueUserWorkItem(o =>
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    m_viewModel.IsBusy = true;
+                });
+
+                m_viewModel.BrowseWithOptions();
+
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    m_viewModel.IsBusy = false;
+                });
+            });
         }
 	}
 }

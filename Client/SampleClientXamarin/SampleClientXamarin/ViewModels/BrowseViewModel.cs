@@ -44,7 +44,6 @@ namespace SampleClientXamarin.ViewModels
             m_results = new ObservableCollection<BrowseResultNode>();
             SampleServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
             MaxReferencesReturned = 3;
-            ThreadPool.QueueUserWorkItem(o => InitializeSession());
         }
 
         #endregion

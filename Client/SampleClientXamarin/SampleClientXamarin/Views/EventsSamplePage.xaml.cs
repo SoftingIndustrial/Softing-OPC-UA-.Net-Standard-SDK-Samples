@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using SampleClientXamarin.ViewModels;
 using Xamarin.Forms;
@@ -33,12 +34,38 @@ namespace SampleClientXamarin.Views
 
 	    private void CreateEventMi_OnClicked(object sender, EventArgs e)
 	    {
-	        m_viewModel.CreateEventMonitoredItem();
-	    }
+            ThreadPool.QueueUserWorkItem(o =>
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    m_viewModel.IsBusy = true;
+                });
+
+                m_viewModel.CreateEventMonitoredItem();
+
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    m_viewModel.IsBusy = false;
+                });
+            });
+        }
 
 	    private void DeleteEventMi_OnClicked(object sender, EventArgs e)
 	    {
-	        m_viewModel.DeleteEventMonitoredItem();
-	    }
+            ThreadPool.QueueUserWorkItem(o =>
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    m_viewModel.IsBusy = true;
+                });
+
+                m_viewModel.DeleteEventMonitoredItem();
+
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    m_viewModel.IsBusy = false;
+                });
+            });
+        }
 	}
 }

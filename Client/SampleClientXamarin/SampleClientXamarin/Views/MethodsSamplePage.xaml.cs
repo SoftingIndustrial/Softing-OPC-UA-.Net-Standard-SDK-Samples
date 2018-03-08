@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using SampleClientXamarin.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -30,13 +31,39 @@ namespace SampleClientXamarin.Views
 	    #endregion
 
 	    private void CallMethod_OnClicked(object sender, EventArgs e)
-	    {
-	        m_viewModel.CallMethod();
-	    }
+	    {	       
+            ThreadPool.QueueUserWorkItem(o =>
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    m_viewModel.IsBusy = true;
+                });
+
+                m_viewModel.CallMethod();
+
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    m_viewModel.IsBusy = false;
+                });
+            });
+        }
 
 	    private void CallMethodAsync_OnClicked(object sender, EventArgs e)
-	    {
-	        m_viewModel.AsyncCallMethod();
-	    }
+	    {	        
+            ThreadPool.QueueUserWorkItem(o =>
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    m_viewModel.IsBusy = true;
+                });
+
+                m_viewModel.AsyncCallMethod();
+
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    m_viewModel.IsBusy = false;
+                });
+            });
+        }
 	}
 }
