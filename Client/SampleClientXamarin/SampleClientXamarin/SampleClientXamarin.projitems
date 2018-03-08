@@ -39,7 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MethodsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MonitoredItemViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ReadWriteViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StartPageViewMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StartPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\AboutPage.xaml.cs">
       <DependentUpon>AboutPage.xaml</DependentUpon>
     </Compile>

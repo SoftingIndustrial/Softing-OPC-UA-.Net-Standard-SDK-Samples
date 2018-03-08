@@ -19,8 +19,7 @@ namespace SampleClientXamarin
 		{
 		    Current.MainPage = new NavigationPage(new StartPage())
 		    {
-		        Title = "OPC UA Sample Client - Xamarin",
-		        Icon = Device.OnPlatform<string>("tab_feed.png", null, null)
+		        Title = "OPC UA Sample Client - Xamarin"
 		    };
         }
 	}

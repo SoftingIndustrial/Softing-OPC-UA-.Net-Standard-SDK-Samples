@@ -15,14 +15,14 @@ namespace SampleClientXamarin.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class StartPage : ContentPage
     {
-        private StartPageViewMode m_viewModel;
+        private StartPageViewModel m_viewModel;
         public ObservableCollection<string> Items { get; set; }
 
         public StartPage()
         {
             InitializeComponent();
 
-            BindingContext = m_viewModel = new StartPageViewMode();
+            BindingContext = m_viewModel = new StartPageViewModel();
         }
         
         async void Samples_ItemTapped(object sender, ItemTappedEventArgs e)

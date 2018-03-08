@@ -19,13 +19,13 @@ namespace SampleClientXamarin.ViewModels
    /// <summary>
    /// View model for StartPage
    /// </summary>
-    class StartPageViewMode : BaseViewModel
+    class StartPageViewModel : BaseViewModel
     {
         #region Constructor
         /// <summary>
         /// Create new instance of StartPageViewMode
         /// </summary>
-        public StartPageViewMode()
+        public StartPageViewModel()
         {
             ThreadPool.QueueUserWorkItem(o => InitializeUaApplication());
 
