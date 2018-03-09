@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamarinSampleClient.Views.EventsSamplePage"
+             Title="{Binding Title}">
+    <ContentPage.Content>
+        <Grid Margin="4">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <!--Header -->
+                <Label Grid.Row="0"
+                    Margin="8,8, 0, 0" 
+                    Text="SampleServer URL:" 
+                    VerticalOptions="Center"/>
+                <Entry Grid.Row="1"
+                    Placeholder="Enter SampleServer URL..." 
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                    Text="{Binding SampleServerUrl}" Keyboard="Url"
+                    HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                <!--Commands-->
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0"  Text="Create MI" Clicked="CreateEventMi_OnClicked"
+                            IsEnabled="{Binding CanCreate}"/>
+                    <Button Grid.Column="1"  Text="Delete MI" Clicked="DeleteEventMi_OnClicked"
+                            IsEnabled="{Binding CanDelete}"/>
+                </Grid>
+                <!--Results-->
+                <ListView Grid.Row="3"
+                    Margin="4,0,0,0"
+                    HorizontalOptions="Fill" 
+                    VerticalOptions="Fill"
+                    ItemsSource="{Binding EventDataList}"
+                    CachingStrategy="RecycleElement"
+                    HasUnevenRows="True"
+                    IsPullToRefreshEnabled="false">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Margin="1" Padding="2" BackgroundColor="{StaticResource softing_secondary_medium_gray}">
+                                    <StackLayout BackgroundColor="{StaticResource view_background}">
+                                        <Label Text="{Binding}"/>
+                                    </StackLayout>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!--list count-->
+                <StackLayout Grid.Row="4" Margin="8,0, 0, 0" Orientation="Horizontal">
+                    <Label Text="Events count:"/>
+                    <Label Text="{Binding EventDataList.Count}"/>
+                </StackLayout>
+                <!--Status information-->
+                <Grid Grid.Row="5" Margin="8,0, 0, 0" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"  Grid.Column="0"
+                           Text="Session status:" Style="{StaticResource BoldLabel}"/>
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Text="{Binding SessionStatusText}"/>
+                    <Label Grid.Row="1"  Grid.Column="0"
+                           Text="Operation status:"/>
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Text="{Binding OperationStatusText}"/>
+                </Grid>
+            </Grid>
+            <ActivityIndicator 
+                IsVisible="{Binding IsBusy}"
+                IsRunning="{Binding IsBusy}"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
