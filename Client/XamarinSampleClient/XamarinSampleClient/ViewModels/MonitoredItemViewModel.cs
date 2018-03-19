@@ -54,7 +54,7 @@ namespace XamarinSampleClient.ViewModels
         public MonitoredItemViewModel()
         {
             Title = "Monitored item sample";
-            m_sampleServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
+            m_sampleServerUrl = App.DefaultSampleServerUrl;
             m_eventDataList = new ObservableCollection<MonitoredItemEventData>();
             CanCreate = true;
         }

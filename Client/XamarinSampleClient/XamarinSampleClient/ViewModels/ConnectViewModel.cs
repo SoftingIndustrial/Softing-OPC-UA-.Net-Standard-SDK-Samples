@@ -42,7 +42,7 @@ namespace XamarinSampleClient.ViewModels
         public ConnectViewModel()
         {
             Title = "Connect sample";
-            ServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
+            ServerUrl = App.DefaultSampleServerUrl;
             MessageSecurityModes = new List<MessageSecurityMode>() { MessageSecurityMode.None, MessageSecurityMode.Sign, MessageSecurityMode.SignAndEncrypt };
             SelectedMessageSecurityMode = MessageSecurityModes[0];
 

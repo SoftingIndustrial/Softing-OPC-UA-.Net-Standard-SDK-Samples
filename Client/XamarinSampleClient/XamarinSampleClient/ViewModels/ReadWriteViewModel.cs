@@ -66,7 +66,7 @@ namespace XamarinSampleClient.ViewModels
         {
             Title = "Read and write sample";
             m_arrayValue = new ObservableCollection<NodeValueItem>();
-            m_sampleServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
+            m_sampleServerUrl = App.DefaultSampleServerUrl;
 
             OperationTargets = new List<OperationTarget>()
             {

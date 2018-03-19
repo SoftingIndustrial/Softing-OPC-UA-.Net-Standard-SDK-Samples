@@ -249,7 +249,9 @@
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Tabbar.axml" />
     <AndroidResource Include="Resources\layout\Toolbar.axml" />
-    <AndroidResource Include="Resources\values\styles.xml" />
+    <AndroidResource Include="Resources\values\styles.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
     <AndroidResource Include="Resources\drawable\slideout.png" />
     <AndroidResource Include="Resources\drawable-hdpi\profile_generic.png" />
     <AndroidResource Include="Resources\drawable-mdpi\profile_generic.png" />

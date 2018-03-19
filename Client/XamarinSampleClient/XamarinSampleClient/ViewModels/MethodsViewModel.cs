@@ -46,8 +46,8 @@ namespace XamarinSampleClient.ViewModels
         public MethodsViewModel()
         {
             Title = "Method calls sample";
-            m_sampleServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
-            
+            m_sampleServerUrl = App.DefaultSampleServerUrl;
+
             FloatValue = 10.77f;
             UInt32Value = 100;
         }

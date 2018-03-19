@@ -42,7 +42,7 @@ namespace XamarinSampleClient.ViewModels
         {
             Title = "Browse sample";
             m_results = new ObservableCollection<BrowseResultNode>();
-            SampleServerUrl = "opc.tcp://192.168.150.166:61510/SampleServer";
+            SampleServerUrl = App.DefaultSampleServerUrl;
             MaxReferencesReturned = 3;
         }
 

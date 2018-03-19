@@ -8,6 +8,7 @@ namespace XamarinSampleClient
 {
 	public partial class App : Application
 	{
+        public static string DefaultSampleServerUrl = "opc.tcp://192.168.43.37:61510/SampleServer";
         public App()
 		{
 			InitializeComponent();
