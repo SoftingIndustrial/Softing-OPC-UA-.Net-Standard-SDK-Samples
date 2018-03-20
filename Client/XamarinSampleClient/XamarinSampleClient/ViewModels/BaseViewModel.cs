@@ -37,6 +37,14 @@ namespace XamarinSampleClient.ViewModels
 			get { return m_title; }
 			set { SetProperty(ref m_title, value); }
 		}
+
+        /// <summary>
+        /// Perform operations required when closing a view
+        /// </summary>
+        public virtual void Close()
+        {
+
+        }
 	}
 }
 

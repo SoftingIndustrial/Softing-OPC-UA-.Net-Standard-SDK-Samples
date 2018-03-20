@@ -20,18 +20,7 @@ namespace XamarinSampleClient.Views
 
 	        BindingContext = m_viewModel = new EventsViewModel();
 	    }
-
-
-        /// <summary>When overridden, allows the application developer to customize behavior as the <see cref="T:Xamarin.Forms.Page" /> disappears.</summary>
-        /// <remarks>To be added.</remarks>
-        protected override void OnDisappearing()
-	    {
-	        //ensure the session is disconnected 
-	        m_viewModel.DisconnectSession();
-
-	        base.OnDisappearing();
-	    }
-
+        
 	    private void CreateEventMi_OnClicked(object sender, EventArgs e)
 	    {
             ThreadPool.QueueUserWorkItem(o =>

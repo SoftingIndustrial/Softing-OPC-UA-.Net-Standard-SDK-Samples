@@ -293,6 +293,17 @@ namespace XamarinSampleClient.ViewModels
 
         #endregion
 
+        #region Public Override Methods
+        /// <summary>
+        /// Perform operations required when closing a view
+        /// </summary>
+        public override void Close()
+        {
+            DisconnectSession();
+            base.Close();
+        }
+        #endregion
+
         #region Event Handlers
 
         /// <summary>

@@ -16,6 +16,7 @@ namespace XamarinSampleClient.Views
     public partial class StartPage : ContentPage
     {
         private StartPageViewModel m_viewModel;
+        private ContentPage m_currentContentPage;
         public ObservableCollection<string> Items { get; set; }
 
         public StartPage()
@@ -23,8 +24,22 @@ namespace XamarinSampleClient.Views
             InitializeComponent();
 
             BindingContext = m_viewModel = new StartPageViewModel();
+            
         }
-        
+        protected override void OnAppearing()
+        {           
+            if (m_currentContentPage != null)
+            {
+                //close current child view model if possible
+                BaseViewModel viewModel = m_currentContentPage.BindingContext as BaseViewModel;
+                if (viewModel != null)
+                {
+                    viewModel.Close();
+                }
+                m_currentContentPage = null;
+            }
+        }
+
         async void Samples_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             if (m_viewModel.IsBusy)
@@ -37,40 +52,41 @@ namespace XamarinSampleClient.Views
             if (tappedItem == null)
             {
                 return;
-            }
-           
+            }            
+            
             //open desired page
             switch (tappedItem.Command)
             {
                 case SampleCommand.DiscoverySample:
-                    await Navigation.PushAsync(new DiscoverySamplePage());
+                    m_currentContentPage = new DiscoverySamplePage();                   
                     break;
                 case SampleCommand.BrowseSample:
-                    await Navigation.PushAsync(new BrowseSamplePage());
+                    m_currentContentPage = new BrowseSamplePage();
                     break;
                 case SampleCommand.CallMethodsSample:
-                    await Navigation.PushAsync(new MethodsSamplePage());
+                    m_currentContentPage = new MethodsSamplePage();
                     break;
                 case SampleCommand.ConnectSample:
-                    await Navigation.PushAsync(new ConnectSamplePage());
+                    m_currentContentPage = new ConnectSamplePage();
                     break;
                 case SampleCommand.EventsSample:
-                    await Navigation.PushAsync(new EventsSamplePage());
+                    m_currentContentPage = new EventsSamplePage();
                     break;
                 case SampleCommand.MonitoredItemSample:
-                    await Navigation.PushAsync(new MonitoredItemSamplePage());
+                    m_currentContentPage = new MonitoredItemSamplePage();
                     break;
                 case SampleCommand.ReadWriteSample:
-                    await Navigation.PushAsync(new ReadWriteSamplePage());
+                    m_currentContentPage = new ReadWriteSamplePage();
                     break;
                 default:
                         break;
             }
+            if (m_currentContentPage != null)
+            {
+                await Navigation.PushAsync(m_currentContentPage);
+            }
             //remove selection
             ((ListView)sender).SelectedItem = null;
-        }
-
-
-        
+        }        
     }
 }

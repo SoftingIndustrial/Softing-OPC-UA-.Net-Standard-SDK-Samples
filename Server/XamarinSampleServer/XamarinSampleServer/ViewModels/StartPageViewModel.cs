@@ -9,12 +9,15 @@
  * ======================================================================*/
 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Opc.Ua;
 using Opc.Ua.Configuration;
 using Xamarin.Forms;
+using XamarinSampleServer.Model;
 using XamarinSampleServer.Services;
 
 namespace XamarinSampleServer.ViewModels
@@ -25,9 +28,12 @@ namespace XamarinSampleServer.ViewModels
     class StartPageViewModel : BaseViewModel
     {
         #region Fields
+        private ObservableCollection<ConnectedSession> m_connectedSessions;
+        private bool m_isRefreshingSessions;
         private string m_resultsText;
         private bool m_canStartServer;
-        ApplicationInstance m_application;
+        private ApplicationInstance m_application;
+        private SampleServer.SampleServer m_sampleServer;
         #endregion
 
         #region Constructors
@@ -40,10 +46,27 @@ namespace XamarinSampleServer.ViewModels
                 ServerIp = addresses[0].ToString();
             }
             CanStartServer = true;
+            m_connectedSessions = new ObservableCollection<ConnectedSession>();
+
+            LoadSessionsCommand = new Command(async () => await ExecuteLoadSessionsCommand());
         }
         #endregion
 
-        #region Properties       
+        #region Properties    
+        /// <summary>
+        /// Get/set command for load sessions
+        /// </summary>
+        public Command LoadSessionsCommand { get; private set; }
+
+        /// <summary>
+        /// Get/set indicator IsRefreshingSessions
+        /// </summary>
+        public bool IsRefreshingSessions
+        {
+            get { return m_isRefreshingSessions; }
+            set { SetProperty(ref m_isRefreshingSessions, value); }
+        }
+
         /// <summary>
         /// Get/set indicator if server can be started
         /// </summary>
@@ -86,6 +109,13 @@ namespace XamarinSampleServer.ViewModels
             set { SetProperty(ref m_resultsText, value); }
         }
 
+        /// <summary>
+        /// Get list of connected sessions
+        /// </summary>
+        public ObservableCollection<ConnectedSession> ConnectedSessions
+        {
+            get { return m_connectedSessions; }
+        }
         /// <summary>
         /// Indicator is view is busy executing something
         /// </summary>
@@ -146,14 +176,10 @@ namespace XamarinSampleServer.ViewModels
                 m_application.ApplicationConfiguration.CertificateValidator.CertificateValidation += CertificateValidator_CertificateValidation;
                 ResultsText += "\nStarting server...";
                 // Start the server
-                await m_application.Start(new SampleServer.SampleServer());
+                m_sampleServer = new SampleServer.SampleServer();
+                await m_application.Start(m_sampleServer);
 
-                ResultsText += "\n\n\nXamarin SampleServer is running:";
-
-                for (int i = 0; i < m_application.ApplicationConfiguration.ServerConfiguration.BaseAddresses.Count; i++)
-                {
-                    ResultsText += "\n" + m_application.ApplicationConfiguration.ServerConfiguration.BaseAddresses[i];
-                }       
+                ResultsText += "\nXamarin SampleServer is running.";    
             }
             catch (Exception e)
             {
@@ -172,11 +198,41 @@ namespace XamarinSampleServer.ViewModels
             if (m_application != null)
             {
                 m_application.Stop();
+                m_sampleServer = null;
+                m_connectedSessions.Clear();
             }
             CanStartServer = true;
             ResultsText = "Server was stopped.";
         }
 
+        #endregion
+
+        #region Execute Command Methods
+
+        public async Task ExecuteLoadSessionsCommand()
+        {
+            if (IsRefreshingSessions)
+                return;
+            IsRefreshingSessions = true;
+
+            if (m_sampleServer != null)
+            {
+                m_connectedSessions.Clear();
+
+                IList<Opc.Ua.Server.Session> sessions = m_sampleServer.CurrentInstance.SessionManager.GetSessions();
+                IList<Opc.Ua.Server.Subscription> subscriptions = m_sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
+                foreach (var session in sessions)
+                {
+                    m_connectedSessions.Add(new ConnectedSession()
+                    {
+                        SessionId = session.Id.ToString(),
+                        IdentityName = session.Identity.DisplayName,
+                    });
+                }
+
+            }
+            IsRefreshingSessions = false;
+        }
         #endregion
 
         #region Event Handlers

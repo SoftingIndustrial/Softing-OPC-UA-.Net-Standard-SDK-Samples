@@ -5,12 +5,18 @@
              Title="{Binding Title}">
     <ContentPage.Content>
         <Grid>
-            <StackLayout>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
                 <!--Server URL-->
-                <Frame Margin="2" Padding="2" CornerRadius="3" OutlineColor="{StaticResource softing_secondary_dark_gray}">
+                <Frame  Grid.Row="0"
+                    Margin="2" Padding="2" CornerRadius="3" OutlineColor="{StaticResource softing_secondary_dark_gray}">
                     <StackLayout Margin="0">
-                        <Label  Margin="2"
-                            Text="{Binding ServerUrl, StringFormat='Server Url: {0}'}" 
+                        <Label  Margin="2" Style="{StaticResource BoldLabel}" 
+                            Text="{Binding ServerUrl}" 
                             VerticalOptions="Center" VerticalTextAlignment="Center" HorizontalOptions="FillAndExpand"/>
                         
                         <Grid >
@@ -30,8 +36,54 @@
                     </StackLayout>
                 </Frame>
                 <!-- Results label -->
-                <Label Margin="4" Text="{Binding ResultsText}" Style="{StaticResource BoldLabel}" />
-            </StackLayout>
+                <Label Grid.Row="1"
+                    Margin="4" Text="{Binding ResultsText}" Style="{StaticResource BoldLabel}" />
+                <!--Sessions list-->
+                <Grid Grid.Row="2"
+                    VerticalOptions="Fill" Margin="4" IsVisible="{Binding CanStopServer}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Text="Client sessions list:"/>
+                    <ListView Grid.Row="1" ItemsSource="{Binding ConnectedSessions}" 
+                            CachingStrategy="RecycleElement"
+                            HasUnevenRows="True"
+                            IsPullToRefreshEnabled="True"
+                            x:Name="SessionsListView"
+                            IsRefreshing="{Binding IsRefreshingSessions, Mode=OneWay}"
+                            RefreshCommand="{Binding LoadSessionsCommand}"
+                              VerticalOptions="Fill">
+                        <ListView.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.5*"/>
+                                    <ColumnDefinition Width="0.5*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0"  Margin="1" Text="Session Id"/>
+                                <Label Grid.Column="1"  Margin="1" Text="Identity Name"/>
+                            </Grid>
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0.5*"/>
+                                            <ColumnDefinition Width="0.5*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0"  Margin="1" Text="{Binding SessionId}"/>
+                                        <Label Grid.Column="1"  Margin="1" Text="{Binding IdentityName}"/>
+                                    </Grid>                                    
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <Button Grid.Row="2" 
+                            Command="{Binding LoadSessionsCommand}" Text="Refresh sessions list" HorizontalOptions="Center"/>
+                </Grid>
+            </Grid>
             <!--IsBusy indicator-->
             <ActivityIndicator 
                 IsVisible="{Binding IsBusy}"

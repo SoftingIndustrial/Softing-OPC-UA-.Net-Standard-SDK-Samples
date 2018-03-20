@@ -442,6 +442,17 @@ namespace XamarinSampleClient.ViewModels
 
         #endregion
 
+        #region Public Override Methods
+        /// <summary>
+        /// Perform operations required when closing a view
+        /// </summary>
+        public override void Close()
+        {
+            DisconnectSession();
+            base.Close();
+        }
+        #endregion
+
         #region Private Methods - Read
         /// <summary>
         /// Reads a variable node with all its attributes.

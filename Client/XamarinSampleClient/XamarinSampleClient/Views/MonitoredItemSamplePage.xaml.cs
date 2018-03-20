@@ -19,17 +19,8 @@ namespace XamarinSampleClient.Views
 			InitializeComponent ();
 
 		    BindingContext = m_viewModel = new MonitoredItemViewModel();
-		}
-
-	    /// <summary>When overridden, allows the application developer to customize behavior as the <see cref="T:Xamarin.Forms.Page" /> disappears.</summary>
-	    /// <remarks>To be added.</remarks>
-	    protected override void OnDisappearing()
-	    {
-	        //ensure the session is disconnected 
-	        m_viewModel.DisconnectSession();
-
-	        base.OnDisappearing();
-	    }
+            
+		}   
 
 	    private void CreateMi_OnClicked(object sender, EventArgs e)
 	    {

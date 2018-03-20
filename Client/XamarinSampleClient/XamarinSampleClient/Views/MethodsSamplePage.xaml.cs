@@ -16,21 +16,13 @@ namespace XamarinSampleClient.Views
 		    BindingContext = m_viewModel = new MethodsViewModel();
 		}
 
-	    #region Overrides of Page
+        protected override bool OnBackButtonPressed()
+        {
+            m_viewModel.Close();
+            return base.OnBackButtonPressed();
+        }
 
-	    /// <summary>When overridden, allows the application developer to customize behavior as the <see cref="T:Xamarin.Forms.Page" /> disappears.</summary>
-	    /// <remarks>To be added.</remarks>
-	    protected override void OnDisappearing()
-	    {
-            //ensure the session is disconnected 
-	        m_viewModel.DisconnectSession();
-
-            base.OnDisappearing();
-	    }
-
-	    #endregion
-
-	    private void CallMethod_OnClicked(object sender, EventArgs e)
+        private void CallMethod_OnClicked(object sender, EventArgs e)
 	    {	       
             ThreadPool.QueueUserWorkItem(o =>
             {

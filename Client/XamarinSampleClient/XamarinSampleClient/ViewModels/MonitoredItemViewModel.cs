@@ -305,7 +305,17 @@ namespace XamarinSampleClient.ViewModels
                 SessionStatusText = "DisconnectSession Error: " + ex.Message;
             }
         }
+        #endregion
 
+        #region Public Override Methods
+        /// <summary>
+        /// Perform operations required when closing a view
+        /// </summary>
+        public override void Close()
+        {
+            DisconnectSession();
+            base.Close();
+        }
         #endregion
 
         #region Event Handlers

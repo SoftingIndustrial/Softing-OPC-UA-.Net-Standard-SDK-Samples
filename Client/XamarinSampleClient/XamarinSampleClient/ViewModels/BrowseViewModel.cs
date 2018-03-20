@@ -95,6 +95,7 @@ namespace XamarinSampleClient.ViewModels
         #endregion
 
         #region Public Methods
+        
         /// <summary>
         /// The BrowseTheServer method uses the Browse method with one parameter from ClientSession, in this case the browse options will be taken from the Session object.
         /// If there are no browse options on the Session object the browse will be done with the default options.
@@ -228,7 +229,6 @@ namespace XamarinSampleClient.ViewModels
                 });
             }
         }
-
         #endregion
 
         #region Initialize & DisconnectSession
@@ -292,6 +292,17 @@ namespace XamarinSampleClient.ViewModels
             }
         }
 
+        #endregion
+
+        #region Public Override Methods
+        /// <summary>
+        /// Perform operations required when closing a view
+        /// </summary>
+        public override void Close()
+        {
+            DisconnectSession();
+            base.Close();
+        }
         #endregion
     }
 }
