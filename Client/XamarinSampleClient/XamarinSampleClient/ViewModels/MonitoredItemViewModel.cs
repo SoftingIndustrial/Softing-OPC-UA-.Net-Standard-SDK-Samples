@@ -146,16 +146,12 @@ namespace XamarinSampleClient.ViewModels
         public void CreateMonitoredItem()
         {
             EventDataList.Clear();
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                InitializeSession();
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "CreateMonitoredItem no session available.";
-                    return;
-                }
+                OperationStatusText = "CreateMonitoredItem no session available.";
+                return;
             }
             if (m_miInt64 != null)
             {
@@ -192,17 +188,14 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         public void DeleteMonitoredItem()
         {
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                InitializeSession();
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "DeleteMonitoredItem no session available.";
-                    return;
-                }
+                OperationStatusText = "DeleteMonitoredItem no session available.";
+                return;
             }
+            
             if (m_miInt64 == null || m_miCurrentTime == null)
             {
                 OperationStatusText = "MonitoredItems are not created";
@@ -240,6 +233,11 @@ namespace XamarinSampleClient.ViewModels
         public void InitializeSession()
         {
             IsBusy = true;
+            if (m_session != null && m_session.CurrentState != State.Connected)
+            {
+                m_session.Dispose();
+                m_session = null;
+            }
             if (m_session == null)
             {
                 try

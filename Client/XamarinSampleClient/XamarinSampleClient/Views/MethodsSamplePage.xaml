@@ -6,18 +6,24 @@
              Title="{Binding Title}">
     <ContentPage.Content>
         <Grid>
-            <StackLayout>
-                <Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition  Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <!--Server url-->
                     <Label Grid.Row="0" Grid.ColumnSpan="2"
@@ -56,24 +62,24 @@
                     </Entry>
                 </Grid>
                 <!--buttons-->
-                <Button 
+                <Button Grid.Row="1"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                     Clicked="CallMethod_OnClicked" Text="Call method"/>
-                <Button 
+                <Button Grid.Row="2"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                     Clicked="CallMethodAsync_OnClicked" Text="Call method asynchronously"/>
                 <!--Results-->
-                <Grid Margin="8,0,0,0">
+                <Grid Grid.Row="3" Margin="8,0,0,0" VerticalOptions="Fill">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0"  Grid.Column="0"
                         Text="Session status:" Style="{StaticResource BoldLabel}"/>
@@ -88,7 +94,7 @@
                     <Label Grid.Row="2" Grid.Column="1"
                             Text="{Binding StatusCode}"/>
                 </Grid>
-            </StackLayout>
+            </Grid>
             <ActivityIndicator 
                 IsVisible="{Binding IsBusy}"
                 IsRunning="{Binding IsBusy}"/>

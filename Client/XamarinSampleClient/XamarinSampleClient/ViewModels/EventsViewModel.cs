@@ -144,16 +144,12 @@ namespace XamarinSampleClient.ViewModels
         public void CreateEventMonitoredItem()
         {
             EventDataList.Clear();
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                InitializeSession();
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "CreateEventMonitoredItem no session available.";
-                    return;
-                }
+                OperationStatusText = "CreateEventMonitoredItem no session available.";
+                return;
             }
             if (m_eventMonitoredItem != null)
             {
@@ -182,16 +178,12 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         public void DeleteEventMonitoredItem()
         {
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                InitializeSession();
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "DeleteEventMonitoredItem no session available.";
-                    return;
-                }
+                OperationStatusText = "DeleteEventMonitoredItem no session available.";
+                return;
             }
             if (m_eventMonitoredItem == null)
             {
@@ -225,6 +217,11 @@ namespace XamarinSampleClient.ViewModels
         public void InitializeSession()
         {
             IsBusy = true;
+            if (m_session != null && m_session.CurrentState != State.Connected)
+            {
+                m_session.Dispose();
+                m_session = null;
+            }
             if (m_session == null)
             {
                 try

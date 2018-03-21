@@ -58,11 +58,13 @@
                         <ListView.Header>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.5*"/>
-                                    <ColumnDefinition Width="0.5*"/>
+                                    <ColumnDefinition Width="0.4*"/>
+                                    <ColumnDefinition Width="0.4*"/>
+                                    <ColumnDefinition Width="0.2*"/>
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Column="0"  Margin="1" Text="Session Id"/>
-                                <Label Grid.Column="1"  Margin="1" Text="Identity Name"/>
+                                <Label Grid.Column="1"  Margin="1" Text="Name"/>
+                                <Label Grid.Column="2"  Margin="1" Text="Subs."/>
                             </Grid>
                         </ListView.Header>
                         <ListView.ItemTemplate>
@@ -70,11 +72,13 @@
                                 <ViewCell>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="0.5*"/>
-                                            <ColumnDefinition Width="0.5*"/>
+                                            <ColumnDefinition Width="0.4*"/>
+                                            <ColumnDefinition Width="0.4*"/>
+                                            <ColumnDefinition Width="0.2*"/>
                                         </Grid.ColumnDefinitions>
                                         <Label Grid.Column="0"  Margin="1" Text="{Binding SessionId}"/>
-                                        <Label Grid.Column="1"  Margin="1" Text="{Binding IdentityName}"/>
+                                        <Label Grid.Column="1"  Margin="1" Text="{Binding SessionName}"/>
+                                        <Label Grid.Column="2"  Margin="1" Text="{Binding SubscriptionsCount}"/>
                                     </Grid>                                    
                                 </ViewCell>
                             </DataTemplate>

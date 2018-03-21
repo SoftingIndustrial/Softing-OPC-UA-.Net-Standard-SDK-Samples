@@ -103,14 +103,11 @@ namespace XamarinSampleClient.ViewModels
         public void BrowseTheServer()
         {
             Results.Clear();
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    return;
-                }
+                return;
             }
             try
             {
@@ -167,14 +164,11 @@ namespace XamarinSampleClient.ViewModels
         public void BrowseWithOptions()
         {
             Results.Clear();
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    return;
-                }
+                return;
             }
             BrowseDescriptionEx options = new BrowseDescriptionEx();
             options.MaxReferencesReturned = MaxReferencesReturned;
@@ -239,6 +233,11 @@ namespace XamarinSampleClient.ViewModels
         public void InitializeSession()
         {
             IsBusy = true;
+            if (m_session != null && m_session.CurrentState != State.Connected)
+            {
+                m_session.Dispose();
+                m_session = null;
+            }
             if (m_session == null)
             {
                 try

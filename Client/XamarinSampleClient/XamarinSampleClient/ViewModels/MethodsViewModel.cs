@@ -135,14 +135,13 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         internal void CallMethod()
         {
+            ResultValue = null;
+            StatusCode = null;
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    return;
-                }
+                return;
             }
             /*initialize input arguments*/
             List<object> inputArguments = new List<object> { FloatValue, UInt32Value };
@@ -173,14 +172,13 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         internal void AsyncCallMethod()
         {
+            ResultValue = null;
+            StatusCode = null;
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    return;
-                }
+                return;
             }
             //set busy indicator
             IsBusy = true;
@@ -207,6 +205,11 @@ namespace XamarinSampleClient.ViewModels
         public void InitializeSession()
         {
             IsBusy = true;
+            if(m_session != null && m_session.CurrentState!= State.Connected)
+            {
+                m_session.Dispose();
+                m_session = null;
+            }
             if (m_session == null)
             {
                 try

@@ -226,7 +226,8 @@ namespace XamarinSampleServer.ViewModels
                     m_connectedSessions.Add(new ConnectedSession()
                     {
                         SessionId = session.Id.ToString(),
-                        IdentityName = session.Identity.DisplayName,
+                        SessionName = session.SessionDiagnostics.SessionName,
+                        SubscriptionsCount = session.SessionDiagnostics.CurrentSubscriptionsCount,
                     });
                 }
 

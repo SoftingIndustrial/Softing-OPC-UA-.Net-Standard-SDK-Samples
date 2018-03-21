@@ -13,6 +13,8 @@ namespace XamarinSampleServer.Model
     class ConnectedSession
     {
         public string SessionId { get; set; }
-        public string IdentityName { get; set; }
+        public string SessionName { get; set; }
+
+        public uint SubscriptionsCount { get; set; }
     }
 }

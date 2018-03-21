@@ -387,6 +387,11 @@ namespace XamarinSampleClient.ViewModels
         public void InitializeSession()
         {
             IsBusy = true;
+            if (m_session != null && m_session.CurrentState != State.Connected)
+            {
+                m_session.Dispose();
+                m_session = null;
+            }
             if (m_session == null)
             {
                 try
@@ -459,15 +464,13 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void ReadVariableNode()
         {
+            BaseNode = null;
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "ReadVariableNode no session available.";
-                    return;
-                }
+                OperationStatusText = "ReadVariableNode no session available.";
+                return;
             }
 
             try
@@ -494,15 +497,13 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void ReadObjectNode()
         {
+            BaseNode = null;
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "ReadObjectNode no session available.";
-                    return;
-                }
+                OperationStatusText = "ReadObjectNode no session available.";
+                return;
             }
 
             try
@@ -529,15 +530,12 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void ReadValueForNode()
         {
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "ReadValueForNode no session available.";
-                    return;
-                }
+                OperationStatusText = "ReadValueForNode no session available.";
+                return;
             }
 
             ReadValueId readValueId = new ReadValueId();
@@ -561,15 +559,13 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void ReadArrayValue()
         {
+            ArrayValue.Clear();
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "ReadArrayValue no session available.";
-                    return;
-                }
+                OperationStatusText = "ReadArrayValue no session available.";
+                return;
             }
             ReadValueId readValueId = new ReadValueId();
             readValueId.NodeId = new NodeId(Int64ArrayNodeId);
@@ -578,8 +574,7 @@ namespace XamarinSampleClient.ViewModels
             try
             {
                 DataValueEx dataValue = m_session.Read(readValueId);
-                Array array = dataValue.Value as Array;
-                ArrayValue.Clear();
+                Array array = dataValue.Value as Array;                
                 foreach (long item in array)
                 {
                     ArrayValue.Add(new NodeValueItem(){Value = item});
@@ -605,15 +600,12 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void ReadComplexValue()
         {
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "ReadComplexValue no session available.";
-                    return;
-                }
+                OperationStatusText = "ReadComplexValue no session available.";
+                return;
             }
             //ensure type dictionaries are loaded
             if (SampleApplication.UaApplication.Configuration.DecodeCustomDataTypes)
@@ -674,15 +666,12 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void ReadEnumValue()
         {
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "ReadEnumValue no session available.";
-                    return;
-                }
+                OperationStatusText = "ReadEnumValue no session available.";
+                return;
             }
             //ensure type dictionaries are loaded
             if (SampleApplication.UaApplication.Configuration.DecodeCustomDataTypes)
@@ -730,15 +719,12 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void ReadMultipleNodesValues()
         {
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "ReadMultipleNodesValues no session available.";
-                    return;
-                }
+                OperationStatusText = "ReadMultipleNodesValues no session available.";
+                return;
             }
 
             List<ReadValueId> listOfNodes = new List<ReadValueId>()
@@ -801,15 +787,12 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void WriteValueForNode()
         {
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "WriteValueForNode no session available.";
-                    return;
-                }
+                OperationStatusText = "WriteValueForNode no session available.";
+                return;
             }
 
             //first value to write
@@ -838,15 +821,12 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void WriteArrayValueForNode()
         {
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "WriteValueForNode no session available.";
-                    return;
-                }
+                OperationStatusText = "WriteValueForNode no session available.";
+                return;
             }
 
             WriteValue writeValue = new WriteValue();
@@ -881,15 +861,12 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void WriteComplexValueForNode()
         {
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "WriteComplexValueForNode no session available.";
-                    return;
-                }
+                OperationStatusText = "WriteComplexValueForNode no session available.";
+                return;
             }
             //ensure type dictionaries are loaded
             if (SampleApplication.UaApplication.Configuration.DecodeCustomDataTypes)
@@ -977,15 +954,12 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void WriteEnumValueForNode()
         {
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "WriteComplexValueForNode no session available.";
-                    return;
-                }
+                OperationStatusText = "WriteComplexValueForNode no session available.";
+                return;
             }
             //ensure type dictionaries are loaded
             if (SampleApplication.UaApplication.Configuration.DecodeCustomDataTypes)
@@ -1029,15 +1003,12 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void WriteMultipleNodesValues()
         {
+            //try to initialize session
+            InitializeSession();
             if (m_session == null)
             {
-                //try to initialize session
-                InitializeSession();
-                if (m_session == null)
-                {
-                    OperationStatusText = "WriteMultipleNodesValues no session available.";
-                    return;
-                }
+                OperationStatusText = "WriteMultipleNodesValues no session available.";
+                return;
             }
 
             List<WriteValue> listOfNodes = new List<WriteValue>()
