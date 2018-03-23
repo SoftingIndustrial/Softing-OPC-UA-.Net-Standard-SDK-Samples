@@ -20,6 +20,7 @@ namespace XamarinSampleClient.ViewModels
     /// <summary>
     /// View Model for MethodsSamplePage
     /// </summary>
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class MethodsViewModel : BaseViewModel
     {
         #region Private Fields

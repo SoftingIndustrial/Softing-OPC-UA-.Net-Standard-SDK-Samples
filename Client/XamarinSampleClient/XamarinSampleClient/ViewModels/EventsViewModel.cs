@@ -23,6 +23,7 @@ namespace XamarinSampleClient.ViewModels
     /// <summary>
     /// View Model for EventsPage
     /// </summary>
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class EventsViewModel : BaseViewModel
     {
 

@@ -17,7 +17,7 @@ namespace XamarinSampleServer.Views
 		    BindingContext = m_viewModel = new StartPageViewModel();
         }
 
-	    private async void StartServer_OnClicked(object sender, EventArgs e)
+	    private void StartServer_OnClicked(object sender, EventArgs e)
         {            
             ThreadPool.QueueUserWorkItem(o =>
             {
@@ -35,7 +35,7 @@ namespace XamarinSampleServer.Views
             });
         }
 
-	    private async void StopServer_OnClicked(object sender, EventArgs e)
+	    private void StopServer_OnClicked(object sender, EventArgs e)
 	    {	        
             ThreadPool.QueueUserWorkItem(o =>
 	        {

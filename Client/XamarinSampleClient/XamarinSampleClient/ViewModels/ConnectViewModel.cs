@@ -20,6 +20,7 @@ namespace XamarinSampleClient.ViewModels
     /// <summary>
     /// View model for ConnectPage
     /// </summary>
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class ConnectViewModel : BaseViewModel
     {
         #region Fields

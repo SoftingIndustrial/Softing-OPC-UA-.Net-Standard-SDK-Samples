@@ -18,6 +18,7 @@ namespace XamarinSampleClient.Models
     /// <summary>
     /// Model class for an node value item
     /// </summary>
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class NodeValueItem : ObservableObject
     {
         #region Private Fields

@@ -13,6 +13,7 @@ namespace XamarinSampleClient.Models
     /// <summary>
     /// Model class for the Browse result
     /// </summary>
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class BrowseResultNode
     {
         #region Public Properties

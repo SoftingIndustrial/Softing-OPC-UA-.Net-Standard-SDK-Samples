@@ -16,6 +16,7 @@ namespace XamarinSampleClient.Models
     /// <summary>
     /// Display object for a Complex value object read from server
     /// </summary>
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class ComplexValueItem : ObservableObject
     {
         /// <summary>

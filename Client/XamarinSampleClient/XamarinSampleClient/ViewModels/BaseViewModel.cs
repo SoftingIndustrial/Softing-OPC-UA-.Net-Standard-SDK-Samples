@@ -12,7 +12,11 @@ using XamarinSampleClient.Helpers;
 
 namespace XamarinSampleClient.ViewModels
 {
-	public class BaseViewModel : ObservableObject
+    /// <summary>
+    /// Base class for ViewModel classes
+    /// </summary>
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
+    public class BaseViewModel : ObservableObject
 	{
 		bool m_isBusy = false;
 	    /// <summary>

@@ -22,6 +22,7 @@ namespace XamarinSampleClient.ViewModels
     /// <summary>
     /// View Model for MonitoredItemPage
     /// </summary>
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class MonitoredItemViewModel : BaseViewModel
     {
 

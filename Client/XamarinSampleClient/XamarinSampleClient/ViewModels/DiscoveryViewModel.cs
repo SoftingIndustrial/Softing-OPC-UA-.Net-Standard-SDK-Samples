@@ -21,6 +21,7 @@ namespace XamarinSampleClient.ViewModels
     /// <summary>
     /// View model for DiscoveryPage
     /// </summary>
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class DiscoveryViewModel : BaseViewModel
     {
         #region Fields

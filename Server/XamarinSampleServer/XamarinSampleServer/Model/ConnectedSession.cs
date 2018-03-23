@@ -10,6 +10,7 @@
 
 namespace XamarinSampleServer.Model
 {
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class ConnectedSession
     {
         public string SessionId { get; set; }

@@ -17,7 +17,6 @@ namespace XamarinSampleClient.Views
     {
         private StartPageViewModel m_viewModel;
         private ContentPage m_currentContentPage;
-        public ObservableCollection<string> Items { get; set; }
 
         public StartPage()
         {

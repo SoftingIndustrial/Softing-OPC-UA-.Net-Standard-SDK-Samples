@@ -16,9 +16,10 @@ using Xamarin.Forms;
 
 namespace XamarinSampleClient.ViewModels
 {
-   /// <summary>
-   /// View model for StartPage
-   /// </summary>
+    /// <summary>
+    /// View model for StartPage
+    /// </summary>
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class StartPageViewModel : BaseViewModel
     {
         #region Constructor

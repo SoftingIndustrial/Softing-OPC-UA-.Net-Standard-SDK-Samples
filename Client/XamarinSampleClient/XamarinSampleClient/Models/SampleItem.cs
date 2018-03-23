@@ -13,6 +13,7 @@
     /// <summary>
     /// Model class for one sample available in this application
     /// </summary>
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class SampleItem
     {
         /// <summary>

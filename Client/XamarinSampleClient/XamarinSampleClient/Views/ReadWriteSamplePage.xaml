@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="XamarinSampleClient.Views.ReadWriteSamplePage"
-             xmlns:viewModels="clr-namespace:XamarinSampleClient.ViewModels;assembly=XamarinSampleClient.Android"
+             xmlns:viewModels="clr-namespace:XamarinSampleClient.ViewModels;assembly=XamarinSampleClient"
              Title="{Binding Title}">
     <ContentPage.Content>
         <Grid Margin="4">

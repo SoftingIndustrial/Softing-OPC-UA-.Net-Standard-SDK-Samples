@@ -14,7 +14,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Java.Lang;
 using Opc.Ua;
 using XamarinSampleClient.Helpers;
 using XamarinSampleClient.Models;
@@ -29,6 +28,7 @@ namespace XamarinSampleClient.ViewModels
     /// <summary>
     /// View Model for readWritePage
     /// </summary>
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class ReadWriteViewModel : BaseViewModel
     {
         #region Private fields

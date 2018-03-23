@@ -16,6 +16,7 @@ namespace XamarinSampleClient.Models
     /// <summary>
     /// Model class for monitored item event data
     /// </summary>
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class MonitoredItemEventData : ObservableObject
     {
         #region Private Fields

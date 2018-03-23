@@ -22,6 +22,7 @@ namespace XamarinSampleClient.ViewModels
     /// <summary>
     /// View model for BrowsePage
     /// </summary>
+    [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class BrowseViewModel : BaseViewModel
     {
         #region Private fields
