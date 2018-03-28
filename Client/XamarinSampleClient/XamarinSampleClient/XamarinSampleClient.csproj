@@ -12,7 +12,9 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Toolkit\Softing.Opc.Ua_2017.csproj" />
+    <Reference Include="Softing.Opc.Ua">
+      <HintPath>..\..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.dll</HintPath>
+    </Reference>
   </ItemGroup>
  
   <ItemGroup>

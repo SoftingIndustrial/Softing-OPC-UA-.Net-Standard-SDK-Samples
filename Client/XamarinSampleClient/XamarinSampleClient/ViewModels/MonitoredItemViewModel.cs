@@ -166,7 +166,6 @@ namespace XamarinSampleClient.ViewModels
                 m_miCurrentTime.DataChangesReceived += Monitoreditem_DataChangesReceived;
                 //set sampling interval to 1 second
                 m_miCurrentTime.SamplingInterval = 1000;
-                Console.WriteLine("Monitored item '{0}' created. Data value changes are shown:", m_miCurrentTime.DisplayName);
 
                 //create monitored item for Int64 variable
                 m_miInt64 = new ClientMonitoredItem(m_subscription, m_miInt64NodeId, "Monitored Item Int64");
@@ -205,9 +204,7 @@ namespace XamarinSampleClient.ViewModels
             try
             {
                 m_miCurrentTime.DataChangesReceived -= Monitoreditem_DataChangesReceived;
-                Console.WriteLine("Monitored item '{0}' unsubscribed from receiving data change notifications.", m_miCurrentTime.DisplayName);
                 m_miCurrentTime.Delete();
-                Console.WriteLine("Monitored item '{0}' deleted.", m_miCurrentTime.DisplayName);
                 m_miCurrentTime = null;
 
                 m_miInt64.DataChangesReceived -= Monitoreditem_DataChangesReceived;

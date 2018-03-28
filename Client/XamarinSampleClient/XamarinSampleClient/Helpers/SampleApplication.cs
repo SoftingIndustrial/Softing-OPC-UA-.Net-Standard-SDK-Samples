@@ -54,8 +54,7 @@ namespace XamarinSampleClient.Helpers
         /// </summary>
         /// <returns></returns>
         private static ApplicationConfigurationEx CreateAplicationConfiguration()
-        {
-            Console.WriteLine("Creating ApplicationConfigurationEx for current UaApplication...");
+        {            
             ApplicationConfigurationEx configuration = new ApplicationConfigurationEx();
 
             configuration.ApplicationName = "UA Sample Client";
