@@ -181,7 +181,7 @@ namespace XamarinSampleServer.ViewModels
                 m_sampleServer = new SampleServer.SampleServer();
                 await m_application.Start(m_sampleServer);
 
-                ResultsText += "\nXamarin SampleServer is running.";    
+                ResultsText += "\nServer is running.";    
             }
             catch (Exception e)
             {
