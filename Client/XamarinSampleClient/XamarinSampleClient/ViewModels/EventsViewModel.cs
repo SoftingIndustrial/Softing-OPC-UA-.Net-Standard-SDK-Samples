@@ -73,6 +73,7 @@ namespace XamarinSampleClient.ViewModels
                 {
                     //disconnect existing session
                     DisconnectSession();
+                    App.DefaultSampleServerUrl = value;
                 }
                 SetProperty(ref m_sampleServerUrl, value);
             }

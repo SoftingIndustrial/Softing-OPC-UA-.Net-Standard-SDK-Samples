@@ -68,25 +68,25 @@
                                     <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
                                     <Label Grid.Row="0" Grid.Column="1" Text="{Binding UInt32NodeId}"/>
                                     <Label Grid.Row="1" Grid.Column="0" Text="Display name:"/>
-                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding BaseNode.DisplayName.Text}"/>
+                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding BaseNodeObject.DisplayName.Text, StringFormat='{0}ish'}"/>
                                     <Label Grid.Row="2" Grid.Column="0" Text="Browse name:"/>
-                                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding BaseNode.BrowseName.Name}"/>
+                                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding BaseNodeObject.BrowseName.Name}"/>
                                     <Label Grid.Row="3" Grid.Column="0" Text="Description:"/>
-                                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding BaseNode.Description.Text}"/>
+                                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding BaseNodeObject.Description.Text}"/>
                                     <Label Grid.Row="4" Grid.Column="0" Text="Node class:"/>
-                                    <Label Grid.Row="4" Grid.Column="1" Text="{Binding BaseNode.NodeClass}"/>
+                                    <Label Grid.Row="4" Grid.Column="1" Text="{Binding BaseNodeObject.NodeClass}"/>
                                     <Label Grid.Row="5" Grid.Column="0" Text="Data type:"/>
-                                    <Label Grid.Row="5" Grid.Column="1" Text="{Binding BaseNode.DataType}"/>
+                                    <Label Grid.Row="5" Grid.Column="1" Text="{Binding BaseNodeObject.DataType}"/>
                                     <Label Grid.Row="6" Grid.Column="0" Text="Value rank:"/>
-                                    <Label Grid.Row="6" Grid.Column="1" Text="{Binding BaseNode.ValueRank}"/>
+                                    <Label Grid.Row="6" Grid.Column="1" Text="{Binding BaseNodeObject.ValueRank}"/>
                                     <Label Grid.Row="7" Grid.Column="0" Text="Data value:"/>
-                                    <Label Grid.Row="7" Grid.Column="1" Text="{Binding BaseNode.Value.Value}"/>
+                                    <Label Grid.Row="7" Grid.Column="1" Text="{Binding BaseNodeObject.Value.Value}"/>
                                     <Label Grid.Row="8" Grid.Column="0" Text="Value is:"/>
-                                    <Label Grid.Row="8" Grid.Column="1" Text="{Binding BaseNode.UserAccessLevelText}"/>
+                                    <Label Grid.Row="8" Grid.Column="1" Text="{Binding BaseNodeObject.UserAccessLevelText}"/>
                                     <Label Grid.Row="9" Grid.Column="0" Text="Value is historizing:"/>
-                                    <Label Grid.Row="9" Grid.Column="1" Text="{Binding BaseNode.Historizing}"/>
+                                    <Label Grid.Row="9" Grid.Column="1" Text="{Binding BaseNodeObject.Historizing}"/>
                                     <Label Grid.Row="10" Grid.Column="0" Text="Value sampling interval:"/>
-                                    <Label Grid.Row="10" Grid.Column="1" Text="{Binding BaseNode.MinimumSamplingIntervalText}"/>
+                                    <Label Grid.Row="10" Grid.Column="1" Text="{Binding BaseNodeObject.MinimumSamplingIntervalText}"/>
                                 </Grid>
                             </ScrollView>
                         </Grid>
@@ -111,15 +111,15 @@
                                     <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
                                     <Label Grid.Row="0" Grid.Column="1" Text="{Binding ServerNodeId}"/>
                                     <Label Grid.Row="1" Grid.Column="0" Text="Display name:"/>
-                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding BaseNode.DisplayName.Text}"/>
+                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding BaseNodeObject.DisplayName.Text}"/>
                                     <Label Grid.Row="2" Grid.Column="0" Text="Browse name:"/>
-                                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding BaseNode.BrowseName.Name}"/>
+                                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding BaseNodeObject.BrowseName.Name}"/>
                                     <Label Grid.Row="3" Grid.Column="0" Text="Description:"/>
-                                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding BaseNode.Description.Text}"/>
+                                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding BaseNodeObject.Description.Text}"/>
                                     <Label Grid.Row="4" Grid.Column="0" Text="Node class:"/>
-                                    <Label Grid.Row="4" Grid.Column="1" Text="{Binding BaseNode.NodeClass}"/>
+                                    <Label Grid.Row="4" Grid.Column="1" Text="{Binding BaseNodeObject.NodeClass}"/>
                                     <Label Grid.Row="5" Grid.Column="0" Text="Event notifier:"/>
-                                    <Label Grid.Row="5" Grid.Column="1" Text="{Binding BaseNode.EventNotifierText}"/>
+                                    <Label Grid.Row="5" Grid.Column="1" Text="{Binding BaseNodeObject.EventNotifierText}"/>
                                 </Grid>
                             </ScrollView>
                         </Grid>

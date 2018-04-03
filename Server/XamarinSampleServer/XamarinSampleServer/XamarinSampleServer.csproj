@@ -31,9 +31,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\NodeManagement\DynamicASNodeManager.cs" Link="_SampleServer\NodeManagement\DynamicASNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\NodeManagement\NodeMangementNodeManager.cs" Link="_SampleServer\NodeManagement\NodeMangementNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\NodeSetImport\NodeSetImportNodeManager.cs" Link="_SampleServer\NodeSetImport\NodeSetImportNodeManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\ReferenceServer\ReferenceNodeManager.cs" Link="_SampleServer\ReferenceServer\ReferenceNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\UserAuthentication\UserAuthenticationNodeManager.cs" Link="_SampleServer\UserAuthentication\UserAuthenticationNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\Namespaces.cs" Link="_SampleServer\Namespaces.cs" />
     
+  </ItemGroup>
+  
+  
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\..\SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" Link="_SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" />
   </ItemGroup>
 </Project>

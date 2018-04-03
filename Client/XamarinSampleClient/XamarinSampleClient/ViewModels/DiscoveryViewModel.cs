@@ -62,6 +62,7 @@ namespace XamarinSampleClient.ViewModels
                 SetProperty(ref m_serverUrlEndpoints, value);
                 m_results.Clear();
                 ResultsText = "";
+                App.DefaultSampleServerUrl = value;
             }
         }
 

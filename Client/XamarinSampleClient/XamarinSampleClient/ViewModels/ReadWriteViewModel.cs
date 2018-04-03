@@ -40,7 +40,7 @@ namespace XamarinSampleClient.ViewModels
         const string StaticDateTimeNodeId = "ns=7;s=Scalar_Static_DateTime";
 
         private Random m_random = new Random();
-        private const string SessionName = "BrowseClient Session";
+        private const string SessionName = "ReadWriteClient Session";
         private ClientSession m_session;
         private string m_sessionStatusText;
         private string m_operationStatusText;
@@ -48,7 +48,7 @@ namespace XamarinSampleClient.ViewModels
         private OperationTarget m_selectedOperationTarget;
 
         private UInt32 m_uint32NodeValue;
-        private BaseNode m_baseNode;
+        private BaseNode m_baseNodeObject;
         private ObservableCollection<NodeValueItem> m_arrayValue;
         private ComplexValueItem m_complexValue;
         private EnumValue m_enumValue;
@@ -141,6 +141,7 @@ namespace XamarinSampleClient.ViewModels
                 {
                     //disconnect existing session
                     DisconnectSession();
+                    App.DefaultSampleServerUrl = value;
                 }
                 SetProperty(ref m_sampleServerUrl, value);
             }
@@ -179,7 +180,7 @@ namespace XamarinSampleClient.ViewModels
             {
                 SetProperty(ref m_selectedOperationTarget, value);
                 OnPropertyChanged("CanWrite");
-                BaseNode = null;
+                BaseNodeObject = null;
                 m_arrayValue.Clear();
                 ComplexValue = null;
                 EnumValue = null;
@@ -201,10 +202,10 @@ namespace XamarinSampleClient.ViewModels
         /// <summary>
         /// Node for used for reading
         /// </summary>
-        public BaseNode BaseNode
+        public BaseNode BaseNodeObject
         {
-            get { return m_baseNode; }
-            set {SetProperty(ref m_baseNode, value);}
+            get { return m_baseNodeObject; }
+            set {SetProperty(ref m_baseNodeObject, value);}
         }
 
         /// <summary>
@@ -384,9 +385,8 @@ namespace XamarinSampleClient.ViewModels
         /// <summary>
         /// Initialize session object
         /// </summary>
-        public void InitializeSession()
+        private void InitializeSession()
         {
-            IsBusy = true;
             if (m_session != null && m_session.CurrentState != State.Connected)
             {
                 m_session.Dispose();
@@ -415,7 +415,6 @@ namespace XamarinSampleClient.ViewModels
                     }
                 }
             }
-            IsBusy = false;
         }
 
 
@@ -464,7 +463,7 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void ReadVariableNode()
         {
-            BaseNode = null;
+            BaseNodeObject = null;
             //try to initialize session
             InitializeSession();
             if (m_session == null)
@@ -476,8 +475,8 @@ namespace XamarinSampleClient.ViewModels
             try
             {
                 NodeId nodeId = new NodeId(UInt32NodeId);
-                BaseNode = m_session.ReadNode(nodeId);
-                if (BaseNode == null)
+                BaseNodeObject = m_session.ReadNode(nodeId);
+                if (BaseNodeObject == null)
                 {
                     OperationStatusText = string.Format("The NodeId:{0} does not exist in the Address Space", UInt32NodeId);
                 }
@@ -497,7 +496,7 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void ReadObjectNode()
         {
-            BaseNode = null;
+            BaseNodeObject = null;
             //try to initialize session
             InitializeSession();
             if (m_session == null)
@@ -509,8 +508,8 @@ namespace XamarinSampleClient.ViewModels
             try
             {
                 //Browse path: Root\Objects\Server
-                BaseNode = m_session.ReadNode( new NodeId(ServerNodeId));
-                if (BaseNode == null)
+                BaseNodeObject = m_session.ReadNode( new NodeId(ServerNodeId));
+                if (BaseNodeObject == null)
                 {
                     OperationStatusText = string.Format("The NodeId:{0} does not exist in the Address Space", ServerNodeId);
                 }

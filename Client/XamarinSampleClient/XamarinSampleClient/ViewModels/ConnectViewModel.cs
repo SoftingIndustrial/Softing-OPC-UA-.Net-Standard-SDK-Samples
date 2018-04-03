@@ -80,6 +80,7 @@ namespace XamarinSampleClient.ViewModels
             {
                 SetProperty(ref m_serverUrl, value);
                 Result = "";
+                App.DefaultSampleServerUrl = value;
             }
         }
 
