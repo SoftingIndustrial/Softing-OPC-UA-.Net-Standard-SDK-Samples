@@ -5,99 +5,101 @@
              xmlns:behaviours="clr-namespace:XamarinSampleClient.Behaviours"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <Grid>
+        <ScrollView>
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition  Width="Auto"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
+                <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <!--Server url-->
-                    <Label Grid.Row="0" Grid.ColumnSpan="2"
-                           Margin="8,8, 0, 0" 
-                           Text="SampleServer URL:" 
-                           VerticalOptions="Center"/>
-                    <Entry Grid.Row="1" Grid.ColumnSpan="2"
-                           Placeholder="Enter SampleServer URL..." 
-                           IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                           Text="{Binding SampleServerUrl}" Keyboard="Url"
-                           HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                    <!--parameters for methods call-->
-                    <Label Grid.Row="2" Grid.ColumnSpan="2"
-                           Margin="8,8, 0, 0" 
-                           Text="Parameters for 'Server\Methods\Add' method:" 
-                           VerticalOptions="Center"/>
-                    <Label Grid.Row="3" Grid.Column="0"
-                           Margin="8,8, 0, 0" 
-                           Text="Float value:"/>
-                    <Entry Grid.Row="3" Grid.Column="1"
-                           Placeholder="Provide Float value..." 
-                           IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                           Text="{Binding FloatValue}" Keyboard="Numeric"
-                           HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                    <Label Grid.Row="4" Grid.Column="0"
-                           Margin="8,8, 0, 0" 
-                           Text="UInt32 value:"/>
-                    <Entry Grid.Row="4" Grid.Column="1"
-                           Placeholder="Provide UInt32 value..." 
-                           IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                           Text="{Binding UInt32Value}" Keyboard="Numeric"
-                           HorizontalOptions="FillAndExpand" VerticalOptions="Center">
-                        <Entry.Behaviors>
-                            <behaviours:UInt32ValidationBehaviour />
-                        </Entry.Behaviors>
-                    </Entry>
-                </Grid>
-                <!--buttons-->
-                <Button Grid.Row="1"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                    Clicked="CallMethod_OnClicked" Text="Call method"/>
-                <Button Grid.Row="2"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                    Clicked="CallMethodAsync_OnClicked" Text="Call method asynchronously"/>
-                <!--Results-->
-                <Grid Grid.Row="3" Margin="8,0,0,0" VerticalOptions="Fill">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0"  Grid.Column="0"
-                        Text="Session status:" Style="{StaticResource BoldLabel}"/>
-                    <Label Grid.Row="0" Grid.Column="1"
-                            Text="{Binding SessionStatusText}"/>
-                    <Label Grid.Row="1"  Grid.Column="0"
-                            Text="Result value:"/>
-                    <Label Grid.Row="1" Grid.Column="1"
-                            Text="{Binding ResultValue}"/>
-                    <Label Grid.Row="2"  Grid.Column="0"
-                            Text="Status code:"/>
-                    <Label Grid.Row="2" Grid.Column="1"
-                            Text="{Binding StatusCode}"/>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition  Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <!--Server url-->
+                        <Label Grid.Row="0" Grid.ColumnSpan="2"
+                               Margin="8,8, 0, 0" 
+                               Text="SampleServer URL:" 
+                               VerticalOptions="Center"/>
+                        <Entry Grid.Row="1" Grid.ColumnSpan="2"
+                               Placeholder="Enter SampleServer URL..." 
+                               IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                               Text="{Binding SampleServerUrl}" Keyboard="Url"
+                               HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                        <!--parameters for methods call-->
+                        <Label Grid.Row="2" Grid.ColumnSpan="2"
+                               Margin="8,8, 0, 0" 
+                               Text="Parameters for 'Server\Methods\Add' method:" 
+                               VerticalOptions="Center"/>
+                        <Label Grid.Row="3" Grid.Column="0"
+                               Margin="8,8, 0, 0" 
+                               Text="Float value:"/>
+                        <Entry Grid.Row="3" Grid.Column="1"
+                               Placeholder="Provide Float value..." 
+                               IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                               Text="{Binding FloatValue}" Keyboard="Numeric"
+                               HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                        <Label Grid.Row="4" Grid.Column="0"
+                               Margin="8,8, 0, 0" 
+                               Text="UInt32 value:"/>
+                        <Entry Grid.Row="4" Grid.Column="1"
+                               Placeholder="Provide UInt32 value..." 
+                               IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                               Text="{Binding UInt32Value}" Keyboard="Numeric"
+                               HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+                            <Entry.Behaviors>
+                                <behaviours:UInt32ValidationBehaviour />
+                            </Entry.Behaviors>
+                        </Entry>
+                    </Grid>
+                    <!--buttons-->
+                    <Button Grid.Row="1"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                        Clicked="CallMethod_OnClicked" Text="Call method"/>
+                    <Button Grid.Row="2"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                        Clicked="CallMethodAsync_OnClicked" Text="Call method asynchronously"/>
+                    <!--Results-->
+                    <Grid Grid.Row="3" Margin="8,0,0,0" VerticalOptions="Fill">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0"  Grid.Column="0"
+                            Text="Session status:" Style="{StaticResource BoldLabel}"/>
+                        <Label Grid.Row="0" Grid.Column="1"
+                                Text="{Binding SessionStatusText}"/>
+                        <Label Grid.Row="1"  Grid.Column="0"
+                                Text="Result value:"/>
+                        <Label Grid.Row="1" Grid.Column="1"
+                                Text="{Binding ResultValue}"/>
+                        <Label Grid.Row="2"  Grid.Column="0"
+                                Text="Status code:"/>
+                        <Label Grid.Row="2" Grid.Column="1"
+                                Text="{Binding StatusCode}"/>
+                    </Grid>
                 </Grid>
+                <ActivityIndicator 
+                    IsVisible="{Binding IsBusy}"
+                    IsRunning="{Binding IsBusy}"/>
             </Grid>
-            <ActivityIndicator 
-                IsVisible="{Binding IsBusy}"
-                IsRunning="{Binding IsBusy}"/>
-        </Grid>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

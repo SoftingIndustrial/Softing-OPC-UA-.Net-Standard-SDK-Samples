@@ -5,189 +5,146 @@
              xmlns:viewModels="clr-namespace:XamarinSampleClient.ViewModels;assembly=XamarinSampleClient"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <Grid Margin="4">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <!--Header -->
-                <Label Grid.Row="0"
+        <ScrollView>
+            <Grid Margin="4">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <!--Header -->
+                    <Label Grid.Row="0"
                        Margin="8,8, 0, 0" 
                        Text="SampleServer URL:" 
                        VerticalOptions="Center"/>
-                <Entry Grid.Row="1"
+                    <Entry Grid.Row="1"
                        Placeholder="Enter SampleServer URL..." 
                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                        Text="{Binding SampleServerUrl}" Keyboard="Url"
                        HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                <StackLayout Grid.Row="2" Orientation="Horizontal" >
-                    <Label 
+                    <StackLayout Grid.Row="2" Orientation="Horizontal" >
+                        <Label 
                         Margin="8,8, 0, 0" 
                         Text="Operation target:" 
                         VerticalOptions="Center"/>
-                    <Picker 
+                        <Picker 
                             HorizontalOptions="FillAndExpand" 
                             Title="Select operation target"
                             ItemsSource="{Binding OperationTargets}"
                             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                             SelectedItem="{Binding SelectedOperationTarget, Mode=TwoWay}"/>
-                </StackLayout>
-                <!--Content-->
-                <StackLayout Grid.Row="3"
+                    </StackLayout>
+                    <!--Content-->
+                    <StackLayout Grid.Row="3"
                     Margin="4" Padding="1" BackgroundColor="{StaticResource softing_primary_color}"  VerticalOptions="FillAndExpand">
-                    <StackLayout BackgroundColor="{StaticResource view_background}"
+                        <StackLayout BackgroundColor="{StaticResource view_background}"
                                  Padding="4"  VerticalOptions="FillAndExpand">
-                        <Label Text="Operation data" Style="{StaticResource BoldLabel}"/>
-                        <!--VariableNodePanel-->
-                        <Grid x:Name="VariableNodePanel"
+                            <Label Text="Operation data" Style="{StaticResource BoldLabel}"/>
+                            <!--VariableNodePanel-->
+                            <Grid x:Name="VariableNodePanel"
                               IsVisible="{Binding SelectedOperationTarget, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Static viewModels:OperationTarget.VariableNode}}">
-                            <ScrollView>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
-                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding UInt32NodeId}"/>
-                                    <Label Grid.Row="1" Grid.Column="0" Text="Display name:"/>
-                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding BaseNodeObject.DisplayName.Text, StringFormat='{0}ish'}"/>
-                                    <Label Grid.Row="2" Grid.Column="0" Text="Browse name:"/>
-                                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding BaseNodeObject.BrowseName.Name}"/>
-                                    <Label Grid.Row="3" Grid.Column="0" Text="Description:"/>
-                                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding BaseNodeObject.Description.Text}"/>
-                                    <Label Grid.Row="4" Grid.Column="0" Text="Node class:"/>
-                                    <Label Grid.Row="4" Grid.Column="1" Text="{Binding BaseNodeObject.NodeClass}"/>
-                                    <Label Grid.Row="5" Grid.Column="0" Text="Data type:"/>
-                                    <Label Grid.Row="5" Grid.Column="1" Text="{Binding BaseNodeObject.DataType}"/>
-                                    <Label Grid.Row="6" Grid.Column="0" Text="Value rank:"/>
-                                    <Label Grid.Row="6" Grid.Column="1" Text="{Binding BaseNodeObject.ValueRank}"/>
-                                    <Label Grid.Row="7" Grid.Column="0" Text="Data value:"/>
-                                    <Label Grid.Row="7" Grid.Column="1" Text="{Binding BaseNodeObject.Value.Value}"/>
-                                    <Label Grid.Row="8" Grid.Column="0" Text="Value is:"/>
-                                    <Label Grid.Row="8" Grid.Column="1" Text="{Binding BaseNodeObject.UserAccessLevelText}"/>
-                                    <Label Grid.Row="9" Grid.Column="0" Text="Value is historizing:"/>
-                                    <Label Grid.Row="9" Grid.Column="1" Text="{Binding BaseNodeObject.Historizing}"/>
-                                    <Label Grid.Row="10" Grid.Column="0" Text="Value sampling interval:"/>
-                                    <Label Grid.Row="10" Grid.Column="1" Text="{Binding BaseNodeObject.MinimumSamplingIntervalText}"/>
-                                </Grid>
-                            </ScrollView>
-                        </Grid>
-
-                        <!--ObjectNodePanel-->
-                        <Grid x:Name="ObjectNodePanel"
-                              IsVisible="{Binding SelectedOperationTarget, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Static viewModels:OperationTarget.ObjectNode}}">
-                            <ScrollView>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
-                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding ServerNodeId}"/>
-                                    <Label Grid.Row="1" Grid.Column="0" Text="Display name:"/>
-                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding BaseNodeObject.DisplayName.Text}"/>
-                                    <Label Grid.Row="2" Grid.Column="0" Text="Browse name:"/>
-                                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding BaseNodeObject.BrowseName.Name}"/>
-                                    <Label Grid.Row="3" Grid.Column="0" Text="Description:"/>
-                                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding BaseNodeObject.Description.Text}"/>
-                                    <Label Grid.Row="4" Grid.Column="0" Text="Node class:"/>
-                                    <Label Grid.Row="4" Grid.Column="1" Text="{Binding BaseNodeObject.NodeClass}"/>
-                                    <Label Grid.Row="5" Grid.Column="0" Text="Event notifier:"/>
-                                    <Label Grid.Row="5" Grid.Column="1" Text="{Binding BaseNodeObject.EventNotifierText}"/>
-                                </Grid>
-                            </ScrollView>
-                        </Grid>
-                        
-                        <!--ValueForNodePanel-->
-                        <Grid x:Name="ValueForNodePanel"
-                            IsVisible="{Binding SelectedOperationTarget, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Static viewModels:OperationTarget.ValueForNode}}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
-                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding UInt32NodeId}"/>
-                            <Label Grid.Row="1" Grid.Column="0" Text="Uint32 value:" VerticalTextAlignment="End" Margin="0,0,0,2"/>
-                            <Entry Grid.Row="1" Grid.Column="1" Text="{Binding UInt32NodeValue}"/>
-                        </Grid>
-
-                        <!--ArrayValuePanel-->
-                        <Grid x:Name="ArrayValuePanel"
-                              IsVisible="{Binding SelectedOperationTarget, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Static viewModels:OperationTarget.ArrayValue}}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
-                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Int64ArrayNodeId}"/>
-                            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" Text="{Binding ArrayValue.Count, StringFormat='Items count: {0}'}"
-                                       VerticalTextAlignment="Center"/>
-                                <Button  Grid.Column="1"  Text="Add" Clicked="AddArrayItem_OnClicked"
-                                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"/>
-                                <Button Grid.Column="2"  Text="Remove" Clicked="RemoveArrayItem_OnClicked"
-                                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"/>
+                                <ScrollView>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
+                                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding UInt32NodeId}"/>
+                                        <Label Grid.Row="1" Grid.Column="0" Text="Display name:"/>
+                                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding BaseNodeObject.DisplayName.Text, StringFormat='{0}'}"/>
+                                        <Label Grid.Row="2" Grid.Column="0" Text="Browse name:"/>
+                                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding BaseNodeObject.BrowseName.Name}"/>
+                                        <Label Grid.Row="3" Grid.Column="0" Text="Description:"/>
+                                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding BaseNodeObject.Description.Text}"/>
+                                        <Label Grid.Row="4" Grid.Column="0" Text="Node class:"/>
+                                        <Label Grid.Row="4" Grid.Column="1" Text="{Binding BaseNodeObject.NodeClass}"/>
+                                        <Label Grid.Row="5" Grid.Column="0" Text="Data type:"/>
+                                        <Label Grid.Row="5" Grid.Column="1" Text="{Binding BaseNodeObject.DataType}"/>
+                                        <Label Grid.Row="6" Grid.Column="0" Text="Value rank:"/>
+                                        <Label Grid.Row="6" Grid.Column="1" Text="{Binding BaseNodeObject.ValueRank}"/>
+                                        <Label Grid.Row="7" Grid.Column="0" Text="Data value:"/>
+                                        <Label Grid.Row="7" Grid.Column="1" Text="{Binding BaseNodeObject.Value.Value}"/>
+                                        <Label Grid.Row="8" Grid.Column="0" Text="Value is:"/>
+                                        <Label Grid.Row="8" Grid.Column="1" Text="{Binding BaseNodeObject.UserAccessLevelText}"/>
+                                        <Label Grid.Row="9" Grid.Column="0" Text="Value is historizing:"/>
+                                        <Label Grid.Row="9" Grid.Column="1" Text="{Binding BaseNodeObject.Historizing}"/>
+                                        <Label Grid.Row="10" Grid.Column="0" Text="Value sampling interval:"/>
+                                        <Label Grid.Row="10" Grid.Column="1" Text="{Binding BaseNodeObject.MinimumSamplingIntervalText}"/>
+                                    </Grid>
+                                </ScrollView>
                             </Grid>
-                           
-                            <ListView x:Name="ArrayValueList"
-                                Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                                ItemsSource="{Binding ArrayValue, Mode=TwoWay}"
-                                      CachingStrategy="RetainElement"
-                                IsPullToRefreshEnabled="false">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <ViewCell >
-                                                <Entry Text="{Binding Value, Mode=TwoWay}" Keyboard="Numeric"/>
-                                        </ViewCell>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </Grid>
 
-                        <!--ComplexValuePanel-->
-                        <Grid x:Name="ComplexValuePanel"
-                              IsVisible="{Binding SelectedOperationTarget, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Static viewModels:OperationTarget.ComplexValue}}">
-                            <Grid>
+                            <!--ObjectNodePanel-->
+                            <Grid x:Name="ObjectNodePanel"
+                              IsVisible="{Binding SelectedOperationTarget, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Static viewModels:OperationTarget.ObjectNode}}">
+                                <ScrollView>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
+                                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding ServerNodeId}"/>
+                                        <Label Grid.Row="1" Grid.Column="0" Text="Display name:"/>
+                                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding BaseNodeObject.DisplayName.Text}"/>
+                                        <Label Grid.Row="2" Grid.Column="0" Text="Browse name:"/>
+                                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding BaseNodeObject.BrowseName.Name}"/>
+                                        <Label Grid.Row="3" Grid.Column="0" Text="Description:"/>
+                                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding BaseNodeObject.Description.Text}"/>
+                                        <Label Grid.Row="4" Grid.Column="0" Text="Node class:"/>
+                                        <Label Grid.Row="4" Grid.Column="1" Text="{Binding BaseNodeObject.NodeClass}"/>
+                                        <Label Grid.Row="5" Grid.Column="0" Text="Event notifier:"/>
+                                        <Label Grid.Row="5" Grid.Column="1" Text="{Binding BaseNodeObject.EventNotifierText}"/>
+                                    </Grid>
+                                </ScrollView>
+                            </Grid>
+
+                            <!--ValueForNodePanel-->
+                            <Grid x:Name="ValueForNodePanel"
+                            IsVisible="{Binding SelectedOperationTarget, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Static viewModels:OperationTarget.ValueForNode}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
+                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding UInt32NodeId}"/>
+                                <Label Grid.Row="1" Grid.Column="0" Text="Uint32 value:" VerticalTextAlignment="End" Margin="0,0,0,2"/>
+                                <Entry Grid.Row="1" Grid.Column="1" Text="{Binding UInt32NodeValue}"/>
+                            </Grid>
+
+                            <!--ArrayValuePanel-->
+                            <Grid x:Name="ArrayValuePanel"
+                              IsVisible="{Binding SelectedOperationTarget, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Static viewModels:OperationTarget.ArrayValue}}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition/>
@@ -198,153 +155,198 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
-                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding ComplexNodeId}"/>
+                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Int64ArrayNodeId}"/>
+                                <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Text="{Binding ArrayValue.Count, StringFormat='Items count: {0}'}"
+                                       VerticalTextAlignment="Center"/>
+                                    <Button  Grid.Column="1"  Text="Add" Clicked="AddArrayItem_OnClicked"
+                                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"/>
+                                    <Button Grid.Column="2"  Text="Remove" Clicked="RemoveArrayItem_OnClicked"
+                                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"/>
+                                </Grid>
 
-                                <Grid  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
-                                                IsVisible="{Binding IsVisible, Source={x:Reference ComplexValueNullLabel}, Converter={StaticResource InverseBoolConverter}}"
-                                                VerticalOptions="FillAndExpand">
+                                <ListView x:Name="ArrayValueList"
+                                Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                ItemsSource="{Binding ArrayValue, Mode=TwoWay}"
+                                      CachingStrategy="RetainElement"
+                                IsPullToRefreshEnabled="false">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <ViewCell >
+                                                <Entry Text="{Binding Value, Mode=TwoWay}" Keyboard="Numeric"/>
+                                            </ViewCell>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </Grid>
+
+                            <!--ComplexValuePanel-->
+                            <Grid x:Name="ComplexValuePanel"
+                              IsVisible="{Binding SelectedOperationTarget, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Static viewModels:OperationTarget.ComplexValue}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-                                        <Label Grid.Column="0" Text="Name" Style="{StaticResource BoldLabel}"/>
-                                        <Label Grid.Column="1" Text="Value" Style="{StaticResource BoldLabel}"/>
-                                        <Label Grid.Column="2" Text="Type" Style="{StaticResource BoldLabel}"/>
-                                    </Grid>
-                                    <ListView Grid.Row="1"
+                                    <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
+                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding ComplexNodeId}"/>
+
+                                    <Grid  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                                                IsVisible="{Binding IsVisible, Source={x:Reference ComplexValueNullLabel}, Converter={StaticResource InverseBoolConverter}}"
+                                                VerticalOptions="FillAndExpand">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0" Text="Name" Style="{StaticResource BoldLabel}"/>
+                                            <Label Grid.Column="1" Text="Value" Style="{StaticResource BoldLabel}"/>
+                                            <Label Grid.Column="2" Text="Type" Style="{StaticResource BoldLabel}"/>
+                                        </Grid>
+                                        <ListView Grid.Row="1"
                                         Margin="0" VerticalOptions="FillAndExpand"
                                         ItemsSource="{Binding ComplexValue.Fields}" 
                                         CachingStrategy="RetainElement"
                                         HasUnevenRows="True"
                                         IsPullToRefreshEnabled="false">
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <ViewCell>
-                                                    <Grid VerticalOptions="Center" Margin="0">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition/>
-                                                            <ColumnDefinition/>
-                                                            <ColumnDefinition/>
-                                                        </Grid.ColumnDefinitions>
-                                                        <Label Grid.Column="0" Text="{Binding FieldName}" VerticalTextAlignment="Center"/>
-                                                        <Label Grid.Column="1" Text="{Binding Value}" VerticalTextAlignment="Center" IsVisible="{Binding IsEditable, Converter={StaticResource InverseBoolConverter}}"/>
-                                                        <Entry Grid.Column="1" Text="{Binding Value}" IsVisible="{Binding IsEditable}"/>
-                                                        <Label Grid.Column="2" Text="{Binding TypeName}" VerticalTextAlignment="Center" />
-                                                    </Grid>
-                                                </ViewCell>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
-                                </Grid>
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <ViewCell>
+                                                        <Grid VerticalOptions="Center" Margin="0">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition/>
+                                                                <ColumnDefinition/>
+                                                                <ColumnDefinition/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Label Grid.Column="0" Text="{Binding FieldName}" VerticalTextAlignment="Center"/>
+                                                            <Label Grid.Column="1" Text="{Binding Value}" VerticalTextAlignment="Center" IsVisible="{Binding IsEditable, Converter={StaticResource InverseBoolConverter}}"/>
+                                                            <Entry Grid.Column="1" Text="{Binding Value}" IsVisible="{Binding IsEditable}"/>
+                                                            <Label Grid.Column="2" Text="{Binding TypeName}" VerticalTextAlignment="Center" />
+                                                        </Grid>
+                                                    </ViewCell>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </Grid>
 
-                                <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                                    <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
                                         x:Name="ComplexValueNullLabel"
                                         Text="Complex value object is null." 
                                        VerticalTextAlignment="Start"
                                         IsVisible="{Binding ComplexValue, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Null}}"/>
+                                </Grid>
                             </Grid>
-                        </Grid>
 
-                        <!--EnumerationValuePanel-->
-                        <Grid x:Name="EnumerationValuePanel"
+                            <!--EnumerationValuePanel-->
+                            <Grid x:Name="EnumerationValuePanel"
                               IsVisible="{Binding SelectedOperationTarget, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Static viewModels:OperationTarget.EnumerationValue}}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
-                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding EnumNodeId}"/>
-                            <Label Grid.Row="1" Grid.Column="0" Text="Enum value:" VerticalTextAlignment="End" Margin="0,0,0,2"/>
-                            <Picker Grid.Row="1" Grid.Column="1" 
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Text="Node Id:" />
+                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding EnumNodeId}"/>
+                                <Label Grid.Row="1" Grid.Column="0" Text="Enum value:" VerticalTextAlignment="End" Margin="0,0,0,2"/>
+                                <Picker Grid.Row="1" Grid.Column="1" 
                                     ItemsSource="{Binding EnumValue.ValueStrings}" SelectedItem="{Binding EnumValue.ValueString}"
                                     Title="Select enum value"/>
-                        </Grid>
+                            </Grid>
 
-                        <!--MultipleNodesPanel-->
-                        <Grid x:Name="MultipleNodesPanel"
+                            <!--MultipleNodesPanel-->
+                            <Grid x:Name="MultipleNodesPanel"
                               IsVisible="{Binding SelectedOperationTarget, Converter={StaticResource AreObjectsEqualConverter}, ConverterParameter={x:Static viewModels:OperationTarget.MultipleNodes}}">
-                            <ScrollView>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <!--int32 node-->
-                                    <Label Grid.Column="0" Text="Int32 NodeId:" Style="{StaticResource BoldLabel}"/>
-                                    <Label Grid.Column="1" Text="{Binding Int32NodeValue.NodeId}"/>
+                                <ScrollView>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <!--int32 node-->
+                                        <Label Grid.Column="0" Text="Int32 NodeId:" Style="{StaticResource BoldLabel}"/>
+                                        <Label Grid.Column="1" Text="{Binding Int32NodeValue.NodeId}"/>
 
-                                    <Label Grid.Row="1" Grid.Column="0" Text="Value:" VerticalTextAlignment="Center"/>
-                                    <Entry  Grid.Row="1" Grid.Column="1" Text="{Binding Int32NodeValue.Value}"/>
+                                        <Label Grid.Row="1" Grid.Column="0" Text="Value:" VerticalTextAlignment="Center"/>
+                                        <Entry  Grid.Row="1" Grid.Column="1" Text="{Binding Int32NodeValue.Value}"/>
 
-                                    <!--guid node-->
-                                    <Label  Grid.Row="2"  Grid.Column="0" Text="Guid NodeId:" Style="{StaticResource BoldLabel}"/>
-                                    <Label  Grid.Row="2"  Grid.Column="1" Text="{Binding GuidNodeValue.NodeId}"/>
+                                        <!--guid node-->
+                                        <Label  Grid.Row="2"  Grid.Column="0" Text="Guid NodeId:" Style="{StaticResource BoldLabel}"/>
+                                        <Label  Grid.Row="2"  Grid.Column="1" Text="{Binding GuidNodeValue.NodeId}"/>
 
-                                    <Label Grid.Row="3" Grid.Column="0" Text="Value:" VerticalTextAlignment="Center"/>
-                                    <Entry  Grid.Row="3" Grid.Column="1" Text="{Binding GuidNodeValue.Value}"/>
-                                    <!--datetime node-->
-                                    <Label Grid.Row="4" Grid.Column="0" Text="DateTime NodeId:" Style="{StaticResource BoldLabel}"/>
-                                    <Label Grid.Row="4" Grid.Column="1" Text="{Binding DateTimeNodeValue.NodeId}"/>
+                                        <Label Grid.Row="3" Grid.Column="0" Text="Value:" VerticalTextAlignment="Center"/>
+                                        <Entry  Grid.Row="3" Grid.Column="1" Text="{Binding GuidNodeValue.Value}"/>
+                                        <!--datetime node-->
+                                        <Label Grid.Row="4" Grid.Column="0" Text="DateTime NodeId:" Style="{StaticResource BoldLabel}"/>
+                                        <Label Grid.Row="4" Grid.Column="1" Text="{Binding DateTimeNodeValue.NodeId}"/>
 
-                                    <Label Grid.Row="5" Grid.Column="0" Text="Value:" VerticalTextAlignment="Center"/>
-                                    <DatePicker  Grid.Row="5" Grid.Column="1" Date="{Binding DateTimeNodeValue.Value}"/>
+                                        <Label Grid.Row="5" Grid.Column="0" Text="Value:" VerticalTextAlignment="Center"/>
+                                        <DatePicker  Grid.Row="5" Grid.Column="1" Date="{Binding DateTimeNodeValue.Value}"/>
 
-                                </Grid>
-                            </ScrollView>
-                        </Grid>
+                                    </Grid>
+                                </ScrollView>
+                            </Grid>
+                        </StackLayout>
                     </StackLayout>
-                </StackLayout>
-                <!--Actions-->
-                <Grid Grid.Row="4" Margin="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button  Grid.Column="0" Text="Read" Clicked="Read_OnClicked" Margin="0" 
+                    <!--Actions-->
+                    <Grid Grid.Row="4" Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button  Grid.Column="0" Text="Read" Clicked="Read_OnClicked" Margin="0" 
                              IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"/>
-                    <Button  Grid.Column="1" Text="Write" Clicked="Write_OnClicked" Margin="0" IsEnabled="{Binding CanWrite}"/>
-                </Grid>
-                <!--Status information-->
-                <Grid Grid.Row="5" Margin="4, 4, 0, 0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0"  Grid.Column="0"
+                        <Button  Grid.Column="1" Text="Write" Clicked="Write_OnClicked" Margin="0" IsEnabled="{Binding CanWrite}"/>
+                    </Grid>
+                    <!--Status information-->
+                    <Grid Grid.Row="5" Margin="4, 4, 0, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0"  Grid.Column="0"
                            Text="Session status:" Style="{StaticResource BoldLabel}"/>
-                    <Label Grid.Row="0" Grid.Column="1"
+                        <Label Grid.Row="0" Grid.Column="1"
                            Text="{Binding SessionStatusText}"/>
-                    <Label Grid.Row="1"  Grid.Column="0"
+                        <Label Grid.Row="1"  Grid.Column="0"
                            Text="Operation status:"/>
-                    <Label Grid.Row="1" Grid.Column="1"
+                        <Label Grid.Row="1" Grid.Column="1"
                            Text="{Binding OperationStatusText}"/>
+                    </Grid>
                 </Grid>
-            </Grid>
-            <ActivityIndicator 
+                <ActivityIndicator 
                 IsVisible="{Binding IsBusy}"
                 IsRunning="{Binding IsBusy}"/>
-        </Grid>
+            </Grid>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

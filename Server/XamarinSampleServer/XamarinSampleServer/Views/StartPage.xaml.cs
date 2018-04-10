@@ -14,7 +14,7 @@ namespace XamarinSampleServer.Views
 		{
             Title = "Sample server";
 			InitializeComponent ();
-		    BindingContext = m_viewModel = new StartPageViewModel();
+            BindingContext = m_viewModel = StartPageViewModel.Instance;
         }
 
 	    private void StartServer_OnClicked(object sender, EventArgs e)

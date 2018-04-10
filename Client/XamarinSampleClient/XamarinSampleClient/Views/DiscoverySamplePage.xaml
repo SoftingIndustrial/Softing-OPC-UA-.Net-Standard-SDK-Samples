@@ -4,65 +4,67 @@
              x:Class="XamarinSampleClient.Views.DiscoverySamplePage"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <Grid>
-            <StackLayout>
-            <!--Server URL-->
-                <Frame Margin="2" Padding="2" CornerRadius="3" OutlineColor="{StaticResource softing_secondary_dark_gray}">
-                    <StackLayout Margin="0">
-                        <Label  Margin="2"
-                            Text="Server URL for endpoints discovery:" 
-                            VerticalOptions="Center" VerticalTextAlignment="Center"/>
-                        <Entry 
-                            FontSize="Small"
-                            Placeholder="Enter server URL..." 
-                            Text="{Binding ServerUrlEndpoints}" 
-                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                            HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                        <Button
-                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                            Clicked="DiscoverEndpoints_OnClicked" 
-                            Text="Discover endpoints"/>
-                    </StackLayout>
-                </Frame>
-                <Frame Margin="3" Padding="2" CornerRadius="3" OutlineColor="{StaticResource softing_secondary_dark_gray}">
-                <StackLayout Margin="0">
-                        <Label  Margin="2"
-                            Text="Server URL for network discovery:" 
-                            VerticalOptions="Center" VerticalTextAlignment="Center"/>
-                        <Entry  
-                            FontSize="Small"
-                            Placeholder="Enter server URL..." 
-                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                            Text="{Binding ServerUrlNetwork}" 
-                            HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                        <Button 
-                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                            Clicked="DiscoverServers_OnClicked" 
-                            Text="Discover servers on network"/>
+        <ScrollView>
+            <Grid>
+                <StackLayout>
+                    <!--Server URL-->
+                    <Frame Margin="2" Padding="2" CornerRadius="3" OutlineColor="{StaticResource softing_secondary_dark_gray}">
+                        <StackLayout Margin="0">
+                            <Label  Margin="2"
+                                Text="Server URL for endpoints discovery:" 
+                                VerticalOptions="Center" VerticalTextAlignment="Center"/>
+                            <Entry 
+                                FontSize="Small"
+                                Placeholder="Enter server URL..." 
+                                Text="{Binding ServerUrlEndpoints}" 
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                                HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                            <Button
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                                Clicked="DiscoverEndpoints_OnClicked" 
+                                Text="Discover endpoints"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Margin="3" Padding="2" CornerRadius="3" OutlineColor="{StaticResource softing_secondary_dark_gray}">
+                        <StackLayout Margin="0">
+                            <Label  Margin="2"
+                                Text="Server URL for network discovery:" 
+                                VerticalOptions="Center" VerticalTextAlignment="Center"/>
+                            <Entry  
+                                FontSize="Small"
+                                Placeholder="Enter server URL..." 
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                                Text="{Binding ServerUrlNetwork}" 
+                                HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                            <Button 
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                                Clicked="DiscoverServers_OnClicked" 
+                                Text="Discover servers on network"/>
+                        </StackLayout>
+                    </Frame>
+                    <!-- Results label -->
+                    <Label Margin="4" Text="{Binding ResultsText}" Style="{StaticResource BoldLabel}" />
+                    <!-- Results list -->
+                    <ListView Margin="0,4,0,0"
+                        ItemsSource="{Binding Results}"
+                        CachingStrategy="RecycleElement"
+                        HasUnevenRows="True"
+                        IsPullToRefreshEnabled="false">
+                        <!--Built in Cells-->
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Label Text="{Binding}" Margin="2"/>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </StackLayout>
-            </Frame>
-            <!-- Results label -->
-            <Label Margin="4" Text="{Binding ResultsText}" Style="{StaticResource BoldLabel}" />
-            <!-- Results list -->
-                <ListView Margin="0,4,0,0"
-                    ItemsSource="{Binding Results}"
-                    CachingStrategy="RecycleElement"
-                    HasUnevenRows="True"
-                    IsPullToRefreshEnabled="false">
-                    <!--Built in Cells-->
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Label Text="{Binding}" Margin="2"/>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackLayout>
-            <!--IsBusy indicator-->
-            <ActivityIndicator 
-                IsVisible="{Binding IsBusy}"
-                IsRunning="{Binding IsBusy}"/>
-        </Grid>
+                <!--IsBusy indicator-->
+                <ActivityIndicator 
+                    IsVisible="{Binding IsBusy}"
+                    IsRunning="{Binding IsBusy}"/>
+            </Grid>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

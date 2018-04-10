@@ -5,71 +5,73 @@
              x:Class="XamarinSampleClient.Views.BrowseSamplePage"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <Grid>
-            <StackLayout>
-                <Label 
-                       Margin="8,8, 0, 0" 
-                       Text="SampleServer URL:" 
-                       VerticalOptions="Center"/>
-                <Entry 
-                       Placeholder="Enter SampleServer URL..." 
-                       IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                       Text="{Binding SampleServerUrl}" Keyboard="Url"
-                       HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                <Button 
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                    Clicked="Browse_OnClicked" Text="Browse"/>
-                <StackLayout Orientation="Horizontal">
+        <ScrollView>
+            <Grid>
+                <StackLayout>
                     <Label 
-                        Margin="8,8, 8, 0" 
-                        Text="Max references returned:" 
-                        VerticalOptions="Center" LineBreakMode="NoWrap"/>
+                           Margin="8,8, 0, 0" 
+                           Text="SampleServer URL:" 
+                           VerticalOptions="Center"/>
                     <Entry 
-                        Placeholder="maximum references returned..." 
+                           Placeholder="Enter SampleServer URL..." 
+                           IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                           Text="{Binding SampleServerUrl}" Keyboard="Url"
+                           HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                    <Button 
                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                        Text="{Binding MaxReferencesReturned}" Keyboard="Numeric"
-                        HorizontalOptions="FillAndExpand" VerticalOptions="Center">
-                        <Entry.Behaviors>
-                            <behaviours:UInt32ValidationBehaviour />
-                        </Entry.Behaviors>
-                    </Entry>
-                </StackLayout>
-                <Button 
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                    Clicked="BrowseWithOptions_OnClicked" Text="Browse with options"/>
+                        Clicked="Browse_OnClicked" Text="Browse"/>
+                    <StackLayout Orientation="Horizontal">
+                        <Label 
+                            Margin="8,8, 8, 0" 
+                            Text="Max references returned:" 
+                            VerticalOptions="Center" LineBreakMode="NoWrap"/>
+                        <Entry 
+                            Placeholder="maximum references returned..." 
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                            Text="{Binding MaxReferencesReturned}" Keyboard="Numeric"
+                            HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+                            <Entry.Behaviors>
+                                <behaviours:UInt32ValidationBehaviour />
+                            </Entry.Behaviors>
+                        </Entry>
+                    </StackLayout>
+                    <Button 
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                        Clicked="BrowseWithOptions_OnClicked" Text="Browse with options"/>
 
-                <StackLayout Orientation="Horizontal" Margin="4, 4, 0, 0">
-                    <Label Text="Session status:" Style="{StaticResource BoldLabel}" VerticalTextAlignment="Center"/>
-                    <Label Text="{Binding SessionStatusText}" VerticalTextAlignment="Center"/>
-                </StackLayout>
+                    <StackLayout Orientation="Horizontal" Margin="4, 4, 0, 0">
+                        <Label Text="Session status:" Style="{StaticResource BoldLabel}" VerticalTextAlignment="Center"/>
+                        <Label Text="{Binding SessionStatusText}" VerticalTextAlignment="Center"/>
+                    </StackLayout>
 
-                <Label  Margin="4,4, 0, 0" 
-                        Text="Results:"
-                        Style="{StaticResource BoldLabel}"/>
-                <!-- Results list -->
-                <ListView 
-                        Margin="4,0,0,0"
-                        ItemsSource="{Binding Results}"
-                        CachingStrategy="RecycleElement"
-                        HasUnevenRows="True"
-                        IsPullToRefreshEnabled="false">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <StackLayout Orientation="Horizontal">
-                                    <Label  Margin="1" Text="{Binding Text}"/>
-                                    <Label IsVisible="{Binding Info, Converter={StaticResource NullToFalseConverter}}"
-                                        Margin="1" Text="{Binding Info, StringFormat='[{0}]'}"/>
-                                </StackLayout>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackLayout>
-            <!--IsBusy indicator-->
-            <ActivityIndicator 
-                IsVisible="{Binding IsBusy}"
-                IsRunning="{Binding IsBusy}"/>
+                    <Label  Margin="4,4, 0, 0" 
+                            Text="Results:"
+                            Style="{StaticResource BoldLabel}"/>
+                    <!-- Results list -->
+                    <ListView 
+                            Margin="4,0,0,0"
+                            ItemsSource="{Binding Results}"
+                            CachingStrategy="RecycleElement"
+                            HasUnevenRows="True"
+                            IsPullToRefreshEnabled="false">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label  Margin="1" Text="{Binding Text}"/>
+                                        <Label IsVisible="{Binding Info, Converter={StaticResource NullToFalseConverter}}"
+                                            Margin="1" Text="{Binding Info, StringFormat='[{0}]'}"/>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+                <!--IsBusy indicator-->
+                <ActivityIndicator 
+                    IsVisible="{Binding IsBusy}"
+                    IsRunning="{Binding IsBusy}"/>
             </Grid>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

@@ -4,97 +4,99 @@
              x:Class="XamarinSampleClient.Views.ConnectSamplePage"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <Grid Padding="4">
-            <StackLayout>
-                <!--Connect options--> 
-                <Grid  VerticalOptions="Start">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <!--Server URL-->
-                    <Label Grid.Row="0" Grid.Column="0" Margin="2,2, 0, 0" 
-                        Text="Server URL:" />
-                    <Entry Grid.Row="1" Grid.ColumnSpan="2"
-                        Placeholder="Enter server URL..." 
-                        FontSize="Small"
-                        Text="{Binding ServerUrl}" Keyboard="Url"
+        <ScrollView>
+            <Grid Padding="4">
+                <StackLayout>
+                    <!--Connect options-->
+                    <Grid  VerticalOptions="Start">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <!--Server URL-->
+                        <Label Grid.Row="0" Grid.Column="0" Margin="2,2, 0, 0" 
+                            Text="Server URL:" />
+                        <Entry Grid.Row="1" Grid.ColumnSpan="2"
+                            Placeholder="Enter server URL..." 
+                            FontSize="Small"
+                            Text="{Binding ServerUrl}" Keyboard="Url"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                            HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                        <!--MessageSecurityMode-->
+                        <Label Grid.Row="2" Grid.Column="0" Margin="2" 
+                            Text="Security mode:" />
+                        <Picker Grid.Row="2" Grid.Column="1"
+                            Title="Select security mode"
+                            HorizontalOptions="FillAndExpand" 
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                            ItemsSource="{Binding MessageSecurityModes}"
+                            SelectedItem="{Binding SelectedMessageSecurityMode, Mode=TwoWay}"/>
+                        <!--SecurityPolicy-->
+                        <Label Grid.Row="3" Grid.Column="0"
+                            Margin="2" 
+                            Text="Security policy:" />
+                        <Picker Grid.Row="3" Grid.Column="1"
+                            HorizontalOptions="FillAndExpand" 
+                            Title="Select security policy"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                            ItemsSource="{Binding SecurityPolicies}"
+                            SelectedItem="{Binding SelectedSecurityPolicy, Mode=TwoWay}"/>
+                        <!--MessageEncoding-->
+                        <Label Grid.Row="4" Grid.Column="0" Margin="2" 
+                            Text="Message encoding:" />
+                        <Picker Grid.Row="4" Grid.Column="1"
+                            HorizontalOptions="FillAndExpand" 
+                            Title="Select message encoding"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                            ItemsSource="{Binding MessageEncodings}"
+                            SelectedItem="{Binding SelectedMessageEncoding, Mode=TwoWay}"/>
+                        <!--User identity-->
+                        <Label Grid.Row="5" Grid.Column="0"
+                            Margin="2" 
+                            Text="User identity:" />
+                        <Picker Grid.Row="5" Grid.Column="1"
+                            HorizontalOptions="FillAndExpand" 
+                            Title="Select user identity"
+                            ItemsSource="{Binding UserIdentities}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                            SelectedItem="{Binding SelectedUserIdentity, Mode=TwoWay}"
+                            ItemDisplayBinding="{Binding TokenType}"/>
+                        <!--User name-->
+                        <Label Grid.Row="6" Grid.Column="0" Margin="2" 
+                            Text="User name:" />
+                        <Entry Grid.Row="6" Grid.Column="1"
+                            HorizontalOptions="FillAndExpand"
+                            IsEnabled="{Binding IsEditUserCredentials}"
+                            Text="{Binding UserName}" Placeholder="Enter user name..."/>
+                        <!--Password-->
+                        <Label Grid.Row="7" Grid.Column="0" Margin="2" 
+                            Text="Password:" />
+                        <Entry Grid.Row="7" Grid.Column="1"
+                            HorizontalOptions="FillAndExpand" 
+                            IsPassword="True"
+                            IsEnabled="{Binding IsEditUserCredentials}"
+                            Text="{Binding Password}" Placeholder="Enter password..."/>
+                    </Grid>
+                    <!--Action button-->
+                    <Button Text="Connect"
                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                        HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                    <!--MessageSecurityMode-->
-                    <Label Grid.Row="2" Grid.Column="0" Margin="2" 
-                        Text="Security mode:" />
-                    <Picker Grid.Row="2" Grid.Column="1"
-                        Title="Select security mode"
-                        HorizontalOptions="FillAndExpand" 
-                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                        ItemsSource="{Binding MessageSecurityModes}"
-                        SelectedItem="{Binding SelectedMessageSecurityMode, Mode=TwoWay}"/>
-                    <!--SecurityPolicy-->
-                    <Label Grid.Row="3" Grid.Column="0"
-                        Margin="2" 
-                        Text="Security policy:" />
-                    <Picker Grid.Row="3" Grid.Column="1"
-                        HorizontalOptions="FillAndExpand" 
-                        Title="Select security policy"
-                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                        ItemsSource="{Binding SecurityPolicies}"
-                        SelectedItem="{Binding SelectedSecurityPolicy, Mode=TwoWay}"/>
-                    <!--MessageEncoding-->
-                    <Label Grid.Row="4" Grid.Column="0" Margin="2" 
-                        Text="Message encoding:" />
-                    <Picker Grid.Row="4" Grid.Column="1"
-                        HorizontalOptions="FillAndExpand" 
-                        Title="Select message encoding"
-                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                        ItemsSource="{Binding MessageEncodings}"
-                        SelectedItem="{Binding SelectedMessageEncoding, Mode=TwoWay}"/>
-                    <!--User identity-->
-                    <Label Grid.Row="5" Grid.Column="0"
-                        Margin="2" 
-                        Text="User identity:" />
-                    <Picker Grid.Row="5" Grid.Column="1"
-                        HorizontalOptions="FillAndExpand" 
-                        Title="Select user identity"
-                        ItemsSource="{Binding UserIdentities}"
-                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                        SelectedItem="{Binding SelectedUserIdentity, Mode=TwoWay}"
-                        ItemDisplayBinding="{Binding TokenType}"/>
-                    <!--User name-->
-                    <Label Grid.Row="6" Grid.Column="0" Margin="2" 
-                        Text="User name:" />
-                    <Entry Grid.Row="6" Grid.Column="1"
-                        HorizontalOptions="FillAndExpand"
-                        IsEnabled="{Binding IsEditUserCredentials}"
-                        Text="{Binding UserName}" Placeholder="Enter user name..."/>
-                    <!--Password-->
-                    <Label Grid.Row="7" Grid.Column="0" Margin="2" 
-                        Text="Password:" />
-                    <Entry Grid.Row="7" Grid.Column="1"
-                        HorizontalOptions="FillAndExpand" 
-                        IsPassword="True"
-                        IsEnabled="{Binding IsEditUserCredentials}"
-                        Text="{Binding Password}" Placeholder="Enter password..."/>
-                </Grid>
-                <!--Action button-->
-                <Button Text="Connect"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                    Clicked="ConnectButton_OnClicked" />
-                <!--Results label-->
-                <Label Text="{Binding Result}"/>
-            </StackLayout>
-            <ActivityIndicator 
-                IsVisible="{Binding IsBusy}"
-                IsRunning="{Binding IsBusy}"/>
-        </Grid>
+                        Clicked="ConnectButton_OnClicked" />
+                    <!--Results label-->
+                    <Label Text="{Binding Result}"/>
+                </StackLayout>
+                <ActivityIndicator 
+                    IsVisible="{Binding IsBusy}"
+                    IsRunning="{Binding IsBusy}"/>
+            </Grid>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

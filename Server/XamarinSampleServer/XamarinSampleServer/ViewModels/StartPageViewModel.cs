@@ -29,6 +29,8 @@ namespace XamarinSampleServer.ViewModels
     [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class StartPageViewModel : BaseViewModel
     {
+        public static StartPageViewModel Instance;
+        
         #region Fields
         private ObservableCollection<ConnectedSession> m_connectedSessions;
         private bool m_isRefreshingSessions;
@@ -39,7 +41,12 @@ namespace XamarinSampleServer.ViewModels
         #endregion
 
         #region Constructors
-        public StartPageViewModel()
+        static StartPageViewModel()
+        {
+            Instance = new StartPageViewModel();
+        }
+
+        private StartPageViewModel()
         {
             Title = "OPC UA Sample Server - Xamarin";
             IPAddress[] addresses = Dns.GetHostAddresses("localhost");
@@ -181,7 +188,7 @@ namespace XamarinSampleServer.ViewModels
                 m_sampleServer = new SampleServer.SampleServer();
                 await m_application.Start(m_sampleServer);
 
-                ResultsText += "\nServer is running.";    
+                ResultsText = "Server is running.";    
             }
             catch (Exception e)
             {

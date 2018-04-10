@@ -421,7 +421,7 @@ namespace XamarinSampleClient.ViewModels
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
-        public void DisconnectSession()
+        private void DisconnectSession()
         {
             SessionStatusText = "";
             if (m_session == null)
