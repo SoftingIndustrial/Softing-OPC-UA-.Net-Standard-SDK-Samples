@@ -15,9 +15,30 @@ namespace XamarinSampleServer.Views
             Title = "Sample server";
 			InitializeComponent ();
             BindingContext = m_viewModel = StartPageViewModel.Instance;
+
+           
         }
 
-	    private void StartServer_OnClicked(object sender, EventArgs e)
+        
+        private void ServerIpsList_Changed(object sender, EventArgs e)
+        {
+            StackLayout stackLayout = sender as StackLayout;
+            if (stackLayout != null)
+            {
+                stackLayout.Children.Clear();
+                foreach (var serverIp in m_viewModel.ServerIps)
+                {
+                    Label label = new Label()
+                    {
+                        Text = String.Format("opc.tcp://{0}:61510/SampleServer", serverIp),
+                        Margin = 1
+                    };
+                    stackLayout.Children.Add(label);
+                }
+            }
+        }
+
+        private void StartServer_OnClicked(object sender, EventArgs e)
         {            
             ThreadPool.QueueUserWorkItem(o =>
             {

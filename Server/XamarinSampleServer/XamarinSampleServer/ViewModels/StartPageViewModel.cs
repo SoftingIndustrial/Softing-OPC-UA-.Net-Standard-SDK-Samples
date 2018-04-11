@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Opc.Ua;
 using Opc.Ua.Configuration;
@@ -49,15 +50,32 @@ namespace XamarinSampleServer.ViewModels
         private StartPageViewModel()
         {
             Title = "OPC UA Sample Server - Xamarin";
+            ServerIps = new ObservableCollection<string>();
             IPAddress[] addresses = Dns.GetHostAddresses("localhost");
-            if (addresses.Length > 0)
+            foreach(var ipAddress in addresses)
             {
-                ServerIp = addresses[0].ToString();
-            }
+                ServerIps.Add(ipAddress.ToString());
+            }            
+
             CanStartServer = true;
             m_connectedSessions = new ObservableCollection<ConnectedSession>();
 
             LoadSessionsCommand = new Command(async () => await ExecuteLoadSessionsCommand());
+
+            ThreadPool.QueueUserWorkItem(o =>
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    IsBusy = true;
+                });
+
+                StartServer().Wait();
+
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    IsBusy = false;
+                });
+            });            
         }
         #endregion
 
@@ -97,16 +115,16 @@ namespace XamarinSampleServer.ViewModels
             get { return !m_canStartServer && !IsBusy; }
         }
         /// <summary>
-        /// Get Server ip
+        /// Get Server ip list
         /// </summary>
-        public string ServerIp { get; private set; }
+        public ObservableCollection<string> ServerIps { get; private set; }
 
         /// <summary>
         /// Server Url 
         /// </summary>
         public string ServerUrl
         {
-            get { return string.Format(@"opc.tcp://{0}:61510/SampleServer", ServerIp); }
+            get { return @"opc.tcp://localhost:61510/SampleServer"; }
         }
 
         /// <summary>
@@ -193,7 +211,12 @@ namespace XamarinSampleServer.ViewModels
             catch (Exception e)
             {
                 ResultsText += string.Format("\n\nError starting server url: {0}.\n{1}", ServerUrl, e.Message);
-            }    
+            }
+
+            Device.StartTimer(new TimeSpan(0, 0, 5), () => {
+                LoadSessionsCommand.Execute(null);
+                return CanStopServer;
+            });
 
             IsBusy = false;            
         }
@@ -227,14 +250,12 @@ namespace XamarinSampleServer.ViewModels
             if (m_sampleServer != null)
             {
                 m_connectedSessions.Clear();
-
                 IList<Opc.Ua.Server.Session> sessions = m_sampleServer.CurrentInstance.SessionManager.GetSessions();
                 IList<Opc.Ua.Server.Subscription> subscriptions = m_sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
                 foreach (var session in sessions)
                 {
                     m_connectedSessions.Add(new ConnectedSession()
                     {
-                        SessionId = session.Id.ToString(),
                         SessionName = session.SessionDiagnostics.SessionName,
                         SubscriptionsCount = session.SessionDiagnostics.CurrentSubscriptionsCount,
                     });
