@@ -5,33 +5,33 @@
   xmlns="http://opcfoundation.org/UA/SDK/Configuration.xsd"
 >
   <ApplicationName>UA Xamarin Sample Server</ApplicationName>
-  <ApplicationUri>urn:localhost:Softing:UANETStandardToolkit:SampleServer</ApplicationUri>
-  <ProductUri>http://industrial.softing.com/OpcUaNetStandardToolkit/SampleServer</ProductUri>
+  <ApplicationUri>urn:localhost:Softing:UANETStandardToolkit:XamarinSampleServer</ApplicationUri>
+  <ProductUri>http://industrial.softing.com/OpcUaNetStandardToolkit/XamarinSampleServer</ProductUri>
   <ApplicationType>Server_0</ApplicationType>
   <SecurityConfiguration>
     <!-- Where the application instance certificate is stored (MachineDefault) -->
     <ApplicationCertificate>
       <StoreType>Directory</StoreType>
-      <StorePath>/storage/emulated/0/OPC Foundation/PKI/own</StorePath>
-      <SubjectName>CN=UA Xamarin Sample Client, C=US, S=Arizona, O=OPC Foundation, DC=localhost</SubjectName>
+      <StorePath>/storage/emulated/0/Softing/pki/own</StorePath>
+      <SubjectName>SoftingOpcUaXamarinSampleServer</SubjectName>
     </ApplicationCertificate>
     <!-- Where the issuer certificate are stored (certificate authorities) -->
     <TrustedIssuerCertificates>
       <StoreType>Directory</StoreType>
-      <StorePath>/storage/emulated/0/OPC Foundation/PKI/issuer</StorePath>
+      <StorePath>/storage/emulated/0/Softing/pki/issuer</StorePath>
     </TrustedIssuerCertificates>
 
     <!-- Where the trust list is stored (UA Applications) -->
     <TrustedPeerCertificates>
       <StoreType>Directory</StoreType>
-      <StorePath>/storage/emulated/0/OPC Foundation/PKI/trusted</StorePath>
+      <StorePath>/storage/emulated/0/Softing/pki/trusted</StorePath>
     </TrustedPeerCertificates>
     
     <NonceLength>32</NonceLength>
     <!-- The directory used to store invalid certficates for later review by the administrator. -->
     <RejectedCertificateStore>
       <StoreType>Directory</StoreType>
-      <StorePath>/storage/emulated/0/OPC Foundation/PKI/rejected</StorePath>
+      <StorePath>/storage/emulated/0/Softing/pki/rejected</StorePath>
     </RejectedCertificateStore>
     
     <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
@@ -131,7 +131,7 @@
         <Count>20</Count>
       </SamplingRateGroup>
     </AvailableSamplingRates>
-    <MaxRegistrationInterval>30000</MaxRegistrationInterval>
+    <MaxRegistrationInterval>0</MaxRegistrationInterval>
     <NodeManagerSaveFile>SampleServer.nodes.xml</NodeManagerSaveFile>
     <MinSubscriptionLifetime>10000</MinSubscriptionLifetime>
     <MaxPublishRequestCount>20</MaxPublishRequestCount>
@@ -153,7 +153,7 @@
   </Extensions>
   
   <TraceConfiguration>
-    <OutputFilePath>/storage/emulated/0/OPC Foundation/logs/SampleServer.log</OutputFilePath>
+    <OutputFilePath>/storage/emulated/0/Softing/logs/XamarinSampleServer.log</OutputFilePath>
     <DeleteOnLoad>true</DeleteOnLoad>
     <!-- Show Only Errors -->
     <!-- <TraceMasks>1</TraceMasks> -->

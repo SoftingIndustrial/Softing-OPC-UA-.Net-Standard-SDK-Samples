@@ -180,8 +180,9 @@ namespace XamarinSampleServer.ViewModels
                 };
                 if (Device.RuntimePlatform == "Android")
                 {
-                    string currentFolder = DependencyService.Get<IPathService>().PublicExternalFolder.ToString();
-                    string filename = m_application.ConfigSectionName + ".Config.xml";
+
+                    string currentFolder = @"/storage/emulated/0/Softing/config/";
+                    string filename = "XamarinSampleServer.Config.xml";
                     string content = DependencyService.Get<IAssetService>().LoadFile(filename);
 
                     File.WriteAllText(currentFolder + filename, content);

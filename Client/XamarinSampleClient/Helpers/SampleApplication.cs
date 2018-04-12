@@ -57,9 +57,10 @@ namespace XamarinSampleClient.Helpers
         {            
             ApplicationConfigurationEx configuration = new ApplicationConfigurationEx();
 
-            configuration.ApplicationName = "UA Sample Client";
+            configuration.ApplicationName = "UA Xamarin Sample Client";
             configuration.ApplicationType = ApplicationType.Client;
-            configuration.ApplicationUri = $"urn:{Utils.GetHostName()}:OPCFoundation:SampleClient";
+            configuration.ApplicationUri = $"urn:{Utils.GetHostName()}:UANETStandardToolkit:XamarinSampleClient";
+            configuration.ProductUri = "http://industrial.softing.com/OpcUaNetStandardToolkit/XamarinSampleClient";
             configuration.TransportConfigurations = new TransportConfigurationCollection();
             configuration.TransportQuotas = new TransportQuotas { OperationTimeout = 15000, MaxByteStringLength = 4194304 , MaxMessageSize = 4194304 };
             configuration.ClientConfiguration = new ClientConfiguration { DefaultSessionTimeout = 15000 };
@@ -69,9 +70,10 @@ namespace XamarinSampleClient.Helpers
             configuration.DecodeCustomDataTypes = true;
 
             string myDocsFolder =  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "1");//"//storage/emulated//0//softing";//
+
             configuration.TraceConfiguration = new TraceConfiguration()
             {
-                OutputFilePath = myDocsFolder + @"//logs//SampleClient.log",
+                OutputFilePath = myDocsFolder + @"/storage/emulated/0/Softing/logs/XamarinSampleClient.log",
                 TraceMasks = 519
             };
 
@@ -80,7 +82,8 @@ namespace XamarinSampleClient.Helpers
                 ApplicationCertificate = new CertificateIdentifier
                 {
                     StoreType = CertificateStoreType.Directory,
-                    StorePath = myDocsFolder + @"//pki//own"
+                    StorePath = myDocsFolder + @"//pki//own",
+                    SubjectName = "SoftingOpcUaXamarinSampleClient"
                 },
                 TrustedPeerCertificates = new CertificateTrustList
                 {
