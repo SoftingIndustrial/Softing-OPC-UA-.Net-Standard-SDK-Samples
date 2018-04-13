@@ -117,15 +117,7 @@ namespace XamarinSampleServer.ViewModels
         /// <summary>
         /// Get Server ip list
         /// </summary>
-        public ObservableCollection<string> ServerIps { get; private set; }
-
-        /// <summary>
-        /// Server Url 
-        /// </summary>
-        public string ServerUrl
-        {
-            get { return @"opc.tcp://localhost:61510/SampleServer"; }
-        }
+        public ObservableCollection<string> ServerIps { get; private set; }        
 
         /// <summary>
         /// Results text hint
@@ -169,7 +161,7 @@ namespace XamarinSampleServer.ViewModels
             IsBusy = true;
 
             ApplicationConfiguration config;
-
+            string serverUrl = "";
             if (m_application == null)
             {
                 ResultsText = "Initializing application configuration...";
@@ -192,7 +184,14 @@ namespace XamarinSampleServer.ViewModels
                     }
                     // load the application configuration.
                     config = await m_application.LoadApplicationConfiguration(currentFolder + filename, false);
-                    config.ServerConfiguration.BaseAddresses[0] = ServerUrl;
+                    config.ServerConfiguration.BaseAddresses.Clear();                  
+                    foreach (var serverIp in ServerIps)
+                    {
+                        string url = $"opc.tcp://{serverIp}:61510/SampleServer";
+                        config.ServerConfiguration.BaseAddresses.Add(url);
+                        serverUrl += url + "\n";
+                        break;
+                    }                    
                 }
                 else
                 {
@@ -209,13 +208,13 @@ namespace XamarinSampleServer.ViewModels
                 ResultsText += "\nStarting server...";
                 // Start the server
                 m_sampleServer = new SampleServer.SampleServer();
+               
                 await m_application.Start(m_sampleServer);
-
                 ResultsText = "Server is running.";    
             }
             catch (Exception e)
             {
-                ResultsText += string.Format("\n\nError starting server url: {0}.\n{1}", ServerUrl, e.Message);
+                ResultsText += string.Format("\n\nError starting server url: {0}.\n{1}", serverUrl, e.Message);
             }
 
             Device.StartTimer(new TimeSpan(0, 0, 5), () => {
