@@ -58,21 +58,15 @@
                                                 <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
                                             </Grid.RowDefinitions>
                                             <StackLayout Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                                                 <Label Text="{Binding SequenceNumber}" />
                                                 <Label Text="{Binding MonitoredItemName}" Style="{StaticResource BoldLabel}"/>
                                             </StackLayout>
-                                            <Label Grid.Row="1" Grid.Column="0" Text="Value:"/>
-                                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding Value}"/>
-                                            <Label Grid.Row="2" Grid.Column="0" Text="StatusCiode:"/>
-                                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding StatusCode}"/>
-                                            <Label Grid.Row="3" Grid.Column="0" Text="ServerTimeStamp:"/>
-                                            <Label Grid.Row="3" Grid.Column="1" Text="{Binding ServerTimeStamp}"/>
-                                            <Label Grid.Row="4" Grid.Column="0" Text="SourceTimestamp:"/>
-                                            <Label Grid.Row="4" Grid.Column="1" Text="{Binding SourceTimestamp}"/>
+                                            <Label Grid.Row="1" Grid.Column="0" Text="Value:" Margin="0"/>
+                                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding Value}" Margin="0"/>
+                                            <Label Grid.Row="2" Grid.Column="0" Text="StatusCode:" Margin="0"/>
+                                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding StatusCode}" Margin="0"/>
                                         </Grid>
                                     </StackLayout>
                                 </StackLayout>

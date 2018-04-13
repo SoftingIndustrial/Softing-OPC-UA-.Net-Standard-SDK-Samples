@@ -25,8 +25,8 @@ namespace XamarinSampleClient.ViewModels
     [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class MonitoredItemViewModel : BaseViewModel
     {
-
         #region Private Fields
+        public static int MaxEventDataListCount = 50;
         // "CTT\\Scalar\\Simulation\\Int64";
         private readonly NodeId m_miInt64NodeId = new NodeId("ns=7;s=Scalar_Simulation_Int64");
         //"Server\\ServerStatus\\CurrentTime";
@@ -337,8 +337,11 @@ namespace XamarinSampleClient.ViewModels
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     //add event data at top of the list
-                    // EventDataList.Insert(0, miEventData);
-                    EventDataList.Add( miEventData);
+                    EventDataList.Insert(0, miEventData);
+                    if (EventDataList.Count > MonitoredItemViewModel.MaxEventDataListCount)
+                    {
+                        EventDataList.RemoveAt(EventDataList.Count - 1);
+                    }
                 });
             }
         }

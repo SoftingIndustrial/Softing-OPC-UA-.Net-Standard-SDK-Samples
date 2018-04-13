@@ -161,8 +161,15 @@ namespace XamarinSampleClient.ViewModels
 
             try
             {
+                //create evenbts filter
+                EventFilterEx filter = filter = new EventFilterEx();
+                filter.AddSelectClause(new NodeId(ObjectTypes.BaseEventType), new QualifiedName(BrowseNames.EventId));
+                filter.AddSelectClause(new NodeId(ObjectTypes.BaseEventType), new QualifiedName(BrowseNames.SourceName));
+                filter.AddSelectClause(new NodeId(ObjectTypes.BaseEventType), new QualifiedName(BrowseNames.Message));
+                filter.AddSelectClause(new NodeId(ObjectTypes.BaseEventType), new QualifiedName(BrowseNames.Severity));                
+
                 //ObjectIds.Server BrowsePath: Root\Objects\Server
-                m_eventMonitoredItem = new ClientMonitoredItem(m_subscription, ObjectIds.Server, "Sample Event Monitored Item", null);
+                m_eventMonitoredItem = new ClientMonitoredItem(m_subscription, ObjectIds.Server, "Sample Event Monitored Item", filter);
                 m_eventMonitoredItem.EventsReceived += EventMonitoredItem_EventsReceived;
                 OperationStatusText = "Event mi is created.";
 
@@ -319,12 +326,15 @@ namespace XamarinSampleClient.ViewModels
                 StringBuilder displayNotification = new StringBuilder();
                 for (int i = 0; i < listOfOperands.Count; i++)
                 {
-                    displayNotification.AppendFormat("{0}:{1}:{2}\n",
-                        listOfOperands[i].PropertyName.NamespaceIndex,
+                    displayNotification.AppendFormat("{0}:{1}\n",
                         listOfOperands[i].PropertyName.Name,
                         eventNotification.EventFields[i]);
                 }
                 EventDataList.Insert(0, displayNotification.ToString().Trim());
+                if (EventDataList.Count > MonitoredItemViewModel.MaxEventDataListCount)
+                {
+                    EventDataList.RemoveAt(EventDataList.Count - 1);
+                }
             }
         }
 
