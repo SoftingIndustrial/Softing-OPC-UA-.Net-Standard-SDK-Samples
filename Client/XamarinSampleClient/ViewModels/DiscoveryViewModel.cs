@@ -37,7 +37,7 @@ namespace XamarinSampleClient.ViewModels
             Title = "Discovery sample";
             m_results = new ObservableCollection<string>();
             ServerUrlEndpoints = App.DefaultSampleServerUrl;
-            ServerUrlNetwork = "opc.tcp://192.168.150.166:4840";
+            ServerUrlNetwork = "opc.tcp://0.0.0.0:4840";
         }
         #endregion
 
