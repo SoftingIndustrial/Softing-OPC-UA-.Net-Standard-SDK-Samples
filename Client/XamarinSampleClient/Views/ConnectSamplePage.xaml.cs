@@ -30,7 +30,7 @@ namespace XamarinSampleClient.Views
 	                m_viewModel.IsBusy = true;
 	            });
 
-	            m_viewModel.CreateAndTestSession();
+	            m_viewModel.CreateAndConnectSession();
 
 	            Device.BeginInvokeOnMainThread(() =>
 	            {
@@ -38,5 +38,23 @@ namespace XamarinSampleClient.Views
 	            });
 	        });
         }
-	}
+
+        private void DisconnectButton_OnClicked(object sender, EventArgs e)
+        {
+            ThreadPool.QueueUserWorkItem(o =>
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    m_viewModel.IsBusy = true;
+                });
+
+                m_viewModel.DisconnectSession();
+
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    m_viewModel.IsBusy = false;
+                });
+            });
+        }
+    }
 }

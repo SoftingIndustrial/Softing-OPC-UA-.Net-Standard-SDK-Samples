@@ -29,7 +29,7 @@
                             Placeholder="Enter server URL..." 
                             FontSize="Small"
                             Text="{Binding ServerUrl}" Keyboard="Url"
-                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                            IsEnabled="{Binding CanConnect}"
                             HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
                         <!--MessageSecurityMode-->
                         <Label Grid.Row="2" Grid.Column="0" Margin="2" 
@@ -37,7 +37,7 @@
                         <Picker Grid.Row="2" Grid.Column="1"
                             Title="Select security mode"
                             HorizontalOptions="FillAndExpand" 
-                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                            IsEnabled="{Binding CanConnect}"
                             ItemsSource="{Binding MessageSecurityModes}"
                             SelectedItem="{Binding SelectedMessageSecurityMode, Mode=TwoWay}"/>
                         <!--SecurityPolicy-->
@@ -47,7 +47,7 @@
                         <Picker Grid.Row="3" Grid.Column="1"
                             HorizontalOptions="FillAndExpand" 
                             Title="Select security policy"
-                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                            IsEnabled="{Binding CanConnect}"
                             ItemsSource="{Binding SecurityPolicies}"
                             SelectedItem="{Binding SelectedSecurityPolicy, Mode=TwoWay}"/>
                         <!--MessageEncoding-->
@@ -56,7 +56,7 @@
                         <Picker Grid.Row="4" Grid.Column="1"
                             HorizontalOptions="FillAndExpand" 
                             Title="Select message encoding"
-                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                            IsEnabled="{Binding CanConnect}"
                             ItemsSource="{Binding MessageEncodings}"
                             SelectedItem="{Binding SelectedMessageEncoding, Mode=TwoWay}"/>
                         <!--User identity-->
@@ -67,7 +67,7 @@
                             HorizontalOptions="FillAndExpand" 
                             Title="Select user identity"
                             ItemsSource="{Binding UserIdentities}"
-                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                            IsEnabled="{Binding CanConnect}"
                             SelectedItem="{Binding SelectedUserIdentity, Mode=TwoWay}"
                             ItemDisplayBinding="{Binding TokenType}"/>
                         <!--User name-->
@@ -86,10 +86,17 @@
                             IsEnabled="{Binding IsEditUserCredentials}"
                             Text="{Binding Password}" Placeholder="Enter password..."/>
                     </Grid>
-                    <!--Action button-->
-                    <Button Text="Connect"
-                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                        Clicked="ConnectButton_OnClicked" />
+                    <!--Action buttons-->
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Text="Connect" IsEnabled="{Binding CanConnect}" Clicked="ConnectButton_OnClicked" />
+                        <Button Grid.Column="1"
+                                Text="Disconnect" IsEnabled="{Binding CanDisconnect}" Clicked="DisconnectButton_OnClicked" />
+                    </Grid>
+                    
                     <!--Results label-->
                     <Label Text="{Binding Result}"/>
                 </StackLayout>

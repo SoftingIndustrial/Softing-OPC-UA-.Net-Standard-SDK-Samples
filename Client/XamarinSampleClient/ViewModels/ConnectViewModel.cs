@@ -33,6 +33,8 @@ namespace XamarinSampleClient.ViewModels
         private bool m_isEditUserCredentials;
         private string m_userName;
         private string m_password;
+        private bool m_canConnect;
+        private ClientSession m_session;
         #endregion
 
         #region Constructors
@@ -57,6 +59,7 @@ namespace XamarinSampleClient.ViewModels
             Password = "pwd";
             UserIdentities = new List<UserIdentity>() { new UserIdentity(), new UserIdentity(UserName, Password) };
             SelectedUserIdentity = UserIdentities[0];
+            CanConnect = true;
         }
 
         #endregion
@@ -164,7 +167,7 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         public bool IsEditUserCredentials
         {
-            get { return m_isEditUserCredentials && !IsBusy; }
+            get { return m_isEditUserCredentials && CanConnect; }
             set { SetProperty(ref m_isEditUserCredentials, value); }
         }
 
@@ -179,6 +182,8 @@ namespace XamarinSampleClient.ViewModels
             {
                 base.IsBusy = value;
                 OnPropertyChanged("IsEditUserCredentials");
+                OnPropertyChanged("CanConnect");
+                OnPropertyChanged("CanDisconnect");
             }
         }
 
@@ -213,6 +218,27 @@ namespace XamarinSampleClient.ViewModels
                 SetProperty(ref m_password, value);
             }
         }
+
+        /// <summary>
+        /// Get/set indicator if session can be connected
+        /// </summary>
+        public bool CanConnect
+        {
+            get { return m_canConnect && !IsBusy; }
+            set
+            {
+                SetProperty(ref m_canConnect, value);
+                OnPropertyChanged("CanDisconnect");
+            }
+        }
+     
+        /// <summary>
+        /// Get/set indicator if session can be disconencted
+        /// </summary>
+        public bool CanDisconnect
+        {
+            get { return !m_canConnect && !IsBusy; }
+        }
         #endregion
 
         #region Methods
@@ -220,7 +246,7 @@ namespace XamarinSampleClient.ViewModels
         /// <summary>
         /// Creates and connects a session on opc.tcp protocol with no security and anonymous user identity.
         /// </summary>
-        public void CreateAndTestSession()
+        public void CreateAndConnectSession()
         {
             // create the session object.
             try
@@ -233,21 +259,42 @@ namespace XamarinSampleClient.ViewModels
                 }
 
                 // Create the Session object.
-                using (ClientSession session = SampleApplication.UaApplication.CreateSession(ServerUrl,
+                m_session = SampleApplication.UaApplication.CreateSession(ServerUrl,
                     SelectedMessageSecurityMode,
                     SelectedSecurityPolicy,
                     SelectedMessageEncoding,
-                    userIdentity))
-                {
+                    userIdentity);
 
-                    Result = "Session created...";
-                    session.SessionName = "Connect sample";
-                    session.Connect(false, true);
-                    Result += " Session connected...";
+
+                Result = "Session created...";
+                m_session.SessionName = "Connect sample";
+                m_session.Connect(false, true);
+                Result += " Session connected...";
+                CanConnect = false;
+            }
+            catch (Exception e)
+            {
+                Result += string.Format("Error: {0}", e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Creates and connects a session on opc.tcp protocol with no security and anonymous user identity.
+        /// </summary>
+        public void DisconnectSession()
+        {
+            // create the session object.
+            try
+            {
+                if (m_session != null)
+                {
                     // Disconnect the session.
-                    session.Disconnect(true);
+                    m_session.Disconnect(true);
                     Result += "Session disconnected.";
-                }
+
+                    m_session = null;
+                    CanConnect = true;
+                }                
             }
             catch (Exception e)
             {
