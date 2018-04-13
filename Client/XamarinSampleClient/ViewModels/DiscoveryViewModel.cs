@@ -137,7 +137,7 @@ namespace XamarinSampleClient.ViewModels
             }
             catch (Exception ex)
             {
-                Results.Add(string.Format("DiscoverServersOnNetwork Error : {0}.", ex.Message));
+                Results.Add(string.Format("DiscoverEndpoints Error : {0}.", ex.Message));
             }
         }
 
