@@ -37,8 +37,8 @@ namespace XamarinSampleClient.Helpers
                 m_isBusy = true;
                 await Task.Run(() =>
                 {
-                    //Create the UaApplication object from config file
-                    UaApplication = UaApplication.Create(CreateAplicationConfiguration()).Result;
+                        //Create the UaApplication object from config file
+                        UaApplication = UaApplication.Create(CreateAplicationConfiguration()).Result;
                 });
 
                 //Subscribe to certificate validation error event
@@ -69,11 +69,11 @@ namespace XamarinSampleClient.Helpers
             //enable read/write complex types
             configuration.DecodeCustomDataTypes = true;
 
-            string myDocsFolder =  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "1");//"//storage/emulated//0//softing";//
+            string myDocsFolder = @"/storage/emulated/0/Softing";//  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "1");//"//storage/emulated//0//softing";//
 
             configuration.TraceConfiguration = new TraceConfiguration()
             {
-                OutputFilePath = myDocsFolder + @"/storage/emulated/0/Softing/logs/XamarinSampleClient.log",
+                OutputFilePath = @"/storage/emulated/0/Softing/logs/XamarinSampleClient.log",
                 TraceMasks = 519
             };
 
@@ -82,23 +82,23 @@ namespace XamarinSampleClient.Helpers
                 ApplicationCertificate = new CertificateIdentifier
                 {
                     StoreType = CertificateStoreType.Directory,
-                    StorePath = myDocsFolder + @"//pki//own",
+                    StorePath = @"/storage/emulated/0/Softing/pki/own",
                     SubjectName = "SoftingOpcUaXamarinSampleClient"
                 },
                 TrustedPeerCertificates = new CertificateTrustList
                 {
                     StoreType = CertificateStoreType.Directory,
-                    StorePath = myDocsFolder + @"//pki//trusted",
+                    StorePath = @"/storage/emulated/0/Softing/pki/trusted",
                 },
                 TrustedIssuerCertificates = new CertificateTrustList
                 {
                     StoreType = CertificateStoreType.Directory,
-                    StorePath = myDocsFolder + @"//pki//issuer",
+                    StorePath = @"/storage/emulated/0/Softing/pki/issuer",
                 },
                 RejectedCertificateStore = new CertificateTrustList
                 {
                     StoreType = CertificateStoreType.Directory,
-                    StorePath = myDocsFolder + @"//pki//rejected",
+                    StorePath = @"/storage/emulated/0/Softing/pki/rejected",
                 },
                 AutoAcceptUntrustedCertificates = true
             };

@@ -13,6 +13,7 @@ using System.Threading;
 using XamarinSampleClient.Helpers;
 using XamarinSampleClient.Models;
 using Xamarin.Forms;
+using System;
 
 namespace XamarinSampleClient.ViewModels
 {
@@ -73,8 +74,15 @@ namespace XamarinSampleClient.ViewModels
             {
                 IsBusy = true;
             });
-          
-            await SampleApplication.InitializeUaApplication();
+
+            try
+            {              
+                await SampleApplication.InitializeUaApplication();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
            
             Device.BeginInvokeOnMainThread(() =>
             {
