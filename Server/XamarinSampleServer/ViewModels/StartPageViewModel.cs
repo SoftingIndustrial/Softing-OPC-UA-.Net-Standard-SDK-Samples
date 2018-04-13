@@ -185,7 +185,11 @@ namespace XamarinSampleServer.ViewModels
                     string filename = "XamarinSampleServer.Config.xml";
                     string content = DependencyService.Get<IAssetService>().LoadFile(filename);
 
-                    File.WriteAllText(currentFolder + filename, content);
+                    Directory.CreateDirectory(currentFolder);
+                    if (!File.Exists(currentFolder + filename))
+                    {
+                        File.WriteAllText(currentFolder + filename, content);
+                    }
                     // load the application configuration.
                     config = await m_application.LoadApplicationConfiguration(currentFolder + filename, false);
                     config.ServerConfiguration.BaseAddresses[0] = ServerUrl;
