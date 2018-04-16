@@ -1030,43 +1030,25 @@ namespace XamarinSampleClient.ViewModels
             };
 
             DataValue valueToWrite = new DataValue();
-            if (Int32NodeValue == null)
-            {
-                valueToWrite.Value = m_random.Next(1, 1975109192);
-            }
-            else
-            {
-                int value = 0;
-                int.TryParse(Int32NodeValue.Value.ToString(), out value);
-                valueToWrite.Value = value;
-            }
+            int value = 0;
+            int.TryParse(Int32NodeValue.Value.ToString(), out value);
+            valueToWrite.Value = value;
+            
             listOfNodes[0].Value = valueToWrite;
 
-            DataValue valueToWrite1 = new DataValue();
-            if (GuidNodeValue == null)
+            DataValue valueToWrite1 = new DataValue();           
+            Guid guid = Guid.NewGuid();
+            if (Guid.TryParse(GuidNodeValue.Value.ToString(), out guid))
             {
-                valueToWrite1.Value = Guid.NewGuid();
-            }
-            else
-            {
-                Guid guid = Guid.NewGuid();
-                Guid.TryParse(GuidNodeValue.Value.ToString(), out guid);
                 valueToWrite1.Value = guid;
+                listOfNodes[1].Value = valueToWrite1;
             }
-            listOfNodes[1].Value = valueToWrite1;
+            
 
-            DataValue valueToWrite2 = new DataValue();
-            if (DateTimeNodeValue == null)
-            {
-                valueToWrite2.Value = DateTime.Now;
-            }
-            else
-            {
-                DateTime dateTime = DateTime.Now;
-                DateTime.TryParse(DateTimeNodeValue.Value.ToString(), out dateTime);
-                valueToWrite2.Value = dateTime;
-            }
-
+            DataValue valueToWrite2 = new DataValue();            
+            DateTime dateTime = DateTime.Now;
+            DateTime.TryParse(DateTimeNodeValue.Value.ToString(), out dateTime);
+            valueToWrite2.Value = dateTime;           
             listOfNodes[2].Value = valueToWrite2;
             
             try

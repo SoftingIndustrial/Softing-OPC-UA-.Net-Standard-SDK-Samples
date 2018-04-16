@@ -298,14 +298,14 @@
                                         <Label Grid.Column="1" Text="{Binding Int32NodeValue.NodeId}"/>
 
                                         <Label Grid.Row="1" Grid.Column="0" Text="Value:" VerticalTextAlignment="Center"/>
-                                        <Entry  Grid.Row="1" Grid.Column="1" Text="{Binding Int32NodeValue.Value}"/>
+                                        <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Int32NodeValue.Value}" Keyboard="Numeric"/>
 
                                         <!--guid node-->
                                         <Label  Grid.Row="2"  Grid.Column="0" Text="Guid NodeId:" Style="{StaticResource BoldLabel}"/>
                                         <Label  Grid.Row="2"  Grid.Column="1" Text="{Binding GuidNodeValue.NodeId}"/>
 
                                         <Label Grid.Row="3" Grid.Column="0" Text="Value:" VerticalTextAlignment="Center"/>
-                                        <Entry  Grid.Row="3" Grid.Column="1" Text="{Binding GuidNodeValue.Value}"/>
+                                        <Entry  Grid.Row="3" Placeholder="Enter GUID" Grid.Column="1" Text="{Binding GuidNodeValue.Value}"/>
                                         <!--datetime node-->
                                         <Label Grid.Row="4" Grid.Column="0" Text="DateTime NodeId:" Style="{StaticResource BoldLabel}"/>
                                         <Label Grid.Row="4" Grid.Column="1" Text="{Binding DateTimeNodeValue.NodeId}"/>
