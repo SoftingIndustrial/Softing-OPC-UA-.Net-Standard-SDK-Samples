@@ -20,21 +20,25 @@
                     <Button 
                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                         Clicked="Browse_OnClicked" Text="Browse"/>
-                    <StackLayout Orientation="Horizontal">
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
                         <Label 
                             Margin="8,8, 8, 0" 
                             Text="Max references returned:" 
-                            VerticalOptions="Center" LineBreakMode="NoWrap"/>
-                        <Entry 
+                            VerticalOptions="Center" LineBreakMode="NoWrap" HorizontalOptions="Fill"/>
+                        <Entry Grid.Column="1"
                             Placeholder="maximum references returned..." 
                             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                             Text="{Binding MaxReferencesReturned}" Keyboard="Numeric"
-                            HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+                            HorizontalOptions="Fill" VerticalOptions="Center">
                             <Entry.Behaviors>
                                 <behaviours:UInt32ValidationBehaviour />
                             </Entry.Behaviors>
                         </Entry>
-                    </StackLayout>
+                    </Grid>
                     <Button 
                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                         Clicked="BrowseWithOptions_OnClicked" Text="Browse with options"/>
