@@ -184,9 +184,9 @@ namespace XamarinSampleClient.ViewModels
                 m_arrayValue.Clear();
                 ComplexValue = null;
                 EnumValue = null;
-                DateTimeNodeValue = null;
-                Int32NodeValue = null;
-                GuidNodeValue = null;
+                DateTimeNodeValue = new NodeValueItem() { NodeId = StaticDateTimeNodeId, Value = DateTime.Now };
+                Int32NodeValue = new NodeValueItem() { NodeId = StaticInt32NodeId, Value = 0 };
+                GuidNodeValue = new NodeValueItem() { NodeId = StaticGuidNodeId, Value = Guid.Empty };
             }
         }
 
