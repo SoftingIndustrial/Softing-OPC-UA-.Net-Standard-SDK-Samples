@@ -7,7 +7,8 @@
  * http://www.softing.com/LicenseSIA.pdf
  * 
  * ======================================================================*/
- 
+
+using System.Collections.Generic;
 using System.Linq;
 using Xamarin.Forms;
 
@@ -18,27 +19,48 @@ namespace XamarinSampleClient.Behaviours
     /// </summary>
     public class UInt32ValidationBehaviour : Behavior<Entry>
     {
+        private static Dictionary<Entry, string> LastValidValue;
 
+        static UInt32ValidationBehaviour()
+        {
+            LastValidValue = new Dictionary<Entry, string>();
+        }
         protected override void OnAttachedTo(Entry entry)
         {
             entry.TextChanged += OnEntryTextChanged;
+            LastValidValue[entry] = entry.Text;
             base.OnAttachedTo(entry);
         }
 
         protected override void OnDetachingFrom(Entry entry)
         {
             entry.TextChanged -= OnEntryTextChanged;
+            LastValidValue.Remove(entry);
             base.OnDetachingFrom(entry);
         }
 
         private static void OnEntryTextChanged(object sender, TextChangedEventArgs args)
         {
-
             if (!string.IsNullOrWhiteSpace(args.NewTextValue))
             {
-                bool isValid = args.NewTextValue.ToCharArray().All(IsDigit); //Make sure all characters are numbers
-
-                ((Entry)sender).Text = isValid ? args.NewTextValue : args.NewTextValue.Remove(args.NewTextValue.Length - 1);
+                Entry entry = sender as Entry;
+                if (entry != null)
+                {
+                    if (!LastValidValue.ContainsKey(entry))
+                    {
+                        LastValidValue[entry] = "0";
+                    }
+                    bool isValid = args.NewTextValue.ToCharArray().All(IsDigit); //Make sure all characters are numbers
+                    if (isValid)
+                    {
+                        entry.Text = args.NewTextValue;
+                        LastValidValue[entry] = args.NewTextValue;
+                    }
+                    else
+                    {
+                        entry.Text = LastValidValue[entry];
+                    }
+                }
             }
         }
 
