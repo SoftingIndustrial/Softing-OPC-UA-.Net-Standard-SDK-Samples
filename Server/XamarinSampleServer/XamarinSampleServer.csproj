@@ -7,8 +7,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.3.352.10" />
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.3.352.10" />    <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
 	<PackageReference Include="System.Security.Principal.Windows" Version="4.4.0" />
   </ItemGroup>
  
@@ -30,7 +29,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Methods\MethodsNodeManager.cs" Link="_SampleServer\Methods\MethodsNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeManagement\DynamicASNodeManager.cs" Link="_SampleServer\NodeManagement\DynamicASNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeManagement\NodeMangementNodeManager.cs" Link="_SampleServer\NodeManagement\NodeMangementNodeManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\NodeSetImportNodeManager.cs" Link="_SampleServer\NodeSetImport\NodeSetImportNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\UserAuthentication\UserAuthenticationNodeManager.cs" Link="_SampleServer\UserAuthentication\UserAuthenticationNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Namespaces.cs" Link="_SampleServer\Namespaces.cs" />
     
@@ -39,5 +37,7 @@
   
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" Link="_SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" />
-  </ItemGroup>
+	<EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" />
+	<EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators2.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators2.NodeSet2.xml" />
+  </ItemGroup>  
 </Project>
