@@ -161,9 +161,6 @@
       <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.3.352.12\lib\net46\Opc.Ua.Server.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Softing.Opc.Ua">
-      <HintPath>..\..\..\..\..\..\..\..\BuildNetStdTK\trunk\bin\net461\Softing.Opc.Ua.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
