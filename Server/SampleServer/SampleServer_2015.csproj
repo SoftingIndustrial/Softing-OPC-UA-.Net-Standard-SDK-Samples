@@ -291,7 +291,6 @@
     <Compile Include="UserAuthentication\UserAuthenticationNodeManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="ReferenceServer\BuildDesign.bat" />
   </ItemGroup>
