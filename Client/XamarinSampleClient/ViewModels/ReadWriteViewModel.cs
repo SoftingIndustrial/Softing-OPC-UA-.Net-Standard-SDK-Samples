@@ -235,10 +235,32 @@ namespace XamarinSampleClient.ViewModels
             set
             {
                 SetProperty(ref m_enumValue, value); 
-                OnPropertyChanged("EnumValue.ValueString");
+                OnPropertyChanged("EnumValueString");
             }
         }
-       
+
+        /// <summary>
+        /// Enum valuestring
+        /// </summary>
+        public string EnumValueString
+        {
+            get
+            {
+                if (m_enumValue != null)
+                {
+                    return m_enumValue.ValueString;
+                }
+                return "";
+            }
+            set
+            {
+                if (m_enumValue != null && value!= null)
+                {
+                    m_enumValue.ValueString = value;
+                }
+            }
+        }
+
         /// <summary>
         /// NodeValueItem for date time node
         /// </summary>
@@ -387,7 +409,7 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         private void InitializeSession()
         {
-            if (m_session != null && m_session.CurrentState != State.Connected)
+            if (m_session != null && m_session.CurrentState == State.Disconnected)
             {
                 m_session.Dispose();
                 m_session = null;

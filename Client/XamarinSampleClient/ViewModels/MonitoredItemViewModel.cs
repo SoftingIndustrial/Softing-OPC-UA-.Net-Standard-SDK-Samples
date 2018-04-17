@@ -242,7 +242,7 @@ namespace XamarinSampleClient.ViewModels
         public void InitializeSession()
         {
             IsBusy = true;
-            if (m_session != null && m_session.CurrentState != State.Connected)
+            if (m_session != null && m_session.CurrentState == State.Disconnected)
             {
                 m_session.Dispose();
                 m_session = null;
@@ -303,6 +303,7 @@ namespace XamarinSampleClient.ViewModels
                 }
                 m_session.Disconnect(true);
                 m_session.Dispose();
+
                 m_session = null;
 
                 SessionStatusText = "Disconnected";

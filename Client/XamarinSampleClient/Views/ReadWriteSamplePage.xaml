@@ -174,20 +174,22 @@
                                     <Button Grid.Column="2"  Text="Remove" Clicked="RemoveArrayItem_OnClicked"
                                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"/>
                                 </Grid>
-
-                                <ListView x:Name="ArrayValueList"
-                                Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                                ItemsSource="{Binding ArrayValue, Mode=TwoWay}"
-                                      CachingStrategy="RetainElement"
-                                IsPullToRefreshEnabled="false">
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <ViewCell >
-                                                <Entry Text="{Binding Value, Mode=TwoWay}" Keyboard="Numeric"/>
-                                            </ViewCell>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
+                                <ScrollView Grid.Row="2" HeightRequest="150" Grid.Column="0" Grid.ColumnSpan="2"
+                                            VerticalOptions="Fill" HorizontalOptions="Fill">
+                                    <ListView x:Name="ArrayValueList"
+                                        Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                        ItemsSource="{Binding ArrayValue, Mode=TwoWay}"
+                                        CachingStrategy="RetainElement"
+                                        IsPullToRefreshEnabled="false" HeightRequest="150">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <ViewCell >
+                                                    <Entry Text="{Binding Value, Mode=TwoWay}" Keyboard="Numeric"/>
+                                                </ViewCell>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </ScrollView>
                             </Grid>
 
                             <!--ComplexValuePanel-->
@@ -272,7 +274,7 @@
                                 <Label Grid.Row="0" Grid.Column="1" Text="{Binding EnumNodeId}"/>
                                 <Label Grid.Row="1" Grid.Column="0" Text="Enum value:" VerticalTextAlignment="End" Margin="0,0,0,2"/>
                                 <Picker Grid.Row="1" Grid.Column="1" 
-                                    ItemsSource="{Binding EnumValue.ValueStrings}" SelectedItem="{Binding EnumValue.ValueString}"
+                                    ItemsSource="{Binding EnumValue.ValueStrings}" SelectedItem="{Binding EnumValueString}"
                                     Title="Select enum value"/>
                             </Grid>
 
