@@ -896,7 +896,7 @@ namespace XamarinSampleClient.ViewModels
                         {
                             if (field.Value is string)
                             {
-                                field.Value = "dummy string value";
+                                field.Value = "dummy value";
                             }
                         }
                     }

@@ -21,7 +21,7 @@
                     VerticalOptions="Start"/>
                 <Entry Grid.Row="1"
                     Placeholder="Enter SampleServer URL..." 
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                    IsEnabled="{Binding CanCreate}"
                     Text="{Binding SampleServerUrl}" Keyboard="Url"
                     HorizontalOptions="FillAndExpand" VerticalOptions="Start"/>
                 <!--Commands-->
@@ -77,7 +77,7 @@
                 <!--list count-->
                 <StackLayout Grid.Row="4" Margin="8,0, 0, 0" Orientation="Horizontal" VerticalOptions="End">
                     <Label Text="Events count:"/>
-                    <Label Text="{Binding EventDataList.Count}"/>
+                    <Label Text="{Binding EventsCount}"/>
                 </StackLayout>
                 <!--Status information-->
                 <Grid Grid.Row="5" Margin="8,0, 0, 0"  VerticalOptions="End">

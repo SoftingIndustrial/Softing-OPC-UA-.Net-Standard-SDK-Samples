@@ -45,6 +45,7 @@ namespace XamarinSampleClient.ViewModels
 
         private bool m_canCreate;
         private bool m_canDelete;
+        private int m_eventsCount;
         #endregion
 
         #region Constructors
@@ -138,6 +139,14 @@ namespace XamarinSampleClient.ViewModels
             }
         }
 
+        /// <summary>
+        /// Events count in a session
+        /// </summary>
+        public int EventsCount
+        {
+            get { return m_eventsCount; }
+            set { SetProperty(ref m_eventsCount, value); }
+        }
         #endregion
 
         #region Methods
@@ -147,6 +156,7 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         public void CreateMonitoredItem()
         {
+            EventsCount = 0;
             EventDataList.Clear();
             //try to initialize session
             InitializeSession();
@@ -342,6 +352,7 @@ namespace XamarinSampleClient.ViewModels
                     {
                         EventDataList.RemoveAt(EventDataList.Count - 1);
                     }
+                    EventsCount = EventsCount + 1;
                 });
             }
         }
