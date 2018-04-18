@@ -68,9 +68,7 @@ namespace XamarinSampleClient.Helpers
             configuration.DiscoveryOperationTimeout = 6500;
             //enable read/write complex types
             configuration.DecodeCustomDataTypes = true;
-
-            string myDocsFolder = @"/storage/emulated/0/Softing";//  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "1");//"//storage/emulated//0//softing";//
-
+                       
             configuration.TraceConfiguration = new TraceConfiguration()
             {
                 OutputFilePath = @"/storage/emulated/0/Softing/logs/XamarinSampleClient.log",
