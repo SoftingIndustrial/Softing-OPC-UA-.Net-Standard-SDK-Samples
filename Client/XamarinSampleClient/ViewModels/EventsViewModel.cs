@@ -171,6 +171,7 @@ namespace XamarinSampleClient.ViewModels
 
             try
             {
+                CanCreate = false;
                 //create evenbts filter
                 EventFilterEx filter = filter = new EventFilterEx();
                 filter.AddSelectClause(new NodeId(ObjectTypes.BaseEventType), new QualifiedName(BrowseNames.EventId));
@@ -183,11 +184,13 @@ namespace XamarinSampleClient.ViewModels
                 m_eventMonitoredItem.EventsReceived += EventMonitoredItem_EventsReceived;
                 OperationStatusText = "Event mi is created.";
 
-                CanCreate = false;
+                
                 CanDelete = true;
             }
             catch (Exception e)
             {
+                CanCreate = true;
+                CanDelete = false;
                 OperationStatusText = "CreateEventMonitoredItem error:" + e.Message;
             }
         }
@@ -211,6 +214,7 @@ namespace XamarinSampleClient.ViewModels
             }
             try
             {
+                CanDelete = false;
                 //delete event monitored item
                 m_eventMonitoredItem.EventsReceived -= EventMonitoredItem_EventsReceived;
                 m_eventMonitoredItem.Delete();
@@ -218,10 +222,12 @@ namespace XamarinSampleClient.ViewModels
                 OperationStatusText = "Event mi was deleted.";
 
                 CanCreate = true;
-                CanDelete = false;
+                
             }
             catch (Exception ex)
             {
+                CanCreate = false;
+                CanDelete = true;
                 OperationStatusText = "DeleteEventMonitoredItem Error: {0}" + ex.Message;
             }
         }

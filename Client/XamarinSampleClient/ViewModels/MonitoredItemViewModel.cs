@@ -172,6 +172,7 @@ namespace XamarinSampleClient.ViewModels
             }
             try
             {
+                CanCreate = false;
                 //create monitored item for server CurrentTime
                 m_miCurrentTime = new ClientMonitoredItem(m_subscription, m_miCurrentTimeNodeId, "Monitored Item Server CurrentTime");
                 m_miCurrentTime.DataChangesReceived += Monitoreditem_DataChangesReceived;
@@ -185,11 +186,13 @@ namespace XamarinSampleClient.ViewModels
                 m_miInt64.SamplingInterval = 3000;
 
                 OperationStatusText = "Monitored items are created.";
-                CanCreate = false;
+                
                 CanDelete = true;
             }
             catch (Exception e)
             {
+                CanCreate = true;
+                CanDelete = false;
                 OperationStatusText = "CreateMonitoredItem error:" + e.Message;
             }
         }
@@ -214,6 +217,7 @@ namespace XamarinSampleClient.ViewModels
             }
             try
             {
+                CanDelete = false;
                 m_miCurrentTime.DataChangesReceived -= Monitoreditem_DataChangesReceived;
                 m_miCurrentTime.Delete();
                 m_miCurrentTime = null;
@@ -222,12 +226,13 @@ namespace XamarinSampleClient.ViewModels
                 m_miInt64.Delete();
                 m_miInt64 = null;
 
-                CanCreate = true;
-                CanDelete = false;
+                CanCreate = true;                
                 OperationStatusText = "Monitored items are deleted.";
             }
             catch (Exception e)
             {
+                CanCreate = false;
+                CanDelete = true;
                 OperationStatusText = "DeleteMonitoredItem error:" + e.Message;
             }
         }
