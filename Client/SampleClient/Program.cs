@@ -41,7 +41,7 @@ namespace SampleClient
             bool result = true;
             // TODO - design time license activation
             // Fill in your design time license activation keys here
-            result = application.ActivateLicense(LicenseFeature.Client, "XXXX-XXXX-XXXX-XXXX-XXXX");
+            //result = application.ActivateLicense(LicenseFeature.Client, "XXXX-XXXX-XXXX-XXXX-XXXX");
             if (!result)
             {
                 return;
