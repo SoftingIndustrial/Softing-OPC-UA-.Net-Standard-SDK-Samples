@@ -1,15 +1,24 @@
-﻿using Opc.Ua;
+﻿/* ========================================================================
+ * Copyright © 2011-2018 Softing Industrial Automation GmbH. 
+ * All rights reserved.
+ * 
+ * The Software is subject to the Softing Industrial Automation GmbH’s 
+ * license agreement, which can be found here:
+ * http://www.softing.com/LicenseSIA.pdf
+ * 
+ * ======================================================================*/
+
+using Opc.Ua;
 using Opc.Ua.Server;
 using SampleServerToolkit.DataAccess;
 using Softing.Opc.Ua.Server;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SampleServerToolkit
 {
+    /// <summary>
+    /// Sample implementation of an Opc Ua Server using Softing opc ua .net standard tollkit
+    /// </summary>
     class SampleServer : UaServer
     {
         /// <summary>
@@ -25,7 +34,7 @@ namespace SampleServerToolkit
             Utils.Trace(Utils.TraceMasks.Information, "SampleServer.CreateMasterNodeManager", "Creating the Node Managers.");
                       
             List<INodeManager> nodeManagers = new List<INodeManager>();
-
+            // Add all node managers to the list
             nodeManagers.Add(new DataAccessNodeManager(server, configuration));           
 
             // Create master node manager

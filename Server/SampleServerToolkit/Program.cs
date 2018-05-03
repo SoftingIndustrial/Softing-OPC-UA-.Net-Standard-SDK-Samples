@@ -1,7 +1,14 @@
-﻿using System;
-using Opc.Ua;
-using Opc.Ua.Configuration;
-using Softing.Opc.Ua.Server;
+﻿/* ========================================================================
+ * Copyright © 2011-2018 Softing Industrial Automation GmbH. 
+ * All rights reserved.
+ * 
+ * The Software is subject to the Softing Industrial Automation GmbH’s 
+ * license agreement, which can be found here:
+ * http://www.softing.com/LicenseSIA.pdf
+ * 
+ * ======================================================================*/
+
+using System;
 
 namespace SampleServerToolkit
 {
@@ -12,15 +19,14 @@ namespace SampleServerToolkit
             StartServer();
         }
 
-
         private static async void StartServer()
         {          
             string configurationFile = "SampleServer.Config.xml";
             SampleServer sampleServer = new SampleServer();
             try
             {
-                //await sampleServer.Start(configurationFile);                
-                await sampleServer.Start(12345);
+                await sampleServer.Start(configurationFile);                
+               // await sampleServer.Start(12345);
                 for (int i = 0; i < sampleServer.ApplicationConfiguration.ServerConfiguration.BaseAddresses.Count; i++)
                 {
                     Console.WriteLine(sampleServer.ApplicationConfiguration.ServerConfiguration.BaseAddresses[i]);
@@ -48,11 +54,6 @@ namespace SampleServerToolkit
             {
                 sampleServer.Stop();
             }
-        }
-
-        private static void CertificateValidator_CertificateValidation(CertificateValidator sender, CertificateValidationEventArgs e)
-        {
-            e.Accept = true;
-        }
+        }        
     }
 }

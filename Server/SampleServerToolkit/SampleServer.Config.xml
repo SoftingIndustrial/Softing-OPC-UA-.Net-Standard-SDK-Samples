@@ -139,7 +139,7 @@
   <Extensions>
     <ua:XmlElement>
       <SampleServerConfiguration>
-        <ShutdownDelay>3</ShutdownDelay>
+        <ShutdownDelay>4</ShutdownDelay>
       </SampleServerConfiguration>
     </ua:XmlElement>
   </Extensions>

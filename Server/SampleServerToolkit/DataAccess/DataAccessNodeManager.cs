@@ -1,11 +1,17 @@
-﻿using Opc.Ua;
+﻿/* ========================================================================
+ * Copyright © 2011-2018 Softing Industrial Automation GmbH. 
+ * All rights reserved.
+ * 
+ * The Software is subject to the Softing Industrial Automation GmbH’s 
+ * license agreement, which can be found here:
+ * http://www.softing.com/LicenseSIA.pdf
+ * 
+ * ======================================================================*/
+
+using Opc.Ua;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.Server;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SampleServerToolkit.DataAccess
 {
