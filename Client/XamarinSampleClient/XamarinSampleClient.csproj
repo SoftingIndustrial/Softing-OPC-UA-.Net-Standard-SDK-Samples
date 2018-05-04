@@ -12,7 +12,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Reference Include="Softing.Opc.Ua">
+    <Reference Include="Softing.Opc.Ua.Client">
       <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.Client.dll</HintPath>
     </Reference>
   </ItemGroup>
