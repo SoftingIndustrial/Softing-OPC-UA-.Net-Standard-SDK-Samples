@@ -11,7 +11,7 @@
 using Opc.Ua;
 using SampleClient.StateMachine;
 using Softing.Opc.Ua;
-using Softing.Opc.Ua.Private;
+using Softing.Opc.Ua.Client.Private;
 using System;
 
 namespace SampleClient
