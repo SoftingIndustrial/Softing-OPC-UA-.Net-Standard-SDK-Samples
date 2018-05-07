@@ -38,20 +38,23 @@ namespace SampleServerToolkit.DataAccess
             {
                 base.CreateAddressSpace(externalReferences);
 
-                FolderState dataAccessFolder = CreateFolder(null, "DataAccess", "DataAccess");
-                dataAccessFolder.AddReference(ReferenceTypes.Organizes, true, ObjectIds.ObjectsFolder);               
-               
-                AddRootNotifier(dataAccessFolder);
+                FolderState rootFolder = CreateFolder(null, "DataAccess");
+                rootFolder.AddReference(ReferenceTypes.Organizes, true, ObjectIds.ObjectsFolder);
 
-                IList<IReference> references;               
+                IList<IReference> references;
                 if (!externalReferences.TryGetValue(ObjectIds.ObjectsFolder, out references))
                 {
                     externalReferences[ObjectIds.ObjectsFolder] = references = new List<IReference>();
                 }
-                references.Add(new NodeStateReference(ReferenceTypes.Organizes, false, dataAccessFolder.NodeId));
+                references.Add(new NodeStateReference(ReferenceTypes.Organizes, false, rootFolder.NodeId));
 
-                // Save the node for later lookup
-                AddPredefinedNode(SystemContext, dataAccessFolder);
+                // Create variable nodes
+                BaseDataVariableState byteVariable = CreateVariable(rootFolder, "StringVariable", DataTypeIds.Byte, ValueRanks.Scalar);
+                BaseDataVariableState stringVariable = CreateVariable(rootFolder, "StringVariable", DataTypeIds.String, ValueRanks.Scalar);
+                BaseDataVariableState intArrayVariable = CreateVariable(rootFolder, "Int32Array", DataTypeIds.Int32, ValueRanks.OneDimension);
+
+                // Create methods
+                MethodState method = CreateMethod(rootFolder, "Method1");
             }
         }
     }
