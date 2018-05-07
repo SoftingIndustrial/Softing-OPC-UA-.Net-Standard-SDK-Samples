@@ -8,10 +8,11 @@
  * 
  * ======================================================================*/
 
-using Opc.Ua;
-using SampleClient.StateMachine;
-using Softing.Opc.Ua;
 using System;
+using Opc.Ua;
+using Softing.Opc.Ua;
+using Softing.Opc.Ua.Client.Private;
+using SampleClient.StateMachine;
 
 namespace SampleClient
 {
