@@ -8,6 +8,7 @@
  * 
  * ======================================================================*/
 
+using Opc.Ua;
 using System;
 
 namespace SampleServerToolkit
@@ -25,8 +26,23 @@ namespace SampleServerToolkit
             SampleServer sampleServer = new SampleServer();
             try
             {
-                await sampleServer.Start(configurationFile);                
-               // await sampleServer.Start(12345);
+                //await sampleServer.Start(configurationFile);    
+
+                UserTokenPolicyCollection userTokens = new UserTokenPolicyCollection()
+                {
+                    new UserTokenPolicy()
+                    {
+                        TokenType = UserTokenType.Anonymous,
+                        SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#None",
+                    },
+                    new UserTokenPolicy()
+                    {
+                        TokenType = UserTokenType.UserName,                        
+                        SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#Basic256",
+                    }
+                };
+
+                await sampleServer.Start(12345);
                 for (int i = 0; i < sampleServer.ApplicationConfiguration.ServerConfiguration.BaseAddresses.Count; i++)
                 {
                     Console.WriteLine(sampleServer.ApplicationConfiguration.ServerConfiguration.BaseAddresses[i]);
