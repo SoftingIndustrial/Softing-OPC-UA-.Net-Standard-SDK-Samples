@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ApplicationConfiguration
+<ApplicationConfigurationEx
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:ua="http://opcfoundation.org/UA/2008/02/Types.xsd"
   xmlns="http://opcfoundation.org/UA/SDK/Configuration.xsd"
@@ -135,15 +135,6 @@
       <ua:String>Method Server Facet</ua:String>
     </ServerProfileArray>
   </ServerConfiguration>
-  
-  <Extensions>
-    <ua:XmlElement>
-      <SampleServerConfiguration>
-        <ShutdownDelay>4</ShutdownDelay>
-      </SampleServerConfiguration>
-    </ua:XmlElement>
-  </Extensions>
-  
   <TraceConfiguration>
     <OutputFilePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleServer.log</OutputFilePath>
     <DeleteOnLoad>true</DeleteOnLoad>
@@ -163,5 +154,19 @@
   
   <!-- Disables the hi-res clock if the QueryPerformanceCounter does work on a particular machine. -->
   <DisableHiResClock>false</DisableHiResClock>
-
-</ApplicationConfiguration>
+  
+  <!-- add here the custom server certificates in this particular order-->
+  <ServerShutdownDelay>4</ServerShutdownDelay>
+  <TrustedIssuerUserCertificateStore>
+    <StoreType>Directory</StoreType>
+    <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/issuerUser1</StorePath>
+  </TrustedIssuerUserCertificateStore>
+  <TrustedUserCertificateStore>
+    <StoreType>Directory</StoreType>
+    <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/trustedUser1</StorePath>
+  </TrustedUserCertificateStore>
+  <RejectedUserCertificateStore>
+    <StoreType>Directory</StoreType>
+    <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/rejectedUser1</StorePath>
+  </RejectedUserCertificateStore>
+</ApplicationConfigurationEx>

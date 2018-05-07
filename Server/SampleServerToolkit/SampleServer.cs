@@ -21,6 +21,19 @@ namespace SampleServerToolkit
     /// </summary>
     class SampleServer : UaServer
     {
+        private Dictionary<string, string> m_userNamePassword;
+
+        /// <summary>
+        /// Create new instance of SampleServer
+        /// </summary>
+        public SampleServer()
+        {
+            // initialize usernbame - opassword list
+            m_userNamePassword = new Dictionary<string, string>();
+            m_userNamePassword.Add("usr", "pwd");
+            m_userNamePassword.Add("admin", "admin");
+        }
+
         /// <summary>
         /// Creates the node managers for the server.
         /// </summary>
@@ -40,5 +53,28 @@ namespace SampleServerToolkit
             // Create master node manager
             return new MasterNodeManager(server, configuration, null, nodeManagers.ToArray());
         }
+
+        /// <summary>
+        /// Validates the password for a username token
+        /// </summary>
+        /// <returns>true if username and password match </returns>
+        protected override void VerifyPassword(string userName, string password)
+        {
+            base.VerifyPassword(userName, password);           
+
+            if (m_userNamePassword.ContainsKey(userName) && m_userNamePassword[userName].Equals(password))
+            {
+                //username & password are valid
+                return;
+            }
+
+            // Construct translation object with default text
+            TranslationInfo info = new TranslationInfo("InvalidUserPassword", "en-US", "Invalid username or password.", userName);
+
+            // Create an exception with a vendor defined sub-code
+            throw new ServiceResultException(new ServiceResult(StatusCodes.BadUserAccessDenied, "InvalidUserPassword", "http://opcfoundation.org/UA/Sample/", new LocalizedText(info)));
+        }
+
+
     }
 }
