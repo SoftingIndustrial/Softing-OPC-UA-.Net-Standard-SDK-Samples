@@ -49,7 +49,7 @@ namespace SampleServerToolkit.DataAccess
                 references.Add(new NodeStateReference(ReferenceTypes.Organizes, false, rootFolder.NodeId));
 
                 // Create variable nodes
-                BaseDataVariableState byteVariable = CreateVariable(rootFolder, "StringVariable", DataTypeIds.Byte, ValueRanks.Scalar);
+                BaseDataVariableState byteVariable = CreateVariable(rootFolder, "ByteVariable", DataTypeIds.Byte, ValueRanks.Scalar);
                 BaseDataVariableState stringVariable = CreateVariable(rootFolder, "StringVariable", DataTypeIds.String, ValueRanks.Scalar);
                 BaseDataVariableState intArrayVariable = CreateVariable(rootFolder, "Int32Array", DataTypeIds.Int32, ValueRanks.OneDimension);
 

@@ -42,7 +42,8 @@ namespace SampleServerToolkit
                     }
                 };
 
-                await sampleServer.Start(12345);
+                //await sampleServer.Start(12345);
+                await sampleServer.Start(configurationFile);
                 for (int i = 0; i < sampleServer.ApplicationConfiguration.ServerConfiguration.BaseAddresses.Count; i++)
                 {
                     Console.WriteLine(sampleServer.ApplicationConfiguration.ServerConfiguration.BaseAddresses[i]);

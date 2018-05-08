@@ -17,21 +17,21 @@ using System.Collections.Generic;
 namespace SampleServerToolkit
 {
     /// <summary>
-    /// Sample implementation of an Opc Ua Server using Softing opc ua .net standard tollkit
+    /// Sample implementation of an Opc Ua Server using Softing OPc UA .NET Standard Toolkit.
     /// </summary>
     class SampleServer : UaServer
     {
-        private Dictionary<string, string> m_userNamePassword;
+        private Dictionary<string, string> m_userNameIdentities;
 
         /// <summary>
         /// Create new instance of SampleServer
         /// </summary>
         public SampleServer()
         {
-            // initialize usernbame - opassword list
-            m_userNamePassword = new Dictionary<string, string>();
-            m_userNamePassword.Add("usr", "pwd");
-            m_userNamePassword.Add("admin", "admin");
+            // Initialize the list of accepted user identities.
+            m_userNameIdentities = new Dictionary<string, string>();
+            m_userNameIdentities.Add("usr", "pwd");
+            m_userNameIdentities.Add("admin", "admin");
         }
 
         /// <summary>
@@ -45,36 +45,31 @@ namespace SampleServerToolkit
         protected override MasterNodeManager CreateMasterNodeManager(IServerInternal server, ApplicationConfiguration configuration)
         {
             Utils.Trace(Utils.TraceMasks.Information, "SampleServer.CreateMasterNodeManager", "Creating the Node Managers.");
-                      
+
             List<INodeManager> nodeManagers = new List<INodeManager>();
             // Add all node managers to the list
-            nodeManagers.Add(new DataAccessNodeManager(server, configuration));           
+            nodeManagers.Add(new DataAccessNodeManager(server, configuration));
 
             // Create master node manager
             return new MasterNodeManager(server, configuration, null, nodeManagers.ToArray());
         }
 
         /// <summary>
-        /// Validates the password for a username token
+        /// Validates the user and password identity.
         /// </summary>
-        /// <returns>true if username and password match </returns>
-        protected override void VerifyPassword(string userName, string password)
+        /// <returns>true if the user identity is valid.</returns>
+        protected override bool ValidateUserPassword(string userName, string password)
         {
-            base.VerifyPassword(userName, password);           
-
-            if (m_userNamePassword.ContainsKey(userName) && m_userNamePassword[userName].Equals(password))
+            if (m_userNameIdentities.ContainsKey(userName) && m_userNameIdentities[userName].Equals(password))
             {
-                //username & password are valid
-                return;
+                // Accept the user identity.
+                return true;
             }
-
-            // Construct translation object with default text
-            TranslationInfo info = new TranslationInfo("InvalidUserPassword", "en-US", "Invalid username or password.", userName);
-
-            // Create an exception with a vendor defined sub-code
-            throw new ServiceResultException(new ServiceResult(StatusCodes.BadUserAccessDenied, "InvalidUserPassword", "http://opcfoundation.org/UA/Sample/", new LocalizedText(info)));
+            else
+            {
+                // Reject the user identity.
+                return false;
+            }
         }
-
-
     }
 }
