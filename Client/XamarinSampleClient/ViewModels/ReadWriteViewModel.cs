@@ -19,7 +19,7 @@ using XamarinSampleClient.Helpers;
 using XamarinSampleClient.Models;
 using Softing.Opc.Ua.Client;
 using Softing.Opc.Ua.Client.Nodes;
-using Softing.Opc.Ua.Types;
+using Softing.Opc.Ua.Client.Types;
 using Xamarin.Forms;
 using Exception = System.Exception;
 

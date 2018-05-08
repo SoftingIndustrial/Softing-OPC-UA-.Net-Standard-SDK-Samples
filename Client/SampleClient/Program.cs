@@ -10,7 +10,7 @@
 
 using System;
 using Opc.Ua;
-using Softing.Opc.Ua;
+using Softing.Opc.Ua.Client;
 using Softing.Opc.Ua.Client.Private;
 using SampleClient.StateMachine;
 
@@ -49,7 +49,7 @@ namespace SampleClient
 
             // Create the process object that will execute user commands
             Process process = new Process(application);
-            while (process.CurrentState != State.Exit)
+            while (process.CurrentState != SampleClient.StateMachine.State.Exit)
             {
                 // Read commands
                 string inputCommand = Console.ReadKey().KeyChar.ToString();

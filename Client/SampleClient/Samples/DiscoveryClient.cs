@@ -11,7 +11,7 @@
 using System;
 using System.Collections.Generic;
 using Opc.Ua;
-using Softing.Opc.Ua;
+using Softing.Opc.Ua.Client;
 
 namespace SampleClient.Samples
 {

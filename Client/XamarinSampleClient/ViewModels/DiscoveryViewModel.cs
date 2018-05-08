@@ -14,7 +14,7 @@ using System.Collections.ObjectModel;
 using Opc.Ua;
 using XamarinSampleClient.Helpers;
 using XamarinSampleClient.Models;
-using Softing.Opc.Ua;
+using Softing.Opc.Ua.Client;
 
 namespace XamarinSampleClient.ViewModels
 {

@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using SampleClient.Samples;
-using Softing.Opc.Ua;
+using Softing.Opc.Ua.Client;
 
 namespace SampleClient.StateMachine
 {

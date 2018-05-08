@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using XamarinSampleClient.ViewModels;
-using Softing.Opc.Ua;
+using Softing.Opc.Ua.Client;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

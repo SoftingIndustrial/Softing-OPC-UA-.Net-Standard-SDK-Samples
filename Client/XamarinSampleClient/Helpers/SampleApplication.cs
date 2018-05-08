@@ -12,7 +12,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Opc.Ua;
-using Softing.Opc.Ua;
+using Softing.Opc.Ua.Client;
 
 namespace XamarinSampleClient.Helpers
 {

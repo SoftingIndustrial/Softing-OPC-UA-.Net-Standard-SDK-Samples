@@ -12,10 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Opc.Ua;
-using Softing.Opc.Ua;
 using Softing.Opc.Ua.Client;
 using Softing.Opc.Ua.Client.Nodes;
-using Softing.Opc.Ua.Types;
+using Softing.Opc.Ua.Client.Types;
 
 namespace SampleClient.Samples
 {
