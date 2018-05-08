@@ -53,6 +53,8 @@ namespace SampleServerToolkit.DataAccess
                 BaseDataVariableState stringVariable = CreateVariable(rootFolder, "StringVariable", DataTypeIds.String, ValueRanks.Scalar);
                 BaseDataVariableState intArrayVariable = CreateVariable(rootFolder, "Int32Array", DataTypeIds.Int32, ValueRanks.OneDimension);
 
+                AnalogItemState analogVariable = CreateAnalogVariable(rootFolder, "AnalogVariable", DataTypeIds.Float, ValueRanks.Scalar, new Range(100, 0), null);
+
                 // Create methods
                 MethodState method = CreateMethod(rootFolder, "Method1");
             }
