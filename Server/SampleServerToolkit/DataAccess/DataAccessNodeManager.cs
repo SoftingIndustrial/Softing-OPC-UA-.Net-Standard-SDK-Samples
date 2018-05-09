@@ -11,7 +11,10 @@
 using Opc.Ua;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.Server;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace SampleServerToolkit.DataAccess
 {
@@ -38,25 +41,57 @@ namespace SampleServerToolkit.DataAccess
             {
                 base.CreateAddressSpace(externalReferences);
 
-                FolderState rootFolder = CreateFolder(null, "DataAccess");
-                rootFolder.AddReference(ReferenceTypes.Organizes, true, ObjectIds.ObjectsFolder);
+                BaseObjectState root = CreateObject(null, "DataAccess");
+                root.AddReference(ReferenceTypes.Organizes, true, ObjectIds.ObjectsFolder);
 
                 IList<IReference> references;
                 if (!externalReferences.TryGetValue(ObjectIds.ObjectsFolder, out references))
                 {
                     externalReferences[ObjectIds.ObjectsFolder] = references = new List<IReference>();
                 }
-                references.Add(new NodeStateReference(ReferenceTypes.Organizes, false, rootFolder.NodeId));
+                references.Add(new NodeStateReference(ReferenceTypes.Organizes, false, root.NodeId));
 
-                // Create variable nodes
-                BaseDataVariableState byteVariable = CreateVariable(rootFolder, "ByteVariable", DataTypeIds.Byte, ValueRanks.Scalar);
-                BaseDataVariableState stringVariable = CreateVariable(rootFolder, "StringVariable", DataTypeIds.String, ValueRanks.Scalar);
-                BaseDataVariableState intArrayVariable = CreateVariable(rootFolder, "Int32Array", DataTypeIds.Int32, ValueRanks.OneDimension);
+                // Create variable nodes.
+                BaseDataVariableState byteVariable = CreateVariable(root, "ByteVariable", DataTypeIds.Byte, ValueRanks.Scalar);
+                BaseDataVariableState stringVariable = CreateVariable(root, "StringVariable", DataTypeIds.String, ValueRanks.Scalar);
+                BaseDataVariableState intArrayVariable = CreateVariable(root, "Int32Array", DataTypeIds.Int32, ValueRanks.OneDimension);
+                AnalogItemState analogVariable = CreateAnalogVariable(root, "AnalogVariable", DataTypeIds.Float, ValueRanks.Scalar, new Range(100, 0), null);
 
-                AnalogItemState analogVariable = CreateAnalogVariable(rootFolder, "AnalogVariable", DataTypeIds.Float, ValueRanks.Scalar, new Range(100, 0), null);
+                // Create methods.
+                MethodState method = CreateMethod(root, "Method1");
 
-                // Create methods
-                MethodState method = CreateMethod(rootFolder, "Method1");
+                // Create Object type instances for all known types.
+                FolderState objectInstances = CreateFolder(root, "ObjectInstances");
+
+                try
+                {
+
+                    Type baseObjectStateType = typeof(BaseObjectState);
+                    Assembly coreLibrary = baseObjectStateType.GetTypeInfo().Assembly;
+
+                    foreach (Type objectStateType in coreLibrary.GetTypes().Where(t => baseObjectStateType.IsAssignableFrom(t)))
+                    {
+                        if (!objectStateType.GetTypeInfo().IsAbstract && !objectStateType.GetTypeInfo().ContainsGenericParameters)
+                        {
+                            BaseObjectState parentNode = new BaseObjectState(null);
+
+                            BaseObjectState objectNode = Activator.CreateInstance(objectStateType, new BaseObjectState(null)) as BaseObjectState;
+
+                            if (objectNode != null)
+                            {
+                                NodeId typeDefinitionId = objectNode.GetDefaultTypeDefinitionId(SystemContext);
+
+                                if (!typeDefinitionId.IsNullNodeId)
+                                {
+                                    CreateObject(objectInstances, objectStateType.Name+"Instance", typeDefinitionId, ReferenceTypeIds.HasComponent);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                }
             }
         }
     }
