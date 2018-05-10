@@ -65,7 +65,6 @@ namespace SampleServerToolkit.DataAccess
 
                 try
                 {
-
                     Type baseObjectStateType = typeof(BaseObjectState);
                     Assembly coreLibrary = baseObjectStateType.GetTypeInfo().Assembly;
 
@@ -73,8 +72,6 @@ namespace SampleServerToolkit.DataAccess
                     {
                         if (!objectStateType.GetTypeInfo().IsAbstract && !objectStateType.GetTypeInfo().ContainsGenericParameters)
                         {
-                            BaseObjectState parentNode = new BaseObjectState(null);
-
                             BaseObjectState objectNode = Activator.CreateInstance(objectStateType, new BaseObjectState(null)) as BaseObjectState;
 
                             if (objectNode != null)
@@ -85,6 +82,32 @@ namespace SampleServerToolkit.DataAccess
                                 {
                                     CreateObject(objectInstances, objectStateType.Name+"Instance", typeDefinitionId, ReferenceTypeIds.HasComponent);
                                 }
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                }
+
+                // Create Object type instances for all known types.
+                FolderState variableInstances = CreateFolder(root, "VariableInstances");
+
+                try
+                {
+                    Type baseVariableType = typeof(BaseDataVariableState);
+                    Assembly coreLibrary = baseVariableType.GetTypeInfo().Assembly;
+
+                    foreach (Type variableType in coreLibrary.GetTypes().Where(t => baseVariableType.IsAssignableFrom(t)))
+                    {
+                        if (!variableType.GetTypeInfo().IsAbstract && !variableType.GetTypeInfo().ContainsGenericParameters)
+                        {
+                            BaseDataVariableState variableNode = Activator.CreateInstance(variableType, new BaseObjectState(null)) as BaseDataVariableState;
+                            NodeId typeDefinitionId = variableNode.GetDefaultTypeDefinitionId(SystemContext);
+
+                            if (!typeDefinitionId.IsNullNodeId)
+                            {
+                                CreateVariable(variableInstances, variableType.Name + "Instance", typeDefinitionId, ReferenceTypeIds.HasChild);
                             }
                         }
                     }
