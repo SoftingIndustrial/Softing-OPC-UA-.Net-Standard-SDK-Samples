@@ -2,8 +2,7 @@
 <ApplicationConfiguration
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:ua="http://opcfoundation.org/UA/2008/02/Types.xsd"
-  xmlns="http://opcfoundation.org/UA/SDK/Configuration.xsd"
->
+  xmlns="http://opcfoundation.org/UA/SDK/Configuration.xsd">
   <ApplicationName>Softing NET Standard Sample Server</ApplicationName>
   <ApplicationUri>urn:localhost:Softing:UANETStandardToolkit:SampleServer</ApplicationUri>
   <ProductUri>http://industrial.softing.com/OpcUaNetStandardToolkit/SampleServer</ProductUri>
@@ -36,7 +35,7 @@
   <TransportConfigurations></TransportConfigurations>
   <TransportQuotas>
     <OperationTimeout>15000</OperationTimeout>
-    MaxStringLength>1048576</MaxStringLength>
+    <MaxStringLength>1048576</MaxStringLength>
     <MaxByteStringLength>1048576</MaxByteStringLength>
     <MaxArrayLength>65535</MaxArrayLength>
     <MaxMessageSize>4194304</MaxMessageSize>
