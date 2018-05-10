@@ -76,13 +76,13 @@
       <ua:UserTokenPolicy>
         <ua:TokenType>UserName_1</ua:TokenType>
         <!-- passwords must be encrypted - this specifies what algorithm to use -->
-        <ua:SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#Basic256</ua:SecurityPolicyUri>
+        <ua:SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256</ua:SecurityPolicyUri>
       </ua:UserTokenPolicy>
       <!-- Allows user certificates -->
       <ua:UserTokenPolicy>
         <ua:TokenType>Certificate_2</ua:TokenType>
         <!-- certificate possession must be proven with a digital signature - this specifies what algorithm to use -->
-        <ua:SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#Basic256</ua:SecurityPolicyUri>
+        <ua:SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256</ua:SecurityPolicyUri>
       </ua:UserTokenPolicy>
     </UserTokenPolicies>
     <DiagnosticsEnabled>true</DiagnosticsEnabled>
@@ -134,6 +134,10 @@
       <ua:String>Data Access Server Facet</ua:String>
       <ua:String>Method Server Facet</ua:String>
     </ServerProfileArray>
+    <ShutdownDelay>5</ShutdownDelay>
+    <ServerCapabilities>
+      <ua:String>DA</ua:String>
+    </ServerCapabilities>
   </ServerConfiguration>
   <TraceConfiguration>
     <OutputFilePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleServer.log</OutputFilePath>
