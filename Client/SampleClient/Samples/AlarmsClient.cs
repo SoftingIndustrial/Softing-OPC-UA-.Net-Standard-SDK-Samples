@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using System.Text;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
-using Softing.Opc.Ua.Client;
 
 namespace SampleClient.Samples
 {
