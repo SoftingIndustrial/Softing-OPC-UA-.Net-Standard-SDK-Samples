@@ -45,8 +45,8 @@
   </TransportQuotas>
   <ServerConfiguration>
     <BaseAddresses>
-      <ua:String>opc.tcp://localhost:61520/SampleServer</ua:String>
-      <!--<ua:String>https://localhost:61521/SampleServer/</ua:String>-->
+      <ua:String>opc.tcp://localhost:61510/SampleServer</ua:String>
+      <!--<ua:String>https://localhost:61511/SampleServer/</ua:String>-->
     </BaseAddresses>
     <SecurityPolicies>
       <ServerSecurityPolicy>

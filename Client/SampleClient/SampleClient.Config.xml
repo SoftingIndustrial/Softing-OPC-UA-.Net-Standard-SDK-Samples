@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ApplicationConfigurationEx
+<ApplicationConfiguration
   xmlns:ua="http://opcfoundation.org/UA/2008/02/Types.xsd"
   xmlns="http://opcfoundation.org/UA/SDK/Configuration.xsd"
   schemaLocation="./Schema/ApplicationConfiguration.xsd"
@@ -139,8 +139,26 @@
         <ServerUrlHttps>https://localhost:61511/SampleServer</ServerUrlHttps>
       </SampleClientConfiguration>
     </ua:XmlElement>
+    <ua:XmlElement>
+      <ClientTookitConfiguration>
+        <!-- Client custom configuration please use the same order!!!!-->
+        <DiscoveryOperationTimeout>10000</DiscoveryOperationTimeout>
+        <DefaultKeepAliveInterval>5000</DefaultKeepAliveInterval>
+        <SessionReconnectDelay>5000</SessionReconnectDelay>
+        <DefaultSessionTimeout>5000</DefaultSessionTimeout>
+        <DefaultSubscriptionPublishingInterval>1000</DefaultSubscriptionPublishingInterval>
+        <DefaultSubscriptionKeepAliveCount>10</DefaultSubscriptionKeepAliveCount>
+        <DefaultSubscriptionLifeTimeCount>1000</DefaultSubscriptionLifeTimeCount>
+        <DefaultSubscriptionMaxNotificationsPerPublish>0</DefaultSubscriptionMaxNotificationsPerPublish>
+        <DefaultSubscriptionPriority>255</DefaultSubscriptionPriority>
+        <DefaultMiSamplingInterval>1000</DefaultMiSamplingInterval>
+        <DefaultMiQueueSize>1</DefaultMiQueueSize>
+        <DefaultEventMiQueueSize>0</DefaultEventMiQueueSize>
+        <DecodeCustomDataTypes>true</DecodeCustomDataTypes>
+      </ClientTookitConfiguration>
+    </ua:XmlElement>
   </Extensions>
-
+  
   <TraceConfiguration>
     <OutputFilePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleClient.log</OutputFilePath>
     <DeleteOnLoad>true</DeleteOnLoad>
@@ -159,19 +177,5 @@
   </TraceConfiguration>
   <!-- Enables the hi-res clock for the process to allows for shorter (<100ms) publishing and sampling intervals. -->
   <!-- QueryPerformanceCounter does not work on all multi-core machines so enabling the hi-res clock by default is not recommended. -->
-  <DisableHiResClock>true</DisableHiResClock>
-  <!-- Client custom configuration please use the same order!!!!-->
-  <DiscoveryOperationTimeout>10000</DiscoveryOperationTimeout>
-  <DefaultKeepAliveInterval>5000</DefaultKeepAliveInterval>
-  <SessionReconnectDelay>5000</SessionReconnectDelay>
-  <DefaultSessionTimeout>5000</DefaultSessionTimeout>
-  <DefaultSubscriptionPublishingInterval>1000</DefaultSubscriptionPublishingInterval>
-  <DefaultSubscriptionKeepAliveCount>10</DefaultSubscriptionKeepAliveCount>
-  <DefaultSubscriptionLifeTimeCount>1000</DefaultSubscriptionLifeTimeCount>
-  <DefaultSubscriptionMaxNotificationsPerPublish>0</DefaultSubscriptionMaxNotificationsPerPublish>
-  <DefaultSubscriptionPriority>255</DefaultSubscriptionPriority>
-  <DefaultMiSamplingInterval>1000</DefaultMiSamplingInterval>
-  <DefaultMiQueueSize>1</DefaultMiQueueSize>
-  <DefaultEventMiQueueSize>0</DefaultEventMiQueueSize>
-  <DecodeCustomDataTypes>true</DecodeCustomDataTypes>
-</ApplicationConfigurationEx>
+  <DisableHiResClock>true</DisableHiResClock>  
+</ApplicationConfiguration>

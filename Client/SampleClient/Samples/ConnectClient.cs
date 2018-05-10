@@ -167,10 +167,10 @@ namespace SampleClient.Samples
         /// Creates Application's ApplicationConfiguration programmatically
         /// </summary>
         /// <returns></returns>
-        private ApplicationConfigurationEx CreateAplicationConfiguration()
+        private ApplicationConfiguration CreateAplicationConfiguration()
         {
             Console.WriteLine("Creating ApplicationConfigurationEx for current UaApplication...");
-            ApplicationConfigurationEx configuration = new ApplicationConfigurationEx();
+            ApplicationConfiguration configuration = new ApplicationConfiguration();
 
             configuration.ApplicationName = "UA Sample Client";
             configuration.ApplicationType = ApplicationType.Client;
