@@ -23,11 +23,10 @@ namespace SampleServerToolkit
         private static async void StartServer()
         {          
             string configurationFile = "SampleServer.Config.xml";
+            SampleServer sampleServerPort = new SampleServer();
             SampleServer sampleServer = new SampleServer();
             try
-            {
-                //await sampleServer.Start(configurationFile);    
-
+            {               
                 UserTokenPolicyCollection userTokens = new UserTokenPolicyCollection()
                 {
                     new UserTokenPolicy()
@@ -41,12 +40,11 @@ namespace SampleServerToolkit
                         SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#Basic256",
                     }
                 };
-
-                //await sampleServer.Start(12345);
+               // await sampleServerPort.Start(61521);
                 await sampleServer.Start(configurationFile);
-                for (int i = 0; i < sampleServer.ApplicationConfiguration.ServerConfiguration.BaseAddresses.Count; i++)
+                for (int i = 0; i < sampleServer.Configuration.ServerConfiguration.BaseAddresses.Count; i++)
                 {
-                    Console.WriteLine(sampleServer.ApplicationConfiguration.ServerConfiguration.BaseAddresses[i]);
+                    Console.WriteLine(sampleServer.Configuration.ServerConfiguration.BaseAddresses[i]);
                 }
                 Console.WriteLine("Server started");
                 Console.WriteLine("Press:\n\tx,q: shutdown the server\n\n");
