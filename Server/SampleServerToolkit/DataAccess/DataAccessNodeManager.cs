@@ -52,10 +52,13 @@ namespace SampleServerToolkit.DataAccess
                 references.Add(new NodeStateReference(ReferenceTypes.Organizes, false, root.NodeId));
 
                 // Create variable nodes.
+                PropertyState property = CreateProperty(root, "Property", DataTypeIds.Int32, ValueRanks.Scalar);
                 BaseDataVariableState byteVariable = CreateVariable(root, "ByteVariable", DataTypeIds.Byte, ValueRanks.Scalar);
                 BaseDataVariableState stringVariable = CreateVariable(root, "StringVariable", DataTypeIds.String, ValueRanks.Scalar);
                 BaseDataVariableState intArrayVariable = CreateVariable(root, "Int32Array", DataTypeIds.Int32, ValueRanks.OneDimension);
                 AnalogItemState analogVariable = CreateAnalogVariable(root, "AnalogVariable", DataTypeIds.Float, ValueRanks.Scalar, new Range(100, 0), null);
+                TwoStateDiscreteState twoStateVariable = CreateTwoStateDiscreteVariable(root, "TwoStateDiscreteVariable","Enabled", "Disabled");
+                MultiStateDiscreteState multiStateVariable = CreateMultiStateDiscreteVariable(root, "MultiStateDiscreteVariable","Green", "Yellow", "Red");
 
                 // Create methods.
                 MethodState method = CreateMethod(root, "Method1");
@@ -95,19 +98,30 @@ namespace SampleServerToolkit.DataAccess
 
                 try
                 {
-                    Type baseVariableType = typeof(BaseDataVariableState);
+                    Type baseVariableType = typeof(BaseVariableState);
                     Assembly coreLibrary = baseVariableType.GetTypeInfo().Assembly;
 
                     foreach (Type variableType in coreLibrary.GetTypes().Where(t => baseVariableType.IsAssignableFrom(t)))
                     {
                         if (!variableType.GetTypeInfo().IsAbstract && !variableType.GetTypeInfo().ContainsGenericParameters)
                         {
-                            BaseDataVariableState variableNode = Activator.CreateInstance(variableType, new BaseObjectState(null)) as BaseDataVariableState;
-                            NodeId typeDefinitionId = variableNode.GetDefaultTypeDefinitionId(SystemContext);
+                            BaseVariableState variableNode = Activator.CreateInstance(variableType, new BaseObjectState(null)) as BaseVariableState;
 
-                            if (!typeDefinitionId.IsNullNodeId)
+                            if (variableNode != null)
                             {
-                                CreateVariable(variableInstances, variableType.Name + "Instance", typeDefinitionId, ReferenceTypeIds.HasChild);
+                                NodeId typeDefinitionId = variableNode.GetDefaultTypeDefinitionId(SystemContext);
+
+                                if (!typeDefinitionId.IsNullNodeId)
+                                {
+                                    if (typeDefinitionId == VariableTypes.PropertyType)
+                                    {
+                                        CreateVariable(variableInstances, variableType.Name + "Instance", typeDefinitionId, ReferenceTypeIds.HasProperty);
+                                    }
+                                    else
+                                    {
+                                        CreateVariable(variableInstances, variableType.Name + "Instance", typeDefinitionId, ReferenceTypeIds.HasChild);
+                                    }
+                                }
                             }
                         }
                     }
