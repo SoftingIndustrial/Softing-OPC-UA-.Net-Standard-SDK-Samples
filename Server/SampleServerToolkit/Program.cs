@@ -37,7 +37,7 @@ namespace SampleServerToolkit
                     new UserTokenPolicy()
                     {
                         TokenType = UserTokenType.UserName,                        
-                        SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#Basic256",
+                        SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256",
                     }
                 };
                // await sampleServerPort.Start(61521);
