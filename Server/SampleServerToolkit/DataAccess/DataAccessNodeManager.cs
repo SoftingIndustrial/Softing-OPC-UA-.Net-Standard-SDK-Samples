@@ -42,6 +42,10 @@ namespace SampleServerToolkit.DataAccess
                 base.CreateAddressSpace(externalReferences);
 
                 BaseObjectState root = CreateObject(null, "DataAccess");
+
+                // Add reference to external Server Objects Folder
+                // AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
+
                 root.AddReference(ReferenceTypes.Organizes, true, ObjectIds.ObjectsFolder);
 
                 IList<IReference> references;
@@ -51,14 +55,20 @@ namespace SampleServerToolkit.DataAccess
                 }
                 references.Add(new NodeStateReference(ReferenceTypes.Organizes, false, root.NodeId));
 
-                // Create variable nodes.
-                PropertyState property = CreateProperty(root, "Property", DataTypeIds.Int32, ValueRanks.Scalar);
-                BaseDataVariableState byteVariable = CreateVariable(root, "ByteVariable", DataTypeIds.Byte, ValueRanks.Scalar);
-                BaseDataVariableState stringVariable = CreateVariable(root, "StringVariable", DataTypeIds.String, ValueRanks.Scalar);
-                BaseDataVariableState intArrayVariable = CreateVariable(root, "Int32Array", DataTypeIds.Int32, ValueRanks.OneDimension);
-                AnalogItemState analogVariable = CreateAnalogVariable(root, "AnalogVariable", DataTypeIds.Float, ValueRanks.Scalar, new Range(100, 0), null);
-                TwoStateDiscreteState twoStateVariable = CreateTwoStateDiscreteVariable(root, "TwoStateDiscreteVariable","Enabled", "Disabled");
-                MultiStateDiscreteState multiStateVariable = CreateMultiStateDiscreteVariable(root, "MultiStateDiscreteVariable","Green", "Yellow", "Red");
+                // Create test variable nodes.
+
+                FolderState testVariables = CreateFolder(root, "TestVariables");
+
+                PropertyState property = CreateProperty(testVariables, "Property", DataTypeIds.Int32, ValueRanks.Scalar);
+                BaseDataVariableState byteVariable = CreateVariable(testVariables, "ByteVariable", DataTypeIds.Byte, ValueRanks.Scalar);
+                BaseDataVariableState stringVariable = CreateVariable(testVariables, "StringVariable", DataTypeIds.String, ValueRanks.Scalar);
+                BaseDataVariableState intArrayVariable = CreateVariable(testVariables, "Int32Array", DataTypeIds.Int32, ValueRanks.OneDimension);
+                AnalogItemState analogVariable = CreateAnalogVariable(testVariables, "AnalogVariable", DataTypeIds.Float, ValueRanks.Scalar, new Range(100, 0), null);
+                TwoStateDiscreteState twoStateVariable = CreateTwoStateDiscreteVariable(testVariables, "TwoStateDiscreteVariable","Enabled", "Disabled");
+                MultiStateDiscreteState multiStateVariable = CreateMultiStateDiscreteVariable(testVariables, "MultiStateDiscreteVariable","Green", "Yellow", "Red");
+
+                // Add reference from stringVariable to Root.
+                AddReference(stringVariable, ReferenceTypeIds.Aggregates, false, root.NodeId, true);
 
                 // Create methods.
                 MethodState method = CreateMethod(root, "Method1");
