@@ -53,9 +53,9 @@ namespace XamarinSampleClient.Helpers
         /// Creates Application's ApplicationConfiguration programmatically
         /// </summary>
         /// <returns></returns>
-        private static ApplicationConfigurationEx CreateAplicationConfiguration()
+        private static ApplicationConfiguration CreateAplicationConfiguration()
         {            
-            ApplicationConfigurationEx configuration = new ApplicationConfigurationEx();
+            ApplicationConfiguration configuration = new ApplicationConfiguration();
 
             configuration.ApplicationName = "UA Xamarin Sample Client";
             configuration.ApplicationType = ApplicationType.Client;
@@ -64,11 +64,15 @@ namespace XamarinSampleClient.Helpers
             configuration.TransportConfigurations = new TransportConfigurationCollection();
             configuration.TransportQuotas = new TransportQuotas { OperationTimeout = 15000, MaxByteStringLength = 4194304 , MaxMessageSize = 4194304 };
             configuration.ClientConfiguration = new ClientConfiguration { DefaultSessionTimeout = 15000 };
-            configuration.DefaultSessionTimeout = 15000;
-            configuration.DiscoveryOperationTimeout = 6500;
+
+            ClientTookitConfiguration clientTkConfigration = new ClientTookitConfiguration();
+            clientTkConfigration.DefaultSessionTimeout = 15000;
+            clientTkConfigration.DiscoveryOperationTimeout = 6500;
             //enable read/write complex types
-            configuration.DecodeCustomDataTypes = true;
-                       
+            clientTkConfigration.DecodeCustomDataTypes = true;
+            configuration.UpdateExtension<ClientTookitConfiguration>( new System.Xml.XmlQualifiedName("ClientTookitConfiguration"), clientTkConfigration);
+
+
             configuration.TraceConfiguration = new TraceConfiguration()
             {
                 OutputFilePath = @"/storage/emulated/0/Softing/logs/XamarinSampleClient.log",

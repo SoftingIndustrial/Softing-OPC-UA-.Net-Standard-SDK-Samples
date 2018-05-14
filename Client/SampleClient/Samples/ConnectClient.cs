@@ -18,7 +18,7 @@ namespace SampleClient.Samples
     /// <summary>
     /// Class providing sample code for connect operations with different configuration parameters.
     /// 
-    /// This class also provides sample code for creating ApplicationConfigurationEx object by code 
+    /// This class also provides sample code for creating ApplicationConfiguration object by code 
     /// </summary>
     public class ConnectClient
     {
@@ -37,8 +37,8 @@ namespace SampleClient.Samples
         public ConnectClient()
         {
             // Alternatively, instead of providing a config XML file, we can provide instead, the custom configuration set below
-            // ApplicationConfigurationEx configuration = CreateAplicationConfiguration();
-            // m_application = UaApplication.Create(configuration).Result;
+            //ApplicationConfiguration configuration = CreateAplicationConfiguration();
+            //m_application = UaApplication.Create(configuration).Result;
             m_application = UaApplication.Create("SampleClient.Config.xml").Result;
         }
 
@@ -169,7 +169,7 @@ namespace SampleClient.Samples
         /// <returns></returns>
         private ApplicationConfiguration CreateAplicationConfiguration()
         {
-            Console.WriteLine("Creating ApplicationConfigurationEx for current UaApplication...");
+            Console.WriteLine("Creating ApplicationConfiguration for current UaApplication...");
             ApplicationConfiguration configuration = new ApplicationConfiguration();
 
             configuration.ApplicationName = "UA Sample Client";
@@ -178,6 +178,11 @@ namespace SampleClient.Samples
             configuration.TransportConfigurations = new TransportConfigurationCollection();
             configuration.TransportQuotas = new TransportQuotas {OperationTimeout = 15000};
             configuration.ClientConfiguration = new ClientConfiguration {DefaultSessionTimeout = 5000};
+
+            ClientTookitConfiguration clientTkConfigration = new ClientTookitConfiguration();
+            clientTkConfigration.DefaultSessionTimeout = 15000;
+            clientTkConfigration.DiscoveryOperationTimeout = 6500;
+            configuration.UpdateExtension<ClientTookitConfiguration>(new System.Xml.XmlQualifiedName("ClientTookitConfiguration"), clientTkConfigration);
 
             configuration.TraceConfiguration = new TraceConfiguration()
             {

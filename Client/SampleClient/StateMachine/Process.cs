@@ -396,7 +396,7 @@ namespace SampleClient.StateMachine
 
         private void ConnectSample_ExecuteCommand(object sender, EventArgs e)
         {
-            //ConnectClient sample creates its own UAApplication object with an ApplicationConfigurationEx object created 
+            //ConnectClient sample creates its own UAApplication object with an ApplicationConfiguration object created 
             //programmatically and not loaded from config file
             ConnectClient connectClient = new ConnectClient();
 
