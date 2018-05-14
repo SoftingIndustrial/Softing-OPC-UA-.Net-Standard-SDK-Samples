@@ -11,6 +11,7 @@
 using Opc.Ua;
 using Opc.Ua.Server;
 using SampleServerToolkit.DataAccess;
+using SampleServerToolkit.ToolkitTest;
 using Softing.Opc.Ua.Server;
 using System.Collections.Generic;
 
@@ -49,6 +50,7 @@ namespace SampleServerToolkit
             List<INodeManager> nodeManagers = new List<INodeManager>();
             // Add all node managers to the list
             nodeManagers.Add(new DataAccessNodeManager(server, configuration));
+            nodeManagers.Add(new ToolkitTestNodeManager(server, configuration));
 
             // Create master node manager
             return new MasterNodeManager(server, configuration, null, nodeManagers.ToArray());
