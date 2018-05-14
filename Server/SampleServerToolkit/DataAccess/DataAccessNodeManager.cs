@@ -41,22 +41,11 @@ namespace SampleServerToolkit.DataAccess
             {
                 base.CreateAddressSpace(externalReferences);
 
+                // Create a root node and add a reference to external Server Objects Folder
                 BaseObjectState root = CreateObject(null, "DataAccess");
-
-                // Add reference to external Server Objects Folder
-                // AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
-
-                root.AddReference(ReferenceTypes.Organizes, true, ObjectIds.ObjectsFolder);
-
-                IList<IReference> references;
-                if (!externalReferences.TryGetValue(ObjectIds.ObjectsFolder, out references))
-                {
-                    externalReferences[ObjectIds.ObjectsFolder] = references = new List<IReference>();
-                }
-                references.Add(new NodeStateReference(ReferenceTypes.Organizes, false, root.NodeId));
+                AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
                 // Create test variable nodes.
-
                 FolderState testVariables = CreateFolder(root, "TestVariables");
 
                 PropertyState property = CreateProperty(testVariables, "Property", DataTypeIds.Int32, ValueRanks.Scalar);
