@@ -60,6 +60,9 @@ namespace SampleServerToolkit.ToolkitTest
 
                 PropertyState property = CreateProperty(testVariables, "Property", DataTypeIds.Int32, ValueRanks.Scalar);
                 PropertyState<bool[]> typedProperty = CreateProperty<bool[]>(testVariables, "TypedProperty");
+
+                BaseDataVariableState<QualifiedName> typedVariable = CreateVariable<QualifiedName>(testVariables, "TypedVariable");
+
                 BaseDataVariableState byteVariable = CreateVariable(testVariables, "ByteVariable", DataTypeIds.Byte, ValueRanks.Scalar);
                 BaseDataVariableState stringVariable = CreateVariable(testVariables, "StringVariable", DataTypeIds.String, ValueRanks.Scalar);
                 BaseDataVariableState intArrayVariable = CreateVariable(testVariables, "Int32Array", DataTypeIds.Int32, ValueRanks.OneDimension);
