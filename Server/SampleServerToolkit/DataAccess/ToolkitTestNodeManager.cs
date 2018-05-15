@@ -63,9 +63,10 @@ namespace SampleServerToolkit.ToolkitTest
 
                 BaseDataVariableState<QualifiedName> typedVariable = CreateVariable<QualifiedName>(testVariables, "TypedVariable");
 
-                BaseDataVariableState byteVariable = CreateVariable(testVariables, "ByteVariable", DataTypeIds.Byte, ValueRanks.Scalar);
+                BaseDataVariableState byteVariable = CreateVariable(testVariables, "ByteVariable", DataTypeIds.Byte);
                 BaseDataVariableState stringVariable = CreateVariable(testVariables, "StringVariable", DataTypeIds.String, ValueRanks.Scalar);
                 BaseDataVariableState intArrayVariable = CreateVariable(testVariables, "Int32Array", DataTypeIds.Int32, ValueRanks.OneDimension);
+                DataItemState dataItemVariable = CreateDataItemVariable(testVariables, "DataItemVariable", DataTypeIds.Double, ValueRanks.Scalar, 0.5, null);
                 AnalogItemState analogVariable = CreateAnalogVariable(testVariables, "AnalogVariable", DataTypeIds.Float, ValueRanks.Scalar, new Range(100, 0), null);
                 TwoStateDiscreteState twoStateVariable = CreateTwoStateDiscreteVariable(testVariables, "TwoStateDiscreteVariable","Enabled", "Disabled");
                 MultiStateDiscreteState multiStateVariable = CreateMultiStateDiscreteVariable(testVariables, "MultiStateDiscreteVariable","Green", "Yellow", "Red");
