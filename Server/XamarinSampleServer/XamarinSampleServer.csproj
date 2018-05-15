@@ -6,9 +6,9 @@
     <RootNamespace>XamarinSampleServer</RootNamespace>
   </PropertyGroup>
   
-  <ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.3.352.10" />    <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
-	<PackageReference Include="System.Security.Principal.Windows" Version="4.4.0" />
+  <ItemGroup>    
+    <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />	
+    <PackageReference Include="System.Security.Principal.Windows" Version="4.4.0" />
   </ItemGroup>
  
   <ItemGroup>
@@ -31,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeManagement\NodeMangementNodeManager.cs" Link="_SampleServer\NodeManagement\NodeMangementNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\UserAuthentication\UserAuthenticationNodeManager.cs" Link="_SampleServer\UserAuthentication\UserAuthenticationNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Namespaces.cs" Link="_SampleServer\Namespaces.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\SampleServerConfiguration.cs" Link="_SampleServer\SampleServerConfiguration.cs" />
     
   </ItemGroup>
   
@@ -43,6 +44,9 @@
   
   
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Configuration\Opc.Ua.Configuration.csproj" />
+    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Server\Opc.Ua.Server.csproj" />
+    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Core\Opc.Ua.Core.csproj" />
     <ProjectReference Include="..\..\..\Toolkit\Server\Softing.Opc.Ua.Server_2017.csproj" />
   </ItemGroup>  
 </Project>

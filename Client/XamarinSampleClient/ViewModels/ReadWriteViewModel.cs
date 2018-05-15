@@ -629,7 +629,7 @@ namespace XamarinSampleClient.ViewModels
                 return;
             }
             //ensure type dictionaries are loaded
-            if (SampleApplication.UaApplication.Configuration.DecodeCustomDataTypes)
+            if (SampleApplication.UaApplication.ClientTookitConfiguration.DecodeCustomDataTypes)
             {
                 while (!m_session.TypeDictionariesLoaded)
                 {
@@ -695,7 +695,7 @@ namespace XamarinSampleClient.ViewModels
                 return;
             }
             //ensure type dictionaries are loaded
-            if (SampleApplication.UaApplication.Configuration.DecodeCustomDataTypes)
+            if (SampleApplication.UaApplication.ClientTookitConfiguration.DecodeCustomDataTypes)
             {
                 while (!m_session.TypeDictionariesLoaded)
                 {
@@ -890,7 +890,7 @@ namespace XamarinSampleClient.ViewModels
                 return;
             }
             //ensure type dictionaries are loaded
-            if (SampleApplication.UaApplication.Configuration.DecodeCustomDataTypes)
+            if (SampleApplication.UaApplication.ClientTookitConfiguration.DecodeCustomDataTypes)
             {
                 while (!m_session.TypeDictionariesLoaded)
                 {
@@ -983,7 +983,7 @@ namespace XamarinSampleClient.ViewModels
                 return;
             }
             //ensure type dictionaries are loaded
-            if (SampleApplication.UaApplication.Configuration.DecodeCustomDataTypes)
+            if (SampleApplication.UaApplication.ClientTookitConfiguration.DecodeCustomDataTypes)
             {
                 while (!m_session.TypeDictionariesLoaded)
                 {
