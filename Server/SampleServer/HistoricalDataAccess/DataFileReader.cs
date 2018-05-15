@@ -632,7 +632,7 @@ namespace SampleServer.HistoricalDataAccess
             }
 
             StringBuilder builder = new StringBuilder();
-            builder.AppendFormat("<Value xmlns=\"{0}\">", Namespaces.OpcUaXsd);
+            builder.AppendFormat("<Value xmlns=\"{0}\">", Opc.Ua.Namespaces.OpcUaXsd);
             builder.AppendFormat("<{0}>", valueType);
             builder.Append(line);
             builder.AppendFormat("</{0}>", valueType);

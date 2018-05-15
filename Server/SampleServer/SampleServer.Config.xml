@@ -135,12 +135,24 @@
       <ua:String>Method Server Facet</ua:String>
     </ServerProfileArray>
   </ServerConfiguration>
-  
+
   <Extensions>
     <ua:XmlElement>
-      <SampleServerConfiguration>
-        <ShutdownDelay>3</ShutdownDelay>
-      </SampleServerConfiguration>
+      <ServerTookitConfiguration>
+        <!-- add here the custom server certificates in this particular order-->
+        <TrustedIssuerUserCertificateStore>
+          <StoreType>Directory</StoreType>
+          <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/issuerUser</StorePath>
+        </TrustedIssuerUserCertificateStore>
+        <TrustedUserCertificateStore>
+          <StoreType>Directory</StoreType>
+          <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/trustedUser</StorePath>
+        </TrustedUserCertificateStore>
+        <RejectedUserCertificateStore>
+          <StoreType>Directory</StoreType>
+          <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/rejectedUser</StorePath>
+        </RejectedUserCertificateStore>
+      </ServerTookitConfiguration>
     </ua:XmlElement>
   </Extensions>
   

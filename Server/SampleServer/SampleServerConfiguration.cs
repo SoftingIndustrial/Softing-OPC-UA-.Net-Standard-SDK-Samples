@@ -15,7 +15,7 @@ namespace SampleServer
     /// <summary>
     /// Stores custom configuration parameters
     /// </summary>
-    [DataContract(Namespace = Namespaces.OpcUaConfig)]
+    [DataContract(Namespace = Opc.Ua.Namespaces.OpcUaConfig)]
     public class SampleServerConfiguration
     {
         #region Constructors

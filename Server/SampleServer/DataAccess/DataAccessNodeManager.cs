@@ -13,22 +13,20 @@ using System.Collections.Generic;
 using System.Threading;
 using Opc.Ua;
 using Opc.Ua.Server;
+using Softing.Opc.Ua.Server;
 
 namespace SampleServer.DataAccess
 {
     /// <summary>
     /// A node manager for a server that provides an implementation of the OPC UA features
     /// </summary>
-    public class DataAccessNodeManager : CustomNodeManager2
+    public class DataAccessNodeManager : NodeManager
     {
         #region Private Members
-        private uint m_nextNodeId;
-        private DataItemState<bool> m_doorOpened;
-        private DataItemState<bool> m_doorClosed;
-        private DataItemState<bool> m_lightStatus;
-
-        AnalogItemState<double> m_motorTemperature;
-
+        private BaseDataVariableState m_doorOpened;
+        private BaseDataVariableState m_doorClosed;
+        private BaseDataVariableState m_lightStatus;
+        private AnalogItemState m_motorTemperature;
         private Timer m_simulationTimer;
         #endregion
 
@@ -38,17 +36,7 @@ namespace SampleServer.DataAccess
         /// </summary>
         public DataAccessNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration, Namespaces.DataAccess)
         {
-            SystemContext.NodeIdFactory = this;
-        }
-        #endregion
-
-        #region INodeIdFactory Members
-        /// <summary>
-        /// Creates the NodeId for the specified node
-        /// </summary>
-        public override NodeId New(ISystemContext context, NodeState node)
-        {
-            return GenerateNodeId();
+            
         }
         #endregion
 
@@ -65,97 +53,15 @@ namespace SampleServer.DataAccess
         {
             lock (Lock)
             {
-                // Create the root folder
-                FolderState folder = new FolderState(null);
-                folder.NodeId = new NodeId("DataAccess", NamespaceIndex);
-                folder.BrowseName = new QualifiedName("DataAccess", NamespaceIndex);
-                folder.DisplayName = folder.BrowseName.Name;
-                folder.TypeDefinitionId = ObjectTypeIds.FolderType;
+                base.CreateAddressSpace(externalReferences);
 
-                IList<IReference> references;
-                if (!externalReferences.TryGetValue(ObjectIds.ObjectsFolder, out references))
-                {
-                    externalReferences[ObjectIds.ObjectsFolder] = references = new List<IReference>();
-                }
+                // Create a root node and add a reference to external Server Objects Folder
+                FolderState folder = CreateFolder(null, "DataAccess");
+                AddReference(folder, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
-                references.Add(new NodeStateReference(ReferenceTypeIds.Organizes, false, folder.NodeId));
-                folder.AddReference(ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder);
-
-                // Save the node for later lookup
-                AddPredefinedNode(SystemContext, folder);
-
-                // Create the refrigerator instance object
                 CreateRefrigerator(SystemContext, folder);
-
                 m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
             }
-        }
-
-        /// <summary>
-        /// Frees any resources allocated for the address space
-        /// </summary>
-        public override void DeleteAddressSpace()
-        {
-            lock (Lock)
-            {
-                // TBD
-            }
-        }
-
-        /// <summary>
-        /// Returns a unique handle for the node
-        /// </summary>
-        protected override NodeHandle GetManagerHandle(ServerSystemContext context, NodeId nodeId, IDictionary<NodeId, NodeState> cache)
-        {
-            lock (Lock)
-            {
-                // Quickly exclude nodes that are not in the namespace
-                if (!IsNodeIdInNamespace(nodeId))
-                {
-                    return null;
-                }
-
-                NodeState node = null;
-
-                if (PredefinedNodes != null && !PredefinedNodes.TryGetValue(nodeId, out node))
-                {
-                    return null;
-                }
-
-                NodeHandle handle = new NodeHandle();
-
-                handle.NodeId = nodeId;
-                handle.Node = node;
-                handle.Validated = true;
-
-                return handle;
-            }
-        }
-
-        /// <summary>
-        /// Verifies that the specified node exists
-        /// </summary>
-        protected override NodeState ValidateNode(ServerSystemContext context, NodeHandle handle, IDictionary<NodeId, NodeState> cache)
-        {
-            // Not valid if no root
-            if (handle == null)
-            {
-                return null;
-            }
-
-            // Check if previously validated
-            if (handle.Validated)
-            {
-                return handle.Node;
-            }
-
-            // TBD
-            return null;
-        }
-
-        private NodeId GenerateNodeId()
-        {
-            return new NodeId(++m_nextNodeId, NamespaceIndex);
         }
         #endregion
 
@@ -167,115 +73,52 @@ namespace SampleServer.DataAccess
         /// <param name="parent">The folder</param>
         private void CreateRefrigerator(ServerSystemContext context, FolderState parent)
         {
-            BaseObjectState refrigerator = new BaseObjectState(parent);
-         
-            refrigerator.Create(context, null, new QualifiedName("Refrigerator", NamespaceIndex), null, true);
+            BaseObjectState refrigerator = CreateObject(parent, "Refrigerator");
 
             parent.AddReference(ReferenceTypeIds.Organizes, false, refrigerator.NodeId);
             refrigerator.AddReference(ReferenceTypeIds.Organizes, true, parent.NodeId);
-            
+
             // Create CoolingMotorRunning variable
-            DataItemState<bool> coolingMotorRunning = new DataItemState<bool>(refrigerator);
-            coolingMotorRunning.Create(SystemContext, GenerateNodeId(), new QualifiedName("CoolingMotorRunning", NamespaceIndex), null, true);
-            coolingMotorRunning.AccessLevel = AccessLevels.CurrentReadOrWrite;
-            coolingMotorRunning.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
+            BaseDataVariableState coolingMotorRunning = CreateVariable(refrigerator, "CoolingMotorRunning", DataTypeIds.Boolean, ValueRanks.Scalar);
             coolingMotorRunning.Value = true;
-            refrigerator.AddChild(coolingMotorRunning);
 
             // Create DoorMotor variable
-            DataItemState<double> doorMotor = new DataItemState<double>(refrigerator);
-            doorMotor.Create(SystemContext, GenerateNodeId(), new QualifiedName("DoorMotor", NamespaceIndex), null, true);
-            doorMotor.AccessLevel = AccessLevels.CurrentReadOrWrite;
-            doorMotor.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
+            BaseDataVariableState doorMotor = CreateVariable(refrigerator, "DoorMotor", DataTypeIds.Double, ValueRanks.Scalar);
             doorMotor.Value = 11.2;
-            refrigerator.AddChild(doorMotor);
 
             // Create LightStatus variable
-            m_lightStatus = new DataItemState<bool>(refrigerator);
-            m_lightStatus.Create(SystemContext, GenerateNodeId(), new QualifiedName("LightStatus", NamespaceIndex), null, true);
-            m_lightStatus.AccessLevel = AccessLevels.CurrentReadOrWrite;
-            m_lightStatus.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
+            m_lightStatus = CreateVariable(refrigerator, "LightStatus", DataTypeIds.Boolean, ValueRanks.Scalar);
             m_lightStatus.Value = true;
-            refrigerator.AddChild(m_lightStatus);
 
             // Create DoorClosed variable
-            m_doorClosed = new DataItemState<bool>(refrigerator);
-            m_doorClosed.Create(SystemContext, GenerateNodeId(), new QualifiedName("DoorClosed", NamespaceIndex), null, true);
-            m_doorClosed.AccessLevel = AccessLevels.CurrentReadOrWrite;
-            m_doorClosed.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
-            refrigerator.AddChild(m_doorClosed);
+            m_doorClosed = CreateVariable(refrigerator, "DoorClosed", DataTypeIds.Boolean, ValueRanks.Scalar);
 
             // Create DoorOpened variable
-            m_doorOpened = new DataItemState<bool>(refrigerator);
-            m_doorOpened.Create(SystemContext, GenerateNodeId(), new QualifiedName("DoorOpened", NamespaceIndex), null, true);
-            m_doorOpened.AccessLevel = AccessLevels.CurrentReadOrWrite;
-            m_doorOpened.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
+            m_doorOpened = CreateVariable(refrigerator, "DoorOpened", DataTypeIds.Boolean, ValueRanks.Scalar);
             m_doorOpened.Value = true;
-            refrigerator.AddChild(m_doorOpened);
 
             // Create ActualTemperature variable
-            AnalogItemState<double> actualTemperature = new AnalogItemState<double>(refrigerator);
-            actualTemperature.InstrumentRange = new PropertyState<Range>(actualTemperature);
-            actualTemperature.Create(SystemContext, GenerateNodeId(), new QualifiedName("ActualTemperature", NamespaceIndex), null, true);
-            actualTemperature.AccessLevel = AccessLevels.CurrentReadOrWrite;
-            actualTemperature.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
-            actualTemperature.EURange.Value = new Range(90, 10);
+            AnalogItemState actualTemperature = CreateAnalogVariable(refrigerator, "ActualTemperature", DataTypeIds.Double, ValueRanks.Scalar, new Range(90, 10), null);
             actualTemperature.InstrumentRange.Value = new Range(100, 0);
             actualTemperature.Value = 2.7;
-            refrigerator.AddChild(actualTemperature);
 
             // Create MotorTemperature variable
-            m_motorTemperature = new AnalogItemState<double>(refrigerator);
-            m_motorTemperature.InstrumentRange = new PropertyState<Range>(m_motorTemperature);
-            m_motorTemperature.Create(SystemContext, GenerateNodeId(), new QualifiedName("MotorTemperature", NamespaceIndex), null, true);
-            m_motorTemperature.AccessLevel = AccessLevels.CurrentReadOrWrite;
-            m_motorTemperature.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
-            m_motorTemperature.Value = 47.6;
-            m_motorTemperature.EURange.Value = new Range(90, 10);
+            m_motorTemperature = CreateAnalogVariable(refrigerator, "MotorTemperature", DataTypeIds.Double, ValueRanks.Scalar, new Range(90, 10), null);
             m_motorTemperature.InstrumentRange.Value = new Range(100, 0);
-            refrigerator.AddChild(m_motorTemperature);
+            m_motorTemperature.Value = 47.6;
 
             // Create SetpointOfTheTemperature variable
-            AnalogItemState<double> setpointOfTheTemperature = new AnalogItemState<double>(refrigerator);
-            setpointOfTheTemperature.InstrumentRange = new PropertyState<Range>(setpointOfTheTemperature);
-            setpointOfTheTemperature.Create(SystemContext, GenerateNodeId(), new QualifiedName("SetpointOfTheTemperature", NamespaceIndex), null, true);
+            AnalogItemState setpointOfTheTemperature = CreateAnalogVariable(refrigerator, "SetpointOfTheTemperature", DataTypeIds.Double, ValueRanks.Scalar, new Range(90, 10), null);
             setpointOfTheTemperature.Value = 3.2;
-            setpointOfTheTemperature.EURange.Value = new Range(90, 10);
             setpointOfTheTemperature.InstrumentRange.Value = new Range(100, 0);
-            refrigerator.AddChild(setpointOfTheTemperature);
 
             // Create OpenCloseDoor method
-            MethodState openCloseDoorMethod = new MethodState(refrigerator);
-            openCloseDoorMethod.NodeId = GenerateNodeId();
-            openCloseDoorMethod.BrowseName = new QualifiedName("OpenCloseDoor", NamespaceIndex);
-            openCloseDoorMethod.DisplayName = openCloseDoorMethod.BrowseName.Name;
-            openCloseDoorMethod.Executable = true;
-            openCloseDoorMethod.UserExecutable = true;
-            openCloseDoorMethod.ReferenceTypeId = ReferenceTypeIds.HasComponent;
-            
-            // Create the input arguments for the method
-            PropertyState<Argument[]> inputArguments = new PropertyState<Argument[]>(openCloseDoorMethod);
-            inputArguments.NodeId = GenerateNodeId();
-            inputArguments.BrowseName = new QualifiedName(BrowseNames.InputArguments);
-            inputArguments.DisplayName = inputArguments.BrowseName.Name;
-            inputArguments.TypeDefinitionId = VariableTypeIds.PropertyType;
-            inputArguments.DataType = DataTypeIds.Argument;
-            inputArguments.ValueRank = ValueRanks.OneDimension;
-            inputArguments.MinimumSamplingInterval = MinimumSamplingIntervals.Continuous;
-            inputArguments.AccessLevel = AccessLevels.CurrentRead;
-            inputArguments.UserAccessLevel = AccessLevels.CurrentRead;
-            inputArguments.Historizing = false;
-            inputArguments.ReferenceTypeId = ReferenceTypeIds.HasProperty;
-            inputArguments.Value = new Argument[] 
-                {
+            Argument[] inputArgs = new Argument[]
+                 {
                     new Argument { Name = "OpenCloseDoor", Description = "Opens/closes the door.",  DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar }
                 };
-            openCloseDoorMethod.InputArguments = inputArguments;
+            MethodState openCloseDoorMethod = CreateMethod(refrigerator, "OpenCloseDoor", inputArguments: inputArgs);
             openCloseDoorMethod.OnCallMethod = DoOpenCloseDoorCall;
-
-            refrigerator.AddChild(openCloseDoorMethod);
-
-            AddPredefinedNode(context, refrigerator);
         }
 
         /// <summary>
@@ -309,7 +152,7 @@ namespace SampleServer.DataAccess
             m_doorClosed.Value = !input.Value;
             m_doorClosed.ClearChangeMasks(context, false);
 
-            if (m_doorClosed.Value)
+            if ((bool)m_doorClosed.Value)
             {
                 m_lightStatus.Value = false;
             }
