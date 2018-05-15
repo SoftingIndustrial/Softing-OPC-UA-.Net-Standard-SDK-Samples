@@ -138,6 +138,11 @@
 
   <Extensions>
     <ua:XmlElement>
+      <SampleServerConfiguration>
+        <TimerInterval>1000</TimerInterval>
+      </SampleServerConfiguration>
+    </ua:XmlElement>
+    <ua:XmlElement>
       <ServerTookitConfiguration>
         <!-- add here the custom server certificates in this particular order-->
         <TrustedIssuerUserCertificateStore>

@@ -18,6 +18,10 @@ namespace SampleServer
     [DataContract(Namespace = Opc.Ua.Namespaces.OpcUaConfig)]
     public class SampleServerConfiguration
     {
+        #region Private Members
+        private uint m_timerInterval;
+        #endregion
+
         #region Constructors
         /// <summary>
         /// The default constructor
@@ -49,15 +53,11 @@ namespace SampleServer
         /// The delay in seconds to allow a graceful shutdown
         /// </summary>
         [DataMember(Order = 1)]
-        public uint ShutdownDelay
+        public uint TimerInterval
         {
-            get { return m_shutdownDelay; }
-            set { m_shutdownDelay = value; }
+            get { return m_timerInterval; }
+            set { m_timerInterval = value; }
         }
-        #endregion
-
-        #region Private Members
-        private uint m_shutdownDelay;
-        #endregion
+        #endregion     
     }
 }

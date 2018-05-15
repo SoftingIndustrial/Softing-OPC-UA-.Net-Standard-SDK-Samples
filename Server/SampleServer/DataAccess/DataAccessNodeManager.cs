@@ -28,6 +28,8 @@ namespace SampleServer.DataAccess
         private BaseDataVariableState m_lightStatus;
         private AnalogItemState m_motorTemperature;
         private Timer m_simulationTimer;
+
+        private uint m_timerInterval = 1000;
         #endregion
 
         #region Constructors
@@ -36,7 +38,12 @@ namespace SampleServer.DataAccess
         /// </summary>
         public DataAccessNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration, Namespaces.DataAccess)
         {
-            
+            //parse custom configuration extension 
+            SampleServerConfiguration sampleServerConfiguration = configuration.ParseExtension<SampleServerConfiguration>();
+            if (sampleServerConfiguration != null)
+            {
+                m_timerInterval = sampleServerConfiguration.TimerInterval;
+            }
         }
         #endregion
 
@@ -60,7 +67,9 @@ namespace SampleServer.DataAccess
                 AddReference(folder, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
                 CreateRefrigerator(SystemContext, folder);
-                m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
+                
+
+                m_simulationTimer = new Timer(DoSimulation, null, m_timerInterval, m_timerInterval);
             }
         }
         #endregion
@@ -192,6 +201,7 @@ namespace SampleServer.DataAccess
                 Utils.Trace(Utils.TraceMasks.Error, "DataAccess.DataAccessNodeManager.DoSimulation", "Unexpected error doing simulation.", e);
             }
         }
+
 
         private double GetNewValue(double minimum, double maximum)
         {

@@ -65,7 +65,6 @@ namespace SampleServer
         {
             Utils.Trace(Utils.TraceMasks.Information, "SampleServer.CreateMasterNodeManager", "Creating the Node Managers.");
 
-
             List<INodeManager> nodeManagers = new List<INodeManager>();
 
             nodeManagers.Add(new AlarmsNodeManager(server, configuration));

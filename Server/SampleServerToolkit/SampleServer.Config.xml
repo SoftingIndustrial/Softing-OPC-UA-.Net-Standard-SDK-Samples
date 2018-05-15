@@ -139,7 +139,7 @@
     </ServerCapabilities>
   </ServerConfiguration>
 
-  <Extensions>
+  <Extensions>   
     <ua:XmlElement>
       <ServerTookitConfiguration>
         <!-- add here the custom server certificates in this particular order-->
