@@ -175,6 +175,10 @@ namespace SampleServer.DataAccess
             return new ServiceResult(StatusCodes.Good);
         }
 
+        /// <summary>
+        /// Simulate changes in variable nodes
+        /// </summary>
+        /// <param name="state"></param>
         private void DoSimulation(object state)
         {
             try
@@ -202,7 +206,12 @@ namespace SampleServer.DataAccess
             }
         }
 
-
+        /// <summary>
+        /// Generate new value in provided bounds
+        /// </summary>
+        /// <param name="minimum"></param>
+        /// <param name="maximum"></param>
+        /// <returns></returns>
         private double GetNewValue(double minimum, double maximum)
         {
             Random random = new Random();
