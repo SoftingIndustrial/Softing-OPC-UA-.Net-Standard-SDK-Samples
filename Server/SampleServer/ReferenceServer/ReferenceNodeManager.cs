@@ -16,10 +16,11 @@ using System.Threading;
 using System.Xml;
 using Opc.Ua;
 using Opc.Ua.Server;
+using Softing.Opc.Ua.Server;
 
 namespace SampleServer.ReferenceServer
 {
-    public class ReferenceNodeManager : CustomNodeManager2
+    public class ReferenceNodeManager : NodeManager
     {
         #region Private Members
         
@@ -1494,23 +1495,10 @@ namespace SampleServer.ReferenceServer
         /// </summary>
         private FolderState CreateFolder(NodeState parent, string path, string name)
         {
-            FolderState folder = new FolderState(parent);
-
+            FolderState folder = CreateFolder(parent, path);
             folder.SymbolicName = name;
-            folder.ReferenceTypeId = ReferenceTypes.Organizes;
-            folder.TypeDefinitionId = ObjectTypeIds.FolderType;
             folder.NodeId = new NodeId(path, NamespaceIndex);
-            folder.BrowseName = new QualifiedName(path, NamespaceIndex);
             folder.DisplayName = new LocalizedText("en", name);
-            folder.WriteMask = AttributeWriteMask.None;
-            folder.UserWriteMask = AttributeWriteMask.None;
-            folder.EventNotifier = EventNotifiers.None;
-
-            if (parent != null)
-            {
-                parent.AddChild(folder);
-            }
-
             return folder;
         }
 
@@ -2178,38 +2166,15 @@ namespace SampleServer.ReferenceServer
         /// </summary>
         private BaseDataVariableState CreateVariable(NodeState parent, string path, string name, NodeId dataType, int valueRank)
         {
-            BaseDataVariableState variable = new BaseDataVariableState(parent);
-
+            BaseDataVariableState variable = CreateVariable(parent, path, dataType, valueRank);
             variable.SymbolicName = name;
-            variable.ReferenceTypeId = ReferenceTypes.Organizes;
-            variable.TypeDefinitionId = VariableTypeIds.BaseDataVariableType;
             variable.NodeId = new NodeId(path, NamespaceIndex);
-            variable.BrowseName = new QualifiedName(path, NamespaceIndex);
             variable.DisplayName = new LocalizedText("en", name);
             variable.WriteMask = AttributeWriteMask.DisplayName | AttributeWriteMask.Description;
             variable.UserWriteMask = AttributeWriteMask.DisplayName | AttributeWriteMask.Description;
-            variable.DataType = dataType;
-            variable.ValueRank = valueRank;
-            variable.AccessLevel = AccessLevels.CurrentReadOrWrite;
-            variable.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
-            variable.Historizing = false;
             variable.Value = GetNewValue(variable);
             variable.StatusCode = StatusCodes.Good;
             variable.Timestamp = DateTime.UtcNow;
-
-            if (valueRank == ValueRanks.OneDimension)
-            {
-                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> {0});
-            }
-            else if (valueRank == ValueRanks.TwoDimensions)
-            {
-                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> {0, 0});
-            }
-
-            if (parent != null)
-            {
-                parent.AddChild(variable);
-            }
 
             return variable;
         }
