@@ -23,9 +23,9 @@ namespace SampleServer.DataAccess
     public class DataAccessNodeManager : NodeManager
     {
         #region Private Members
-        private BaseDataVariableState m_doorOpened;
-        private BaseDataVariableState m_doorClosed;
-        private BaseDataVariableState m_lightStatus;
+        private DataItemState m_doorOpened;
+        private DataItemState m_doorClosed;
+        private DataItemState m_lightStatus;
         private AnalogItemState m_motorTemperature;
         private Timer m_simulationTimer;
 
@@ -66,8 +66,7 @@ namespace SampleServer.DataAccess
                 FolderState folder = CreateFolder(null, "DataAccess");
                 AddReference(folder, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
-                CreateRefrigerator(SystemContext, folder);
-                
+                CreateRefrigerator(SystemContext, folder);                
 
                 m_simulationTimer = new Timer(DoSimulation, null, m_timerInterval, m_timerInterval);
             }
@@ -84,26 +83,23 @@ namespace SampleServer.DataAccess
         {
             BaseObjectState refrigerator = CreateObject(parent, "Refrigerator");
 
-            parent.AddReference(ReferenceTypeIds.Organizes, false, refrigerator.NodeId);
-            refrigerator.AddReference(ReferenceTypeIds.Organizes, true, parent.NodeId);
-
             // Create CoolingMotorRunning variable
-            BaseDataVariableState coolingMotorRunning = CreateVariable(refrigerator, "CoolingMotorRunning", DataTypeIds.Boolean, ValueRanks.Scalar);
+            DataItemState coolingMotorRunning = CreateDataItemVariable(refrigerator, "CoolingMotorRunning", DataTypes.Boolean);
             coolingMotorRunning.Value = true;
 
             // Create DoorMotor variable
-            BaseDataVariableState doorMotor = CreateVariable(refrigerator, "DoorMotor", DataTypeIds.Double, ValueRanks.Scalar);
+            DataItemState doorMotor = CreateDataItemVariable(refrigerator, "DoorMotor", DataTypes.Double);
             doorMotor.Value = 11.2;
 
             // Create LightStatus variable
-            m_lightStatus = CreateVariable(refrigerator, "LightStatus", DataTypeIds.Boolean, ValueRanks.Scalar);
+            m_lightStatus = CreateDataItemVariable(refrigerator, "LightStatus", DataTypes.Boolean);
             m_lightStatus.Value = true;
 
             // Create DoorClosed variable
-            m_doorClosed = CreateVariable(refrigerator, "DoorClosed", DataTypeIds.Boolean, ValueRanks.Scalar);
+            m_doorClosed = CreateDataItemVariable(refrigerator, "DoorClosed", DataTypes.Boolean);
 
             // Create DoorOpened variable
-            m_doorOpened = CreateVariable(refrigerator, "DoorOpened", DataTypeIds.Boolean, ValueRanks.Scalar);
+            m_doorOpened = CreateDataItemVariable(refrigerator, "DoorOpened", DataTypes.Boolean);
             m_doorOpened.Value = true;
 
             // Create ActualTemperature variable
