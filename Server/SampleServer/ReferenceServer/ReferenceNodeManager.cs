@@ -118,6 +118,7 @@ namespace SampleServer.ReferenceServer
         {
             lock (Lock)
             {
+                // Execute base class CreateAddressSpace
                 base.CreateAddressSpace(externalReferences);
 
                 FolderState root = CreateFolder(null, "CTT");

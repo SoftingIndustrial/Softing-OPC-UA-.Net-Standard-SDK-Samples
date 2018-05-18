@@ -46,11 +46,13 @@ namespace SampleServer.Methods
         {
             lock (Lock)
             {
+                // Execute base class CreateAddressSpace
+                base.CreateAddressSpace(externalReferences);
+
                 // Create a root node and add a reference to external Server Objects Folder
                 FolderState root = CreateFolder(null, "Methods");
-                AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
-
                 root.EventNotifier = EventNotifiers.SubscribeToEvents;
+                AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);               
 
                 #region Create Add Method
                 Argument[] inputArgumentsAdd = new Argument[]
@@ -66,7 +68,6 @@ namespace SampleServer.Methods
 
                 CreateMethod(root, "Add", inputArgumentsAdd, outputArgumentsAdd, OnAddCall);
                 #endregion
-
 
                 #region Create Multiply Method
                 Argument[] inputArgumentsMultiply = new Argument[]
@@ -87,7 +88,7 @@ namespace SampleServer.Methods
 
         #endregion
 
-        #region Private Methods   
+        #region Private Methods - OnCall Event Handlers
         /// <summary>
         /// Handles the method call
         /// </summary>

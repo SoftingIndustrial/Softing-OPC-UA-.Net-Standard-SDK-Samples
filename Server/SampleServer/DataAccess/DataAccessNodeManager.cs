@@ -60,14 +60,16 @@ namespace SampleServer.DataAccess
         {
             lock (Lock)
             {
+                // Execute base class CreateAddressSpace
                 base.CreateAddressSpace(externalReferences);
 
                 // Create a root node and add a reference to external Server Objects Folder
-                FolderState folder = CreateFolder(null, "DataAccess");
-                AddReference(folder, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
+                FolderState root = CreateFolder(null, "DataAccess");
+                AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
-                CreateRefrigerator(SystemContext, folder);                
+                CreateRefrigerator(SystemContext, root);                
 
+                // Initialize timer for data changes simulation
                 m_simulationTimer = new Timer(DoSimulation, null, m_timerInterval, m_timerInterval);
             }
         }

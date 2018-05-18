@@ -13,46 +13,24 @@ using System.Collections.Generic;
 using System.IO;
 using Opc.Ua;
 using Opc.Ua.Server;
+using Softing.Opc.Ua.Server;
+using SampleServer;
 
 namespace SampleServer.UserAuthentication
 {
     /// <summary>
     /// A node manager for a server that exposes several variables
     /// </summary>
-    public class UserAuthenticationNodeManager : CustomNodeManager2
+    public class UserAuthenticationNodeManager : NodeManager
     {
         #region Constructors
         /// <summary>
         /// Initializes the node manager
         /// </summary>
-        public UserAuthenticationNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, global::SampleServer.Namespaces.UserAuthentication)
+        public UserAuthenticationNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration, Namespaces.UserAuthentication)
         {
-            SystemContext.NodeIdFactory = this;
         }
-        #endregion
-        
-        #region IDisposable Members
-        /// <summary>
-        /// An overrideable version of the Dispose
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {  
-            if (disposing)
-            {
-                // TBD
-            }
-        }
-        #endregion
-
-        #region INodeIdFactory Members
-        /// <summary>
-        /// Creates the NodeId for the specified node.
-        /// </summary>
-        public override NodeId New(ISystemContext context, NodeState node)
-        {
-            return node.NodeId;
-        }
-        #endregion
+        #endregion        
 
         #region INodeManager Members
         /// <summary>
@@ -67,51 +45,40 @@ namespace SampleServer.UserAuthentication
         {
             lock (Lock)
             {
-                // Create a object to represent the process being controlled
-                FolderState process = new FolderState(null);
+                // Execute base class CreateAddressSpace
+                base.CreateAddressSpace(externalReferences);
 
-                process.NodeId = new NodeId(1, NamespaceIndex);
-                process.BrowseName = new QualifiedName("UserAuthentication", NamespaceIndex);
-                process.DisplayName = process.BrowseName.Name;
-                process.TypeDefinitionId = ObjectTypeIds.FolderType;
-                process.Description = new LocalizedText("To test user authentication, try to change the value of LogFilePath. Anonymous will not be able to change the value, while an authenticated user can do this.", "en-US");
+                // Create a root node and add a reference to external Server Objects Folder
+                FolderState process = CreateFolder(null, "UserAuthentication");
+                process.Description = new LocalizedText($"To test user authentication, try to change the value of LogFilePath. " +
+                   $"Anonymous will not be able to change the value, while an authenticated user can do this.", "en-US");
 
-                // Ensure the process object can be found via the server object
-                IList<IReference> references = null;
+                AddReference(process, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
-                if (!externalReferences.TryGetValue(ObjectIds.ObjectsFolder, out references))
-                {
-                    externalReferences[ObjectIds.ObjectsFolder] = references = new List<IReference>();
-                }
-
-                process.AddReference(ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder);
-                references.Add(new NodeStateReference(ReferenceTypeIds.Organizes, false, process.NodeId));
+                           
 
                 // A property to report the process state
-                PropertyState<string> state = new PropertyState<string>(process);
-
-                state.NodeId = new NodeId(2, NamespaceIndex);
-                state.BrowseName = new QualifiedName("LogFilePath", NamespaceIndex);
-                state.DisplayName = state.BrowseName.Name;
-                state.TypeDefinitionId = VariableTypeIds.PropertyType;
-                state.ReferenceTypeId = ReferenceTypeIds.HasProperty;
-                state.DataType = DataTypeIds.String;
-                state.ValueRank = ValueRanks.Scalar;
+                PropertyState<string> state = CreateProperty<string>(process, "LogFilePath");               
                 state.AccessLevel = AccessLevels.CurrentReadOrWrite;
                 state.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
                 state.Value = ".\\Log.txt";
 
-                process.AddChild(state);
-                
-                state.OnReadUserAccessLevel = OnReadUserAccessLevel;
                 state.OnSimpleWriteValue = OnWriteValue;
-
-                // Save in dictionary
-                AddPredefinedNode(SystemContext, process);
+                state.OnReadUserAccessLevel = OnReadUserAccessLevel;               
             } 
         }
 
-        public ServiceResult OnWriteValue(ISystemContext context, NodeState node, ref object value)
+        #endregion
+
+        #region PropertyState - Event Handlers
+        /// <summary>
+        /// Handler for OnWriteValue event of PropertyState node 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="node"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private ServiceResult OnWriteValue(ISystemContext context, NodeState node, ref object value)
         {
             if (context.UserIdentity == null || context.UserIdentity.TokenType == UserTokenType.Anonymous)
             {
@@ -156,7 +123,14 @@ namespace SampleServer.UserAuthentication
             return ServiceResult.Good;
         }
 
-        public ServiceResult OnReadUserAccessLevel(ISystemContext context, NodeState node, ref byte value)
+        /// <summary>
+        /// Handler for OnReadUserAccessLevel event of PropertyState node 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="node"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private ServiceResult OnReadUserAccessLevel(ISystemContext context, NodeState node, ref byte value)
         {
             if (context.UserIdentity == null || context.UserIdentity.TokenType == UserTokenType.Anonymous)
             {
@@ -168,67 +142,6 @@ namespace SampleServer.UserAuthentication
             }
 
             return ServiceResult.Good;
-        }
-
-        /// <summary>
-        /// Frees any resources allocated for the address space
-        /// </summary>
-        public override void DeleteAddressSpace()
-        {
-            lock (Lock)
-            {
-                // TBD
-            }
-        }
-
-        /// <summary>
-        /// Returns a unique handle for the node
-        /// </summary>
-        protected override NodeHandle GetManagerHandle(ServerSystemContext context, NodeId nodeId, IDictionary<NodeId, NodeState> cache)
-        {
-            lock (Lock)
-            {
-                // Quickly exclude nodes that are not in the namespace 
-                if (!IsNodeIdInNamespace(nodeId))
-                {
-                    return null;
-                }
-
-                NodeState node = null;
-
-                if (!PredefinedNodes.TryGetValue(nodeId, out node))
-                {
-                    return null;
-                }
-
-                NodeHandle handle = new NodeHandle();
-
-                handle.NodeId = nodeId;
-                handle.Node = node;
-                handle.Validated = true;
-
-                return handle;
-            } 
-        }
-
-        /// <summary>
-        /// Verifies that the specified node exists
-        /// </summary>
-        protected override NodeState ValidateNode(ServerSystemContext context, NodeHandle handle, IDictionary<NodeId, NodeState> cache)
-        {
-            // Not valid if no root
-            if (handle == null)
-            {
-                return null;
-            }
-
-            // Check if previously validated
-            if (handle.Validated)
-            {
-                return handle.Node;
-            }
-
-            return null;
         }
         #endregion
     }
