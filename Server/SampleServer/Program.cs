@@ -22,25 +22,16 @@ namespace SampleServer
         }
 
         private static async void StartServer()
-        {
-            ApplicationInstance application = new ApplicationInstance();
-            application.ApplicationType = ApplicationType.Server;
+        {           
             string configurationFile = "SampleServer.Config.xml";
-
+            SampleServer sampleServer = new SampleServer();
             try
-            {
-                // Load the application configuration
-                await application.LoadApplicationConfiguration(configurationFile, false);
-
-                // Check the application certificate
-                await application.CheckApplicationInstanceCertificate(false, 0);
-                application.ApplicationConfiguration.CertificateValidator.CertificateValidation += CertificateValidator_CertificateValidation;
+            {       
                 // Start the server
-                await application.Start(new SampleServer());
-
-                for (int i = 0; i < application.ApplicationConfiguration.ServerConfiguration.BaseAddresses.Count; i++)
+                await sampleServer.Start(configurationFile);
+                for (int i = 0; i < sampleServer.Configuration.ServerConfiguration.BaseAddresses.Count; i++)
                 {
-                    Console.WriteLine(application.ApplicationConfiguration.ServerConfiguration.BaseAddresses[i]);
+                    Console.WriteLine(sampleServer.Configuration.ServerConfiguration.BaseAddresses[i]);
                 }
                 Console.WriteLine("Server started");
                 Console.WriteLine("Press:\n\tx,q: shutdown the server\n\n");
@@ -63,13 +54,8 @@ namespace SampleServer
             }
             finally
             {
-                application.Stop();
+                sampleServer.Stop();
             }
-        }
-
-        private static void CertificateValidator_CertificateValidation(CertificateValidator sender, CertificateValidationEventArgs e)
-        {
-            e.Accept = true;
         }
     }
 }
