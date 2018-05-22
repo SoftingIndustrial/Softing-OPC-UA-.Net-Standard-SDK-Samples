@@ -17,6 +17,9 @@ using Opc.Ua;
 
 namespace SampleServer.HistoricalDataAccess
 {
+    /// <summary>
+    /// Saple implementation of a histtorical data access node manager
+    /// </summary>
     class SampleHDANodeManager : HistoricalDataAccessNodeManager
     {
         #region Private Members
@@ -25,6 +28,11 @@ namespace SampleServer.HistoricalDataAccess
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// Create new instance of SampleHDANodeManager
+        /// </summary>
+        /// <param name="server"></param>
+        /// <param name="configuration"></param>
         public SampleHDANodeManager(IServerInternal server, ApplicationConfiguration configuration): base(server, configuration, Namespaces.HistoricalDataAccess)
         {
             m_simulatedNodes = new List<ArchiveItemState>();
@@ -32,53 +40,29 @@ namespace SampleServer.HistoricalDataAccess
         #endregion
 
         #region Overridden Methods
+        /// <summary>
+        /// Create address space for current node manager
+        /// Invoked during the initialisation of the address space.
+        /// </summary>
+        /// <param name="externalReferences"></param>
         public override void CreateAddressSpace(IDictionary<NodeId, IList<IReference>> externalReferences)
         {
             base.CreateAddressSpace(externalReferences);
 
             try
             {
-                // Create the root folder
-                FolderState root = new FolderState(null);
-
-                root.NodeId = new NodeId("HistoricalDataAccess", NamespaceIndex);
-                root.BrowseName = new QualifiedName("HistoricalDataAccess", NamespaceIndex);
-                root.DisplayName = root.BrowseName.Name;
-                root.TypeDefinitionId = ObjectTypeIds.FolderType;
-
-                // Ensure root can be found via the Objects object
-                IList<IReference> references = null;
-                if(!externalReferences.TryGetValue(ObjectIds.ObjectsFolder, out references))
-                {
-                    externalReferences[ObjectIds.ObjectsFolder] = references = new List<IReference>();
-                }
-
-                root.AddReference(ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder);
-                references.Add(new NodeStateReference(ReferenceTypeIds.Organizes, false, root.NodeId));
-
-                // Save the node for later lookup
-                AddPredefinedNode(SystemContext, root);
+                // Create a root node and add a reference to external Server Objects Folder
+                FolderState root = CreateFolder(null, "HistoricalDataAccess");
+                AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);                
 
                 // Historical Access
-                FolderState dynamicHistoricals = new FolderState(null);
-                dynamicHistoricals.NodeId = new NodeId("DynamicHistoricalDataItems", NamespaceIndex);
-                dynamicHistoricals.BrowseName = new QualifiedName("DynamicHistoricalDataItems", NamespaceIndex);
-                dynamicHistoricals.DisplayName = dynamicHistoricals.BrowseName.Name;
-                dynamicHistoricals.TypeDefinitionId = ObjectTypeIds.FolderType;
-                root.AddReference(ReferenceTypeIds.Organizes, false, dynamicHistoricals.NodeId);
-                dynamicHistoricals.AddReference(ReferenceTypeIds.Organizes, true, root.NodeId);
-                AddPredefinedNode(SystemContext, dynamicHistoricals);
+                FolderState dynamicHistoricals = CreateFolder(root, "DynamicHistoricalDataItems");
+              //  AddReference(dynamicHistoricals, ReferenceTypeIds.Organizes, true, dynamicHistoricals.NodeId, true);
 
                 CreateDynamicHistoricalVariables(dynamicHistoricals);
 
-                FolderState staticHistoricals = new FolderState(null);
-                staticHistoricals.NodeId = new NodeId("StaticHistoricalDataItems", NamespaceIndex);
-                staticHistoricals.BrowseName = new QualifiedName("StaticHistoricalDataItems", NamespaceIndex);
-                staticHistoricals.DisplayName = staticHistoricals.BrowseName.Name;
-                staticHistoricals.TypeDefinitionId = ObjectTypeIds.FolderType;
-                root.AddReference(ReferenceTypeIds.Organizes, false, staticHistoricals.NodeId);
-                staticHistoricals.AddReference(ReferenceTypeIds.Organizes, true, root.NodeId);
-                AddPredefinedNode(SystemContext, staticHistoricals);
+                FolderState staticHistoricals = CreateFolder(root, "StaticHistoricalDataItems");
+               // AddReference(root, ReferenceTypeIds.Organizes, true, staticHistoricals.NodeId, true);
 
                 CreateStaticHistoricalVariables(staticHistoricals);
 
@@ -93,70 +77,59 @@ namespace SampleServer.HistoricalDataAccess
         #endregion
 
         #region Private Methods
+        /// <summary>
+        /// Create a set of statc historical variables and add them to the porovided root node
+        /// </summary>
+        /// <param name="root"></param>
         private void CreateStaticHistoricalVariables(BaseObjectState root)
         {
             // Historian nodes
             ArchiveItem itemHistorian1 = new ArchiveItem("StaticHistoricalDataItem_Historian1", new FileInfo(Path.Combine("HistoricalDataAccess","Data","Sample","Historian1.txt")));
             ArchiveItemState nodeHistorian1 = new ArchiveItemState(SystemContext, itemHistorian1, NamespaceIndex);
-            nodeHistorian1.ReloadFromSource(SystemContext);
-
-            root.AddReference(ReferenceTypeIds.Organizes, false, nodeHistorian1.NodeId);
-            nodeHistorian1.AddReference(ReferenceTypeIds.Organizes, true, root.NodeId);
-
+            nodeHistorian1.ReloadFromSource(SystemContext);   
             AddPredefinedNode(SystemContext, nodeHistorian1);
-
+            AddReference(root, ReferenceTypeIds.Organizes, false, nodeHistorian1.NodeId, true);
 
             ArchiveItem itemHistorian2 = new ArchiveItem("StaticHistoricalDataItem_Historian2", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "Historian2.txt")));
             ArchiveItemState nodeHistorian2 = new ArchiveItemState(SystemContext, itemHistorian2, NamespaceIndex);
-            nodeHistorian2.ReloadFromSource(SystemContext);
-
-            root.AddReference(ReferenceTypeIds.Organizes, false, nodeHistorian2.NodeId);
-            nodeHistorian2.AddReference(ReferenceTypeIds.Organizes, true, root.NodeId);
-
+            nodeHistorian2.ReloadFromSource(SystemContext);            
             AddPredefinedNode(SystemContext, nodeHistorian2);
-
+            AddReference(root, ReferenceTypeIds.Organizes, false, nodeHistorian2.NodeId, true);
 
             ArchiveItem itemHistorian3 = new ArchiveItem("StaticHistoricalDataItem_Historian3", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "Historian3.txt")));
             ArchiveItemState nodeHistorian3 = new ArchiveItemState(SystemContext, itemHistorian3, NamespaceIndex);
             nodeHistorian3.ReloadFromSource(SystemContext);
-
-            root.AddReference(ReferenceTypeIds.Organizes, false, nodeHistorian3.NodeId);
-            nodeHistorian3.AddReference(ReferenceTypeIds.Organizes, true, root.NodeId);
-
             AddPredefinedNode(SystemContext, nodeHistorian3);
-
+            AddReference(root, ReferenceTypeIds.Organizes, false, nodeHistorian3.NodeId, true);
 
             ArchiveItem itemHistorian4 = new ArchiveItem("StaticHistoricalDataItem_Historian4", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "Historian4.txt")));
             ArchiveItemState nodeHistorian4 = new ArchiveItemState(SystemContext, itemHistorian4, NamespaceIndex);
             nodeHistorian4.ReloadFromSource(SystemContext);
-
-            root.AddReference(ReferenceTypeIds.Organizes, false, nodeHistorian4.NodeId);
-            nodeHistorian4.AddReference(ReferenceTypeIds.Organizes, true, root.NodeId);
-
             AddPredefinedNode(SystemContext, nodeHistorian4);
+            AddReference(root, ReferenceTypeIds.Organizes, false, nodeHistorian4.NodeId, true);
         }
 
+        /// <summary>
+        /// Create a set of dynamic histyorical variables and add them to the provided root node
+        /// </summary>
+        /// <param name="root"></param>
         private void CreateDynamicHistoricalVariables(BaseObjectState root)
         {
             // Historian nodes
-            ArchiveItem itemDouble = new ArchiveItem("StaticHistoricalDataItem_Double", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Dynamic", "Double.txt")));
+            ArchiveItem itemDouble = new ArchiveItem("DynamicHistoricalDataItem_Double", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Dynamic", "Double.txt")));
             ArchiveItemState nodeDouble = new ArchiveItemState(SystemContext, itemDouble, NamespaceIndex);
-            nodeDouble.ReloadFromSource(SystemContext);
-
-            root.AddReference(ReferenceTypeIds.Organizes, false, nodeDouble.NodeId);
-            nodeDouble.AddReference(ReferenceTypeIds.Organizes, true, root.NodeId);
-
+            nodeDouble.ReloadFromSource(SystemContext);   
             AddPredefinedNode(SystemContext, nodeDouble);
+            AddReference(root, ReferenceTypeIds.Organizes, false, nodeDouble.NodeId, true);
+
             m_simulatedNodes.Add(nodeDouble);
 
-            ArchiveItem itemInt32 = new ArchiveItem("StaticHistoricalDataItem_Int32", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Dynamic", "Int32.txt")));
+            ArchiveItem itemInt32 = new ArchiveItem("DynamicHistoricalDataItem_Int32", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Dynamic", "Int32.txt")));
             ArchiveItemState nodeInt32 = new ArchiveItemState(SystemContext, itemInt32, NamespaceIndex);
-            nodeInt32.ReloadFromSource(SystemContext);
-
-            root.AddReference(ReferenceTypeIds.Organizes, false, nodeInt32.NodeId);
-            nodeInt32.AddReference(ReferenceTypeIds.Organizes, true, root.NodeId);
-
+            nodeInt32.ReloadFromSource(SystemContext);     
             AddPredefinedNode(SystemContext, nodeInt32);
+            AddReference(root, ReferenceTypeIds.Organizes, false, nodeInt32.NodeId, true);
+
             m_simulatedNodes.Add(nodeInt32);
         }
 

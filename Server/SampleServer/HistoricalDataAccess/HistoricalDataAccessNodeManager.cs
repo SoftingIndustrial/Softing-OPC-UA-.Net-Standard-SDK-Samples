@@ -14,10 +14,11 @@ using System.Data;
 using System.Text;
 using Opc.Ua.Server;
 using Opc.Ua;
+using Softing.Opc.Ua.Server;
 
 namespace SampleServer.HistoricalDataAccess
 {
-    public abstract class HistoricalDataAccessNodeManager : CustomNodeManager2
+    public abstract class HistoricalDataAccessNodeManager : NodeManager
     {
         #region Constructor
         /// <summary>
@@ -25,7 +26,6 @@ namespace SampleServer.HistoricalDataAccess
         /// </summary>
         protected HistoricalDataAccessNodeManager(IServerInternal server, ApplicationConfiguration configuration, params string[] namespaceUris) : base(server, configuration, namespaceUris)
         {
-            SystemContext.NodeIdFactory = this;
         }
         #endregion
         
@@ -68,12 +68,20 @@ namespace SampleServer.HistoricalDataAccess
 
                 return new NodeId(buffer.ToString(), instance.Parent.NodeId.NamespaceIndex);
             }
-
-            return node.NodeId;
+            if (node != null && node.BrowseName != null)
+            {
+                return new NodeId(node.BrowseName.Name, NamespaceIndex);
+            }
+            return base.New(context, node);
         }
         #endregion
 
         #region Public Methods - Overrides
+        /// <summary>
+        /// Create address space for current node manager
+        /// Invoked during the initialisation of the address space.
+        /// </summary>
+        /// <param name="externalReferences"></param>
         public override void CreateAddressSpace(IDictionary<NodeId, IList<IReference>> externalReferences)
         {
             base.CreateAddressSpace(externalReferences);

@@ -7,8 +7,7 @@
  * http://www.softing.com/LicenseSIA.pdf
  * 
  * ======================================================================*/
-
-using System;
+ 
 using System.Collections.Generic;
 using Opc.Ua;
 using Opc.Ua.Server;
@@ -20,12 +19,6 @@ namespace SampleServer.NodeManagement
     /// </summary>
     class DynamicASNodeManager : NodeManagementNodeManager
     {
-        #region Private Members
-
-        private uint m_nextNodeId;
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -33,19 +26,6 @@ namespace SampleServer.NodeManagement
         /// </summary>
         public DynamicASNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration)
         {
-            SystemContext.NodeIdFactory = this;
-        }
-
-        #endregion
-
-        #region INodeIdFactory Members
-
-        /// <summary>
-        /// Creates the NodeId for the specified node.
-        /// </summary>
-        public override NodeId New(ISystemContext context, NodeState node)
-        {
-            return GenerateNodeId();
         }
 
         #endregion
@@ -64,177 +44,49 @@ namespace SampleServer.NodeManagement
         {
             lock (Lock)
             {
-                // Create the root of the node manager in the AddressSpace
-                FolderState root = new FolderState(null);
-
-                // Set root object data 
-                root.NodeId = GenerateNodeId();
-                root.BrowseName = new QualifiedName("NodeManagement", NamespaceIndex);
-                root.DisplayName = root.BrowseName.Name;
+                // Create a root node and add a reference to external Server Objects Folder
+                FolderState root = CreateFolder(null, "NodeManagement");
                 root.Description = "UA Node Management Server Root";
-                root.TypeDefinitionId = ObjectTypeIds.FolderType;
-
-                // Ensure the process object can be found via the server object. 
-                IList<IReference> references;
-                if (!externalReferences.TryGetValue(ObjectIds.ObjectsFolder, out references))
-                {
-                    externalReferences[ObjectIds.ObjectsFolder] = references = new List<IReference>();
-                }
-
-                root.AddReference(ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder);
-                references.Add(new NodeStateReference(ReferenceTypeIds.Organizes, false, root.NodeId));
-
+                AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
+                
+                
                 // Add some initial nodes
-                FolderState node1 = AddFolder(root, "Node1");
+                FolderState node1 = CreateFolder(root, "Node1");
 
-                FolderState node11 = AddFolder(node1, "Node1_1");
-                AddVariable(node11, "Variable1_1_1", BuiltInType.Int32, ValueRanks.Scalar);
+                FolderState node11 = CreateFolder(node1, "Node1_1");
+                AddVariable(node11, "Variable1_1_1", BuiltInType.Int32);
 
-                FolderState node12 = AddFolder(node1, "Node1_2");
-                AddVariable(node12, "Variable1_2_1", BuiltInType.Int32, ValueRanks.Scalar);
+                FolderState node12 = CreateFolder(node1, "Node1_2");
+                AddVariable(node12, "Variable1_2_1", BuiltInType.Int32);
 
-                FolderState node13 = AddFolder(node1, "Node1_3");
-                AddVariable(node13, "Variable1_3_1", BuiltInType.Int32, ValueRanks.Scalar);
-                AddVariable(node13, "Variable1_3_2", BuiltInType.Int32, ValueRanks.Scalar);
-
-                // Save the node for later lookup (all tightly coupled children are added with this call)
-                AddPredefinedNode(SystemContext, root);
+                FolderState node13 = CreateFolder(node1, "Node1_3");
+                AddVariable(node13, "Variable1_3_1", BuiltInType.Int32);
+                AddVariable(node13, "Variable1_3_2", BuiltInType.Int32);
+                
             }
-        }
-
-        /// <summary>
-        /// Creates a new folder and adds it to the specified parent
-        /// </summary>
-        private FolderState AddFolder(NodeState parent, string name)
-        {
-            FolderState folder = new FolderState(parent);
-
-            folder.NodeId = GenerateNodeId();
-            folder.BrowseName = new QualifiedName(name, NamespaceIndex);
-            folder.DisplayName = folder.BrowseName.Name;
-            folder.Description = String.Empty;
-            folder.EventNotifier = EventNotifiers.None;
-
-            folder.ReferenceTypeId = ReferenceTypes.Organizes;
-            folder.TypeDefinitionId = ObjectTypeIds.FolderType;
-
-            if (parent != null)
-            {
-                parent.AddChild(folder);
-
-                parent.AddReference(ReferenceTypeIds.Organizes, false, folder.NodeId);
-                folder.AddReference(ReferenceTypeIds.Organizes, true, parent.NodeId);
-            }
-
-            return folder;
-        }
+        }        
 
         /// <summary>
         /// Creates a new variable and adds it to the specified parent.
         /// </summary>
-        private void AddVariable(NodeState parent, string name, BuiltInType dataType, int valueRank)
+        private void AddVariable(NodeState parent, string name, BuiltInType dataType, int valueRank = ValueRanks.Scalar)
         {
-            BaseDataVariableState variable = new BaseDataVariableState(parent);
-
-            variable.NodeId = GenerateNodeId();
-            variable.BrowseName = new QualifiedName(name, NamespaceIndex);
-            variable.DisplayName = variable.BrowseName.Name;
-            variable.Description = String.Empty;
-            variable.Value = new Variant(0);
-            variable.DataType = (uint) dataType;
-            variable.ValueRank = valueRank;
-            variable.AccessLevel = AccessLevels.CurrentReadOrWrite;
-            variable.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
-            variable.Historizing = false;
+            BaseDataVariableState variable = CreateVariable(parent, name, (uint)dataType, valueRank);
+            
             variable.WriteMask = AttributeWriteMask.DisplayName | AttributeWriteMask.Description;
-            variable.UserWriteMask = AttributeWriteMask.DisplayName | AttributeWriteMask.Description;
-
-            variable.ReferenceTypeId = ReferenceTypes.Organizes;
-            variable.TypeDefinitionId = VariableTypeIds.BaseDataVariableType;
-
-            variable.StatusCode = StatusCodes.Good;
-            variable.Timestamp = DateTime.UtcNow;
-
-            if (parent != null)
-            {
-                parent.AddChild(variable);
-
-                parent.AddReference(ReferenceTypeIds.Organizes, false, variable.NodeId);
-                variable.AddReference(ReferenceTypeIds.Organizes, true, parent.NodeId);
-            }
-        }
-
-        /// <summary>
-        /// Frees any resources allocated for the address space.
-        /// </summary>
-        public override void DeleteAddressSpace()
-        {
-            lock (Lock)
-            {
-                // TBD
-            }
-        }
-
-        /// <summary>
-        /// Returns a unique handle for the node.
-        /// </summary>
-        protected override NodeHandle GetManagerHandle(ServerSystemContext context, NodeId nodeId, IDictionary<NodeId, NodeState> cache)
-        {
-            lock (Lock)
-            {
-                // Quickly exclude nodes that are not in the namespace
-                if (!IsNodeIdInNamespace(nodeId))
-                {
-                    return null;
-                }
-
-                NodeState node = null;
-
-                if (PredefinedNodes != null && !PredefinedNodes.TryGetValue(nodeId, out node))
-                {
-                    return null;
-                }
-
-                NodeHandle handle = new NodeHandle();
-
-                handle.NodeId = nodeId;
-                handle.Node = node;
-                handle.Validated = true;
-
-                return handle;
-            }
-        }
-
-        /// <summary>
-        /// Verifies that the specified node exists.
-        /// </summary>
-        protected override NodeState ValidateNode(ServerSystemContext context, NodeHandle handle, IDictionary<NodeId, NodeState> cache)
-        {
-            // Not valid if no root
-            if (handle == null)
-            {
-                return null;
-            }
-
-            // Check if previously validated
-            if (handle.Validated)
-            {
-                return handle.Node;
-            }
-
-            return null;
-        }
-
-        private NodeId GenerateNodeId()
-        {
-            return new NodeId(++m_nextNodeId, NamespaceIndex);
+            variable.UserWriteMask = AttributeWriteMask.DisplayName | AttributeWriteMask.Description;                       
         }
 
         #endregion
 
         #region NodeManagement Methods
 
-        // Validates an AddNodesItem request
+        /// <summary>
+        /// Validates an AddNodesItem request
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="nodeToAdd"></param>
+        /// <returns></returns>
         public override ServiceResult ValidateAddNodeRequest(OperationContext context, AddNodesItem nodeToAdd)
         {
             if (context.UserIdentity == null || context.UserIdentity.TokenType == UserTokenType.Anonymous)
@@ -263,7 +115,12 @@ namespace SampleServer.NodeManagement
             return ServiceResult.Good;
         }
 
-        // Validates a DeleteNodesItem request
+        /// <summary>
+        /// Validates a DeleteNodesItem request
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="nodeToDelete"></param>
+        /// <returns></returns>
         public override ServiceResult ValidateDeleteNodesRequest(OperationContext context, DeleteNodesItem nodeToDelete)
         {
             if (context.UserIdentity == null || context.UserIdentity.TokenType == UserTokenType.Anonymous)
@@ -277,7 +134,12 @@ namespace SampleServer.NodeManagement
             return ServiceResult.Good;
         }
 
-        // Validates an AddReferencesItem request
+        /// <summary>
+        /// Validates an AddReferencesItem request
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="referenceToAdd"></param>
+        /// <returns></returns>
         public override ServiceResult ValidateAddReferencesRequest(OperationContext context, AddReferencesItem referenceToAdd)
         {
             if (context.UserIdentity == null || context.UserIdentity.TokenType == UserTokenType.Anonymous)
@@ -291,7 +153,12 @@ namespace SampleServer.NodeManagement
             return ServiceResult.Good;
         }
 
-        // Validates a DeleteReferencesItem request
+        /// <summary>
+        /// Validates a DeleteReferencesItem request
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="referenceToDelete"></param>
+        /// <returns></returns>
         public override ServiceResult ValidateDeleteReferencesRequest(OperationContext context, DeleteReferencesItem referenceToDelete)
         {
             if (context.UserIdentity == null || context.UserIdentity.TokenType == UserTokenType.Anonymous)

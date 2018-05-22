@@ -12,13 +12,14 @@ using System;
 using System.Collections.Generic;
 using Opc.Ua;
 using Opc.Ua.Server;
+using Softing.Opc.Ua.Server;
 
 namespace SampleServer.NodeManagement
 {
     /// <summary>
     /// A node manager for a server that manages the NodeManagement Service Set
     /// </summary>
-    public class NodeManagementNodeManager : CustomNodeManager2
+    public class NodeManagementNodeManager : NodeManager
     {
         #region Constructors
 
@@ -27,41 +28,19 @@ namespace SampleServer.NodeManagement
         /// </summary>
         public NodeManagementNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration, Namespaces.NodeManagement)
         {
-            SystemContext.NodeIdFactory = this;
         }
 
-        #endregion
-
-        #region IDisposable Members
-
-        /// <summary>
-        /// An overrideable version of the Dispose.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                // TBD
-            }
-        }
-
-        #endregion
-
-        #region INodeIdFactory Members
-
-        /// <summary>
-        /// Creates the NodeId for the specified node.
-        /// </summary>
-        public override NodeId New(ISystemContext context, NodeState node)
-        {
-            return node.NodeId;
-        }
-
-        #endregion
+        #endregion       
 
         #region AddNodes Service
 
+        /// <summary>
         /// Handle AddNodes service request
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="nodesToAdd"></param>
+        /// <param name="results"></param>
+        /// <param name="diagnosticInfos"></param>
         public void AddNodes(OperationContext context, AddNodesItemCollection nodesToAdd, out AddNodesResultCollection results, out DiagnosticInfoCollection diagnosticInfos)
         {
             // Validate nodesToAdd parameter
@@ -89,7 +68,13 @@ namespace SampleServer.NodeManagement
             }
         }
 
-        // Validates the AddNode request and adds the node in the address space
+        /// <summary>
+        /// Validates the AddNode request and adds the node in the address space
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="nodeToAdd"></param>
+        /// <param name="result"></param>
+        /// <param name="diagnosticInfo"></param>
         private void AddNode(OperationContext context, AddNodesItem nodeToAdd, out AddNodesResult result, out DiagnosticInfo diagnosticInfo)
         {
             result = new AddNodesResult();
@@ -166,7 +151,12 @@ namespace SampleServer.NodeManagement
             }
         }
 
-        // Validates if an AddNodesItem request structure respects the specification of the AddNodes service
+        /// <summary>
+        ///  Validates if an AddNodesItem request structure respects the specification of the AddNodes service
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="nodeToAdd"></param>
+        /// <returns></returns>
         private ServiceResult ValidateAddNodesItem(OperationContext context, AddNodesItem nodeToAdd)
         {
             // Check parentNodeId
@@ -231,7 +221,12 @@ namespace SampleServer.NodeManagement
             return ServiceResult.Good;
         }
 
-        // Validates an AddNodesItem request
+        /// <summary>
+        /// Validates an AddNodesItem request
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="nodeToAdd"></param>
+        /// <returns></returns>
         public virtual ServiceResult ValidateAddNodeRequest(OperationContext context, AddNodesItem nodeToAdd)
         {
             // Return BadNotSupported
@@ -239,7 +234,12 @@ namespace SampleServer.NodeManagement
             return new ServiceResult(StatusCodes.BadNotSupported, "Server does not allow nodes to be added by client.");
         }
 
-        // Creates an object node according to AddNodes operation request
+        /// <summary>
+        /// Creates an object node according to AddNodes operation request
+        /// </summary>
+        /// <param name="nodeToAdd"></param>
+        /// <param name="parentNode"></param>
+        /// <returns></returns>
         private NodeId AddObject(AddNodesItem nodeToAdd, NodeState parentNode)
         {
             // Check NodeAttributes
@@ -330,7 +330,12 @@ namespace SampleServer.NodeManagement
             return objectToAdd.NodeId;
         }
 
-        // Creates a variable node according to AddNodes operation request
+        /// <summary>
+        /// Creates a variable node according to AddNodes operation request
+        /// </summary>
+        /// <param name="nodeToAdd"></param>
+        /// <param name="parentNode"></param>
+        /// <returns></returns>
         private NodeId AddVariable(AddNodesItem nodeToAdd, NodeState parentNode)
         {
             // Check NodeAttributes
