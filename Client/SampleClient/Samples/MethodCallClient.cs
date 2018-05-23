@@ -61,7 +61,7 @@ namespace SampleClient.Samples
 
             //Browse Path: Root\Objects\Server\Methods\Add
             string methodPath = "Root\\Objects\\Server\\Methods\\Add";
-            NodeId methodId = new NodeId("ns=5;s=Add");
+            NodeId methodId = new NodeId("ns=5;i=2");
 
             /*initialize input arguments*/
             float arg1 = 123.123f;
@@ -109,7 +109,7 @@ namespace SampleClient.Samples
             NodeId parentObjectId = new NodeId(1, 5);
             //Browse Path: Root\Objects\Server\Methods\Multiply
             string methodPath = "Root\\Objects\\Server\\Methods\\Multiply";
-            NodeId methodId = new NodeId("ns=5;s=Multiply");
+            NodeId methodId = new NodeId("ns=5;i=5");
 
             /*initialize input arguments*/
             Int16 arg1 = -34;
