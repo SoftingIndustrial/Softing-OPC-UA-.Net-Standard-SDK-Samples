@@ -62,6 +62,7 @@ namespace SampleServer.Alarms
 
                 // Add a folder representing the monitored device.
                 BaseObjectState machine = CreateObject(root, "Machine A");
+                machine.EventNotifier = EventNotifiers.SubscribeToEvents;
 
                 // Create an alarm monitor for a temperature sensor 1.
                 CreateExclusiveLimitMonitor(
