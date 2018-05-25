@@ -39,7 +39,6 @@ namespace SampleServer.ReferenceServer
         /// </summary>
         public ReferenceNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration, Namespaces.ReferenceApplications)
         {
-            SystemContext.NodeIdFactory = this;
             m_usedIdentifiers = new Dictionary<string, int>();
             m_dynamicNodes = new List<BaseDataVariableState>();
         }

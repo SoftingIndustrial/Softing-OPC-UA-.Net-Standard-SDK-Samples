@@ -26,7 +26,6 @@ namespace SampleServer.HistoricalDataAccess
         /// </summary>
         public SampleHDANodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration, Namespaces.HistoricalDataAccess)
         {
-            SystemContext.NodeIdFactory = this;
         }
 
         #endregion      

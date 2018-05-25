@@ -31,7 +31,6 @@ namespace SampleServer.NodeSetImport
         /// </summary>
         public NodeSetImportNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration, Namespaces.Refrigerators)
         {
-            SystemContext.NodeIdFactory = this;
         }
         #endregion
 
