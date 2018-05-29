@@ -33,11 +33,11 @@ namespace XamarinSampleClient.ViewModels
     {
         #region Private fields
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Int32
-        const string StaticInt32NodeId = "ns=7;s=Scalar_Static_Int32";
+        const string StaticInt32NodeId = "ns=7;s=CTT_Scalar_Scalar_Static_Int32";
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Guid
-        const string StaticGuidNodeId = "ns=7;s=Scalar_Static_Guid";
+        const string StaticGuidNodeId = "ns=7;s=CTT_Scalar_Scalar_Static_Guid";
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\DateTime 
-        const string StaticDateTimeNodeId = "ns=7;s=Scalar_Static_DateTime";
+        const string StaticDateTimeNodeId = "ns=7;s=CTT_Scalar_Scalar_Static_DateTime";
 
         private Random m_random = new Random();
         private const string SessionName = "ReadWriteClient Session";
@@ -92,7 +92,7 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         public string UInt32NodeId
         {
-            get { return "ns=7;s=Scalar_Static_UInt32"; }
+            get { return "ns=7;s=CTT_Scalar_Scalar_Static_UInt32"; }
         }
         /// <summary>
         /// Node id for ObjectIds.Server node
@@ -108,7 +108,7 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         public string Int64ArrayNodeId
         {
-            get { return "ns=7;s=Scalar_Static_Arrays_Int64"; }
+            get { return "ns=7;s=CTT_Scalar_Scalar_Static_Arrays_Int64"; }
         }
 
         /// <summary>

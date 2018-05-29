@@ -30,16 +30,16 @@ namespace SampleClient.Samples
         private readonly Random m_random = new Random();
 
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Int32
-        const string StaticInt32NodeId = "ns=7;s=Scalar_Static_Int32";
+        const string StaticInt32NodeId = "ns=7;s=CTT_Scalar_Scalar_Static_Int32";
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\UInt32
-        const string StaticUInt32NodeId = "ns=7;s=Scalar_Static_UInt32";
+        const string StaticUInt32NodeId = "ns=7;s=CTT_Scalar_Scalar_Static_UInt32";
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Guid
-        const string StaticGuidNodeId = "ns=7;s=Scalar_Static_Guid";
+        const string StaticGuidNodeId = "ns=7;s=CTT_Scalar_Scalar_Static_Guid";
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\DateTime 
-        const string StaticDateTimeNodeId = "ns=7;s=Scalar_Static_DateTime";
+        const string StaticDateTimeNodeId = "ns=7;s=CTT_Scalar_Scalar_Static_DateTime";
 
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Arrays\Int64
-        const string StaticInt64ArrayNodeId = "ns=7;s=Scalar_Static_Arrays_Int64";
+        const string StaticInt64ArrayNodeId = "ns=7;s=CTT_Scalar_Scalar_Static_Arrays_Int64";
         //Browse path: Root\Objects\CTT\StructuredTypeVariables\EnumerationType1Variable
         const string StaticEnumNodeId = "ns=7;i=14";
         //Browse path: Root\Objects\CTT\StructuredTypeVariables\DataType5Variable
