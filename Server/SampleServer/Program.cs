@@ -11,6 +11,7 @@
 using System;
 using Opc.Ua;
 using Opc.Ua.Configuration;
+using Softing.Opc.Ua.Server.Private;
 
 namespace SampleServer
 {
@@ -22,11 +23,21 @@ namespace SampleServer
         }
 
         private static async void StartServer()
-        {           
+        {
             string configurationFile = "SampleServer.Config.xml";
             SampleServer sampleServer = new SampleServer();
             try
-            {       
+            {
+                bool result = true;
+                // TODO - design time license activation
+                // Fill in your design time license activation keys here
+                //result = License.ActivateLicense(LicenseFeature.Server, "XXXX-XXXX-XXXX-XXXX-XXXX");
+
+                if (!result)
+                {
+                    return;
+                }
+
                 // Start the server
                 await sampleServer.Start(configurationFile);
                 for (int i = 0; i < sampleServer.Configuration.ServerConfiguration.BaseAddresses.Count; i++)
