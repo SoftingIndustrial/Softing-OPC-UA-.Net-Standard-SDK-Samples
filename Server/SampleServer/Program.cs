@@ -35,6 +35,8 @@ namespace SampleServer
 
                 if (!result)
                 {
+                    Console.WriteLine("Invalid License key!");
+                    Console.ReadKey();
                     return;
                 }
 

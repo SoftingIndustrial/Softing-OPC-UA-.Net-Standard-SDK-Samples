@@ -15,11 +15,12 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Opc.Ua;
-using Opc.Ua.Configuration;
 using Xamarin.Forms;
 using XamarinSampleServer.Model;
 using XamarinSampleServer.Services;
+using Opc.Ua;
+using Opc.Ua.Configuration;
+using Softing.Opc.Ua.Server.Private;
 
 namespace XamarinSampleServer.ViewModels
 {
@@ -55,12 +56,21 @@ namespace XamarinSampleServer.ViewModels
             foreach(var ipAddress in addresses)
             {
                 ServerIps.Add(ipAddress.ToString());
-            }            
+            }
 
             CanStartServer = true;
+            LoadSessionsCommand = new Command(async () => await ExecuteLoadSessionsCommand());
             m_connectedSessions = new ObservableCollection<ConnectedSession>();
 
-            LoadSessionsCommand = new Command(async () => await ExecuteLoadSessionsCommand());
+            bool result = true;
+            // TODO - design time license activation
+            // Fill in your design time license activation keys here
+            //result = License.ActivateLicense(LicenseFeature.Server, "XXXX-XXXX-XXXX-XXXX-XXXX");
+
+            if (!result)
+            {
+                Title = "Invalid License key!";
+            }
 
             ThreadPool.QueueUserWorkItem(o =>
             {
@@ -75,7 +85,7 @@ namespace XamarinSampleServer.ViewModels
                 {
                     IsBusy = false;
                 });
-            });            
+            });
         }
         #endregion
 
@@ -117,7 +127,7 @@ namespace XamarinSampleServer.ViewModels
         /// <summary>
         /// Get Server ip list
         /// </summary>
-        public ObservableCollection<string> ServerIps { get; private set; }        
+        public ObservableCollection<string> ServerIps { get; private set; }
 
         /// <summary>
         /// Results text hint
@@ -191,7 +201,7 @@ namespace XamarinSampleServer.ViewModels
                         config.ServerConfiguration.BaseAddresses.Add(url);
                         serverUrl += url + "\n";
                         break;
-                    }                    
+                    }
                 }
                 else
                 {
@@ -210,7 +220,7 @@ namespace XamarinSampleServer.ViewModels
                 m_sampleServer = new SampleServer.SampleServer();
                
                 await m_application.Start(m_sampleServer);
-                ResultsText = "Server is running.";    
+                ResultsText = "Server is running.";
             }
             catch (Exception e)
             {
@@ -222,7 +232,7 @@ namespace XamarinSampleServer.ViewModels
                 return CanStopServer;
             });
 
-            IsBusy = false;            
+            IsBusy = false;
         }
 
         /// <summary>
@@ -230,7 +240,7 @@ namespace XamarinSampleServer.ViewModels
         /// </summary>
         public void StopServer()
         {
-            ResultsText = "Stopping server...";            
+            ResultsText = "Stopping server...";
             if (m_application != null)
             {
                 m_application.Stop();
