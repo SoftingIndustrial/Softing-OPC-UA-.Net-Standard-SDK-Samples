@@ -28,7 +28,7 @@ namespace SampleServer.DataAccess
         private DataItemState m_lightStatus;
         private AnalogItemState m_motorTemperature;
         private Timer m_simulationTimer;
-
+        private FolderState m_dataAccessRoot;
         private uint m_timerInterval = 1000;
         #endregion
 
@@ -71,6 +71,8 @@ namespace SampleServer.DataAccess
 
                 // Initialize timer for data changes simulation
                 m_simulationTimer = new Timer(DoSimulation, null, m_timerInterval, m_timerInterval);
+                //remember data access root 
+                m_dataAccessRoot = root;                
             }
         }
         #endregion
@@ -188,15 +190,9 @@ namespace SampleServer.DataAccess
                     m_motorTemperature.ClearChangeMasks(SystemContext, false);
                 }
 
-                // Report an event at Server level
-
-                string eventMessage = String.Format("Motor temperature changed to {0}", m_motorTemperature.Value);
-                BaseEventState temperatureChangeEvent = new BaseEventState(m_motorTemperature);
-
-                temperatureChangeEvent.Initialize(SystemContext, m_motorTemperature, EventSeverity.Medium,
-                    new LocalizedText(eventMessage));
-
-                Server.ReportEvent(temperatureChangeEvent);
+                // Report an event at on DataAccess node
+                string eventMessage = String.Format("Motor temperature changed to {0}", m_motorTemperature.Value);  
+                ReportEvent(m_dataAccessRoot, new LocalizedText(eventMessage));
             }
             catch (Exception e)
             {
@@ -215,6 +211,6 @@ namespace SampleServer.DataAccess
             Random random = new Random();
             return random.NextDouble() * (maximum - minimum) + minimum;
         }
-        #endregion
+        #endregion       
     }
 }
