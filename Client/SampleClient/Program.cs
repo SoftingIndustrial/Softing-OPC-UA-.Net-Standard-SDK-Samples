@@ -44,6 +44,8 @@ namespace SampleClient
             //result = application.ActivateLicense(LicenseFeature.Client, "XXXX-XXXX-XXXX-XXXX-XXXX");
             if (!result)
             {
+                Console.WriteLine("Invalid License key!");
+                Console.ReadKey();
                 return;
             }
 
