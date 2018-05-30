@@ -67,17 +67,14 @@ namespace SampleClient.Samples
             }
             try
             {
-                if (m_alarmsMonitoredItem != null)
+                if (m_alarmsMonitoredItem != null && m_subscription!= null)
                 {
                     // Clear the local list of alarms
                     m_retainedAlarms.Clear();
 
-                    IList<object> outputArgs;
                     // Invoke the ConditionRefresh method on the server passing the sessionId
                     // After this call the server should send new event notifications for all the retained (active) alarms
-                    m_session.Call(ObjectTypeIds.ConditionType,
-                        MethodIds.ConditionType_ConditionRefresh,
-                        new List<object>(1) {m_subscription.Id}, out outputArgs);
+                    m_subscription.ConditionRefresh();
 
                     Console.WriteLine("ConditionRefresh method invoked.");
                 }
