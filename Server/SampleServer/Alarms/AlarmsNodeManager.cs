@@ -106,11 +106,11 @@ namespace SampleServer.Alarms
                     15.0,
                     20.0,
                     4.0,
-                    2.0);                
+                    2.0);
 
                 // Add sub-notifiers
-                root.AddNotifier(SystemContext, ReferenceTypeIds.HasNotifier, false, machine);
-                machine.AddNotifier(SystemContext, ReferenceTypeIds.HasNotifier, true, root);
+                AddNotifier(ServerNode, root, false);
+                AddNotifier(root, machine, true);
             }
         }
 
