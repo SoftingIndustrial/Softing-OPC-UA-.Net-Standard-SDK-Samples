@@ -177,11 +177,11 @@ namespace SampleClient.Samples
             configuration.ApplicationUri = $"urn:{Utils.GetHostName()}:OPCFoundation:SampleClient";
             configuration.TransportConfigurations = new TransportConfigurationCollection();
             configuration.TransportQuotas = new TransportQuotas {OperationTimeout = 15000};
-            configuration.ClientConfiguration = new ClientConfiguration {DefaultSessionTimeout = 5000};
+            configuration.ClientConfiguration = new ClientConfiguration {DefaultSessionTimeout = 60000};
 
             ClientTookitConfiguration clientTkConfigration = new ClientTookitConfiguration();
-            clientTkConfigration.DefaultSessionTimeout = 15000;
-            clientTkConfigration.DiscoveryOperationTimeout = 6500;
+            clientTkConfigration.DefaultSessionTimeout = 60000;
+            clientTkConfigration.DiscoveryOperationTimeout = 10000;
             configuration.UpdateExtension<ClientTookitConfiguration>(new System.Xml.XmlQualifiedName("ClientTookitConfiguration"), clientTkConfigration);
 
             configuration.TraceConfiguration = new TraceConfiguration()

@@ -145,7 +145,7 @@
         <DiscoveryOperationTimeout>10000</DiscoveryOperationTimeout>
         <DefaultKeepAliveInterval>5000</DefaultKeepAliveInterval>
         <SessionReconnectDelay>5000</SessionReconnectDelay>
-        <DefaultSessionTimeout>5000</DefaultSessionTimeout>
+        <DefaultSessionTimeout>60000</DefaultSessionTimeout>
         <DefaultSubscriptionPublishingInterval>1000</DefaultSubscriptionPublishingInterval>
         <DefaultSubscriptionKeepAliveCount>10</DefaultSubscriptionKeepAliveCount>
         <DefaultSubscriptionLifeTimeCount>1000</DefaultSubscriptionLifeTimeCount>
