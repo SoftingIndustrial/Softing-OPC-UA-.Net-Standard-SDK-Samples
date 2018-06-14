@@ -7,6 +7,7 @@
   </PropertyGroup>
   
   <ItemGroup>    
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.3.352.12" />    
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />	
     <PackageReference Include="System.Security.Principal.Windows" Version="4.4.0" />
   </ItemGroup>
@@ -44,6 +45,8 @@
   
   
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Toolkit\Server\Softing.Opc.Ua.Server_2017.csproj" />
+    <Reference Include="Softing.Opc.Ua.Server">
+      <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.Server.dll</HintPath>
+    </Reference>
   </ItemGroup>  
 </Project>
