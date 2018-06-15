@@ -17,13 +17,14 @@ using System.Xml;
 using Opc.Ua;
 using Opc.Ua.Export;
 using Opc.Ua.Server;
+using Softing.Opc.Ua.Server;
 
 namespace SampleServer.NodeSetImport
 {
     /// <summary>
     /// A node manager for a server that provides an implementation of the OPC UA features
     /// </summary>
-    public class NodeSetImportNodeManager : CustomNodeManager2
+    public class NodeSetImportNodeManager : NodeManager
     {
         #region Constructors
         /// <summary>
@@ -31,16 +32,6 @@ namespace SampleServer.NodeSetImport
         /// </summary>
         public NodeSetImportNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration, Namespaces.Refrigerators)
         {
-        }
-        #endregion
-
-        #region INodeIdFactory Members
-        /// <summary>
-        /// Creates the NodeId for the specified node.
-        /// </summary>
-        public override NodeId New(ISystemContext context, NodeState node)
-        {
-            return node.NodeId;
         }
         #endregion
 

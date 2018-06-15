@@ -33,16 +33,6 @@ namespace SampleServer.NodeSetImport
         }
         #endregion
 
-        #region INodeIdFactory Members
-        /// <summary>
-        /// Creates the NodeId for the specified node.
-        /// </summary>
-        public override NodeId New(ISystemContext context, NodeState node)
-        {
-            return node.NodeId;
-        }
-        #endregion
-
         #region INodeManager Members
         /// <summary>
         /// Does any initialization required before the address space can be used.

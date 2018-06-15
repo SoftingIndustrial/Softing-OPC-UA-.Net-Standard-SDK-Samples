@@ -14,10 +14,11 @@ using System.IO;
 using System.Threading;
 using Opc.Ua.Server;
 using Opc.Ua;
+using Softing.Opc.Ua.Server;
 
 namespace SampleServer.HistoricalDataAccess
 {
-    class SampleHDANodeManager : CustomNodeManager2
+    class SampleHDANodeManager : NodeManager
     {
         #region Constructors
 

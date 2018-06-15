@@ -24,10 +24,11 @@ using SampleServer.NodeManagement;
 using SampleServer.NodeSetImport;
 using SampleServer.ReferenceServer;
 using SampleServer.UserAuthentication;
+using Softing.Opc.Ua.Server;
 
 namespace XamarinSampleServer.SampleServer
 {
-    public class SampleServer : StandardServer
+    public class SampleServer : UaServer
     {
         #region Private Members
         private uint m_shutdownDelay = 5;

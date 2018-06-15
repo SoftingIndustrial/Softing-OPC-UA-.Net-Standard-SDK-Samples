@@ -16,10 +16,11 @@ using System.Threading;
 using System.Xml;
 using Opc.Ua;
 using Opc.Ua.Server;
+using Softing.Opc.Ua.Server;
 
 namespace SampleServer.ReferenceServer
 {
-    public class ReferenceNodeManager : CustomNodeManager2
+    public class ReferenceNodeManager : NodeManager
     {
         #region Private Members
         
