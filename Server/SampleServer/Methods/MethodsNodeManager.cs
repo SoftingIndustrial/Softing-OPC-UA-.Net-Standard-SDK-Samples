@@ -51,7 +51,6 @@ namespace SampleServer.Methods
 
                 // Create a root node and add a reference to external Server Objects Folder
                 FolderState root = CreateFolder(null, "Methods");
-                root.EventNotifier = EventNotifiers.SubscribeToEvents;
                 AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);               
 
                 #region Create Add Method

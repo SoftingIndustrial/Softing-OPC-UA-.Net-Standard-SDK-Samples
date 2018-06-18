@@ -7,20 +7,14 @@
  * http://www.softing.com/LicenseSIA.pdf
  * 
  * ======================================================================*/
-
-using System;
+ 
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using Opc.Ua;
 using Opc.Ua.Server;
 using SampleServer.Alarms;
 using SampleServer.DataAccess;
 using SampleServer.HistoricalDataAccess;
 using SampleServer.Methods;
-using SampleServer.NodeManagement;
 using SampleServer.NodeSetImport;
 using SampleServer.ReferenceServer;
 using SampleServer.UserAuthentication;
@@ -28,11 +22,13 @@ using Softing.Opc.Ua.Server;
 
 namespace SampleServer
 {
+    /// <summary>
+    /// A sample implementation of UaServer from Softin OPC UA .Net Standard Toolkit
+    /// </summary>
     public class SampleServer : UaServer
     {
         #region Private Members
         private Dictionary<string, string> m_userNameIdentities;
-        private NodeManagementNodeManager m_nodeManagementManager; // The sample node manager able to handle UA Node management services
         #endregion
 
         #region Constructor
@@ -71,9 +67,6 @@ namespace SampleServer
             nodeManagers.Add(new DataAccessNodeManager(server, configuration));
             nodeManagers.Add(new SampleHDANodeManager(server, configuration));
             nodeManagers.Add(new MethodsNodeManager(server, configuration));
-            // Uncomment this when there is implementation in the client
-            // NodeManagement support missing from ClientAPI
-            // nodeManagers.Add(m_nodeManagementManager = new DynamicASNodeManager(server, configuration)); 
             nodeManagers.Add(new NodeSetImportNodeManager(server, configuration));
             nodeManagers.Add(new ReferenceNodeManager(server, configuration));
             nodeManagers.Add(new UserAuthenticationNodeManager(server, configuration));

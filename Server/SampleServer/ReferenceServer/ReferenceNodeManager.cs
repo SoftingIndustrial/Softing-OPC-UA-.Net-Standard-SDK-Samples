@@ -45,21 +45,6 @@ namespace SampleServer.ReferenceServer
 
         #endregion
 
-        #region IDisposable Members
-
-        /// <summary>
-        /// An overrideable version of the Dispose.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                // TBD
-            }
-        }
-
-        #endregion
-
         #region INodeIdFactory Members
         /// <summary>
         /// Creates the NodeId for the specified node.
@@ -98,7 +83,7 @@ namespace SampleServer.ReferenceServer
                 }
             }
 
-            return node.NodeId;
+            return base.New(SystemContext, node);
         }
 
         #endregion
@@ -1495,7 +1480,7 @@ namespace SampleServer.ReferenceServer
             variable.SymbolicName = name;
             variable.WriteMask = AttributeWriteMask.None;
             variable.UserWriteMask = AttributeWriteMask.None;
-
+            // Create method will assign also the NodeId calling New method and it ensures node id uniqueness.
             variable.Create(SystemContext, null, variable.BrowseName, null, true);
            
             variable.ReferenceTypeId = ReferenceTypes.Organizes;
@@ -1662,17 +1647,17 @@ namespace SampleServer.ReferenceServer
         /// <returns></returns>
         private ViewState CreateView(NodeState parent, IDictionary<NodeId, IList<IReference>> externalReferences, string name)
         {
-            ViewState type = new ViewState();
+            ViewState viewState = new ViewState();
 
-            type.SymbolicName = name;
+            viewState.SymbolicName = name;
            
-            type.BrowseName = new QualifiedName(name, NamespaceIndex);
-            type.DisplayName = type.BrowseName.Name;
-            type.WriteMask = AttributeWriteMask.None;
-            type.UserWriteMask = AttributeWriteMask.None;
-            type.ContainsNoLoops = true;
+            viewState.BrowseName = new QualifiedName(name, NamespaceIndex);
+            viewState.DisplayName = viewState.BrowseName.Name;
+            viewState.WriteMask = AttributeWriteMask.None;
+            viewState.UserWriteMask = AttributeWriteMask.None;
+            viewState.ContainsNoLoops = true;
 
-            type.NodeId = New(SystemContext, type);
+            viewState.NodeId = New(SystemContext, viewState);
 
             IList<IReference> references = null;
 
@@ -1681,17 +1666,17 @@ namespace SampleServer.ReferenceServer
                 externalReferences[ObjectIds.ViewsFolder] = references = new List<IReference>();
             }
 
-            type.AddReference(ReferenceTypeIds.Organizes, true, ObjectIds.ViewsFolder);
-            references.Add(new NodeStateReference(ReferenceTypeIds.Organizes, false, type.NodeId));
+            viewState.AddReference(ReferenceTypeIds.Organizes, true, ObjectIds.ViewsFolder);
+            references.Add(new NodeStateReference(ReferenceTypeIds.Organizes, false, viewState.NodeId));
 
             if (parent != null)
             {
-                parent.AddReference(ReferenceTypes.Organizes, false, type.NodeId);
-                type.AddReference(ReferenceTypes.Organizes, true, parent.NodeId);
+                parent.AddReference(ReferenceTypes.Organizes, false, viewState.NodeId);
+                viewState.AddReference(ReferenceTypes.Organizes, true, parent.NodeId);
             }
 
-            AddPredefinedNode(SystemContext, type);
-            return type;
+            AddPredefinedNode(SystemContext, viewState);
+            return viewState;
         }
 
         #endregion

@@ -53,9 +53,7 @@ namespace SampleServer.UserAuthentication
                 process.Description = new LocalizedText($"To test user authentication, try to change the value of LogFilePath. " +
                    $"Anonymous will not be able to change the value, while an authenticated user can do this.", "en-US");
 
-                AddReference(process, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
-
-                           
+                AddReference(process, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);                           
 
                 // A property to report the process state
                 PropertyState<string> state = CreateProperty<string>(process, "LogFilePath");               
