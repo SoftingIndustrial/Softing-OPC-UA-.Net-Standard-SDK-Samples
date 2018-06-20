@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using Opc.Ua;
 using XamarinSampleClient.Helpers;
 using Softing.Opc.Ua.Client;
-using Softing.Opc.Ua.Client;
 
 namespace XamarinSampleClient.ViewModels
 {

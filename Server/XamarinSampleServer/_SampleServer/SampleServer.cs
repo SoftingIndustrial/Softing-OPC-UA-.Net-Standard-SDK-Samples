@@ -31,8 +31,8 @@ namespace XamarinSampleServer.SampleServer
     public class SampleServer : UaServer
     {
         #region Private Members
-        private uint m_shutdownDelay = 5;
-        private NodeManagementNodeManager m_nodeManagementManager; // The sample node manager able to handle UA Node management services
+        //private uint m_shutdownDelay = 5;
+        private NodeManagementNodeManager m_nodeManagementManager = null; // The sample node manager able to handle UA Node management services
         #endregion
 
         #region Overridden Methods
@@ -48,14 +48,7 @@ namespace XamarinSampleServer.SampleServer
         protected override MasterNodeManager CreateMasterNodeManager(IServerInternal server, ApplicationConfiguration configuration)
         {
             Utils.Trace(Utils.TraceMasks.Information, "SampleServer.CreateMasterNodeManager", "Creating the Node Managers.");
-
-            // Get the ShutdownDelay configuration parameter
-            //SampleServerConfiguration sampleServerConfiguration = configuration.ParseExtension<SampleServerConfiguration>();
-            //if (sampleServerConfiguration != null)
-            //{
-            //    m_shutdownDelay = sampleServerConfiguration.ShutdownDelay;
-            //}
-
+            
             List<INodeManager> nodeManagers = new List<INodeManager>();
 
             nodeManagers.Add(new AlarmsNodeManager(server, configuration));
@@ -110,46 +103,7 @@ namespace XamarinSampleServer.SampleServer
             server.SessionManager.ImpersonateUser += SessionManager_ImpersonateUser;
             #endregion
         }
-
-        /// <summary>
-        /// Cleans up before the server shuts down.
-        /// </summary>
-        /// <remarks>
-        /// This method is called before any shutdown processing occurs.
-        /// </remarks>
-        protected override void OnServerStopping()
-        {
-            try
-            {
-                // Check for connected clients
-                IList<Session> currentessions = ServerInternal.SessionManager.GetSessions();
-
-                if (currentessions.Count > 0)
-                {
-                    // Provide some time for the connected clients to detect the shutdown state
-                    ServerInternal.Status.Value.ShutdownReason = new LocalizedText("en-US", "Application closed.");
-                    ServerInternal.Status.Variable.ShutdownReason.Value = new LocalizedText("en-US", "Application closed.");
-                    ServerInternal.Status.Value.State = ServerState.Shutdown;
-                    ServerInternal.Status.Variable.State.Value = ServerState.Shutdown;
-                    ServerInternal.Status.Variable.ClearChangeMasks(ServerInternal.DefaultSystemContext, true);
-
-                    for (uint timeTillShutdown = m_shutdownDelay; timeTillShutdown > 0; timeTillShutdown--)
-                    {
-                        ServerInternal.Status.Value.SecondsTillShutdown = timeTillShutdown;
-                        ServerInternal.Status.Variable.SecondsTillShutdown.Value = timeTillShutdown;
-                        ServerInternal.Status.Variable.ClearChangeMasks(ServerInternal.DefaultSystemContext, true);
-
-                        Thread.Sleep(1000);
-                    }
-                }
-            }
-            catch
-            {
-                // Ignore error during shutdown procedure
-            }
-
-            base.OnServerStopping();
-        }
+        
         #endregion
 
         #region NodeManagement

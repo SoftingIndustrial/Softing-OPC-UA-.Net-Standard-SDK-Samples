@@ -11,7 +11,13 @@
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />	
     <PackageReference Include="System.Security.Principal.Windows" Version="4.4.0" />
   </ItemGroup>
- 
+
+  <ItemGroup>
+    <Reference Include="Softing.Opc.Ua.Server">
+      <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.Server.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  
   <ItemGroup>
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="App.xaml.cs">
       <DependentUpon>*.xaml</DependentUpon>
@@ -36,17 +42,10 @@
     
   </ItemGroup>
   
-  
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" Link="_SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" />
 	<EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" />
 	<EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators2.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators2.NodeSet2.xml" />
   </ItemGroup>
   
-  
-  <ItemGroup>
-    <Reference Include="Softing.Opc.Ua.Server">
-      <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.Server.dll</HintPath>
-    </Reference>
-  </ItemGroup>  
 </Project>
