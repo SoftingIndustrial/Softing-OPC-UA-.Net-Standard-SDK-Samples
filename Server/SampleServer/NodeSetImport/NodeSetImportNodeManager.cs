@@ -73,7 +73,7 @@ namespace SampleServer.NodeSetImport
                     {
                         Argument[] inputArguments = new Argument[]
                         {
-                        new Argument("File path", DataTypeIds.String, ValueRanks.Scalar, null)
+                            new Argument("File path", DataTypeIds.String, ValueRanks.Scalar, null)
                         };
                         MethodState importMethod = CreateMethod(nodeSetImportNode, "Import", inputArguments, null, OnImportNodeSet);                        
                     }

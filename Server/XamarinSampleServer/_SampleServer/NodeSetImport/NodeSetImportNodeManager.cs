@@ -102,7 +102,7 @@ namespace SampleServer.NodeSetImport
 
                         inputArguments.Value = new Argument[]
                         {
-                        new Argument("File path", DataTypeIds.String, ValueRanks.Scalar, null)
+                            new Argument("File path", DataTypeIds.String, ValueRanks.Scalar, null)
                         };
 
                         importMethod.InputArguments = inputArguments;
