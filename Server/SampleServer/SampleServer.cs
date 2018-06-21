@@ -43,7 +43,6 @@ namespace SampleServer
             m_userNameIdentities.Add("admin", "admin");
 
             ManufacturerName = "Softing";
-            ProductName = "Sample Server";
         }
         #endregion
 
