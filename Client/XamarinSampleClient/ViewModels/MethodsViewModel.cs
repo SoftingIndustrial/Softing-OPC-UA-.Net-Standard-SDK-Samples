@@ -24,8 +24,8 @@ namespace XamarinSampleClient.ViewModels
     class MethodsViewModel : BaseViewModel
     {
         #region Private Fields
-        //Browse Path: Root\Objects\Server\Methods\Add
-        private readonly NodeId m_methodNodeId = new NodeId("ns=5;s=Add");
+        //Browse Path: Root\Objects\Methods\Add
+        private readonly NodeId m_methodNodeId = new NodeId("ns=5;i=2");
         private readonly NodeId m_parentObjectId = new NodeId("ns=5;i=1");
 
         private const string SessionName = "MethodCallClient Session";

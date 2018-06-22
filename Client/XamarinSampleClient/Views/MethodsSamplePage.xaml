@@ -39,7 +39,7 @@
                         <!--parameters for methods call-->
                         <Label Grid.Row="2" Grid.ColumnSpan="2"
                                Margin="8,8, 0, 0" 
-                               Text="Parameters for 'Server\Methods\Add' method:" 
+                               Text="Parameters for 'Objects\Methods\Add' method:" 
                                VerticalOptions="Center"/>
                         <Label Grid.Row="3" Grid.Column="0"
                                Margin="8,8, 0, 0" 

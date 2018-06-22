@@ -15,6 +15,7 @@ using System.Threading;
 using Opc.Ua.Server;
 using Opc.Ua;
 using Softing.Opc.Ua.Server;
+using System.Text;
 
 namespace SampleServer.HistoricalDataAccess
 {
@@ -30,6 +31,52 @@ namespace SampleServer.HistoricalDataAccess
         }
 
         #endregion      
+        #region INodeIdFactory Members
+        /// <summary>
+        /// Creates the NodeId for the specified node.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="node">The node.</param>
+        /// <returns>The new NodeId.</returns>
+        /// <remarks>
+        /// This method is called by the NodeState.Create() method which initializes a Node from
+        /// the type model. During initialization a number of child nodes are created and need to 
+        /// have NodeIds assigned to them. This implementation constructs NodeIds by constructing
+        /// strings. Other implementations could assign unique integers or Guids and save the new
+        /// Node in a dictionary for later lookup.
+        /// </remarks>
+        public override NodeId New(ISystemContext context, NodeState node)
+        {
+            BaseInstanceState instance = node as BaseInstanceState;
+
+            if (instance != null && instance.Parent != null)
+            {
+                // Parent must have a string identifier
+                string parentId = instance.Parent.NodeId.Identifier as string;
+
+                if (parentId == null)
+                {
+                    return null;
+                }
+
+                StringBuilder buffer = new StringBuilder();
+                buffer.Append(parentId);
+
+                // Check if the parent is another component
+                bool isAntoherComponent = parentId.IndexOf('?') == -1;
+                buffer.Append(isAntoherComponent ? '?' : '/');
+
+                buffer.Append(node.SymbolicName);
+
+                return new NodeId(buffer.ToString(), instance.Parent.NodeId.NamespaceIndex);
+            }
+            if (node != null && node.BrowseName != null)
+            {
+                return new NodeId(node.BrowseName.Name, NamespaceIndex);
+            }
+            return base.New(context, node);
+        }
+        #endregion
 
         #region Overridden Methods
         public override void CreateAddressSpace(IDictionary<NodeId, IList<IReference>> externalReferences)
@@ -45,56 +92,13 @@ namespace SampleServer.HistoricalDataAccess
                 // Add Support for Event Notifiers
                 // Creating notifier ensures events propagate up the hierarchy when they are produced
                 AddRootNotifier(root);
-
-                // Create the root folder
-                /*FolderState root = new FolderState(null);
-
-                root.NodeId = new NodeId("HistoricalDataAccess", NamespaceIndex);
-                root.BrowseName = new QualifiedName("HistoricalDataAccess", NamespaceIndex);
-                root.DisplayName = root.BrowseName.Name;
-                root.TypeDefinitionId = ObjectTypeIds.FolderType;
-
-                // Ensure root can be found via the Objects object
-                IList<IReference> references = null;
-                if (!externalReferences.TryGetValue(ObjectIds.ObjectsFolder, out references))
-                {
-                    externalReferences[ObjectIds.ObjectsFolder] = references = new List<IReference>();
-                }
-
-                root.AddReference(ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder);
-                references.Add(new NodeStateReference(ReferenceTypeIds.Organizes, false, root.NodeId));
-
-                // Save the node for later lookup
-                AddPredefinedNode(SystemContext, root);
-                */
-
+                
                 // Historical Access
                 FolderState dynamicHistoricals = CreateFolder(root, "DynamicHistoricalDataItems");
-                root.EventNotifier = EventNotifiers.SubscribeToEvents;
-                /*
-                FolderState dynamicHistoricals = new FolderState(null);
-                dynamicHistoricals.NodeId = new NodeId("DynamicHistoricalDataItems", NamespaceIndex);
-                dynamicHistoricals.BrowseName = new QualifiedName("DynamicHistoricalDataItems", NamespaceIndex);
-                dynamicHistoricals.DisplayName = dynamicHistoricals.BrowseName.Name;
-                dynamicHistoricals.TypeDefinitionId = ObjectTypeIds.FolderType;
-                root.AddReference(ReferenceTypeIds.Organizes, false, dynamicHistoricals.NodeId);
-                dynamicHistoricals.AddReference(ReferenceTypeIds.Organizes, true, root.NodeId);
-                AddPredefinedNode(SystemContext, dynamicHistoricals);
-                */
-
+                dynamicHistoricals.EventNotifier = EventNotifiers.SubscribeToEvents;
+               
                 FolderState staticHistoricals = CreateFolder(root, "StaticHistoricalDataItems");
-                root.EventNotifier = EventNotifiers.SubscribeToEvents;
-
-                /*
-                FolderState staticHistoricals = new FolderState(null);
-                staticHistoricals.NodeId = new NodeId("StaticHistoricalDataItems", NamespaceIndex);
-                staticHistoricals.BrowseName = new QualifiedName("StaticHistoricalDataItems", NamespaceIndex);
-                staticHistoricals.DisplayName = staticHistoricals.BrowseName.Name;
-                staticHistoricals.TypeDefinitionId = ObjectTypeIds.FolderType;
-                root.AddReference(ReferenceTypeIds.Organizes, false, staticHistoricals.NodeId);
-                staticHistoricals.AddReference(ReferenceTypeIds.Organizes, true, root.NodeId);
-                AddPredefinedNode(SystemContext, staticHistoricals);
-                */
+                staticHistoricals.EventNotifier = EventNotifiers.SubscribeToEvents;
             }
             catch (Exception ex)
             {

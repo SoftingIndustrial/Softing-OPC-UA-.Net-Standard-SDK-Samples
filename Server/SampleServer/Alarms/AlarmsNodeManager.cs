@@ -109,7 +109,7 @@ namespace SampleServer.Alarms
                     2.0);
 
                 // Add sub-notifiers
-                AddNotifier(ServerNode, root, false);
+                AddNotifier(ServerNode, root, false);  
                 AddNotifier(root, machine, true);
             }
         }

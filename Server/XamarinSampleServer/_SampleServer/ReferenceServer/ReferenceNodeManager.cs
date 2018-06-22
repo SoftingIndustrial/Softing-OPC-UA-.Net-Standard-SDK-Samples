@@ -511,16 +511,15 @@ namespace SampleServer.ReferenceServer
                     #region DataAccess_DataItem
 
                     FolderState daFolder = CreateFolder(root, "DataAccess");
-                    BaseDataVariableState daInstructions = CreateVariable(daFolder, "DataAccess_Instructions", "Instructions", DataTypeIds.String, ValueRanks.Scalar);
+                    BaseDataVariableState daInstructions = CreateVariable(daFolder, "Instructions", "Instructions", DataTypeIds.String, ValueRanks.Scalar);
                     daInstructions.Value = "A library of Read/Write Variables of all supported data-types.";
                     variables.Add(daInstructions);
 
-                    FolderState dataItemFolder = CreateFolder(daFolder, "DataAccess_DataItem", "DataItem");
-                    const string daDataItem = "DataAccess_DataItem_";
-
+                    FolderState dataItemFolder = CreateFolder(daFolder, "DataItem");
+                    
                     foreach (string name in Enum.GetNames(typeof(BuiltInType)))
                     {
-                        DataItemState item = CreateDataItemVariable(dataItemFolder, daDataItem + name, name, (BuiltInType) Enum.Parse(typeof(BuiltInType), name), ValueRanks.Scalar);
+                        DataItemState item = CreateDataItemVariable(dataItemFolder, name, name, (BuiltInType) Enum.Parse(typeof(BuiltInType), name), ValueRanks.Scalar);
 
                         // set initial value to String.Empty for String node.
                         if (name == BuiltInType.String.ToString())
@@ -533,15 +532,14 @@ namespace SampleServer.ReferenceServer
 
                     #region DataAccess_AnalogType
 
-                    FolderState analogItemFolder = CreateFolder(daFolder, "DataAccess_AnalogType", "AnalogType");
-                    const string daAnalogItem = "DataAccess_AnalogType_";
-
+                    FolderState analogItemFolder = CreateFolder(daFolder, "AnalogType");
+                    
                     foreach (string name in Enum.GetNames(typeof(BuiltInType)))
                     {
                         BuiltInType builtInType = (BuiltInType) Enum.Parse(typeof(BuiltInType), name);
                         if (IsAnalogType(builtInType))
                         {
-                            AnalogItemState item = CreateAnalogItemVariable(analogItemFolder, daAnalogItem + name, name, builtInType, ValueRanks.Scalar);
+                            AnalogItemState item = CreateAnalogItemVariable(analogItemFolder, name, name, builtInType, ValueRanks.Scalar);
 
                             if (builtInType == BuiltInType.Int64 ||
                                 builtInType == BuiltInType.UInt64)
@@ -562,7 +560,7 @@ namespace SampleServer.ReferenceServer
 
                     #region DataAccess_AnalogType_Array
 
-                    FolderState analogArrayFolder = CreateFolder(analogItemFolder, "DataAccess_AnalogType_Array", "Array");
+                    FolderState analogArrayFolder = CreateFolder(analogItemFolder, "AnalogType_Array", "Array");
                     
                     CreateAnalogItemVariable(analogArrayFolder, "Boolean", "Boolean", BuiltInType.Boolean, ValueRanks.OneDimension, new Boolean[] {true, false, true, false, true, false, true, false, true});
                     CreateAnalogItemVariable(analogArrayFolder, "Byte", "Byte", BuiltInType.Byte, ValueRanks.OneDimension, new Byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
@@ -629,68 +627,64 @@ namespace SampleServer.ReferenceServer
 
                     #region DataAccess_DiscreteType
 
-                    FolderState discreteTypeFolder = CreateFolder(daFolder, "DataAccess_DiscreteType", "DiscreteType");
-                    FolderState twoStateDiscreteFolder = CreateFolder(discreteTypeFolder, "DataAccess_TwoStateDiscreteType", "TwoStateDiscreteType");
-                    const string daTwoStateDiscrete = "DataAccess_TwoStateDiscreteType_";
-
+                    FolderState discreteTypeFolder = CreateFolder(daFolder, "DiscreteType");
+                    FolderState twoStateDiscreteFolder = CreateFolder(discreteTypeFolder, "TwoStateDiscreteType");
+                    
                     // Add our Nodes to the folder, and specify their customized discrete enumerations
-                    CreateTwoStateDiscreteItemVariable(twoStateDiscreteFolder, daTwoStateDiscrete + "001", "001", "red", "blue");
-                    CreateTwoStateDiscreteItemVariable(twoStateDiscreteFolder, daTwoStateDiscrete + "002", "002", "open", "close");
-                    CreateTwoStateDiscreteItemVariable(twoStateDiscreteFolder, daTwoStateDiscrete + "003", "003", "up", "down");
-                    CreateTwoStateDiscreteItemVariable(twoStateDiscreteFolder, daTwoStateDiscrete + "004", "004", "left", "right");
-                    CreateTwoStateDiscreteItemVariable(twoStateDiscreteFolder, daTwoStateDiscrete + "005", "005", "circle", "cross");
+                    CreateTwoStateDiscreteItemVariable(twoStateDiscreteFolder, "001", "001", "red", "blue");
+                    CreateTwoStateDiscreteItemVariable(twoStateDiscreteFolder, "002", "002", "open", "close");
+                    CreateTwoStateDiscreteItemVariable(twoStateDiscreteFolder, "003", "003", "up", "down");
+                    CreateTwoStateDiscreteItemVariable(twoStateDiscreteFolder, "004", "004", "left", "right");
+                    CreateTwoStateDiscreteItemVariable(twoStateDiscreteFolder, "005", "005", "circle", "cross");
 
-                    FolderState multiStateDiscreteFolder = CreateFolder(discreteTypeFolder, "DataAccess_MultiStateDiscreteType", "MultiStateDiscreteType");
-                    const string daMultiStateDiscrete = "DataAccess_MultiStateDiscreteType_";
-
+                    FolderState multiStateDiscreteFolder = CreateFolder(discreteTypeFolder, "MultiStateDiscreteType");
+                    
                     // Add our Nodes to the folder, and specify their customized discrete enumerations
-                    CreateMultiStateDiscreteItemVariable(multiStateDiscreteFolder, daMultiStateDiscrete + "001", "001", "open", "closed", "jammed");
-                    CreateMultiStateDiscreteItemVariable(multiStateDiscreteFolder, daMultiStateDiscrete + "002", "002", "red", "green", "blue", "cyan");
-                    CreateMultiStateDiscreteItemVariable(multiStateDiscreteFolder, daMultiStateDiscrete + "003", "003", "lolo", "lo", "normal", "hi", "hihi");
-                    CreateMultiStateDiscreteItemVariable(multiStateDiscreteFolder, daMultiStateDiscrete + "004", "004", "left", "right", "center");
-                    CreateMultiStateDiscreteItemVariable(multiStateDiscreteFolder, daMultiStateDiscrete + "005", "005", "circle", "cross", "triangle");
+                    CreateMultiStateDiscreteItemVariable(multiStateDiscreteFolder, "001", "001", "open", "closed", "jammed");
+                    CreateMultiStateDiscreteItemVariable(multiStateDiscreteFolder, "002", "002", "red", "green", "blue", "cyan");
+                    CreateMultiStateDiscreteItemVariable(multiStateDiscreteFolder, "003", "003", "lolo", "lo", "normal", "hi", "hihi");
+                    CreateMultiStateDiscreteItemVariable(multiStateDiscreteFolder, "004", "004", "left", "right", "center");
+                    CreateMultiStateDiscreteItemVariable(multiStateDiscreteFolder, "005", "005", "circle", "cross", "triangle");
 
                     #endregion
 
                     #region DataAccess_MultiStateValueDiscreteType
 
-                    FolderState multiStateValueDiscreteFolder = CreateFolder(discreteTypeFolder, "DataAccess_MultiStateValueDiscreteType", "MultiStateValueDiscreteType");
-                    const string daMultiStateValueDiscrete = "DataAccess_MultiStateValueDiscreteType_";
-
+                    FolderState multiStateValueDiscreteFolder = CreateFolder(discreteTypeFolder, "MultiStateValueDiscreteType");
+                    
                     // Add our Nodes to the folder, and specify their customized discrete enumerations
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "001", "001", new string[] {"open", "closed", "jammed"});
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "002", "002", new string[] {"red", "green", "blue", "cyan"});
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "003", "003", new string[] {"lolo", "lo", "normal", "hi", "hihi"});
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "004", "004", new string[] {"left", "right", "center"});
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "005", "005", new string[] {"circle", "cross", "triangle"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, "001", "001", new string[] {"open", "closed", "jammed"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, "002", "002", new string[] {"red", "green", "blue", "cyan"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, "003", "003", new string[] {"lolo", "lo", "normal", "hi", "hihi"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, "004", "004", new string[] {"left", "right", "center"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, "005", "005", new string[] {"circle", "cross", "triangle"});
 
                     // Add our Nodes to the folder and specify varying data types
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "Byte", "Byte", DataTypeIds.Byte, new string[] {"open", "closed", "jammed"});
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "Int16", "Int16", DataTypeIds.Int16, new string[] {"red", "green", "blue", "cyan"});
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "Int32", "Int32", DataTypeIds.Int32, new string[] {"lolo", "lo", "normal", "hi", "hihi"});
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "Int64", "Int64", DataTypeIds.Int64, new string[] {"left", "right", "center"});
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "SByte", "SByte", DataTypeIds.SByte, new string[] {"open", "closed", "jammed"});
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "UInt16", "UInt16", DataTypeIds.UInt16, new string[] {"red", "green", "blue", "cyan"});
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "UInt32", "UInt32", DataTypeIds.UInt32, new string[] {"lolo", "lo", "normal", "hi", "hihi"});
-                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, daMultiStateValueDiscrete + "UInt64", "UInt64", DataTypeIds.UInt64, new string[] {"left", "right", "center"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, "Byte", "Byte", DataTypeIds.Byte, new string[] {"open", "closed", "jammed"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, "Int16", "Int16", DataTypeIds.Int16, new string[] {"red", "green", "blue", "cyan"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, "Int32", "Int32", DataTypeIds.Int32, new string[] {"lolo", "lo", "normal", "hi", "hihi"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, "Int64", "Int64", DataTypeIds.Int64, new string[] {"left", "right", "center"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, "SByte", "SByte", DataTypeIds.SByte, new string[] {"open", "closed", "jammed"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, "UInt16", "UInt16", DataTypeIds.UInt16, new string[] {"red", "green", "blue", "cyan"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, "UInt32", "UInt32", DataTypeIds.UInt32, new string[] {"lolo", "lo", "normal", "hi", "hihi"});
+                    CreateMultiStateValueDiscreteItemVariable(multiStateValueDiscreteFolder, "UInt64", "UInt64", DataTypeIds.UInt64, new string[] {"left", "right", "center"});
 
                     #endregion
 
                     #region References
 
                     FolderState referencesFolder = CreateFolder(root, "References");
-                    const string referencesPrefix = "References_";
-
-                    BaseDataVariableState referencesInstructions = CreateVariable(referencesFolder, "References_Instructions", "Instructions", DataTypeIds.String, ValueRanks.Scalar);
+                    
+                    BaseDataVariableState referencesInstructions = CreateVariable(referencesFolder, "Instructions", "Instructions", DataTypeIds.String, ValueRanks.Scalar);
                     referencesInstructions.Value = "This folder will contain nodes that have specific Reference configurations.";
                     variables.Add(referencesInstructions);
 
                     // create variable nodes with specific references
-                    BaseDataVariableState hasForwardReference = CreateMeshVariable(referencesFolder, referencesPrefix + "HasForwardReference", "HasForwardReference");
+                    BaseDataVariableState hasForwardReference = CreateMeshVariable(referencesFolder, "HasForwardReference", "HasForwardReference");
                     hasForwardReference.AddReference(ReferenceTypes.HasCause, false, variables[0].NodeId);
                     variables.Add(hasForwardReference);
 
-                    BaseDataVariableState hasInverseReference = CreateMeshVariable(referencesFolder, referencesPrefix + "HasInverseReference", "HasInverseReference");
+                    BaseDataVariableState hasInverseReference = CreateMeshVariable(referencesFolder, "HasInverseReference", "HasInverseReference");
                     hasInverseReference.AddReference(ReferenceTypes.HasCause, true, variables[0].NodeId);
                     variables.Add(hasInverseReference);
 
@@ -702,7 +696,7 @@ namespace SampleServer.ReferenceServer
                         {
                             referenceString += i.ToString();
                         }
-                        BaseDataVariableState has3ForwardReferences = CreateMeshVariable(referencesFolder, referencesPrefix + referenceString, referenceString);
+                        BaseDataVariableState has3ForwardReferences = CreateMeshVariable(referencesFolder, referenceString, referenceString);
                         has3ForwardReferences.AddReference(ReferenceTypes.HasCause, false, variables[0].NodeId);
                         has3ForwardReferences.AddReference(ReferenceTypes.HasCause, false, variables[1].NodeId);
                         has3ForwardReferences.AddReference(ReferenceTypes.HasCause, false, variables[2].NodeId);
@@ -713,13 +707,13 @@ namespace SampleServer.ReferenceServer
                         variables.Add(has3ForwardReferences);
                     }
 
-                    BaseDataVariableState has3InverseReferences = CreateMeshVariable(referencesFolder, referencesPrefix + "Has3InverseReferences", "Has3InverseReferences");
+                    BaseDataVariableState has3InverseReferences = CreateMeshVariable(referencesFolder, "Has3InverseReferences", "Has3InverseReferences");
                     has3InverseReferences.AddReference(ReferenceTypes.HasEffect, true, variables[0].NodeId);
                     has3InverseReferences.AddReference(ReferenceTypes.HasEffect, true, variables[1].NodeId);
                     has3InverseReferences.AddReference(ReferenceTypes.HasEffect, true, variables[2].NodeId);
                     variables.Add(has3InverseReferences);
 
-                    BaseDataVariableState hasForwardAndInverseReferences = CreateMeshVariable(referencesFolder, referencesPrefix + "HasForwardAndInverseReference", "HasForwardAndInverseReference", hasForwardReference, hasInverseReference,
+                    BaseDataVariableState hasForwardAndInverseReferences = CreateMeshVariable(referencesFolder, "HasForwardAndInverseReference", "HasForwardAndInverseReference", hasForwardReference, hasInverseReference,
                         has3InverseReference, has3InverseReferences, variables[0]);
                     variables.Add(hasForwardAndInverseReferences);
 
@@ -728,51 +722,49 @@ namespace SampleServer.ReferenceServer
                     #region AccessRights
 
                     FolderState folderAccessRights = CreateFolder(root, "AccessRights");
-                    const string accessRights = "AccessRights_";
-
-                    BaseDataVariableState accessRightsInstructions = CreateVariable(folderAccessRights, accessRights + "Instructions", "Instructions", DataTypeIds.String, ValueRanks.Scalar);
+                    
+                    BaseDataVariableState accessRightsInstructions = CreateVariable(folderAccessRights, "Instructions", "Instructions", DataTypeIds.String, ValueRanks.Scalar);
                     accessRightsInstructions.Value = "This folder will be accessible to all who enter, but contents therein will be secured.";
                     variables.Add(accessRightsInstructions);
 
                     // sub-folder for "AccessAll"
                     FolderState folderAccessRightsAccessAll = CreateFolder(folderAccessRights, "AccessRights_AccessAll", "AccessAll");
-                    const string accessRightsAccessAll = "AccessRights_AccessAll_";
-
-                    BaseDataVariableState arAllRO = CreateVariable(folderAccessRightsAccessAll, accessRightsAccessAll + "RO", "RO", BuiltInType.Int16, ValueRanks.Scalar);
+                    
+                    BaseDataVariableState arAllRO = CreateVariable(folderAccessRightsAccessAll, "RO", "RO", BuiltInType.Int16, ValueRanks.Scalar);
                     arAllRO.AccessLevel = AccessLevels.CurrentRead;
                     arAllRO.UserAccessLevel = AccessLevels.CurrentRead;
                     variables.Add(arAllRO);
-                    BaseDataVariableState arAllWO = CreateVariable(folderAccessRightsAccessAll, accessRightsAccessAll + "WO", "WO", BuiltInType.Int16, ValueRanks.Scalar);
+                    BaseDataVariableState arAllWO = CreateVariable(folderAccessRightsAccessAll, "WO", "WO", BuiltInType.Int16, ValueRanks.Scalar);
                     arAllWO.AccessLevel = AccessLevels.CurrentWrite;
                     arAllWO.UserAccessLevel = AccessLevels.CurrentWrite;
                     variables.Add(arAllWO);
-                    BaseDataVariableState arAllRW = CreateVariable(folderAccessRightsAccessAll, accessRightsAccessAll + "RW", "RW", BuiltInType.Int16, ValueRanks.Scalar);
+                    BaseDataVariableState arAllRW = CreateVariable(folderAccessRightsAccessAll, "RW", "RW", BuiltInType.Int16, ValueRanks.Scalar);
                     arAllRW.AccessLevel = AccessLevels.CurrentReadOrWrite;
                     arAllRW.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
                     variables.Add(arAllRW);
-                    BaseDataVariableState arAllRONotUser = CreateVariable(folderAccessRightsAccessAll, accessRightsAccessAll + "RO_NotUser", "RO_NotUser", BuiltInType.Int16, ValueRanks.Scalar);
+                    BaseDataVariableState arAllRONotUser = CreateVariable(folderAccessRightsAccessAll, "RO_NotUser", "RO_NotUser", BuiltInType.Int16, ValueRanks.Scalar);
                     arAllRONotUser.AccessLevel = AccessLevels.CurrentRead;
                     arAllRONotUser.UserAccessLevel = AccessLevels.None;
                     variables.Add(arAllRONotUser);
-                    BaseDataVariableState arAllWONotUser = CreateVariable(folderAccessRightsAccessAll, accessRightsAccessAll + "WO_NotUser", "WO_NotUser", BuiltInType.Int16, ValueRanks.Scalar);
+                    BaseDataVariableState arAllWONotUser = CreateVariable(folderAccessRightsAccessAll, "WO_NotUser", "WO_NotUser", BuiltInType.Int16, ValueRanks.Scalar);
                     arAllWONotUser.AccessLevel = AccessLevels.CurrentWrite;
                     arAllWONotUser.UserAccessLevel = AccessLevels.None;
                     variables.Add(arAllWONotUser);
-                    BaseDataVariableState arAllRWNotUser = CreateVariable(folderAccessRightsAccessAll, accessRightsAccessAll + "RW_NotUser", "RW_NotUser", BuiltInType.Int16, ValueRanks.Scalar);
+                    BaseDataVariableState arAllRWNotUser = CreateVariable(folderAccessRightsAccessAll, "RW_NotUser", "RW_NotUser", BuiltInType.Int16, ValueRanks.Scalar);
                     arAllRWNotUser.AccessLevel = AccessLevels.CurrentReadOrWrite;
                     arAllRWNotUser.UserAccessLevel = AccessLevels.CurrentRead;
                     variables.Add(arAllRWNotUser);
-                    BaseDataVariableState arAllROUserRW = CreateVariable(folderAccessRightsAccessAll, accessRightsAccessAll + "RO_User1_RW", "RO_User1_RW", BuiltInType.Int16, ValueRanks.Scalar);
+                    BaseDataVariableState arAllROUserRW = CreateVariable(folderAccessRightsAccessAll, "RO_User1_RW", "RO_User1_RW", BuiltInType.Int16, ValueRanks.Scalar);
                     arAllROUserRW.AccessLevel = AccessLevels.CurrentRead;
                     arAllROUserRW.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
                     variables.Add(arAllROUserRW);
-                    BaseDataVariableState arAllROGroupRW = CreateVariable(folderAccessRightsAccessAll, accessRightsAccessAll + "RO_Group1_RW", "RO_Group1_RW", BuiltInType.Int16, ValueRanks.Scalar);
+                    BaseDataVariableState arAllROGroupRW = CreateVariable(folderAccessRightsAccessAll, "RO_Group1_RW", "RO_Group1_RW", BuiltInType.Int16, ValueRanks.Scalar);
                     arAllROGroupRW.AccessLevel = AccessLevels.CurrentRead;
                     arAllROGroupRW.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
                     variables.Add(arAllROGroupRW);
 
                     // sub-folder for "AccessUser1"
-                    FolderState folderAccessRightsAccessUser1 = CreateFolder(folderAccessRights, "AccessRights_AccessUser1", "AccessUser1");
+                    FolderState folderAccessRightsAccessUser1 = CreateFolder(folderAccessRights, "AccessUser1", "AccessUser1");
                     const string accessRightsAccessUser1 = "AccessRights_AccessUser1_";
 
                     BaseDataVariableState arUserRO = CreateVariable(folderAccessRightsAccessUser1, accessRightsAccessUser1 + "RO", "RO", BuiltInType.Int16, ValueRanks.Scalar);
@@ -789,18 +781,17 @@ namespace SampleServer.ReferenceServer
                     variables.Add(arUserRW);
 
                     // sub-folder for "AccessGroup1"
-                    FolderState folderAccessRightsAccessGroup1 = CreateFolder(folderAccessRights, "AccessRights_AccessGroup1", "AccessGroup1");
-                    const string accessRightsAccessGroup1 = "AccessRights_AccessGroup1_";
-
-                    BaseDataVariableState arGroupRO = CreateVariable(folderAccessRightsAccessGroup1, accessRightsAccessGroup1 + "RO", "RO", BuiltInType.Int16, ValueRanks.Scalar);
+                    FolderState folderAccessRightsAccessGroup1 = CreateFolder(folderAccessRights, "AccessGroup1", "AccessGroup1");
+                    
+                    BaseDataVariableState arGroupRO = CreateVariable(folderAccessRightsAccessGroup1, "RO", "RO", BuiltInType.Int16, ValueRanks.Scalar);
                     arGroupRO.AccessLevel = AccessLevels.CurrentRead;
                     arGroupRO.UserAccessLevel = AccessLevels.CurrentRead;
                     variables.Add(arGroupRO);
-                    BaseDataVariableState arGroupWO = CreateVariable(folderAccessRightsAccessGroup1, accessRightsAccessGroup1 + "WO", "WO", BuiltInType.Int16, ValueRanks.Scalar);
+                    BaseDataVariableState arGroupWO = CreateVariable(folderAccessRightsAccessGroup1, "WO", "WO", BuiltInType.Int16, ValueRanks.Scalar);
                     arGroupWO.AccessLevel = AccessLevels.CurrentWrite;
                     arGroupWO.UserAccessLevel = AccessLevels.CurrentWrite;
                     variables.Add(arGroupWO);
-                    BaseDataVariableState arGroupRW = CreateVariable(folderAccessRightsAccessGroup1, accessRightsAccessGroup1 + "RW", "RW", BuiltInType.Int16, ValueRanks.Scalar);
+                    BaseDataVariableState arGroupRW = CreateVariable(folderAccessRightsAccessGroup1, "RW", "RW", BuiltInType.Int16, ValueRanks.Scalar);
                     arGroupRW.AccessLevel = AccessLevels.CurrentReadOrWrite;
                     arGroupRW.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
                     variables.Add(arGroupRW);
@@ -810,23 +801,22 @@ namespace SampleServer.ReferenceServer
                     #region NodeIds
 
                     FolderState nodeIdsFolder = CreateFolder(root, "NodeIds");
-                    const string nodeIds = "NodeIds_";
-
-                    BaseDataVariableState nodeIdsInstructions = CreateVariable(folderAccessRights, nodeIds + "Instructions", "Instructions", DataTypeIds.String, ValueRanks.Scalar);
+                    
+                    BaseDataVariableState nodeIdsInstructions = CreateVariable(folderAccessRights, "Instructions", "Instructions", DataTypeIds.String, ValueRanks.Scalar);
                     nodeIdsInstructions.Value = "All supported Node types are available except whichever is in use for the other nodes.";
                     variables.Add(nodeIdsInstructions);
 
-                    BaseDataVariableState integerNodeId = CreateVariable(nodeIdsFolder, nodeIds + "Int16Integer", "Int16Integer", DataTypeIds.Int16, ValueRanks.Scalar);
+                    BaseDataVariableState integerNodeId = CreateVariable(nodeIdsFolder, "Int16Integer", "Int16Integer", DataTypeIds.Int16, ValueRanks.Scalar);
                     integerNodeId.NodeId = new NodeId((uint) 9202, NamespaceIndex);
                     variables.Add(integerNodeId);
 
-                    variables.Add(CreateVariable(nodeIdsFolder, nodeIds + "Int16String", "Int16String", DataTypeIds.Int16, ValueRanks.Scalar));
+                    variables.Add(CreateVariable(nodeIdsFolder, "Int16String", "Int16String", DataTypeIds.Int16, ValueRanks.Scalar));
 
-                    BaseDataVariableState guidNodeId = CreateVariable(nodeIdsFolder, nodeIds + "Int16GUID", "Int16GUID", DataTypeIds.Int16, ValueRanks.Scalar);
+                    BaseDataVariableState guidNodeId = CreateVariable(nodeIdsFolder, "Int16GUID", "Int16GUID", DataTypeIds.Int16, ValueRanks.Scalar);
                     guidNodeId.NodeId = new NodeId(new Guid("00000000-0000-0000-0000-000000009204"), NamespaceIndex);
                     variables.Add(guidNodeId);
 
-                    BaseDataVariableState opaqueNodeId = CreateVariable(nodeIdsFolder, nodeIds + "Int16Opaque", "Int16Opaque", DataTypeIds.Int16, ValueRanks.Scalar);
+                    BaseDataVariableState opaqueNodeId = CreateVariable(nodeIdsFolder, "Int16Opaque", "Int16Opaque", DataTypeIds.Int16, ValueRanks.Scalar);
                     opaqueNodeId.NodeId = new NodeId(new byte[] {9, 2, 0, 5}, NamespaceIndex);
                     variables.Add(opaqueNodeId);
 
@@ -1092,85 +1082,84 @@ namespace SampleServer.ReferenceServer
                     #region Locales
 
                     FolderState localesFolder = CreateFolder(root, "Locales");
-                    const string locales = "Locales_";
-
-                    BaseDataVariableState qnEnglishVariable = CreateVariable(localesFolder, locales + "QNEnglish", "QNEnglish", DataTypeIds.QualifiedName, ValueRanks.Scalar);
+                    
+                    BaseDataVariableState qnEnglishVariable = CreateVariable(localesFolder, "QNEnglish", "QNEnglish", DataTypeIds.QualifiedName, ValueRanks.Scalar);
                     qnEnglishVariable.Description = new LocalizedText("en", "English");
                     qnEnglishVariable.Value = new QualifiedName("Hello World", NamespaceIndex);
                     variables.Add(qnEnglishVariable);
-                    BaseDataVariableState ltEnglishVariable = CreateVariable(localesFolder, locales + "LTEnglish", "LTEnglish", DataTypeIds.LocalizedText, ValueRanks.Scalar);
+                    BaseDataVariableState ltEnglishVariable = CreateVariable(localesFolder, "LTEnglish", "LTEnglish", DataTypeIds.LocalizedText, ValueRanks.Scalar);
                     ltEnglishVariable.Description = new LocalizedText("en", "English");
                     ltEnglishVariable.Value = new LocalizedText("en", "Hello World");
                     variables.Add(ltEnglishVariable);
 
-                    BaseDataVariableState qnFrancaisVariable = CreateVariable(localesFolder, locales + "QNFrancais", "QNFrancais", DataTypeIds.QualifiedName, ValueRanks.Scalar);
+                    BaseDataVariableState qnFrancaisVariable = CreateVariable(localesFolder, "QNFrancais", "QNFrancais", DataTypeIds.QualifiedName, ValueRanks.Scalar);
                     qnFrancaisVariable.Description = new LocalizedText("en", "Francais");
                     qnFrancaisVariable.Value = new QualifiedName("Salut tout le monde", NamespaceIndex);
                     variables.Add(qnFrancaisVariable);
-                    BaseDataVariableState ltFrancaisVariable = CreateVariable(localesFolder, locales + "LTFrancais", "LTFrancais", DataTypeIds.LocalizedText, ValueRanks.Scalar);
+                    BaseDataVariableState ltFrancaisVariable = CreateVariable(localesFolder, "LTFrancais", "LTFrancais", DataTypeIds.LocalizedText, ValueRanks.Scalar);
                     ltFrancaisVariable.Description = new LocalizedText("en", "Francais");
                     ltFrancaisVariable.Value = new LocalizedText("fr", "Salut tout le monde");
                     variables.Add(ltFrancaisVariable);
 
-                    BaseDataVariableState qnDeutschVariable = CreateVariable(localesFolder, locales + "QNDeutsch", "QNDeutsch", DataTypeIds.QualifiedName, ValueRanks.Scalar);
+                    BaseDataVariableState qnDeutschVariable = CreateVariable(localesFolder, "QNDeutsch", "QNDeutsch", DataTypeIds.QualifiedName, ValueRanks.Scalar);
                     qnDeutschVariable.Description = new LocalizedText("en", "Deutsch");
                     qnDeutschVariable.Value = new QualifiedName("Hallo Welt", NamespaceIndex);
                     variables.Add(qnDeutschVariable);
-                    BaseDataVariableState ltDeutschVariable = CreateVariable(localesFolder, locales + "LTDeutsch", "LTDeutsch", DataTypeIds.LocalizedText, ValueRanks.Scalar);
+                    BaseDataVariableState ltDeutschVariable = CreateVariable(localesFolder, "LTDeutsch", "LTDeutsch", DataTypeIds.LocalizedText, ValueRanks.Scalar);
                     ltDeutschVariable.Description = new LocalizedText("en", "Deutsch");
                     ltDeutschVariable.Value = new LocalizedText("de", "Hallo Welt");
                     variables.Add(ltDeutschVariable);
 
-                    BaseDataVariableState qnEspanolVariable = CreateVariable(localesFolder, locales + "QNEspanol", "QNEspanol", DataTypeIds.QualifiedName, ValueRanks.Scalar);
+                    BaseDataVariableState qnEspanolVariable = CreateVariable(localesFolder, "QNEspanol", "QNEspanol", DataTypeIds.QualifiedName, ValueRanks.Scalar);
                     qnEspanolVariable.Description = new LocalizedText("en", "Espanol");
                     qnEspanolVariable.Value = new QualifiedName("Hola mundo", NamespaceIndex);
                     variables.Add(qnEspanolVariable);
-                    BaseDataVariableState ltEspanolVariable = CreateVariable(localesFolder, locales + "LTEspanol", "LTEspanol", DataTypeIds.LocalizedText, ValueRanks.Scalar);
+                    BaseDataVariableState ltEspanolVariable = CreateVariable(localesFolder, "LTEspanol", "LTEspanol", DataTypeIds.LocalizedText, ValueRanks.Scalar);
                     ltEspanolVariable.Description = new LocalizedText("en", "Espanol");
                     ltEspanolVariable.Value = new LocalizedText("es", "Hola mundo");
                     variables.Add(ltEspanolVariable);
 
-                    BaseDataVariableState qnJapaneseVariable = CreateVariable(localesFolder, locales + "QN日本の", "QN日本の", DataTypeIds.QualifiedName, ValueRanks.Scalar);
+                    BaseDataVariableState qnJapaneseVariable = CreateVariable(localesFolder, "QN日本の", "QN日本の", DataTypeIds.QualifiedName, ValueRanks.Scalar);
                     qnJapaneseVariable.Description = new LocalizedText("en", "Japanese");
                     qnJapaneseVariable.Value = new QualifiedName("ハローワールド", NamespaceIndex);
                     variables.Add(qnJapaneseVariable);
-                    BaseDataVariableState ltJapaneseVariable = CreateVariable(localesFolder, locales + "LT日本の", "LT日本の", DataTypeIds.LocalizedText, ValueRanks.Scalar);
+                    BaseDataVariableState ltJapaneseVariable = CreateVariable(localesFolder, "LT日本の", "LT日本の", DataTypeIds.LocalizedText, ValueRanks.Scalar);
                     ltJapaneseVariable.Description = new LocalizedText("en", "Japanese");
                     ltJapaneseVariable.Value = new LocalizedText("jp", "ハローワールド");
                     variables.Add(ltJapaneseVariable);
 
-                    BaseDataVariableState qnChineseVariable = CreateVariable(localesFolder, locales + "QN中國的", "QN中國的", DataTypeIds.QualifiedName, ValueRanks.Scalar);
+                    BaseDataVariableState qnChineseVariable = CreateVariable(localesFolder, "QN中國的", "QN中國的", DataTypeIds.QualifiedName, ValueRanks.Scalar);
                     qnChineseVariable.Description = new LocalizedText("en", "Chinese");
                     qnChineseVariable.Value = new QualifiedName("世界您好", NamespaceIndex);
                     variables.Add(qnChineseVariable);
-                    BaseDataVariableState ltChineseVariable = CreateVariable(localesFolder, locales + "LT中國的", "LT中國的", DataTypeIds.LocalizedText, ValueRanks.Scalar);
+                    BaseDataVariableState ltChineseVariable = CreateVariable(localesFolder, "LT中國的", "LT中國的", DataTypeIds.LocalizedText, ValueRanks.Scalar);
                     ltChineseVariable.Description = new LocalizedText("en", "Chinese");
                     ltChineseVariable.Value = new LocalizedText("ch", "世界您好");
                     variables.Add(ltChineseVariable);
 
-                    BaseDataVariableState qnRussianVariable = CreateVariable(localesFolder, locales + "QNрусский", "QNрусский", DataTypeIds.QualifiedName, ValueRanks.Scalar);
+                    BaseDataVariableState qnRussianVariable = CreateVariable(localesFolder, "QNрусский", "QNрусский", DataTypeIds.QualifiedName, ValueRanks.Scalar);
                     qnRussianVariable.Description = new LocalizedText("en", "Russian");
                     qnRussianVariable.Value = new QualifiedName("LTрусский", NamespaceIndex);
                     variables.Add(qnRussianVariable);
-                    BaseDataVariableState ltRussianVariable = CreateVariable(localesFolder, locales + "LTрусский", "LTрусский", DataTypeIds.LocalizedText, ValueRanks.Scalar);
+                    BaseDataVariableState ltRussianVariable = CreateVariable(localesFolder, "LTрусский", "LTрусский", DataTypeIds.LocalizedText, ValueRanks.Scalar);
                     ltRussianVariable.Description = new LocalizedText("en", "Russian");
                     ltRussianVariable.Value = new LocalizedText("ru", "LTрусский");
                     variables.Add(ltRussianVariable);
 
-                    BaseDataVariableState qnArabicVariable = CreateVariable(localesFolder, locales + "QNالعربية", "QNالعربية", DataTypeIds.QualifiedName, ValueRanks.Scalar);
+                    BaseDataVariableState qnArabicVariable = CreateVariable(localesFolder, "QNالعربية", "QNالعربية", DataTypeIds.QualifiedName, ValueRanks.Scalar);
                     qnArabicVariable.Description = new LocalizedText("en", "Arabic");
                     qnArabicVariable.Value = new QualifiedName("مرحبا بالعال", NamespaceIndex);
                     variables.Add(qnArabicVariable);
-                    BaseDataVariableState ltArabicVariable = CreateVariable(localesFolder, locales + "LTالعربية", "LTالعربية", DataTypeIds.LocalizedText, ValueRanks.Scalar);
+                    BaseDataVariableState ltArabicVariable = CreateVariable(localesFolder, "LTالعربية", "LTالعربية", DataTypeIds.LocalizedText, ValueRanks.Scalar);
                     ltArabicVariable.Description = new LocalizedText("en", "Arabic");
                     ltArabicVariable.Value = new LocalizedText("ae", "مرحبا بالعال");
                     variables.Add(ltArabicVariable);
 
-                    BaseDataVariableState qnKlingonVariable = CreateVariable(localesFolder, locales + "QNtlhIngan", "QNtlhIngan", DataTypeIds.QualifiedName, ValueRanks.Scalar);
+                    BaseDataVariableState qnKlingonVariable = CreateVariable(localesFolder, "QNtlhIngan", "QNtlhIngan", DataTypeIds.QualifiedName, ValueRanks.Scalar);
                     qnKlingonVariable.Description = new LocalizedText("en", "Klingon");
                     qnKlingonVariable.Value = new QualifiedName("qo' vIvan", NamespaceIndex);
                     variables.Add(qnKlingonVariable);
-                    BaseDataVariableState ltKlingonVariable = CreateVariable(localesFolder, locales + "LTtlhIngan", "LTtlhIngan", DataTypeIds.LocalizedText, ValueRanks.Scalar);
+                    BaseDataVariableState ltKlingonVariable = CreateVariable(localesFolder, "LTtlhIngan", "LTtlhIngan", DataTypeIds.LocalizedText, ValueRanks.Scalar);
                     ltKlingonVariable.Description = new LocalizedText("en", "Klingon");
                     ltKlingonVariable.Value = new LocalizedText("ko", "qo' vIvan");
                     variables.Add(ltKlingonVariable);
@@ -1183,7 +1172,7 @@ namespace SampleServer.ReferenceServer
 
                     #region AccessAll
 
-                    FolderState folderAttributesAccessAll = CreateFolder(folderAttributes, "Attributes_AccessAll", "AccessAll");
+                    FolderState folderAttributesAccessAll = CreateFolder(folderAttributes, "AccessAll", "AccessAll");
                     const string attributesAccessAll = "Attributes_AccessAll_";
 
                     BaseDataVariableState accessLevelAccessAll = CreateVariable(folderAttributesAccessAll, attributesAccessAll + "AccessLevel", "AccessLevel", DataTypeIds.Double, ValueRanks.Scalar);
@@ -1306,109 +1295,108 @@ namespace SampleServer.ReferenceServer
                     #region AccessUser1
 
                     FolderState folderAttributesAccessUser1 = CreateFolder(folderAttributes, "Attributes_AccessUser1", "AccessUser1");
-                    const string attributesAccessUser1 = "Attributes_AccessUser1_";
-
-                    BaseDataVariableState accessLevelAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "AccessLevel", "AccessLevel", DataTypeIds.Double, ValueRanks.Scalar);
+                    
+                    BaseDataVariableState accessLevelAccessUser1 = CreateVariable(folderAttributesAccessUser1, "AccessLevel", "AccessLevel", DataTypeIds.Double, ValueRanks.Scalar);
                     accessLevelAccessAll.WriteMask = AttributeWriteMask.AccessLevel;
                     accessLevelAccessAll.UserWriteMask = AttributeWriteMask.AccessLevel;
                     variables.Add(accessLevelAccessAll);
 
-                    BaseDataVariableState arrayDimensionsAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "ArrayDimensions", "ArrayDimensions", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState arrayDimensionsAccessUser1 = CreateVariable(folderAttributesAccessUser1, "ArrayDimensions", "ArrayDimensions", DataTypeIds.Double, ValueRanks.Scalar);
                     arrayDimensionsAccessUser1.WriteMask = AttributeWriteMask.ArrayDimensions;
                     arrayDimensionsAccessUser1.UserWriteMask = AttributeWriteMask.ArrayDimensions;
                     variables.Add(arrayDimensionsAccessUser1);
 
-                    BaseDataVariableState browseNameAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "BrowseName", "BrowseName", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState browseNameAccessUser1 = CreateVariable(folderAttributesAccessUser1, "BrowseName", "BrowseName", DataTypeIds.Double, ValueRanks.Scalar);
                     browseNameAccessUser1.WriteMask = AttributeWriteMask.BrowseName;
                     browseNameAccessUser1.UserWriteMask = AttributeWriteMask.BrowseName;
                     variables.Add(browseNameAccessUser1);
 
-                    BaseDataVariableState containsNoLoopsAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "ContainsNoLoops", "ContainsNoLoops", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState containsNoLoopsAccessUser1 = CreateVariable(folderAttributesAccessUser1, "ContainsNoLoops", "ContainsNoLoops", DataTypeIds.Double, ValueRanks.Scalar);
                     containsNoLoopsAccessUser1.WriteMask = AttributeWriteMask.ContainsNoLoops;
                     containsNoLoopsAccessUser1.UserWriteMask = AttributeWriteMask.ContainsNoLoops;
                     variables.Add(containsNoLoopsAccessUser1);
 
-                    BaseDataVariableState dataTypeAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "DataType", "DataType", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState dataTypeAccessUser1 = CreateVariable(folderAttributesAccessUser1, "DataType", "DataType", DataTypeIds.Double, ValueRanks.Scalar);
                     dataTypeAccessUser1.WriteMask = AttributeWriteMask.DataType;
                     dataTypeAccessUser1.UserWriteMask = AttributeWriteMask.DataType;
                     variables.Add(dataTypeAccessUser1);
 
-                    BaseDataVariableState descriptionAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "Description", "Description", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState descriptionAccessUser1 = CreateVariable(folderAttributesAccessUser1, "Description", "Description", DataTypeIds.Double, ValueRanks.Scalar);
                     descriptionAccessUser1.WriteMask = AttributeWriteMask.Description;
                     descriptionAccessUser1.UserWriteMask = AttributeWriteMask.Description;
                     variables.Add(descriptionAccessUser1);
 
-                    BaseDataVariableState eventNotifierAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "EventNotifier", "EventNotifier", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState eventNotifierAccessUser1 = CreateVariable(folderAttributesAccessUser1, "EventNotifier", "EventNotifier", DataTypeIds.Double, ValueRanks.Scalar);
                     eventNotifierAccessUser1.WriteMask = AttributeWriteMask.EventNotifier;
                     eventNotifierAccessUser1.UserWriteMask = AttributeWriteMask.EventNotifier;
                     variables.Add(eventNotifierAccessUser1);
 
-                    BaseDataVariableState executableAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "Executable", "Executable", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState executableAccessUser1 = CreateVariable(folderAttributesAccessUser1, "Executable", "Executable", DataTypeIds.Double, ValueRanks.Scalar);
                     executableAccessUser1.WriteMask = AttributeWriteMask.Executable;
                     executableAccessUser1.UserWriteMask = AttributeWriteMask.Executable;
                     variables.Add(executableAccessUser1);
 
-                    BaseDataVariableState historizingAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "Historizing", "Historizing", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState historizingAccessUser1 = CreateVariable(folderAttributesAccessUser1, "Historizing", "Historizing", DataTypeIds.Double, ValueRanks.Scalar);
                     historizingAccessUser1.WriteMask = AttributeWriteMask.Historizing;
                     historizingAccessUser1.UserWriteMask = AttributeWriteMask.Historizing;
                     variables.Add(historizingAccessUser1);
 
-                    BaseDataVariableState inverseNameAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "InverseName", "InverseName", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState inverseNameAccessUser1 = CreateVariable(folderAttributesAccessUser1, "InverseName", "InverseName", DataTypeIds.Double, ValueRanks.Scalar);
                     inverseNameAccessUser1.WriteMask = AttributeWriteMask.InverseName;
                     inverseNameAccessUser1.UserWriteMask = AttributeWriteMask.InverseName;
                     variables.Add(inverseNameAccessUser1);
 
-                    BaseDataVariableState isAbstractAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "IsAbstract", "IsAbstract", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState isAbstractAccessUser1 = CreateVariable(folderAttributesAccessUser1, "IsAbstract", "IsAbstract", DataTypeIds.Double, ValueRanks.Scalar);
                     isAbstractAccessUser1.WriteMask = AttributeWriteMask.IsAbstract;
                     isAbstractAccessUser1.UserWriteMask = AttributeWriteMask.IsAbstract;
                     variables.Add(isAbstractAccessUser1);
 
-                    BaseDataVariableState minimumSamplingIntervalAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "MinimumSamplingInterval", "MinimumSamplingInterval", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState minimumSamplingIntervalAccessUser1 = CreateVariable(folderAttributesAccessUser1, "MinimumSamplingInterval", "MinimumSamplingInterval", DataTypeIds.Double, ValueRanks.Scalar);
                     minimumSamplingIntervalAccessUser1.WriteMask = AttributeWriteMask.MinimumSamplingInterval;
                     minimumSamplingIntervalAccessUser1.UserWriteMask = AttributeWriteMask.MinimumSamplingInterval;
                     variables.Add(minimumSamplingIntervalAccessUser1);
 
-                    BaseDataVariableState nodeClassIntervalAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "NodeClass", "NodeClass", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState nodeClassIntervalAccessUser1 = CreateVariable(folderAttributesAccessUser1, "NodeClass", "NodeClass", DataTypeIds.Double, ValueRanks.Scalar);
                     nodeClassIntervalAccessUser1.WriteMask = AttributeWriteMask.NodeClass;
                     nodeClassIntervalAccessUser1.UserWriteMask = AttributeWriteMask.NodeClass;
                     variables.Add(nodeClassIntervalAccessUser1);
 
-                    BaseDataVariableState nodeIdAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "NodeId", "NodeId", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState nodeIdAccessUser1 = CreateVariable(folderAttributesAccessUser1, "NodeId", "NodeId", DataTypeIds.Double, ValueRanks.Scalar);
                     nodeIdAccessUser1.WriteMask = AttributeWriteMask.NodeId;
                     nodeIdAccessUser1.UserWriteMask = AttributeWriteMask.NodeId;
                     variables.Add(nodeIdAccessUser1);
 
-                    BaseDataVariableState symmetricAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "Symmetric", "Symmetric", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState symmetricAccessUser1 = CreateVariable(folderAttributesAccessUser1, "Symmetric", "Symmetric", DataTypeIds.Double, ValueRanks.Scalar);
                     symmetricAccessUser1.WriteMask = AttributeWriteMask.Symmetric;
                     symmetricAccessUser1.UserWriteMask = AttributeWriteMask.Symmetric;
                     variables.Add(symmetricAccessUser1);
 
-                    BaseDataVariableState userAccessUser1AccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "UserAccessUser1", "UserAccessUser1", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState userAccessUser1AccessUser1 = CreateVariable(folderAttributesAccessUser1, "UserAccessUser1", "UserAccessUser1", DataTypeIds.Double, ValueRanks.Scalar);
                     userAccessUser1AccessUser1.WriteMask = AttributeWriteMask.UserAccessLevel;
                     userAccessUser1AccessUser1.UserWriteMask = AttributeWriteMask.UserAccessLevel;
                     variables.Add(userAccessUser1AccessUser1);
 
-                    BaseDataVariableState userExecutableAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "UserExecutable", "UserExecutable", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState userExecutableAccessUser1 = CreateVariable(folderAttributesAccessUser1, "UserExecutable", "UserExecutable", DataTypeIds.Double, ValueRanks.Scalar);
                     userExecutableAccessUser1.WriteMask = AttributeWriteMask.UserExecutable;
                     userExecutableAccessUser1.UserWriteMask = AttributeWriteMask.UserExecutable;
                     variables.Add(userExecutableAccessUser1);
 
-                    BaseDataVariableState valueRankAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "ValueRank", "ValueRank", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState valueRankAccessUser1 = CreateVariable(folderAttributesAccessUser1, "ValueRank", "ValueRank", DataTypeIds.Double, ValueRanks.Scalar);
                     valueRankAccessUser1.WriteMask = AttributeWriteMask.ValueRank;
                     valueRankAccessUser1.UserWriteMask = AttributeWriteMask.ValueRank;
                     variables.Add(valueRankAccessUser1);
 
-                    BaseDataVariableState writeMaskAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "WriteMask", "WriteMask", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState writeMaskAccessUser1 = CreateVariable(folderAttributesAccessUser1, "WriteMask", "WriteMask", DataTypeIds.Double, ValueRanks.Scalar);
                     writeMaskAccessUser1.WriteMask = AttributeWriteMask.WriteMask;
                     writeMaskAccessUser1.UserWriteMask = AttributeWriteMask.WriteMask;
                     variables.Add(writeMaskAccessUser1);
 
-                    BaseDataVariableState valueForVariableTypeAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "ValueForVariableType", "ValueForVariableType", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState valueForVariableTypeAccessUser1 = CreateVariable(folderAttributesAccessUser1, "ValueForVariableType", "ValueForVariableType", DataTypeIds.Double, ValueRanks.Scalar);
                     valueForVariableTypeAccessUser1.WriteMask = AttributeWriteMask.ValueForVariableType;
                     valueForVariableTypeAccessUser1.UserWriteMask = AttributeWriteMask.ValueForVariableType;
                     variables.Add(valueForVariableTypeAccessUser1);
 
-                    BaseDataVariableState allAccessUser1 = CreateVariable(folderAttributesAccessUser1, attributesAccessUser1 + "All", "All", DataTypeIds.Double, ValueRanks.Scalar);
+                    BaseDataVariableState allAccessUser1 = CreateVariable(folderAttributesAccessUser1, "All", "All", DataTypeIds.Double, ValueRanks.Scalar);
                     allAccessUser1.WriteMask = AttributeWriteMask.AccessLevel | AttributeWriteMask.ArrayDimensions | AttributeWriteMask.BrowseName | AttributeWriteMask.ContainsNoLoops | AttributeWriteMask.DataType |
                                                AttributeWriteMask.Description | AttributeWriteMask.DisplayName | AttributeWriteMask.EventNotifier | AttributeWriteMask.Executable | AttributeWriteMask.Historizing | AttributeWriteMask.InverseName |
                                                AttributeWriteMask.IsAbstract |
@@ -1430,9 +1418,8 @@ namespace SampleServer.ReferenceServer
                     #region MyCompany
 
                     FolderState myCompanyFolder = CreateFolder(root, "MyCompany");
-                    const string myCompany = "MyCompany_";
-
-                    BaseDataVariableState myCompanyInstructions = CreateVariable(myCompanyFolder, myCompany + "Instructions", "Instructions", DataTypeIds.String, ValueRanks.Scalar);
+                    
+                    BaseDataVariableState myCompanyInstructions = CreateVariable(myCompanyFolder, "Instructions", "Instructions", DataTypeIds.String, ValueRanks.Scalar);
                     myCompanyInstructions.Value = "A place for the vendor to describe their address-space.";
                     variables.Add(myCompanyInstructions);
 

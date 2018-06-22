@@ -143,12 +143,29 @@
       <ua:String>Method Server Facet</ua:String>
     </ServerProfileArray>
   </ServerConfiguration>
-  
+
   <Extensions>
     <ua:XmlElement>
       <SampleServerConfiguration>
-        <ShutdownDelay>3</ShutdownDelay>
+        <TimerInterval>1000</TimerInterval>
       </SampleServerConfiguration>
+    </ua:XmlElement>
+    <ua:XmlElement>
+      <ServerTookitConfiguration>
+        <!-- add here the custom server certificates in this particular order-->
+        <TrustedIssuerUserCertificateStore>
+          <StoreType>Directory</StoreType>
+          <StorePath>/storage/emulated/0/Softing/pki/issuer</StorePath>
+        </TrustedIssuerUserCertificateStore>
+        <TrustedUserCertificateStore>
+          <StoreType>Directory</StoreType>
+          <StorePath>/storage/emulated/0/Softing/pki/trusted</StorePath>
+        </TrustedUserCertificateStore>
+        <RejectedUserCertificateStore>
+          <StoreType>Directory</StoreType>
+          <StorePath>/storage/emulated/0/Softing/pki/rejected</StorePath>
+        </RejectedUserCertificateStore>
+      </ServerTookitConfiguration>
     </ua:XmlElement>
   </Extensions>
   
