@@ -38,8 +38,16 @@ namespace SampleServer.HistoricalDataAccess
 
             try
             {
+                FolderState root = CreateFolder(null, "HistoricalDataAccess");
+                root.EventNotifier = EventNotifiers.SubscribeToEvents;
+                AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
+
+                // Add Support for Event Notifiers
+                // Creating notifier ensures events propagate up the hierarchy when they are produced
+                AddRootNotifier(root);
+
                 // Create the root folder
-                FolderState root = new FolderState(null);
+                /*FolderState root = new FolderState(null);
 
                 root.NodeId = new NodeId("HistoricalDataAccess", NamespaceIndex);
                 root.BrowseName = new QualifiedName("HistoricalDataAccess", NamespaceIndex);
@@ -58,8 +66,12 @@ namespace SampleServer.HistoricalDataAccess
 
                 // Save the node for later lookup
                 AddPredefinedNode(SystemContext, root);
+                */
 
                 // Historical Access
+                FolderState dynamicHistoricals = CreateFolder(root, "DynamicHistoricalDataItems");
+                root.EventNotifier = EventNotifiers.SubscribeToEvents;
+                /*
                 FolderState dynamicHistoricals = new FolderState(null);
                 dynamicHistoricals.NodeId = new NodeId("DynamicHistoricalDataItems", NamespaceIndex);
                 dynamicHistoricals.BrowseName = new QualifiedName("DynamicHistoricalDataItems", NamespaceIndex);
@@ -68,7 +80,12 @@ namespace SampleServer.HistoricalDataAccess
                 root.AddReference(ReferenceTypeIds.Organizes, false, dynamicHistoricals.NodeId);
                 dynamicHistoricals.AddReference(ReferenceTypeIds.Organizes, true, root.NodeId);
                 AddPredefinedNode(SystemContext, dynamicHistoricals);
-                
+                */
+
+                FolderState staticHistoricals = CreateFolder(root, "StaticHistoricalDataItems");
+                root.EventNotifier = EventNotifiers.SubscribeToEvents;
+
+                /*
                 FolderState staticHistoricals = new FolderState(null);
                 staticHistoricals.NodeId = new NodeId("StaticHistoricalDataItems", NamespaceIndex);
                 staticHistoricals.BrowseName = new QualifiedName("StaticHistoricalDataItems", NamespaceIndex);
@@ -77,7 +94,7 @@ namespace SampleServer.HistoricalDataAccess
                 root.AddReference(ReferenceTypeIds.Organizes, false, staticHistoricals.NodeId);
                 staticHistoricals.AddReference(ReferenceTypeIds.Organizes, true, root.NodeId);
                 AddPredefinedNode(SystemContext, staticHistoricals);
-                
+                */
             }
             catch (Exception ex)
             {
