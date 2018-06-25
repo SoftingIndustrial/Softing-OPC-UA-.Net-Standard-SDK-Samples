@@ -56,11 +56,10 @@ namespace SampleClient.Samples
             }
 
             /*Select the method from the address space*/
-            //Browse Path: Root\Objects\Server\Methods
+            //Browse Path: Root\Objects\Methods
             NodeId parentObjectId = new NodeId("ns=5;i=1");
 
-            //Browse Path: Root\Objects\Server\Methods\Add
-            //string methodPath = "Root\\Objects\\Server\\Methods\\Add";
+            //Browse Path: Root\Objects\Methods\Add
             string methodPath = "Root\\Objects\\Methods\\Add";
             NodeId methodId = new NodeId("ns=5;i=2");
 
@@ -106,10 +105,9 @@ namespace SampleClient.Samples
             }
 
             /*Select the method from the address space*/
-            //Browse Path: Root\Objects\Server\Methods
+            //Browse Path: Root\Objects\Methods
             NodeId parentObjectId = new NodeId(1, 5);
-            //Browse Path: Root\Objects\Server\Methods\Multiply
-            //string methodPath = "Root\\Objects\\Server\\Methods\\Multiply";
+            //Browse Path: Root\Objects\Methods\Multiply
             string methodPath = "Root\\Objects\\Methods\\Multiply";
             NodeId methodId = new NodeId("ns=5;i=5");
 
