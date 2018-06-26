@@ -64,7 +64,7 @@ namespace SampleServer.DataAccess
                 base.CreateAddressSpace(externalReferences);
 
                 // Create a root node and add a reference to external Server Objects Folder
-                FolderState root = CreateFolder(null, "DataAccess");
+                FolderState root = CreateObjectFromType(null, "DataAccess", ObjectTypeIds.FolderType, ReferenceTypeIds.Organizes) as FolderState;
                 AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
                 CreateRefrigerator(SystemContext, root);                
@@ -88,7 +88,9 @@ namespace SampleServer.DataAccess
             BaseObjectState refrigerator = CreateObject(parent, "Refrigerator");
 
             // Create CoolingMotorRunning variable
-            DataItemState coolingMotorRunning = CreateDataItemVariable(refrigerator, "CoolingMotorRunning", DataTypes.Boolean);
+            DataItemState coolingMotorRunning = CreateVariableFromType(refrigerator, "CoolingMotorRunning", VariableTypeIds.DataItemType, ReferenceTypeIds.Organizes) as DataItemState;
+            coolingMotorRunning.DataType = DataTypeIds.Boolean;
+            coolingMotorRunning.ValueRank = ValueRanks.Scalar;
             coolingMotorRunning.Value = true;
 
             // Create DoorMotor variable
@@ -107,8 +109,11 @@ namespace SampleServer.DataAccess
             m_doorOpened.Value = true;
 
             // Create ActualTemperature variable
-            AnalogItemState actualTemperature = CreateAnalogVariable(refrigerator, "ActualTemperature", DataTypeIds.Double, ValueRanks.Scalar, new Range(90, 10), null);
+            AnalogItemState actualTemperature = CreateVariableFromType(refrigerator, "ActualTemperature", VariableTypeIds.AnalogItemType, ReferenceTypeIds.Organizes) as AnalogItemState;
+            actualTemperature.DataType = DataTypeIds.Double;
+            actualTemperature.EURange.Value = new Range(90, 10);
             actualTemperature.InstrumentRange.Value = new Range(100, 0);
+            actualTemperature.ValueRank = ValueRanks.Scalar;  
             actualTemperature.Value = 2.7;
 
             // Create MotorTemperature variable

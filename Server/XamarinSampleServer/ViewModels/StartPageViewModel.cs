@@ -38,7 +38,6 @@ namespace XamarinSampleServer.ViewModels
         private bool m_isRefreshingSessions;
         private string m_resultsText;
         private bool m_canStartServer;
-        private ApplicationInstance m_application;
         private SampleServer.SampleServer m_sampleServer;
         #endregion
 
@@ -169,32 +168,27 @@ namespace XamarinSampleServer.ViewModels
         {
             CanStartServer = false;
             IsBusy = true;
-
-            ApplicationConfiguration config;
+            
             string serverUrl = "";
-            if (m_application == null)
+            
+            ResultsText = "Initializing application configuration...";                
+            if (Device.RuntimePlatform == "Android")
             {
-                ResultsText = "Initializing application configuration...";
-                m_application = new ApplicationInstance
-                {
-                    ApplicationType = ApplicationType.Server,
-                    ConfigSectionName = "XamarinSampleServer"
-                };
-                if (Device.RuntimePlatform == "Android")
-                {
 
-                    string currentFolder = @"/storage/emulated/0/Softing/config/";
-                    string filename = "XamarinSampleServer.Config.xml";
-                    string content = DependencyService.Get<IAssetService>().LoadFile(filename);
+                string currentFolder = @"/storage/emulated/0/Softing/config/";
+                string filename = "XamarinSampleServer.Config.xml";
+                string content = DependencyService.Get<IAssetService>().LoadFile(filename);                
 
-                    Directory.CreateDirectory(currentFolder);
-                    if (!File.Exists(currentFolder + filename))
-                    {
-                        File.WriteAllText(currentFolder + filename, content);
-                    }
-                    // load the application configuration.
-                    config = await m_application.LoadApplicationConfiguration(currentFolder + filename, false);
-                    config.ServerConfiguration.BaseAddresses.Clear();                  
+                Directory.CreateDirectory(currentFolder);
+                if (!File.Exists(currentFolder + filename))
+                {
+                    File.WriteAllText(currentFolder + filename, content);
+                }                
+                try
+                {
+                    ApplicationConfiguration config;
+                    config = await new ApplicationInstance().LoadApplicationConfiguration(currentFolder + filename, false);
+                    config.ServerConfiguration.BaseAddresses.Clear();
                     foreach (var serverIp in ServerIps)
                     {
                         string url = $"opc.tcp://{serverIp}:61510/SampleServer";
@@ -202,30 +196,19 @@ namespace XamarinSampleServer.ViewModels
                         serverUrl += url + "\n";
                         break;
                     }
+
+                    ResultsText += "\nStarting server...";
+                    // Start the server
+                    m_sampleServer = new SampleServer.SampleServer();
+                    await m_sampleServer.Start(config);
+              
+                    ResultsText = "Server is running.";
                 }
-                else
+                catch (Exception e)
                 {
-                    // load the application configuration.
-                    config = await m_application.LoadApplicationConfiguration(false);
+                    ResultsText += string.Format("\n\nError starting server url: {0}.\n{1}", serverUrl, e.Message);
                 }
-            }
-            try
-            {
-                ResultsText += "\nChecking certificates...";
-                // Check the application certificate
-                await m_application.CheckApplicationInstanceCertificate(false, 0);
-                m_application.ApplicationConfiguration.CertificateValidator.CertificateValidation += CertificateValidator_CertificateValidation;
-                ResultsText += "\nStarting server...";
-                // Start the server
-                m_sampleServer = new SampleServer.SampleServer();
-               
-                await m_application.Start(m_sampleServer);
-                ResultsText = "Server is running.";
-            }
-            catch (Exception e)
-            {
-                ResultsText += string.Format("\n\nError starting server url: {0}.\n{1}", serverUrl, e.Message);
-            }
+            }                
 
             Device.StartTimer(new TimeSpan(0, 0, 5), () => {
                 LoadSessionsCommand.Execute(null);
@@ -241,10 +224,9 @@ namespace XamarinSampleServer.ViewModels
         public void StopServer()
         {
             ResultsText = "Stopping server...";
-            if (m_application != null)
+            if (m_sampleServer != null)
             {
-                m_application.Stop();
-                m_sampleServer = null;
+                m_sampleServer.Stop();
                 m_connectedSessions.Clear();
             }
             CanStartServer = true;
