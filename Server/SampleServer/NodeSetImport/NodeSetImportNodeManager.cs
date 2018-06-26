@@ -113,15 +113,28 @@ namespace SampleServer.NodeSetImport
 
             return ServiceResult.Good;
         }
-        
+
         /// <summary>
         /// Handles the AddDeviceMethodCall
         /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="inputArguments"></param>
+        /// <param name="outputArguments"></param>
+        /// <returns></returns>
         private ServiceResult OnAddRefrigerator(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
             return Import(context, Path.Combine(m_SecondaryModelFilePath));
         }
 
+        /// <summary>
+        /// Handles the ImportMethodCall
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="inputArguments"></param>
+        /// <param name="outputArguments"></param>
+        /// <returns></returns>
         private ServiceResult OnImportNodeSet(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
             string filePath = (string)inputArguments[0];
