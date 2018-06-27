@@ -1689,11 +1689,9 @@ namespace SampleServer.ReferenceServer
         private ServiceResult ImportNodeSet()
         {
             try
-            {
-                string resourceName = "SampleServer.ReferenceServer.Model.ReferenceServer.NodeSet2.xml";
-
+            {           
                 System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-                Stream stream = assembly.GetManifestResourceStream(resourceName);
+                Stream stream = assembly.GetManifestResourceStream(ResourceNames.ReferenceNodeSet2);
 
                 if (stream != null)
                 {

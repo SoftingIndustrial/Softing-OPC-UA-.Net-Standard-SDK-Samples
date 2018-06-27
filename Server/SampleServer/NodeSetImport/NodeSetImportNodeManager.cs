@@ -23,12 +23,7 @@ namespace SampleServer.NodeSetImport
     /// A node manager for a server that provides an implementation of the OPC UA features
     /// </summary>
     public class NodeSetImportNodeManager : NodeManager
-    {
-        #region Private Members
-        private readonly string[] m_InitialModelFilePath = { "NodeSetImport", "Refrigerators.NodeSet2.xml" };
-        private readonly string[] m_SecondaryModelFilePath = { "NodeSetImport", "Refrigerators2.NodeSet2.xml" };
-        #endregion
-
+    {      
         #region Constructors
         /// <summary>
         /// Initializes the node manager. 
@@ -55,7 +50,7 @@ namespace SampleServer.NodeSetImport
                 base.CreateAddressSpace(externalReferences);
 
                 // Import the initial data model from a NodeSet file
-                Import(SystemContext, Path.Combine(m_InitialModelFilePath));
+                ImportNodeSet(ResourceNames.NodeSetImportInitialModel);
 
                 try
                 {
@@ -90,20 +85,30 @@ namespace SampleServer.NodeSetImport
             // This override will receive a callback every time a new node is added
             // e.g. The extension data can be received in predefinedNode.Extensions
             return predefinedNode;
-        }      
+        }
         #endregion
 
-        #region Private Methods
+        #region Private Methods     
         /// <summary>
-        /// Imports into the address space an xml file containing the model structure
+        /// Imports into the address space an xml file stream containing the model structure. The Xml Stream is taken from resources
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="filePath">The path of the NodeSet XML file</param>
-        private ServiceResult Import(ISystemContext context, string filePath)
+        /// <param name="resourceName">resource name</param>
+        /// <returns></returns>
+        private ServiceResult ImportNodeSet(string resourceName)
         {
             try
             {
-                ImportNodeSet(context, filePath);
+                if (resourceName == null) throw new ArgumentNullException(nameof(resourceName));
+
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                Stream stream = assembly.GetManifestResourceStream(resourceName);
+
+                if (stream == null)
+                {
+                    throw ServiceResultException.Create(StatusCodes.BadDecodingError, "Could not load nodes from resource: {0}", resourceName);
+                }
+
+                ImportNodeSet(SystemContext, stream);
             }
             catch (Exception ex)
             {
@@ -124,7 +129,7 @@ namespace SampleServer.NodeSetImport
         /// <returns></returns>
         private ServiceResult OnAddRefrigerator(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
-            return Import(context, Path.Combine(m_SecondaryModelFilePath));
+            return ImportNodeSet(ResourceNames.NodeSetImportInitialSecondaryModel);
         }
 
         /// <summary>
@@ -138,7 +143,15 @@ namespace SampleServer.NodeSetImport
         private ServiceResult OnImportNodeSet(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
             string filePath = (string)inputArguments[0];
-            return Import(context, filePath);
+            try
+            {
+                ImportNodeSet(context, filePath);
+            }
+            catch
+            {
+                new ServiceResult(StatusCodes.Bad);
+            }
+            return ServiceResult.Good;
         }
         #endregion       
     }
