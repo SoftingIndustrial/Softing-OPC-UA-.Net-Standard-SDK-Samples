@@ -47,12 +47,4 @@
 	<EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" />
 	<EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators2.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators2.NodeSet2.xml" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Configuration\Opc.Ua.Configuration.csproj" />
-    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Server\Opc.Ua.Server.csproj" />
-    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Core\Opc.Ua.Core.csproj" />
-    <ProjectReference Include="..\..\..\Toolkit\Server\Softing.Opc.Ua.Server_2017.csproj" />
-  </ItemGroup>
-  
 </Project>
