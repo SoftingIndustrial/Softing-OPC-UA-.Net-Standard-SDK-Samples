@@ -16,7 +16,8 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -66,10 +67,10 @@
                         <Picker Grid.Row="5" Grid.Column="1"
                             HorizontalOptions="FillAndExpand" 
                             Title="Select user identity"
-                            ItemsSource="{Binding UserIdentities}"
+                            ItemsSource="{Binding UserTokenTypes}"
                             IsEnabled="{Binding CanConnect}"
-                            SelectedItem="{Binding SelectedUserIdentity, Mode=TwoWay}"
-                            ItemDisplayBinding="{Binding TokenType}"/>
+                            SelectedItem="{Binding SelectedUserTokenType, Mode=TwoWay}"
+                            ItemDisplayBinding="{Binding}"/>
                         <!--User name-->
                         <Label Grid.Row="6" Grid.Column="0" Margin="2" 
                             Text="User name:" />
@@ -85,6 +86,17 @@
                             IsPassword="True"
                             IsEnabled="{Binding IsEditUserCredentials}"
                             Text="{Binding Password}" Placeholder="Enter password..."/>
+                        <!--user certificate-->
+                        <Label Grid.Row="8" Grid.Column="0" Margin="2" 
+                            Text="User certificate:" />
+                        <StackLayout  Grid.Row="8" Grid.Column="1"
+                            HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                            <Entry 
+                                HorizontalOptions="FillAndExpand" 
+                                IsEnabled="{Binding IsEditUserCertificate}"
+                                Text="{Binding UserCertificate}" Placeholder="Enter certifcate file path..."/>
+                            <Button Text="."  Clicked="FindCertificateFile_OnClicked" IsEnabled="{Binding IsEditUserCertificate}" HorizontalOptions="End" WidthRequest="30"/>
+                        </StackLayout>
                     </Grid>
                     <!--Action buttons-->
                     <Grid >

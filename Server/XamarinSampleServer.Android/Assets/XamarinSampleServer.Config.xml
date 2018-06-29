@@ -155,15 +155,15 @@
         <!-- add here the custom server certificates in this particular order-->
         <TrustedIssuerUserCertificateStore>
           <StoreType>Directory</StoreType>
-          <StorePath>/storage/emulated/0/Softing/pki/issuer</StorePath>
+          <StorePath>/storage/emulated/0/Softing/pki/userIssuer</StorePath>
         </TrustedIssuerUserCertificateStore>
         <TrustedUserCertificateStore>
           <StoreType>Directory</StoreType>
-          <StorePath>/storage/emulated/0/Softing/pki/trusted</StorePath>
+          <StorePath>/storage/emulated/0/Softing/pki/userTrusted</StorePath>
         </TrustedUserCertificateStore>
         <RejectedUserCertificateStore>
           <StoreType>Directory</StoreType>
-          <StorePath>/storage/emulated/0/Softing/pki/rejected</StorePath>
+          <StorePath>/storage/emulated/0/Softing/pki/userRejected</StorePath>
         </RejectedUserCertificateStore>
       </ServerTookitConfiguration>
     </ua:XmlElement>

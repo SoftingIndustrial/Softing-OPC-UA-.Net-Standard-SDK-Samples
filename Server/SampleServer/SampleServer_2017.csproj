@@ -10,6 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="NodeSetImport\Refrigerators.NodeSet2.xml" />
+    <None Remove="NodeSetImport\Refrigerators2.NodeSet2.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="HistoricalDataAccess\Data\Dynamic\Double.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -32,6 +37,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ReferenceServer\Model\ModelDesign.xml" />
+    <EmbeddedResource Include="NodeSetImport\Refrigerators.NodeSet2.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NodeSetImport\Refrigerators2.NodeSet2.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="ReferenceServer\Model\ReferenceServer.NodeSet2.xml" />
   </ItemGroup>
 
@@ -40,7 +51,6 @@
     <Folder Include="DataAccess\" />
     <Folder Include="Methods\" />
     <Folder Include="UserAuthentication\" />
-    <Folder Include="NodeSetImport\" />
     <Folder Include="NodeManagement\" />
   </ItemGroup>
   
@@ -62,17 +72,10 @@
     </Reference>
   </ItemGroup>
   
-  <ItemGroup>
-    <None Update="NodeSetImport\NodeSet\Refrigerators.NodeSet2.xml">
+  <ItemGroup>    <None Update="NodeSetImport\NodeSet\Refrigerators.NodeSet2.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="NodeSetImport\NodeSet\Refrigerators2.NodeSet2.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="NodeSetImport\Refrigerators.NodeSet2.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="NodeSetImport\Refrigerators2.NodeSet2.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SampleServer.Config.xml">

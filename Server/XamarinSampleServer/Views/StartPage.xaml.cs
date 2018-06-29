@@ -35,7 +35,6 @@ namespace XamarinSampleServer.Views
                 }
             }
         }
-
         private void StartServer_OnClicked(object sender, EventArgs e)
         {            
             ThreadPool.QueueUserWorkItem(o =>

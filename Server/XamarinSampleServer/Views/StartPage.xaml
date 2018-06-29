@@ -33,6 +33,7 @@
                                 Clicked="StopServer_OnClicked" 
                                 Text="Stop Server"/>
                         </Grid>
+                       
                     </StackLayout>
                 </Frame>
                 <StackLayout Grid.Row="1" Orientation="Vertical" >

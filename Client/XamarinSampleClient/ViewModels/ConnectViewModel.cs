@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using Opc.Ua;
 using XamarinSampleClient.Helpers;
 using Softing.Opc.Ua.Client;
+using System.Security.Cryptography.X509Certificates;
 
 namespace XamarinSampleClient.ViewModels
 {
@@ -28,9 +29,11 @@ namespace XamarinSampleClient.ViewModels
         private MessageSecurityMode m_selectedMessageSecurityMode;
         private SecurityPolicy m_selectedSecurityPolicy;
         private MessageEncoding m_selectedMessageEncoding;
-        private UserIdentity m_selectedUserIdentity;
+        private UserTokenType m_selectedUserTokenType;
         private bool m_isEditUserCredentials;
+        private bool m_isEditUserCertificate;
         private string m_userName;
+        private string m_userCertificate;
         private string m_password;
         private bool m_canConnect;
         private ClientSession m_session;
@@ -56,8 +59,9 @@ namespace XamarinSampleClient.ViewModels
 
             UserName = "usr";
             Password = "pwd";
-            UserIdentities = new List<UserIdentity>() { new UserIdentity(), new UserIdentity(UserName, Password) };
-            SelectedUserIdentity = UserIdentities[0];
+            UserCertificate = "";
+            UserTokenTypes = new List<UserTokenType>() { UserTokenType.Anonymous, UserTokenType.UserName, UserTokenType.Certificate };
+            SelectedUserTokenType = UserTokenTypes[0];
             CanConnect = true;
         }
 
@@ -145,22 +149,22 @@ namespace XamarinSampleClient.ViewModels
         /// <summary>
         /// List of available UserIdentity
         /// </summary>
-        public List<UserIdentity> UserIdentities { get; }
+        public List<UserTokenType> UserTokenTypes { get; }
 
         /// <summary>
         /// Selected UserIdentity
         /// </summary>
-        public UserIdentity SelectedUserIdentity
+        public UserTokenType SelectedUserTokenType
         {
-            get { return m_selectedUserIdentity; }
+            get { return m_selectedUserTokenType; }
             set
             {
-                SetProperty(ref m_selectedUserIdentity, value);
+                SetProperty(ref m_selectedUserTokenType, value);
                 Result = "";
-                IsEditUserCredentials = (value.TokenType == UserTokenType.UserName);
+                IsEditUserCertificate = (value == UserTokenType.Certificate);
+                IsEditUserCredentials = (value == UserTokenType.UserName);
             }
         }
-
         /// <summary>
         /// Indicator if username and password are editable
         /// </summary>
@@ -168,6 +172,15 @@ namespace XamarinSampleClient.ViewModels
         {
             get { return m_isEditUserCredentials && CanConnect; }
             set { SetProperty(ref m_isEditUserCredentials, value); }
+        }
+
+        /// <summary>
+        /// Indicator if user certificate is editable
+        /// </summary>
+        public bool IsEditUserCertificate
+        {
+            get { return m_isEditUserCertificate && CanConnect; }
+            set { SetProperty(ref m_isEditUserCertificate, value); }
         }
 
 
@@ -185,7 +198,21 @@ namespace XamarinSampleClient.ViewModels
                 OnPropertyChanged("CanDisconnect");
             }
         }
-
+        /// <summary>
+        /// User certificate path
+        /// </summary>
+        public string UserCertificate
+        {
+            get { return m_userCertificate; }
+            set
+            {
+                if (value == null)
+                {
+                    value = string.Empty;
+                }
+                SetProperty(ref m_userCertificate, value);
+            }
+        }
         /// <summary>
         /// Username
         /// </summary>
@@ -251,10 +278,18 @@ namespace XamarinSampleClient.ViewModels
             try
             {
                 //create user identity used to connect
-                UserIdentity userIdentity = SelectedUserIdentity;
-                if (SelectedUserIdentity.TokenType == UserTokenType.UserName)
+                UserIdentity userIdentity = null;
+                switch (SelectedUserTokenType)
                 {
-                    userIdentity = new UserIdentity(UserName, Password);
+                    case UserTokenType.Anonymous:
+                        userIdentity = new UserIdentity();
+                        break;
+                    case UserTokenType.UserName:                
+                        userIdentity = new UserIdentity(UserName, Password);
+                        break;
+                    case UserTokenType.Certificate:
+                        userIdentity = new UserIdentity(new X509Certificate2(UserCertificate));
+                        break;
                 }
 
                 // Create the Session object.
@@ -273,7 +308,14 @@ namespace XamarinSampleClient.ViewModels
             }
             catch (Exception e)
             {
-                Result += string.Format("Error: {0}", e.Message);
+                if (e.InnerException != null)
+                {
+                    Result += string.Format("Error: {0}", e.InnerException.Message);
+                }
+                else
+                {
+                    Result += string.Format("Error: {0}", e.Message);
+                }
             }
         }
 
