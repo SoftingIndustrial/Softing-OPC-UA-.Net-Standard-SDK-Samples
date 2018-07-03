@@ -62,6 +62,11 @@ namespace XamarinSampleClient.ViewModels
         /// List of available samples
         /// </summary>
         public IList<SampleItem> Samples { get; set; }
+
+        /// <summary>
+        /// Get/set rference to CurrentSampleViewModel
+        /// </summary>
+        public BaseViewModel CurrentSampleViewModel { get; set; }
         #endregion
 
         #region Private Methods

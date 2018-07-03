@@ -9,6 +9,7 @@ namespace XamarinSampleClient
 	public partial class App : Application
 	{
         public static string DefaultSampleServerUrl = "opc.tcp://localhost:61510/SampleServer";
+        private static StartPage m_startPage;
         public App()
 		{
 			InitializeComponent();
@@ -18,7 +19,11 @@ namespace XamarinSampleClient
 
 		public static void SetMainPage()
 		{
-		    Current.MainPage = new NavigationPage(new StartPage())
+            if (m_startPage == null)
+            {
+                m_startPage = new StartPage();		   
+            }
+		    Current.MainPage = new NavigationPage(m_startPage)
 		    {
 		        Title = "OPC UA Sample Client - Xamarin"
 		    };

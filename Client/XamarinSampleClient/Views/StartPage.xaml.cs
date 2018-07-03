@@ -26,16 +26,12 @@ namespace XamarinSampleClient.Views
             
         }
         protected override void OnAppearing()
-        {           
-            if (m_currentContentPage != null)
+        {
+            if (m_viewModel.CurrentSampleViewModel != null)
             {
                 //close current child view model if possible
-                BaseViewModel viewModel = m_currentContentPage.BindingContext as BaseViewModel;
-                if (viewModel != null)
-                {
-                    viewModel.Close();
-                }
-                m_currentContentPage = null;
+                m_viewModel.CurrentSampleViewModel.Close();
+                m_viewModel.CurrentSampleViewModel = null;
             }
         }
 
@@ -82,6 +78,7 @@ namespace XamarinSampleClient.Views
             }
             if (m_currentContentPage != null)
             {
+                m_viewModel.CurrentSampleViewModel = m_currentContentPage.BindingContext as BaseViewModel;
                 await Navigation.PushAsync(m_currentContentPage);
             }
             //remove selection
