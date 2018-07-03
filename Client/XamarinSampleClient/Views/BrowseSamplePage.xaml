@@ -7,20 +7,30 @@
     <ContentPage.Content>
         <ScrollView>
             <Grid>
-                <StackLayout>
-                    <Label 
+                <Grid VerticalOptions="FillAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"
                            Margin="8,8, 0, 0" 
                            Text="SampleServer URL:" 
                            VerticalOptions="Center"/>
-                    <Entry 
+                    <Entry Grid.Row="1"
                            Placeholder="Enter SampleServer URL..." 
                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                            Text="{Binding SampleServerUrl}" Keyboard="Url"
                            HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                    <Button 
+                    <Button Grid.Row="2"
                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                         Clicked="Browse_OnClicked" Text="Browse"/>
-                    <Grid >
+                    <Grid Grid.Row="3">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
@@ -39,25 +49,27 @@
                             </Entry.Behaviors>
                         </Entry>
                     </Grid>
-                    <Button 
+                    <Button Grid.Row="4"
                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                         Clicked="BrowseWithOptions_OnClicked" Text="Browse with options"/>
 
-                    <StackLayout Orientation="Horizontal" Margin="4, 4, 0, 0">
+                    <StackLayout Grid.Row="5"
+                        Orientation="Horizontal" Margin="4, 4, 0, 0">
                         <Label Text="Session status:" Style="{StaticResource BoldLabel}" VerticalTextAlignment="Center"/>
                         <Label Text="{Binding SessionStatusText}" VerticalTextAlignment="Center"/>
                     </StackLayout>
 
-                    <Label  Margin="4,4, 0, 0" 
+                    <Label  Grid.Row="6"
+                        Margin="4,4, 0, 0" 
                             Text="Results:"
                             Style="{StaticResource BoldLabel}"/>
                     <!-- Results list -->
-                    <ListView 
+                    <ListView Grid.Row="7"
                             Margin="4,0,0,0"
                             ItemsSource="{Binding Results}"
                             CachingStrategy="RecycleElement"
                             HasUnevenRows="True"
-                            IsPullToRefreshEnabled="false">
+                            IsPullToRefreshEnabled="false" VerticalOptions="FillAndExpand" HeightRequest="800" >
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
@@ -70,7 +82,7 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                </StackLayout>
+                </Grid>
                 <!--IsBusy indicator-->
                 <ActivityIndicator 
                     IsVisible="{Binding IsBusy}"
