@@ -161,7 +161,7 @@
       <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.3.352.12\lib\net46\Opc.Ua.Server.dll</HintPath>
       <Private>True</Private>
     </Reference>
-	<Reference Include="Softing.Opc.Ua.Server">
+    <Reference Include="Softing.Opc.Ua.Server">
       <HintPath>..\..\..\..\bin\net461\Softing.Opc.Ua.Server.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -286,6 +286,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferenceServer\ReferenceNodeManager.cs" />
+    <Compile Include="ResourceNames.cs" />
     <Compile Include="SampleServer.cs" />
     <Compile Include="SampleServerConfiguration.cs" />
     <Compile Include="UserAuthentication\UserAuthenticationNodeManager.cs" />
