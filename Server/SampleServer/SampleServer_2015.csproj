@@ -145,10 +145,6 @@
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Opc.Ua.Client, Version=1.4.353.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.353.15\lib\net46\Opc.Ua.Client.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Opc.Ua.Configuration, Version=1.4.353.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
       <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.353.15\lib\net46\Opc.Ua.Configuration.dll</HintPath>
       <Private>True</Private>
