@@ -292,7 +292,6 @@
     <Compile Include="UserAuthentication\UserAuthenticationNodeManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="ReferenceServer\BuildDesign.bat" />
   </ItemGroup>
@@ -318,12 +317,8 @@
     <Content Include="HistoricalDataAccess\Data\Sample\Historian4.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="NodeSetImport\Refrigerators.NodeSet2.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NodeSetImport\Refrigerators2.NodeSet2.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="NodeSetImport\Refrigerators.NodeSet2.xml" />
+    <EmbeddedResource Include="NodeSetImport\Refrigerators2.NodeSet2.xml" />
     <Content Include="ReferenceServer\Model\ModelDesign.xml" />
     <EmbeddedResource Include="ReferenceServer\Model\ReferenceServer.NodeSet2.xml" />
     <None Include="SampleServer.Config.xml">
