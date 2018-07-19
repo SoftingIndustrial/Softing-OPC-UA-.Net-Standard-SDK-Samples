@@ -28,7 +28,7 @@ namespace SampleClient.Samples
         private readonly NodeId m_miCurrentTimeNodeId = VariableIds.Server_ServerStatus_CurrentTime;
 
         // "CTT\\Scalar\\Simulation\\Int64";
-        private readonly NodeId m_miInt64NodeId = new NodeId("ns=7;s=Scalar_Simulation_Int64");
+        private readonly NodeId m_miInt64NodeId = new NodeId("ns=7;s=CTT_Scalar_Simulation_Int64");
 
         private readonly UaApplication m_application;
 
