@@ -72,7 +72,9 @@ namespace SampleServer.DataAccess
                 // Initialize timer for data changes simulation
                 m_simulationTimer = new Timer(DoSimulation, null, m_timerInterval, m_timerInterval);
                 //remember data access root 
-                m_dataAccessRoot = root;                
+                m_dataAccessRoot = root;
+
+                AddRootNotifier(root);
             }
         }
         #endregion
@@ -197,7 +199,7 @@ namespace SampleServer.DataAccess
 
                 // Report an event at on DataAccess node
                 string eventMessage = String.Format("Motor temperature changed to {0}", m_motorTemperature.Value);  
-                ReportEvent(m_dataAccessRoot, new LocalizedText(eventMessage));
+                ReportEvent(m_motorTemperature, new LocalizedText(eventMessage));
             }
             catch (Exception e)
             {
