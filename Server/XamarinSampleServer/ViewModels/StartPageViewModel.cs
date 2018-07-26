@@ -31,7 +31,7 @@ namespace XamarinSampleServer.ViewModels
     [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class StartPageViewModel : BaseViewModel
     {
-        public static StartPageViewModel Instance;
+        public static StartPageViewModel Instance;        
         
         #region Fields
         private ObservableCollection<ConnectedSession> m_connectedSessions;
@@ -39,6 +39,7 @@ namespace XamarinSampleServer.ViewModels
         private string m_resultsText;
         private bool m_canStartServer;
         private SampleServer.SampleServer m_sampleServer;
+        private bool m_isValidLicenseKey = true;
         #endregion
 
         #region Constructors
@@ -56,21 +57,21 @@ namespace XamarinSampleServer.ViewModels
             {
                 ServerIps.Add(ipAddress.ToString());
             }
-
-            CanStartServer = true;
+           
             LoadSessionsCommand = new Command(async () => await ExecuteLoadSessionsCommand());
             m_connectedSessions = new ObservableCollection<ConnectedSession>();
-
-            bool result = true;
+            
             // TODO - design time license activation
             // Fill in your design time license activation keys here
-            //result = License.ActivateLicense(LicenseFeature.Server, "XXXX-XXXX-XXXX-XXXX-XXXX");
+            m_isValidLicenseKey = License.ActivateLicense(LicenseFeature.Server, "10a0-03df-d245-cc2b-d85d");
 
-            if (!result)
+            if (!m_isValidLicenseKey)
             {
-                Title = "Invalid License key!";
+                ResultsText = string.Format("\n\nError starting server: Invalid License key!");
+                CanStartServer = false;
+                return;
             }
-
+            CanStartServer = true;
             ThreadPool.QueueUserWorkItem(o =>
             {
                 Device.BeginInvokeOnMainThread(() =>
@@ -121,7 +122,7 @@ namespace XamarinSampleServer.ViewModels
         /// </summary>
         public bool CanStopServer
         {
-            get { return !m_canStartServer && !IsBusy; }
+            get { return !m_canStartServer && !IsBusy && m_isValidLicenseKey; }
         }
         /// <summary>
         /// Get Server ip list
@@ -165,12 +166,12 @@ namespace XamarinSampleServer.ViewModels
         /// Starts the Server
         /// </summary>
         public async Task StartServer()
-        {
+        {            
             CanStartServer = false;
             IsBusy = true;
             
             string serverUrl = "";
-            
+           
             ResultsText = "Initializing application configuration...";                
             if (Device.RuntimePlatform == "Android")
             {
