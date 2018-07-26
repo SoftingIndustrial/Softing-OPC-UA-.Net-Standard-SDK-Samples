@@ -308,6 +308,12 @@ namespace XamarinSampleClient.ViewModels
             }
             catch (Exception e)
             {
+                try
+                {
+                    m_session.Disconnect(true);
+                    m_session = null;
+                }
+                catch { }
                 if (e.InnerException != null)
                 {
                     Result += string.Format("Error: {0}", e.InnerException.Message);
@@ -315,7 +321,7 @@ namespace XamarinSampleClient.ViewModels
                 else
                 {
                     Result += string.Format("Error: {0}", e.Message);
-                }
+                }               
             }
         }
 

@@ -56,6 +56,17 @@ namespace SampleServer
                     {
                         break;
                     }
+                    if (key.KeyChar == 's')
+                    {
+                        //list sessions
+                        var sessions = sampleServer.CurrentInstance.SessionManager.GetSessions();
+                        var subscriptions = sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
+                        Console.WriteLine("Sessions list:");
+                        foreach (var session in sessions)
+                        {
+                            Console.WriteLine($"Session{session.SessionDiagnostics.SessionName}; SubscriptionsCount={ session.SessionDiagnostics.CurrentSubscriptionsCount}");                            
+                        }
+                    }
                 }
                 while (true);
             }
