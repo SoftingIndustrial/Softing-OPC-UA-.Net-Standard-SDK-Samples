@@ -14,6 +14,7 @@ using XamarinSampleClient.Helpers;
 using XamarinSampleClient.Models;
 using Xamarin.Forms;
 using System;
+using Softing.Opc.Ua.Client.Private;
 
 namespace XamarinSampleClient.ViewModels
 {
@@ -32,6 +33,9 @@ namespace XamarinSampleClient.ViewModels
             ThreadPool.QueueUserWorkItem(o => InitializeUaApplication());
 
             Title = "OPC UA sample client";
+           
+            WelcomeMessage = "Please select a sample from the list below:";
+
             Samples = new List<SampleItem>();
             Samples.Add(new SampleItem() { SampleName = "Discover",
                 Description = "Sample code for discovering endpoints of a server or discovering the servers on network.",
@@ -59,6 +63,11 @@ namespace XamarinSampleClient.ViewModels
 
         #region Properties
         /// <summary>
+        /// Get/set welcome message
+        /// </summary>
+        public string WelcomeMessage { get;set;}
+
+        /// <summary>
         /// List of available samples
         /// </summary>
         public IList<SampleItem> Samples { get; set; }
@@ -83,9 +92,26 @@ namespace XamarinSampleClient.ViewModels
             try
             {              
                 await SampleApplication.InitializeUaApplication();
+
+                bool result = true;
+                // TODO - design time license activation
+                // Fill in your design time license activation keys here
+                // result = SampleApplication.UaApplication.ActivateLicense(LicenseFeature.Client, "XXXX-XXXX-XXXX-XXXX-XXXX");
+                if (!result)
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        WelcomeMessage = "Invalid License key!";
+                        Samples = new List<SampleItem>();
+                        OnPropertyChanged("WelcomeMessage");
+                        OnPropertyChanged("Samples");
+                    });                   
+                }
             }
             catch(Exception ex)
             {
+                WelcomeMessage = "An exception occured while initializing UaApplication." + ex.Message;
+                Samples.Clear();
                 Console.WriteLine(ex);
             }
            

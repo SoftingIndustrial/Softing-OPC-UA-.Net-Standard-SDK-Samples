@@ -13,7 +13,7 @@
             <Label Grid.Row="0"
                 Style="{StaticResource BoldLabel}"
                 Margin="4"
-                Text="Please select a sample from the list below:" 
+                Text="{Binding WelcomeMessage}" 
                 HorizontalTextAlignment="Center"
                    HorizontalOptions="Fill"/>
             <ListView Grid.Row="1"

@@ -308,12 +308,10 @@ namespace XamarinSampleClient.ViewModels
             }
             catch (Exception e)
             {
-                try
+                if (m_session != null)
                 {
-                    m_session.Disconnect(true);
-                    m_session = null;
+                    m_session.Dispose();
                 }
-                catch { }
                 if (e.InnerException != null)
                 {
                     Result += string.Format("Error: {0}", e.InnerException.Message);
@@ -337,6 +335,7 @@ namespace XamarinSampleClient.ViewModels
                 {
                     // Disconnect the session.
                     m_session.Disconnect(true);
+                    m_session.Dispose();
                     Result += "Session disconnected.";
 
                     m_session = null;
