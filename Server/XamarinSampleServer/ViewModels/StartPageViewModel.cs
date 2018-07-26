@@ -63,7 +63,7 @@ namespace XamarinSampleServer.ViewModels
             
             // TODO - design time license activation
             // Fill in your design time license activation keys here
-            m_isValidLicenseKey = License.ActivateLicense(LicenseFeature.Server, "10a0-03df-d245-cc2b-d85d");
+            //m_isValidLicenseKey = License.ActivateLicense(LicenseFeature.Server, "XXXX-XXXX-XXXX-XXXX-XXXX");
 
             if (!m_isValidLicenseKey)
             {
