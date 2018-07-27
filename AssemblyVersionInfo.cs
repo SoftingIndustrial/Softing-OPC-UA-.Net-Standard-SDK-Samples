@@ -41,10 +41,10 @@ internal static class AssemblyVersionInfo
     
     /// BEWARE THAT IN VS 2017 THE USAGE OF * PLACEHOLDER IS NOT ALLOWED
     /// <summary> The current build version. </summary>
-    public const string CurrentVersion = "2.0.0.800";
+    public const string CurrentVersion = "2.0.0.804";
 
     /// <summary> The current build file version. </summary>
-    public const string CurrentFileVersion = "2.0.0.800";
+    public const string CurrentFileVersion = "2.0.0.804";
 
     /// <summary>The assembly copyright owner.</summary>
     public const string AssemblyCompany = "Softing Industrial Automation GmbH";
