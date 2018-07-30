@@ -64,6 +64,7 @@
   
   <ItemGroup>
     <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.4.353.15" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.4.0" />
   </ItemGroup>
   
   <ItemGroup>
