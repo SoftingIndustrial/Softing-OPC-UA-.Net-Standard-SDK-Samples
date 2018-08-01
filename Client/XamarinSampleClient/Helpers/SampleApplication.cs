@@ -65,12 +65,12 @@ namespace XamarinSampleClient.Helpers
             configuration.TransportQuotas = new TransportQuotas { OperationTimeout = 15000, MaxByteStringLength = 4194304 , MaxMessageSize = 4194304 };
             configuration.ClientConfiguration = new ClientConfiguration { DefaultSessionTimeout = 15000 };
 
-            ClientTookitConfiguration clientTkConfigration = new ClientTookitConfiguration();
+            ClientToolkitConfiguration clientTkConfigration = new ClientToolkitConfiguration();
             clientTkConfigration.DefaultSessionTimeout = 15000;
             clientTkConfigration.DiscoveryOperationTimeout = 6500;
             //enable read/write complex types
             clientTkConfigration.DecodeCustomDataTypes = true;
-            configuration.UpdateExtension<ClientTookitConfiguration>( new System.Xml.XmlQualifiedName("ClientTookitConfiguration"), clientTkConfigration);
+            configuration.UpdateExtension<ClientToolkitConfiguration>( new System.Xml.XmlQualifiedName("ClientToolkitConfiguration"), clientTkConfigration);
 
 
             configuration.TraceConfiguration = new TraceConfiguration()

@@ -151,7 +151,7 @@
       </SampleServerConfiguration>
     </ua:XmlElement>
     <ua:XmlElement>
-      <ServerTookitConfiguration>
+      <ServerToolkitConfiguration>
         <!-- add here the custom server certificates in this particular order-->
         <TrustedIssuerUserCertificateStore>
           <StoreType>Directory</StoreType>
@@ -165,7 +165,7 @@
           <StoreType>Directory</StoreType>
           <StorePath>/storage/emulated/0/Softing/pki/userRejected</StorePath>
         </RejectedUserCertificateStore>
-      </ServerTookitConfiguration>
+      </ServerToolkitConfiguration>
     </ua:XmlElement>
   </Extensions>
   

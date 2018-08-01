@@ -140,7 +140,7 @@
       </SampleClientConfiguration>
     </ua:XmlElement>
     <ua:XmlElement>
-      <ClientTookitConfiguration>
+      <ClientToolkitConfiguration>
         <!-- Client custom configuration please use the same order!!!!-->
         <DiscoveryOperationTimeout>10000</DiscoveryOperationTimeout>
         <DefaultKeepAliveInterval>5000</DefaultKeepAliveInterval>
@@ -155,7 +155,7 @@
         <DefaultMiQueueSize>1</DefaultMiQueueSize>
         <DefaultEventMiQueueSize>0</DefaultEventMiQueueSize>
         <DecodeCustomDataTypes>true</DecodeCustomDataTypes>
-      </ClientTookitConfiguration>
+      </ClientToolkitConfiguration>
     </ua:XmlElement>
   </Extensions>
   

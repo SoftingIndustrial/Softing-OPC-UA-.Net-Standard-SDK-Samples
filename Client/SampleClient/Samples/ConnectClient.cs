@@ -179,10 +179,10 @@ namespace SampleClient.Samples
             configuration.TransportQuotas = new TransportQuotas {OperationTimeout = 15000};
             configuration.ClientConfiguration = new ClientConfiguration {DefaultSessionTimeout = 60000};
 
-            ClientTookitConfiguration clientTkConfigration = new ClientTookitConfiguration();
+            ClientToolkitConfiguration clientTkConfigration = new ClientToolkitConfiguration();
             clientTkConfigration.DefaultSessionTimeout = 60000;
             clientTkConfigration.DiscoveryOperationTimeout = 10000;
-            configuration.UpdateExtension<ClientTookitConfiguration>(new System.Xml.XmlQualifiedName("ClientTookitConfiguration"), clientTkConfigration);
+            configuration.UpdateExtension<ClientToolkitConfiguration>(new System.Xml.XmlQualifiedName("ClientToolkitConfiguration"), clientTkConfigration);
 
             configuration.TraceConfiguration = new TraceConfiguration()
             {

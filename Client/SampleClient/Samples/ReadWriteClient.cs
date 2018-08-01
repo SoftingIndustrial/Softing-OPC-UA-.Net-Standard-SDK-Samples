@@ -593,7 +593,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("Session is connected.");
 
                 //wait until type dictionaries are loaded
-                if (m_application.ClientTookitConfiguration.DecodeCustomDataTypes)
+                if (m_application.ClientToolkitConfiguration.DecodeCustomDataTypes)
                 {
                     while (!m_session.TypeDictionariesLoaded)
                     {
