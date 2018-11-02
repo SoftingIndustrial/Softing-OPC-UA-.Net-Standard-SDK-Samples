@@ -23,7 +23,7 @@ using Softing.Opc.Ua.Server;
 namespace SampleServer
 {
     /// <summary>
-    /// A sample implementation of UaServer from Softin OPC UA .Net Standard Toolkit
+    /// A sample implementation of UaServer from Softing OPC UA .Net Standard Toolkit
     /// </summary>
     public class SampleServer : UaServer
     {
