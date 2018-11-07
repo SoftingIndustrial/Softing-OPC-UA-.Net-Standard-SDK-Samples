@@ -15,6 +15,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="FileTransfer\Files\ByteStringFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileTransfer\Files\DownloadFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileTransfer\Files\UploadFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="HistoricalDataAccess\Data\Dynamic\Double.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

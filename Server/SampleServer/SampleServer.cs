@@ -13,6 +13,7 @@ using Opc.Ua;
 using Opc.Ua.Server;
 using SampleServer.Alarms;
 using SampleServer.DataAccess;
+using SampleServer.FileTransfer;
 using SampleServer.HistoricalDataAccess;
 using SampleServer.Methods;
 using SampleServer.NodeSetImport;
@@ -64,6 +65,7 @@ namespace SampleServer
 
             nodeManagers.Add(new AlarmsNodeManager(server, configuration));
             nodeManagers.Add(new DataAccessNodeManager(server, configuration));
+            nodeManagers.Add(new FileTransferNodeManager(server, configuration));
             nodeManagers.Add(new SampleHDANodeManager(server, configuration));
             nodeManagers.Add(new MethodsNodeManager(server, configuration));
             nodeManagers.Add(new NodeSetImportNodeManager(server, configuration));

@@ -24,6 +24,7 @@ namespace SampleClient.StateMachine
         MonitoredItem,
         Alarms,
         ReadWrite,
+        FileTransfer,
         Exit
     }
 
@@ -69,6 +70,15 @@ namespace SampleClient.StateMachine
         EndReadWrite,
 
         CallMethods,
+
+        StartFileTransfer,
+        CreateSessionFileTransfer,
+        DisconnectSessionFileTransfer,
+        UploadFileTransfer,
+        DownloadFileTransfer,
+        ReadByteArrayFileTransfer,
+        EndFileTransfer,
+
         Exit
     }
 }

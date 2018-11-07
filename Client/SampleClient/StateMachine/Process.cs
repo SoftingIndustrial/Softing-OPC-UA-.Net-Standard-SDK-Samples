@@ -34,6 +34,7 @@ namespace SampleClient.StateMachine
         private ReadWriteClient m_readWriteClient;
         private MonitoredItemClient m_monitoredItemClient;
         private AlarmsClient m_alarmsClient;
+        private FileTransferClient m_fileTransferClient;
 
         #endregion
 
@@ -73,6 +74,8 @@ namespace SampleClient.StateMachine
             m_transitions.Add(callMethods, State.Main);
             //add history menu
             InitializeHistoryTransitions();
+            // add file transfer menu
+            InitializeFileTransferTransitions();
 
             //add all exit commands
             StateTransition exit = new StateTransition(State.Main, Command.Exit, "x", "Exit Client Application");
@@ -99,6 +102,10 @@ namespace SampleClient.StateMachine
             exit = new StateTransition(State.ReadWrite, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
             m_transitions.Add(exit, State.Exit);
+            exit = new StateTransition(State.FileTransfer, Command.Exit, "x", "Exit Client Application");
+            exit.ExecuteCommand += Exit_ExecuteCommand;
+            m_transitions.Add(exit, State.Exit);
+
 
             m_processStateCommands = new Dictionary<State, IList<CommandDescriptor>>();
             foreach (var stateStansition in m_transitions.Keys)
@@ -292,6 +299,38 @@ namespace SampleClient.StateMachine
             StateTransition endMonitoredItem = new StateTransition(State.MonitoredItem, Command.EndMonitoredItem, "0", "Back to Main Menu");
             endMonitoredItem.ExecuteCommand += EndMonitoredItem_ExecuteCommand;
             m_transitions.Add(endMonitoredItem, State.Main);
+        }
+
+        private void InitializeFileTransferTransitions()
+        {
+            //commands for file transfer
+            StateTransition startFileTransfer = new StateTransition(State.Main, Command.StartFileTransfer, "f", "Enter File Transfer Menu");
+            startFileTransfer.ExecuteCommand += StartFileTransfer_ExecuteCommand;
+            m_transitions.Add(startFileTransfer, State.FileTransfer);
+
+            StateTransition createSessionFileTransfer = new StateTransition(State.FileTransfer, Command.CreateSessionFileTransfer, "1", "Create and Connect the session");
+            createSessionFileTransfer.ExecuteCommand += CreateSessionFileTransfer_ExecuteCommand;
+            m_transitions.Add(createSessionFileTransfer, State.FileTransfer);
+
+            StateTransition closeSessionFileTransfer = new StateTransition(State.FileTransfer, Command.DisconnectSessionFileTransfer, "2", "Disconnect session");
+            closeSessionFileTransfer.ExecuteCommand += DisconnectSessionFileTransfer_ExecuteCommand;
+            m_transitions.Add(closeSessionFileTransfer, State.FileTransfer);
+
+            StateTransition uploadFileTransfer = new StateTransition(State.FileTransfer, Command.UploadFileTransfer, "3", "Upload file");
+            uploadFileTransfer.ExecuteCommand += UploadFileTransfer_ExecuteCommand;
+            m_transitions.Add(uploadFileTransfer, State.FileTransfer);
+
+            StateTransition downloadFileTransfer = new StateTransition(State.FileTransfer, Command.DownloadFileTransfer, "4", "Download file");
+            downloadFileTransfer.ExecuteCommand += DownloadFileTransfer_ExecuteCommand;
+            m_transitions.Add(downloadFileTransfer, State.FileTransfer);
+
+            StateTransition readByteArrayFileTransfer = new StateTransition(State.FileTransfer, Command.ReadByteArrayFileTransfer, "5", "Read Byte Array");
+            readByteArrayFileTransfer.ExecuteCommand += ReadByteArrayFileTransfer_ExecuteCommand;
+            m_transitions.Add(readByteArrayFileTransfer, State.FileTransfer);
+            
+            StateTransition endFileTransfer = new StateTransition(State.FileTransfer, Command.EndFileTransfer, "0", "Back to Main Menu");
+            endFileTransfer.ExecuteCommand += EndFileTransfer_ExecuteCommand;
+            m_transitions.Add(endFileTransfer, State.Main);
         }
 
         #endregion
@@ -622,6 +661,68 @@ namespace SampleClient.StateMachine
             }
         }
 
+        #endregion
+
+        #region  ExecuteCommand Handlers for FileTransferItem
+
+        private void StartFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_fileTransferClient == null)
+            {
+                m_fileTransferClient = new FileTransferClient(m_application);
+            }
+        }
+
+        private void CreateSessionFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_fileTransferClient != null)
+            {
+                //m_fileTransferClient = new FileTransferClient(m_application);
+                m_fileTransferClient.CreateSession();
+            }
+        }
+
+        private void DisconnectSessionFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_fileTransferClient != null)
+            {
+                //m_fileTransferClient = new FileTransferClient(m_application);
+                m_fileTransferClient.DisconnectSession();
+            }
+        }
+
+        private void UploadFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_fileTransferClient != null)
+            {
+                m_fileTransferClient.UploadFile();
+            }
+        }
+
+        private void DownloadFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_fileTransferClient != null)
+            {
+                m_fileTransferClient.DownloadFile();
+            }
+        }
+
+        private void ReadByteArrayFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_fileTransferClient != null)
+            {
+                m_fileTransferClient.ReadByteString();
+            }
+        }
+
+        private void EndFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_fileTransferClient != null)
+            {
+                m_fileTransferClient.Dispose();
+                m_fileTransferClient = null;
+            }
+        }
         #endregion
 
         #region ExecuteCommand Handler for Exit
