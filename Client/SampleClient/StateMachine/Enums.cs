@@ -77,6 +77,7 @@ namespace SampleClient.StateMachine
         UploadFileTransfer,
         DownloadFileTransfer,
         ReadByteArrayFileTransfer,
+        WriteByteArrayFileTransfer,
         EndFileTransfer,
 
         Exit

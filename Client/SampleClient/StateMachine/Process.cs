@@ -327,7 +327,11 @@ namespace SampleClient.StateMachine
             StateTransition readByteArrayFileTransfer = new StateTransition(State.FileTransfer, Command.ReadByteArrayFileTransfer, "5", "Read Byte Array");
             readByteArrayFileTransfer.ExecuteCommand += ReadByteArrayFileTransfer_ExecuteCommand;
             m_transitions.Add(readByteArrayFileTransfer, State.FileTransfer);
-            
+
+            StateTransition writeByteArrayFileTransfer = new StateTransition(State.FileTransfer, Command.WriteByteArrayFileTransfer, "6", "Write Byte Array");
+            writeByteArrayFileTransfer.ExecuteCommand += WriteByteArrayFileTransfer_ExecuteCommand;
+            m_transitions.Add(writeByteArrayFileTransfer, State.FileTransfer);
+
             StateTransition endFileTransfer = new StateTransition(State.FileTransfer, Command.EndFileTransfer, "0", "Back to Main Menu");
             endFileTransfer.ExecuteCommand += EndFileTransfer_ExecuteCommand;
             m_transitions.Add(endFileTransfer, State.Main);
@@ -663,7 +667,7 @@ namespace SampleClient.StateMachine
 
         #endregion
 
-        #region  ExecuteCommand Handlers for FileTransferItem
+        #region  ExecuteCommand Handlers for FileTransfer
 
         private void StartFileTransfer_ExecuteCommand(object sender, EventArgs e)
         {
@@ -712,6 +716,14 @@ namespace SampleClient.StateMachine
             if (m_fileTransferClient != null)
             {
                 m_fileTransferClient.ReadByteString();
+            }
+        }
+
+        private void WriteByteArrayFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_fileTransferClient != null)
+            {
+                m_fileTransferClient.WriteByteString();
             }
         }
 

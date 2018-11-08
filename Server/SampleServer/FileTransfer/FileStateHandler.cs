@@ -10,6 +10,9 @@ using Softing.Opc.Ua.Server;
 
 namespace SampleServer.FileTransfer
 {
+    /// <summary>
+    /// File state handler class
+    /// </summary>
     internal class FileStateHandler 
     {
         #region Private Members
@@ -20,6 +23,7 @@ namespace SampleServer.FileTransfer
         private Timer m_Timer;
         private Dictionary<uint, FileStreamTracker> m_fileHandles;
 
+        private const double CheckStreamAccessPeriod = 60; // seconds
         #endregion
 
         #region Constructors
@@ -33,23 +37,36 @@ namespace SampleServer.FileTransfer
         public FileStateHandler(string filePath) : this()
         {
             m_filePath = filePath;
-            //Name = Path.GetFileName(filePath);
+            Name = Path.GetFileName(filePath);
         }
         #endregion
 
         #region Public Properties
 
+        /// <summary>
+        /// File State reference
+        /// </summary>
         public FileState State
         {
             get { return m_fileState; }
         }
 
-        //public string Name { get; set; }
+        /// <summary>
+        /// File name info
+        /// </summary>
+        public string Name { get; set; }
 
         #endregion
 
         #region Public Methods
 
+        /// <summary>
+        /// Create a new FileState instance
+        /// </summary>
+        /// <param name="fileTransferNodeManager"></param>
+        /// <param name="root"></param>
+        /// <param name="writePermission"></param>
+        /// <returns></returns>
         public FileState CreateFileState(FileTransferNodeManager fileTransferNodeManager, FolderState root, bool writePermission)
         {
             if (fileTransferNodeManager != null)
@@ -103,6 +120,15 @@ namespace SampleServer.FileTransfer
             }
         }
 
+        /// <summary>
+        /// Open method callback
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="mode"></param>
+        /// <param name="fileHandle"></param>
+        /// <returns></returns>
         private ServiceResult OnOpenMethodCall(
            ISystemContext context,
            MethodState method,
@@ -155,6 +181,16 @@ namespace SampleServer.FileTransfer
             }
         }
 
+        /// <summary>
+        /// Read method callback
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="fileHandle"></param>
+        /// <param name="length"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         private ServiceResult OnReadMethodCall(
             ISystemContext context,
             MethodState method,
@@ -193,6 +229,14 @@ namespace SampleServer.FileTransfer
             }
         }
 
+        /// <summary>
+        /// Close method callback
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="fileHandle"></param>
+        /// <returns></returns>
         private ServiceResult OnCloseMethodCall(
           ISystemContext context,
           MethodState method,
@@ -231,6 +275,15 @@ namespace SampleServer.FileTransfer
             }
         }
 
+        /// <summary>
+        /// Write method callback
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="fileHandle"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         private ServiceResult OnWriteMethodCall(
           ISystemContext context,
           MethodState method,
@@ -262,6 +315,15 @@ namespace SampleServer.FileTransfer
             }
         }
 
+        /// <summary>
+        /// Get Position method callback
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="fileHandle"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
         private ServiceResult OnGetPositionMethodCall(
             ISystemContext context,
             MethodState method,
@@ -288,6 +350,15 @@ namespace SampleServer.FileTransfer
             }
         }
 
+        /// <summary>
+        /// Set position callback
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="fileHandle"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
         private ServiceResult OnSetPositionMethodCall(
             ISystemContext context,
             MethodState method,
@@ -316,13 +387,17 @@ namespace SampleServer.FileTransfer
         #endregion
 
         #region Private Methods
+        /// <summary>
+        /// Check when the stream was last time accessed and close it
+        /// </summary>
+        /// <param name="state"></param>
         private void CheckFileStreamAvailability(object state)
         {
             foreach (KeyValuePair<uint, FileStreamTracker> entry in m_fileHandles.ToList())
             {
                 TimeSpan duration = DateTime.Now - entry.Value.LastAccessTime;
 
-                if (duration.TotalSeconds > 60)
+                if (duration.TotalSeconds > CheckStreamAccessPeriod) 
                 {
                     m_fileHandles.Remove(entry.Key);
                     entry.Value.FileStream.Close();

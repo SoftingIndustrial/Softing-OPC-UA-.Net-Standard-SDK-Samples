@@ -22,9 +22,14 @@ namespace SampleClient.Helpers
     /// </summary>
     public class FileStateHelper
     {
+        #region Private Members
+
         private UInt32 m_fileHandle;
         private ClientSession m_session;
 
+        #endregion
+
+        #region Constructor
         public FileStateHelper(ClientSession session, string filename, NodeId nodeId)
         {
             m_session = session;
@@ -33,7 +38,11 @@ namespace SampleClient.Helpers
 
             TranslateBrowsePathToNodeIds();
         }
+        #endregion
 
+        #region Properties
+
+        #region FileState node attributes
         public string Filename { get; private set; }
 
         public NodeId NodeID { get; private set; }
@@ -95,9 +104,13 @@ namespace SampleClient.Helpers
                 return false;
             }
         }
+        #endregion FileState node attributes
 
+        #endregion Properties
+
+        #region Public Methods
         /// <summary>
-        /// Opens the specified mode.
+        /// Opens the file into the specified mode.
         /// </summary>
         /// <param name="mode">The file open mode. It is bitmask of the following possible values
         /// Read - 1
@@ -121,11 +134,15 @@ namespace SampleClient.Helpers
             }
             catch(Exception ex)
             {
-                string errorText =  !StatusCode.IsGood(statusCode) ? string.Format("\nStatus Code is: {0}", statusCode) : string.Format("File cannot be opend: [0}", ex.Message);
+                string errorText =  StatusCode.IsGood(statusCode) ? string.Format("\nStatus Code is: {0}", statusCode) : string.Format("File cannot be opend: [0}", ex.Message);
                 throw new Exception(errorText);
             }
         }
 
+        /// <summary>
+        /// Close the related file
+        /// </summary>
+        /// <returns></returns>
         public StatusCode Close()
         {
             StatusCode statusCode = new StatusCode();
@@ -146,6 +163,12 @@ namespace SampleClient.Helpers
             }
         }
 
+        /// <summary>
+        /// Read the file content
+        /// </summary>
+        /// <param name="length"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public StatusCode Read(int length, out byte[] data)
         {
             StatusCode statusCode = new StatusCode();
@@ -166,6 +189,11 @@ namespace SampleClient.Helpers
             }
         }
 
+        /// <summary>
+        /// Write file data content
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public StatusCode Write(byte[] data)
         {
             StatusCode statusCode = new StatusCode();
@@ -185,6 +213,10 @@ namespace SampleClient.Helpers
             }
         }
 
+        /// <summary>
+        /// Get related file position
+        /// </summary>
+        /// <returns></returns>
         public UInt64 GetPosition()
         {
             StatusCode statusCode = new StatusCode();
@@ -204,6 +236,10 @@ namespace SampleClient.Helpers
             }
         }
 
+        /// <summary>
+        /// Set related file position
+        /// </summary>
+        /// <param name="position"></param>
         public void SetPosition(UInt64 position)
         {
             StatusCode statusCode = new StatusCode();
@@ -220,7 +256,9 @@ namespace SampleClient.Helpers
                 throw new Exception(string.Format("\nStatus Code is: {0}", statusCode));
             }
         }
+        #endregion
 
+        #region Private Methods
         /// <summary>
         /// Translates the specified browse path to its corresponding NodeId.
         /// </summary>
@@ -267,17 +305,22 @@ namespace SampleClient.Helpers
             browsePaths.Add(browsePath);
         }
 
+        /// <summary>
+        /// Get target id
+        /// </summary>
+        /// <param name="browseResult"></param>
+        /// <returns></returns>
         private NodeId GetTargetId(BrowsePathResultEx browseResult)
         {
             NodeId nodeId = null;
 
             if (StatusCode.IsGood(browseResult.StatusCode))
             {
-                nodeId = browseResult.TargetIds[0]; //browseResult.Targets[0];
-                //nodeId = new NodeId(browseResult.Targets[0].TargetId);//browseResult.Targets[0];
+                nodeId = browseResult.TargetIds[0]; 
             }
 
             return nodeId;
         }
+        #endregion
     }
 }

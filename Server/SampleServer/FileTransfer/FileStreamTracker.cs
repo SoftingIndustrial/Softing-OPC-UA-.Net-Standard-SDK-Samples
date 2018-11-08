@@ -5,13 +5,12 @@ using System.IO;
 
 namespace SampleServer.FileTransfer
 {
+    /// <summary>
+    /// Holds the file stream instance created to a specified time
+    /// </summary>
     public class FileStreamTracker
     {
-        #region PrivateFields
-
-        //private FileStream m_fileStream;
-        private DateTime m_lastAccessTime;
-
+        #region Private Fields
         #endregion
 
         #region Constructors
@@ -19,15 +18,21 @@ namespace SampleServer.FileTransfer
         public FileStreamTracker(string path, FileMode fileMode, FileAccess fileAccess)
         {
             FileStream = new FileStream(path, fileMode, fileAccess);
-            m_lastAccessTime = DateTime.Now;
+            LastAccessTime = DateTime.Now;
         }
 
         #endregion
 
-        #region PublicProperties
+        #region Public Properties
 
+        /// <summary>
+        /// File stream reference
+        /// </summary>
         public FileStream FileStream { get; private set; }
 
+        /// <summary>
+        /// The time when the file stream was accessed (used) 
+        /// </summary>
         public DateTime LastAccessTime { get; set; }
 
         #endregion
