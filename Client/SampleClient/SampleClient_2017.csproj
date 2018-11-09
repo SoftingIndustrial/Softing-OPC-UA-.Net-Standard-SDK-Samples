@@ -14,9 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Files\Softing.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Files\UploadClientFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

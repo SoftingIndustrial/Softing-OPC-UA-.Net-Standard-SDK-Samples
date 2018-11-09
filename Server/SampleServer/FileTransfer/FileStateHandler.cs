@@ -66,51 +66,25 @@ namespace SampleServer.FileTransfer
         #region Public Methods
 
         /// <summary>
-        /// Create a new FileState instance
+        /// Set FileState callbacks
         /// </summary>
-        /// <param name="fileTransferNodeManager"></param>
-        /// <param name="root"></param>
-        /// <param name="writePermission"></param>
-        /// <returns></returns>
-        public FileState CreateFileState(FileTransferNodeManager fileTransferNodeManager, FolderState root, bool writePermission)
+        /// <param name="fileState"></param>
+        public void SetCallbacks(FileState fileState)
         {
-            if (fileTransferNodeManager != null)
+            if (fileState != null)
             {
-                m_fileState = fileTransferNodeManager.CreateObjectFromType(root, Name, ObjectTypeIds.FileType, ReferenceTypeIds.HasComponent) as FileState;
-                if (m_fileState != null)
-                {
-                    m_fileState.WriteMask = AttributeWriteMask.None;
-                    m_fileState.UserWriteMask = AttributeWriteMask.None;
+                m_fileState = fileState;
 
-                    m_fileState.Writable.Value = writePermission;
-                    m_fileState.UserWritable.Value = writePermission;
-
-                    m_fileState.Open.OnCall = OnOpenMethodCall;
-                    m_fileState.Read.OnCall = OnReadMethodCall;
-                    m_fileState.Close.OnCall = OnCloseMethodCall;
-                    m_fileState.Write.OnCall = OnWriteMethodCall;
-                    m_fileState.GetPosition.OnCall = OnGetPositionMethodCall;
-                    m_fileState.SetPosition.OnCall = OnSetPositionMethodCall;
-                    m_fileState.Size.OnSimpleReadValue = OnReadSize;
-                }
-
-                /*
-                m_fileState = fileTransferNodeManager.CreateFileState(root,
-                    Name,
-                    writePermission,
-                    OnOpenMethodCall,
-                    OnReadMethodCall,
-                    OnCloseMethodCall,
-                    OnWriteMethodCall,
-                    OnGetPositionMethodCall,
-                    OnSetPositionMethodCall,
-                    OnReadSize);
-                    */
+                m_fileState.Open.OnCall = OnOpenMethodCall;
+                m_fileState.Read.OnCall = OnReadMethodCall;
+                m_fileState.Close.OnCall = OnCloseMethodCall;
+                m_fileState.Write.OnCall = OnWriteMethodCall;
+                m_fileState.GetPosition.OnCall = OnGetPositionMethodCall;
+                m_fileState.SetPosition.OnCall = OnSetPositionMethodCall;
+                m_fileState.Size.OnSimpleReadValue = OnReadSize;
             }
-
-            return m_fileState;
         }
-
+        
         #endregion
 
         #region Private Callback Methods
@@ -185,7 +159,7 @@ namespace SampleServer.FileTransfer
             try
             {
                 FileStreamTracker fileStreamTracker = new FileStreamTracker(m_filePath, fileMode, fileAccess);
-                fileStreamTracker.LastAccessTime = DateTime.Now;
+                // fileStreamTracker.LastAccessTime = DateTime.Now;
 
                 //increment OpenCount.
                 ushort openCount = (ushort)m_fileState.OpenCount.Value;

@@ -25,8 +25,6 @@ namespace SampleClient.Samples
         private const string UploadFilePath = @"Files\UploadClientFile.xml";
         private const string ByteStringFilePath = @"Files\ByteStringFile.xml";
 
-        private const string ByteStringIconFile = @"Files\Softing.ico";
-
         private const int ChunkSize = 512;
         private ClientSession m_session;
         private readonly UaApplication m_application;
@@ -324,68 +322,6 @@ namespace SampleClient.Samples
             }
         }
 
-        /// <summary>
-        /// Upload the ByteString from the specified file.
-        /// </summary>
-        public void WriteByteString()
-        {
-            if (m_session == null)
-            {
-                Console.WriteLine("Session is not created, please use \"1\" command");
-                return;
-            }
-
-            try
-            {
-                if (File.Exists(ByteStringIconFile))
-                {
-                    byte[] content = File.ReadAllBytes(ByteStringIconFile);
-                    Console.WriteLine("{0} bytes has been read from: {1}", content.Length, Path.GetFileName(ByteStringIconFile));
-
-                    WriteValue writeValue = new WriteValue();
-                    writeValue.AttributeId = Attributes.Value;
-                    writeValue.NodeId = new NodeId(ByteStringNodeID);
-                    
-                    DataValue valueToWrite = new DataValue();
-                    valueToWrite.Value = content; 
-                    writeValue.Value = valueToWrite;
-
-                    StatusCode statusCode = m_session.Write(writeValue);
-                    if (StatusCode.IsBad(statusCode))
-                    {
-                        Console.WriteLine("It could not write node content.");
-                        return;
-                    }
-                    Console.WriteLine("{0} bytes has been written to ByteString variable", content.Length);
-
-                    // check if the written data is consistent 
-                    ReadValueId readValueId = new ReadValueId();
-                    readValueId.AttributeId = Attributes.Value;
-                    readValueId.NodeId = new NodeId(ByteStringNodeID);
-                    
-                    DataValueEx dataValueRead = m_session.Read(readValueId);
-                    byte[] binaryData = dataValueRead.Value as byte[];
-
-                    Console.WriteLine("{0} bytes has been read back.", binaryData.Length);
-                    if (content.Length != binaryData.Length)
-                    {
-                        Console.WriteLine("The ByteString data content seems not to be saved correctly.");
-                    }
-
-                    Console.WriteLine("The ByteString was entered successfully.");
-                }
-                else
-                {
-                    Console.WriteLine("The specified {0} file is missing", ByteStringIconFile);
-                }
-            }
-            catch (Exception e)
-            {
-                string logMessage = String.Format("Upload ByteString Error : {0}.", e.Message);
-                Console.WriteLine(logMessage);
-                Console.WriteLine("Upload ByteString error..." + e.Message);
-            }
-        }
         #endregion
 
         #region Private Methods

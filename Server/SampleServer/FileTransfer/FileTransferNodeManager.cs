@@ -15,15 +15,18 @@ namespace SampleServer.FileTransfer
     {
         #region Private Members
 
+        private const string DownloadNodeID = "ns=9;i=2";
+
         private const string DownloadFilePath = @"FileTransfer\Files\DownloadFile.xml";
         private const string UploadFilePath = @"FileTransfer\Files\UploadFile.xml";
-        private const string ByteStringFilePath = @"FileTransfer\Files\ByteStringFile.xml";
         
+        private const string ByteStringFilePath = @"FileTransfer\Files\ByteStringFile.xml";
+
+        private const string TemporaryFilePath = @"FileTransfer\Files\TemporaryFile.xml";
+
         private const string FileTransferName = "FileTransfer";
         private const string ByteStringName = "ByteString";
 
-        private const string FileTransferTmpName = "FileTransferTmp";
-        private const string ByteStringTmpName = "TmpByteString";
         #endregion
 
         #region Constructors
@@ -60,18 +63,8 @@ namespace SampleServer.FileTransfer
 
                 CreateByteString(root, ByteStringName, ByteStringFilePath);
 
-                /*
-                FolderState rootTmp = CreateObjectFromType(null, FileTransferTmpName, ObjectTypeIds.FolderType, ReferenceTypeIds.Organizes) as FolderState;
-                AddReference(rootTmp, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
-
-                CreateTmpFileState(rootTmp, DownloadFilePath, false);
-                CreateTmpFileState(rootTmp, UploadFilePath, true);
-
-                CreateTmpByteString(rootTmp, ByteStringTmpName, ByteStringFilePath);
-
-                AddRootNotifier(rootTmp);
-                */
-
+                CreateTmpFileState(root, TemporaryFilePath, false);
+                
                 AddRootNotifier(root);
             }
         }
@@ -90,8 +83,20 @@ namespace SampleServer.FileTransfer
         {
             try
             {
+                FileState fileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.FileType, ReferenceTypeIds.HasComponent) as FileState;
+                if (fileState != null)
+                {
+                    fileState.WriteMask = AttributeWriteMask.None;
+                    fileState.UserWriteMask = AttributeWriteMask.None;
+
+                    fileState.Writable.Value = writePermission;
+                    fileState.UserWritable.Value = writePermission;
+                }
+
                 FileStateHandler fileTypeHandler = new FileStateHandler(filename);
-                return fileTypeHandler.CreateFileState(this, root, writePermission);
+                fileTypeHandler.SetCallbacks(fileState);
+
+                return fileState;
             }
             catch (FileNotFoundException)
             {
@@ -105,10 +110,20 @@ namespace SampleServer.FileTransfer
         /// <param name="filename"></param>
         /// <param name="writePermission"></param>
         /// <returns></returns>
-        private FileState CreateTmpFileState(FolderState root, string filename, bool writePermission)
+        private TemporaryFileTransferState CreateTmpFileState(FolderState root, string filename, bool writePermission)
         {
             try
             {
+                TemporaryFileTransferState tmpFileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.TemporaryFileTransferType, ReferenceTypeIds.HasComponent) as TemporaryFileTransferState;
+
+                // tmpFileState.ClientProcessingTimeout = new PropertyState<double>(new NodeState(100));
+                tmpFileState.GenerateFileForRead.OnCall = OnGenerateFileForReadCall;
+                tmpFileState.GenerateFileForWrite.OnCall = GenerateFileForWriteCall;
+                tmpFileState.CloseAndCommit.OnCall = CloseAndCommitCall;
+
+                return tmpFileState;
+
+                /*
                 // Creates and copy data content to a temporary file
                 string tmpFileName = Path.GetTempFileName();
                 using (FileStream fileStream = new FileStream(filename, FileMode.Open))
@@ -122,9 +137,10 @@ namespace SampleServer.FileTransfer
                     }
                     fileStream.Close();
                 }
+                */
 
-                FileStateHandler fileTypeHandler = new FileStateHandler(tmpFileName, Path.GetFileNameWithoutExtension(filename));
-                return fileTypeHandler.CreateFileState(this, root, writePermission);
+                //FileStateHandler fileTypeHandler = new FileStateHandler(tmpFileName, Path.GetFileNameWithoutExtension(filename));
+                //return fileTypeHandler.CreateFileState(this, root, writePermission);
             }
             catch (FileNotFoundException)
             {
@@ -142,12 +158,14 @@ namespace SampleServer.FileTransfer
         private BaseDataVariableState CreateByteString(FolderState root, string byteStringName, string byteStringPath)
         {
             BaseDataVariableState byteString = CreateVariable(root, byteStringName, DataTypeIds.ByteString);
+            byteString.AccessLevel = AccessLevels.CurrentRead;
+            byteString.UserAccessLevel = AccessLevels.CurrentRead;
             byteString.Handle = byteStringPath; // link the node handle to a file handler
             byteString.OnSimpleReadValue = OnReadFile; // read the file content as byte array
-            byteString.OnWriteValue = OnWriteFile; // write the variable data as a byte array
-
+            
             return byteString;
         }
+
         /// <summary>
         /// Creates temporary byte string node
         /// </summary>
@@ -236,6 +254,7 @@ namespace SampleServer.FileTransfer
         /// <param name="statusCode"></param>
         /// <param name="timestamp"></param>
         /// <returns></returns>
+        /*
         private ServiceResult OnWriteFile(ISystemContext context, NodeState node, NumericRange indexRange,
             QualifiedName dataEncoding, ref object value, ref StatusCode statusCode, ref DateTime timestamp)
         {
@@ -263,7 +282,58 @@ namespace SampleServer.FileTransfer
 
             return StatusCodes.Good;
         }
+        */
 
+        private ServiceResult OnGenerateFileForReadCall(ISystemContext context,
+            MethodState method,
+            NodeId objectId,
+            object generateOptions,
+            ref NodeId fileNodeId,
+            ref uint fileHandle,
+            ref NodeId completionStateMachine)
+        {
+            // Creates and copy data content to a temporary file
+            string tmpFileName = Path.GetTempFileName();
+            using (Stream fileStreamTmp = File.OpenWrite(tmpFileName))
+            {
+                //byte[] bytes = new byte[fileStream.Length];
+                //fileStream.Read(bytes, 0, bytes.Length);
+                //fileStreamTmp.Write(bytes, 0, bytes.Length);
+                fileStreamTmp.Close();
+            }
+
+            NodeId download = new NodeId(DownloadNodeID);
+            NodeState targetNode = FindPredefinedNode(download, null);
+            
+            FileState fileState = CreateObjectFromType(targetNode, Path.GetFileName(DownloadFilePath), ObjectTypeIds.FileType, ReferenceTypeIds.HasComponent) as FileState;
+            if (fileState != null)
+            {
+                //fileState.Open.Call();
+                //fileState.Open.v;
+            }
+
+            return StatusCodes.Good;
+        }
+
+        private ServiceResult GenerateFileForWriteCall(ISystemContext context, 
+            MethodState method, 
+            NodeId objectId, 
+            object generateOptions, 
+            ref NodeId fileNodeId, 
+            ref uint fileHandle)
+
+        {
+            return StatusCodes.Good;
+        }
+
+        private ServiceResult CloseAndCommitCall(ISystemContext context, 
+            MethodState method, 
+            NodeId objectId, 
+            uint fileHandle, 
+            ref NodeId completionStateMachine)
+        {
+            return StatusCodes.Good;
+        }
         #endregion
     }
 }
