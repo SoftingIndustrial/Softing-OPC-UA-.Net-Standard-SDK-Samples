@@ -82,19 +82,27 @@ namespace SampleServer.FileTransfer
         /// <param name="root"></param>
         /// <param name="filename"></param>
         /// <param name="writePermission"></param>
-        private void CreateFileState(FolderState root, string filename, bool writePermission)
+        /// <returns></returns>
+        private FileState CreateFileState(FolderState root, string filename, bool writePermission)
         {
             try
             {
                 FileStateHandler fileTypeHandler = new FileStateHandler(filename);
-                fileTypeHandler.CreateFileState(this, root, writePermission);
+                return fileTypeHandler.CreateFileState(this, root, writePermission);
             }
             catch (FileNotFoundException)
             {
                 throw new Exception("File not found exception.");
             }
         }
-        private void CreateTmpFileState(FolderState root, string filename, bool writePermission)
+        /// <summary>
+        /// Creates temporary file state node
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="filename"></param>
+        /// <param name="writePermission"></param>
+        /// <returns></returns>
+        private FileState CreateTmpFileState(FolderState root, string filename, bool writePermission)
         {
             try
             {
@@ -112,8 +120,8 @@ namespace SampleServer.FileTransfer
                     fileStream.Close();
                 }
 
-                FileStateHandler fileTypeHandler = new FileStateHandler(tmpFileName);
-                fileTypeHandler.CreateFileState(this, root, writePermission);
+                FileStateHandler fileTypeHandler = new FileStateHandler(tmpFileName, Path.GetFileNameWithoutExtension(filename));
+                return fileTypeHandler.CreateFileState(this, root, writePermission);
             }
             catch (FileNotFoundException)
             {
@@ -121,6 +129,13 @@ namespace SampleServer.FileTransfer
             }
         }
 
+        /// <summary>
+        /// Creates byte string node
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="byteStringName"></param>
+        /// <param name="byteStringPath"></param>
+        /// <returns></returns>
         private BaseDataVariableState CreateByteString(FolderState root, string byteStringName, string byteStringPath)
         {
             BaseDataVariableState byteString = CreateVariable(root, byteStringName, DataTypeIds.ByteString);
@@ -130,7 +145,13 @@ namespace SampleServer.FileTransfer
 
             return byteString;
         }
-
+        /// <summary>
+        /// Creates temporary byte string node
+        /// </summary>
+        /// <param name="tmpRoot"></param>
+        /// <param name="byteStringName"></param>
+        /// <param name="byteStringPath"></param>
+        /// <returns></returns>
         private BaseDataVariableState CreateTmpByteString(FolderState tmpRoot, string byteStringName, string byteStringPath)
         {
             string tmpByteStringPath = String.Empty;

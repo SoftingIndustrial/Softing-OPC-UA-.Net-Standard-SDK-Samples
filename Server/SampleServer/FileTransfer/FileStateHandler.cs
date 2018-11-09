@@ -34,11 +34,16 @@ namespace SampleServer.FileTransfer
             m_fileHandles = new Dictionary<uint, FileStreamTracker>();
             m_Timer = new Timer(CheckFileStreamAvailability, null, 0, 60*1000);
         }
-        public FileStateHandler(string filePath) : this()
+        public FileStateHandler(string filePath, string prefix = null) : this()
         {
             m_filePath = filePath;
             Name = Path.GetFileName(filePath);
+            if (!string.IsNullOrEmpty(prefix))
+            {
+                Name = string.Format("{0}_{1}", prefix, Path.GetFileName(filePath));
+            }
         }
+
         #endregion
 
         #region Public Properties
@@ -72,7 +77,7 @@ namespace SampleServer.FileTransfer
             if (fileTransferNodeManager != null)
             {
                 m_fileState = fileTransferNodeManager.CreateFileState(root,
-                    Path.GetFileName(m_filePath),
+                    Name,
                     writePermission,
                     OnOpenMethodCall,
                     OnReadMethodCall,
