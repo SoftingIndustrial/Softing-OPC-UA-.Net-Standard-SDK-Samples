@@ -76,6 +76,25 @@ namespace SampleServer.FileTransfer
         {
             if (fileTransferNodeManager != null)
             {
+                m_fileState = fileTransferNodeManager.CreateObjectFromType(root, Name, ObjectTypeIds.FileType, ReferenceTypeIds.HasComponent) as FileState;
+                if (m_fileState != null)
+                {
+                    m_fileState.WriteMask = AttributeWriteMask.None;
+                    m_fileState.UserWriteMask = AttributeWriteMask.None;
+
+                    m_fileState.Writable.Value = writePermission;
+                    m_fileState.UserWritable.Value = writePermission;
+
+                    m_fileState.Open.OnCall = OnOpenMethodCall;
+                    m_fileState.Read.OnCall = OnReadMethodCall;
+                    m_fileState.Close.OnCall = OnCloseMethodCall;
+                    m_fileState.Write.OnCall = OnWriteMethodCall;
+                    m_fileState.GetPosition.OnCall = OnGetPositionMethodCall;
+                    m_fileState.SetPosition.OnCall = OnSetPositionMethodCall;
+                    m_fileState.Size.OnSimpleReadValue = OnReadSize;
+                }
+
+                /*
                 m_fileState = fileTransferNodeManager.CreateFileState(root,
                     Name,
                     writePermission,
@@ -86,6 +105,7 @@ namespace SampleServer.FileTransfer
                     OnGetPositionMethodCall,
                     OnSetPositionMethodCall,
                     OnReadSize);
+                    */
             }
 
             return m_fileState;

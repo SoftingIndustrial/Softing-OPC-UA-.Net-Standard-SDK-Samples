@@ -13,13 +13,13 @@ namespace SampleClient.Samples
         #region Private Fields
 
         // the nodeId of the DownloadFile which is specified on the FileTransferServer
-        private const string DownloadNodeID = "ns=4;i=2";
+        private const string DownloadNodeID = "ns=9;i=2";
 
         // the nodeId of the UploadFile from the server
-        private const string UploadNodeID = "ns=4;i=23";
+        private const string UploadNodeID = "ns=9;i=23";
         
         // the nodeId of the ByteString element from the server
-        private const string ByteStringNodeID = "ns=4;i=44";
+        private const string ByteStringNodeID = "ns=9;i=44";
 
         private const string DownloadFilePath = @"Files\DownloadFile.xml";
         private const string UploadFilePath = @"Files\UploadClientFile.xml";

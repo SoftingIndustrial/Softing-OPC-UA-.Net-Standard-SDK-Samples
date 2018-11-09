@@ -65,12 +65,12 @@ namespace SampleServer
 
             nodeManagers.Add(new AlarmsNodeManager(server, configuration));
             nodeManagers.Add(new DataAccessNodeManager(server, configuration));
-            nodeManagers.Add(new FileTransferNodeManager(server, configuration));
             nodeManagers.Add(new SampleHDANodeManager(server, configuration));
             nodeManagers.Add(new MethodsNodeManager(server, configuration));
             nodeManagers.Add(new NodeSetImportNodeManager(server, configuration));
             nodeManagers.Add(new ReferenceNodeManager(server, configuration));
             nodeManagers.Add(new UserAuthenticationNodeManager(server, configuration));
+            nodeManagers.Add(new FileTransferNodeManager(server, configuration));
 
             // Create master node manager
             return new MasterNodeManager(server, configuration, null, nodeManagers.ToArray());

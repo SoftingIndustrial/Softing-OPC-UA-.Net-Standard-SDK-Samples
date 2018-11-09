@@ -60,6 +60,7 @@ namespace SampleServer.FileTransfer
 
                 CreateByteString(root, ByteStringName, ByteStringFilePath);
 
+                /*
                 FolderState rootTmp = CreateObjectFromType(null, FileTransferTmpName, ObjectTypeIds.FolderType, ReferenceTypeIds.Organizes) as FolderState;
                 AddReference(rootTmp, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
@@ -68,8 +69,10 @@ namespace SampleServer.FileTransfer
 
                 CreateTmpByteString(rootTmp, ByteStringTmpName, ByteStringFilePath);
 
-                AddRootNotifier(root);
                 AddRootNotifier(rootTmp);
+                */
+
+                AddRootNotifier(root);
             }
         }
 
