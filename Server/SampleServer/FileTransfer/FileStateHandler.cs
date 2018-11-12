@@ -34,14 +34,10 @@ namespace SampleServer.FileTransfer
             m_fileHandles = new Dictionary<uint, FileStreamTracker>();
             m_Timer = new Timer(CheckFileStreamAvailability, null, 0, 60*1000);
         }
-        public FileStateHandler(string filePath, string prefix = null) : this()
+        public FileStateHandler(string filePath) : this()
         {
             m_filePath = filePath;
             Name = Path.GetFileName(filePath);
-            if (!string.IsNullOrEmpty(prefix))
-            {
-                Name = string.Format("{0}_{1}", prefix, Path.GetFileName(filePath));
-            }
         }
 
         #endregion
@@ -159,8 +155,7 @@ namespace SampleServer.FileTransfer
             try
             {
                 FileStreamTracker fileStreamTracker = new FileStreamTracker(m_filePath, fileMode, fileAccess);
-                // fileStreamTracker.LastAccessTime = DateTime.Now;
-
+                
                 //increment OpenCount.
                 ushort openCount = (ushort)m_fileState.OpenCount.Value;
                 m_fileState.OpenCount.Value = ++openCount;
@@ -206,8 +201,7 @@ namespace SampleServer.FileTransfer
                 }
 
                 FileStreamTracker fileStreamTracker = m_fileHandles[fileHandle];
-                fileStreamTracker.LastAccessTime = DateTime.Now;
-
+                
                 data = new byte[length];
                 int cRead = fileStreamTracker.FileStream.Read(data, 0, length);
 

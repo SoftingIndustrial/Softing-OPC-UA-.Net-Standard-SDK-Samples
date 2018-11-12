@@ -17,14 +17,19 @@ namespace SampleClient.Samples
 
         // the nodeId of the UploadFile from the server
         private const string UploadNodeID = "ns=9;i=23";
-        
+
         // the nodeId of the ByteString element from the server
         private const string ByteStringNodeID = "ns=9;i=44";
+
+        // the nodeId of the TemporaryFile element from the server
+        private const string TemporaryFileNodeId = "ns=9;i=45";
 
         private const string DownloadFilePath = @"Files\DownloadFile.xml";
         private const string UploadFilePath = @"Files\UploadClientFile.xml";
         private const string ByteStringFilePath = @"Files\ByteStringFile.xml";
-
+        private const string ReadTemporaryFilePath = @"Files\ReadClientTemporaryFile.xml";
+        private const string WriteTemporaryFilePath = @"Files\WriteClientTemporaryFile.xml";
+        
         private const int ChunkSize = 512;
         private ClientSession m_session;
         private readonly UaApplication m_application;
@@ -41,6 +46,7 @@ namespace SampleClient.Samples
         #endregion
 
         #region IDisposable implementation
+
         /// <summary>
         /// Dispose the opened session or/and file handlers
         /// </summary>
@@ -51,6 +57,7 @@ namespace SampleClient.Samples
                 DisconnectSession();
             }
         }
+
         #endregion
 
         #region Public Methods
@@ -68,7 +75,7 @@ namespace SampleClient.Samples
 
             m_session = m_application.CreateSession(Program.ServerUrl);
             m_session.SessionName = "Softing FileTransfer Sample Client";
-            
+
             try
             {
                 // connect session
@@ -121,10 +128,10 @@ namespace SampleClient.Samples
             {
                 NodeId nodeID = new NodeId(DownloadNodeID);
                 FileStateHelper fileState = new FileStateHelper(m_session, Path.GetFileName(DownloadFilePath), nodeID);
-                
+
                 // Open the file in Read mode
-                StatusCode statusCode = fileState.Open(1);
-                if (StatusCode.IsBad(statusCode))
+                StatusCode openStatusCode = fileState.Open(1);
+                if (StatusCode.IsBad(openStatusCode))
                 {
                     Console.WriteLine("Unable to open the file in read mode.");
                     return;
@@ -138,22 +145,23 @@ namespace SampleClient.Samples
 
                     while (cTotalRead < totalSize)
                     {
-                        int cRead = totalSize - cTotalRead > ChunkSize ? ChunkSize : (int)(totalSize - cTotalRead);
+                        int cRead = totalSize - cTotalRead > ChunkSize ? ChunkSize : (int) (totalSize - cTotalRead);
                         byte[] buffer;
 
-                        statusCode = fileState.Read(cRead, out buffer);
+                        StatusCode readStatusCode = fileState.Read(cRead, out buffer);
 
-                        if (StatusCode.IsBad(statusCode))
+                        if (StatusCode.IsBad(readStatusCode))
                         {
                             fileState.Close();
-                            Console.WriteLine(string.Format("\nStatus Code is: {0}\n", statusCode));
+                            Console.WriteLine(string.Format("\nStatus Code is: {0}\n", readStatusCode));
 
                             return;
                         }
 
                         fs.Write(buffer, 0, cRead);
-                        cTotalRead += (ulong)cRead;
-                        Console.Write("\rReading {0} bytes of {1} - {2}% complete", cTotalRead, totalSize, cTotalRead * 100 / totalSize);
+                        cTotalRead += (ulong) cRead;
+                        Console.Write("\rReading {0} bytes of {1} - {2}% complete", cTotalRead, totalSize,
+                            cTotalRead * 100 / totalSize);
                     }
 
                     Console.WriteLine();
@@ -161,11 +169,12 @@ namespace SampleClient.Samples
 
                 // Close the file
                 StatusCode closeStatusCode = fileState.Close();
-                if (StatusCode.IsBad(statusCode))
+                if (StatusCode.IsBad(closeStatusCode))
                 {
                     Console.WriteLine("Unable to close the file.");
                     return;
                 }
+
                 Console.WriteLine("The File was downloaded successfully.");
             }
             catch (Exception e)
@@ -197,7 +206,7 @@ namespace SampleClient.Samples
 
                 NodeId uploadNodeID = new NodeId(UploadNodeID);
                 FileStateHelper fileState = new FileStateHelper(m_session, fileName, uploadNodeID);
-                
+
                 if (!fileState.Writable)
                 {
                     Console.WriteLine("The file writable property is false.");
@@ -206,10 +215,10 @@ namespace SampleClient.Samples
                 }
 
                 // Open the file in Write and EraseExisting mode
-                StatusCode readStatusCode = fileState.Open(2 | 4);
-                if (StatusCode.IsBad(readStatusCode))
+                StatusCode openStatusCode = fileState.Open(2 | 4);
+                if (StatusCode.IsBad(openStatusCode))
                 {
-                    Console.WriteLine(string.Format("\nStatus Code is: {0}\n", readStatusCode));
+                    Console.WriteLine(string.Format("\nStatus Code is: {0}\n", openStatusCode));
                     return;
                 }
 
@@ -217,7 +226,7 @@ namespace SampleClient.Samples
                 using (FileStream fs = new FileStream(UploadFilePath, FileMode.Open))
                 {
                     FileInfo fi = new FileInfo(UploadFilePath);
-                    ulong totalSize = (ulong)fi.Length;
+                    ulong totalSize = (ulong) fi.Length;
                     ulong totalWrite = 0;
 
                     if (totalSize == 0)
@@ -226,7 +235,6 @@ namespace SampleClient.Samples
 
                         return;
                     }
-
 
                     byte[] buffer = new byte[ChunkSize];
                     int cRead;
@@ -248,19 +256,20 @@ namespace SampleClient.Samples
                             data = buffer;
                         }
 
-                        StatusCode statusCode = fileState.Write(data);
+                        StatusCode writeStatusCode = fileState.Write(data);
 
-                        if (StatusCode.IsBad(statusCode))
+                        if (StatusCode.IsBad(writeStatusCode))
                         {
                             fileState.Close();
-                            Console.WriteLine("\nStatus Code is: {0}\n", statusCode);
+                            Console.WriteLine("\nStatus Code is: {0}\n", writeStatusCode);
 
                             return;
                         }
 
-                        totalWrite += (ulong)data.Length;
+                        totalWrite += (ulong) data.Length;
 
-                        Console.Write("\rWriting {0} bytes of {1} - {2}% complete", totalWrite, totalSize, totalWrite * 100 / totalSize);
+                        Console.Write("\rWriting {0} bytes of {1} - {2}% complete", totalWrite, totalSize,
+                            totalWrite * 100 / totalSize);
                     }
 
                     Console.WriteLine();
@@ -268,14 +277,13 @@ namespace SampleClient.Samples
 
                 // Close the file
                 StatusCode closeStatusCode = fileState.Close();
-
                 if (StatusCode.IsBad(closeStatusCode))
                 {
                     Console.WriteLine("\nStatus Code is: {0}\n", closeStatusCode);
 
                     return;
                 }
-                
+
                 Console.WriteLine("The File was uploaded with success.");
             }
             catch (Exception e)
@@ -322,9 +330,185 @@ namespace SampleClient.Samples
             }
         }
 
+        public void ReadTemporaryFile()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("Session is not created, please use \"1\" command");
+                return;
+            }
+
+            try
+            {
+                NodeId nodeID = new NodeId(TemporaryFileNodeId);
+                TemporaryFileTransferStateHelper tmpFileTransferState =
+                    new TemporaryFileTransferStateHelper(m_session, Path.GetFileName(ReadTemporaryFilePath), nodeID);
+
+                StatusCode readFileStatusCode = tmpFileTransferState.GenerateFileForRead(null);
+                if (StatusCode.IsBad(readFileStatusCode))
+                {
+                    Console.WriteLine("The server could not generate a new temporary file");
+                    return;
+                }
+
+                FileStateHelper fileState = new FileStateHelper(m_session,
+                    tmpFileTransferState.Filename,
+                    tmpFileTransferState.FileNodeID,
+                    tmpFileTransferState.FileHandle);
+                if (fileState != null)
+                {
+                    ulong totalSize = fileState.Size;
+                    if (totalSize == 0)
+                    {
+                        Console.WriteLine("The file to be written becacuse has the size 0.");
+                        return;
+                    }
+
+                    // Copy the file in chunks of <chunkSize> bytes from server
+                    using (FileStream fs = new FileStream(ReadTemporaryFilePath, FileMode.Create))
+                    {
+                        ulong cTotalRead = 0;
+                        while (cTotalRead < totalSize)
+                        {
+                            int cRead = totalSize - cTotalRead > ChunkSize ? ChunkSize : (int) (totalSize - cTotalRead);
+                            byte[] buffer;
+
+                            StatusCode readStatusCode = fileState.Read(cRead, out buffer);
+
+                            if (StatusCode.IsBad(readStatusCode))
+                            {
+                                fileState.Close();
+                                Console.WriteLine(string.Format("\nStatus Code is: {0}\n", readStatusCode));
+
+                                return;
+                            }
+
+                            fs.Write(buffer, 0, cRead);
+                            cTotalRead += (ulong) cRead;
+                            Console.Write("\rReading {0} bytes of {1} - {2}% complete", cTotalRead, totalSize,
+                                cTotalRead * 100 / totalSize);
+                        }
+                    }
+                }
+
+                Console.WriteLine();
+
+                // Close the file
+                StatusCode closeStatusCode = fileState.Close();
+                if (StatusCode.IsBad(closeStatusCode))
+                {
+                    Console.WriteLine("Unable to close the file.");
+                    return;
+                }
+
+                Console.WriteLine("The File was red successfully.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Read File error..." + e.Message);
+            }
+        }
+
+        public void WriteTemporaryFile()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("Session is not created, please use \"1\" command");
+                return;
+            }
+
+            try
+            {
+                NodeId nodeID = new NodeId(TemporaryFileNodeId);
+                TemporaryFileTransferStateHelper tmpFileTransferState =
+                    new TemporaryFileTransferStateHelper(m_session, Path.GetFileName(WriteTemporaryFilePath), nodeID);
+
+                StatusCode readFileStatusCode = tmpFileTransferState.GenerateFileForWrite(null);
+                if (StatusCode.IsBad(readFileStatusCode))
+                {
+                    Console.WriteLine("The server could not generate a new temporary file");
+                    return;
+                }
+
+                FileStateHelper fileState = new FileStateHelper(m_session,
+                    tmpFileTransferState.Filename,
+                    tmpFileTransferState.FileNodeID,
+                    tmpFileTransferState.FileHandle);
+                if (fileState != null)
+                {
+                    // Send the file content in chunks of chunkSize bytes
+                    using (FileStream fs = new FileStream(WriteTemporaryFilePath, FileMode.Open))
+                    {
+                        FileInfo fi = new FileInfo(WriteTemporaryFilePath);
+                        ulong totalSize = (ulong)fi.Length;
+                        ulong totalWrite = 0;
+
+                        if (totalSize == 0)
+                        {
+                            Console.WriteLine("The file to be written becacuse has the size 0.");
+                            return;
+                        }
+
+                        byte[] buffer = new byte[ChunkSize];
+                        int cRead;
+
+                        while ((cRead = fs.Read(buffer, 0, ChunkSize)) > 0)
+                        {
+                            // if the amount of available bytes is less than the chunkSize requested
+                            // we need to strip the buffer
+                            byte[] data;
+
+                            if (cRead < ChunkSize)
+                            {
+                                byte[] readData = new byte[cRead];
+                                Array.Copy(buffer, readData, cRead);
+                                data = readData;
+                            }
+                            else
+                            {
+                                data = buffer;
+                            }
+
+                            StatusCode writeStatusCode = fileState.Write(data);
+
+                            if (StatusCode.IsBad(writeStatusCode))
+                            {
+                                fileState.Close();
+                                Console.WriteLine("\nStatus Code is: {0}\n", writeStatusCode);
+
+                                return;
+                            }
+
+                            totalWrite += (ulong)data.Length;
+
+                            Console.Write("\rWriting {0} bytes of {1} - {2}% complete", totalWrite, totalSize,
+                                totalWrite * 100 / totalSize);
+                        }
+
+                        Console.WriteLine();
+                    }
+
+                    // Close the file
+                    StatusCode closeStatusCode = tmpFileTransferState.CloseAndCommit(null);
+                    if (StatusCode.IsBad(closeStatusCode))
+                    {
+                        Console.WriteLine("\nStatus Code is: {0}\n", closeStatusCode);
+
+                        return;
+                    }
+
+                    Console.WriteLine("The File was written with success.");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Write File error..." + e.Message);
+            }
+        }
         #endregion
 
         #region Private Methods
+
         #endregion
     }
 }

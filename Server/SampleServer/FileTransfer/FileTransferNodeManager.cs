@@ -22,10 +22,20 @@ namespace SampleServer.FileTransfer
         
         private const string ByteStringFilePath = @"FileTransfer\Files\ByteStringFile.xml";
 
-        private const string TemporaryFilePath = @"FileTransfer\Files\TemporaryFile.xml";
+        private const string ReadTemporaryFilePath = @"FileTransfer\Files\ReadTemporaryFile.xml";
+        private const string WriteTemporaryFilePath = @"FileTransfer\Files\WriteTemporaryFile.xml";
 
         private const string FileTransferName = "FileTransfer";
         private const string ByteStringName = "ByteString";
+        private const string TemporaryFileName = "TemporaryFile";
+
+        /// <summary>
+        /// The maximum time in milliseconds the Server accepts between Method calls necessary
+        /// to complete a file read transfer or a file write transfer transaction
+        /// </summary>
+        private const double ClientProcessingTimeoutPeriod = 100; // seconds 
+
+        private Dictionary<uint, FileState> m_tmpWriteFileHandles;
 
         #endregion
 
@@ -37,6 +47,7 @@ namespace SampleServer.FileTransfer
         public FileTransferNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server,
             configuration, Namespaces.FileTransfer)
         {
+            m_tmpWriteFileHandles = new Dictionary<uint, FileState>();
         }
 
         #endregion
@@ -63,7 +74,7 @@ namespace SampleServer.FileTransfer
 
                 CreateByteString(root, ByteStringName, ByteStringFilePath);
 
-                CreateTmpFileState(root, TemporaryFilePath, false);
+                CreateTmpFileState(root, TemporaryFileName);
                 
                 AddRootNotifier(root);
             }
@@ -110,37 +121,19 @@ namespace SampleServer.FileTransfer
         /// <param name="filename"></param>
         /// <param name="writePermission"></param>
         /// <returns></returns>
-        private TemporaryFileTransferState CreateTmpFileState(FolderState root, string filename, bool writePermission)
+        private TemporaryFileTransferState CreateTmpFileState(FolderState root, string filename)
         {
             try
             {
                 TemporaryFileTransferState tmpFileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.TemporaryFileTransferType, ReferenceTypeIds.HasComponent) as TemporaryFileTransferState;
 
-                // tmpFileState.ClientProcessingTimeout = new PropertyState<double>(new NodeState(100));
+                tmpFileState.ClientProcessingTimeout = CreateProperty<double>(tmpFileState, "ClientProcessingTimeout");
+                tmpFileState.ClientProcessingTimeout.Value = ClientProcessingTimeoutPeriod; 
                 tmpFileState.GenerateFileForRead.OnCall = OnGenerateFileForReadCall;
                 tmpFileState.GenerateFileForWrite.OnCall = GenerateFileForWriteCall;
                 tmpFileState.CloseAndCommit.OnCall = CloseAndCommitCall;
 
                 return tmpFileState;
-
-                /*
-                // Creates and copy data content to a temporary file
-                string tmpFileName = Path.GetTempFileName();
-                using (FileStream fileStream = new FileStream(filename, FileMode.Open))
-                {
-                    using (Stream fileStreamTmp = File.OpenWrite(tmpFileName))
-                    {
-                        byte[] bytes = new byte[fileStream.Length];
-                        fileStream.Read(bytes, 0, bytes.Length);
-                        fileStreamTmp.Write(bytes, 0, bytes.Length);
-                        fileStreamTmp.Close();
-                    }
-                    fileStream.Close();
-                }
-                */
-
-                //FileStateHandler fileTypeHandler = new FileStateHandler(tmpFileName, Path.GetFileNameWithoutExtension(filename));
-                //return fileTypeHandler.CreateFileState(this, root, writePermission);
             }
             catch (FileNotFoundException)
             {
@@ -164,40 +157,6 @@ namespace SampleServer.FileTransfer
             byteString.OnSimpleReadValue = OnReadFile; // read the file content as byte array
             
             return byteString;
-        }
-
-        /// <summary>
-        /// Creates temporary byte string node
-        /// </summary>
-        /// <param name="tmpRoot"></param>
-        /// <param name="byteStringName"></param>
-        /// <param name="byteStringPath"></param>
-        /// <returns></returns>
-        private BaseDataVariableState CreateTmpByteString(FolderState tmpRoot, string byteStringName, string byteStringPath)
-        {
-            string tmpByteStringPath = String.Empty;
-            try
-            {
-                // Creates and copy data content to a temporary file
-                tmpByteStringPath = Path.GetTempFileName();
-                using (FileStream fileStream = new FileStream(byteStringPath, FileMode.Open))
-                {
-                    using (Stream fileStreamTmp = File.OpenWrite(tmpByteStringPath))
-                    {
-                        byte[] bytes = new byte[fileStream.Length];
-                        fileStream.Read(bytes, 0, bytes.Length);
-                        fileStreamTmp.Write(bytes, 0, bytes.Length);
-                        fileStreamTmp.Close();
-                    }
-                    fileStream.Close();
-                }
-            }
-            catch (FileNotFoundException)
-            {
-                throw new Exception("File not found exception.");
-            }
-
-            return CreateByteString(tmpRoot, byteStringName, tmpByteStringPath);
         }
 
         #endregion
@@ -243,47 +202,6 @@ namespace SampleServer.FileTransfer
             return StatusCodes.Good;
         }
 
-        /// <summary>
-        /// Persist the node value received to the related 
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="node"></param>
-        /// <param name="indexRange"></param>
-        /// <param name="dataEncoding"></param>
-        /// <param name="value"></param>
-        /// <param name="statusCode"></param>
-        /// <param name="timestamp"></param>
-        /// <returns></returns>
-        /*
-        private ServiceResult OnWriteFile(ISystemContext context, NodeState node, NumericRange indexRange,
-            QualifiedName dataEncoding, ref object value, ref StatusCode statusCode, ref DateTime timestamp)
-        {
-            if (context != null && context.SessionId != null)
-            {
-                // read the file from the disk
-                string filePath = node.Handle as string;
-
-                try
-                {
-                    using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
-                    {
-                        byte[] bytes = value as byte[];
-                        fileStream.Write(bytes, 0, bytes.Length);
-                        fileStream.Close();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // file access error
-                    throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
-                }
-
-            }
-
-            return StatusCodes.Good;
-        }
-        */
-
         private ServiceResult OnGenerateFileForReadCall(ISystemContext context,
             MethodState method,
             NodeId objectId,
@@ -292,27 +210,38 @@ namespace SampleServer.FileTransfer
             ref uint fileHandle,
             ref NodeId completionStateMachine)
         {
-            // Creates and copy data content to a temporary file
+            StatusCode openStatusCode = new StatusCode();
+
+            // use generateOptions option !?
+
+            // Creates and copy data content from "ReadTemporaryFilePath" to a temporary file
             string tmpFileName = Path.GetTempFileName();
-            using (Stream fileStreamTmp = File.OpenWrite(tmpFileName))
+            using (FileStream fileStream = new FileStream(ReadTemporaryFilePath, FileMode.Open))
             {
-                //byte[] bytes = new byte[fileStream.Length];
-                //fileStream.Read(bytes, 0, bytes.Length);
-                //fileStreamTmp.Write(bytes, 0, bytes.Length);
-                fileStreamTmp.Close();
+                using (Stream fileStreamTmp = File.OpenWrite(tmpFileName))
+                {
+                    byte[] bytes = new byte[fileStream.Length];
+                    fileStream.Read(bytes, 0, bytes.Length);
+                    fileStreamTmp.Write(bytes, 0, bytes.Length);
+                    fileStreamTmp.Close();
+                }
+                fileStream.Close();
             }
 
-            NodeId download = new NodeId(DownloadNodeID);
-            NodeState targetNode = FindPredefinedNode(download, null);
-            
-            FileState fileState = CreateObjectFromType(targetNode, Path.GetFileName(DownloadFilePath), ObjectTypeIds.FileType, ReferenceTypeIds.HasComponent) as FileState;
+            FileState fileState = CreateFileState(null, tmpFileName, false);
             if (fileState != null)
             {
-                //fileState.Open.Call();
-                //fileState.Open.v;
+                fileNodeId = fileState.NodeId;
+                ServiceResult openResult = fileState.Open.OnCall(context, null, fileNodeId, (byte)FileAccess.Read, ref fileHandle);
+                openStatusCode = openResult.StatusCode;
+                if (StatusCode.IsGood(openStatusCode))
+                {
+                    // prepare completionStateMachine node
+                }
             }
 
-            return StatusCodes.Good;
+
+            return openStatusCode;
         }
 
         private ServiceResult GenerateFileForWriteCall(ISystemContext context, 
@@ -321,19 +250,75 @@ namespace SampleServer.FileTransfer
             object generateOptions, 
             ref NodeId fileNodeId, 
             ref uint fileHandle)
-
         {
-            return StatusCodes.Good;
+            StatusCode writeStatusCode = new StatusCode();
+
+            // use generateOptions option !?
+
+            // Creates and copy data content from "WriteTemporaryFilePath" to a temporary file
+            string tmpFileName = Path.GetTempFileName();
+            
+            FileState fileState = CreateFileState(null, tmpFileName, true);
+            if (fileState != null)
+            {
+                fileNodeId = fileState.NodeId;
+                ServiceResult writeResult = fileState.Open.OnCall(context, null, fileNodeId, (byte)FileAccess.Write, ref fileHandle);
+                writeStatusCode = writeResult.StatusCode;
+                if (StatusCode.IsGood(writeStatusCode))
+                {
+                    if (m_tmpWriteFileHandles.ContainsKey(fileHandle))
+                    {
+                        m_tmpWriteFileHandles.Add(fileHandle, fileState);
+                    }
+                }
+            }
+
+            return writeStatusCode;
         }
 
-        private ServiceResult CloseAndCommitCall(ISystemContext context, 
-            MethodState method, 
-            NodeId objectId, 
-            uint fileHandle, 
+        private ServiceResult CloseAndCommitCall(ISystemContext context,
+            MethodState method,
+            NodeId objectId,
+            uint fileHandle,
             ref NodeId completionStateMachine)
         {
-            return StatusCodes.Good;
+            StatusCode closeAndCommitStatusCode = new StatusCode();
+            try
+            {
+                if (m_tmpWriteFileHandles.ContainsKey(fileHandle))
+                {
+                    FileState fileState = m_tmpWriteFileHandles[fileHandle];
+                    if (fileState != null)
+                    {
+                        // todo: initiate a saving content before closing and deleting the handler
+
+                        ServiceResult closeResult = fileState.Close.OnCall(context, null, objectId, fileHandle);
+                        closeAndCommitStatusCode = closeResult.StatusCode;
+                        if (StatusCode.IsGood(closeAndCommitStatusCode))
+                        {
+                            string tempPath = Path.GetTempPath();
+                            if (Directory.Exists(tempPath))
+                            {
+                                string tmpFileName = Path.Combine(tempPath, fileState.SymbolicName);
+                                if (File.Exists(tmpFileName))
+                                {
+                                    File.Delete(tmpFileName);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                // Console.WriteLine(e);
+                throw ;
+            }
+
+            return closeAndCommitStatusCode;
         }
+
         #endregion
     }
 }

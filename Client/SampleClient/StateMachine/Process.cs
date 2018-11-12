@@ -328,6 +328,14 @@ namespace SampleClient.StateMachine
             readByteArrayFileTransfer.ExecuteCommand += ReadByteArrayFileTransfer_ExecuteCommand;
             m_transitions.Add(readByteArrayFileTransfer, State.FileTransfer);
 
+            StateTransition readTemporaryFileTransfer = new StateTransition(State.FileTransfer, Command.ReadTemporaryFileTransfer, "6", "Read Temporary File");
+            readTemporaryFileTransfer.ExecuteCommand += ReadTemporaryFileTransfer_ExecuteCommand;
+            m_transitions.Add(readTemporaryFileTransfer, State.FileTransfer);
+
+            StateTransition writeTemporaryFileTransfer = new StateTransition(State.FileTransfer, Command.WriteTemporaryFileTransfer, "7", "Write Temporary File");
+            writeTemporaryFileTransfer.ExecuteCommand += WriteTemporaryFileTransfer_ExecuteCommand;
+            m_transitions.Add(writeTemporaryFileTransfer, State.FileTransfer);
+
             StateTransition endFileTransfer = new StateTransition(State.FileTransfer, Command.EndFileTransfer, "0", "Back to Main Menu");
             endFileTransfer.ExecuteCommand += EndFileTransfer_ExecuteCommand;
             m_transitions.Add(endFileTransfer, State.Main);
@@ -712,6 +720,22 @@ namespace SampleClient.StateMachine
             if (m_fileTransferClient != null)
             {
                 m_fileTransferClient.ReadByteString();
+            }
+        }
+
+        private void ReadTemporaryFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_fileTransferClient != null)
+            {
+                m_fileTransferClient.ReadTemporaryFile();
+            }
+        }
+
+        private void WriteTemporaryFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_fileTransferClient != null)
+            {
+                m_fileTransferClient.WriteTemporaryFile();
             }
         }
 

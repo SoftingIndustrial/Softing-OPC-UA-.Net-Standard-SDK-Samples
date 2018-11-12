@@ -18,7 +18,7 @@ using Softing.Opc.Ua.Client;
 namespace SampleClient.Helpers
 {    
     /// <summary>
-    /// Represents the FileType class
+    /// FileState helper class
     /// </summary>
     public class FileStateHelper
     {
@@ -30,11 +30,12 @@ namespace SampleClient.Helpers
         #endregion
 
         #region Constructor
-        public FileStateHelper(ClientSession session, string filename, NodeId nodeId)
+        public FileStateHelper(ClientSession session, string filename, NodeId nodeId, UInt32 fileHandle = 0)
         {
             m_session = session;
             Filename = filename;
             NodeID = nodeId;
+            m_fileHandle = fileHandle;
 
             TranslateBrowsePathToNodeIds();
         }
@@ -109,12 +110,14 @@ namespace SampleClient.Helpers
         #endregion Properties
 
         #region Public Methods
+
         /// <summary>
         /// Opens the file into the specified mode.
         /// </summary>
         /// <param name="mode">The file open mode. It is bitmask of the following possible values
         /// Read - 1
         /// Write - 2
+        /// ReadWrite - 3
         /// EraseExisting - 4
         /// Append - 8
         /// </param>

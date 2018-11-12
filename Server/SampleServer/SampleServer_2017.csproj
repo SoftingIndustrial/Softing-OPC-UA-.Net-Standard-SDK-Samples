@@ -10,6 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="FileTransfer\Files\ReadTemporaryFile.xml" />
+    <None Remove="FileTransfer\Files\WriteTemporaryFile.xml" />
     <None Remove="NodeSetImport\Refrigerators.NodeSet2.xml" />
     <None Remove="NodeSetImport\Refrigerators2.NodeSet2.xml" />
   </ItemGroup>
@@ -18,7 +20,13 @@
     <Content Include="FileTransfer\Files\ByteStringFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="FileTransfer\Files\ReadTemporaryFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="FileTransfer\Files\DownloadFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileTransfer\Files\WriteTemporaryFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="FileTransfer\Files\UploadFile.xml">
