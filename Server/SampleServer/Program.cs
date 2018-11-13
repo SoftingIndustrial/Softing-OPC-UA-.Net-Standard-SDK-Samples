@@ -9,8 +9,10 @@
  * ======================================================================*/
 
 using System;
+using System.Text;
 using Opc.Ua;
 using Opc.Ua.Configuration;
+using Opc.Ua.Server;
 using Softing.Opc.Ua.Server.Private;
 
 namespace SampleServer
@@ -25,7 +27,8 @@ namespace SampleServer
         private static async void StartServer()
         {
             string configurationFile = "SampleServer.Config.xml";
-            SampleServer sampleServer = new SampleServer();
+            SampleServer sampleServer = new SampleServer();            
+
             try
             {
                 bool result = true;
@@ -47,7 +50,12 @@ namespace SampleServer
                     Console.WriteLine(sampleServer.Configuration.ServerConfiguration.BaseAddresses[i]);
                 }
                 Console.WriteLine("Server started");
-                Console.WriteLine("Press:\n\tx,q: shutdown the server\n\n");
+                PrintCommandParameters();
+
+                // print notification on session events
+                sampleServer.CurrentInstance.SessionManager.SessionActivated += SessionStateChanged;
+                sampleServer.CurrentInstance.SessionManager.SessionClosing += SessionStateChanged;
+                sampleServer.CurrentInstance.SessionManager.SessionCreated += SessionStateChanged;
 
                 do
                 {
@@ -56,16 +64,28 @@ namespace SampleServer
                     {
                         break;
                     }
-                    if (key.KeyChar == 's')
+                    else if (key.KeyChar == 's')
                     {
                         //list sessions
                         var sessions = sampleServer.CurrentInstance.SessionManager.GetSessions();
-                        var subscriptions = sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
-                        Console.WriteLine("Sessions list:");
-                        foreach (var session in sessions)
+                        var subscriptions = sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();                       
+                       
+                        if (sessions.Count > 0)
                         {
-                            Console.WriteLine($"Session{session.SessionDiagnostics.SessionName}; SubscriptionsCount={ session.SessionDiagnostics.CurrentSubscriptionsCount}");                            
+                            Console.WriteLine("\nSessions list:");
+                            foreach (var session in sessions)
+                            {
+                                PrintSessionStatus(session);
+                            }
                         }
+                        else
+                        {
+                            Console.WriteLine("\nSessions list: empty");
+                        }
+                    }
+                    else
+                    {
+                        PrintCommandParameters();
                     }
                 }
                 while (true);
@@ -81,5 +101,37 @@ namespace SampleServer
                 sampleServer.Stop();
             }
         }
+
+        #region Print State
+        private static void PrintCommandParameters()
+        {
+            Console.WriteLine("Press:\n\ts: session list");
+            Console.WriteLine("\tx,q: shutdown the server\n\n");
+        }
+        private static void SessionStateChanged(Session session, SessionEventReason reason)
+        {
+            PrintSessionStatus(session, reason.ToString());
+        }
+        private static void PrintSessionStatus(Session session, string reason = null)
+        {
+           lock (session.DiagnosticsLock)
+            {
+                StringBuilder line = new StringBuilder();
+                if (reason != null)
+                {
+                    line.AppendFormat("{0,9};", reason);
+                }
+                line.AppendFormat("{0,20}", session.SessionDiagnostics.SessionName);
+
+                if (session.Identity != null)
+                {
+                    line.AppendFormat(";{0,20}", session.Identity.DisplayName);
+                }
+                line.AppendFormat(";Session ID:{0}", session.Id);
+                line.AppendFormat(";Subscriptions:{0}", session.SessionDiagnostics.CurrentSubscriptionsCount);                             
+                Console.WriteLine(line);
+            }
+        }
+        #endregion
     }
 }
