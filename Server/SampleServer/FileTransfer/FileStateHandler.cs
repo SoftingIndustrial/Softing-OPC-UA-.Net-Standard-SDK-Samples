@@ -1,10 +1,10 @@
-﻿using Opc.Ua;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.IO;
 using System.Linq;
+using Opc.Ua;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.Server;
 
@@ -18,12 +18,12 @@ namespace SampleServer.FileTransfer
         #region Private Members
 
         private FileState m_fileState;
-        private string m_filePath;
+        protected string m_filePath;
         private uint m_nextFileHandle;
         private Timer m_Timer;
         private Dictionary<uint, FileStreamTracker> m_fileHandles;
 
-        private const double CheckStreamAccessPeriod = 60; // seconds
+        private const int CheckFileStreamAvailabilityPeriod = 100; // seconds
         #endregion
 
         #region Constructors
@@ -32,7 +32,7 @@ namespace SampleServer.FileTransfer
         {
             m_nextFileHandle = 0;
             m_fileHandles = new Dictionary<uint, FileStreamTracker>();
-            m_Timer = new Timer(CheckFileStreamAvailability, null, 0, 60*1000);
+            m_Timer = new Timer(CheckFileStreamAvailability, null, 0, CheckFileStreamAvailabilityPeriod); // remove opened files after 
         }
         public FileStateHandler(string filePath) : this()
         {
@@ -47,7 +47,7 @@ namespace SampleServer.FileTransfer
         /// <summary>
         /// File State reference
         /// </summary>
-        public FileState State
+        public FileState FileState
         {
             get { return m_fileState; }
         }
@@ -57,6 +57,10 @@ namespace SampleServer.FileTransfer
         /// </summary>
         public string Name { get; set; }
 
+        protected string FilePath
+        {
+            get { return m_filePath; }
+        }
         #endregion
 
         #region Public Methods
@@ -80,15 +84,25 @@ namespace SampleServer.FileTransfer
                 m_fileState.Size.OnSimpleReadValue = OnReadSize;
             }
         }
-        
+
         #endregion
+
+        protected FileStream GetFileStream(uint fileHandle)
+        {
+            if (m_fileHandles.ContainsKey(fileHandle))
+            {
+                return m_fileHandles[fileHandle].FileStream;
+            }
+
+            return null;
+        }
 
         #region Private Callback Methods
 
-        /// <summary>
-        /// Read the size of the file.
-        /// </summary>
-        private ServiceResult OnReadSize(
+            /// <summary>
+            /// Read the size of the file.
+            /// </summary>
+            private ServiceResult OnReadSize(
             ISystemContext context,
             NodeState node,
             ref object value)
@@ -109,9 +123,9 @@ namespace SampleServer.FileTransfer
                     return new ServiceResult(StatusCodes.BadUnexpectedError, string.Format("The file: {0} was not found!", m_filePath));
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
             }
         }
 
@@ -165,13 +179,13 @@ namespace SampleServer.FileTransfer
 
                 return ServiceResult.Good;
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException ex)
             {
-                throw new ServiceResultException(StatusCodes.BadNotFound, e.Message);
+                throw new ServiceResultException(StatusCodes.BadNotFound, ex.Message);
             }
-            catch (UnauthorizedAccessException e)
+            catch (UnauthorizedAccessException ex)
             {
-                throw new ServiceResultException(StatusCodes.BadNotWritable, e.Message);
+                throw new ServiceResultException(StatusCodes.BadNotWritable, ex.Message);
             }
         }
 
@@ -216,55 +230,9 @@ namespace SampleServer.FileTransfer
 
                 return StatusCodes.Good;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
-            }
-        }
-
-        /// <summary>
-        /// Close method callback
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="method"></param>
-        /// <param name="objectId"></param>
-        /// <param name="fileHandle"></param>
-        /// <returns></returns>
-        private ServiceResult OnCloseMethodCall(
-          ISystemContext context,
-          MethodState method,
-          NodeId objectId,
-          uint fileHandle)
-        {
-            try
-            {
-                if (!m_fileHandles.ContainsKey(fileHandle))
-                {
-                    return StatusCodes.BadInvalidArgument;
-                }
-
-                FileStream fileStream = m_fileHandles[fileHandle].FileStream;
-                m_fileHandles.Remove(fileHandle);
-
-                //if the file was opened with Write access
-                //we need to refresh the Size property
-                bool bWasWritable = fileStream.CanWrite;
-
-                fileStream.Close();
-
-                if (bWasWritable)
-                {
-                    FileInfo fi = new FileInfo(m_filePath);
-
-                    m_fileState.Size.Value = (ulong)fi.Length;
-                    m_fileState.Size.ClearChangeMasks(null, false);
-                }
-
-                return StatusCodes.Good;
-            }
-            catch (Exception e)
-            {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
             }
         }
 
@@ -302,9 +270,9 @@ namespace SampleServer.FileTransfer
 
                 return StatusCodes.Good;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
             }
         }
 
@@ -337,9 +305,9 @@ namespace SampleServer.FileTransfer
 
                 return StatusCodes.Good;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
             }
         }
 
@@ -372,28 +340,100 @@ namespace SampleServer.FileTransfer
 
                 return StatusCodes.Good;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
             }
         }
         #endregion
 
-        #region Private Methods
+        #region Protected Callback Methods
+
+        /// <summary>
+        /// Close method callback
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="fileHandle"></param>
+        /// <returns></returns>
+        protected virtual ServiceResult OnCloseMethodCall(
+            ISystemContext context,
+            MethodState method,
+            NodeId objectId,
+            uint fileHandle)
+        {
+            try
+            {
+                if (!m_fileHandles.ContainsKey(fileHandle))
+                {
+                    return StatusCodes.BadInvalidArgument;
+                }
+
+                FileStream fileStream = m_fileHandles[fileHandle].FileStream;
+                m_fileHandles.Remove(fileHandle);
+
+                //if the file was opened with Write access
+                //we need to refresh the Size property
+                bool bWasWritable = fileStream.CanWrite;
+                fileStream.Close();
+
+                if (bWasWritable)
+                {
+                    FileInfo fi = new FileInfo(m_filePath);
+
+                    m_fileState.Size.Value = (ulong)fi.Length;
+                    m_fileState.Size.ClearChangeMasks(null, false);
+                }
+
+                return StatusCodes.Good;
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Protected Methods
         /// <summary>
         /// Check when the stream was last time accessed and close it
         /// </summary>
         /// <param name="state"></param>
         private void CheckFileStreamAvailability(object state)
         {
-            foreach (KeyValuePair<uint, FileStreamTracker> entry in m_fileHandles.ToList())
+            lock (this)
             {
-                TimeSpan duration = DateTime.Now - entry.Value.LastAccessTime;
-
-                if (duration.TotalSeconds > CheckStreamAccessPeriod) 
+                foreach (KeyValuePair<uint, FileStreamTracker> entry in m_fileHandles.ToList())
                 {
-                    m_fileHandles.Remove(entry.Key);
-                    entry.Value.FileStream.Close();
+                    TimeSpan duration = DateTime.Now - entry.Value.LastAccessTime;
+
+                    if (duration.TotalSeconds > CheckFileStreamAvailabilityPeriod)
+                    {
+                        if (FileState != null)
+                        {
+                            try
+                            {
+                                uint fileHandle = entry.Key;
+                                ServiceResult writeResult = FileState.Close.OnCall(null, null, null, fileHandle);
+                                if (StatusCode.IsBad(writeResult.StatusCode))
+                                {
+                                    throw new Exception(string.Format(
+                                        "Error closing the file state for the file handle: {0}", fileHandle));
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                            }
+                        }
+                        else
+                        {
+                            m_fileHandles.Remove(entry.Key);
+                            entry.Value.FileStream.Close();
+                        }
+                    }
                 }
             }
         }

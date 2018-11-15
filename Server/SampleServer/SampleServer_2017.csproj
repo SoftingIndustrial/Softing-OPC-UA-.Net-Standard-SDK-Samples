@@ -26,9 +26,6 @@
     <Content Include="FileTransfer\Files\DownloadFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="FileTransfer\Files\WriteTemporaryFile.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="FileTransfer\Files\UploadFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

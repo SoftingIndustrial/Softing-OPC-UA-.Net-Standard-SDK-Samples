@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.IO;
 using Opc.Ua;
@@ -14,8 +15,6 @@ namespace SampleServer.FileTransfer
     public class FileTransferNodeManager : NodeManager
     {
         #region Private Members
-
-        private const string DownloadNodeID = "ns=9;i=2";
 
         private const string DownloadFilePath = @"FileTransfer\Files\DownloadFile.xml";
         private const string UploadFilePath = @"FileTransfer\Files\UploadFile.xml";
@@ -35,7 +34,7 @@ namespace SampleServer.FileTransfer
         /// </summary>
         private const double ClientProcessingTimeoutPeriod = 100; // seconds 
 
-        private Dictionary<uint, FileState> m_tmpWriteFileHandles;
+        private TempFilesHolder m_tmpFilesHolder;
 
         #endregion
 
@@ -47,7 +46,7 @@ namespace SampleServer.FileTransfer
         public FileTransferNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server,
             configuration, Namespaces.FileTransfer)
         {
-            m_tmpWriteFileHandles = new Dictionary<uint, FileState>();
+            m_tmpFilesHolder = new TempFilesHolder();
         }
 
         #endregion
@@ -74,7 +73,7 @@ namespace SampleServer.FileTransfer
 
                 CreateByteString(root, ByteStringName, ByteStringFilePath);
 
-                CreateTmpFileState(root, TemporaryFileName);
+                CreateTemporaryFileTransferState(root, TemporaryFileName);
                 
                 AddRootNotifier(root);
             }
@@ -114,6 +113,32 @@ namespace SampleServer.FileTransfer
                 throw new Exception("File not found exception.");
             }
         }
+
+        private TempFileStateHandler CreateTempFileState(FolderState root, string filename, bool writePermission)
+        {
+            try
+            {
+                FileState fileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.FileType, ReferenceTypeIds.HasComponent) as FileState;
+                if (fileState != null)
+                {
+                    fileState.WriteMask = AttributeWriteMask.None;
+                    fileState.UserWriteMask = AttributeWriteMask.None;
+
+                    fileState.Writable.Value = writePermission;
+                    fileState.UserWritable.Value = writePermission;
+                }
+
+                TempFileStateHandler fileTypeHandler = new TempFileStateHandler(filename);
+                fileTypeHandler.SetCallbacks(fileState);
+
+                return fileTypeHandler;
+            }
+            catch (FileNotFoundException)
+            {
+                throw new Exception("File not found exception.");
+            }
+        }
+
         /// <summary>
         /// Creates temporary file state node
         /// </summary>
@@ -121,7 +146,7 @@ namespace SampleServer.FileTransfer
         /// <param name="filename"></param>
         /// <param name="writePermission"></param>
         /// <returns></returns>
-        private TemporaryFileTransferState CreateTmpFileState(FolderState root, string filename)
+        private TemporaryFileTransferState CreateTemporaryFileTransferState(FolderState root, string filename)
         {
             try
             {
@@ -202,6 +227,17 @@ namespace SampleServer.FileTransfer
             return StatusCodes.Good;
         }
 
+        /// <summary>
+        /// Creates a temporary file, fill the temporary file content with "ReadTemporaryFilePath" data, open it in read mode and pass its handler to the client
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="generateOptions"></param>
+        /// <param name="fileNodeId"></param>
+        /// <param name="fileHandle"></param>
+        /// <param name="completionStateMachine"></param>
+        /// <returns></returns>
         private ServiceResult OnGenerateFileForReadCall(ISystemContext context,
             MethodState method,
             NodeId objectId,
@@ -212,38 +248,80 @@ namespace SampleServer.FileTransfer
         {
             StatusCode openStatusCode = new StatusCode();
 
-            // use generateOptions option !?
-
-            // Creates and copy data content from "ReadTemporaryFilePath" to a temporary file
-            string tmpFileName = Path.GetTempFileName();
-            using (FileStream fileStream = new FileStream(ReadTemporaryFilePath, FileMode.Open))
+            try
             {
-                using (Stream fileStreamTmp = File.OpenWrite(tmpFileName))
-                {
-                    byte[] bytes = new byte[fileStream.Length];
-                    fileStream.Read(bytes, 0, bytes.Length);
-                    fileStreamTmp.Write(bytes, 0, bytes.Length);
-                    fileStreamTmp.Close();
-                }
-                fileStream.Close();
-            }
+                // ignore generateOptions option 
+                // completionStateMachine for asyncronously read mode (not used in this sample)
 
-            FileState fileState = CreateFileState(null, tmpFileName, false);
-            if (fileState != null)
+                // Creates and copy data content from "ReadTemporaryFilePath" to a temporary file
+                string tmpFileName = Path.GetTempFileName();
+                using (FileStream fileStream = new FileStream(ReadTemporaryFilePath, FileMode.Open))
+                {
+                    using (Stream fileStreamTmp = File.OpenWrite(tmpFileName))
+                    {
+                        byte[] bytes = new byte[fileStream.Length];
+                        fileStream.Read(bytes, 0, bytes.Length);
+                        fileStreamTmp.Write(bytes, 0, bytes.Length);
+                        fileStreamTmp.Close();
+                    }
+
+                    fileStream.Close();
+                }
+
+                TempFileStateHandler fileStateHandler = CreateTempFileState(null, tmpFileName, false);
+                if (fileStateHandler != null)
+                {
+                    FileState fileState = fileStateHandler.FileState;
+                    if (fileState != null)
+                    {
+                        fileNodeId = fileState.NodeId;
+                        ServiceResult openResult = fileState.Open.OnCall(context, method, fileNodeId,
+                            (byte) FileAccess.Read, ref fileHandle);
+                        if (openResult != null)
+                        {
+                            openStatusCode = openResult.StatusCode;
+                            if (StatusCode.IsGood(openStatusCode))
+                            {
+                                uint writeFileHandle = m_tmpFilesHolder.Add(fileNodeId, fileStateHandler);
+                                if (writeFileHandle != 0)
+                                {
+                                    fileHandle = writeFileHandle;
+                                }
+                                else
+                                {
+                                    throw new Exception(string.Format("{0}: The file is already opened!", tmpFileName));
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format("{0}: Open file call failed!", tmpFileName));
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Open file call failed!");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                fileNodeId = fileState.NodeId;
-                ServiceResult openResult = fileState.Open.OnCall(context, null, fileNodeId, (byte)FileAccess.Read, ref fileHandle);
-                openStatusCode = openResult.StatusCode;
-                if (StatusCode.IsGood(openStatusCode))
-                {
-                    // prepare completionStateMachine node
-                }
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
             }
-
 
             return openStatusCode;
         }
 
+        /// <summary>
+        /// Creates a temporary file, open it in write mode and pass its handler to the client to fill up with client data
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="generateOptions"></param>
+        /// <param name="fileNodeId"></param>
+        /// <param name="fileHandle"></param>
+        /// <returns></returns>
         private ServiceResult GenerateFileForWriteCall(ISystemContext context, 
             MethodState method, 
             NodeId objectId, 
@@ -253,29 +331,62 @@ namespace SampleServer.FileTransfer
         {
             StatusCode writeStatusCode = new StatusCode();
 
-            // use generateOptions option !?
-
-            // Creates and copy data content from "WriteTemporaryFilePath" to a temporary file
-            string tmpFileName = Path.GetTempFileName();
-            
-            FileState fileState = CreateFileState(null, tmpFileName, true);
-            if (fileState != null)
+            try
             {
-                fileNodeId = fileState.NodeId;
-                ServiceResult writeResult = fileState.Open.OnCall(context, null, fileNodeId, (byte)FileAccess.Write, ref fileHandle);
-                writeStatusCode = writeResult.StatusCode;
-                if (StatusCode.IsGood(writeStatusCode))
+                // ignore generateOptions option 
+                // completionStateMachine for asyncronously write mode (not used in this sample)
+                
+                // Creates a temporary file (used by client to persist client file content data)
+                string tmpFileName = Path.GetTempFileName();
+                
+                TempFileStateHandler fileStateHandler = CreateTempFileState(null, tmpFileName, true);
+                if (fileStateHandler != null)
                 {
-                    if (m_tmpWriteFileHandles.ContainsKey(fileHandle))
+                    FileState fileState = fileStateHandler.FileState;
+                    if (fileState != null)
                     {
-                        m_tmpWriteFileHandles.Add(fileHandle, fileState);
+                        fileNodeId = fileState.NodeId;
+
+                        ServiceResult writeResult = fileState.Open.OnCall(context, method, fileNodeId,
+                            (byte) FileAccess.ReadWrite, ref fileHandle);
+                        writeStatusCode = writeResult.StatusCode;
+                        if (StatusCode.IsGood(writeStatusCode))
+                        {
+                            uint writeFileHandle = m_tmpFilesHolder.Add(fileNodeId, fileStateHandler);
+                            if (writeFileHandle != 0)
+                            {
+                                fileHandle = writeFileHandle;
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format("{0}: The file is already opened!", tmpFileName));
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception(string.Format("{0}: Open file call failed!", tmpFileName));
+                        }
+
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
             }
 
             return writeStatusCode;
         }
 
+        /// <summary>
+        /// Apply(save) the content of the written file by the client (to a dedicated server file) then close and delete the temporary file after the completion of the transaction
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="fileHandle"></param>
+        /// <param name="completionStateMachine"></param>
+        /// <returns></returns>
         private ServiceResult CloseAndCommitCall(ISystemContext context,
             MethodState method,
             NodeId objectId,
@@ -283,42 +394,106 @@ namespace SampleServer.FileTransfer
             ref NodeId completionStateMachine)
         {
             StatusCode closeAndCommitStatusCode = new StatusCode();
+
             try
             {
-                if (m_tmpWriteFileHandles.ContainsKey(fileHandle))
-                {
-                    FileState fileState = m_tmpWriteFileHandles[fileHandle];
-                    if (fileState != null)
-                    {
-                        // todo: initiate a saving content before closing and deleting the handler
+                // completionStateMachine for asyncronously close and commit mode (not used in this sample)
 
-                        ServiceResult closeResult = fileState.Close.OnCall(context, null, objectId, fileHandle);
-                        closeAndCommitStatusCode = closeResult.StatusCode;
-                        if (StatusCode.IsGood(closeAndCommitStatusCode))
+                TempFileStateData tmpFileStateData = m_tmpFilesHolder.Get(fileHandle);
+                if (tmpFileStateData != null)
+                {
+                    NodeId fileNodeId = tmpFileStateData.FileNodeId;
+                    if (fileNodeId == null)
+                    {
+                        throw new Exception(string.Format("The file Node id related to file handler {0} was removed!", fileHandle));
+                    }
+                    TempFileStateHandler fileStateHandler = tmpFileStateData.FileStateHandler;
+                    if (fileStateHandler != null)
+                    {
+                        FileState fileState = fileStateHandler.FileState;
+                        if (fileState != null)
                         {
-                            string tempPath = Path.GetTempPath();
-                            if (Directory.Exists(tempPath))
+                            if (fileState.Writable != null && fileState.Writable.Value == false)
                             {
-                                string tmpFileName = Path.Combine(tempPath, fileState.SymbolicName);
-                                if (File.Exists(tmpFileName))
+                                string notSupportedType =
+                                    "The GenerateFileForRead node types are not allowed to use CloseAndCommit! Please use GenerateFileForWrite type file handle.";
+
+                                Console.Write(notSupportedType);
+                                throw new Exception(notSupportedType);
+                            }
+
+                            // Commit(save) on server the file data filled on client
+                            FileStream fileStream = fileStateHandler.GetTmpFileStream(1);
+                            if (fileStream != null)
+                            {
+                                if (fileStream.Length > 0)
                                 {
-                                    File.Delete(tmpFileName);
+                                    using (fileStream)
+                                    {
+                                        using (Stream fileStreamTmp = File.OpenWrite(WriteTemporaryFilePath))
+                                        {
+                                            byte[] bytes = new byte[fileStream.Length];
+                                            fileStream.Read(bytes, 0, bytes.Length);
+                                            fileStreamTmp.Write(bytes, 0, bytes.Length);
+                                            fileStreamTmp.Close();
+                                        }
+
+                                        fileStream.Close();
+                                    }
+                                }
+                                else
+                                {
+                                    Console.Write(
+                                        "\rThe file {0} is empty. No copy of file content on server performed.",
+                                        fileStream.Name);
                                 }
                             }
+
+                            // Close the handler and delete the temporary file
+                            ServiceResult closeResult = fileState.Close.OnCall(context, method, fileNodeId, 1);
+                            closeAndCommitStatusCode = closeResult.StatusCode;
+                            if (StatusCode.IsBad(closeAndCommitStatusCode))
+                            {
+                                throw new Exception("Close file state failed.");
+                            }
+
+                            m_tmpFilesHolder.Remove(fileHandle);
+                        }
+                        else
+                        {
+                            throw new Exception(string.Format("The file state related to the file handler {0} was removed!", fileHandle));
                         }
                     }
+                    else
+                    {
+                        throw new Exception(string.Format("The file state related to the file handler {0} was removed!", fileHandle));
+                    }
                 }
-
+                else
+                {
+                    throw new Exception(string.Format("The file related to the handler number {0} was already removed!", fileHandle));
+                }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                // Console.WriteLine(e);
-                throw ;
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
             }
 
             return closeAndCommitStatusCode;
         }
 
         #endregion
+
+        public override void SessionClosing(OperationContext context, NodeId sessionId, bool deleteSubscriptions)
+        {
+            // remove temporary nodes
+            List<LocalReference> list = new List<LocalReference>();
+            //foreach (NodeState nodeState in m_tmpWriteFileHandles.Values)
+            //{
+                //RemovePredefinedNode((SystemContext)context, nodeState, list);
+            //}
+            
+        }
+
     }
 }

@@ -64,13 +64,13 @@ namespace SampleClient.Helpers
 
         #endregion Properties
 
-        public StatusCode GenerateFileForRead(NodeId nodeId)
+        public StatusCode GenerateFileForRead(object generateOptions)
         {
             StatusCode statusCode = new StatusCode();
 
             try
             {
-                object[] args = new object[] { nodeId };
+                object[] args = new object[] { generateOptions };
 
                 IList<object> outArgs = null;
                 statusCode = m_session.Call(NodeID, GenerateFileForReadNodeID, args, out outArgs);
@@ -94,13 +94,13 @@ namespace SampleClient.Helpers
             return statusCode;
         }
 
-        public StatusCode GenerateFileForWrite(NodeId nodeId)
+        public StatusCode GenerateFileForWrite(object generateOptions)
         {
             StatusCode statusCode = new StatusCode();
 
             try
             {
-                object[] args = new object[] { nodeId };
+                object[] args = new object[] { generateOptions };
 
                 IList<object> outArgs = null;
                 statusCode = m_session.Call(NodeID, GenerateFileForWriteNodeID, args, out outArgs);
@@ -123,7 +123,7 @@ namespace SampleClient.Helpers
             return statusCode;
         }
 
-        public StatusCode CloseAndCommit(NodeId nodeId)
+        public StatusCode CloseAndCommit()
         {
             StatusCode statusCode = new StatusCode();
 

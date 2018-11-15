@@ -22,7 +22,7 @@ namespace SampleClient.Samples
         private const string ByteStringNodeID = "ns=9;i=44";
 
         // the nodeId of the TemporaryFile element from the server
-        private const string TemporaryFileNodeId = "ns=9;i=45";
+        private const string TemporaryFileNodeID = "ns=9;i=45";
 
         private const string DownloadFilePath = @"Files\DownloadFile.xml";
         private const string UploadFilePath = @"Files\UploadClientFile.xml";
@@ -73,11 +73,11 @@ namespace SampleClient.Samples
                 return;
             }
 
-            m_session = m_application.CreateSession(Program.ServerUrl);
-            m_session.SessionName = "Softing FileTransfer Sample Client";
-
             try
             {
+                m_session = m_application.CreateSession(Program.ServerUrl);
+                m_session.SessionName = "Softing FileTransfer Sample Client";
+
                 // connect session
                 m_session.Connect(false, true);
                 Console.WriteLine("Session is connected.");
@@ -330,6 +330,9 @@ namespace SampleClient.Samples
             }
         }
 
+        /// <summary>
+        /// Read temporary file content from the server node 
+        /// </summary>
         public void ReadTemporaryFile()
         {
             if (m_session == null)
@@ -340,7 +343,7 @@ namespace SampleClient.Samples
 
             try
             {
-                NodeId nodeID = new NodeId(TemporaryFileNodeId);
+                NodeId nodeID = new NodeId(TemporaryFileNodeID);
                 TemporaryFileTransferStateHelper tmpFileTransferState =
                     new TemporaryFileTransferStateHelper(m_session, Path.GetFileName(ReadTemporaryFilePath), nodeID);
 
@@ -409,6 +412,9 @@ namespace SampleClient.Samples
             }
         }
 
+        /// <summary>
+        /// Write a client file content into temporary file on the server
+        /// </summary>
         public void WriteTemporaryFile()
         {
             if (m_session == null)
@@ -419,7 +425,7 @@ namespace SampleClient.Samples
 
             try
             {
-                NodeId nodeID = new NodeId(TemporaryFileNodeId);
+                NodeId nodeID = new NodeId(TemporaryFileNodeID);
                 TemporaryFileTransferStateHelper tmpFileTransferState =
                     new TemporaryFileTransferStateHelper(m_session, Path.GetFileName(WriteTemporaryFilePath), nodeID);
 
@@ -488,8 +494,8 @@ namespace SampleClient.Samples
                         Console.WriteLine();
                     }
 
-                    // Close the file
-                    StatusCode closeStatusCode = tmpFileTransferState.CloseAndCommit(null);
+                    // Close and remove the file
+                    StatusCode closeStatusCode = tmpFileTransferState.CloseAndCommit();
                     if (StatusCode.IsBad(closeStatusCode))
                     {
                         Console.WriteLine("\nStatus Code is: {0}\n", closeStatusCode);
