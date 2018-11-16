@@ -50,6 +50,7 @@ namespace SampleServer
                     Console.WriteLine(sampleServer.Configuration.ServerConfiguration.BaseAddresses[i]);
                 }
                 Console.WriteLine("Server started");
+               
                 PrintCommandParameters();
 
                 // print notification on session events
@@ -128,7 +129,10 @@ namespace SampleServer
                     line.AppendFormat(";{0,20}", session.Identity.DisplayName);
                 }
                 line.AppendFormat(";Session ID:{0}", session.Id);
-                line.AppendFormat(";Subscriptions:{0}", session.SessionDiagnostics.CurrentSubscriptionsCount);                             
+                if (reason == null)
+                {
+                    line.AppendFormat(";Subscriptions:{0}", session.SessionDiagnostics.CurrentSubscriptionsCount);
+                }                           
                 Console.WriteLine(line);
             }
         }
