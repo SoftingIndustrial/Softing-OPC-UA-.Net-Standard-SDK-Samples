@@ -17,13 +17,13 @@ namespace SampleServer.FileTransfer
     {
         #region Private Members
 
-        private FileState m_fileState;
+        protected FileState m_fileState;
         protected string m_filePath;
         private uint m_nextFileHandle;
         private Timer m_Timer;
         private Dictionary<uint, FileStreamTracker> m_fileHandles;
 
-        private const int CheckFileStreamAvailabilityPeriod = 100; // seconds
+        private const int CheckFileStreamAvailabilityPeriod = 50; // seconds
         #endregion
 
         #region Constructors
@@ -47,7 +47,7 @@ namespace SampleServer.FileTransfer
         /// <summary>
         /// File State reference
         /// </summary>
-        public FileState FileState
+        protected FileState FileState
         {
             get { return m_fileState; }
         }
@@ -69,7 +69,7 @@ namespace SampleServer.FileTransfer
         /// Set FileState callbacks
         /// </summary>
         /// <param name="fileState"></param>
-        public void SetCallbacks(FileState fileState)
+        public virtual void SetCallbacks(FileState fileState)
         {
             if (fileState != null)
             {
@@ -98,183 +98,6 @@ namespace SampleServer.FileTransfer
         }
 
         #region Private Callback Methods
-
-            /// <summary>
-            /// Read the size of the file.
-            /// </summary>
-            private ServiceResult OnReadSize(
-            ISystemContext context,
-            NodeState node,
-            ref object value)
-        {
-            try
-            {
-                FileInfo fi = new FileInfo(m_filePath);
-                if (fi != null && fi.Exists)
-                {
-                    ulong size = (ulong) fi.Length;
-
-                    value = size;
-
-                    return ServiceResult.Good;
-                }
-                else
-                {
-                    return new ServiceResult(StatusCodes.BadUnexpectedError, string.Format("The file: {0} was not found!", m_filePath));
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Open method callback
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="method"></param>
-        /// <param name="objectId"></param>
-        /// <param name="mode"></param>
-        /// <param name="fileHandle"></param>
-        /// <returns></returns>
-        private ServiceResult OnOpenMethodCall(
-           ISystemContext context,
-           MethodState method,
-           NodeId objectId,
-           byte mode,
-           ref uint fileHandle)
-        {
-            FileMode fileMode;
-            FileAccess fileAccess;
-
-            switch (mode & 3)
-            {
-                case 1: fileAccess = FileAccess.Read; break;
-                case 2: fileAccess = FileAccess.Write; break;
-                case 3: fileAccess = FileAccess.ReadWrite; break;
-                default: fileAccess = FileAccess.Read; break;
-            }
-
-            if ((mode & 4) == 4)
-                fileMode = FileMode.Truncate;
-            else
-                fileMode = FileMode.Open;
-
-            if (fileAccess != FileAccess.Read && m_fileState.Writable.Value == false)
-            {
-                return StatusCodes.BadWriteNotSupported;
-            }
-
-            try
-            {
-                FileStreamTracker fileStreamTracker = new FileStreamTracker(m_filePath, fileMode, fileAccess);
-                
-                //increment OpenCount.
-                ushort openCount = (ushort)m_fileState.OpenCount.Value;
-                m_fileState.OpenCount.Value = ++openCount;
-
-                fileHandle = ++m_nextFileHandle;
-                m_fileHandles[fileHandle] = fileStreamTracker;
-
-                return ServiceResult.Good;
-            }
-            catch (FileNotFoundException ex)
-            {
-                throw new ServiceResultException(StatusCodes.BadNotFound, ex.Message);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                throw new ServiceResultException(StatusCodes.BadNotWritable, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Read method callback
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="method"></param>
-        /// <param name="objectId"></param>
-        /// <param name="fileHandle"></param>
-        /// <param name="length"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        private ServiceResult OnReadMethodCall(
-            ISystemContext context,
-            MethodState method,
-            NodeId objectId,
-            uint fileHandle,
-            int length,
-            ref byte[] data)
-        {
-            try
-            {
-                if (!m_fileHandles.ContainsKey(fileHandle))
-                {
-                    return StatusCodes.BadInvalidArgument;
-                }
-
-                FileStreamTracker fileStreamTracker = m_fileHandles[fileHandle];
-                
-                data = new byte[length];
-                int cRead = fileStreamTracker.FileStream.Read(data, 0, length);
-
-                // if the amount of available bytes is less than the length requested
-                // we need to strip the buffer
-                if (cRead < length)
-                {
-                    byte[] readData = new byte[cRead];
-                    Array.Copy(data, readData, cRead);
-                    data = readData;
-                }
-
-                return StatusCodes.Good;
-            }
-            catch (Exception ex)
-            {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Write method callback
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="method"></param>
-        /// <param name="objectId"></param>
-        /// <param name="fileHandle"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        private ServiceResult OnWriteMethodCall(
-          ISystemContext context,
-          MethodState method,
-          NodeId objectId,
-          uint fileHandle,
-          byte[] data)
-        {
-            try
-            {
-                if (!m_fileHandles.ContainsKey(fileHandle))
-                {
-                    return StatusCodes.BadInvalidArgument;
-                }
-
-                if (m_fileState.Writable.Value == false)
-                {
-                    return StatusCodes.BadWriteNotSupported;
-                }
-
-                FileStreamTracker fileStreamTracker = m_fileHandles[fileHandle];
-                fileStreamTracker.LastAccessTime = DateTime.Now;
-                fileStreamTracker.FileStream.Write(data, 0, data.Length);
-
-                return StatusCodes.Good;
-            }
-            catch (Exception ex)
-            {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
-            }
-        }
 
         /// <summary>
         /// Get Position method callback
@@ -348,6 +171,184 @@ namespace SampleServer.FileTransfer
         #endregion
 
         #region Protected Callback Methods
+
+        /// <summary>
+        /// Read the size of the file.
+        /// </summary>
+        protected ServiceResult OnReadSize(
+            ISystemContext context,
+            NodeState node,
+            ref object value)
+        {
+            try
+            {
+                FileInfo fi = new FileInfo(m_filePath);
+                if (fi != null && fi.Exists)
+                {
+                    ulong size = (ulong)fi.Length;
+
+                    value = size;
+
+                    return ServiceResult.Good;
+                }
+                else
+                {
+                    return new ServiceResult(StatusCodes.BadUnexpectedError,
+                        string.Format("The file: {0} was not found!", m_filePath));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Open method callback
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="mode"></param>
+        /// <param name="fileHandle"></param>
+        /// <returns></returns>
+        protected ServiceResult OnOpenMethodCall(
+           ISystemContext context,
+           MethodState method,
+           NodeId objectId,
+           byte mode,
+           ref uint fileHandle)
+        {
+            FileMode fileMode;
+            FileAccess fileAccess;
+
+            switch (mode & 3)
+            {
+                case 1: fileAccess = FileAccess.Read; break;
+                case 2: fileAccess = FileAccess.Write; break;
+                case 3: fileAccess = FileAccess.ReadWrite; break;
+                default: fileAccess = FileAccess.Read; break;
+            }
+
+            if ((mode & 4) == 4)
+                fileMode = FileMode.Truncate;
+            else
+                fileMode = FileMode.Open;
+
+            if (fileAccess != FileAccess.Read && m_fileState.Writable.Value == false)
+            {
+                return StatusCodes.BadWriteNotSupported;
+            }
+
+            try
+            {
+                FileStreamTracker fileStreamTracker = new FileStreamTracker(m_filePath, fileMode, fileAccess);
+
+                //increment OpenCount.
+                ushort openCount = (ushort)m_fileState.OpenCount.Value;
+                m_fileState.OpenCount.Value = ++openCount;
+
+                fileHandle = ++m_nextFileHandle;
+                m_fileHandles[fileHandle] = fileStreamTracker;
+
+                return ServiceResult.Good;
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new ServiceResultException(StatusCodes.BadNotFound, ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new ServiceResultException(StatusCodes.BadNotWritable, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Read method callback
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="fileHandle"></param>
+        /// <param name="length"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected ServiceResult OnReadMethodCall(
+            ISystemContext context,
+            MethodState method,
+            NodeId objectId,
+            uint fileHandle,
+            int length,
+            ref byte[] data)
+        {
+            try
+            {
+                if (!m_fileHandles.ContainsKey(fileHandle))
+                {
+                    return StatusCodes.BadInvalidArgument;
+                }
+
+                FileStreamTracker fileStreamTracker = m_fileHandles[fileHandle];
+
+                data = new byte[length];
+                int cRead = fileStreamTracker.FileStream.Read(data, 0, length);
+
+                // if the amount of available bytes is less than the length requested
+                // we need to strip the buffer
+                if (cRead < length)
+                {
+                    byte[] readData = new byte[cRead];
+                    Array.Copy(data, readData, cRead);
+                    data = readData;
+                }
+
+                return StatusCodes.Good;
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Write method callback
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="fileHandle"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected ServiceResult OnWriteMethodCall(
+          ISystemContext context,
+          MethodState method,
+          NodeId objectId,
+          uint fileHandle,
+          byte[] data)
+        {
+            try
+            {
+                if (!m_fileHandles.ContainsKey(fileHandle))
+                {
+                    return StatusCodes.BadInvalidArgument;
+                }
+
+                if (m_fileState.Writable.Value == false)
+                {
+                    return StatusCodes.BadWriteNotSupported;
+                }
+
+                FileStreamTracker fileStreamTracker = m_fileHandles[fileHandle];
+                fileStreamTracker.LastAccessTime = DateTime.Now;
+                fileStreamTracker.FileStream.Write(data, 0, data.Length);
+
+                return StatusCodes.Good;
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+            }
+        }
 
         /// <summary>
         /// Close method callback

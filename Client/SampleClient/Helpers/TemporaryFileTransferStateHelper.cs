@@ -41,19 +41,9 @@ namespace SampleClient.Helpers
 
         public NodeId FileNodeID
         {
-            get
-            {
-                return m_fileNodeId;
-            }
+            get { return m_fileNodeId; }
         }
 
-        public UInt32 FileHandle
-        {
-            get
-            {
-                return m_fileHandle;
-            }
-        }
         public NodeId ClientProcessingTimeoutNodeID { get; private set; }
 
         public NodeId GenerateFileForReadNodeID { get; private set; }

@@ -16,7 +16,17 @@ using Opc.Ua;
 using Softing.Opc.Ua.Client;
 
 namespace SampleClient.Helpers
-{    
+{
+    public enum FileStateMode
+    {
+        Read = 1,
+        Write = 2,
+        ReadWrite = 3,
+        EraseExisting = 4,
+        Append = 8
+    }
+
+
     /// <summary>
     /// FileState helper class
     /// </summary>
@@ -121,13 +131,13 @@ namespace SampleClient.Helpers
         /// EraseExisting - 4
         /// Append - 8
         /// </param>
-        public StatusCode Open(byte mode)
+        public StatusCode Open(FileStateMode mode)
         {
             StatusCode statusCode = new StatusCode();
 
             try
             {
-                object[] args = new object[] { mode };
+                object[] args = new object[] { (byte)mode };
 
                 IList<object> outArgs = null;
                 statusCode = m_session.Call(NodeID, OpenNodeID, args, out outArgs);

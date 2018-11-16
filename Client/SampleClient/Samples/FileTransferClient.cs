@@ -130,7 +130,7 @@ namespace SampleClient.Samples
                 FileStateHelper fileState = new FileStateHelper(m_session, Path.GetFileName(DownloadFilePath), nodeID);
 
                 // Open the file in Read mode
-                StatusCode openStatusCode = fileState.Open(1);
+                StatusCode openStatusCode = fileState.Open(FileStateMode.Read);
                 if (StatusCode.IsBad(openStatusCode))
                 {
                     Console.WriteLine("Unable to open the file in read mode.");
@@ -215,7 +215,7 @@ namespace SampleClient.Samples
                 }
 
                 // Open the file in Write and EraseExisting mode
-                StatusCode openStatusCode = fileState.Open(2 | 4);
+                StatusCode openStatusCode = fileState.Open(FileStateMode.Write | FileStateMode.EraseExisting);
                 if (StatusCode.IsBad(openStatusCode))
                 {
                     Console.WriteLine(string.Format("\nStatus Code is: {0}\n", openStatusCode));
@@ -350,14 +350,15 @@ namespace SampleClient.Samples
                 StatusCode readFileStatusCode = tmpFileTransferState.GenerateFileForRead(null);
                 if (StatusCode.IsBad(readFileStatusCode))
                 {
-                    Console.WriteLine("The server could not generate a new temporary file");
+                    Console.WriteLine("The server could not generate and open a new temporary file");
                     return;
                 }
 
+                uint readFileHandle = 1; // only one handle is generated for a temporary file node
                 FileStateHelper fileState = new FileStateHelper(m_session,
                     tmpFileTransferState.Filename,
                     tmpFileTransferState.FileNodeID,
-                    tmpFileTransferState.FileHandle);
+                    readFileHandle);
                 if (fileState != null)
                 {
                     ulong totalSize = fileState.Size;
@@ -429,17 +430,18 @@ namespace SampleClient.Samples
                 TemporaryFileTransferStateHelper tmpFileTransferState =
                     new TemporaryFileTransferStateHelper(m_session, Path.GetFileName(WriteTemporaryFilePath), nodeID);
 
-                StatusCode readFileStatusCode = tmpFileTransferState.GenerateFileForWrite(null);
-                if (StatusCode.IsBad(readFileStatusCode))
+                StatusCode writeFileStatusCode = tmpFileTransferState.GenerateFileForWrite(null);
+                if (StatusCode.IsBad(writeFileStatusCode))
                 {
-                    Console.WriteLine("The server could not generate a new temporary file");
+                    Console.WriteLine("The server could not generate and open a new temporary file");
                     return;
                 }
 
+                uint writeFileHandle = 1; // only one handle is generated for a temporary file node
                 FileStateHelper fileState = new FileStateHelper(m_session,
                     tmpFileTransferState.Filename,
                     tmpFileTransferState.FileNodeID,
-                    tmpFileTransferState.FileHandle);
+                    writeFileHandle);
                 if (fileState != null)
                 {
                     // Send the file content in chunks of chunkSize bytes
