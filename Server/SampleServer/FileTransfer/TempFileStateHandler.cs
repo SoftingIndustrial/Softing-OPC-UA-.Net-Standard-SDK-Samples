@@ -12,9 +12,22 @@ namespace SampleServer.FileTransfer
     /// </summary>
     internal class TempFileStateHandler : FileStateHandler
     {
-        public TempFileStateHandler(string filePath) : base(filePath)
+        #region Public Members
+        internal delegate void FileStateEventHandler(object sender, FileStateEventArgs e);
+
+        public event FileStateEventHandler FileStateEvent = null;
+        #endregion
+
+        #region Constructor
+        public TempFileStateHandler(ISystemContext context, string filePath) : base(filePath)
         {
+            Context = context;
         }
+        #endregion
+
+        #region Properties
+        protected ISystemContext Context { get; private set; }
+        #endregion
 
         #region Public Methods
         public override void SetCallbacks(FileState fileState)
@@ -29,9 +42,9 @@ namespace SampleServer.FileTransfer
                 m_fileState.Write.OnCall = OnWriteMethodCall;
                 m_fileState.Size.OnSimpleReadValue = OnReadSize;
 
-                // the following callbacks are not necesary. they are not mention into documentation
-                //m_fileState.GetPosition.OnCall = OnGetPositionMethodCall;
-                //m_fileState.SetPosition.OnCall = OnSetPositionMethodCall;
+                // The following callbacks are not necesary. They are not mention into documentation
+                // m_fileState.GetPosition.OnCall = OnGetPositionMethodCall;
+                // m_fileState.SetPosition.OnCall = OnSetPositionMethodCall;
             }
         }
 
@@ -90,7 +103,7 @@ namespace SampleServer.FileTransfer
 
             return new StatusCode(1);
         }
-
+        
         public bool IsGenerateForWriteFileType()
         {
             if (m_fileState != null)
@@ -110,35 +123,40 @@ namespace SampleServer.FileTransfer
         {
             return m_fileState.NodeId;
         }
+
+        public void RemoveFileStateNodes(NodeId fileNodeId)
+        {
+            OnRemoveFileStateNodes(Context, fileNodeId);
+        }
         #endregion
 
         #region Protected Callback Methods
 
-        /// <summary>
-        /// Close method callback
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="method"></param>
-        /// <param name="objectId"></param>
-        /// <param name="fileHandle"></param>
-        /// <returns></returns>
+            /// <summary>
+            /// Close method callback
+            /// </summary>
+            /// <param name="context"></param>
+            /// <param name="method"></param>
+            /// <param name="objectId"></param>
+            /// <param name="fileHandle"></param>
+            /// <returns></returns>
         protected override ServiceResult OnCloseMethodCall(
             ISystemContext context,
             MethodState method,
-            NodeId objectId,
+            NodeId fileStateNodeId,
             uint fileHandle)
         {
             try
             {
-                base.OnCloseMethodCall(context, method, objectId, fileHandle);
+                base.OnCloseMethodCall(context, method, fileStateNodeId, fileHandle);
                 if (File.Exists(base.FilePath))
                 {
                     File.Delete(base.FilePath);
                 }
 
-                // todo: add remove temporary nodes
+                // Remove temporary file state nodes added in predefined nodes
+                OnRemoveFileStateNodes(context, fileStateNodeId);
 
-                
                 return StatusCodes.Good;
             }
             catch (Exception e)
@@ -147,6 +165,16 @@ namespace SampleServer.FileTransfer
             }
         }
 
+        #endregion
+
+        #region Private Event Handlers
+        private void OnRemoveFileStateNodes(ISystemContext context, NodeId fileStateNodeId)
+        {
+            if(FileStateEvent != null)
+            {
+                FileStateEvent(this, new FileStateEventArgs(context, fileStateNodeId));
+            }
+        }
         #endregion
     }
 }

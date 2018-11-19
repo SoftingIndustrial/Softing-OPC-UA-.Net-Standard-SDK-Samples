@@ -64,6 +64,16 @@ namespace SampleServer.FileTransfer
             }
         }
 
+        public void RemoveFileStateNodes()
+        {
+            lock (this)
+            {
+                foreach (TempFileStateData tmpFileStateData in m_tmpFileStateData.Values)
+                {
+                    tmpFileStateData.RemoveFileStateNodes();
+                }
+            }
+        }
         #endregion
     }
 }

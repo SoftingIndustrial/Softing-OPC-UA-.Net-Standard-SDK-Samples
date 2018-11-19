@@ -122,7 +122,7 @@ namespace SampleServer.FileTransfer
         /// <param name="filename"></param>
         /// <param name="writePermission"></param>
         /// <returns></returns>
-        private TempFileStateHandler CreateTempFileState(FolderState root, string filename, bool writePermission)
+        private TempFileStateHandler CreateTempFileState(FolderState root, ISystemContext context, string filename, bool writePermission)
         {
             try
             {
@@ -136,7 +136,7 @@ namespace SampleServer.FileTransfer
                     fileState.UserWritable.Value = writePermission;
                 }
 
-                TempFileStateHandler fileTypeHandler = new TempFileStateHandler(filename);
+                TempFileStateHandler fileTypeHandler = new TempFileStateHandler(context, filename);
                 fileTypeHandler.SetCallbacks(fileState);
 
                 return fileTypeHandler;
@@ -278,9 +278,10 @@ namespace SampleServer.FileTransfer
                     fileStream.Close();
                 }
 
-                TempFileStateHandler fileStateHandler = CreateTempFileState(null, tmpFileName, false);
+                TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, false);
                 if (fileStateHandler != null)
                 {
+                    fileStateHandler.FileStateEvent += RemoveFileStatePredefinedNodes;
                     generateFileForReadStatusCode = fileStateHandler.Open(context, method, FileAccess.Read, ref fileNodeId, ref fileHandle);
                     if (StatusCode.IsGood(generateFileForReadStatusCode))
                     {
@@ -335,9 +336,10 @@ namespace SampleServer.FileTransfer
                 // Creates a temporary file (used by client to persist client file content data)
                 string tmpFileName = Path.GetTempFileName();
                 
-                TempFileStateHandler fileStateHandler = CreateTempFileState(null, tmpFileName, true);
+                TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, true);
                 if (fileStateHandler != null)
                 {
+                    fileStateHandler.FileStateEvent += RemoveFileStatePredefinedNodes;
                     generateFileForWriteStatusCode = fileStateHandler.Open(context, method, FileAccess.ReadWrite, ref fileNodeId, ref fileHandle);
                     if (StatusCode.IsGood(generateFileForWriteStatusCode))
                     {
@@ -385,7 +387,6 @@ namespace SampleServer.FileTransfer
             try
             {
                 // completionStateMachine for asyncronously close and commit mode (not used in this sample)
-
                 TempFileStateData tmpFileStateData = m_tmpFilesHolder.Get(fileHandle);
                 if (tmpFileStateData != null)
                 {
@@ -426,21 +427,11 @@ namespace SampleServer.FileTransfer
                                 }
                             }
 
-                            closeAndCommitStatusCode = fileStateHandler.Close(context, method); 
+                            closeAndCommitStatusCode = fileStateHandler.Close(context, method);
                             if (StatusCode.IsBad(closeAndCommitStatusCode))
                             {
                                 throw new Exception("Close file state failed.");
                             }
-
-                            /*
-                            NodeId fileStateNodeId = fileStateHandler.GetFileStateNodeId();
-                            if (PredefinedNodes.ContainsKey(fileStateNodeId))
-                            {
-                                PredefinedNodes.Keys.Remove(56);
-                                PredefinedNodes.Remove(fileStateNodeId);
-                                
-                            }
-                            */
 
                             m_tmpFilesHolder.Remove(fileHandle);
                         }
@@ -473,9 +464,32 @@ namespace SampleServer.FileTransfer
 
         #endregion
 
+        private void RemoveFileStatePredefinedNodes(object sender, FileStateEventArgs e)
+        {
+            if(sender != null)
+            {
+                NodeId fileNodeId = e.FileStateNodeId;
+                ISystemContext context = e.Context;
+                if (context != null && fileNodeId != null)
+                {
+                    NodeState fileState = FindPredefinedNode(fileNodeId, null);
+                    if (fileState != null)
+                    {
+                        RemovePredefinedNode(context, fileState, new List<LocalReference>());
+
+                        if(sender is TempFileStateHandler)
+                        {
+                            ((TempFileStateHandler)sender).FileStateEvent -= RemoveFileStatePredefinedNodes;
+                        }
+                    }
+                }
+            }
+        }
+
         public override void SessionClosing(OperationContext context, NodeId sessionId, bool deleteSubscriptions)
         {
             // todo: remove temporary nodes
+            m_tmpFilesHolder.RemoveFileStateNodes();
         }
 
     }

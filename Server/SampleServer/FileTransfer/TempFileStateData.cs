@@ -5,7 +5,7 @@ using Opc.Ua;
 
 namespace SampleServer.FileTransfer
 {
-    internal class TempFileStateData 
+    internal class TempFileStateData
     {
         #region Constructor
         public TempFileStateData(TempFileStateHandler tmpFileStateHandler, NodeId fileNodeId)
@@ -18,9 +18,20 @@ namespace SampleServer.FileTransfer
         #region Properties
 
         public TempFileStateHandler FileStateHandler { get; private set; }
-        
+
         public NodeId FileNodeId { get; private set; }
 
+        #endregion
+
+        #region Public Methods
+
+        public void RemoveFileStateNodes()
+        {
+            if (FileStateHandler != null)
+            {
+                FileStateHandler.RemoveFileStateNodes(FileNodeId);
+            }
+        }
         #endregion
     }
 }
