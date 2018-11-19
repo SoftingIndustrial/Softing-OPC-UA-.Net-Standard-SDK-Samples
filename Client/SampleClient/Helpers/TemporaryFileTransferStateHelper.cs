@@ -31,11 +31,11 @@ namespace SampleClient.Helpers
         }
         #endregion
 
-        #region Properties
-
-        #region TemporaryFileTransferState node attributes
+        #region Public Properties
 
         public string Filename { get; private set; }
+
+        #region TemporaryFileTransferState node attributes
 
         public NodeId NodeID { get; private set; }
 
@@ -52,8 +52,36 @@ namespace SampleClient.Helpers
 
         public NodeId CloseAndCommitNodeID { get; private set; }
 
-        #endregion Properties
+        #endregion Public Properties
 
+        public double ClientProcessingTimeout
+        {
+            get
+            {
+                if (ClientProcessingTimeoutNodeID == null)
+                {
+                    throw new Exception("ClientProcessingTimeout nodeId is null.");
+                }
+
+                ReadValueId valueToRead = new ReadValueId();
+                valueToRead.NodeId = ClientProcessingTimeoutNodeID;
+                valueToRead.AttributeId = Attributes.Value;
+                DataValueEx value = m_session.Read(valueToRead);
+
+                if (value != null)
+                    return (double)value.Value;
+
+                return 0;
+            }
+        }
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        /// Generate and open a file state for read
+        /// </summary>
+        /// <param name="generateOptions"></param>
+        /// <returns></returns>
         public StatusCode GenerateFileForRead(object generateOptions)
         {
             StatusCode statusCode = new StatusCode();
@@ -84,6 +112,11 @@ namespace SampleClient.Helpers
             return statusCode;
         }
 
+        /// <summary>
+        /// Generate and open a file state for write
+        /// </summary>
+        /// <param name="generateOptions"></param>
+        /// <returns></returns>
         public StatusCode GenerateFileForWrite(object generateOptions)
         {
             StatusCode statusCode = new StatusCode();
@@ -113,6 +146,10 @@ namespace SampleClient.Helpers
             return statusCode;
         }
 
+        /// <summary>
+        /// Apply(commit) changes that close the file state 
+        /// </summary>
+        /// <returns></returns>
         public StatusCode CloseAndCommit()
         {
             StatusCode statusCode = new StatusCode();
@@ -159,7 +196,6 @@ namespace SampleClient.Helpers
                 GenerateFileForReadNodeID = GetTargetId(translateResults[1]);
                 GenerateFileForWriteNodeID = GetTargetId(translateResults[2]);
                 CloseAndCommitNodeID = GetTargetId(translateResults[3]);
-               
             }
             catch (Exception ex)
             {
@@ -167,12 +203,17 @@ namespace SampleClient.Helpers
             }
         }
 
+        /// <summary>
+        /// Add browse path
+        /// </summary>
+        /// <param name="browsePaths"></param>
+        /// <param name="name"></param>
         private void AddBrowsePath(List<BrowsePathEx> browsePaths, string name)
         {
             // define the starting node as the "Objects" node.
             BrowsePathEx browsePath = new BrowsePathEx();
             browsePath.StartingNode = NodeID;
-            browsePath.RelativePath = new List<QualifiedName>() { new QualifiedName(name) };//new RelativePath(new QualifiedName(name));
+            browsePath.RelativePath = new List<QualifiedName>() { new QualifiedName(name) };
             browsePaths.Add(browsePath);
         }
 

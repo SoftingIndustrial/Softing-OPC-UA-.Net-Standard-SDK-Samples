@@ -17,6 +17,9 @@ using Softing.Opc.Ua.Client;
 
 namespace SampleClient.Helpers
 {
+    /// <summary>
+    /// File state mode
+    /// </summary>
     public enum FileStateMode
     {
         Read = 1,
@@ -309,6 +312,11 @@ namespace SampleClient.Helpers
             }
         }
 
+        /// <summary>
+        /// Add browse path
+        /// </summary>
+        /// <param name="browsePaths"></param>
+        /// <param name="name"></param>
         private void AddBrowsePath(List<BrowsePathEx> browsePaths, string name)
         {
             // define the starting node as the "Objects" node.

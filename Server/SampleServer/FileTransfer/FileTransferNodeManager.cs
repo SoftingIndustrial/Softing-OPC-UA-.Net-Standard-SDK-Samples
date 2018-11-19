@@ -31,9 +31,9 @@ namespace SampleServer.FileTransfer
 
         /// <summary>
         /// The maximum time in milliseconds the Server accepts between Method calls necessary
-        /// to complete a file read transfer or a file write transfer transaction
+        /// to complete a file read transfer or a file write transfer transactions
         /// </summary>
-        private const double ClientProcessingTimeoutPeriod = 100; // seconds 
+        private const double ClientProcessingTimeoutPeriod = 10; // seconds 
 
         private TempFilesHolder m_tmpFilesHolder;
 
@@ -111,14 +111,15 @@ namespace SampleServer.FileTransfer
             }
             catch (FileNotFoundException)
             {
-                throw new Exception("File not found exception.");
+                throw new Exception("File state could not found be created exception.");
             }
         }
 
         /// <summary>
-        /// Creates file state node
+        /// Creates temporary file state node
         /// </summary>
         /// <param name="root"></param>
+        /// <param name="context"></param>
         /// <param name="filename"></param>
         /// <param name="writePermission"></param>
         /// <returns></returns>
@@ -143,12 +144,12 @@ namespace SampleServer.FileTransfer
             }
             catch (FileNotFoundException)
             {
-                throw new Exception("File not found exception.");
+                throw new Exception("Temporary File state could not be created exception.");
             }
         }
 
         /// <summary>
-        /// Creates temporary file state node
+        /// Creates temporary file state node in address space
         /// </summary>
         /// <param name="root"></param>
         /// <param name="filename"></param>
@@ -160,17 +161,16 @@ namespace SampleServer.FileTransfer
             {
                 TemporaryFileTransferState tmpFileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.TemporaryFileTransferType, ReferenceTypeIds.HasComponent) as TemporaryFileTransferState;
 
-                tmpFileState.ClientProcessingTimeout = CreateProperty<double>(tmpFileState, "ClientProcessingTimeout");
-                tmpFileState.ClientProcessingTimeout.Value = ClientProcessingTimeoutPeriod; 
+                tmpFileState.ClientProcessingTimeout.Value = ClientProcessingTimeoutPeriod;
                 tmpFileState.GenerateFileForRead.OnCall = OnGenerateFileForReadCall;
                 tmpFileState.GenerateFileForWrite.OnCall = GenerateFileForWriteCall;
                 tmpFileState.CloseAndCommit.OnCall = CloseAndCommitCall;
-
+                
                 return tmpFileState;
             }
             catch (FileNotFoundException)
             {
-                throw new Exception("File not found exception.");
+                throw new Exception("Create Temporary File state node in adress space could not be created exception.");
             }
         }
 
@@ -331,7 +331,6 @@ namespace SampleServer.FileTransfer
             try
             {
                 // ignore generateOptions option 
-                // completionStateMachine for asyncronously write mode (not used in this sample)
                 
                 // Creates a temporary file (used by client to persist client file content data)
                 string tmpFileName = Path.GetTempFileName();
@@ -387,13 +386,16 @@ namespace SampleServer.FileTransfer
             try
             {
                 // completionStateMachine for asyncronously close and commit mode (not used in this sample)
+                // FileTransferStateMachineState completionStateMachineState = CreateObjectFromType(null, "CompletionStateMachine", ObjectTypeIds.FileTransferStateMachineType, ReferenceTypeIds.HasComponent) as FileTransferStateMachineState;
+                // completionStateMachine = completionStateMachineState.NodeId;
+
                 TempFileStateData tmpFileStateData = m_tmpFilesHolder.Get(fileHandle);
                 if (tmpFileStateData != null)
                 {
                     NodeId fileNodeId = tmpFileStateData.FileNodeId;
                     if (fileNodeId == null)
                     {
-                        throw new Exception(string.Format("The file Node id related to file handler {0} was removed!", fileHandle));
+                        throw new Exception(string.Format("The file Node id related to file handler '{0}' was already removed!", fileHandle));
                     }
                     TempFileStateHandler fileStateHandler = tmpFileStateData.FileStateHandler;
                     if (fileStateHandler != null)
@@ -446,12 +448,12 @@ namespace SampleServer.FileTransfer
                     }
                     else
                     {
-                        throw new Exception(string.Format("The file state related to the file handler {0} was removed!", fileHandle));
+                        throw new Exception(string.Format("The file state related to the file handler '{0}' was removed!", fileHandle));
                     }
                 }
                 else
                 {
-                    throw new Exception(string.Format("The file related to the handler number {0} was already removed!", fileHandle));
+                    throw new Exception(string.Format("The file related to the handler number '{0}' was already removed!", fileHandle));
                 }
             }
             catch (Exception ex)
@@ -464,6 +466,12 @@ namespace SampleServer.FileTransfer
 
         #endregion
 
+        #region Class Handlers
+        /// <summary>
+        /// Remove temporary file state nodes from server address space
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RemoveFileStatePredefinedNodes(object sender, FileStateEventArgs e)
         {
             if(sender != null)
@@ -486,11 +494,16 @@ namespace SampleServer.FileTransfer
             }
         }
 
+        /// <summary>
+        /// Remove all temporary file state nodes from current session that is closing
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="sessionId"></param>
+        /// <param name="deleteSubscriptions"></param>
         public override void SessionClosing(OperationContext context, NodeId sessionId, bool deleteSubscriptions)
         {
-            // todo: remove temporary nodes
             m_tmpFilesHolder.RemoveFileStateNodes();
         }
-
+        #endregion
     }
 }

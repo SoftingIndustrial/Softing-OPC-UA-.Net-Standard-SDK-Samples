@@ -5,6 +5,9 @@ using Opc.Ua;
 
 namespace SampleServer.FileTransfer
 {
+    /// <summary>
+    /// Event arguments class used to pass the temporary file state node from server address space 
+    /// </summary>
     internal class FileStateEventArgs
     {
         #region Constructor
@@ -15,7 +18,7 @@ namespace SampleServer.FileTransfer
         }
         #endregion
 
-        #region Properties
+        #region Public Properties
 
         public ISystemContext Context { get; private set; }
 

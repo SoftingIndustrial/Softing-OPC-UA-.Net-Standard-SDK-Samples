@@ -31,7 +31,7 @@ namespace SampleServer.FileTransfer
         public FileStream FileStream { get; private set; }
 
         /// <summary>
-        /// The time when the file stream was accessed (used) 
+        /// The time when the file stream was accessed (last used) 
         /// </summary>
         public DateTime LastAccessTime { get; set; }
 

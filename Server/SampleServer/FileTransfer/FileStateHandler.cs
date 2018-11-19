@@ -23,6 +23,9 @@ namespace SampleServer.FileTransfer
         private Timer m_Timer;
         private Dictionary<uint, FileStreamTracker> m_fileHandles;
 
+        /// <summary>
+        /// Clean up threshold period till all opened streams will be closed
+        /// </summary>
         private const int CheckFileStreamAvailabilityPeriod = 50; // seconds
         #endregion
 
@@ -51,7 +54,6 @@ namespace SampleServer.FileTransfer
         {
             get { return m_fileState; }
         }
-
         /// <summary>
         /// File name info
         /// </summary>
@@ -86,7 +88,11 @@ namespace SampleServer.FileTransfer
         }
 
         #endregion
-
+        /// <summary>
+        /// Get file stream related to a file handle
+        /// </summary>
+        /// <param name="fileHandle"></param>
+        /// <returns></returns>
         protected FileStream GetFileStream(uint fileHandle)
         {
             if (m_fileHandles.ContainsKey(fileHandle))

@@ -26,10 +26,17 @@ namespace SampleServer.FileTransfer
         #endregion
 
         #region Properties
+        /// <summary>
+        /// System context reference
+        /// </summary>
         protected ISystemContext Context { get; private set; }
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Set temporary FileState callbacks
+        /// </summary>
+        /// <param name="fileState"></param>
         public override void SetCallbacks(FileState fileState)
         {
             if (fileState != null)
@@ -48,6 +55,15 @@ namespace SampleServer.FileTransfer
             }
         }
 
+        /// <summary>
+        /// Open file state stream
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="fileAccessMode"></param>
+        /// <param name="fileNodeId"></param>
+        /// <param name="fileHandle"></param>
+        /// <returns></returns>
         public StatusCode Open(ISystemContext context,
             MethodState method,
             FileAccess fileAccessMode,
@@ -79,6 +95,12 @@ namespace SampleServer.FileTransfer
             return new StatusCode(1);
         }
         
+        /// <summary>
+        /// Close file state stream
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <returns></returns>
         public StatusCode Close(ISystemContext context, MethodState method)
         {
             try
@@ -103,7 +125,11 @@ namespace SampleServer.FileTransfer
 
             return new StatusCode(1);
         }
-        
+
+        /// <summary>
+        /// Check if file state GenerateForWriteFile type
+        /// </summary>
+        /// <returns></returns>
         public bool IsGenerateForWriteFileType()
         {
             if (m_fileState != null)
@@ -114,16 +140,33 @@ namespace SampleServer.FileTransfer
             return false;
         }
 
+        /// <summary>
+        /// Get the temporary file stream
+        /// </summary>
+        /// <returns></returns>
         public FileStream GetTmpFileStream()
         {
             return base.GetFileStream(1);
         }
 
+        /// <summary>
+        /// Get file state node Id
+        /// </summary>
+        /// <returns></returns>
         public NodeId GetFileStateNodeId()
         {
-            return m_fileState.NodeId;
+            if (m_fileState != null)
+            {
+                return m_fileState.NodeId;
+            }
+
+            return null;
         }
 
+        /// <summary>
+        /// Remove temporary file state nodes from server adress space 
+        /// </summary>
+        /// <param name="fileNodeId"></param>
         public void RemoveFileStateNodes(NodeId fileNodeId)
         {
             OnRemoveFileStateNodes(Context, fileNodeId);
@@ -132,14 +175,14 @@ namespace SampleServer.FileTransfer
 
         #region Protected Callback Methods
 
-            /// <summary>
-            /// Close method callback
-            /// </summary>
-            /// <param name="context"></param>
-            /// <param name="method"></param>
-            /// <param name="objectId"></param>
-            /// <param name="fileHandle"></param>
-            /// <returns></returns>
+        /// <summary>
+        /// Close method callback
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="fileHandle"></param>
+        /// <returns></returns>
         protected override ServiceResult OnCloseMethodCall(
             ISystemContext context,
             MethodState method,
@@ -154,7 +197,7 @@ namespace SampleServer.FileTransfer
                     File.Delete(base.FilePath);
                 }
 
-                // Remove temporary file state nodes added in predefined nodes
+                // Remove temporary file state nodes from server adress space
                 OnRemoveFileStateNodes(context, fileStateNodeId);
 
                 return StatusCodes.Good;
@@ -167,7 +210,12 @@ namespace SampleServer.FileTransfer
 
         #endregion
 
-        #region Private Event Handlers
+        #region Private Event Handler(s)
+        /// <summary>
+        /// Trigger remove temporary file state nodes from server adress space 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="fileStateNodeId"></param>
         private void OnRemoveFileStateNodes(ISystemContext context, NodeId fileStateNodeId)
         {
             if(FileStateEvent != null)
