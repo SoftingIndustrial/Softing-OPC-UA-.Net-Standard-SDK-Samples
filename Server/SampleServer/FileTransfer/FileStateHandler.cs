@@ -26,7 +26,7 @@ namespace SampleServer.FileTransfer
         /// <summary>
         /// Clean up threshold period till all opened streams will be closed
         /// </summary>
-        private const int CheckFileStreamAvailabilityPeriod = 50; // seconds
+        private const int CheckFileStreamAvailabilityPeriod = 60; // seconds
         #endregion
 
         #region Constructors
@@ -361,13 +361,13 @@ namespace SampleServer.FileTransfer
         /// </summary>
         /// <param name="context"></param>
         /// <param name="method"></param>
-        /// <param name="objectId"></param>
+        /// <param name="fileNodeId"></param>
         /// <param name="fileHandle"></param>
         /// <returns></returns>
         protected virtual ServiceResult OnCloseMethodCall(
             ISystemContext context,
             MethodState method,
-            NodeId objectId,
+            NodeId fileNodeId,
             uint fileHandle)
         {
             try
@@ -404,42 +404,40 @@ namespace SampleServer.FileTransfer
         #endregion
 
         #region Protected Methods
+
         /// <summary>
         /// Check when the stream was last time accessed and close it
         /// </summary>
         /// <param name="state"></param>
         private void CheckFileStreamAvailability(object state)
         {
-            lock (this)
+            foreach (KeyValuePair<uint, FileStreamTracker> entry in m_fileHandles.ToList())
             {
-                foreach (KeyValuePair<uint, FileStreamTracker> entry in m_fileHandles.ToList())
-                {
-                    TimeSpan duration = DateTime.Now - entry.Value.LastAccessTime;
+                TimeSpan duration = DateTime.Now - entry.Value.LastAccessTime;
 
-                    if (duration.TotalSeconds > CheckFileStreamAvailabilityPeriod)
+                if (duration.TotalSeconds > CheckFileStreamAvailabilityPeriod)
+                {
+                    if (FileState != null)
                     {
-                        if (FileState != null)
+                        try
                         {
-                            try
+                            uint fileHandle = entry.Key;
+                            ServiceResult writeResult = FileState.Close.OnCall(null, null, null, fileHandle);
+                            if (StatusCode.IsBad(writeResult.StatusCode))
                             {
-                                uint fileHandle = entry.Key;
-                                ServiceResult writeResult = FileState.Close.OnCall(null, null, null, fileHandle);
-                                if (StatusCode.IsBad(writeResult.StatusCode))
-                                {
-                                    throw new Exception(string.Format(
-                                        "Error closing the file state for the file handle: {0}", fileHandle));
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                                throw new Exception(string.Format(
+                                    "Error closing the file state for the file handle: {0}", fileHandle));
                             }
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            m_fileHandles.Remove(entry.Key);
-                            entry.Value.FileStream.Close();
+                            throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
                         }
+                    }
+                    else
+                    {
+                        m_fileHandles.Remove(entry.Key);
+                        entry.Value.FileStream.Close();
                     }
                 }
             }

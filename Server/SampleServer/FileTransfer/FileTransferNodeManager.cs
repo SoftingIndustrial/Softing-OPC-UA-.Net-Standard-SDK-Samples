@@ -440,7 +440,7 @@ namespace SampleServer.FileTransfer
                         else
                         {
                             string notSupportedType =
-                                "The GenerateFileForRead node types are not allowed to use CloseAndCommit! Please use GenerateFileForWrite type file handle.";
+                                "The GenerateFileForRead node types are not allowed to use CloseAndCommit! \nPlease use GenerateFileForWrite type file handle.";
 
                             Console.Write(notSupportedType);
                             throw new Exception(notSupportedType);
@@ -474,20 +474,23 @@ namespace SampleServer.FileTransfer
         /// <param name="e"></param>
         private void RemoveFileStatePredefinedNodes(object sender, FileStateEventArgs e)
         {
-            if(sender != null)
+            lock (this)
             {
-                NodeId fileNodeId = e.FileStateNodeId;
-                ISystemContext context = e.Context;
-                if (context != null && fileNodeId != null)
+                if (sender != null)
                 {
-                    NodeState fileState = FindPredefinedNode(fileNodeId, null);
-                    if (fileState != null)
+                    NodeId fileNodeId = e.FileStateNodeId;
+                    ISystemContext context = e.Context;
+                    if (context != null && fileNodeId != null)
                     {
-                        RemovePredefinedNode(context, fileState, new List<LocalReference>());
-
-                        if(sender is TempFileStateHandler)
+                        NodeState fileState = FindPredefinedNode(fileNodeId, null);
+                        if (fileState != null)
                         {
-                            ((TempFileStateHandler)sender).FileStateEvent -= RemoveFileStatePredefinedNodes;
+                            RemovePredefinedNode(context, fileState, new List<LocalReference>());
+
+                            if (sender is TempFileStateHandler)
+                            {
+                                ((TempFileStateHandler) sender).FileStateEvent -= RemoveFileStatePredefinedNodes;
+                            }
                         }
                     }
                 }

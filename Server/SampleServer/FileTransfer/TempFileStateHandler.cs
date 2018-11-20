@@ -13,8 +13,7 @@ namespace SampleServer.FileTransfer
     internal class TempFileStateHandler : FileStateHandler
     {
         #region Public Members
-        internal delegate void FileStateEventHandler(object sender, FileStateEventArgs e);
-
+        public delegate void FileStateEventHandler(object sender, FileStateEventArgs e);
         public event FileStateEventHandler FileStateEvent = null;
         #endregion
 
@@ -186,19 +185,26 @@ namespace SampleServer.FileTransfer
         protected override ServiceResult OnCloseMethodCall(
             ISystemContext context,
             MethodState method,
-            NodeId fileStateNodeId,
+            NodeId fileNodeId,
             uint fileHandle)
         {
             try
             {
-                base.OnCloseMethodCall(context, method, fileStateNodeId, fileHandle);
+                base.OnCloseMethodCall(context, method, fileNodeId, fileHandle);
                 if (File.Exists(base.FilePath))
                 {
                     File.Delete(base.FilePath);
                 }
 
                 // Remove temporary file state nodes from server adress space
-                OnRemoveFileStateNodes(context, fileStateNodeId);
+                if(fileNodeId == null)
+                {
+                    if (m_fileState != null)
+                    {
+                        fileNodeId = m_fileState.NodeId;
+                    }
+                } 
+                OnRemoveFileStateNodes(Context, fileNodeId);
 
                 return StatusCodes.Good;
             }
