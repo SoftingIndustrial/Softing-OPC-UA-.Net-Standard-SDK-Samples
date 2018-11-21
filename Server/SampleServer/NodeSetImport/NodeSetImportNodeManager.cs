@@ -92,6 +92,12 @@ namespace SampleServer.NodeSetImport
             }
         }
 
+        /// <summary>
+        /// Add behaviour to predefined node
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="predefinedNode"></param>
+        /// <returns></returns>
         protected override NodeState AddBehaviourToPredefinedNode(ISystemContext context, NodeState predefinedNode)
         {
             // This override will receive a callback every time a new node is added
@@ -100,7 +106,7 @@ namespace SampleServer.NodeSetImport
         }
         #endregion
 
-        #region Private Methods     
+        #region Private Methods  
         /// <summary>
         /// Imports into the address space an xml file stream containing the model structure. The Xml Stream is taken from resources
         /// </summary>
@@ -133,7 +139,7 @@ namespace SampleServer.NodeSetImport
         }
 
         /// <summary>
-        /// Handles the AddDeviceMethodCall
+        /// Handles the AddSecondaryRefrigerator method call
         /// </summary>
         /// <param name="context"></param>
         /// <param name="method"></param>
@@ -146,7 +152,7 @@ namespace SampleServer.NodeSetImport
         }
 
         /// <summary>
-        /// Handles the ImportMethodCall
+        /// Handles the ImportNodeSet method call
         /// </summary>
         /// <param name="context"></param>
         /// <param name="method"></param>
@@ -172,8 +178,9 @@ namespace SampleServer.NodeSetImport
                 throw new ServiceResultException(StatusCodes.Bad, "ImportNodeSet error:" + e.Message);
             }
         }
+
         /// <summary>
-        /// Handles the ExportNodeSet.
+        /// Handles the ExportNodeSet method call.
         /// </summary>
         /// <param name="context"></param>
         /// <param name="method"></param>
@@ -219,13 +226,13 @@ namespace SampleServer.NodeSetImport
         private ServiceResult OnCreateInstance(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
             //get reference to parent node
-            NodeState parentNode = GetNodeState(inputArguments[0] as NodeId);
+            NodeState parentNode = FindNodeInAddressSpace(inputArguments[0] as NodeId);
             if (parentNode == null)
             {
                 throw new ServiceResultException(StatusCodes.BadNodeIdUnknown, "Specified parent NodeId is unknown");
             }
 
-            NodeState typeNode = GetNodeState(inputArguments[1] as NodeId);
+            NodeState typeNode = FindNodeInAddressSpace(inputArguments[1] as NodeId);
             if (typeNode == null)
             {
                 throw new ServiceResultException(StatusCodes.BadNodeIdUnknown, string.Format("Specified type NodeId ({0}) is unknown", inputArguments[1]));
@@ -253,218 +260,6 @@ namespace SampleServer.NodeSetImport
             throw new ServiceResultException(StatusCodes.BadInvalidArgument, "Cannot create instance of type id:" + inputArguments[1]);
         }
         #endregion
-
-        #region Create Instance From Type Methods
-        /// <summary>
-        /// Get node from address space based on ints nodeId
-        /// </summary>
-        /// <param name="nodeId"></param>
-        /// <returns></returns>
-        private NodeState GetNodeState(NodeId nodeId)
-        {
-            if (nodeId == null)
-            {
-                return null;
-            }
-
-            INodeManager typeDefinitionNodeManager = null;
-            Server.NodeManager.GetManagerHandle(nodeId, out typeDefinitionNodeManager);
-
-            if (typeDefinitionNodeManager is CustomNodeManager2)
-            {
-                return ((CustomNodeManager2)typeDefinitionNodeManager).FindPredefinedNode(nodeId, typeof(object));
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Creates a new object node in the address space according to the specified type definition.
-        /// </summary>
-        /// <param name="parent">The parent node. If null no parent is set.</param>
-        /// <param name="name">Name for new instance.</param>
-        /// <param name="typeDefinition">The TypeDefinition for the object node to be created.</param>
-        /// <param name="namespaceIndex">The namespace index for the node to be created.</param>
-        /// <returns>An object instance of a type inferred from typeDefinition parameter.</returns>
-        private BaseInstanceState CreateInstanceFromType(NodeState parent, string name, ushort namespaceIndex, NodeId typeDefinition)
-        {
-
-            BaseInstanceState instance = SystemContext.NodeStateFactory.CreateInstance(SystemContext, parent,
-                NodeClass.ReferenceType, null, ReferenceTypeIds.Organizes, typeDefinition) as BaseInstanceState;
-            if (instance != null)
-            {
-                //the instance was created via type definition  
-                instance.Create(SystemContext, null, new QualifiedName(name, NamespaceIndex), name, true);
-                instance.TypeDefinitionId = typeDefinition;
-            }
-            else
-            {
-                NodeState typeNode = GetNodeState(typeDefinition);
-                if (typeNode != null)
-                {
-                    switch (typeNode.NodeClass)
-                    {
-                        case NodeClass.VariableType:
-                            {
-                                instance = new BaseDataVariableState(parent);
-                                break;
-                            }
-
-                        case NodeClass.ObjectType:
-                            {
-                                instance = new BaseObjectState(parent);
-                                break;
-                            }
-
-                        case NodeClass.Method:
-                            {
-                                instance = new MethodState(parent);
-                                MethodState methodType = typeNode as MethodState;
-                                if (methodType != null)
-                                {
-                                    ((MethodState)instance).InputArguments = CreateCopyFromNodeState(instance, methodType.InputArguments) as PropertyState<Argument[]>;
-                                    ((MethodState)instance).OutputArguments = CreateCopyFromNodeState(instance, methodType.OutputArguments) as PropertyState<Argument[]>;
-                                }
-
-                                break;
-                            }
-                    }
-
-                    if (instance != null)
-                    {
-                        //handle children
-                        IList<BaseInstanceState> children = new List<BaseInstanceState>();
-                        typeNode.GetChildren(SystemContext, children);
-                        foreach (var child in children)
-                        {
-                            if (child.ModellingRuleId == Objects.ModellingRule_Mandatory
-                                || child.ModellingRuleId == Objects.ModellingRule_Optional)
-                            {
-                                BaseInstanceState childObject = CreateCopyFromNodeState(instance, child);
-                                if (childObject != null)
-                                {
-                                    instance.AddChild(childObject);
-                                }
-                            }
-                        }
-                        // Create the object and the defined structure of nodes.                
-                        instance.Create(SystemContext, null, new QualifiedName(name, namespaceIndex), name, true);
-                        instance.TypeDefinitionId = typeDefinition;
-
-                        CopyReferences(typeNode, instance);
-                    }
-                }
-            }
-            return instance;
-        }
-
-        /// <summary>
-        /// Creates a copy of BaseInstanceState object
-        /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="orriginalNode"></param>
-        /// <returns></returns>
-        private BaseInstanceState CreateCopyFromNodeState(NodeState parent, BaseInstanceState orriginalNode)
-        {
-            if (orriginalNode == null) return null;
-            string name = orriginalNode.BrowseName.Name;
-            ushort namespaceIndex = orriginalNode.BrowseName.NamespaceIndex;
-
-            BaseInstanceState newNode = null;
-            switch (orriginalNode.NodeClass)
-            {
-                case NodeClass.Object:
-                    if (((BaseObjectState)orriginalNode).TypeDefinitionId != ObjectTypeIds.BaseObjectType)
-                    {
-                        newNode = CreateInstanceFromType(parent, name, namespaceIndex, ((BaseObjectState)orriginalNode).TypeDefinitionId);
-                    }
-                    else
-                    {
-                        BaseObjectState newObject = new BaseObjectState(parent);
-                        newObject.Create(SystemContext, null, new QualifiedName(name, namespaceIndex), name, true);
-                        newObject.TypeDefinitionId = ((BaseObjectState)orriginalNode).TypeDefinitionId;
-
-                        CopyReferences(orriginalNode, newObject);
-                        newNode = newObject;
-                    }                    
-                    break;
-                case NodeClass.Method:
-                    NodeId methodTypeId = orriginalNode.TypeDefinitionId;
-                    if (methodTypeId == null)
-                    {
-                        methodTypeId = orriginalNode.NodeId;
-                    }
-                    NodeState typeNode = GetNodeState(methodTypeId);
-                    if (typeNode != null)
-                    {
-                        newNode = CreateInstanceFromType(parent, name, namespaceIndex, methodTypeId);
-
-                        ((MethodState)newNode).Executable = ((MethodState)orriginalNode).Executable;
-                        ((MethodState)newNode).UserExecutable = ((MethodState)orriginalNode).UserExecutable;
-                    }
-                    break;
-                case NodeClass.Variable:
-                    BaseVariableState newVariable = Activator.CreateInstance(orriginalNode.GetType(), parent) as BaseVariableState;
-
-                    newVariable.Create(SystemContext, null, new QualifiedName(name, namespaceIndex), name, true);
-                    newVariable.DataType = ((BaseVariableState)orriginalNode).DataType;
-                    newVariable.ValueRank = ((BaseVariableState)orriginalNode).ValueRank;
-                    newVariable.ArrayDimensions = ((BaseVariableState)orriginalNode).ArrayDimensions;
-                    newVariable.AccessLevel = ((BaseVariableState)orriginalNode).AccessLevel;
-                    newVariable.UserAccessLevel = ((BaseVariableState)orriginalNode).UserAccessLevel;
-                    newVariable.MinimumSamplingInterval = ((BaseVariableState)orriginalNode).MinimumSamplingInterval;
-                    newVariable.Historizing = ((BaseVariableState)orriginalNode).Historizing;
-                    newVariable.Value = ((BaseVariableState)orriginalNode).Value;
-
-                    CopyReferences(orriginalNode, newVariable);
-
-                    newNode = newVariable;
-                    break;
-            }
-            if (newNode != null)
-            {
-                newNode.DisplayName = orriginalNode.DisplayName;
-                newNode.Description = orriginalNode.Description;
-                newNode.WriteMask = orriginalNode.WriteMask;
-                newNode.UserWriteMask = orriginalNode.UserWriteMask;
-
-                newNode.ReferenceTypeId = orriginalNode.ReferenceTypeId;
-                AddPredefinedNode(SystemContext, newNode);
-            }
-
-            return newNode;
-        }
-
-        /// <summary>
-        /// Copy HasComponent and HasProperty references from source node to destination node
-        /// </summary>
-        /// <param name="sourceNode"></param>
-        /// <param name="destinationNode"></param>
-        private void CopyReferences(NodeState sourceNode, NodeState destinationNode)
-        {
-            //handle children specified as references
-            IList<IReference> references = new List<IReference>();
-            sourceNode.GetReferences(SystemContext, references);
-            foreach (var reference in references)
-            {
-                if (reference.IsInverse
-                    || (reference.ReferenceTypeId != ReferenceTypeIds.HasComponent && reference.ReferenceTypeId != ReferenceTypeIds.HasProperty))
-                {
-                    continue;
-                }
-                NodeId targetNodeId = ExpandedNodeId.ToNodeId(reference.TargetId, SystemContext.NamespaceUris);
-                BaseInstanceState targetNode = GetNodeState(targetNodeId) as BaseInstanceState;
-                if (targetNode != null)
-                {
-                    BaseInstanceState copyNode = CreateCopyFromNodeState(destinationNode, targetNode);
-                    if (copyNode != null)
-                    {
-                        //create copy references
-                        destinationNode.AddReference(reference.ReferenceTypeId, reference.IsInverse, copyNode.NodeId);
-                        copyNode.AddReference(reference.ReferenceTypeId, !reference.IsInverse, destinationNode.NodeId);
-                    }
-                }
-            }
-        }
-        #endregion    
+        
     }
 }
