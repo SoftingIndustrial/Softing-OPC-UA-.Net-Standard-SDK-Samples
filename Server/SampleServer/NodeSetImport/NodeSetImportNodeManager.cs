@@ -245,7 +245,7 @@ namespace SampleServer.NodeSetImport
             try
             {
                 //create object of specified type
-                var newNode = CreateInstanceFromType(parentNode, name, NamespaceIndex, inputArguments[1] as NodeId);
+                var newNode = CreateInstanceFromType(parentNode, name, NamespaceIndex, inputArguments[1] as NodeId, ReferenceTypeIds.Organizes);
                 if (newNode != null)
                 {
                     parentNode.AddChild(newNode);
