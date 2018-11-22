@@ -82,9 +82,9 @@ namespace SampleClient.Samples
                 m_session.Connect(false, true);
                 Console.WriteLine("Session is connected.");
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(String.Format("CreateSession Error: {0}", ex.Message));
+                Console.WriteLine(String.Format("CreateSession Error: {0}", e.Message));
             }
         }
 
@@ -104,9 +104,9 @@ namespace SampleClient.Samples
                 m_session.Disconnect(false);
                 Console.WriteLine("Session is disconnected.");
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(String.Format("DisconnectSession Error: {0}", ex.Message));
+                Console.WriteLine(String.Format("DisconnectSession Error: {0}", e.Message));
             }
 
             m_session.Dispose();
@@ -231,7 +231,7 @@ namespace SampleClient.Samples
 
                     if (totalSize == 0)
                     {
-                        Console.WriteLine("The file to be written becacuse has the size 0.");
+                        Console.WriteLine("The file can not be written becacuse has the size 0.");
 
                         return;
                     }
@@ -520,7 +520,7 @@ namespace SampleClient.Samples
                                 break; // no more writes from server 
                             }
                         }
-
+                        
                         Console.WriteLine();
                     }
 

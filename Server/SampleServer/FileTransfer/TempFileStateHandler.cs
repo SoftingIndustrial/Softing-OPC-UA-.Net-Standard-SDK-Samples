@@ -15,6 +15,8 @@ namespace SampleServer.FileTransfer
         #region Public Members
         public delegate void FileStateEventHandler(object sender, FileStateEventArgs e);
         public event FileStateEventHandler FileStateEvent = null;
+
+        private const uint defaultFileHandle = 1;
         #endregion
 
         #region Constructor
@@ -32,28 +34,75 @@ namespace SampleServer.FileTransfer
         #endregion
 
         #region Public Methods
+
         /// <summary>
-        /// Set temporary FileState callbacks
+        /// Get file size
         /// </summary>
-        /// <param name="fileState"></param>
-        public override void SetCallbacks(FileState fileState)
+        /// <returns></returns>
+        public ulong GetFileSize()
         {
-            if (fileState != null)
+            try
             {
-                m_fileState = fileState;
 
-                m_fileState.Open.OnCall = OnOpenMethodCall;
-                m_fileState.Read.OnCall = OnReadMethodCall;
-                m_fileState.Close.OnCall = OnCloseMethodCall;
-                m_fileState.Write.OnCall = OnWriteMethodCall;
-                m_fileState.Size.OnSimpleReadValue = OnReadSize;
-
-                // The following callbacks are not necesary. They are not mention into documentation
-                // m_fileState.GetPosition.OnCall = OnGetPositionMethodCall;
-                // m_fileState.SetPosition.OnCall = OnSetPositionMethodCall;
+                if (m_fileState != null)
+                {
+                    FileStream fileStream = GetFileStream(defaultFileHandle);
+                    if (fileStream != null)
+                    {
+                        return (ulong)fileStream.Length;
+                    }
+                    /*
+                    ServiceResult readResult = m_fileState.Size.OnReadValue(context, method, m_fileState.NodeId, defaultFileHandle, 0);
+                    if (readResult == null)
+                    {
+                        throw new Exception("The Temporary Read file state method failed.");
+                    }
+                    else
+                    {
+                        return readResult.StatusCode;
+                    }
+                    */
+                }
             }
+            catch (Exception e)
+            {
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+            }
+
+            return 0;
         }
 
+        /// <summary>
+        /// Set file offset position to the begining  
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        public StatusCode SetBeginPosition(ISystemContext context,
+            MethodState method)
+        {
+            try
+            {
+                if (m_fileState != null)
+                {
+                    ServiceResult readResult = m_fileState.SetPosition.OnCall(context, method, m_fileState.NodeId, defaultFileHandle, 0);
+                    if (readResult == null)
+                    {
+                        throw new Exception("The Temporary Read file state method failed.");
+                    }
+                    else
+                    {
+                        return readResult.StatusCode;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+            }
+
+            return new StatusCode(StatusCodes.Good);
+        }
         /// <summary>
         /// Open file state stream
         /// </summary>
@@ -78,7 +127,7 @@ namespace SampleServer.FileTransfer
                         (byte)fileAccessMode, ref fileHandle);
                     if (openResult == null)
                     {
-                        throw new Exception("The Open file state method failed.");
+                        throw new Exception("The Temporary Open file state method failed.");
                     }
                     else
                     {
@@ -86,12 +135,12 @@ namespace SampleServer.FileTransfer
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
             }
 
-            return new StatusCode(1);
+            return new StatusCode(StatusCodes.Good);
         }
         
         /// <summary>
@@ -106,10 +155,10 @@ namespace SampleServer.FileTransfer
             {
                 if (m_fileState != null)
                 {
-                    ServiceResult closeResult = m_fileState.Close.OnCall(context, method, m_fileState.NodeId, 1);
+                    ServiceResult closeResult = m_fileState.Close.OnCall(context, method, m_fileState.NodeId, defaultFileHandle);
                     if (closeResult == null)
                     {
-                        throw new Exception("The Close file state method failed.");
+                        throw new Exception("The Temporary Close file state method failed.");
                     }
                     else
                     {
@@ -117,14 +166,45 @@ namespace SampleServer.FileTransfer
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
             }
 
-            return new StatusCode(1);
+            return new StatusCode(StatusCodes.Good);
         }
 
+        public StatusCode Read(ISystemContext context,
+            MethodState method,
+            int length,
+            ref byte[] data)
+        {
+
+            try
+            {
+                if (m_fileState != null)
+                {
+                    ServiceResult readResult = m_fileState.Read.OnCall(context, method, m_fileState.NodeId,
+                        defaultFileHandle, length, ref data);
+                    if (readResult == null)
+                    {
+                        throw new Exception("The Temporary Read file state method failed.");
+                    }
+                    else
+                    {
+                        return readResult.StatusCode;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+            }
+
+            return new StatusCode(StatusCodes.Good);
+        }
+
+        
         /// <summary>
         /// Check if file state GenerateForWriteFile type
         /// </summary>
@@ -137,29 +217,6 @@ namespace SampleServer.FileTransfer
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Get the temporary file stream
-        /// </summary>
-        /// <returns></returns>
-        public FileStream GetTmpFileStream()
-        {
-            return base.GetFileStream(1);
-        }
-
-        /// <summary>
-        /// Get file state node Id
-        /// </summary>
-        /// <returns></returns>
-        public NodeId GetFileStateNodeId()
-        {
-            if (m_fileState != null)
-            {
-                return m_fileState.NodeId;
-            }
-
-            return null;
         }
 
         /// <summary>

@@ -134,9 +134,9 @@ namespace SampleServer.FileTransfer
 
                 return StatusCodes.Good;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
             }
         }
 
@@ -169,9 +169,9 @@ namespace SampleServer.FileTransfer
 
                 return StatusCodes.Good;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
             }
         }
         #endregion
@@ -203,9 +203,9 @@ namespace SampleServer.FileTransfer
                         string.Format("The file: {0} was not found!", m_filePath));
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
             }
         }
 
@@ -249,7 +249,7 @@ namespace SampleServer.FileTransfer
             try
             {
                 FileStreamTracker fileStreamTracker = new FileStreamTracker(m_filePath, fileMode, fileAccess);
-
+                
                 //increment OpenCount.
                 ushort openCount = (ushort)m_fileState.OpenCount.Value;
                 m_fileState.OpenCount.Value = ++openCount;
@@ -259,13 +259,13 @@ namespace SampleServer.FileTransfer
 
                 return ServiceResult.Good;
             }
-            catch (FileNotFoundException ex)
+            catch (FileNotFoundException e)
             {
-                throw new ServiceResultException(StatusCodes.BadNotFound, ex.Message);
+                throw new ServiceResultException(StatusCodes.BadNotFound, e.Message);
             }
-            catch (UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException e)
             {
-                throw new ServiceResultException(StatusCodes.BadNotWritable, ex.Message);
+                throw new ServiceResultException(StatusCodes.BadNotWritable, e.Message);
             }
         }
 
@@ -310,9 +310,9 @@ namespace SampleServer.FileTransfer
 
                 return StatusCodes.Good;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
             }
         }
 
@@ -350,9 +350,9 @@ namespace SampleServer.FileTransfer
 
                 return StatusCodes.Good;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
             }
         }
 
@@ -395,9 +395,9 @@ namespace SampleServer.FileTransfer
 
                 return StatusCodes.Good;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
             }
         }
 
@@ -429,9 +429,9 @@ namespace SampleServer.FileTransfer
                                     "Error closing the file state for the file handle: {0}", fileHandle));
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception e)
                         {
-                            throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                            throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
                         }
                     }
                     else

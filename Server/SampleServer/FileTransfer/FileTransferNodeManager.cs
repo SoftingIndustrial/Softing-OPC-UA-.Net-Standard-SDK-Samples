@@ -37,6 +37,8 @@ namespace SampleServer.FileTransfer
 
         private TempFilesHolder m_tmpFilesHolder;
 
+        private const int ChunkSize = 512;
+
         #endregion
 
         #region Constructors
@@ -225,10 +227,10 @@ namespace SampleServer.FileTransfer
                         value = bytes;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
                     // file access error
-                    throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                    throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
                 }
             }
 
@@ -263,47 +265,93 @@ namespace SampleServer.FileTransfer
                 // FileTransferStateMachineState completionStateMachineState = CreateObjectFromType(null, "CompletionStateMachine", ObjectTypeIds.FileTransferStateMachineType, ReferenceTypeIds.HasComponent) as FileTransferStateMachineState;
                 // completionStateMachine = completionStateMachineState.NodeId;
 
+                bool isWriteFailed = false;
+                DateTime startTime = DateTime.Now;
+
                 // Creates and copy data content from "ReadTemporaryFilePath" to a temporary file
                 string tmpFileName = Path.GetTempFileName();
                 using (FileStream fileStream = new FileStream(ReadTemporaryFilePath, FileMode.Open))
                 {
-                    using (Stream fileStreamTmp = File.OpenWrite(tmpFileName))
+                    using (FileStream fileStreamTmp = File.OpenWrite(tmpFileName))
                     {
-                        byte[] bytes = new byte[fileStream.Length];
-                        fileStream.Read(bytes, 0, bytes.Length);
-                        fileStreamTmp.Write(bytes, 0, bytes.Length);
-                        fileStreamTmp.Close();
-                    }
+                        ulong totalSize = (ulong) fileStream.Length;
 
-                    fileStream.Close();
+
+                        // Copy the file in chunks of <chunkSize> bytes from server
+                        ulong cTotalRead = 0;
+                        while (cTotalRead < totalSize)
+                        {
+                            int cRead = totalSize - cTotalRead > ChunkSize
+                                ? ChunkSize
+                                : (int) (totalSize - cTotalRead);
+                            byte[] buffer = new byte[cRead];
+
+                            int readValue = fileStream.Read(buffer, 0, cRead);
+                            /*if (readValue != -1)
+                            {
+                                fileStream.Close();
+                                throw new Exception(string.Format("{0}: Read file call failed!", tmpFileName));
+                            }
+                            */
+
+                            TimeSpan elapsedTime = (DateTime.Now - startTime);
+                            if (elapsedTime.TotalSeconds < ClientProcessingTimeoutPeriod)
+                            {
+                                fileStreamTmp.Write(buffer, 0, cRead);
+                                cTotalRead += (ulong) cRead;
+                                Console.Write("\rWriting client content to temporary file {0} bytes of {1} - {2}% complete", cTotalRead, totalSize,
+                                    cTotalRead * 100 / totalSize);
+                            }
+                            else
+                            {
+                                isWriteFailed = true;
+                                Console.WriteLine(
+                                    "\nWriting the server temporary file content to '{0}' timeout exceeded. \n'ClientProcessingTimeout' period = {1} seconds",
+                                    ReadTemporaryFilePath, ClientProcessingTimeoutPeriod);
+                                break; // no more writes from server 
+                            }
+                        }
+
+                        Console.WriteLine();
+
+                        fileStream.Close();
+                    }
                 }
 
-                TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, false);
-                if (fileStateHandler != null)
+                if (isWriteFailed)
                 {
-                    fileStateHandler.FileStateEvent += RemoveFileStatePredefinedNodes;
-                    generateFileForReadStatusCode = fileStateHandler.Open(context, method, FileAccess.Read, ref fileNodeId, ref fileHandle);
-                    if (StatusCode.IsGood(generateFileForReadStatusCode))
+                    Console.WriteLine("The file content temporary copy was not finalized due to 'ClientProcessingTimeout' period limit.");
+                }
+                else
+                {
+                    TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, false);
+                    if (fileStateHandler != null)
                     {
-                        uint readFileHandle = m_tmpFilesHolder.Add(fileNodeId, fileStateHandler);
-                        if (readFileHandle != 0)
+                        fileStateHandler.FileStateEvent += RemoveFileStatePredefinedNodes;
+                        generateFileForReadStatusCode = fileStateHandler.Open(context, method, FileAccess.Read,
+                            ref fileNodeId, ref fileHandle);
+                        if (StatusCode.IsGood(generateFileForReadStatusCode))
                         {
-                            fileHandle = readFileHandle;
+                            uint readFileHandle = m_tmpFilesHolder.Add(fileNodeId, fileStateHandler);
+                            if (readFileHandle != 0)
+                            {
+                                fileHandle = readFileHandle;
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format("{0}: The file is already opened!", tmpFileName));
+                            }
                         }
                         else
                         {
-                            throw new Exception(string.Format("{0}: The file is already opened!", tmpFileName));
+                            throw new Exception(string.Format("{0}: Open file call failed!", tmpFileName));
                         }
-                    }
-                    else
-                    {
-                        throw new Exception(string.Format("{0}: Open file call failed!", tmpFileName));
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
             }
 
             return generateFileForReadStatusCode;
@@ -358,9 +406,9 @@ namespace SampleServer.FileTransfer
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
             }
 
             return generateFileForWriteStatusCode;
@@ -403,30 +451,58 @@ namespace SampleServer.FileTransfer
                         if (fileStateHandler.IsGenerateForWriteFileType())
                         {
                             // Commit(save) on server the file data filled on client
-                            FileStream fileStream = fileStateHandler.GetTmpFileStream();
-                            if (fileStream != null)
-                            {
-                                if (fileStream.Length > 0)
-                                {
-                                    using (fileStream)
-                                    {
-                                        using (Stream fileStreamTmp = File.OpenWrite(WriteTemporaryFilePath))
-                                        {
-                                            byte[] bytes = new byte[fileStream.Length];
-                                            fileStream.Read(bytes, 0, bytes.Length);
-                                            fileStreamTmp.Write(bytes, 0, bytes.Length);
-                                            fileStreamTmp.Close();
-                                        }
+                            bool isReadFailed = false;
+                            DateTime startTime = DateTime.Now;
 
-                                        fileStream.Close();
+                            using (FileStream fileStreamTmp = File.OpenWrite(WriteTemporaryFilePath))
+                            {
+                                // to be entirely red the offset of file position should be at the begining
+                                fileStateHandler.SetBeginPosition(context, method);
+
+                                ulong totalSize = (ulong) fileStateHandler.GetFileSize();
+                                ulong cTotalRead = 0;
+                                while (cTotalRead < totalSize)
+                                {
+                                    int cRead = totalSize - cTotalRead > ChunkSize
+                                        ? ChunkSize
+                                        : (int) (totalSize - cTotalRead);
+                                    byte[] buffer = new byte[cRead];
+
+                                    StatusCode readStatusCode =
+                                        fileStateHandler.Read(context, method, cRead, ref buffer);
+                                    if (StatusCode.IsBad(readStatusCode))
+                                    {
+                                        Console.WriteLine(string.Format("\nRead status code is: {0}\n", readStatusCode));
+                                        break;
+                                    }
+
+                                    TimeSpan elapsedTime = (DateTime.Now - startTime);
+                                    if (elapsedTime.TotalSeconds < ClientProcessingTimeoutPeriod)
+                                    {
+                                        fileStreamTmp.Write(buffer, 0, cRead);
+                                        cTotalRead += (ulong) cRead;
+                                        Console.Write("\rReading temporary file data filled by client {0} bytes of {1} - {2}% complete", cTotalRead,
+                                            totalSize,
+                                            cTotalRead * 100 / totalSize);
+                                    }
+                                    else
+                                    {
+                                        isReadFailed = true;
+                                        Console.WriteLine(
+                                            "\nReading the server temporary file content to '{0}' timeout exceeded. \n'ClientProcessingTimeout' period = {1} seconds",
+                                            WriteTemporaryFilePath, ClientProcessingTimeoutPeriod);
+                                        break; // no more writes from server 
                                     }
                                 }
-                                else
-                                {
-                                    Console.Write(
-                                        "\rThe file {0} is empty. No copy of file content on server performed.",
-                                        fileStream.Name);
-                                }
+
+                                Console.WriteLine();
+
+                                fileStreamTmp.Close();
+                            }
+
+                            if (isReadFailed)
+                            {
+                                File.Delete(WriteTemporaryFilePath);
                             }
 
                             closeAndCommitStatusCode = fileStateHandler.Close(context, method);
@@ -456,9 +532,9 @@ namespace SampleServer.FileTransfer
                     throw new Exception(string.Format("The file related to the handler number '{0}' was already removed!", fileHandle));
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, ex.Message);
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
             }
 
             return closeAndCommitStatusCode;
