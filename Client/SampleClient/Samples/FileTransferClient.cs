@@ -24,12 +24,12 @@ namespace SampleClient.Samples
         // the nodeId of the TemporaryFile element from the server
         private const string TemporaryFileNodeID = "ns=9;i=45";
 
-        private const string DownloadFilePath = @"Files\DownloadFile.xml";
-        private const string UploadFilePath = @"Files\UploadClientFile.xml";
-        private const string ByteStringFilePath = @"Files\ByteStringFile.xml";
-        private const string ReadTemporaryFilePath = @"Files\ReadClientTemporaryFile.xml";
-        private const string WriteTemporaryFilePath = @"Files\WriteClientTemporaryFile.xml";
-        
+        private string DownloadFilePath = Path.Combine("Files", "DownloadFile.xml");
+        private string UploadFilePath = Path.Combine("Files", "UploadClientFile.xml");
+        private string ByteStringFilePath = Path.Combine("Files", "ByteStringFile.xml");
+        private string ReadTemporaryFilePath = Path.Combine("Files", "ReadClientTemporaryFile.xml");
+        private string WriteTemporaryFilePath = Path.Combine("Files", "WriteClientTemporaryFile.xml");
+
         private const int ChunkSize = 512;
         private ClientSession m_session;
         private readonly UaApplication m_application;

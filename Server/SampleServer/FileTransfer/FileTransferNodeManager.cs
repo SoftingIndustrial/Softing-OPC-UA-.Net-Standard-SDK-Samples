@@ -17,13 +17,13 @@ namespace SampleServer.FileTransfer
     {
         #region Private Members
 
-        private const string DownloadFilePath = @"FileTransfer\Files\DownloadFile.xml";
-        private const string UploadFilePath = @"FileTransfer\Files\UploadFile.xml";
-        
-        private const string ByteStringFilePath = @"FileTransfer\Files\ByteStringFile.xml";
+        private string DownloadFilePath = Path.Combine("FileTransfer", "Files", "DownloadFile.xml");
+        private string UploadFilePath = Path.Combine("FileTransfer", "Files", "UploadFile.xml");
 
-        private const string ReadTemporaryFilePath = @"FileTransfer\Files\ReadTemporaryFile.xml";
-        private const string WriteTemporaryFilePath = @"FileTransfer\Files\WriteTemporaryFile.xml";
+        private string ByteStringFilePath = Path.Combine("FileTransfer", "Files", "ByteStringFile.xml");
+
+        private string ReadTemporaryFilePath = Path.Combine("FileTransfer", "Files", "ReadTemporaryFile.xml");
+        private string WriteTemporaryFilePath = Path.Combine("FileTransfer", "Files", "WriteTemporaryFile.xml");
 
         private const string FileTransferName = "FileTransfer";
         private const string ByteStringName = "ByteString";
