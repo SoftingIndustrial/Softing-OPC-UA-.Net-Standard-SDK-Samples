@@ -10,8 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="FileTransfer\Files\ReadTemporaryFile.xml" />
-    <None Remove="FileTransfer\Files\WriteTemporaryFile.xml" />
     <None Remove="NodeSetImport\Refrigerators.NodeSet2.xml" />
     <None Remove="NodeSetImport\Refrigerators2.NodeSet2.xml" />
   </ItemGroup>
@@ -87,7 +85,8 @@
     </Reference>
   </ItemGroup>
   
-  <ItemGroup>    <None Update="NodeSetImport\NodeSet\Refrigerators.NodeSet2.xml">
+  <ItemGroup>    
+	<None Update="NodeSetImport\NodeSet\Refrigerators.NodeSet2.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="NodeSetImport\NodeSet\Refrigerators2.NodeSet2.xml">

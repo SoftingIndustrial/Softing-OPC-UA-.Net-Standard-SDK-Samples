@@ -230,6 +230,9 @@
     <Compile Include="StateMachine\Enums.cs" />
     <Compile Include="StateMachine\Process.cs" />
     <Compile Include="StateMachine\StateTransition.cs" />
+	<Compile Include="Samples\FileTransferClient.cs" />
+	<Compile Include="Helpers\FileStateHelper.cs" />
+	<Compile Include="Helpers\TemporaryFileTransferStateHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -238,6 +241,14 @@
     <None Include="SampleClient.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Files\UploadClientFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\WriteClientTemporaryFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

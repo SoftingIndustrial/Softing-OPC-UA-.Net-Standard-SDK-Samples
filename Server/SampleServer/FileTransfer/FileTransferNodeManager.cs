@@ -172,7 +172,7 @@ namespace SampleServer.FileTransfer
             }
             catch (FileNotFoundException)
             {
-                throw new Exception("Create Temporary File state node in adress space could not be created exception.");
+                throw new Exception("Create Temporary File state node in address space could not be created exception.");
             }
         }
 

@@ -269,6 +269,13 @@
     <Compile Include="Alarms\AlarmsNodeManager.cs" />
     <Compile Include="Alarms\ExclusiveLimitMonitor.cs" />
     <Compile Include="DataAccess\DataAccessNodeManager.cs" />
+    <Compile Include="FileTransfer\FileStateEventArgs.cs" />
+    <Compile Include="FileTransfer\FileStateHandler.cs" />
+    <Compile Include="FileTransfer\FileStreamTracker.cs" />
+    <Compile Include="FileTransfer\FileTransferNodeManager.cs" />
+    <Compile Include="FileTransfer\TempFilesHolder.cs" />
+    <Compile Include="FileTransfer\TempFileStateData.cs" />
+    <Compile Include="FileTransfer\TempFileStateHandler.cs" />
     <Compile Include="HistoricalDataAccess\ArchiveItem.cs" />
     <Compile Include="HistoricalDataAccess\ArchiveItemState.cs" />
     <Compile Include="HistoricalDataAccess\DataFileReader.cs" />
@@ -292,6 +299,18 @@
     <None Include="ReferenceServer\BuildDesign.bat" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="FileTransfer\Files\ByteStringFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileTransfer\Files\ReadTemporaryFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileTransfer\Files\DownloadFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileTransfer\Files\UploadFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="HistoricalDataAccess\Data\Dynamic\Double.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
