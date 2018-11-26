@@ -33,7 +33,7 @@ namespace SampleServer.FileTransfer
         /// The maximum time in milliseconds the Server accepts between Method calls necessary
         /// to complete a file read transfer or a file write transfer transactions
         /// </summary>
-        private const double ClientProcessingTimeoutPeriod = 10; // seconds 
+        private const double ClientProcessingTimeoutPeriod = 10000; // miliseconds (10 seconds) 
 
         private TempFilesHolder m_tmpFilesHolder;
 
@@ -295,7 +295,7 @@ namespace SampleServer.FileTransfer
                             */
 
                             TimeSpan elapsedTime = (DateTime.Now - startTime);
-                            if (elapsedTime.TotalSeconds < ClientProcessingTimeoutPeriod)
+                            if (elapsedTime.TotalMilliseconds < ClientProcessingTimeoutPeriod)
                             {
                                 fileStreamTmp.Write(buffer, 0, cRead);
                                 cTotalRead += (ulong) cRead;
@@ -306,7 +306,7 @@ namespace SampleServer.FileTransfer
                             {
                                 isWriteFailed = true;
                                 Console.WriteLine(
-                                    "\nWriting the server temporary file content to '{0}' timeout exceeded. \n'ClientProcessingTimeout' period = {1} seconds",
+                                    "\nWriting the server temporary file content to '{0}' timeout exceeded. \n'ClientProcessingTimeout' period = {1} milliseconds",
                                     ReadTemporaryFilePath, ClientProcessingTimeoutPeriod);
                                 break; // no more writes from server 
                             }
@@ -477,7 +477,7 @@ namespace SampleServer.FileTransfer
                                     }
 
                                     TimeSpan elapsedTime = (DateTime.Now - startTime);
-                                    if (elapsedTime.TotalSeconds < ClientProcessingTimeoutPeriod)
+                                    if (elapsedTime.TotalMilliseconds < ClientProcessingTimeoutPeriod)
                                     {
                                         fileStreamTmp.Write(buffer, 0, cRead);
                                         cTotalRead += (ulong) cRead;
@@ -489,7 +489,7 @@ namespace SampleServer.FileTransfer
                                     {
                                         isReadFailed = true;
                                         Console.WriteLine(
-                                            "\nReading the server temporary file content to '{0}' timeout exceeded. \n'ClientProcessingTimeout' period = {1} seconds",
+                                            "\nReading the server temporary file content to '{0}' timeout exceeded. \n'ClientProcessingTimeout' period = {1} milliseconds",
                                             WriteTemporaryFilePath, ClientProcessingTimeoutPeriod);
                                         break; // no more writes from server 
                                     }

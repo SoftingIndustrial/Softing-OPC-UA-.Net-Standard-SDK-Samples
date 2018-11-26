@@ -392,7 +392,7 @@ namespace SampleClient.Samples
                             }
 
                             TimeSpan elapsedTime = (DateTime.Now - startTime);
-                            if (elapsedTime.TotalSeconds < clientProcessingTimeout)
+                            if (elapsedTime.TotalMilliseconds < clientProcessingTimeout)
                             {
                                 fs.Write(buffer, 0, cRead);
                                 cTotalRead += (ulong) cRead;
@@ -402,7 +402,7 @@ namespace SampleClient.Samples
                             else
                             {
                                 isReadFailed = true;
-                                Console.WriteLine("\nReading the server temporary file content to '{0}' timeout exceeded. \n'ClientProcessingTimeout' period = {1} seconds", filename, clientProcessingTimeout);
+                                Console.WriteLine("\nReading the server temporary file content to '{0}' timeout exceeded. \n'ClientProcessingTimeout' period = {1} milliseconds", filename, clientProcessingTimeout);
                                 break; // no more writes from server 
                             }
                         }
@@ -497,7 +497,7 @@ namespace SampleClient.Samples
                             }
 
                             TimeSpan elapsedTime = (DateTime.Now - startTime);
-                            if (elapsedTime.TotalSeconds < clientProcessingTimeout)
+                            if (elapsedTime.TotalMilliseconds < clientProcessingTimeout)
                             {
                                 StatusCode writeStatusCode = fileState.Write(data);
                                 if (StatusCode.IsBad(writeStatusCode))
@@ -516,7 +516,7 @@ namespace SampleClient.Samples
                             else
                             {
                                 isWriteFailed = true;
-                                Console.WriteLine("\nWriting the server temporary file content from client file '{0}' timeout exceeded. \n'ClientProcessingTimeout' period = {1} seconds", filename, clientProcessingTimeout);
+                                Console.WriteLine("\nWriting the server temporary file content from client file '{0}' timeout exceeded. \n'ClientProcessingTimeout' period = {1} milliseconds", filename, clientProcessingTimeout);
                                 break; // no more writes from server 
                             }
                         }
