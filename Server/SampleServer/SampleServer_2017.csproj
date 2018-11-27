@@ -10,6 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="FileTransfer\FileStateEventArgs.cs" />
+    <Compile Remove="FileTransfer\TempFileStateData.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="NodeSetImport\Refrigerators.NodeSet2.xml" />
     <None Remove="NodeSetImport\Refrigerators2.NodeSet2.xml" />
   </ItemGroup>

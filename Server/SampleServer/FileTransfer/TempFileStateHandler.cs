@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Opc.Ua;
 using Opc.Ua.Server;
+using Softing.Opc.Ua.Server;
 
 namespace SampleServer.FileTransfer
 {
@@ -13,55 +16,66 @@ namespace SampleServer.FileTransfer
     internal class TempFileStateHandler : FileStateHandler
     {
         #region Public Members
-        public delegate void FileStateEventHandler(object sender, FileStateEventArgs e);
-        public event FileStateEventHandler FileStateEvent = null;
-
         private const uint defaultFileHandle = 1;
+        private NodeManager m_nodeManager;
         #endregion
 
         #region Constructor
-        public TempFileStateHandler(ISystemContext context, string filePath) : base(filePath)
+        public TempFileStateHandler(NodeManager nodeManager, string filePath, FileState fileState, bool writePermission) : base(filePath, fileState, writePermission)
         {
-            Context = context;
+            //Context = SystemContext;
+            m_nodeManager = nodeManager;
         }
         #endregion
 
-        #region Properties
+        /*
         /// <summary>
-        /// System context reference
+        /// Session identifier for the FileState in use
         /// </summary>
-        protected ISystemContext Context { get; private set; }
+        public uint SessionIdentifier
+        {
+            get
+            {
+                if (m_nodeManager != null)
+                {
+                    return (uint)m_nodeManager.SystemContext.SessionId.Identifier;
+                }
+
+                // session was already removed
+                return 0; 
+            }
+        }
+        */
+
+        #region Public Properties
+
+        public NodeId FileNodeId
+        {
+            get
+            {
+                if (m_fileState != null)
+                {
+                    return m_fileState.NodeId;
+                }
+
+                return null;
+            }
+        }
         #endregion
 
         #region Public Methods
 
         /// <summary>
-        /// Get file size
+        /// Get file stream 
         /// </summary>
         /// <returns></returns>
-        public ulong GetFileSize()
+        public FileStream GetTemporaryFileStream()
         {
             try
             {
-
                 if (m_fileState != null)
                 {
-                    FileStream fileStream = GetFileStream(defaultFileHandle);
-                    if (fileStream != null)
-                    {
-                        return (ulong)fileStream.Length;
-                    }
-                    /*
-                    ServiceResult readResult = m_fileState.Size.OnReadValue(context, method, m_fileState.NodeId, defaultFileHandle, 0);
-                    if (readResult == null)
-                    {
-                        throw new Exception("The Temporary Read file state method failed.");
-                    }
-                    else
-                    {
-                        return readResult.StatusCode;
-                    }
-                    */
+                    return GetFileStream(defaultFileHandle);
                 }
             }
             catch (Exception e)
@@ -69,7 +83,7 @@ namespace SampleServer.FileTransfer
                 throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
             }
 
-            return 0;
+            return null;
         }
 
         /// <summary>
@@ -184,6 +198,11 @@ namespace SampleServer.FileTransfer
             {
                 if (m_fileState != null)
                 {
+                    if (HasSessionExpired(context))
+                    {
+                        return StatusCodes.BadSessionClosed;
+                    }
+
                     ServiceResult readResult = m_fileState.Read.OnCall(context, method, m_fileState.NodeId,
                         defaultFileHandle, length, ref data);
                     if (readResult == null)
@@ -219,13 +238,24 @@ namespace SampleServer.FileTransfer
             return false;
         }
 
-        /// <summary>
-        /// Remove temporary file state nodes from server adress space 
-        /// </summary>
-        /// <param name="fileNodeId"></param>
-        public void RemoveFileStateNodes(NodeId fileNodeId)
+        #endregion
+
+        #region Private Methods
+
+        private bool HasSessionExpired(ISystemContext context)
         {
-            OnRemoveFileStateNodes(Context, fileNodeId);
+            if (m_nodeManager != null)
+            {
+                // SessionManager sessionId 
+                uint sessionId = (uint)m_nodeManager.SystemContext.SessionId.Identifier;
+                if (sessionId != (uint)context.SessionId.Identifier)
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            return true;
         }
         #endregion
 
@@ -253,15 +283,20 @@ namespace SampleServer.FileTransfer
                     File.Delete(base.FilePath);
                 }
 
-                // Remove temporary file state nodes from server adress space
+                // Remove temporary file state nodes from server address space
                 if(fileNodeId == null)
                 {
                     if (m_fileState != null)
                     {
                         fileNodeId = m_fileState.NodeId;
                     }
-                } 
-                OnRemoveFileStateNodes(Context, fileNodeId);
+                }
+
+                // Remove temporary file state node from address space
+                if (m_nodeManager != null)
+                {
+                    m_nodeManager.DeleteNode(m_nodeManager.SystemContext, fileNodeId);
+                }
 
                 return StatusCodes.Good;
             }
@@ -271,21 +306,6 @@ namespace SampleServer.FileTransfer
             }
         }
 
-        #endregion
-
-        #region Private Event Handler(s)
-        /// <summary>
-        /// Trigger remove temporary file state nodes from server adress space 
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="fileStateNodeId"></param>
-        private void OnRemoveFileStateNodes(ISystemContext context, NodeId fileStateNodeId)
-        {
-            if(FileStateEvent != null)
-            {
-                FileStateEvent(this, new FileStateEventArgs(context, fileStateNodeId));
-            }
-        }
         #endregion
     }
 }

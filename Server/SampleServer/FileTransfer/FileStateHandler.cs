@@ -17,8 +17,9 @@ namespace SampleServer.FileTransfer
     {
         #region Private Members
 
-        protected FileState m_fileState;
         protected string m_filePath;
+        protected FileState m_fileState;
+        private bool m_writePermission;
         private uint m_nextFileHandle;
         private Timer m_Timer;
         private Dictionary<uint, FileStreamTracker> m_fileHandles;
@@ -37,10 +38,11 @@ namespace SampleServer.FileTransfer
             m_fileHandles = new Dictionary<uint, FileStreamTracker>();
             m_Timer = new Timer(CheckFileStreamAvailability, null, 0, CheckFileStreamAvailabilityPeriod); // remove opened files after 
         }
-        public FileStateHandler(string filePath) : this()
+        public FileStateHandler(string filePath, FileState fileState, bool writePermission) : this()
         {
             m_filePath = filePath;
-            Name = Path.GetFileName(filePath);
+            m_fileState = fileState;
+            m_writePermission = writePermission;
         }
 
         #endregion
@@ -54,11 +56,10 @@ namespace SampleServer.FileTransfer
         {
             get { return m_fileState; }
         }
+        
         /// <summary>
-        /// File name info
+        /// File Path
         /// </summary>
-        public string Name { get; set; }
-
         protected string FilePath
         {
             get { return m_filePath; }
@@ -68,14 +69,17 @@ namespace SampleServer.FileTransfer
         #region Public Methods
 
         /// <summary>
-        /// Set FileState callbacks
+        /// Initialize: set write permission atributes and set callbacks
         /// </summary>
-        /// <param name="fileState"></param>
-        public virtual void SetCallbacks(FileState fileState)
+        public void Initialize()
         {
-            if (fileState != null)
+            if (m_fileState != null)
             {
-                m_fileState = fileState;
+                m_fileState.WriteMask = AttributeWriteMask.None;
+                m_fileState.UserWriteMask = AttributeWriteMask.None;
+
+                m_fileState.Writable.Value = m_writePermission;
+                m_fileState.UserWritable.Value = m_writePermission;
 
                 m_fileState.Open.OnCall = OnOpenMethodCall;
                 m_fileState.Read.OnCall = OnReadMethodCall;
@@ -86,7 +90,7 @@ namespace SampleServer.FileTransfer
                 m_fileState.Size.OnSimpleReadValue = OnReadSize;
             }
         }
-
+       
         #endregion
         /// <summary>
         /// Get file stream related to a file handle
@@ -250,9 +254,10 @@ namespace SampleServer.FileTransfer
             {
                 FileStreamTracker fileStreamTracker = new FileStreamTracker(m_filePath, fileMode, fileAccess);
                 
-                //increment OpenCount.
+                // increment OpenCount.
                 ushort openCount = (ushort)m_fileState.OpenCount.Value;
                 m_fileState.OpenCount.Value = ++openCount;
+                m_fileState.OpenCount.ClearChangeMasks(null, true);
 
                 fileHandle = ++m_nextFileHandle;
                 m_fileHandles[fileHandle] = fileStreamTracker;
@@ -295,6 +300,7 @@ namespace SampleServer.FileTransfer
                 }
 
                 FileStreamTracker fileStreamTracker = m_fileHandles[fileHandle];
+                fileStreamTracker.LastAccessTime = DateTime.Now;
 
                 data = new byte[length];
                 int cRead = fileStreamTracker.FileStream.Read(data, 0, length);

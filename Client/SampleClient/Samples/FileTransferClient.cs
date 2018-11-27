@@ -27,13 +27,14 @@ namespace SampleClient.Samples
         private string DownloadFilePath = Path.Combine("Files", "DownloadFile.xml");
         private string UploadFilePath = Path.Combine("Files", "UploadClientFile.xml");
         private string ByteStringFilePath = Path.Combine("Files", "ByteStringFile.xml");
-        private string ReadTemporaryFilePath = Path.Combine("Files", "ReadClientTemporaryFile.xml");
-        private string WriteTemporaryFilePath = Path.Combine("Files", "WriteClientTemporaryFile.xml");
+        private string DownloadTemporaryFilePath = Path.Combine("Files", "ReadClientTemporaryFile.xml");
+        private string UploadTemporaryFilePath = Path.Combine("Files", "WriteClientTemporaryFile.xml");
 
         private const int ChunkSize = 512;
         private ClientSession m_session;
         private readonly UaApplication m_application;
 
+        private const string SessionName = "Softing FileTransfer Sample Client";
         #endregion
 
         #region Constructor
@@ -76,7 +77,7 @@ namespace SampleClient.Samples
             try
             {
                 m_session = m_application.CreateSession(Program.ServerUrl);
-                m_session.SessionName = "Softing FileTransfer Sample Client";
+                m_session.SessionName = SessionName;
 
                 // connect session
                 m_session.Connect(false, true);
@@ -344,7 +345,7 @@ namespace SampleClient.Samples
             try
             {
                 NodeId nodeID = new NodeId(TemporaryFileNodeID);
-                string filename = Path.GetFileName(ReadTemporaryFilePath);
+                string filename = Path.GetFileName(DownloadTemporaryFilePath);
                 TemporaryFileTransferStateHelper tmpFileTransferState =
                     new TemporaryFileTransferStateHelper(m_session, filename, nodeID);
 
@@ -374,7 +375,7 @@ namespace SampleClient.Samples
                     }
 
                     // Copy the file in chunks of <chunkSize> bytes from server
-                    using (FileStream fs = new FileStream(ReadTemporaryFilePath, FileMode.Create))
+                    using (FileStream fs = new FileStream(DownloadTemporaryFilePath, FileMode.Create))
                     {
                         ulong cTotalRead = 0;
                         while (cTotalRead < totalSize)
@@ -441,7 +442,7 @@ namespace SampleClient.Samples
             try
             {
                 NodeId nodeID = new NodeId(TemporaryFileNodeID);
-                string filename = Path.GetFileName(WriteTemporaryFilePath);
+                string filename = Path.GetFileName(UploadTemporaryFilePath);
                 TemporaryFileTransferStateHelper tmpFileTransferState =
                     new TemporaryFileTransferStateHelper(m_session, filename, nodeID);
 
@@ -464,9 +465,9 @@ namespace SampleClient.Samples
                 if (fileState != null)
                 {
                     // Send the file content in chunks of chunkSize bytes
-                    using (FileStream fs = new FileStream(WriteTemporaryFilePath, FileMode.Open))
+                    using (FileStream fs = new FileStream(UploadTemporaryFilePath, FileMode.Open))
                     {
-                        FileInfo fi = new FileInfo(WriteTemporaryFilePath);
+                        FileInfo fi = new FileInfo(UploadTemporaryFilePath);
                         ulong totalSize = (ulong)fi.Length;
                         ulong totalWrite = 0;
 

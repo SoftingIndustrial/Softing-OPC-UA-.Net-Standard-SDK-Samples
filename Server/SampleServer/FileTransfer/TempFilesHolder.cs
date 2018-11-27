@@ -14,7 +14,7 @@ namespace SampleServer.FileTransfer
         #region Private Members
 
         private uint m_nextFileHandle;
-        private Dictionary<uint, TempFileStateData> m_tmpFileStateData;
+        private Dictionary<uint, TempFileStateHandler> m_tmpFileStateData;
 
         #endregion
 
@@ -23,7 +23,7 @@ namespace SampleServer.FileTransfer
         public TempFilesHolder()
         {
             m_nextFileHandle = 0;
-            m_tmpFileStateData = new Dictionary<uint, TempFileStateData>();
+            m_tmpFileStateData = new Dictionary<uint, TempFileStateHandler>();
         }
 
         #endregion
@@ -39,7 +39,7 @@ namespace SampleServer.FileTransfer
         {
             if (!m_tmpFileStateData.Values.Any(tmp => tmp.FileNodeId == fileNodeId))
             {
-                m_tmpFileStateData.Add(++m_nextFileHandle, new TempFileStateData(tmpFileStateHandler, fileNodeId));
+                m_tmpFileStateData.Add(++m_nextFileHandle, tmpFileStateHandler);
                 return m_nextFileHandle;
             }
             
@@ -61,7 +61,7 @@ namespace SampleServer.FileTransfer
         /// </summary>
         /// <param name="fileHandle"></param>
         /// <returns></returns>
-        public TempFileStateData Get(uint fileHandle)
+        public TempFileStateHandler Get(uint fileHandle)
         {
             if (Exists(fileHandle))
             {
@@ -86,21 +86,6 @@ namespace SampleServer.FileTransfer
             }
         }
 
-        /// <summary>
-        /// Remove temporary file state nodes from server address space
-        /// </summary>
-        public void RemoveFileStateNodes()
-        {
-            lock (this)
-            {
-                foreach (TempFileStateData tmpFileStateData in m_tmpFileStateData.Values)
-                {
-                    tmpFileStateData.RemoveFileStateNodes();
-                }
-
-                m_tmpFileStateData.Clear();
-            }
-        }
         #endregion
     }
 }

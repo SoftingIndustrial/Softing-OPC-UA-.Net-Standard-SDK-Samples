@@ -35,7 +35,7 @@ namespace SampleServer.FileTransfer
         /// </summary>
         private const double ClientProcessingTimeoutPeriod = 10000; // miliseconds (10 seconds) 
 
-        private TempFilesHolder m_tmpFilesHolder;
+        private TempFilesHolder m_tmpWriteFilesHolder;
 
         private const int ChunkSize = 512;
 
@@ -49,7 +49,7 @@ namespace SampleServer.FileTransfer
         public FileTransferNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server,
             configuration, Namespaces.FileTransfer)
         {
-            m_tmpFilesHolder = new TempFilesHolder();
+            m_tmpWriteFilesHolder = new TempFilesHolder();
         }
 
         #endregion
@@ -68,13 +68,13 @@ namespace SampleServer.FileTransfer
                 base.CreateAddressSpace(externalReferences);
 
                 // Create a root node and add a reference to external Server Objects Folder
-                FolderState root = CreateObjectFromType(null, FileTransferName, ObjectTypeIds.FolderType, ReferenceTypeIds.Organizes) as FolderState;
+                FolderState root = CreateFolder(null, FileTransferName);
                 AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
                 CreateFileState(root, DownloadFilePath, false);
                 CreateFileState(root, UploadFilePath, true);
 
-                CreateByteString(root, ByteStringName, ByteStringFilePath);
+                CreateByteStringVariable(root, ByteStringName, ByteStringFilePath);
 
                 CreateTemporaryFileTransferState(root, TemporaryFileName);
                 
@@ -99,15 +99,9 @@ namespace SampleServer.FileTransfer
                 FileState fileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.FileType, ReferenceTypeIds.HasComponent) as FileState;
                 if (fileState != null)
                 {
-                    fileState.WriteMask = AttributeWriteMask.None;
-                    fileState.UserWriteMask = AttributeWriteMask.None;
-
-                    fileState.Writable.Value = writePermission;
-                    fileState.UserWritable.Value = writePermission;
+                    FileStateHandler fileTypeHandler = new FileStateHandler(filename, fileState, writePermission);
+                    fileTypeHandler.Initialize();
                 }
-
-                FileStateHandler fileTypeHandler = new FileStateHandler(filename);
-                fileTypeHandler.SetCallbacks(fileState);
 
                 return fileState;
             }
@@ -132,22 +126,18 @@ namespace SampleServer.FileTransfer
                 FileState fileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.FileType, ReferenceTypeIds.HasComponent) as FileState;
                 if (fileState != null)
                 {
-                    fileState.WriteMask = AttributeWriteMask.None;
-                    fileState.UserWriteMask = AttributeWriteMask.None;
+                    TempFileStateHandler fileTypeHandler = new TempFileStateHandler(this, filename, fileState, writePermission);
+                    fileTypeHandler.Initialize();
 
-                    fileState.Writable.Value = writePermission;
-                    fileState.UserWritable.Value = writePermission;
+                    return fileTypeHandler;
                 }
-
-                TempFileStateHandler fileTypeHandler = new TempFileStateHandler(context, filename);
-                fileTypeHandler.SetCallbacks(fileState);
-
-                return fileTypeHandler;
             }
             catch (FileNotFoundException)
             {
                 throw new Exception("Temporary File state could not be created exception.");
             }
+            return null;
+
         }
 
         /// <summary>
@@ -165,8 +155,8 @@ namespace SampleServer.FileTransfer
 
                 tmpFileState.ClientProcessingTimeout.Value = ClientProcessingTimeoutPeriod;
                 tmpFileState.GenerateFileForRead.OnCall = OnGenerateFileForReadCall;
-                tmpFileState.GenerateFileForWrite.OnCall = GenerateFileForWriteCall;
-                tmpFileState.CloseAndCommit.OnCall = CloseAndCommitCall;
+                tmpFileState.GenerateFileForWrite.OnCall = OnGenerateFileForWriteCall;
+                tmpFileState.CloseAndCommit.OnCall = OnCloseAndCommitCall;
                 
                 return tmpFileState;
             }
@@ -183,13 +173,15 @@ namespace SampleServer.FileTransfer
         /// <param name="byteStringName"></param>
         /// <param name="byteStringPath"></param>
         /// <returns></returns>
-        private BaseDataVariableState CreateByteString(FolderState root, string byteStringName, string byteStringPath)
+        private BaseDataVariableState CreateByteStringVariable(FolderState root, string byteStringName, string byteStringPath)
         {
             BaseDataVariableState byteString = CreateVariable(root, byteStringName, DataTypeIds.ByteString);
             byteString.AccessLevel = AccessLevels.CurrentRead;
             byteString.UserAccessLevel = AccessLevels.CurrentRead;
-            byteString.Handle = byteStringPath; // link the node handle to a file handler
-            byteString.OnSimpleReadValue = OnReadFile; // read the file content as byte array
+            // Link the node handle to a file handler
+            byteString.Handle = byteStringPath;
+            // Read the file content as byte array
+            byteString.OnSimpleReadValue = OnReadFile; 
             
             return byteString;
         }
@@ -260,92 +252,32 @@ namespace SampleServer.FileTransfer
 
             try
             {
-                // ignore generateOptions option 
-                // completionStateMachine for asyncronously read mode (not used in this sample)
-                // FileTransferStateMachineState completionStateMachineState = CreateObjectFromType(null, "CompletionStateMachine", ObjectTypeIds.FileTransferStateMachineType, ReferenceTypeIds.HasComponent) as FileTransferStateMachineState;
-                // completionStateMachine = completionStateMachineState.NodeId;
-
-                bool isWriteFailed = false;
                 DateTime startTime = DateTime.Now;
 
-                // Creates and copy data content from "ReadTemporaryFilePath" to a temporary file
+                // Creates and copy data content from "ReadTemporaryFilePath" to a temporary file that it will be read by client
                 string tmpFileName = Path.GetTempFileName();
-                using (FileStream fileStream = new FileStream(ReadTemporaryFilePath, FileMode.Open))
+                File.Copy(ReadTemporaryFilePath, tmpFileName);
+
+                TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, false);
+                if (fileStateHandler != null)
                 {
-                    using (FileStream fileStreamTmp = File.OpenWrite(tmpFileName))
+                    generateFileForReadStatusCode = fileStateHandler.Open(context, method, FileAccess.Read,
+                        ref fileNodeId, ref fileHandle);
+                    if (StatusCode.IsGood(generateFileForReadStatusCode))
                     {
-                        ulong totalSize = (ulong) fileStream.Length;
-
-
-                        // Copy the file in chunks of <chunkSize> bytes from server
-                        ulong cTotalRead = 0;
-                        while (cTotalRead < totalSize)
+                        uint readFileHandle = m_tmpWriteFilesHolder.Add(fileNodeId, fileStateHandler);
+                        if (readFileHandle != 0)
                         {
-                            int cRead = totalSize - cTotalRead > ChunkSize
-                                ? ChunkSize
-                                : (int) (totalSize - cTotalRead);
-                            byte[] buffer = new byte[cRead];
-
-                            int readValue = fileStream.Read(buffer, 0, cRead);
-                            /*if (readValue != -1)
-                            {
-                                fileStream.Close();
-                                throw new Exception(string.Format("{0}: Read file call failed!", tmpFileName));
-                            }
-                            */
-
-                            TimeSpan elapsedTime = (DateTime.Now - startTime);
-                            if (elapsedTime.TotalMilliseconds < ClientProcessingTimeoutPeriod)
-                            {
-                                fileStreamTmp.Write(buffer, 0, cRead);
-                                cTotalRead += (ulong) cRead;
-                                Console.Write("\rWriting client content to temporary file {0} bytes of {1} - {2}% complete", cTotalRead, totalSize,
-                                    cTotalRead * 100 / totalSize);
-                            }
-                            else
-                            {
-                                isWriteFailed = true;
-                                Console.WriteLine(
-                                    "\nWriting the server temporary file content to '{0}' timeout exceeded. \n'ClientProcessingTimeout' period = {1} milliseconds",
-                                    ReadTemporaryFilePath, ClientProcessingTimeoutPeriod);
-                                break; // no more writes from server 
-                            }
-                        }
-
-                        Console.WriteLine();
-
-                        fileStream.Close();
-                    }
-                }
-
-                if (isWriteFailed)
-                {
-                    Console.WriteLine("The file content temporary copy was not finalized due to 'ClientProcessingTimeout' period limit.");
-                }
-                else
-                {
-                    TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, false);
-                    if (fileStateHandler != null)
-                    {
-                        fileStateHandler.FileStateEvent += RemoveFileStatePredefinedNodes;
-                        generateFileForReadStatusCode = fileStateHandler.Open(context, method, FileAccess.Read,
-                            ref fileNodeId, ref fileHandle);
-                        if (StatusCode.IsGood(generateFileForReadStatusCode))
-                        {
-                            uint readFileHandle = m_tmpFilesHolder.Add(fileNodeId, fileStateHandler);
-                            if (readFileHandle != 0)
-                            {
-                                fileHandle = readFileHandle;
-                            }
-                            else
-                            {
-                                throw new Exception(string.Format("{0}: The file is already opened!", tmpFileName));
-                            }
+                            fileHandle = readFileHandle;
                         }
                         else
                         {
-                            throw new Exception(string.Format("{0}: Open file call failed!", tmpFileName));
+                            throw new Exception(string.Format("{0}: The file is already opened!", tmpFileName));
                         }
+                    }
+                    else
+                    {
+                        throw new Exception(string.Format("{0}: Open file call failed!", tmpFileName));
                     }
                 }
             }
@@ -367,7 +299,7 @@ namespace SampleServer.FileTransfer
         /// <param name="fileNodeId"></param>
         /// <param name="fileHandle"></param>
         /// <returns></returns>
-        private ServiceResult GenerateFileForWriteCall(ISystemContext context, 
+        private ServiceResult OnGenerateFileForWriteCall(ISystemContext context, 
             MethodState method, 
             NodeId objectId, 
             object generateOptions, 
@@ -378,19 +310,16 @@ namespace SampleServer.FileTransfer
 
             try
             {
-                // ignore generateOptions option 
-                
                 // Creates a temporary file (used by client to persist client file content data)
                 string tmpFileName = Path.GetTempFileName();
                 
                 TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, true);
                 if (fileStateHandler != null)
                 {
-                    fileStateHandler.FileStateEvent += RemoveFileStatePredefinedNodes;
                     generateFileForWriteStatusCode = fileStateHandler.Open(context, method, FileAccess.ReadWrite, ref fileNodeId, ref fileHandle);
                     if (StatusCode.IsGood(generateFileForWriteStatusCode))
                     {
-                        uint readFileHandle = m_tmpFilesHolder.Add(fileNodeId, fileStateHandler);
+                        uint readFileHandle = m_tmpWriteFilesHolder.Add(fileNodeId, fileStateHandler);
                         if (readFileHandle != 0)
                         {
                             fileHandle = readFileHandle;
@@ -423,7 +352,7 @@ namespace SampleServer.FileTransfer
         /// <param name="fileHandle"></param>
         /// <param name="completionStateMachine"></param>
         /// <returns></returns>
-        private ServiceResult CloseAndCommitCall(ISystemContext context,
+        private ServiceResult OnCloseAndCommitCall(ISystemContext context,
             MethodState method,
             NodeId objectId,
             uint fileHandle,
@@ -433,103 +362,54 @@ namespace SampleServer.FileTransfer
 
             try
             {
-                // completionStateMachine for asyncronously close and commit mode (not used in this sample)
-                // FileTransferStateMachineState completionStateMachineState = CreateObjectFromType(null, "CompletionStateMachine", ObjectTypeIds.FileTransferStateMachineType, ReferenceTypeIds.HasComponent) as FileTransferStateMachineState;
-                // completionStateMachine = completionStateMachineState.NodeId;
-
-                TempFileStateData tmpFileStateData = m_tmpFilesHolder.Get(fileHandle);
-                if (tmpFileStateData != null)
+                TempFileStateHandler fileStateHandler = m_tmpWriteFilesHolder.Get(fileHandle);
+                if (fileStateHandler != null)
                 {
-                    NodeId fileNodeId = tmpFileStateData.FileNodeId;
-                    if (fileNodeId == null)
+                    if (fileStateHandler.IsGenerateForWriteFileType())
                     {
-                        throw new Exception(string.Format("The file Node id related to file handler '{0}' was already removed!", fileHandle));
-                    }
-                    TempFileStateHandler fileStateHandler = tmpFileStateData.FileStateHandler;
-                    if (fileStateHandler != null)
-                    {
-                        if (fileStateHandler.IsGenerateForWriteFileType())
+                        using (FileStream fileStreamTmp = File.OpenWrite(WriteTemporaryFilePath))
                         {
-                            // Commit(save) on server the file data filled on client
-                            bool isReadFailed = false;
-                            DateTime startTime = DateTime.Now;
+                            // The Client filled the temporary file with client data content
+                            // The file (offset)position should be set at the beginning to read all its content
+                            fileStateHandler.SetBeginPosition(context, method);
 
-                            using (FileStream fileStreamTmp = File.OpenWrite(WriteTemporaryFilePath))
+                            FileStream fileStream = fileStateHandler.GetTemporaryFileStream();
+                            if (fileStream != null)
                             {
-                                // to be entirely red the offset of file position should be at the begining
-                                fileStateHandler.SetBeginPosition(context, method);
-
-                                ulong totalSize = (ulong) fileStateHandler.GetFileSize();
-                                ulong cTotalRead = 0;
-                                while (cTotalRead < totalSize)
-                                {
-                                    int cRead = totalSize - cTotalRead > ChunkSize
-                                        ? ChunkSize
-                                        : (int) (totalSize - cTotalRead);
-                                    byte[] buffer = new byte[cRead];
-
-                                    StatusCode readStatusCode =
-                                        fileStateHandler.Read(context, method, cRead, ref buffer);
-                                    if (StatusCode.IsBad(readStatusCode))
-                                    {
-                                        Console.WriteLine(string.Format("\nRead status code is: {0}\n", readStatusCode));
-                                        break;
-                                    }
-
-                                    TimeSpan elapsedTime = (DateTime.Now - startTime);
-                                    if (elapsedTime.TotalMilliseconds < ClientProcessingTimeoutPeriod)
-                                    {
-                                        fileStreamTmp.Write(buffer, 0, cRead);
-                                        cTotalRead += (ulong) cRead;
-                                        Console.Write("\rReading temporary file data filled by client {0} bytes of {1} - {2}% complete", cTotalRead,
-                                            totalSize,
-                                            cTotalRead * 100 / totalSize);
-                                    }
-                                    else
-                                    {
-                                        isReadFailed = true;
-                                        Console.WriteLine(
-                                            "\nReading the server temporary file content to '{0}' timeout exceeded. \n'ClientProcessingTimeout' period = {1} milliseconds",
-                                            WriteTemporaryFilePath, ClientProcessingTimeoutPeriod);
-                                        break; // no more writes from server 
-                                    }
-                                }
-
-                                Console.WriteLine();
-
-                                fileStreamTmp.Close();
+                                byte[] bytes = new byte[fileStream.Length];
+                                fileStream.Read(bytes, 0, bytes.Length);
+                                fileStreamTmp.Write(bytes, 0, bytes.Length);
+                                fileStream.Close();
+                            }
+                            else
+                            {
+                                throw new Exception("The temporary file state was released!");
                             }
 
-                            if (isReadFailed)
-                            {
-                                File.Delete(WriteTemporaryFilePath);
-                            }
-
-                            closeAndCommitStatusCode = fileStateHandler.Close(context, method);
-                            if (StatusCode.IsBad(closeAndCommitStatusCode))
-                            {
-                                throw new Exception("Close file state failed.");
-                            }
-
-                            m_tmpFilesHolder.Remove(fileHandle);
+                            fileStreamTmp.Close();
                         }
-                        else
+
+                        closeAndCommitStatusCode = fileStateHandler.Close(context, method);
+                        if (StatusCode.IsBad(closeAndCommitStatusCode))
                         {
-                            string notSupportedType =
-                                "The GenerateFileForRead node types are not allowed to use CloseAndCommit! \nPlease use GenerateFileForWrite type file handle.";
-
-                            Console.Write(notSupportedType);
-                            throw new Exception(notSupportedType);
+                            throw new Exception("Close file state failed.");
                         }
+
+                        m_tmpWriteFilesHolder.Remove(fileHandle);
                     }
                     else
                     {
-                        throw new Exception(string.Format("The file state related to the file handler '{0}' was removed!", fileHandle));
+                        string notSupportedType =
+                            "The GenerateFileForRead node types are not allowed to use CloseAndCommit! \nPlease use GenerateFileForWrite type file handle.";
+
+                        Console.Write(notSupportedType);
+                        throw new Exception(notSupportedType);
                     }
                 }
                 else
                 {
-                    throw new Exception(string.Format("The file related to the handler number '{0}' was already removed!", fileHandle));
+                    throw new Exception(string.Format("The temporary file state related to the file handler '{0}' was removed!",
+                        fileHandle));
                 }
             }
             catch (Exception e)
@@ -540,49 +420,6 @@ namespace SampleServer.FileTransfer
             return closeAndCommitStatusCode;
         }
 
-        #endregion
-
-        #region Class Handlers
-        /// <summary>
-        /// Remove temporary file state nodes from server address space
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void RemoveFileStatePredefinedNodes(object sender, FileStateEventArgs e)
-        {
-            lock (this)
-            {
-                if (sender != null)
-                {
-                    NodeId fileNodeId = e.FileStateNodeId;
-                    ISystemContext context = e.Context;
-                    if (context != null && fileNodeId != null)
-                    {
-                        NodeState fileState = FindPredefinedNode(fileNodeId, null);
-                        if (fileState != null)
-                        {
-                            RemovePredefinedNode(context, fileState, new List<LocalReference>());
-
-                            if (sender is TempFileStateHandler)
-                            {
-                                ((TempFileStateHandler) sender).FileStateEvent -= RemoveFileStatePredefinedNodes;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Remove all temporary file state nodes from current session that is closing
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="sessionId"></param>
-        /// <param name="deleteSubscriptions"></param>
-        public override void SessionClosing(OperationContext context, NodeId sessionId, bool deleteSubscriptions)
-        {
-            m_tmpFilesHolder.RemoveFileStateNodes();
-        }
         #endregion
     }
 }
