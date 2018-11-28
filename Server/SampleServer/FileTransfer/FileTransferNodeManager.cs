@@ -96,7 +96,7 @@ namespace SampleServer.FileTransfer
         {
             try
             {
-                FileState fileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.FileType, ReferenceTypeIds.HasComponent) as FileState;
+                FileState fileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.FileType) as FileState;
                 if (fileState != null)
                 {
                     FileStateHandler fileTypeHandler = new FileStateHandler(filename, fileState, writePermission);
@@ -123,7 +123,7 @@ namespace SampleServer.FileTransfer
         {
             try
             {
-                FileState fileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.FileType, ReferenceTypeIds.HasComponent) as FileState;
+                FileState fileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.FileType) as FileState;
                 if (fileState != null)
                 {
                     TempFileStateHandler fileTypeHandler = new TempFileStateHandler(this, filename, fileState, writePermission);
@@ -151,7 +151,7 @@ namespace SampleServer.FileTransfer
         {
             try
             {
-                TemporaryFileTransferState tmpFileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.TemporaryFileTransferType, ReferenceTypeIds.HasComponent) as TemporaryFileTransferState;
+                TemporaryFileTransferState tmpFileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.TemporaryFileTransferType) as TemporaryFileTransferState;
 
                 tmpFileState.ClientProcessingTimeout.Value = ClientProcessingTimeoutPeriod;
                 tmpFileState.GenerateFileForRead.OnCall = OnGenerateFileForReadCall;
