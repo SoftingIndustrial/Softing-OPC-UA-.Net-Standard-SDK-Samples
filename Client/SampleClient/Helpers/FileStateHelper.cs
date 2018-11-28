@@ -22,14 +22,13 @@ namespace SampleClient.Helpers
     /// </summary>
     public enum FileStateMode
     {
-        Read = 1,
-        Write = 2,
-        ReadWrite = 3,
-        EraseExisting = 4,
-        Append = 8
+        Read = 0,
+        Write = 1,
+        EraseExisting = 2,
+        Append = 3
+        /* options 4-7 are reserved for future version */ 
     }
-
-
+    
     /// <summary>
     /// FileState helper class
     /// </summary>
@@ -128,11 +127,10 @@ namespace SampleClient.Helpers
         /// Opens the file into the specified mode.
         /// </summary>
         /// <param name="mode">The file open mode. It is bitmask of the following possible values
-        /// Read - 1
-        /// Write - 2
-        /// ReadWrite - 3
-        /// EraseExisting - 4
-        /// Append - 8
+        /// Read - 0
+        /// Write - 1
+        /// EraseExisting - 2
+        /// Append - 3
         /// </param>
         public StatusCode Open(FileStateMode mode)
         {

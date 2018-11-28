@@ -27,7 +27,7 @@ namespace SampleClient.Samples
         private string DownloadFilePath = Path.Combine("Files", "DownloadFile.xml");
         private string UploadFilePath = Path.Combine("Files", "UploadClientFile.xml");
         private string ByteStringFilePath = Path.Combine("Files", "ByteStringFile.xml");
-        private string DownloadTemporaryFilePath = Path.Combine("Files", "ReadClientTemporaryFile.xml");
+        private string DownloadTemporaryFilePath = Path.Combine("Files", "DownloadTemporaryFile.xml");
         private string UploadTemporaryFilePath = Path.Combine("Files", "WriteClientTemporaryFile.xml");
 
         private const int ChunkSize = 512;
@@ -356,10 +356,6 @@ namespace SampleClient.Samples
                     return;
                 }
 
-                bool isReadFailed = false;
-                double clientProcessingTimeout = tmpFileTransferState.ClientProcessingTimeout;
-                DateTime startTime = DateTime.Now;
-
                 uint readFileHandle = 1; // only one handle is generated for a temporary file node
                 FileStateHelper fileState = new FileStateHelper(m_session,
                     tmpFileTransferState.Filename,
@@ -387,25 +383,15 @@ namespace SampleClient.Samples
                             if (StatusCode.IsBad(readStatusCode))
                             {
                                 fileState.Close();
-                                Console.WriteLine(string.Format("\nStatus Code is: {0}\n", readStatusCode));
+                                Console.WriteLine(string.Format("\nReading aborted due the reason: {0}\n", readStatusCode));
 
                                 return;
                             }
 
-                            TimeSpan elapsedTime = (DateTime.Now - startTime);
-                            if (elapsedTime.TotalMilliseconds < clientProcessingTimeout)
-                            {
-                                fs.Write(buffer, 0, cRead);
-                                cTotalRead += (ulong) cRead;
-                                Console.Write("\rReading {0} bytes of {1} - {2}% complete", cTotalRead, totalSize,
-                                    cTotalRead * 100 / totalSize);
-                            }
-                            else
-                            {
-                                isReadFailed = true;
-                                Console.WriteLine("\nReading the server temporary file content to '{0}' timeout exceeded. \n'ClientProcessingTimeout' period = {1} milliseconds", filename, clientProcessingTimeout);
-                                break; // no more writes from server 
-                            }
+                            fs.Write(buffer, 0, cRead);
+                            cTotalRead += (ulong) cRead;
+                            Console.Write("\rReading {0} bytes of {1} - {2}% complete", cTotalRead, totalSize,
+                                cTotalRead * 100 / totalSize);
                         }
                     }
                 }
@@ -419,8 +405,6 @@ namespace SampleClient.Samples
                     Console.WriteLine("Unable to close the file.");
                     return;
                 }
-
-                Console.WriteLine(isReadFailed ? "\rThe file content copy was not finalized due to 'ClientProcessingTimeout' period limit." : "The File was red successfully.");
             }
             catch (Exception e)
             {
@@ -452,10 +436,6 @@ namespace SampleClient.Samples
                     Console.WriteLine("The server could not generate and open a new temporary file");
                     return;
                 }
-
-                bool isWriteFailed = false;
-                double clientProcessingTimeout = tmpFileTransferState.ClientProcessingTimeout;
-                DateTime startTime = DateTime.Now;
 
                 uint writeFileHandle = 1; // only one handle is generated for a temporary file node
                 FileStateHelper fileState = new FileStateHelper(m_session,
@@ -497,31 +477,22 @@ namespace SampleClient.Samples
                                 data = buffer;
                             }
 
-                            TimeSpan elapsedTime = (DateTime.Now - startTime);
-                            if (elapsedTime.TotalMilliseconds < clientProcessingTimeout)
+
+                            StatusCode writeStatusCode = fileState.Write(data);
+                            if (StatusCode.IsBad(writeStatusCode))
                             {
-                                StatusCode writeStatusCode = fileState.Write(data);
-                                if (StatusCode.IsBad(writeStatusCode))
-                                {
-                                    fileState.Close();
-                                    Console.WriteLine("\nStatus Code is: {0}\n", writeStatusCode);
+                                fileState.Close();
+                                Console.WriteLine("\nStatus Code is: {0}\n", writeStatusCode);
 
-                                    return;
-                                }
-
-                                totalWrite += (ulong) data.Length;
-
-                                Console.Write("\rWriting {0} bytes of {1} - {2}% complete", totalWrite, totalSize,
-                                    totalWrite * 100 / totalSize);
+                                return;
                             }
-                            else
-                            {
-                                isWriteFailed = true;
-                                Console.WriteLine("\nWriting the server temporary file content from client file '{0}' timeout exceeded. \n'ClientProcessingTimeout' period = {1} milliseconds", filename, clientProcessingTimeout);
-                                break; // no more writes from server 
-                            }
+
+                            totalWrite += (ulong) data.Length;
+
+                            Console.Write("\rWriting {0} bytes of {1} - {2}% complete", totalWrite, totalSize,
+                                totalWrite * 100 / totalSize);
                         }
-                        
+
                         Console.WriteLine();
                     }
 
@@ -533,8 +504,6 @@ namespace SampleClient.Samples
 
                         return;
                     }
-
-                    Console.WriteLine(isWriteFailed ? "\rThe file content temporary copy was not finalized due to 'ClientProcessingTimeout' period limit." : "The temporary file content was written with success.");
                 }
             }
             catch (Exception e)

@@ -47,16 +47,6 @@ namespace SampleServer.FileTransfer
         }
 
         /// <summary>
-        /// Check if file handle exists in the current holder
-        /// </summary>
-        /// <param name="fileHandle"></param>
-        /// <returns></returns>
-        public bool Exists(uint fileHandle)
-        {
-            return fileHandle <= m_nextFileHandle;
-        }
-
-        /// <summary>
         /// Get file state data identified by file handle
         /// </summary>
         /// <param name="fileHandle"></param>
@@ -86,6 +76,18 @@ namespace SampleServer.FileTransfer
             }
         }
 
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Check if file handle exists in the current holder
+        /// </summary>
+        /// <param name="fileHandle"></param>
+        /// <returns></returns>
+        private bool Exists(uint fileHandle)
+        {
+            return fileHandle <= m_nextFileHandle;
+        }
         #endregion
     }
 }

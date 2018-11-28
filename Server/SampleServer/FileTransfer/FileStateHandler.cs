@@ -11,9 +11,21 @@ using Softing.Opc.Ua.Server;
 namespace SampleServer.FileTransfer
 {
     /// <summary>
+    /// File state mode
+    /// </summary>
+    public enum FileStateMode
+    {
+        Read = 0,
+        Write = 1,
+        EraseExisting = 2,
+        Append = 3
+        /* options 4-7 are reserved for future version */
+    }
+
+    /// <summary>
     /// File state handler class
     /// </summary>
-    internal class FileStateHandler 
+    internal class FileStateHandler : IDisposable
     {
         #region Private Members
 
@@ -21,13 +33,13 @@ namespace SampleServer.FileTransfer
         protected FileState m_fileState;
         private bool m_writePermission;
         private uint m_nextFileHandle;
-        private Timer m_Timer;
+        protected Timer m_timer;
         private Dictionary<uint, FileStreamTracker> m_fileHandles;
 
         /// <summary>
-        /// Clean up threshold period till all opened streams will be closed
+        /// Clean up threshold period (milliseconds) until all opened streams will be closed
         /// </summary>
-        private const int CheckFileStreamAvailabilityPeriod = 60; // seconds
+        protected const uint CheckFileStreamAvailabilityPeriod = 60*1000;  
         #endregion
 
         #region Constructors
@@ -36,27 +48,20 @@ namespace SampleServer.FileTransfer
         {
             m_nextFileHandle = 0;
             m_fileHandles = new Dictionary<uint, FileStreamTracker>();
-            m_Timer = new Timer(CheckFileStreamAvailability, null, 0, CheckFileStreamAvailabilityPeriod); // remove opened files after 
         }
         public FileStateHandler(string filePath, FileState fileState, bool writePermission) : this()
         {
             m_filePath = filePath;
             m_fileState = fileState;
             m_writePermission = writePermission;
+
+            SetExpireFileStreamAvailabilityTime(CheckFileStreamAvailabilityPeriod);
         }
 
         #endregion
 
-        #region Public Properties
+        #region Properties
 
-        /// <summary>
-        /// File State reference
-        /// </summary>
-        protected FileState FileState
-        {
-            get { return m_fileState; }
-        }
-        
         /// <summary>
         /// File Path
         /// </summary>
@@ -64,6 +69,27 @@ namespace SampleServer.FileTransfer
         {
             get { return m_filePath; }
         }
+
+        /// <summary>
+        /// Clean up threshold period (milliseconds) reference 
+        /// </summary>
+        private uint ExpireFileStreamAvailabilityTime { get; set; }
+
+        #endregion
+
+        #region IDisposable implementation
+
+        /// <summary>
+        /// Dispose the opened session or/and file handlers
+        /// </summary>
+        public void Dispose()
+        {
+            if (m_timer != null)
+            {
+                m_timer.Dispose();
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -73,25 +99,24 @@ namespace SampleServer.FileTransfer
         /// </summary>
         public void Initialize()
         {
-            if (m_fileState != null)
-            {
-                m_fileState.WriteMask = AttributeWriteMask.None;
-                m_fileState.UserWriteMask = AttributeWriteMask.None;
+            m_fileState.WriteMask = AttributeWriteMask.None;
+            m_fileState.UserWriteMask = AttributeWriteMask.None;
 
-                m_fileState.Writable.Value = m_writePermission;
-                m_fileState.UserWritable.Value = m_writePermission;
+            m_fileState.Writable.Value = m_writePermission;
+            m_fileState.UserWritable.Value = m_writePermission;
 
-                m_fileState.Open.OnCall = OnOpenMethodCall;
-                m_fileState.Read.OnCall = OnReadMethodCall;
-                m_fileState.Close.OnCall = OnCloseMethodCall;
-                m_fileState.Write.OnCall = OnWriteMethodCall;
-                m_fileState.GetPosition.OnCall = OnGetPositionMethodCall;
-                m_fileState.SetPosition.OnCall = OnSetPositionMethodCall;
-                m_fileState.Size.OnSimpleReadValue = OnReadSize;
-            }
+            m_fileState.Open.OnCall = OnOpenMethodCall;
+            m_fileState.Read.OnCall = OnReadMethodCall;
+            m_fileState.Close.OnCall = OnCloseMethodCall;
+            m_fileState.Write.OnCall = OnWriteMethodCall;
+            m_fileState.GetPosition.OnCall = OnGetPositionMethodCall;
+            m_fileState.SetPosition.OnCall = OnSetPositionMethodCall;
+            m_fileState.Size.OnSimpleReadValue = OnReadSize;
         }
-       
+
         #endregion
+
+        #region Protected Methods
         /// <summary>
         /// Get file stream related to a file handle
         /// </summary>
@@ -106,6 +131,20 @@ namespace SampleServer.FileTransfer
 
             return null;
         }
+
+        protected void SetExpireFileStreamAvailabilityTime(uint expireFileStreamAvailTime)
+        {
+            if (m_timer == null)
+            {
+                m_timer = new Timer(CheckFileStreamAvailability, null, 0, expireFileStreamAvailTime);
+            }
+            else
+            {
+                m_timer.Change(0, expireFileStreamAvailTime);
+            }
+            ExpireFileStreamAvailabilityTime = expireFileStreamAvailTime;
+        }
+        #endregion
 
         #region Private Callback Methods
 
@@ -232,16 +271,28 @@ namespace SampleServer.FileTransfer
             FileMode fileMode;
             FileAccess fileAccess;
 
-            switch (mode & 3)
+            if (mode > 7)
             {
-                case 1: fileAccess = FileAccess.Read; break;
-                case 2: fileAccess = FileAccess.Write; break;
-                case 3: fileAccess = FileAccess.ReadWrite; break;
+                return StatusCodes.BadInvalidArgument;
+            }
+
+            FileStateMode fileStateMode = (FileStateMode)mode;
+            if (!Enum.IsDefined(typeof(FileStateMode), fileStateMode))
+            {
+                return StatusCodes.BadNotSupported;
+            }
+            
+            switch (fileStateMode)
+            {
+                case FileStateMode.Read: fileAccess = FileAccess.Read; break;
+                case FileStateMode.Write: fileAccess = FileAccess.Write; break;
+                case FileStateMode.EraseExisting: fileAccess = FileAccess.ReadWrite;break;
+                case FileStateMode.Append: fileAccess = FileAccess.Write; break;
                 default: fileAccess = FileAccess.Read; break;
             }
 
-            if ((mode & 4) == 4)
-                fileMode = FileMode.Truncate;
+            if (fileStateMode == FileStateMode.EraseExisting)
+                fileMode = FileMode.Truncate; 
             else
                 fileMode = FileMode.Open;
 
@@ -399,6 +450,10 @@ namespace SampleServer.FileTransfer
                     m_fileState.Size.ClearChangeMasks(null, false);
                 }
 
+                ushort openCount = (ushort)m_fileState.OpenCount.Value;
+                m_fileState.OpenCount.Value = --openCount;
+                m_fileState.OpenCount.ClearChangeMasks(null, true);
+
                 return StatusCodes.Good;
             }
             catch (Exception e)
@@ -421,14 +476,14 @@ namespace SampleServer.FileTransfer
             {
                 TimeSpan duration = DateTime.Now - entry.Value.LastAccessTime;
 
-                if (duration.TotalSeconds > CheckFileStreamAvailabilityPeriod)
+                if (duration.TotalMilliseconds > ExpireFileStreamAvailabilityTime)
                 {
-                    if (FileState != null)
+                    if (m_fileState != null)
                     {
                         try
                         {
                             uint fileHandle = entry.Key;
-                            ServiceResult writeResult = FileState.Close.OnCall(null, null, null, fileHandle);
+                            ServiceResult writeResult = m_fileState.Close.OnCall(null, null, null, fileHandle);
                             if (StatusCode.IsBad(writeResult.StatusCode))
                             {
                                 throw new Exception(string.Format(

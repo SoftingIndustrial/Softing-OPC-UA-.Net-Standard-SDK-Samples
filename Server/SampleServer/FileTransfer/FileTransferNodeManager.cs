@@ -31,9 +31,9 @@ namespace SampleServer.FileTransfer
 
         /// <summary>
         /// The maximum time in milliseconds the Server accepts between Method calls necessary
-        /// to complete a file read transfer or a file write transfer transactions
+        /// to complete a file read transfer or a file write transfer transactions 
         /// </summary>
-        private const double ClientProcessingTimeoutPeriod = 10000; // miliseconds (10 seconds) 
+        public const int ClientProcessingTimeoutPeriod = 10*1000; 
 
         private TempFilesHolder m_tmpWriteFilesHolder;
 
@@ -127,7 +127,7 @@ namespace SampleServer.FileTransfer
                 if (fileState != null)
                 {
                     TempFileStateHandler fileTypeHandler = new TempFileStateHandler(this, filename, fileState, writePermission);
-                    fileTypeHandler.Initialize();
+                    fileTypeHandler.Initialize(ClientProcessingTimeoutPeriod);
 
                     return fileTypeHandler;
                 }
@@ -256,12 +256,23 @@ namespace SampleServer.FileTransfer
 
                 // Creates and copy data content from "ReadTemporaryFilePath" to a temporary file that it will be read by client
                 string tmpFileName = Path.GetTempFileName();
-                File.Copy(ReadTemporaryFilePath, tmpFileName);
+                using (FileStream fileStream = new FileStream(ReadTemporaryFilePath, FileMode.Open))
+                {
+                    using (Stream fileStreamTmp = File.OpenWrite(tmpFileName))
+                    {
+                        byte[] bytes = new byte[fileStream.Length];
+                        fileStream.Read(bytes, 0, bytes.Length);
+                        fileStreamTmp.Write(bytes, 0, bytes.Length);
+                        fileStreamTmp.Close();
+                    }
+
+                    fileStream.Close();
+                }
 
                 TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, false);
                 if (fileStateHandler != null)
                 {
-                    generateFileForReadStatusCode = fileStateHandler.Open(context, method, FileAccess.Read,
+                    generateFileForReadStatusCode = fileStateHandler.Open(context, method, FileStateMode.Read,
                         ref fileNodeId, ref fileHandle);
                     if (StatusCode.IsGood(generateFileForReadStatusCode))
                     {
@@ -316,7 +327,7 @@ namespace SampleServer.FileTransfer
                 TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, true);
                 if (fileStateHandler != null)
                 {
-                    generateFileForWriteStatusCode = fileStateHandler.Open(context, method, FileAccess.ReadWrite, ref fileNodeId, ref fileHandle);
+                    generateFileForWriteStatusCode = fileStateHandler.Open(context, method, FileStateMode.EraseExisting, ref fileNodeId, ref fileHandle);
                     if (StatusCode.IsGood(generateFileForWriteStatusCode))
                     {
                         uint readFileHandle = m_tmpWriteFilesHolder.Add(fileNodeId, fileStateHandler);
@@ -369,13 +380,13 @@ namespace SampleServer.FileTransfer
                     {
                         using (FileStream fileStreamTmp = File.OpenWrite(WriteTemporaryFilePath))
                         {
-                            // The Client filled the temporary file with client data content
-                            // The file (offset)position should be set at the beginning to read all its content
-                            fileStateHandler.SetBeginPosition(context, method);
-
                             FileStream fileStream = fileStateHandler.GetTemporaryFileStream();
                             if (fileStream != null)
                             {
+                                // The Client filled the temporary file with client data content
+                                // The File state (offset)position should be set at the beginning to read all its content
+                                fileStateHandler.SetBeginPosition(context, method);
+                                
                                 byte[] bytes = new byte[fileStream.Length];
                                 fileStream.Read(bytes, 0, bytes.Length);
                                 fileStreamTmp.Write(bytes, 0, bytes.Length);
@@ -399,10 +410,8 @@ namespace SampleServer.FileTransfer
                     }
                     else
                     {
-                        string notSupportedType =
-                            "The GenerateFileForRead node types are not allowed to use CloseAndCommit! \nPlease use GenerateFileForWrite type file handle.";
-
-                        Console.Write(notSupportedType);
+                        string notSupportedType = "The GenerateFileForRead node types are not allowed to use CloseAndCommit!";
+                        Console.WriteLine(notSupportedType);
                         throw new Exception(notSupportedType);
                     }
                 }

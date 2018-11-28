@@ -17,13 +17,12 @@ namespace SampleServer.FileTransfer
     {
         #region Public Members
         private const uint defaultFileHandle = 1;
-        private NodeManager m_nodeManager;
+        private FileTransferNodeManager m_nodeManager;
         #endregion
 
         #region Constructor
-        public TempFileStateHandler(NodeManager nodeManager, string filePath, FileState fileState, bool writePermission) : base(filePath, fileState, writePermission)
+        public TempFileStateHandler(FileTransferNodeManager nodeManager, string filePath, FileState fileState, bool writePermission) : base(filePath, fileState, writePermission)
         {
-            //Context = SystemContext;
             m_nodeManager = nodeManager;
         }
         #endregion
@@ -65,6 +64,14 @@ namespace SampleServer.FileTransfer
 
         #region Public Methods
 
+        public void Initialize(uint clientProcessingTimeoutPeriod)
+        {
+            base.Initialize();
+
+            // Reset the timer period to the 'ClientProcessingTimeout' set on 'FileTransfer' node by the server
+            // In this way the temporary file transfer nodes will be released when 'ClientProcessingTimeout' exceeds this period
+            base.SetExpireFileStreamAvailabilityTime(clientProcessingTimeoutPeriod);
+        }
         /// <summary>
         /// Get file stream 
         /// </summary>
@@ -117,6 +124,7 @@ namespace SampleServer.FileTransfer
 
             return new StatusCode(StatusCodes.Good);
         }
+
         /// <summary>
         /// Open file state stream
         /// </summary>
@@ -128,7 +136,7 @@ namespace SampleServer.FileTransfer
         /// <returns></returns>
         public StatusCode Open(ISystemContext context,
             MethodState method,
-            FileAccess fileAccessMode,
+            FileStateMode fileStateMode,
             ref NodeId fileNodeId,
             ref uint fileHandle)
         {
@@ -138,7 +146,7 @@ namespace SampleServer.FileTransfer
                 {
                     fileNodeId = m_fileState.NodeId;
                     ServiceResult openResult = m_fileState.Open.OnCall(context, method, fileNodeId,
-                        (byte)fileAccessMode, ref fileHandle);
+                        (byte)fileStateMode, ref fileHandle);
                     if (openResult == null)
                     {
                         throw new Exception("The Temporary Open file state method failed.");
