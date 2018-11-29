@@ -727,7 +727,7 @@ namespace SampleClient.StateMachine
         {
             if (m_fileTransferClient != null)
             {
-                m_fileTransferClient.ReadTemporaryFile();
+                m_fileTransferClient.DownloadTemporaryFile();
             }
         }
 
@@ -735,7 +735,7 @@ namespace SampleClient.StateMachine
         {
             if (m_fileTransferClient != null)
             {
-                m_fileTransferClient.WriteTemporaryFile();
+                m_fileTransferClient.UploadTemporaryFile();
             }
         }
 

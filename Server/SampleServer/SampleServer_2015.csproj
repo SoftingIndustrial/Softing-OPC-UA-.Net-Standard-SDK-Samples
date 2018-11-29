@@ -302,7 +302,7 @@
     <Content Include="FileTransfer\Files\ByteStringFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="FileTransfer\Files\ReadTemporaryFile.xml">
+    <Content Include="FileTransfer\Files\DownloadTemporaryFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="FileTransfer\Files\DownloadFile.xml">

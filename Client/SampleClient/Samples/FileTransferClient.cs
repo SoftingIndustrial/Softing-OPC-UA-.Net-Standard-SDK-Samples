@@ -28,7 +28,7 @@ namespace SampleClient.Samples
         private string UploadFilePath = Path.Combine("Files", "UploadClientFile.xml");
         private string ByteStringFilePath = Path.Combine("Files", "ByteStringFile.xml");
         private string DownloadTemporaryFilePath = Path.Combine("Files", "DownloadTemporaryFile.xml");
-        private string UploadTemporaryFilePath = Path.Combine("Files", "WriteClientTemporaryFile.xml");
+        private string UploadTemporaryFilePath = Path.Combine("Files", "UploadTemporaryFile.xml");
 
         private const int ChunkSize = 512;
         private ClientSession m_session;
@@ -332,9 +332,9 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
-        /// Read temporary file content from the server node 
+        /// Read(download) temporary file content from the server node 
         /// </summary>
-        public void ReadTemporaryFile()
+        public void DownloadTemporaryFile()
         {
             if (m_session == null)
             {
@@ -413,9 +413,9 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
-        /// Write a client file content into temporary file on the server
+        /// Write(upload) a client file content into temporary file on the server
         /// </summary>
-        public void WriteTemporaryFile()
+        public void UploadTemporaryFile()
         {
             if (m_session == null)
             {
@@ -511,10 +511,6 @@ namespace SampleClient.Samples
                 Console.WriteLine("Write File error..." + e.Message);
             }
         }
-        #endregion
-
-        #region Private Methods
-
         #endregion
     }
 }

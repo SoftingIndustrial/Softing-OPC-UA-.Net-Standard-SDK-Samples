@@ -34,7 +34,7 @@ namespace SampleServer.FileTransfer
         private bool m_writePermission;
         private uint m_nextFileHandle;
         protected Timer m_timer;
-        private Dictionary<uint, FileStreamTracker> m_fileHandles;
+        protected Dictionary<uint, FileStreamTracker> m_fileHandles;
 
         /// <summary>
         /// Clean up threshold period (milliseconds) until all opened streams will be closed
@@ -73,7 +73,7 @@ namespace SampleServer.FileTransfer
         /// <summary>
         /// Clean up threshold period (milliseconds) reference 
         /// </summary>
-        private uint ExpireFileStreamAvailabilityTime { get; set; }
+        protected uint ExpireFileStreamAvailabilityTime { get; set; }
 
         #endregion
 
@@ -117,21 +117,11 @@ namespace SampleServer.FileTransfer
         #endregion
 
         #region Protected Methods
+        
         /// <summary>
-        /// Get file stream related to a file handle
+        /// Set/reset the time period until the file streams will be released (if they are not in use)
         /// </summary>
-        /// <param name="fileHandle"></param>
-        /// <returns></returns>
-        protected FileStream GetFileStream(uint fileHandle)
-        {
-            if (m_fileHandles.ContainsKey(fileHandle))
-            {
-                return m_fileHandles[fileHandle].FileStream;
-            }
-
-            return null;
-        }
-
+        /// <param name="expireFileStreamAvailTime"></param>
         protected void SetExpireFileStreamAvailabilityTime(uint expireFileStreamAvailTime)
         {
             if (m_timer == null)
@@ -146,7 +136,153 @@ namespace SampleServer.FileTransfer
         }
         #endregion
 
+        #region Private Methods
+
+        /// <summary>
+        /// Check when the stream was last time accessed and close it
+        /// </summary>
+        /// <param name="state"></param>
+        private void CheckFileStreamAvailability(object state)
+        {
+            foreach (KeyValuePair<uint, FileStreamTracker> entry in m_fileHandles.ToList())
+            {
+                TimeSpan duration = DateTime.Now - entry.Value.LastAccessTime;
+
+                if (duration.TotalMilliseconds > ExpireFileStreamAvailabilityTime)
+                {
+                    if (m_fileState != null)
+                    {
+                        try
+                        {
+                            uint fileHandle = entry.Key;
+                            ServiceResult writeResult = m_fileState.Close.OnCall(null, null, null, fileHandle);
+                            if (StatusCode.IsBad(writeResult.StatusCode))
+                            {
+                                throw new Exception(string.Format(
+                                    "Error closing the file state for the file handle: {0}", fileHandle));
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+                        }
+                    }
+                    else
+                    {
+                        m_fileHandles.Remove(entry.Key);
+                        entry.Value.FileStream.Close();
+                    }
+                }
+            }
+        }
+
+        #endregion
+
         #region Private Callback Methods
+
+        /// <summary>
+        /// Read the size of the file.
+        /// </summary>
+        private ServiceResult OnReadSize(
+            ISystemContext context,
+            NodeState node,
+            ref object value)
+        {
+            try
+            {
+                FileInfo fi = new FileInfo(m_filePath);
+                if (fi != null && fi.Exists)
+                {
+                    ulong size = (ulong)fi.Length;
+
+                    value = size;
+
+                    return ServiceResult.Good;
+                }
+                else
+                {
+                    return new ServiceResult(StatusCodes.BadUnexpectedError,
+                        string.Format("The file: {0} was not found!", m_filePath));
+                }
+            }
+            catch (Exception e)
+            {
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Open method callback
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="mode"></param>
+        /// <param name="fileHandle"></param>
+        /// <returns></returns>
+        private ServiceResult OnOpenMethodCall(
+           ISystemContext context,
+           MethodState method,
+           NodeId objectId,
+           byte mode,
+           ref uint fileHandle)
+        {
+            FileMode fileMode;
+            FileAccess fileAccess;
+
+            if (mode > 7)
+            {
+                return StatusCodes.BadInvalidArgument;
+            }
+
+            FileStateMode fileStateMode = (FileStateMode)mode;
+            if (!Enum.IsDefined(typeof(FileStateMode), fileStateMode))
+            {
+                return StatusCodes.BadNotSupported;
+            }
+
+            switch (fileStateMode)
+            {
+                case FileStateMode.Read: fileAccess = FileAccess.Read; break;
+                case FileStateMode.Write: fileAccess = FileAccess.Write; break;
+                case FileStateMode.EraseExisting: fileAccess = FileAccess.ReadWrite; break;
+                case FileStateMode.Append: fileAccess = FileAccess.Write; break;
+                default: fileAccess = FileAccess.Read; break;
+            }
+
+            if (fileStateMode == FileStateMode.EraseExisting)
+                fileMode = FileMode.Truncate;
+            else
+                fileMode = FileMode.Open;
+
+            if (fileAccess != FileAccess.Read && m_fileState.Writable.Value == false)
+            {
+                return StatusCodes.BadWriteNotSupported;
+            }
+
+            try
+            {
+                FileStreamTracker fileStreamTracker = new FileStreamTracker(m_filePath, fileMode, fileAccess);
+
+                // increment OpenCount.
+                ushort openCount = (ushort)m_fileState.OpenCount.Value;
+                m_fileState.OpenCount.Value = ++openCount;
+                m_fileState.OpenCount.ClearChangeMasks(null, true);
+
+                fileHandle = ++m_nextFileHandle;
+                m_fileHandles[fileHandle] = fileStreamTracker;
+
+                return ServiceResult.Good;
+            }
+            catch (FileNotFoundException e)
+            {
+                throw new ServiceResultException(StatusCodes.BadNotFound, e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                throw new ServiceResultException(StatusCodes.BadNotWritable, e.Message);
+            }
+        }
 
         /// <summary>
         /// Get Position method callback
@@ -222,110 +358,6 @@ namespace SampleServer.FileTransfer
         #region Protected Callback Methods
 
         /// <summary>
-        /// Read the size of the file.
-        /// </summary>
-        protected ServiceResult OnReadSize(
-            ISystemContext context,
-            NodeState node,
-            ref object value)
-        {
-            try
-            {
-                FileInfo fi = new FileInfo(m_filePath);
-                if (fi != null && fi.Exists)
-                {
-                    ulong size = (ulong)fi.Length;
-
-                    value = size;
-
-                    return ServiceResult.Good;
-                }
-                else
-                {
-                    return new ServiceResult(StatusCodes.BadUnexpectedError,
-                        string.Format("The file: {0} was not found!", m_filePath));
-                }
-            }
-            catch (Exception e)
-            {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
-            }
-        }
-
-        /// <summary>
-        /// Open method callback
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="method"></param>
-        /// <param name="objectId"></param>
-        /// <param name="mode"></param>
-        /// <param name="fileHandle"></param>
-        /// <returns></returns>
-        protected ServiceResult OnOpenMethodCall(
-           ISystemContext context,
-           MethodState method,
-           NodeId objectId,
-           byte mode,
-           ref uint fileHandle)
-        {
-            FileMode fileMode;
-            FileAccess fileAccess;
-
-            if (mode > 7)
-            {
-                return StatusCodes.BadInvalidArgument;
-            }
-
-            FileStateMode fileStateMode = (FileStateMode)mode;
-            if (!Enum.IsDefined(typeof(FileStateMode), fileStateMode))
-            {
-                return StatusCodes.BadNotSupported;
-            }
-            
-            switch (fileStateMode)
-            {
-                case FileStateMode.Read: fileAccess = FileAccess.Read; break;
-                case FileStateMode.Write: fileAccess = FileAccess.Write; break;
-                case FileStateMode.EraseExisting: fileAccess = FileAccess.ReadWrite;break;
-                case FileStateMode.Append: fileAccess = FileAccess.Write; break;
-                default: fileAccess = FileAccess.Read; break;
-            }
-
-            if (fileStateMode == FileStateMode.EraseExisting)
-                fileMode = FileMode.Truncate; 
-            else
-                fileMode = FileMode.Open;
-
-            if (fileAccess != FileAccess.Read && m_fileState.Writable.Value == false)
-            {
-                return StatusCodes.BadWriteNotSupported;
-            }
-
-            try
-            {
-                FileStreamTracker fileStreamTracker = new FileStreamTracker(m_filePath, fileMode, fileAccess);
-                
-                // increment OpenCount.
-                ushort openCount = (ushort)m_fileState.OpenCount.Value;
-                m_fileState.OpenCount.Value = ++openCount;
-                m_fileState.OpenCount.ClearChangeMasks(null, true);
-
-                fileHandle = ++m_nextFileHandle;
-                m_fileHandles[fileHandle] = fileStreamTracker;
-
-                return ServiceResult.Good;
-            }
-            catch (FileNotFoundException e)
-            {
-                throw new ServiceResultException(StatusCodes.BadNotFound, e.Message);
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                throw new ServiceResultException(StatusCodes.BadNotWritable, e.Message);
-            }
-        }
-
-        /// <summary>
         /// Read method callback
         /// </summary>
         /// <param name="context"></param>
@@ -335,7 +367,7 @@ namespace SampleServer.FileTransfer
         /// <param name="length"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected ServiceResult OnReadMethodCall(
+        protected virtual ServiceResult OnReadMethodCall(
             ISystemContext context,
             MethodState method,
             NodeId objectId,
@@ -382,7 +414,7 @@ namespace SampleServer.FileTransfer
         /// <param name="fileHandle"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected ServiceResult OnWriteMethodCall(
+        protected virtual ServiceResult OnWriteMethodCall(
           ISystemContext context,
           MethodState method,
           NodeId objectId,
@@ -464,47 +496,7 @@ namespace SampleServer.FileTransfer
 
         #endregion
 
-        #region Protected Methods
-
-        /// <summary>
-        /// Check when the stream was last time accessed and close it
-        /// </summary>
-        /// <param name="state"></param>
-        private void CheckFileStreamAvailability(object state)
-        {
-            foreach (KeyValuePair<uint, FileStreamTracker> entry in m_fileHandles.ToList())
-            {
-                TimeSpan duration = DateTime.Now - entry.Value.LastAccessTime;
-
-                if (duration.TotalMilliseconds > ExpireFileStreamAvailabilityTime)
-                {
-                    if (m_fileState != null)
-                    {
-                        try
-                        {
-                            uint fileHandle = entry.Key;
-                            ServiceResult writeResult = m_fileState.Close.OnCall(null, null, null, fileHandle);
-                            if (StatusCode.IsBad(writeResult.StatusCode))
-                            {
-                                throw new Exception(string.Format(
-                                    "Error closing the file state for the file handle: {0}", fileHandle));
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
-                        }
-                    }
-                    else
-                    {
-                        m_fileHandles.Remove(entry.Key);
-                        entry.Value.FileStream.Close();
-                    }
-                }
-            }
-        }
-
-        #endregion
+        
     }
 
 }

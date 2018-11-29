@@ -22,8 +22,8 @@ namespace SampleServer.FileTransfer
 
         private string ByteStringFilePath = Path.Combine("FileTransfer", "Files", "ByteStringFile.xml");
 
-        private string ReadTemporaryFilePath = Path.Combine("FileTransfer", "Files", "ReadTemporaryFile.xml");
-        private string WriteTemporaryFilePath = Path.Combine("FileTransfer", "Files", "WriteTemporaryFile.xml");
+        private string DownloadTemporaryFilePath = Path.Combine("FileTransfer", "Files", "DownloadTemporaryFile.xml");
+        private string UploadTemporaryFilePath = Path.Combine("FileTransfer", "Files", "UploadTemporaryFile.xml");
 
         private const string FileTransferName = "FileTransfer";
         private const string ByteStringName = "ByteString";
@@ -35,7 +35,7 @@ namespace SampleServer.FileTransfer
         /// </summary>
         public const int ClientProcessingTimeoutPeriod = 10*1000; 
 
-        private TempFilesHolder m_tmpWriteFilesHolder;
+        private TempFilesHolder m_tmpFilesHolder;
 
         private const int ChunkSize = 512;
 
@@ -49,7 +49,7 @@ namespace SampleServer.FileTransfer
         public FileTransferNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server,
             configuration, Namespaces.FileTransfer)
         {
-            m_tmpWriteFilesHolder = new TempFilesHolder();
+            m_tmpFilesHolder = new TempFilesHolder();
         }
 
         #endregion
@@ -82,6 +82,18 @@ namespace SampleServer.FileTransfer
             }
         }
 
+        #endregion
+
+        #region Public Methods
+
+        public void DeleteTemporaryNode(NodeId fileNodeId)
+        {
+            // Remove temporary file state from holder
+            m_tmpFilesHolder.RemoveNode(fileNodeId);
+
+            // Remove temporary file state node from address space
+            DeleteNode(SystemContext, fileNodeId);
+        }
         #endregion
 
         #region Private Methods
@@ -230,7 +242,7 @@ namespace SampleServer.FileTransfer
         }
 
         /// <summary>
-        /// Creates a temporary file, fill the temporary file content with "ReadTemporaryFilePath" data, open it in read mode and pass its handler to the client
+        /// Creates a temporary file, fill the temporary file content with "DownloadTemporaryFilePath" data, open it in read mode and pass its handler to the client
         /// </summary>
         /// <param name="context"></param>
         /// <param name="method"></param>
@@ -254,9 +266,9 @@ namespace SampleServer.FileTransfer
             {
                 DateTime startTime = DateTime.Now;
 
-                // Creates and copy data content from "ReadTemporaryFilePath" to a temporary file that it will be read by client
+                // Creates and copy data content from "DownloadTemporaryFilePath" to a temporary file that it will be read by client
                 string tmpFileName = Path.GetTempFileName();
-                using (FileStream fileStream = new FileStream(ReadTemporaryFilePath, FileMode.Open))
+                using (FileStream fileStream = new FileStream(DownloadTemporaryFilePath, FileMode.Open))
                 {
                     using (Stream fileStreamTmp = File.OpenWrite(tmpFileName))
                     {
@@ -276,7 +288,7 @@ namespace SampleServer.FileTransfer
                         ref fileNodeId, ref fileHandle);
                     if (StatusCode.IsGood(generateFileForReadStatusCode))
                     {
-                        uint readFileHandle = m_tmpWriteFilesHolder.Add(fileNodeId, fileStateHandler);
+                        uint readFileHandle = m_tmpFilesHolder.Add(fileNodeId, fileStateHandler);
                         if (readFileHandle != 0)
                         {
                             fileHandle = readFileHandle;
@@ -298,6 +310,11 @@ namespace SampleServer.FileTransfer
             }
 
             return generateFileForReadStatusCode;
+        }
+
+        internal void DeleteTemporaryNode()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -330,7 +347,7 @@ namespace SampleServer.FileTransfer
                     generateFileForWriteStatusCode = fileStateHandler.Open(context, method, FileStateMode.EraseExisting, ref fileNodeId, ref fileHandle);
                     if (StatusCode.IsGood(generateFileForWriteStatusCode))
                     {
-                        uint readFileHandle = m_tmpWriteFilesHolder.Add(fileNodeId, fileStateHandler);
+                        uint readFileHandle = m_tmpFilesHolder.Add(fileNodeId, fileStateHandler);
                         if (readFileHandle != 0)
                         {
                             fileHandle = readFileHandle;
@@ -373,12 +390,12 @@ namespace SampleServer.FileTransfer
 
             try
             {
-                TempFileStateHandler fileStateHandler = m_tmpWriteFilesHolder.Get(fileHandle);
+                TempFileStateHandler fileStateHandler = m_tmpFilesHolder.Get(fileHandle);
                 if (fileStateHandler != null)
                 {
                     if (fileStateHandler.IsGenerateForWriteFileType())
                     {
-                        using (FileStream fileStreamTmp = File.OpenWrite(WriteTemporaryFilePath))
+                        using (FileStream fileStreamTmp = File.OpenWrite(UploadTemporaryFilePath))
                         {
                             FileStream fileStream = fileStateHandler.GetTemporaryFileStream();
                             if (fileStream != null)
@@ -406,7 +423,7 @@ namespace SampleServer.FileTransfer
                             throw new Exception("Close file state failed.");
                         }
 
-                        m_tmpWriteFilesHolder.Remove(fileHandle);
+                        m_tmpFilesHolder.Remove(fileHandle);
                     }
                     else
                     {

@@ -17,7 +17,7 @@
     <Content Include="Files\UploadClientFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Files\WriteClientTemporaryFile.xml">
+    <Content Include="Files\UploadTemporaryFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

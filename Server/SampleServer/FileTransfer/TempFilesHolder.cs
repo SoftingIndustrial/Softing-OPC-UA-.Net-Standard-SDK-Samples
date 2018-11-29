@@ -72,7 +72,23 @@ namespace SampleServer.FileTransfer
         {
             if (m_tmpFileStateData.ContainsKey(fileHandle))
             {
+                m_tmpFileStateData[fileHandle].Dispose();
                 m_tmpFileStateData.Remove(fileHandle);
+            }
+        }
+
+        /// <summary>
+        /// Cleaning step. Remove the file state entry from holder 
+        /// </summary>
+        /// <param name="fileNodeId"></param>
+        /// <returns></returns>
+        public void RemoveNode(NodeId fileNodeId)
+        {
+            var tmpFileState = m_tmpFileStateData.FirstOrDefault(tmp => tmp.Value.FileNodeId == fileNodeId);
+            if (tmpFileState.Value != null)
+            {
+                tmpFileState.Value.Dispose();
+                m_tmpFileStateData.Remove(tmpFileState.Key);
             }
         }
 
