@@ -257,7 +257,7 @@ namespace SampleServer.FileTransfer
 
             if (fileAccess != FileAccess.Read && m_fileState.Writable.Value == false)
             {
-                return StatusCodes.BadWriteNotSupported;
+                return StatusCodes.BadNotWritable;
             }
 
             try

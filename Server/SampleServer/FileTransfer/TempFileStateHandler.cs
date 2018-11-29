@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Opc.Ua;
@@ -211,6 +212,16 @@ namespace SampleServer.FileTransfer
         {
             if (m_nodeManager != null && (uint)context.SessionId.Identifier > 0)
             {
+                Session tmpSession = m_nodeManager.Server.SessionManager.GetSessions().FirstOrDefault(session => session.Id.Identifier == context.SessionId.Identifier);
+                if (tmpSession != null)
+                {
+                    if (tmpSession.HasExpired)
+                    {
+                        Console.WriteLine("Session ID: ns:{0},i={1}  expired!", context.SessionId.NamespaceIndex, context.SessionId.Identifier);
+                        return true;
+                    }
+                }
+
                 if (m_fileHandles.ContainsKey(defaultFileHandle))
                 {
                     DateTime lastAccessTime = m_fileHandles[defaultFileHandle].LastAccessTime;

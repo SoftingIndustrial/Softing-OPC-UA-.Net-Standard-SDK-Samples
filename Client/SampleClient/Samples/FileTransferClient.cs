@@ -382,9 +382,8 @@ namespace SampleClient.Samples
                             StatusCode readStatusCode = fileState.Read(cRead, out buffer);
                             if (StatusCode.IsBad(readStatusCode))
                             {
-                                fileState.Close();
                                 Console.WriteLine(string.Format("\nReading aborted due the reason: {0}\n", readStatusCode));
-
+                                fileState.Close();
                                 return;
                             }
 
@@ -408,7 +407,7 @@ namespace SampleClient.Samples
             }
             catch (Exception e)
             {
-                Console.WriteLine("Read File error..." + e.Message);
+                Console.WriteLine("\tRead File error..." + e.Message);
             }
         }
 
@@ -481,9 +480,8 @@ namespace SampleClient.Samples
                             StatusCode writeStatusCode = fileState.Write(data);
                             if (StatusCode.IsBad(writeStatusCode))
                             {
+                                Console.WriteLine("\n\tWrite failed status Code is: {0}\n", writeStatusCode);
                                 fileState.Close();
-                                Console.WriteLine("\nStatus Code is: {0}\n", writeStatusCode);
-
                                 return;
                             }
 
@@ -508,7 +506,7 @@ namespace SampleClient.Samples
             }
             catch (Exception e)
             {
-                Console.WriteLine("Write File error..." + e.Message);
+                Console.WriteLine("\tWrite File error..." + e.Message);
             }
         }
         #endregion
