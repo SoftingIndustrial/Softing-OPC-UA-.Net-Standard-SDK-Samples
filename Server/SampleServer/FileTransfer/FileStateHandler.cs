@@ -71,7 +71,7 @@ namespace SampleServer.FileTransfer
         }
 
         /// <summary>
-        /// Clean up threshold period (milliseconds) reference 
+        /// Clean up expire time threshold period (milliseconds) reference 
         /// </summary>
         protected uint ExpireFileStreamAvailabilityTime { get; set; }
 
@@ -495,8 +495,6 @@ namespace SampleServer.FileTransfer
         }
 
         #endregion
-
-        
     }
 
 }

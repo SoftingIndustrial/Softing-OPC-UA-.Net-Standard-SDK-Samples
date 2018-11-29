@@ -51,6 +51,11 @@ namespace SampleServer.FileTransfer
 
         #region Public Methods
 
+        /// <summary>
+        /// Initialize: set write permission atributes and set callbacks;
+        /// Set timer to release temporary file states after 'ClientProcessingTimeout' time period  
+        /// </summary>
+        /// <param name="clientProcessingTimeoutPeriod"></param>
         public void Initialize(uint clientProcessingTimeoutPeriod)
         {
             base.Initialize();

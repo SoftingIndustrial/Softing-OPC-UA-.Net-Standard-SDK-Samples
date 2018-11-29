@@ -37,8 +37,6 @@ namespace SampleServer.FileTransfer
 
         private TempFilesHolder m_tmpFilesHolder;
 
-        private const int ChunkSize = 512;
-
         #endregion
 
         #region Constructors
@@ -86,6 +84,10 @@ namespace SampleServer.FileTransfer
 
         #region Public Methods
 
+        /// <summary>
+        /// Delete temporary file nodes from the address space
+        /// </summary>
+        /// <param name="fileNodeId"></param>
         public void DeleteTemporaryNode(NodeId fileNodeId)
         {
             // Remove temporary file state from holder
@@ -124,7 +126,7 @@ namespace SampleServer.FileTransfer
         }
 
         /// <summary>
-        /// Creates temporary file state node
+        /// Creates temporary file state node in address space
         /// </summary>
         /// <param name="root"></param>
         /// <param name="context"></param>
@@ -264,8 +266,7 @@ namespace SampleServer.FileTransfer
 
             try
             {
-                DateTime startTime = DateTime.Now;
-
+                #region Demo optional step
                 // Creates and copy data content from "DownloadTemporaryFilePath" to a temporary file that it will be read by client
                 string tmpFileName = Path.GetTempFileName();
                 using (FileStream fileStream = new FileStream(DownloadTemporaryFilePath, FileMode.Open))
@@ -280,10 +281,14 @@ namespace SampleServer.FileTransfer
 
                     fileStream.Close();
                 }
+                #endregion
 
                 TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, false);
                 if (fileStateHandler != null)
                 {
+                    // At this step the user can change and define its own application logic of what he wants to keep into temporary file state node 
+                    // It could be an application memory, firmware file, stream or special device ...
+
                     generateFileForReadStatusCode = fileStateHandler.Open(context, method, FileStateMode.Read,
                         ref fileNodeId, ref fileHandle);
                     if (StatusCode.IsGood(generateFileForReadStatusCode))
@@ -310,11 +315,6 @@ namespace SampleServer.FileTransfer
             }
 
             return generateFileForReadStatusCode;
-        }
-
-        internal void DeleteTemporaryNode()
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -395,6 +395,10 @@ namespace SampleServer.FileTransfer
                 {
                     if (fileStateHandler.IsGenerateForWriteFileType())
                     {
+                        // At this step the user can change and define its own application logic of what he wants to receive from temporary file state node
+                        // performed on client side. It could be an application memory, firmware file, stream or special device ...
+
+                        #region Demo optional step
                         using (FileStream fileStreamTmp = File.OpenWrite(UploadTemporaryFilePath))
                         {
                             FileStream fileStream = fileStateHandler.GetTemporaryFileStream();
@@ -424,6 +428,8 @@ namespace SampleServer.FileTransfer
                         }
 
                         m_tmpFilesHolder.Remove(fileHandle);
+                        #endregion
+
                     }
                     else
                     {

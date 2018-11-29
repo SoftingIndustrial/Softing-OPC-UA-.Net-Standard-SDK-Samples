@@ -269,12 +269,10 @@
     <Compile Include="Alarms\AlarmsNodeManager.cs" />
     <Compile Include="Alarms\ExclusiveLimitMonitor.cs" />
     <Compile Include="DataAccess\DataAccessNodeManager.cs" />
-    <Compile Include="FileTransfer\FileStateEventArgs.cs" />
     <Compile Include="FileTransfer\FileStateHandler.cs" />
     <Compile Include="FileTransfer\FileStreamTracker.cs" />
     <Compile Include="FileTransfer\FileTransferNodeManager.cs" />
     <Compile Include="FileTransfer\TempFilesHolder.cs" />
-    <Compile Include="FileTransfer\TempFileStateData.cs" />
     <Compile Include="FileTransfer\TempFileStateHandler.cs" />
     <Compile Include="HistoricalDataAccess\ArchiveItem.cs" />
     <Compile Include="HistoricalDataAccess\ArchiveItemState.cs" />
