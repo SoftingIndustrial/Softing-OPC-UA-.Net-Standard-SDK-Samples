@@ -236,10 +236,10 @@ namespace SampleClient.StateMachine
             StateTransition startMonitoredItem = new StateTransition(State.MonitoredItemEvents, Command.StartMonitoredItem, "1", "Enter MonitoredItem Menu");
             startMonitoredItem.ExecuteCommand += StartMonitoredItem_ExecuteCommand;
             m_transitions.Add(startMonitoredItem, State.MonitoredItem);
-            StateTransition createMonitoredItem = new StateTransition(State.MonitoredItem, Command.CreateMonitoredItem, "1", "Create Monitored Items");
+            StateTransition createMonitoredItem = new StateTransition(State.MonitoredItem, Command.CreateMonitoredItem, "1", "Create data change Monitored Items");
             createMonitoredItem.ExecuteCommand += CreateMonitoredItem_ExecuteCommand;
             m_transitions.Add(createMonitoredItem, State.MonitoredItem);
-            StateTransition deleteMonitoredItem = new StateTransition(State.MonitoredItem, Command.DeleteMonitoredItem, "2", "Delete Monitored Items");
+            StateTransition deleteMonitoredItem = new StateTransition(State.MonitoredItem, Command.DeleteMonitoredItem, "2", "Delete data change Monitored Items");
             deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItem_ExecuteCommand;
             m_transitions.Add(deleteMonitoredItem, State.MonitoredItem);
             StateTransition endMonitoredItem = new StateTransition(State.MonitoredItem, Command.EndMonitoredItem, "0", "Back to MonitoredItem/Events Menu");
@@ -250,12 +250,12 @@ namespace SampleClient.StateMachine
             StateTransition startEventsClient = new StateTransition(State.MonitoredItemEvents, Command.StartEvents, "2", "Enter Events Menu");
             startEventsClient.ExecuteCommand += StartEventsClient_ExecuteCommand;
             m_transitions.Add(startEventsClient, State.Events);
-            StateTransition createEventMonitorItem = new StateTransition(State.Events, Command.CreateEventMonitorItem, "1", "Create event monitored item");
+            StateTransition createEventMonitorItem = new StateTransition(State.Events, Command.CreateEventMonitorItem, "1", "Create event Monitored Item");
             createEventMonitorItem.ExecuteCommand += CreateEventMonitorItem_ExecuteCommand;
             m_transitions.Add(createEventMonitorItem, State.Events);
             StateTransition deleteEventMonitorItem = new StateTransition(State.Events, Command.DeleteEventMonitorItem,
                 "2",
-                "Delete event monitored item");
+                "Delete event Monitored Item");
             deleteEventMonitorItem.ExecuteCommand += DeleteEventMonitorItem_ExecuteCommand;
             m_transitions.Add(deleteEventMonitorItem, State.Events);
             StateTransition endEvents = new StateTransition(State.Events, Command.EndEvents, "0", "Back to MonitoredItem/Events Menu");
