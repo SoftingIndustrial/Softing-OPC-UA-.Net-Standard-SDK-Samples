@@ -244,17 +244,25 @@ namespace SampleServer.FileTransfer
             switch (fileStateMode)
             {
                 case FileStateMode.Read: fileAccess = FileAccess.Read; break;
-                case FileStateMode.Write: fileAccess = FileAccess.Write; break;
+                case FileStateMode.Write: fileAccess = FileAccess.ReadWrite; break;
                 case FileStateMode.EraseExisting: fileAccess = FileAccess.ReadWrite; break;
                 case FileStateMode.Append: fileAccess = FileAccess.Write; break;
                 default: fileAccess = FileAccess.Read; break;
             }
 
             if (fileStateMode == FileStateMode.EraseExisting)
+            {
                 fileMode = FileMode.Truncate;
+            }
+            else if (fileStateMode == FileStateMode.Append)
+            {
+                fileMode = FileMode.Append;
+            }
             else
+            {
                 fileMode = FileMode.Open;
-
+            }
+            
             if (fileAccess != FileAccess.Read && m_fileState.Writable.Value == false)
             {
                 return StatusCodes.BadNotWritable;
@@ -265,7 +273,7 @@ namespace SampleServer.FileTransfer
                 FileStreamTracker fileStreamTracker = new FileStreamTracker(m_filePath, fileMode, fileAccess);
 
                 // increment OpenCount.
-                ushort openCount = (ushort)m_fileState.OpenCount.Value;
+                ushort openCount = (ushort) m_fileState.OpenCount.Value;
                 m_fileState.OpenCount.Value = ++openCount;
                 m_fileState.OpenCount.ClearChangeMasks(null, true);
 
@@ -281,6 +289,10 @@ namespace SampleServer.FileTransfer
             catch (UnauthorizedAccessException e)
             {
                 throw new ServiceResultException(StatusCodes.BadNotWritable, e.Message);
+            }
+            catch (Exception e)
+            {
+                throw new ServiceResultException(StatusCodes.BadNotReadable, e.Message);
             }
         }
 

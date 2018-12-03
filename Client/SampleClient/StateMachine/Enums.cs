@@ -78,13 +78,11 @@ namespace SampleClient.StateMachine
         CallMethods,
 
         StartFileTransfer,
-        CreateSessionFileTransfer,
-        DisconnectSessionFileTransfer,
         UploadFileTransfer,
         DownloadFileTransfer,
         ReadByteArrayFileTransfer,
-        ReadTemporaryFileTransfer,
-        WriteTemporaryFileTransfer,
+        DownloadTemporaryFileTransfer,
+        UploadTemporaryFileTransfer,
         EndFileTransfer,
 
         Exit

@@ -8,7 +8,7 @@ using System.IO;
 
 namespace SampleClient.Samples
 {
-    public class FileTransferClient : IDisposable
+    public class FileTransferClient 
     {
         #region Private Fields
 
@@ -46,73 +46,58 @@ namespace SampleClient.Samples
 
         #endregion
 
-        #region IDisposable implementation
-
-        /// <summary>
-        /// Dispose the opened session or/and file handlers
-        /// </summary>
-        public void Dispose()
-        {
-            if (m_session != null)
-            {
-                DisconnectSession();
-            }
-        }
-
-        #endregion
-
         #region Public Methods
 
         /// <summary>
-        /// Creates a new session and connect to the server.
+        /// Initialize session
         /// </summary>
-        public void CreateSession()
-        {
-            if (m_session != null)
-            {
-                Console.WriteLine("Session already created.");
-                return;
-            }
-
-            try
-            {
-                m_session = m_application.CreateSession(Program.ServerUrl);
-                m_session.SessionName = SessionName;
-
-                // connect session
-                m_session.Connect(false, true);
-                Console.WriteLine("Session is connected.");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("CreateSession error: {0}", e.Message);
-            }
-        }
-
-        /// <summary>
-        /// Disconnect the current session.
-        /// </summary>
-        public void DisconnectSession()
+        public void Initialize()
         {
             if (m_session == null)
             {
-                Console.WriteLine("Session is not created, please use \"1\" command");
-                return;
-            }
+                try
+                {
+                    // create the session object with no security and anonymous login    
+                    m_session = m_application.CreateSession(Program.ServerUrl);
+                    m_session.SessionName = SessionName;
 
+                    // connect session
+                    m_session.Connect(false, true);
+                    Console.WriteLine("Session is connected.");
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("CreateSession Error: {0}", ex.Message);
+                    if (m_session != null)
+                    {
+                        m_session.Dispose();
+                        m_session = null;
+                    }
+
+                    return;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Disconnect the current session
+        /// </summary>
+        public void Disconnect()
+        {
             try
             {
-                m_session.Disconnect(false);
+                m_session.Disconnect(true);
+                m_session.Dispose();
+                m_session = null;
                 Console.WriteLine("Session is disconnected.");
             }
             catch (Exception e)
             {
                 Console.WriteLine("DisconnectSession error: {0}", e.Message);
             }
-
-            m_session.Dispose();
-            m_session = null;
         }
+        
 
         /// <summary>
         /// Download the file from the server to the specified path.
@@ -121,7 +106,7 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                Console.WriteLine("Session is not created, please use \"1\" command");
+                Console.WriteLine("The session is not initialized!");
                 return;
             }
 
@@ -190,7 +175,7 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                Console.WriteLine("Session is not created, please use \"1\" command");
+                Console.WriteLine("The session is not initialized!");
                 return;
             }
 
@@ -297,7 +282,7 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                Console.WriteLine("Session is not created, please use \"1\" command");
+                Console.WriteLine("The session is not initialized!");
                 return;
             }
 
@@ -332,7 +317,7 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                Console.WriteLine("Session is not created, please use \"1\" command");
+                Console.WriteLine("The session is not initialized!");
                 return;
             }
 
@@ -412,7 +397,7 @@ namespace SampleClient.Samples
         {
             if (m_session == null)
             {
-                Console.WriteLine("Session is not created, please use \"1\" command");
+                Console.WriteLine("The session is not initialized!");
                 return;
             }
 
@@ -493,7 +478,6 @@ namespace SampleClient.Samples
                     if (StatusCode.IsBad(closeStatusCode))
                     {
                         Console.WriteLine("\nClose status code is: {0}\n", closeStatusCode);
-
                         return;
                     }
                 }

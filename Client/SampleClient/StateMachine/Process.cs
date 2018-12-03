@@ -324,33 +324,25 @@ namespace SampleClient.StateMachine
             startFileTransfer.ExecuteCommand += StartFileTransfer_ExecuteCommand;
             m_transitions.Add(startFileTransfer, State.FileTransfer);
 
-            StateTransition createSessionFileTransfer = new StateTransition(State.FileTransfer, Command.CreateSessionFileTransfer, "1", "Create and Connect the session");
-            createSessionFileTransfer.ExecuteCommand += CreateSessionFileTransfer_ExecuteCommand;
-            m_transitions.Add(createSessionFileTransfer, State.FileTransfer);
-
-            StateTransition closeSessionFileTransfer = new StateTransition(State.FileTransfer, Command.DisconnectSessionFileTransfer, "2", "Disconnect session");
-            closeSessionFileTransfer.ExecuteCommand += DisconnectSessionFileTransfer_ExecuteCommand;
-            m_transitions.Add(closeSessionFileTransfer, State.FileTransfer);
-
-            StateTransition uploadFileTransfer = new StateTransition(State.FileTransfer, Command.UploadFileTransfer, "3", "Upload file");
+            StateTransition uploadFileTransfer = new StateTransition(State.FileTransfer, Command.UploadFileTransfer, "1", "Upload file");
             uploadFileTransfer.ExecuteCommand += UploadFileTransfer_ExecuteCommand;
             m_transitions.Add(uploadFileTransfer, State.FileTransfer);
 
-            StateTransition downloadFileTransfer = new StateTransition(State.FileTransfer, Command.DownloadFileTransfer, "4", "Download file");
+            StateTransition downloadFileTransfer = new StateTransition(State.FileTransfer, Command.DownloadFileTransfer, "2", "Download file");
             downloadFileTransfer.ExecuteCommand += DownloadFileTransfer_ExecuteCommand;
             m_transitions.Add(downloadFileTransfer, State.FileTransfer);
 
-            StateTransition readByteArrayFileTransfer = new StateTransition(State.FileTransfer, Command.ReadByteArrayFileTransfer, "5", "Read Byte Array");
+            StateTransition readByteArrayFileTransfer = new StateTransition(State.FileTransfer, Command.ReadByteArrayFileTransfer, "3", "Read Byte Array");
             readByteArrayFileTransfer.ExecuteCommand += ReadByteArrayFileTransfer_ExecuteCommand;
             m_transitions.Add(readByteArrayFileTransfer, State.FileTransfer);
+            
+            StateTransition uploadTemporaryFileTransfer = new StateTransition(State.FileTransfer, Command.UploadTemporaryFileTransfer, "4", "Upload Temporary File");
+            uploadTemporaryFileTransfer.ExecuteCommand += WriteTemporaryFileTransfer_ExecuteCommand;
+            m_transitions.Add(uploadTemporaryFileTransfer, State.FileTransfer);
 
-            StateTransition readTemporaryFileTransfer = new StateTransition(State.FileTransfer, Command.ReadTemporaryFileTransfer, "6", "Read Temporary File");
-            readTemporaryFileTransfer.ExecuteCommand += ReadTemporaryFileTransfer_ExecuteCommand;
-            m_transitions.Add(readTemporaryFileTransfer, State.FileTransfer);
-
-            StateTransition writeTemporaryFileTransfer = new StateTransition(State.FileTransfer, Command.WriteTemporaryFileTransfer, "7", "Write Temporary File");
-            writeTemporaryFileTransfer.ExecuteCommand += WriteTemporaryFileTransfer_ExecuteCommand;
-            m_transitions.Add(writeTemporaryFileTransfer, State.FileTransfer);
+            StateTransition downloadTemporaryFileTransfer = new StateTransition(State.FileTransfer, Command.DownloadTemporaryFileTransfer, "5", "Download Temporary File");
+            downloadTemporaryFileTransfer.ExecuteCommand += ReadTemporaryFileTransfer_ExecuteCommand;
+            m_transitions.Add(downloadTemporaryFileTransfer, State.FileTransfer);
 
             StateTransition endFileTransfer = new StateTransition(State.FileTransfer, Command.EndFileTransfer, "0", "Back to Main Menu");
             endFileTransfer.ExecuteCommand += EndFileTransfer_ExecuteCommand;
@@ -694,24 +686,7 @@ namespace SampleClient.StateMachine
             if (m_fileTransferClient == null)
             {
                 m_fileTransferClient = new FileTransferClient(m_application);
-            }
-        }
-
-        private void CreateSessionFileTransfer_ExecuteCommand(object sender, EventArgs e)
-        {
-            if (m_fileTransferClient != null)
-            {
-                //m_fileTransferClient = new FileTransferClient(m_application);
-                m_fileTransferClient.CreateSession();
-            }
-        }
-
-        private void DisconnectSessionFileTransfer_ExecuteCommand(object sender, EventArgs e)
-        {
-            if (m_fileTransferClient != null)
-            {
-                //m_fileTransferClient = new FileTransferClient(m_application);
-                m_fileTransferClient.DisconnectSession();
+                m_fileTransferClient.Initialize();
             }
         }
 
@@ -759,7 +734,7 @@ namespace SampleClient.StateMachine
         {
             if (m_fileTransferClient != null)
             {
-                m_fileTransferClient.Dispose();
+                m_fileTransferClient.Disconnect();
                 m_fileTransferClient = null;
             }
         }
