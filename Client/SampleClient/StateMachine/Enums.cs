@@ -17,11 +17,12 @@ namespace SampleClient.StateMachine
     public enum State
     {
         Main,
-        Connect,
+        DiscoveryConnect,
         Browse,
-        Events,
-        History,
+        MonitoredItemEvents,
         MonitoredItem,
+        Events,
+        History,       
         Alarms,
         ReadWrite,
         FileTransfer,
@@ -33,8 +34,10 @@ namespace SampleClient.StateMachine
     /// </summary>
     public enum Command
     {
+        DiscoveryConnect,
         DiscoverySample,
         ConnectSample,
+        EndDiscoveryConnect,
 
         StartBrowse,
         BrowseServer,
@@ -52,6 +55,9 @@ namespace SampleClient.StateMachine
         HistoryReadAtTime,
         HistoryReadProcessed,
         EndHistory,
+
+        StartMonitoredItemEvents,
+        EndMonitoredItemEvents,
 
         StartMonitoredItem, 
         CreateMonitoredItem,
