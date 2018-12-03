@@ -305,12 +305,12 @@ namespace SampleServer.FileTransfer
                         }
                         else
                         {
-                            throw new Exception(string.Format("{0}: The file is already opened!", tmpFileName));
+                            throw new Exception(string.Format("{0}: The temporary file is already opened!", tmpFileName));
                         }
                     }
                     else
                     {
-                        throw new Exception(string.Format("{0}: Open file call failed!", tmpFileName));
+                        throw new Exception(string.Format("{0}: Open temporary file call failed!", tmpFileName));
                     }
                 }
             }
@@ -359,12 +359,12 @@ namespace SampleServer.FileTransfer
                         }
                         else
                         {
-                            throw new Exception(string.Format("{0}: The file is already opened!", tmpFileName));
+                            throw new Exception(string.Format("{0}: The temporary file is already opened!", tmpFileName));
                         }
                     }
                     else
                     {
-                        throw new Exception(string.Format("{0}: Open file call failed!", tmpFileName));
+                        throw new Exception(string.Format("{0}: Open temporary file call failed!", tmpFileName));
                     }
                 }
             }
@@ -429,7 +429,7 @@ namespace SampleServer.FileTransfer
                         closeAndCommitStatusCode = fileStateHandler.Close(context, method);
                         if (StatusCode.IsBad(closeAndCommitStatusCode))
                         {
-                            throw new Exception("Close file state failed.");
+                            throw new Exception("Close temporary file state failed.");
                         }
 
                         m_tmpFilesHolder.Remove(fileHandle);

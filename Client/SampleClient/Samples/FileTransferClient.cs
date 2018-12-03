@@ -14,10 +14,10 @@ namespace SampleClient.Samples
 
         // the nodeId of the DownloadFile which is specified on the File Transfer Node Manager
         private const string DownloadNodeID = "ns=9;i=2";
-
+        
         // the nodeId of the UploadFile from the server
         private const string UploadNodeID = "ns=9;i=23";
-
+        
         // the nodeId of the ByteString element from the server
         private const string ByteStringNodeID = "ns=9;i=44";
 
@@ -85,7 +85,7 @@ namespace SampleClient.Samples
             }
             catch (Exception e)
             {
-                Console.WriteLine(String.Format("CreateSession error: {0}", e.Message));
+                Console.WriteLine("CreateSession error: {0}", e.Message);
             }
         }
 
@@ -107,7 +107,7 @@ namespace SampleClient.Samples
             }
             catch (Exception e)
             {
-                Console.WriteLine(String.Format("DisconnectSession error: {0}", e.Message));
+                Console.WriteLine("DisconnectSession error: {0}", e.Message);
             }
 
             m_session.Dispose();
@@ -179,9 +179,7 @@ namespace SampleClient.Samples
             }
             catch (Exception e)
             {
-                string logMessage = String.Format("Download File Error : {0}.", e.Message);
-                Console.WriteLine(logMessage);
-                Console.WriteLine("DownloadFile error..." + e.Message);
+                Console.WriteLine("Download file error: {0}", e.Message);
             }
         }
 
@@ -288,8 +286,7 @@ namespace SampleClient.Samples
             }
             catch (Exception e)
             {
-                string logMessage = String.Format("Upload file error : {0}.", e.Message);
-                Console.WriteLine(logMessage);
+                Console.WriteLine("Upload file error: {0}", e.Message);
             }
         }
 
@@ -324,9 +321,7 @@ namespace SampleClient.Samples
             }
             catch (Exception e)
             {
-                string logMessage = String.Format("Download ByteString Error : {0}.", e.Message);
-                Console.WriteLine(logMessage);
-                Console.WriteLine("Download ByteString error..." + e.Message);
+                Console.WriteLine("Download ByteString error: {0}", e.Message);
             }
         }
 
@@ -406,7 +401,7 @@ namespace SampleClient.Samples
             }
             catch (Exception e)
             {
-                Console.WriteLine("\tDownload temporary file error..." + e.Message);
+                Console.WriteLine("Download temporary file error: {0}", e.Message);
             }
         }
 
@@ -505,7 +500,7 @@ namespace SampleClient.Samples
             }
             catch (Exception e)
             {
-                Console.WriteLine("\tUpload temporary file error..." + e.Message);
+                Console.WriteLine("Upload temporary file error: {0}", e.Message);
             }
         }
         #endregion
