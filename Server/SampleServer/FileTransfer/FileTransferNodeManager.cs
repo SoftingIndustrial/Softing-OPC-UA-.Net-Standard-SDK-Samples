@@ -99,6 +99,7 @@ namespace SampleServer.FileTransfer
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Creates file state node
         /// </summary>
@@ -110,7 +111,8 @@ namespace SampleServer.FileTransfer
         {
             try
             {
-                FileState fileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.FileType) as FileState;
+                FileState fileState =
+                    CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.FileType) as FileState;
                 if (fileState != null)
                 {
                     FileStateHandler fileTypeHandler = new FileStateHandler(filename, fileState, writePermission);
@@ -133,14 +135,17 @@ namespace SampleServer.FileTransfer
         /// <param name="filename"></param>
         /// <param name="writePermission"></param>
         /// <returns></returns>
-        private TempFileStateHandler CreateTempFileState(FolderState root, ISystemContext context, string filename, bool writePermission)
+        private TempFileStateHandler CreateTempFileState(FolderState root, ISystemContext context, string filename,
+            bool writePermission)
         {
             try
             {
-                FileState fileState = CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.FileType) as FileState;
+                FileState fileState =
+                    CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.FileType) as FileState;
                 if (fileState != null)
                 {
-                    TempFileStateHandler fileTypeHandler = new TempFileStateHandler(this, filename, fileState, writePermission);
+                    TempFileStateHandler fileTypeHandler =
+                        new TempFileStateHandler(this, filename, fileState, writePermission);
                     fileTypeHandler.Initialize(ClientProcessingTimeoutPeriod);
 
                     return fileTypeHandler;
@@ -150,8 +155,8 @@ namespace SampleServer.FileTransfer
             {
                 throw new Exception("Temporary File state could not be created exception.");
             }
-            return null;
 
+            return null;
         }
 
         /// <summary>

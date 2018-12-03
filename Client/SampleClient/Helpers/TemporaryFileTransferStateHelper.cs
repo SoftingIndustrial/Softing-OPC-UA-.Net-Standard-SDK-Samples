@@ -161,8 +161,6 @@ namespace SampleClient.Helpers
                 IList<object> outArgs = null;
                 statusCode = m_session.Call(NodeID, CloseAndCommitNodeID, args, out outArgs);
                 m_fileHandle = 0;
-
-                return statusCode;
             }
             catch
             {

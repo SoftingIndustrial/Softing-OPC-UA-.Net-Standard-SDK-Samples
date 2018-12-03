@@ -12,7 +12,7 @@ namespace SampleClient.Samples
     {
         #region Private Fields
 
-        // the nodeId of the DownloadFile which is specified on the FileTransferServer
+        // the nodeId of the DownloadFile which is specified on the File Transfer Node Manager
         private const string DownloadNodeID = "ns=9;i=2";
 
         // the nodeId of the UploadFile from the server
@@ -85,7 +85,7 @@ namespace SampleClient.Samples
             }
             catch (Exception e)
             {
-                Console.WriteLine(String.Format("CreateSession Error: {0}", e.Message));
+                Console.WriteLine(String.Format("CreateSession error: {0}", e.Message));
             }
         }
 
@@ -107,7 +107,7 @@ namespace SampleClient.Samples
             }
             catch (Exception e)
             {
-                Console.WriteLine(String.Format("DisconnectSession Error: {0}", e.Message));
+                Console.WriteLine(String.Format("DisconnectSession error: {0}", e.Message));
             }
 
             m_session.Dispose();
@@ -150,11 +150,10 @@ namespace SampleClient.Samples
                         byte[] buffer;
 
                         StatusCode readStatusCode = fileState.Read(cRead, out buffer);
-
                         if (StatusCode.IsBad(readStatusCode))
                         {
                             fileState.Close();
-                            Console.WriteLine(string.Format("\nStatus Code is: {0}\n", readStatusCode));
+                            Console.WriteLine(string.Format("\nReading status code failure is: {0}\n", readStatusCode));
 
                             return;
                         }
@@ -172,7 +171,7 @@ namespace SampleClient.Samples
                 StatusCode closeStatusCode = fileState.Close();
                 if (StatusCode.IsBad(closeStatusCode))
                 {
-                    Console.WriteLine("Unable to close the file.");
+                    Console.WriteLine("Unable to close the file state.");
                     return;
                 }
 
@@ -210,7 +209,7 @@ namespace SampleClient.Samples
 
                 if (!fileState.Writable)
                 {
-                    Console.WriteLine("The file writable property is false.");
+                    Console.WriteLine("The file state writable property is false.");
 
                     return;
                 }
@@ -219,7 +218,7 @@ namespace SampleClient.Samples
                 StatusCode openStatusCode = fileState.Open(FileStateMode.Write | FileStateMode.EraseExisting);
                 if (StatusCode.IsBad(openStatusCode))
                 {
-                    Console.WriteLine(string.Format("\nStatus Code is: {0}\n", openStatusCode));
+                    Console.WriteLine(string.Format("\nOpen status code failure is: {0}\n", openStatusCode));
                     return;
                 }
 
@@ -262,7 +261,7 @@ namespace SampleClient.Samples
                         if (StatusCode.IsBad(writeStatusCode))
                         {
                             fileState.Close();
-                            Console.WriteLine("\nStatus Code is: {0}\n", writeStatusCode);
+                            Console.WriteLine("\nWrite status code failure is: {0}\n", writeStatusCode);
 
                             return;
                         }
@@ -280,16 +279,16 @@ namespace SampleClient.Samples
                 StatusCode closeStatusCode = fileState.Close();
                 if (StatusCode.IsBad(closeStatusCode))
                 {
-                    Console.WriteLine("\nStatus Code is: {0}\n", closeStatusCode);
+                    Console.WriteLine("\nClose status Code is: {0}\n", closeStatusCode);
 
                     return;
                 }
 
-                Console.WriteLine("The File was uploaded with success.");
+                Console.WriteLine("The file was uploaded with success.");
             }
             catch (Exception e)
             {
-                string logMessage = String.Format("Upload File Error : {0}.", e.Message);
+                string logMessage = String.Format("Upload file error : {0}.", e.Message);
                 Console.WriteLine(logMessage);
             }
         }
@@ -401,13 +400,13 @@ namespace SampleClient.Samples
                 StatusCode closeStatusCode = fileState.Close();
                 if (StatusCode.IsBad(closeStatusCode))
                 {
-                    Console.WriteLine("Unable to close the file.");
+                    Console.WriteLine("Unable to close the temporary file.");
                     return;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("\tRead File error..." + e.Message);
+                Console.WriteLine("\tDownload temporary file error..." + e.Message);
             }
         }
 
@@ -480,7 +479,7 @@ namespace SampleClient.Samples
                             StatusCode writeStatusCode = fileState.Write(data);
                             if (StatusCode.IsBad(writeStatusCode))
                             {
-                                Console.WriteLine("\n\tWrite failed status Code is: {0}\n", writeStatusCode);
+                                Console.WriteLine("\n\tWrite failed status code is: {0}\n", writeStatusCode);
                                 fileState.Close();
                                 return;
                             }
@@ -498,7 +497,7 @@ namespace SampleClient.Samples
                     StatusCode closeStatusCode = tmpFileTransferState.CloseAndCommit();
                     if (StatusCode.IsBad(closeStatusCode))
                     {
-                        Console.WriteLine("\nStatus Code is: {0}\n", closeStatusCode);
+                        Console.WriteLine("\nClose status code is: {0}\n", closeStatusCode);
 
                         return;
                     }
@@ -506,7 +505,7 @@ namespace SampleClient.Samples
             }
             catch (Exception e)
             {
-                Console.WriteLine("\tWrite File error..." + e.Message);
+                Console.WriteLine("\tUpload temporary file error..." + e.Message);
             }
         }
         #endregion

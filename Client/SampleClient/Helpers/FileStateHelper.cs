@@ -163,18 +163,19 @@ namespace SampleClient.Helpers
 
             try
             {
-                object[] args = new object[] { m_fileHandle };
+                object[] args = new object[] {m_fileHandle};
 
                 IList<object> outArgs = null;
                 statusCode = m_session.Call(NodeID, CloseNodeID, args, out outArgs);
                 m_fileHandle = 0;
 
-                return statusCode;
             }
             catch
             {
-                throw new Exception(string.Format("\nStatus Code is: {0}", statusCode));
+                throw new Exception(string.Format("\nClose status code is: {0}", statusCode));
             }
+
+            return statusCode;
         }
 
         /// <summary>
@@ -194,13 +195,13 @@ namespace SampleClient.Helpers
                 IList<object> outArgs = null;
                 statusCode = m_session.Call(NodeID, ReadNodeID, args, out outArgs);
                 data = outArgs[0] as byte[];
-
-                return statusCode;
             }
             catch
             {
-                throw new Exception(string.Format("\nStatus Code is: {0}", statusCode));
+                throw new Exception(string.Format("\nRead status Code is: {0}", statusCode));
             }
+
+            return statusCode;
         }
 
         /// <summary>
@@ -218,13 +219,12 @@ namespace SampleClient.Helpers
 
                 IList<object> outArgs = null;
                 statusCode = m_session.Call(NodeID, WriteNodeID, args, out outArgs);
-
-                return statusCode;
             }
             catch
             {
-                throw new Exception(string.Format("\nStatus Code is: {0}", statusCode));
+                throw new Exception(string.Format("\nWrite status Code is: {0}", statusCode));
             }
+            return statusCode;
         }
 
         /// <summary>
