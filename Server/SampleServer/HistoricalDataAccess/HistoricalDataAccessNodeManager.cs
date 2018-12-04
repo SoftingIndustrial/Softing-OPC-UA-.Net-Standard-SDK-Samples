@@ -88,14 +88,19 @@ namespace SampleServer.HistoricalDataAccess
 
             lock(Server.DiagnosticsLock)
             {
-                HistoryServerCapabilitiesState capabilities = Server.DiagnosticsNodeManager.GetDefaultHistoryCapabilities();
-                capabilities.AccessHistoryDataCapability.Value = true;
-                capabilities.InsertDataCapability.Value = true;
-                capabilities.ReplaceDataCapability.Value = true;
-                capabilities.UpdateDataCapability.Value = true;
-                capabilities.DeleteRawCapability.Value = true;
-                capabilities.DeleteAtTimeCapability.Value = true;
-                capabilities.InsertAnnotationCapability.Value = true;
+                // find HistoryServerCapabilities node.
+                HistoryServerCapabilitiesState capabilities = Server.DiagnosticsNodeManager.FindPredefinedNode(ObjectIds.HistoryServerCapabilities, null) as HistoryServerCapabilitiesState;
+
+                if (capabilities != null)
+                {
+                    capabilities.AccessHistoryDataCapability.Value = true;
+                    capabilities.InsertDataCapability.Value = true;
+                    capabilities.ReplaceDataCapability.Value = true;
+                    capabilities.UpdateDataCapability.Value = true;
+                    capabilities.DeleteRawCapability.Value = true;
+                    capabilities.DeleteAtTimeCapability.Value = true;
+                    capabilities.InsertAnnotationCapability.Value = true;
+                }
             }
         }
         #endregion

@@ -50,7 +50,7 @@ namespace SampleServer
                     Console.WriteLine(sampleServer.Configuration.ServerConfiguration.BaseAddresses[i]);
                 }
                 Console.WriteLine("Server started");
-               
+
                 PrintCommandParameters();
 
                 // print notification on session events
@@ -63,14 +63,26 @@ namespace SampleServer
                     ConsoleKeyInfo key = Console.ReadKey();
                     if (key.KeyChar == 'q' || key.KeyChar == 'x')
                     {
+                        Console.WriteLine("\nShutting down...");
                         break;
+                    }
+                    else if (key.KeyChar == 'c')
+                    {
+                        // clear list of validated certificates
+                        try
+                        {
+                            await sampleServer.CertificateValidator.Update(sampleServer.Configuration);
+                            Console.WriteLine("\nThe internal list of validated certificates was cleared.");
+
+                        }
+                        catch { }
                     }
                     else if (key.KeyChar == 's')
                     {
-                        //list sessions
+                        // list active sessions
                         var sessions = sampleServer.CurrentInstance.SessionManager.GetSessions();
-                        var subscriptions = sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();                       
-                       
+                        var subscriptions = sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
+
                         if (sessions.Count > 0)
                         {
                             Console.WriteLine("\nSessions list:");
@@ -107,6 +119,7 @@ namespace SampleServer
         private static void PrintCommandParameters()
         {
             Console.WriteLine("Press:\n\ts: session list");
+            Console.WriteLine("\tc: clear cached trusted certificates");
             Console.WriteLine("\tx,q: shutdown the server\n\n");
         }
         private static void SessionStateChanged(Session session, SessionEventReason reason)
@@ -120,7 +133,7 @@ namespace SampleServer
                 StringBuilder line = new StringBuilder();
                 if (reason != null)
                 {
-                    line.AppendFormat("{0,9};", reason);
+                    line.AppendFormat("Session {0,9};", reason);
                 }
                 line.AppendFormat("{0,20}", session.SessionDiagnostics.SessionName);
 
@@ -132,7 +145,7 @@ namespace SampleServer
                 if (reason == null)
                 {
                     line.AppendFormat(";Subscriptions:{0}", session.SessionDiagnostics.CurrentSubscriptionsCount);
-                }                           
+                }
                 Console.WriteLine(line);
             }
         }
