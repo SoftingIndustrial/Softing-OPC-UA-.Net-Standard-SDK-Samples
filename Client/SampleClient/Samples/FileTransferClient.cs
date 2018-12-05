@@ -5,6 +5,7 @@ using Opc.Ua;
 using Softing.Opc.Ua.Client;
 using SampleClient.Helpers;
 using System.IO;
+using Opc.Ua.Client;
 
 namespace SampleClient.Samples
 {
@@ -35,6 +36,7 @@ namespace SampleClient.Samples
         private readonly UaApplication m_application;
 
         private const string SessionName = "Softing FileTransfer Sample Client";
+        private ServerState m_currentServerState = ServerState.Unknown;
         #endregion
 
         #region Constructor
@@ -60,6 +62,7 @@ namespace SampleClient.Samples
                     // create the session object with no security and anonymous login    
                     m_session = m_application.CreateSession(Program.ServerUrl);
                     m_session.SessionName = SessionName;
+                    m_session.KeepAlive += Session_KeepAlive;
 
                     // connect session
                     m_session.Connect(false, true);
@@ -79,7 +82,16 @@ namespace SampleClient.Samples
                 }
             }
         }
-        
+
+        private void Session_KeepAlive(object sender, KeepAliveEventArgs e)
+        {
+            if (e.CurrentState != m_currentServerState)
+            {
+                m_currentServerState = e.CurrentState;
+                Console.WriteLine("Session KeepAlive Server state changed to: {0}", m_currentServerState);
+            }
+        }
+
         /// <summary>
         /// Disconnect the current session
         /// </summary>
