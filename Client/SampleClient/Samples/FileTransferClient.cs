@@ -189,11 +189,9 @@ namespace SampleClient.Samples
 
                 NodeId uploadNodeID = new NodeId(UploadNodeID);
                 FileStateHelper fileState = new FileStateHelper(m_session, fileName, uploadNodeID);
-
                 if (!fileState.Writable)
                 {
                     Console.WriteLine("The file state writable property is false.");
-
                     return;
                 }
 
@@ -240,7 +238,6 @@ namespace SampleClient.Samples
                         }
 
                         StatusCode writeStatusCode = fileState.Write(data);
-
                         if (StatusCode.IsBad(writeStatusCode))
                         {
                             fileState.Close();

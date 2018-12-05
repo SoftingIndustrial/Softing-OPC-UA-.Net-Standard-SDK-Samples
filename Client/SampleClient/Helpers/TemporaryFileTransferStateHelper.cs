@@ -105,7 +105,7 @@ namespace SampleClient.Helpers
             }
             catch (Exception ex)
             {
-                string errorText = StatusCode.IsGood(statusCode) ? string.Format("\nStatus Code is: {0}", statusCode) : string.Format("File cannot be opend: [0}", ex.Message);
+                string errorText = StatusCode.IsGood(statusCode) ? string.Format("\nGenerateFileForRead status code is: {0}", statusCode) : string.Format("File cannot be opend: [0}", ex.Message);
                 throw new Exception(errorText);
             }
 
@@ -139,7 +139,7 @@ namespace SampleClient.Helpers
             }
             catch (Exception ex)
             {
-                string errorText = StatusCode.IsGood(statusCode) ? string.Format("\nStatus Code is: {0}", statusCode) : string.Format("File cannot be opend: [0}", ex.Message);
+                string errorText = StatusCode.IsGood(statusCode) ? string.Format("\nGenerateFileForWrite status code is: {0}", statusCode) : string.Format("File cannot be opened: [0}", ex.Message);
                 throw new Exception(errorText);
             }
 
@@ -164,7 +164,7 @@ namespace SampleClient.Helpers
             }
             catch
             {
-                throw new Exception(string.Format("\nStatus Code is: {0}", statusCode));
+                throw new Exception(string.Format("\nCloseAndCommit status code is: {0}", statusCode));
             }
 
             return statusCode;

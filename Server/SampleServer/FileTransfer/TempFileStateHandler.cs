@@ -97,7 +97,7 @@ namespace SampleServer.FileTransfer
                         m_fileState.SetPosition.OnCall(context, method, m_fileState.NodeId, defaultFileHandle, 0);
                     if (readResult == null)
                     {
-                        throw new Exception("The Temporary Read file state method failed.");
+                        throw new Exception("The Temporary 'SetPosition' file state method failed.");
                     }
                     else
                     {
@@ -137,7 +137,7 @@ namespace SampleServer.FileTransfer
                         (byte) fileStateMode, ref fileHandle);
                     if (openResult == null)
                     {
-                        throw new Exception("The Temporary Open file state method failed.");
+                        throw new Exception("The Temporary 'Open' file state method failed.");
                     }
                     else
                     {
@@ -169,7 +169,7 @@ namespace SampleServer.FileTransfer
                         m_fileState.Close.OnCall(context, method, m_fileState.NodeId, defaultFileHandle);
                     if (closeResult == null)
                     {
-                        throw new Exception("The Temporary Close file state method failed.");
+                        throw new Exception("The Temporary 'Close' file state method failed.");
                     }
                     else
                     {

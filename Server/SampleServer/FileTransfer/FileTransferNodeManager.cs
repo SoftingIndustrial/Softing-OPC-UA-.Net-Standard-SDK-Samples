@@ -349,7 +349,7 @@ namespace SampleServer.FileTransfer
                 TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, true);
                 if (fileStateHandler != null)
                 {
-                    generateFileForWriteStatusCode = fileStateHandler.Open(context, method, FileStateMode.EraseExisting, ref fileNodeId, ref fileHandle);
+                    generateFileForWriteStatusCode = fileStateHandler.Open(context, method, FileStateMode.Read | FileStateMode.Write, ref fileNodeId, ref fileHandle);
                     if (StatusCode.IsGood(generateFileForWriteStatusCode))
                     {
                         uint readFileHandle = m_tmpFilesHolder.Add(fileNodeId, fileStateHandler);

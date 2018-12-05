@@ -22,13 +22,13 @@ namespace SampleClient.Helpers
     /// </summary>
     public enum FileStateMode
     {
-        Read = 0,
-        Write = 1,
-        EraseExisting = 2,
-        Append = 3
-        /* options 4-7 are reserved for future version */ 
+        Read = 1,           
+        Write = 2,          
+        EraseExisting = 4,  
+        Append = 8
+        /* options for bits position 4-7 are reserved for future version */
     }
-    
+
     /// <summary>
     /// FileState helper class
     /// </summary>
@@ -138,18 +138,24 @@ namespace SampleClient.Helpers
 
             try
             {
-                object[] args = new object[] { (byte)mode };
+                object[] args = new object[] {(byte) mode};
 
                 IList<object> outArgs = null;
                 statusCode = m_session.Call(NodeID, OpenNodeID, args, out outArgs);
-                m_fileHandle = (uint)outArgs[0];
+                if (StatusCode.IsGood(statusCode))
+                {
+                    m_fileHandle = (uint) outArgs[0];
+                }
+                else
+                {
+                    throw new Exception(string.Format("File state 'Open' status code is {0}", statusCode));
+                }
 
                 return statusCode;
             }
-            catch(Exception ex)
+            catch (Exception e)
             {
-                string errorText =  StatusCode.IsGood(statusCode) ? string.Format("\nStatus Code is: {0}", statusCode) : string.Format("File cannot be opend: [0}", ex.Message);
-                throw new Exception(errorText);
+                throw new Exception(e.Message);
             }
         }
 
@@ -168,7 +174,6 @@ namespace SampleClient.Helpers
                 IList<object> outArgs = null;
                 statusCode = m_session.Call(NodeID, CloseNodeID, args, out outArgs);
                 m_fileHandle = 0;
-
             }
             catch
             {
@@ -198,7 +203,7 @@ namespace SampleClient.Helpers
             }
             catch
             {
-                throw new Exception(string.Format("\nRead status Code is: {0}", statusCode));
+                throw new Exception(string.Format("\nRead status code is: {0}", statusCode));
             }
 
             return statusCode;
@@ -222,7 +227,7 @@ namespace SampleClient.Helpers
             }
             catch
             {
-                throw new Exception(string.Format("\nWrite status Code is: {0}", statusCode));
+                throw new Exception(string.Format("\nWrite status code is: {0}", statusCode));
             }
             return statusCode;
         }
@@ -246,7 +251,7 @@ namespace SampleClient.Helpers
             }
             catch
             {
-                throw new Exception(string.Format("\nStatus Code is: {0}", statusCode));
+                throw new Exception(string.Format("\nGet position status code is: {0}", statusCode));
             }
         }
 
@@ -267,7 +272,7 @@ namespace SampleClient.Helpers
             }
             catch
             {
-                throw new Exception(string.Format("\nStatus Code is: {0}", statusCode));
+                throw new Exception(string.Format("\nSet position status code is: {0}", statusCode));
             }
         }
         #endregion

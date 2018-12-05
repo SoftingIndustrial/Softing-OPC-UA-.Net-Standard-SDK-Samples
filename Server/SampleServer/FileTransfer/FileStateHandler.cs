@@ -15,11 +15,11 @@ namespace SampleServer.FileTransfer
     /// </summary>
     public enum FileStateMode
     {
-        Read = 0,
-        Write = 1,
-        EraseExisting = 2,
-        Append = 3
-        /* options 4-7 are reserved for future version */
+        Read = 1,
+        Write = 2,
+        EraseExisting = 4,
+        Append = 8
+        /* options for bits position 4-7 are reserved for future version */
     }
 
     /// <summary>
@@ -227,42 +227,61 @@ namespace SampleServer.FileTransfer
            byte mode,
            ref uint fileHandle)
         {
-            FileMode fileMode;
-            FileAccess fileAccess;
+            FileMode fileMode = FileMode.Open;
+            FileAccess fileAccess = FileAccess.Write;
 
-            if (mode > 7)
+            if (mode > 0xF)
             {
+                // not supported at this time; options for bits position 4-7 are reserved for future version
                 return StatusCodes.BadInvalidArgument;
             }
 
             FileStateMode fileStateMode = (FileStateMode)mode;
-            if (!Enum.IsDefined(typeof(FileStateMode), fileStateMode))
+            bool isModeValid = false;
+            bool isReadMode = false;
+            if ((fileStateMode & FileStateMode.Read) == FileStateMode.Read)
             {
-                return StatusCodes.BadNotSupported;
+                isReadMode = true;
+                fileAccess = FileAccess.Read;
+                isModeValid = true;
             }
-
-            switch (fileStateMode)
+            if ((fileStateMode & FileStateMode.Write) == FileStateMode.Write)
             {
-                case FileStateMode.Read: fileAccess = FileAccess.Read; break;
-                case FileStateMode.Write: fileAccess = FileAccess.ReadWrite; break;
-                case FileStateMode.EraseExisting: fileAccess = FileAccess.ReadWrite; break;
-                case FileStateMode.Append: fileAccess = FileAccess.Write; break;
-                default: fileAccess = FileAccess.Read; break;
-            }
-
-            if (fileStateMode == FileStateMode.EraseExisting)
-            {
-                fileMode = FileMode.Truncate;
-            }
-            else if (fileStateMode == FileStateMode.Append)
-            {
-                fileMode = FileMode.Append;
-            }
-            else
-            {
+                if (fileAccess == FileAccess.Read)
+                {
+                    fileAccess = FileAccess.ReadWrite;
+                }
                 fileMode = FileMode.Open;
+                isModeValid = true;
             }
-            
+            bool isEraseExistingMode = false;
+            if ((fileStateMode & FileStateMode.EraseExisting) == FileStateMode.EraseExisting)
+            {
+                isEraseExistingMode = true;
+                fileMode = FileMode.Truncate;
+                isModeValid = true;
+            }
+            bool isAppendMode = false;
+            if ((fileStateMode & FileStateMode.Append) == FileStateMode.Append)
+            {
+                isAppendMode = true;
+                fileMode = FileMode.Append;
+                isModeValid = true;
+            }
+            if (isReadMode && (isEraseExistingMode || isAppendMode))
+            {
+                isModeValid = false;
+            }
+            if (isEraseExistingMode && isAppendMode)
+            {
+                isModeValid = false;
+            }
+
+            if (isModeValid == false)
+            {
+                return StatusCodes.BadInvalidArgument;
+            }
+
             if (fileAccess != FileAccess.Read && m_fileState.Writable.Value == false)
             {
                 return StatusCodes.BadNotWritable;
@@ -272,7 +291,7 @@ namespace SampleServer.FileTransfer
             {
                 FileStreamTracker fileStreamTracker = new FileStreamTracker(m_filePath, fileMode, fileAccess);
 
-                // increment OpenCount.
+                // increment OpenCount
                 ushort openCount = (ushort) m_fileState.OpenCount.Value;
                 m_fileState.OpenCount.Value = ++openCount;
                 m_fileState.OpenCount.ClearChangeMasks(null, true);
@@ -284,15 +303,15 @@ namespace SampleServer.FileTransfer
             }
             catch (FileNotFoundException e)
             {
-                throw new ServiceResultException(StatusCodes.BadNotFound, e.Message);
+                throw new ServiceResultException(StatusCodes.BadNotFound, e);
             }
             catch (UnauthorizedAccessException e)
             {
-                throw new ServiceResultException(StatusCodes.BadNotWritable, e.Message);
+                throw new ServiceResultException(StatusCodes.BadNotWritable, e);
             }
             catch (Exception e)
             {
-                throw new ServiceResultException(StatusCodes.BadNotReadable, e.Message);
+                throw new ServiceResultException(StatusCodes.BadNotReadable, e);
             }
         }
 
@@ -494,6 +513,7 @@ namespace SampleServer.FileTransfer
                     m_fileState.Size.ClearChangeMasks(null, false);
                 }
 
+                // decrement OpenCount
                 ushort openCount = (ushort)m_fileState.OpenCount.Value;
                 m_fileState.OpenCount.Value = --openCount;
                 m_fileState.OpenCount.ClearChangeMasks(null, true);
