@@ -432,7 +432,6 @@ namespace SampleServer.FileTransfer
                             throw new Exception("Close temporary file state failed.");
                         }
 
-                        m_tmpFilesHolder.Remove(fileHandle);
                         #endregion
 
                     }

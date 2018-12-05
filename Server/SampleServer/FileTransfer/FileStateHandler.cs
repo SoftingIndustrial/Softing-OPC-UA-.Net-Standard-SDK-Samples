@@ -414,18 +414,25 @@ namespace SampleServer.FileTransfer
                 }
 
                 FileStreamTracker fileStreamTracker = m_fileHandles[fileHandle];
-                fileStreamTracker.LastAccessTime = DateTime.Now;
-
-                data = new byte[length];
-                int cRead = fileStreamTracker.FileStream.Read(data, 0, length);
-
-                // if the amount of available bytes is less than the length requested
-                // we need to strip the buffer
-                if (cRead < length)
+                if (fileStreamTracker.FileStream.CanRead)
                 {
-                    byte[] readData = new byte[cRead];
-                    Array.Copy(data, readData, cRead);
-                    data = readData;
+                    fileStreamTracker.LastAccessTime = DateTime.Now;
+
+                    data = new byte[length];
+                    int cRead = fileStreamTracker.FileStream.Read(data, 0, length);
+
+                    // if the amount of available bytes is less than the length requested
+                    // we need to strip the buffer
+                    if (cRead < length)
+                    {
+                        byte[] readData = new byte[cRead];
+                        Array.Copy(data, readData, cRead);
+                        data = readData;
+                    }
+                }
+                else
+                {
+                    return StatusCodes.BadInvalidState;
                 }
 
                 return StatusCodes.Good;
@@ -465,8 +472,15 @@ namespace SampleServer.FileTransfer
                 }
 
                 FileStreamTracker fileStreamTracker = m_fileHandles[fileHandle];
-                fileStreamTracker.LastAccessTime = DateTime.Now;
-                fileStreamTracker.FileStream.Write(data, 0, data.Length);
+                if (fileStreamTracker.FileStream.CanWrite)
+                {
+                    fileStreamTracker.LastAccessTime = DateTime.Now;
+                    fileStreamTracker.FileStream.Write(data, 0, data.Length);
+                }
+                else
+                {
+                    return StatusCodes.BadInvalidState;
+                }
 
                 return StatusCodes.Good;
             }
