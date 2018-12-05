@@ -375,7 +375,15 @@ namespace SampleServer.FileTransfer
 
                 FileStreamTracker fileStreamTracker = m_fileHandles[fileHandle];
                 fileStreamTracker.LastAccessTime = DateTime.Now;
-                fileStreamTracker.FileStream.Position = (long)position;
+                long offsetPosition = (long)position;
+                if (offsetPosition < fileStreamTracker.FileStream.Length)
+                {
+                    fileStreamTracker.FileStream.Position = offsetPosition;
+                }
+                else
+                {
+                    fileStreamTracker.FileStream.Position = fileStreamTracker.FileStream.Length;
+                }
 
                 return StatusCodes.Good;
             }
