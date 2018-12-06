@@ -22,8 +22,8 @@ namespace SampleServer.FileTransfer
 
         private string ByteStringFilePath = Path.Combine("FileTransfer", "Files", "ByteStringFile.xml");
 
-        private string DownloadTemporaryFilePath = Path.Combine("FileTransfer", "Files", "DownloadTemporaryFile.7z");
-        private string UploadTemporaryFilePath = Path.Combine("FileTransfer", "Files", "UploadTemporaryFile.7z");
+        private string DownloadTemporaryFilePath = Path.Combine("FileTransfer", "Files", "DownloadTemporaryFile.xml");
+        private string UploadTemporaryFilePath = Path.Combine("FileTransfer", "Files", "UploadTemporaryFile.xml");
 
         private const string FileTransferName = "FileTransfer";
         private const string ByteStringName = "ByteString";

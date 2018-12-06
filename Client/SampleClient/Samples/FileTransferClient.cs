@@ -28,8 +28,8 @@ namespace SampleClient.Samples
         private string DownloadFilePath = Path.Combine("Files", "DownloadFile.xml");
         private string UploadFilePath = Path.Combine("Files", "UploadClientFile.xml");
         private string ByteStringFilePath = Path.Combine("Files", "ByteStringFile.xml");
-        private string DownloadTemporaryFilePath = Path.Combine("Files", "DownloadTemporaryFile.7z");
-        private string UploadTemporaryFilePath = Path.Combine("Files", "UploadTemporaryFile.7z");
+        private string DownloadTemporaryFilePath = Path.Combine("Files", "DownloadTemporaryFile.xml");
+        private string UploadTemporaryFilePath = Path.Combine("Files", "UploadTemporaryFile.xml");
 
         private const int ChunkSize = 512;
         private ClientSession m_session;
