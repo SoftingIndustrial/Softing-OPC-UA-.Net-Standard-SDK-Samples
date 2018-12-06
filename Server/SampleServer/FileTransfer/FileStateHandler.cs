@@ -134,48 +134,35 @@ namespace SampleServer.FileTransfer
             }
             ExpireFileStreamAvailabilityTime = expireFileStreamAvailTime;
         }
-        #endregion
-
-        #region Private Methods
 
         /// <summary>
         /// Check when the stream was last time accessed and close it
         /// </summary>
         /// <param name="state"></param>
-        private void CheckFileStreamAvailability(object state)
+        protected virtual void CheckFileStreamAvailability(object state)
         {
             foreach (KeyValuePair<uint, FileStreamTracker> entry in m_fileHandles.ToList())
             {
                 TimeSpan duration = DateTime.Now - entry.Value.LastAccessTime;
-
                 if (duration.TotalMilliseconds > ExpireFileStreamAvailabilityTime)
                 {
-                    if (m_fileState != null)
+                    try
                     {
-                        try
+                        uint fileHandle = entry.Key;
+                        ServiceResult closeResult = m_fileState.Close.OnCall(null, null, null, fileHandle);
+                        if (StatusCode.IsBad(closeResult.StatusCode))
                         {
-                            uint fileHandle = entry.Key;
-                            ServiceResult writeResult = m_fileState.Close.OnCall(null, null, null, fileHandle);
-                            if (StatusCode.IsBad(writeResult.StatusCode))
-                            {
-                                throw new Exception(string.Format(
-                                    "Error closing the file state for the file handle: {0}", fileHandle));
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+                            throw new Exception(string.Format(
+                                "Error closing the file state for the file handle: {0}", fileHandle));
                         }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        m_fileHandles.Remove(entry.Key);
-                        entry.Value.FileStream.Close();
+                        throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
                     }
                 }
             }
         }
-
         #endregion
 
         #region Private Callback Methods
@@ -550,5 +537,4 @@ namespace SampleServer.FileTransfer
 
         #endregion
     }
-
 }

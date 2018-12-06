@@ -35,7 +35,7 @@ namespace SampleClient.Samples
         private ClientSession m_session;
         private readonly UaApplication m_application;
 
-        private const string SessionName = "Softing FileTransfer Sample Client";
+        private const string SessionName = "FileTransferClient Session";
         private ServerState m_currentServerState = ServerState.Unknown;
         #endregion
 
@@ -99,10 +99,18 @@ namespace SampleClient.Samples
         {
             try
             {
-                m_session.Disconnect(true);
-                m_session.Dispose();
-                m_session = null;
-                Console.WriteLine("Session is disconnected.");
+                if (m_session != null)
+                {
+                    m_session.Disconnect(true);
+                    m_session.Dispose();
+                    m_session = null;
+
+                    Console.WriteLine("Session is disconnected.");
+                }
+                else
+                {
+                    Console.WriteLine("Session already disconnected.");
+                }
             }
             catch (Exception e)
             {

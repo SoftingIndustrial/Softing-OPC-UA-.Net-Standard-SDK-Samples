@@ -67,14 +67,14 @@ namespace SampleServer.FileTransfer
         }
 
         /// <summary>
-        /// Get file stream 
+        /// Get file stream entry
         /// </summary>
         /// <returns></returns>
-        public FileStream GetTemporaryFileStream()
+        public FileStreamTracker GetTemporaryFileStreamEntry()
         {
             if (m_fileHandles.ContainsKey(defaultFileHandle))
             {
-                return m_fileHandles[defaultFileHandle].FileStream;
+                return m_fileHandles[defaultFileHandle];
             }
 
             return null;
@@ -199,6 +199,47 @@ namespace SampleServer.FileTransfer
             return false;
         }
 
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Check when the stream was last time accessed and close it
+        /// </summary>
+        /// <param name="state"></param>
+        protected override void CheckFileStreamAvailability(object state)
+        {
+            if (m_nodeManager != null)
+            {
+                lock (m_nodeManager.Lock)
+                {
+                    FileStreamTracker entry = GetTemporaryFileStreamEntry();
+
+                    if (entry != null)
+                    {
+                        TimeSpan duration = DateTime.Now - entry.LastAccessTime;
+                        if (duration.TotalMilliseconds > ExpireFileStreamAvailabilityTime)
+                        {
+                            try
+                            {
+                                uint fileHandle = defaultFileHandle;
+                                ServiceResult closeResult = m_fileState.Close.OnCall(m_nodeManager.SystemContext, null,
+                                    m_fileState.NodeId, fileHandle);
+                                if (StatusCode.IsBad(closeResult.StatusCode))
+                                {
+                                    throw new Exception(string.Format(
+                                        "Error closing the file state for the file handle: {0}", fileHandle));
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         #endregion
 
         #region Private Methods

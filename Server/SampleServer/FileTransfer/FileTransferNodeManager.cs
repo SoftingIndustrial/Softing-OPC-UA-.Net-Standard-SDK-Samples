@@ -271,46 +271,52 @@ namespace SampleServer.FileTransfer
 
             try
             {
-                #region Demo optional step
-                // Creates and copy data content from "DownloadTemporaryFilePath" to a temporary file that it will be read by client
-                string tmpFileName = Path.GetTempFileName();
-                using (FileStream fileStream = new FileStream(DownloadTemporaryFilePath, FileMode.Open))
+                lock (Lock)
                 {
-                    using (Stream fileStreamTmp = File.OpenWrite(tmpFileName))
+                    #region Demo optional step
+
+                    // Creates and copy data content from "DownloadTemporaryFilePath" to a temporary file that it will be read by client
+                    string tmpFileName = Path.GetTempFileName();
+                    using (FileStream fileStream = new FileStream(DownloadTemporaryFilePath, FileMode.Open))
                     {
-                        byte[] bytes = new byte[fileStream.Length];
-                        fileStream.Read(bytes, 0, bytes.Length);
-                        fileStreamTmp.Write(bytes, 0, bytes.Length);
-                        fileStreamTmp.Close();
+                        using (Stream fileStreamTmp = File.OpenWrite(tmpFileName))
+                        {
+                            byte[] bytes = new byte[fileStream.Length];
+                            fileStream.Read(bytes, 0, bytes.Length);
+                            fileStreamTmp.Write(bytes, 0, bytes.Length);
+                            fileStreamTmp.Close();
+                        }
+
+                        fileStream.Close();
                     }
 
-                    fileStream.Close();
-                }
-                #endregion
+                    #endregion
 
-                TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, false);
-                if (fileStateHandler != null)
-                {
-                    // At this step the user can change and define its own application logic of what he wants to keep into temporary file state node 
-                    // It could be an application memory, firmware file, stream or special device ...
-
-                    generateFileForReadStatusCode = fileStateHandler.Open(context, method, FileStateMode.Read,
-                        ref fileNodeId, ref fileHandle);
-                    if (StatusCode.IsGood(generateFileForReadStatusCode))
+                    TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, false);
+                    if (fileStateHandler != null)
                     {
-                        uint readFileHandle = m_tmpFilesHolder.Add(fileNodeId, fileStateHandler);
-                        if (readFileHandle != 0)
+                        // At this step the user can change and define its own application logic of what he wants to keep into temporary file state node 
+                        // It could be an application memory, firmware file, stream or special device ...
+
+                        generateFileForReadStatusCode = fileStateHandler.Open(context, method, FileStateMode.Read,
+                            ref fileNodeId, ref fileHandle);
+                        if (StatusCode.IsGood(generateFileForReadStatusCode))
                         {
-                            fileHandle = readFileHandle;
+                            uint readFileHandle = m_tmpFilesHolder.Add(fileNodeId, fileStateHandler);
+                            if (readFileHandle != 0)
+                            {
+                                fileHandle = readFileHandle;
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format("{0}: The temporary file is already opened!",
+                                    tmpFileName));
+                            }
                         }
                         else
                         {
-                            throw new Exception(string.Format("{0}: The temporary file is already opened!", tmpFileName));
+                            throw new Exception(string.Format("{0}: Open temporary file call failed!", tmpFileName));
                         }
-                    }
-                    else
-                    {
-                        throw new Exception(string.Format("{0}: Open temporary file call failed!", tmpFileName));
                     }
                 }
             }
@@ -343,28 +349,33 @@ namespace SampleServer.FileTransfer
 
             try
             {
-                // Creates a temporary file (used by client to persist client file content data)
-                string tmpFileName = Path.GetTempFileName();
-                
-                TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, true);
-                if (fileStateHandler != null)
+                lock (Lock)
                 {
-                    generateFileForWriteStatusCode = fileStateHandler.Open(context, method, FileStateMode.Read | FileStateMode.Write, ref fileNodeId, ref fileHandle);
-                    if (StatusCode.IsGood(generateFileForWriteStatusCode))
+                    // Creates a temporary file (used by client to persist client file content data)
+                    string tmpFileName = Path.GetTempFileName();
+
+                    TempFileStateHandler fileStateHandler = CreateTempFileState(null, context, tmpFileName, true);
+                    if (fileStateHandler != null)
                     {
-                        uint readFileHandle = m_tmpFilesHolder.Add(fileNodeId, fileStateHandler);
-                        if (readFileHandle != 0)
+                        generateFileForWriteStatusCode = fileStateHandler.Open(context, method,
+                            FileStateMode.Read | FileStateMode.Write, ref fileNodeId, ref fileHandle);
+                        if (StatusCode.IsGood(generateFileForWriteStatusCode))
                         {
-                            fileHandle = readFileHandle;
+                            uint readFileHandle = m_tmpFilesHolder.Add(fileNodeId, fileStateHandler);
+                            if (readFileHandle != 0)
+                            {
+                                fileHandle = readFileHandle;
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format("{0}: The temporary file is already opened!",
+                                    tmpFileName));
+                            }
                         }
                         else
                         {
-                            throw new Exception(string.Format("{0}: The temporary file is already opened!", tmpFileName));
+                            throw new Exception(string.Format("{0}: Open temporary file call failed!", tmpFileName));
                         }
-                    }
-                    else
-                    {
-                        throw new Exception(string.Format("{0}: Open temporary file call failed!", tmpFileName));
                     }
                 }
             }
@@ -395,57 +406,62 @@ namespace SampleServer.FileTransfer
 
             try
             {
-                TempFileStateHandler fileStateHandler = m_tmpFilesHolder.Get(fileHandle);
-                if (fileStateHandler != null)
+                lock (Lock)
                 {
-                    if (fileStateHandler.IsGenerateForWriteFileType())
+                    TempFileStateHandler fileStateHandler = m_tmpFilesHolder.Get(fileHandle);
+                    if (fileStateHandler != null)
                     {
-                        // At this step the user can change and define its own application logic of what he wants to receive from temporary file state node
-                        // performed on client side. It could be an application memory, firmware file, stream or special device ...
-
-                        #region Demo optional step
-                        using (FileStream fileStreamTmp = File.OpenWrite(UploadTemporaryFilePath))
+                        if (fileStateHandler.IsGenerateForWriteFileType())
                         {
-                            FileStream fileStream = fileStateHandler.GetTemporaryFileStream();
-                            if (fileStream != null)
+                            // At this step the user can change and define its own application logic of what he wants to receive from temporary file state node
+                            // performed on client side. It could be an application memory, firmware file, stream or special device ...
+
+                            #region Demo optional step
+
+                            using (FileStream fileStreamTmp = File.OpenWrite(UploadTemporaryFilePath))
                             {
-                                // The Client filled the temporary file with client data content
-                                // The File state (offset)position should be set at the beginning to read all its content
-                                fileStateHandler.SetBeginPosition(context, method);
-                                
-                                byte[] bytes = new byte[fileStream.Length];
-                                fileStream.Read(bytes, 0, bytes.Length);
-                                fileStreamTmp.Write(bytes, 0, bytes.Length);
-                                fileStream.Close();
-                            }
-                            else
-                            {
-                                throw new Exception("The temporary file state was released!");
+                                FileStream fileStream = fileStateHandler.GetTemporaryFileStreamEntry().FileStream;
+                                if (fileStream != null)
+                                {
+                                    // The Client filled the temporary file with client data content
+                                    // The File state (offset)position should be set at the beginning to read all its content
+                                    fileStateHandler.SetBeginPosition(context, method);
+
+                                    byte[] bytes = new byte[fileStream.Length];
+                                    fileStream.Read(bytes, 0, bytes.Length);
+                                    fileStreamTmp.Write(bytes, 0, bytes.Length);
+                                    fileStream.Close();
+                                }
+                                else
+                                {
+                                    throw new Exception("The temporary file state was released!");
+                                }
+
+                                fileStreamTmp.Close();
                             }
 
-                            fileStreamTmp.Close();
+                            closeAndCommitStatusCode = fileStateHandler.Close(context, method);
+                            if (StatusCode.IsBad(closeAndCommitStatusCode))
+                            {
+                                throw new Exception("Close temporary file state failed.");
+                            }
+
+                            #endregion
                         }
-
-                        closeAndCommitStatusCode = fileStateHandler.Close(context, method);
-                        if (StatusCode.IsBad(closeAndCommitStatusCode))
+                        else
                         {
-                            throw new Exception("Close temporary file state failed.");
+                            string notSupportedType =
+                                "The GenerateFileForRead node types are not allowed to use CloseAndCommit!";
+                            Console.WriteLine(notSupportedType);
+                            throw new Exception(notSupportedType);
                         }
-
-                        #endregion
-
                     }
                     else
                     {
-                        string notSupportedType = "The GenerateFileForRead node types are not allowed to use CloseAndCommit!";
-                        Console.WriteLine(notSupportedType);
-                        throw new Exception(notSupportedType);
+                        throw new Exception(string.Format(
+                            "The temporary file state related to the file handler '{0}' was removed!",
+                            fileHandle));
                     }
-                }
-                else
-                {
-                    throw new Exception(string.Format("The temporary file state related to the file handler '{0}' was removed!",
-                        fileHandle));
                 }
             }
             catch (Exception e)
