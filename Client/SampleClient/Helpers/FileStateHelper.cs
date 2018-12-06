@@ -148,7 +148,7 @@ namespace SampleClient.Helpers
                 }
                 else
                 {
-                    throw new Exception(string.Format("File state 'Open' status code is {0}", statusCode));
+                    throw new Exception(string.Format("\tFile state 'Open' status code is {0}", statusCode));
                 }
 
                 return statusCode;
@@ -177,7 +177,7 @@ namespace SampleClient.Helpers
             }
             catch
             {
-                throw new Exception(string.Format("\nClose status code is: {0}", statusCode));
+                throw new Exception(string.Format("\tFile state 'Close' status code is: {0}", statusCode));
             }
 
             return statusCode;
@@ -203,7 +203,7 @@ namespace SampleClient.Helpers
             }
             catch
             {
-                throw new Exception(string.Format("\nRead status code is: {0}", statusCode));
+                throw new Exception(string.Format("\tFile state 'Read' status code is: {0}", statusCode));
             }
 
             return statusCode;
@@ -227,7 +227,7 @@ namespace SampleClient.Helpers
             }
             catch
             {
-                throw new Exception(string.Format("\nWrite status code is: {0}", statusCode));
+                throw new Exception(string.Format("\nFile state 'Write' status code is: {0}", statusCode));
             }
             return statusCode;
         }
@@ -251,7 +251,7 @@ namespace SampleClient.Helpers
             }
             catch
             {
-                throw new Exception(string.Format("\nGet position status code is: {0}", statusCode));
+                throw new Exception(string.Format("\nFile state 'GetPosition' status code is: {0}", statusCode));
             }
         }
 
@@ -272,7 +272,7 @@ namespace SampleClient.Helpers
             }
             catch
             {
-                throw new Exception(string.Format("\nSet position status code is: {0}", statusCode));
+                throw new Exception(string.Format("\nFile state 'SetPosition' status code is: {0}", statusCode));
             }
         }
         #endregion

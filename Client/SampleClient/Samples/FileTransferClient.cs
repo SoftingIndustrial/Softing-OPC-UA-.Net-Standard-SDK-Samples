@@ -172,7 +172,7 @@ namespace SampleClient.Samples
                     return;
                 }
 
-                Console.WriteLine("The File was downloaded successfully.");
+                Console.WriteLine("The file was downloaded successfully.");
             }
             catch (Exception e)
             {
@@ -276,7 +276,7 @@ namespace SampleClient.Samples
                     return;
                 }
 
-                Console.WriteLine("The file was uploaded with success.");
+                Console.WriteLine("The file was uploaded successfully.");
             }
             catch (Exception e)
             {
@@ -381,16 +381,22 @@ namespace SampleClient.Samples
                                 cTotalRead * 100 / totalSize);
                         }
                     }
+
+                    Console.WriteLine();
+
+                    // Close the file
+                    StatusCode closeStatusCode = fileState.Close();
+                    if (StatusCode.IsBad(closeStatusCode))
+                    {
+                        Console.WriteLine("Unable to close the temporary file.");
+                        return;
+                    }
+
+                    Console.WriteLine("The temporary file was downloaded successfully.");
                 }
-
-                Console.WriteLine();
-
-                // Close the file
-                StatusCode closeStatusCode = fileState.Close();
-                if (StatusCode.IsBad(closeStatusCode))
+                else
                 {
-                    Console.WriteLine("Unable to close the temporary file.");
-                    return;
+                    Console.WriteLine("The temporary file helper initialization failed.");
                 }
             }
             catch (Exception e)
@@ -478,9 +484,9 @@ namespace SampleClient.Samples
                             Console.Write("\rWriting {0} bytes of {1} - {2}% complete", totalWrite, totalSize,
                                 totalWrite * 100 / totalSize);
                         }
-
-                        Console.WriteLine();
                     }
+
+                    Console.WriteLine();
 
                     // Close and remove the file
                     StatusCode closeStatusCode = tmpFileTransferState.CloseAndCommit();
@@ -489,6 +495,12 @@ namespace SampleClient.Samples
                         Console.WriteLine("\nClose status code is: {0}\n", closeStatusCode);
                         return;
                     }
+
+                    Console.WriteLine("The temporary file was uploaded successfully.");
+                }
+                else
+                {
+                    Console.WriteLine("The temporary file helper initialization failed.");
                 }
             }
             catch (Exception e)
