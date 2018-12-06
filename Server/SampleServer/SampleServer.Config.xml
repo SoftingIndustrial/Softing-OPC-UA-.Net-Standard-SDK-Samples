@@ -141,8 +141,8 @@
     <MaxRegistrationInterval>30000</MaxRegistrationInterval>
     <NodeManagerSaveFile>SampleServer.nodes.xml</NodeManagerSaveFile>
     <MinSubscriptionLifetime>10000</MinSubscriptionLifetime>
-    <MaxPublishRequestCount>20</MaxPublishRequestCount>
-    <MaxSubscriptionCount>100</MaxSubscriptionCount>
+    <MaxPublishRequestCount>100</MaxPublishRequestCount>
+    <MaxSubscriptionCount>200</MaxSubscriptionCount>
     <MaxEventQueueSize>10000</MaxEventQueueSize>
     <ServerProfileArray>
       <ua:String>Standard UA Server Profile</ua:String>
@@ -155,6 +155,7 @@
     <ua:XmlElement>
       <SampleServerConfiguration>
         <TimerInterval>1000</TimerInterval>
+        <ClearCachedCertificatesInterval>30000</ClearCachedCertificatesInterval>
       </SampleServerConfiguration>
     </ua:XmlElement>
     <ua:XmlElement>

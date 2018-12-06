@@ -27,7 +27,7 @@ namespace SampleServer
         private static async void StartServer()
         {
             string configurationFile = "SampleServer.Config.xml";
-            SampleServer sampleServer = new SampleServer();            
+            SampleServer sampleServer = new SampleServer();
 
             try
             {
@@ -65,17 +65,6 @@ namespace SampleServer
                     {
                         Console.WriteLine("\nShutting down...");
                         break;
-                    }
-                    else if (key.KeyChar == 'c')
-                    {
-                        // clear list of validated certificates
-                        try
-                        {
-                            await sampleServer.CertificateValidator.Update(sampleServer.Configuration);
-                            Console.WriteLine("\nThe internal list of validated certificates was cleared.");
-
-                        }
-                        catch { }
                     }
                     else if (key.KeyChar == 's')
                     {
@@ -119,7 +108,6 @@ namespace SampleServer
         private static void PrintCommandParameters()
         {
             Console.WriteLine("Press:\n\ts: session list");
-            Console.WriteLine("\tc: clear cached trusted certificates");
             Console.WriteLine("\tx,q: shutdown the server\n\n");
         }
         private static void SessionStateChanged(Session session, SessionEventReason reason)

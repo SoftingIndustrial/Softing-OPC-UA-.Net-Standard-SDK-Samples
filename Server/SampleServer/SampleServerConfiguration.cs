@@ -20,6 +20,7 @@ namespace SampleServer
     {
         #region Private Members
         private uint m_timerInterval;
+        private uint m_clearCachedCertificatesInterval; 
         #endregion
 
         #region Constructors
@@ -58,6 +59,16 @@ namespace SampleServer
             get { return m_timerInterval; }
             set { m_timerInterval = value; }
         }
-        #endregion     
+
+        /// <summary>
+        /// The interval to clear the list of cached trusted certificates
+        /// </summary>
+        [DataMember(Order = 2)]
+        public uint ClearCachedCertificatesInterval
+        {
+            get { return m_clearCachedCertificatesInterval; }
+            set { m_clearCachedCertificatesInterval = value; }
+        }
+        #endregion
     }
 }

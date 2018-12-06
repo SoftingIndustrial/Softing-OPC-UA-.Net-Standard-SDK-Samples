@@ -9,6 +9,7 @@
  * ======================================================================*/
  
 using System.Collections.Generic;
+using System.Threading;
 using Opc.Ua;
 using Opc.Ua.Server;
 using SampleServer.Alarms;
@@ -30,6 +31,7 @@ namespace SampleServer
     {
         #region Private Members
         private Dictionary<string, string> m_userNameIdentities;
+        private Timer m_certificatesTimer;
         #endregion
 
         #region Constructor
@@ -44,6 +46,43 @@ namespace SampleServer
             m_userNameIdentities.Add("admin", "admin");
 
             ManufacturerName = "Softing";
+        }
+
+        #endregion
+
+        #region OnServerStarted
+        /// <summary>
+        /// Called after the server has been started.
+        /// </summary>
+        /// <param name="server">The server.</param>
+        protected override void OnServerStarted(IServerInternal server)
+        {
+            base.OnServerStarted(server);
+
+            uint clearCertificatesInterval = 30000;
+
+            //parse custom configuration extension 
+            SampleServerConfiguration sampleServerConfiguration = this.Configuration.ParseExtension<SampleServerConfiguration>();
+            if (sampleServerConfiguration != null)
+            {
+                clearCertificatesInterval = sampleServerConfiguration.ClearCachedCertificatesInterval;
+            }
+
+            m_certificatesTimer = new Timer(ClearCachedCertificates, null, clearCertificatesInterval, clearCertificatesInterval);
+        }
+
+        /// <summary>
+        /// Clear cached trusted certificates
+        /// </summary>
+        /// <param name="state"></param>
+        private void ClearCachedCertificates(object state)
+        {
+            try
+            {
+                // clear list of validated certificates
+                CertificateValidator.Update(Configuration).Wait();
+            }
+            catch { }
         }
         #endregion
 
@@ -97,6 +136,5 @@ namespace SampleServer
             }
         }
         #endregion
-
     }
 }
