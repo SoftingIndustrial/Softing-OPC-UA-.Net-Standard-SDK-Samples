@@ -463,7 +463,7 @@ namespace SampleServer.FileTransfer
 
                 if (m_fileState.Writable.Value == false)
                 {
-                    return StatusCodes.BadWriteNotSupported;
+                    return StatusCodes.BadNotWritable; 
                 }
 
                 FileStreamTracker fileStreamTracker = m_fileHandles[fileHandle];

@@ -141,22 +141,22 @@ namespace SampleClient.Helpers
                 object[] args = new object[] {(byte) mode};
 
                 IList<object> outArgs = null;
-                statusCode = m_session.Call(NodeID, OpenNodeID, args, out outArgs);
-                if (StatusCode.IsGood(statusCode))
+                if (m_session.CurrentState != State.Active)
                 {
+                    statusCode = m_session.Call(NodeID, OpenNodeID, args, out outArgs);
                     m_fileHandle = (uint) outArgs[0];
                 }
                 else
                 {
-                    throw new Exception(string.Format("\tFile state 'Open' status code is {0}", statusCode));
+                    statusCode = StatusCodes.BadSessionClosed;
                 }
-
-                return statusCode;
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw new Exception(string.Format("\tFile state 'Open' status code is {0}", e.Message));
             }
+
+            return statusCode;
         }
 
         /// <summary>
@@ -172,12 +172,20 @@ namespace SampleClient.Helpers
                 object[] args = new object[] {m_fileHandle};
 
                 IList<object> outArgs = null;
-                statusCode = m_session.Call(NodeID, CloseNodeID, args, out outArgs);
+                if (m_session.CurrentState != State.Active)
+                {
+                    statusCode = m_session.Call(NodeID, CloseNodeID, args, out outArgs);
+                }
+                else
+                {
+                    statusCode = StatusCodes.BadSessionClosed;
+                }
+
                 m_fileHandle = 0;
             }
-            catch
+            catch(Exception e)
             {
-                throw new Exception(string.Format("\tFile state 'Close' status code is: {0}", statusCode));
+                throw new Exception(string.Format("\tFile state 'Close' status code is: {0}", e.Message));
             }
 
             return statusCode;
@@ -196,14 +204,23 @@ namespace SampleClient.Helpers
             try
             {
                 object[] args = new object[] { m_fileHandle, length };
-
                 IList<object> outArgs = null;
-                statusCode = m_session.Call(NodeID, ReadNodeID, args, out outArgs);
-                data = outArgs[0] as byte[];
+
+                if (m_session.CurrentState != State.Active)
+                {
+                    statusCode = m_session.Call(NodeID, ReadNodeID, args, out outArgs);
+                    data = outArgs[0] as byte[];
+                }
+                else
+                {
+                    data = new byte[0];
+                    statusCode = StatusCodes.BadSessionClosed;
+                }
+                
             }
-            catch
+            catch(Exception e)
             {
-                throw new Exception(string.Format("\tFile state 'Read' status code is: {0}", statusCode));
+                throw new Exception(string.Format("\tFile state 'Read' status code is: {0}", e.Message));
             }
 
             return statusCode;
@@ -223,11 +240,18 @@ namespace SampleClient.Helpers
                 object[] args = new object[] { m_fileHandle, data };
 
                 IList<object> outArgs = null;
-                statusCode = m_session.Call(NodeID, WriteNodeID, args, out outArgs);
+                if (m_session.CurrentState != State.Active)
+                {
+                    statusCode = m_session.Call(NodeID, WriteNodeID, args, out outArgs);
+                }
+                else
+                {
+                    statusCode = StatusCodes.BadSessionClosed;
+                }
             }
-            catch
+            catch(Exception e)
             {
-                throw new Exception(string.Format("\nFile state 'Write' status code is: {0}", statusCode));
+                throw new Exception(string.Format("\tFile state 'Write' status code is: {0}", e.Message));
             }
             return statusCode;
         }
@@ -245,13 +269,20 @@ namespace SampleClient.Helpers
                 object[] args = new object[] { m_fileHandle };
                 IList<object> outArgs = null;
 
-                statusCode = m_session.Call(NodeID, GetPositionNodeID, args, out outArgs);
+                if (m_session.CurrentState != State.Active)
+                {
+                    statusCode = m_session.Call(NodeID, GetPositionNodeID, args, out outArgs);
+                }
+                else
+                {
+                    throw new Exception(string.Format("{0}", StatusCodes.BadSessionClosed));
+                }
 
                 return (UInt64)outArgs[0];
             }
-            catch
+            catch(Exception e)
             {
-                throw new Exception(string.Format("\nFile state 'GetPosition' status code is: {0}", statusCode));
+                throw new Exception(string.Format("\tFile state 'GetPosition' status code is: {0}", e.Message));
             }
         }
 
@@ -265,14 +296,21 @@ namespace SampleClient.Helpers
 
             try
             {
-                object[] args = new object[] { m_fileHandle, position };
+                object[] args = new object[] {m_fileHandle, position};
                 IList<object> outArgs = null;
 
-                statusCode = m_session.Call(NodeID, SetPositionNodeID, args, out outArgs);
+                if (m_session.CurrentState != State.Active)
+                {
+                    statusCode = m_session.Call(NodeID, SetPositionNodeID, args, out outArgs);
+                }
+                else
+                {
+                    throw new Exception(string.Format("{0}", StatusCodes.BadSessionClosed));
+                }
             }
-            catch
+            catch(Exception e)
             {
-                throw new Exception(string.Format("\nFile state 'SetPosition' status code is: {0}", statusCode));
+                throw new Exception(string.Format("\tFile state 'SetPosition' status code is: {0}", e.Message));
             }
         }
         #endregion
@@ -309,9 +347,9 @@ namespace SampleClient.Helpers
                 GetPositionNodeID = GetTargetId(translateResults[6]);
                 SetPositionNodeID = GetTargetId(translateResults[7]);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new Exception("TranslateBrowsePathToNodeIds error: " + ex.Message);
+                throw new Exception(string.Format("TranslateBrowsePathToNodeIds error: {0}", e.Message));
             }
         }
 
