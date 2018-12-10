@@ -463,7 +463,7 @@ namespace SampleServer.FileTransfer
 
                 if (m_fileState.Writable.Value == false)
                 {
-                    return StatusCodes.BadNotWritable; 
+                    return StatusCodes.BadInvalidState; 
                 }
 
                 FileStreamTracker fileStreamTracker = m_fileHandles[fileHandle];
@@ -481,7 +481,7 @@ namespace SampleServer.FileTransfer
             }
             catch (Exception e)
             {
-                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+                throw new ServiceResultException(StatusCodes.BadNotWritable, e.Message);
             }
         }
 
