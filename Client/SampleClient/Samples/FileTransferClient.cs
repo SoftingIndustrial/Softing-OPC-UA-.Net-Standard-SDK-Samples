@@ -139,7 +139,7 @@ namespace SampleClient.Samples
                 StatusCode openStatusCode = fileState.Open(FileStateMode.Read);
                 if (StatusCode.IsBad(openStatusCode))
                 {
-                    Console.WriteLine("Unable to open the file in read mode.");
+                    Console.WriteLine("'Open' file state status code is: {0}", openStatusCode);
                     return;
                 }
 
@@ -158,14 +158,13 @@ namespace SampleClient.Samples
                         if (StatusCode.IsBad(readStatusCode))
                         {
                             fileState.Close();
-                            Console.WriteLine(string.Format("\nReading status code failure is: {0}\n", readStatusCode));
-
+                            Console.WriteLine(string.Format("'Read' file state status code is: {0}", readStatusCode));
                             return;
                         }
 
                         fs.Write(buffer, 0, cRead);
                         cTotalRead += (ulong) cRead;
-                        Console.Write("\rReading {0} bytes of {1} - {2}% complete", cTotalRead, totalSize,
+                        Console.Write("\rReading {0} bytes of {1} - {2}% complete ", cTotalRead, totalSize,
                             cTotalRead * 100 / totalSize);
                     }
 
@@ -219,7 +218,7 @@ namespace SampleClient.Samples
                 StatusCode openStatusCode = fileState.Open(FileStateMode.Write | FileStateMode.EraseExisting);
                 if (StatusCode.IsBad(openStatusCode))
                 {
-                    Console.WriteLine(string.Format("\nOpen status code failure is: {0}\n", openStatusCode));
+                    Console.WriteLine(string.Format("'Open' file state status code is: {0}", openStatusCode));
                     return;
                 }
 
@@ -261,14 +260,13 @@ namespace SampleClient.Samples
                         if (StatusCode.IsBad(writeStatusCode))
                         {
                             fileState.Close();
-                            Console.WriteLine("\nWrite status code failure is: {0}\n", writeStatusCode);
-
+                            Console.WriteLine("'Write' file state status code is: {0}", writeStatusCode);
                             return;
                         }
 
                         totalWrite += (ulong) data.Length;
 
-                        Console.Write("\rWriting {0} bytes of {1} - {2}% complete", totalWrite, totalSize,
+                        Console.Write("\rWriting {0} bytes of {1} - {2}% complete ", totalWrite, totalSize,
                             totalWrite * 100 / totalSize);
                     }
 
@@ -378,14 +376,14 @@ namespace SampleClient.Samples
                             StatusCode readStatusCode = fileState.Read(cRead, out buffer);
                             if (StatusCode.IsBad(readStatusCode))
                             {
-                                Console.WriteLine(string.Format("\nReading aborted due the reason: {0}\n", readStatusCode));
+                                Console.WriteLine(string.Format("'Read' file state status code is: {0}", readStatusCode));
                                 fileState.Close();
                                 return;
                             }
 
                             fs.Write(buffer, 0, cRead);
                             cTotalRead += (ulong) cRead;
-                            Console.Write("\rReading {0} bytes of {1} - {2}% complete", cTotalRead, totalSize,
+                            Console.Write("\rReading {0} bytes of {1} - {2}% complete ", cTotalRead, totalSize,
                                 cTotalRead * 100 / totalSize);
                         }
                     }
@@ -482,14 +480,14 @@ namespace SampleClient.Samples
                             StatusCode writeStatusCode = fileState.Write(data);
                             if (StatusCode.IsBad(writeStatusCode))
                             {
-                                Console.WriteLine("\n\tWrite failed status code is: {0}\n", writeStatusCode);
+                                Console.WriteLine("'Write' file state status code is: {0}", writeStatusCode);
                                 fileState.Close();
                                 return;
                             }
 
                             totalWrite += (ulong) data.Length;
 
-                            Console.Write("\rWriting {0} bytes of {1} - {2}% complete", totalWrite, totalSize,
+                            Console.Write("\rWriting {0} bytes of {1} - {2}% complete ", totalWrite, totalSize,
                                 totalWrite * 100 / totalSize);
                         }
                     }

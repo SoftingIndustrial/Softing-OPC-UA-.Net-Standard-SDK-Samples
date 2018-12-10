@@ -141,7 +141,7 @@ namespace SampleClient.Helpers
                 object[] args = new object[] {(byte) mode};
 
                 IList<object> outArgs = null;
-                if (m_session.CurrentState != State.Active)
+                if (m_session.CurrentState == State.Active)
                 {
                     statusCode = m_session.Call(NodeID, OpenNodeID, args, out outArgs);
                     m_fileHandle = (uint) outArgs[0];
@@ -149,11 +149,12 @@ namespace SampleClient.Helpers
                 else
                 {
                     statusCode = StatusCodes.BadSessionClosed;
+                    throw new Exception();
                 }
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(string.Format("\tFile state 'Open' status code is {0}", e.Message));
+                throw new Exception(string.Format("'Open' file state error: {0}", statusCode));
             }
 
             return statusCode;
@@ -172,20 +173,21 @@ namespace SampleClient.Helpers
                 object[] args = new object[] {m_fileHandle};
 
                 IList<object> outArgs = null;
-                if (m_session.CurrentState != State.Active)
+                if (m_session.CurrentState == State.Active)
                 {
                     statusCode = m_session.Call(NodeID, CloseNodeID, args, out outArgs);
+                    m_fileHandle = 0;
                 }
                 else
                 {
+                    m_fileHandle = 0;
                     statusCode = StatusCodes.BadSessionClosed;
+                    throw new Exception();
                 }
-
-                m_fileHandle = 0;
             }
-            catch(Exception e)
+            catch
             {
-                throw new Exception(string.Format("\tFile state 'Close' status code is: {0}", e.Message));
+                throw new Exception(string.Format("'Close' file state error: {0}", statusCode));
             }
 
             return statusCode;
@@ -206,7 +208,7 @@ namespace SampleClient.Helpers
                 object[] args = new object[] { m_fileHandle, length };
                 IList<object> outArgs = null;
 
-                if (m_session.CurrentState != State.Active)
+                if (m_session.CurrentState == State.Active)
                 {
                     statusCode = m_session.Call(NodeID, ReadNodeID, args, out outArgs);
                     data = outArgs[0] as byte[];
@@ -215,12 +217,12 @@ namespace SampleClient.Helpers
                 {
                     data = new byte[0];
                     statusCode = StatusCodes.BadSessionClosed;
+                    throw new Exception();
                 }
-                
             }
-            catch(Exception e)
+            catch
             {
-                throw new Exception(string.Format("\tFile state 'Read' status code is: {0}", e.Message));
+                throw new Exception(string.Format("'Read' file state error: {0}", statusCode));
             }
 
             return statusCode;
@@ -240,18 +242,19 @@ namespace SampleClient.Helpers
                 object[] args = new object[] { m_fileHandle, data };
 
                 IList<object> outArgs = null;
-                if (m_session.CurrentState != State.Active)
+                if (m_session.CurrentState == State.Active)
                 {
                     statusCode = m_session.Call(NodeID, WriteNodeID, args, out outArgs);
                 }
                 else
                 {
                     statusCode = StatusCodes.BadSessionClosed;
+                    throw new Exception();
                 }
             }
-            catch(Exception e)
+            catch
             {
-                throw new Exception(string.Format("\tFile state 'Write' status code is: {0}", e.Message));
+                throw new Exception(string.Format("'Write' file state error: {0}", statusCode));
             }
             return statusCode;
         }
@@ -269,20 +272,21 @@ namespace SampleClient.Helpers
                 object[] args = new object[] { m_fileHandle };
                 IList<object> outArgs = null;
 
-                if (m_session.CurrentState != State.Active)
+                if (m_session.CurrentState == State.Active)
                 {
                     statusCode = m_session.Call(NodeID, GetPositionNodeID, args, out outArgs);
                 }
                 else
                 {
-                    throw new Exception(string.Format("{0}", StatusCodes.BadSessionClosed));
+                    statusCode = StatusCodes.BadSessionClosed;
+                    throw new Exception();
                 }
 
                 return (UInt64)outArgs[0];
             }
-            catch(Exception e)
+            catch
             {
-                throw new Exception(string.Format("\tFile state 'GetPosition' status code is: {0}", e.Message));
+                throw new Exception(string.Format("'GetPosition' file state error: {0}", statusCode));
             }
         }
 
@@ -299,18 +303,19 @@ namespace SampleClient.Helpers
                 object[] args = new object[] {m_fileHandle, position};
                 IList<object> outArgs = null;
 
-                if (m_session.CurrentState != State.Active)
+                if (m_session.CurrentState == State.Active)
                 {
                     statusCode = m_session.Call(NodeID, SetPositionNodeID, args, out outArgs);
                 }
                 else
                 {
-                    throw new Exception(string.Format("{0}", StatusCodes.BadSessionClosed));
+                    statusCode = StatusCodes.BadSessionClosed;
+                    throw new Exception();
                 }
             }
-            catch(Exception e)
+            catch
             {
-                throw new Exception(string.Format("\tFile state 'SetPosition' status code is: {0}", e.Message));
+                throw new Exception(string.Format("'SetPosition' file state error: {0}", statusCode));
             }
         }
         #endregion
@@ -335,19 +340,26 @@ namespace SampleClient.Helpers
                 AddBrowsePath(browsePaths, "GetPosition");
                 AddBrowsePath(browsePaths, "SetPosition");
 
-                // invoke the TranslateBrowsePath service.
-                IList<BrowsePathResultEx> translateResults = m_session.TranslateBrowsePathsToNodeIds(browsePaths);
+                if (m_session.CurrentState == State.Active)
+                {
+                    // invoke the TranslateBrowsePath service.
+                    IList<BrowsePathResultEx> translateResults = m_session.TranslateBrowsePathsToNodeIds(browsePaths);
 
-                SizeNodeID = GetTargetId(translateResults[0]);
-                WritableNodeID = GetTargetId(translateResults[1]);
-                OpenNodeID = GetTargetId(translateResults[2]);
-                CloseNodeID = GetTargetId(translateResults[3]);
-                ReadNodeID = GetTargetId(translateResults[4]);
-                WriteNodeID = GetTargetId(translateResults[5]);
-                GetPositionNodeID = GetTargetId(translateResults[6]);
-                SetPositionNodeID = GetTargetId(translateResults[7]);
+                    SizeNodeID = GetTargetId(translateResults[0]);
+                    WritableNodeID = GetTargetId(translateResults[1]);
+                    OpenNodeID = GetTargetId(translateResults[2]);
+                    CloseNodeID = GetTargetId(translateResults[3]);
+                    ReadNodeID = GetTargetId(translateResults[4]);
+                    WriteNodeID = GetTargetId(translateResults[5]);
+                    GetPositionNodeID = GetTargetId(translateResults[6]);
+                    SetPositionNodeID = GetTargetId(translateResults[7]);
+                }
+                else
+                {
+                    throw new ServiceResultException(StatusCodes.BadSessionClosed);
+                }
             }
-            catch (Exception e)
+            catch(Exception e)
             {
                 throw new Exception(string.Format("TranslateBrowsePathToNodeIds error: {0}", e.Message));
             }

@@ -88,25 +88,31 @@ namespace SampleClient.Helpers
 
             try
             {
-                object[] args = new object[] { generateOptions };
-
-                IList<object> outArgs = null;
-                statusCode = m_session.Call(NodeID, GenerateFileForReadNodeID, args, out outArgs);
-                if (outArgs != null && outArgs.Count == 3)
+                if (m_session.CurrentState == State.Active)
                 {
-                    m_fileNodeId = (NodeId)outArgs[0];
-                    m_fileHandle = (uint)outArgs[1];
-                    NodeId completionStateMachine = (NodeId)outArgs[2];
+                    object[] args = new object[] {generateOptions};
+
+                    IList<object> outArgs = null;
+                    statusCode = m_session.Call(NodeID, GenerateFileForReadNodeID, args, out outArgs);
+                    if (outArgs != null && outArgs.Count == 3)
+                    {
+                        m_fileNodeId = (NodeId) outArgs[0];
+                        m_fileHandle = (uint) outArgs[1];
+                        NodeId completionStateMachine = (NodeId) outArgs[2];
+                    }
+                    else
+                    {
+                        throw new ServiceResultException(StatusCodes.BadInvalidArgument);
+                    }
                 }
                 else
                 {
-                    throw new Exception("Invalid number of output arguments received.");
+                    throw new ServiceResultException(StatusCodes.BadSessionClosed);
                 }
             }
-            catch (Exception ex)
+            catch 
             {
-                string errorText = StatusCode.IsGood(statusCode) ? string.Format("\nGenerateFileForRead status code is: {0}", statusCode) : string.Format("File cannot be opend: [0}", ex.Message);
-                throw new Exception(errorText);
+                throw new Exception(string.Format("GenerateFileForRead error: {0}", statusCode));
             }
 
             return statusCode;
@@ -123,24 +129,30 @@ namespace SampleClient.Helpers
 
             try
             {
-                object[] args = new object[] { generateOptions };
-
-                IList<object> outArgs = null;
-                statusCode = m_session.Call(NodeID, GenerateFileForWriteNodeID, args, out outArgs);
-                if (outArgs != null && outArgs.Count == 2)
+                if (m_session.CurrentState == State.Active)
                 {
-                    m_fileNodeId = (NodeId) outArgs[0];
-                    m_fileHandle = (uint) outArgs[1];
+                    object[] args = new object[] {generateOptions};
+
+                    IList<object> outArgs = null;
+                    statusCode = m_session.Call(NodeID, GenerateFileForWriteNodeID, args, out outArgs);
+                    if (outArgs != null && outArgs.Count == 2)
+                    {
+                        m_fileNodeId = (NodeId) outArgs[0];
+                        m_fileHandle = (uint) outArgs[1];
+                    }
+                    else
+                    {
+                        throw new ServiceResultException(StatusCodes.BadInvalidArgument);
+                    }
                 }
                 else
                 {
-                    throw new Exception("Invalid number of output arguments received.");
+                    throw new ServiceResultException(StatusCodes.BadSessionClosed);
                 }
             }
-            catch (Exception ex)
+            catch 
             {
-                string errorText = StatusCode.IsGood(statusCode) ? string.Format("\nGenerateFileForWrite status code is: {0}", statusCode) : string.Format("File cannot be opened: [0}", ex.Message);
-                throw new Exception(errorText);
+                throw new Exception(string.Format("GenerateFileForWrite error: {0}", statusCode));
             }
 
             return statusCode;
@@ -156,15 +168,23 @@ namespace SampleClient.Helpers
 
             try
             {
-                object[] args = new object[] { m_fileHandle };
+                if (m_session.CurrentState == State.Active)
+                {
+                    object[] args = new object[] {m_fileHandle};
 
-                IList<object> outArgs = null;
-                statusCode = m_session.Call(NodeID, CloseAndCommitNodeID, args, out outArgs);
-                m_fileHandle = 0;
+                    IList<object> outArgs = null;
+                    statusCode = m_session.Call(NodeID, CloseAndCommitNodeID, args, out outArgs);
+                    m_fileHandle = 0;
+                }
+                else
+                {
+                    m_fileHandle = 0;
+                    throw new ServiceResultException(StatusCodes.BadSessionClosed);
+                }
             }
-            catch
+            catch 
             {
-                throw new Exception(string.Format("\nCloseAndCommit status code is: {0}", statusCode));
+                throw new Exception(string.Format("CloseAndCommit error: {0}", statusCode));
             }
 
             return statusCode;
@@ -186,18 +206,25 @@ namespace SampleClient.Helpers
                 AddBrowsePath(browsePaths, "GenerateFileForRead");
                 AddBrowsePath(browsePaths, "GenerateFileForWrite");
                 AddBrowsePath(browsePaths, "CloseAndCommit");
-                
-                // invoke the TranslateBrowsePath service.
-                IList<BrowsePathResultEx> translateResults = m_session.TranslateBrowsePathsToNodeIds(browsePaths);
 
-                ClientProcessingTimeoutNodeID = GetTargetId(translateResults[0]);
-                GenerateFileForReadNodeID = GetTargetId(translateResults[1]);
-                GenerateFileForWriteNodeID = GetTargetId(translateResults[2]);
-                CloseAndCommitNodeID = GetTargetId(translateResults[3]);
+                if (m_session.CurrentState == State.Active)
+                {
+                    // invoke the TranslateBrowsePath service.
+                    IList<BrowsePathResultEx> translateResults = m_session.TranslateBrowsePathsToNodeIds(browsePaths);
+
+                    ClientProcessingTimeoutNodeID = GetTargetId(translateResults[0]);
+                    GenerateFileForReadNodeID = GetTargetId(translateResults[1]);
+                    GenerateFileForWriteNodeID = GetTargetId(translateResults[2]);
+                    CloseAndCommitNodeID = GetTargetId(translateResults[3]);
+                }
+                else
+                {
+                    throw new ServiceResultException(StatusCodes.BadSessionClosed);
+                }
             }
-            catch (Exception ex)
+            catch(Exception e) 
             {
-                throw new Exception("TranslateBrowsePathToNodeIds error: " + ex.Message);
+                throw new Exception(string.Format("TranslateBrowsePathToNodeIds error: {0}", e.Message));
             }
         }
 
