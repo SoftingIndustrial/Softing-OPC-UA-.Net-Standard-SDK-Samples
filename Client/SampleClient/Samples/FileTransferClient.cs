@@ -350,11 +350,9 @@ namespace SampleClient.Samples
                     return;
                 }
 
-                uint readFileHandle = 1; // only one handle is generated for a temporary file node
                 FileStateHelper fileState = new FileStateHelper(m_session,
                     tmpFileTransferState.Filename,
-                    tmpFileTransferState.FileNodeID,
-                    readFileHandle);
+                    tmpFileTransferState.FileNodeID);
                 if (fileState != null)
                 {
                     ulong totalSize = fileState.Size;
@@ -436,11 +434,9 @@ namespace SampleClient.Samples
                     return;
                 }
 
-                uint writeFileHandle = 1; // only one handle is generated for a temporary file node
                 FileStateHelper fileState = new FileStateHelper(m_session,
                     tmpFileTransferState.Filename,
-                    tmpFileTransferState.FileNodeID,
-                    writeFileHandle);
+                    tmpFileTransferState.FileNodeID);
                 if (fileState != null)
                 {
                     // Send the file content in chunks of chunkSize bytes
@@ -475,7 +471,6 @@ namespace SampleClient.Samples
                             {
                                 data = buffer;
                             }
-
 
                             StatusCode writeStatusCode = fileState.Write(data);
                             if (StatusCode.IsBad(writeStatusCode))

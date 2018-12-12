@@ -402,8 +402,6 @@ namespace SampleServer.FileTransfer
             uint fileHandle,
             ref NodeId completionStateMachine)
         {
-            StatusCode closeAndCommitStatusCode = new StatusCode();
-
             try
             {
                 lock (Lock)
@@ -440,8 +438,8 @@ namespace SampleServer.FileTransfer
                                 fileStreamTmp.Close();
                             }
 
-                            closeAndCommitStatusCode = fileStateHandler.Close(context, method);
-                            if (StatusCode.IsBad(closeAndCommitStatusCode))
+                            StatusCode closeStatusCode = fileStateHandler.Close(context, method);
+                            if (StatusCode.IsBad(closeStatusCode))
                             {
                                 throw new Exception("Close temporary file state failed.");
                             }
@@ -469,7 +467,7 @@ namespace SampleServer.FileTransfer
                 throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
             }
 
-            return closeAndCommitStatusCode;
+            return StatusCodes.Good;
         }
 
         #endregion

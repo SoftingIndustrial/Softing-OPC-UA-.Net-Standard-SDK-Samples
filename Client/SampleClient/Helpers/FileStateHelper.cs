@@ -42,13 +42,12 @@ namespace SampleClient.Helpers
         #endregion
 
         #region Constructor
-        public FileStateHelper(ClientSession session, string filename, NodeId nodeId, UInt32 fileHandle = 0)
+        public FileStateHelper(ClientSession session, string filename, NodeId nodeId)
         {
             m_session = session;
             Filename = filename;
             NodeID = nodeId;
-            m_fileHandle = fileHandle;
-
+            
             TranslateBrowsePathToNodeIds();
         }
         #endregion
