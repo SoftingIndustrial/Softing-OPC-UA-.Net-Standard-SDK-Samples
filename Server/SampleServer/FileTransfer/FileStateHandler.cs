@@ -302,6 +302,10 @@ namespace SampleServer.FileTransfer
             }
         }
 
+        #endregion
+
+        #region Protected Callback Methods
+
         /// <summary>
         /// Get Position method callback
         /// </summary>
@@ -311,7 +315,7 @@ namespace SampleServer.FileTransfer
         /// <param name="fileHandle"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        private ServiceResult OnGetPositionMethodCall(
+        protected virtual ServiceResult OnGetPositionMethodCall(
             ISystemContext context,
             MethodState method,
             NodeId objectId,
@@ -346,7 +350,7 @@ namespace SampleServer.FileTransfer
         /// <param name="fileHandle"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        private ServiceResult OnSetPositionMethodCall(
+        protected virtual ServiceResult OnSetPositionMethodCall(
             ISystemContext context,
             MethodState method,
             NodeId objectId,
@@ -379,9 +383,6 @@ namespace SampleServer.FileTransfer
                 throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
             }
         }
-        #endregion
-
-        #region Protected Callback Methods
 
         /// <summary>
         /// Read method callback

@@ -409,6 +409,11 @@ namespace SampleServer.FileTransfer
                     TempFileStateHandler fileStateHandler = m_tmpFilesHolder.Get(fileHandle);
                     if (fileStateHandler != null)
                     {
+                        if (!fileStateHandler.IsUserAccessAllowed(context))
+                        {
+                            return StatusCodes.BadUserAccessDenied;
+                        }
+
                         if (fileStateHandler.IsGenerateForWriteFileType())
                         {
                             // At this step the user can change and define its own application logic of what he wants to receive from temporary file state node

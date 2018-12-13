@@ -18,7 +18,12 @@ namespace SampleServer.FileTransfer
     {
         #region Public Members
 
-        private uint m_fileHandle;
+        #region Used to hold Open info (handle and session info
+        private uint m_openFileHandle;
+        // Used by clean-up opened file state when the usage time expired
+        private ISystemContext m_openSessionContext;
+        #endregion
+
         private FileTransferNodeManager m_nodeManager;
         private uint m_sessionId;
 
@@ -29,7 +34,7 @@ namespace SampleServer.FileTransfer
         public TempFileStateHandler(FileTransferNodeManager nodeManager, string filePath, FileState fileState,
             bool writePermission) : base(filePath, fileState, writePermission)
         {
-            m_fileHandle = 0;
+            m_openFileHandle = 0;
             m_nodeManager = nodeManager;
             m_sessionId = 0;
         }
@@ -75,9 +80,9 @@ namespace SampleServer.FileTransfer
         /// <returns></returns>
         public FileStreamTracker GetTemporaryFileStreamEntry()
         {
-            if (m_fileHandles.ContainsKey(m_fileHandle))
+            if (m_fileHandles.ContainsKey(m_openFileHandle))
             {
-                return m_fileHandles[m_fileHandle];
+                return m_fileHandles[m_openFileHandle];
             }
 
             return null;
@@ -96,13 +101,8 @@ namespace SampleServer.FileTransfer
             {
                 if (m_fileState != null)
                 {
-                    if (!IsUserAccessAllowed(context))
-                    {
-                        return StatusCodes.BadUserAccessDenied;
-                    }
-
                     ServiceResult readResult =
-                        m_fileState.SetPosition.OnCall(context, method, m_fileState.NodeId, m_fileHandle, 0);
+                        m_fileState.SetPosition.OnCall(context, method, m_fileState.NodeId, m_openFileHandle, 0);
                     if (readResult == null)
                     {
                         throw new Exception("The Temporary 'SetPosition' file state method failed.");
@@ -138,6 +138,11 @@ namespace SampleServer.FileTransfer
         {
             try
             {
+                if (m_openFileHandle > 0)
+                {
+                    // only one open is allowed for temporary file state
+                    return StatusCodes.BadNotSupported;
+                }
                 if (m_fileState != null)
                 {
                     fileNodeId = m_fileState.NodeId;
@@ -149,7 +154,8 @@ namespace SampleServer.FileTransfer
                     }
                     else
                     {
-                        m_fileHandle = fileHandle;
+                        m_openFileHandle = fileHandle;
+                        m_openSessionContext = context;
                         m_sessionId = (uint)context.SessionId.Identifier;
                         return openResult.StatusCode;
                     }
@@ -176,7 +182,7 @@ namespace SampleServer.FileTransfer
                 if (m_fileState != null)
                 {
                     ServiceResult closeResult =
-                        m_fileState.Close.OnCall(context, method, m_fileState.NodeId, m_fileHandle);
+                        m_fileState.Close.OnCall(context, method, m_fileState.NodeId, m_openFileHandle);
                     if (closeResult == null)
                     {
                         throw new Exception("The Temporary 'Close' file state method failed.");
@@ -209,21 +215,17 @@ namespace SampleServer.FileTransfer
             return false;
         }
 
-        #endregion
-
-        #region Private Methods
-
         /// <summary>
         /// Check if the session id is the same with the one created on open
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        private bool IsUserAccessAllowed(ISystemContext context)
+        public bool IsUserAccessAllowed(ISystemContext context)
         {
             if (context != null &&
                 context.SessionId != null)
             {
-                uint sessionId = (uint) context.SessionId.Identifier;
+                uint sessionId = (uint)context.SessionId.Identifier;
                 if (m_sessionId == sessionId)
                 {
                     return true;
@@ -232,6 +234,9 @@ namespace SampleServer.FileTransfer
 
             return false;
         }
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Clean data
@@ -239,18 +244,21 @@ namespace SampleServer.FileTransfer
         /// <param name="fileNodeId"></param>
         private void ClearData(NodeId fileNodeId)
         {
-            try
+            lock (this)
             {
-                if (File.Exists(base.FilePath))
+                try
                 {
-                    File.Delete(base.FilePath);
+                    if (File.Exists(base.FilePath))
+                    {
+                        File.Delete(base.FilePath);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
                 }
             }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            
+
             // Remove temporary file state nodes from server address space
             if (fileNodeId == null)
             {
@@ -286,17 +294,17 @@ namespace SampleServer.FileTransfer
                         {
                             try
                             {
-                                ServiceResult closeResult = m_fileState.Close.OnCall(m_nodeManager.SystemContext, null,
-                                    m_fileState.NodeId, m_fileHandle);
+                                ServiceResult closeResult = m_fileState.Close.OnCall(m_openSessionContext, null,
+                                    m_fileState.NodeId, m_openFileHandle);
                                 if (closeResult.StatusCode == StatusCodes.BadUserAccessDenied)
                                 {
-                                    // clean the data, the time of the temporary node expired
+                                    // clean the data wheb the time of the temporary node expired
                                     ClearData(m_fileState.NodeId);
                                 }
                                 else if (StatusCode.IsBad(closeResult.StatusCode))
                                 {
                                     throw new Exception(string.Format(
-                                        "Error closing the file state for the file handle: {0}", m_fileHandle));
+                                        "Error closing the file state for the file handle: {0}", m_openFileHandle));
                                 }
                             }
                             catch (Exception e)
@@ -311,6 +319,68 @@ namespace SampleServer.FileTransfer
         #endregion
 
         #region Protected Callback Methods
+
+        /// <summary>
+        /// Get Position method callback
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="fileHandle"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        protected override ServiceResult OnGetPositionMethodCall(
+            ISystemContext context,
+            MethodState method,
+            NodeId objectId,
+            uint fileHandle,
+            ref ulong position)
+        {
+            try
+            {
+                if (!IsUserAccessAllowed(context))
+                {
+                    return StatusCodes.BadUserAccessDenied;
+                }
+
+                return base.OnGetPositionMethodCall(context, method, objectId, m_openFileHandle, ref position);
+            }
+            catch (Exception e)
+            {
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Set position callback
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="fileHandle"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        protected override ServiceResult OnSetPositionMethodCall(
+            ISystemContext context,
+            MethodState method,
+            NodeId objectId,
+            uint fileHandle,
+            ulong position)
+        {
+            try
+            {
+                if (!IsUserAccessAllowed(context))
+                {
+                    return StatusCodes.BadUserAccessDenied;
+                }
+
+                return base.OnSetPositionMethodCall(context, method, objectId, m_openFileHandle, position);
+            }
+            catch (Exception e)
+            {
+                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
+            }
+        }
 
         /// <summary>
         /// Read method callback
@@ -337,7 +407,7 @@ namespace SampleServer.FileTransfer
                     return StatusCodes.BadUserAccessDenied;
                 }
                 
-                return base.OnReadMethodCall(context, method, objectId, m_fileHandle, length, ref data);
+                return base.OnReadMethodCall(context, method, objectId, m_openFileHandle, length, ref data);
             }
             catch (Exception e)
             {
@@ -368,7 +438,7 @@ namespace SampleServer.FileTransfer
                     return StatusCodes.BadUserAccessDenied;
                 }
 
-                return base.OnWriteMethodCall(context, method, objectId, m_fileHandle, data);
+                return base.OnWriteMethodCall(context, method, objectId, m_openFileHandle, data);
             }
             catch (Exception e)
             {
@@ -397,7 +467,7 @@ namespace SampleServer.FileTransfer
                     return StatusCodes.BadUserAccessDenied;
                 }
 
-                ServiceResult closeResult = base.OnCloseMethodCall(context, method, fileNodeId, m_fileHandle);
+                ServiceResult closeResult = base.OnCloseMethodCall(context, method, fileNodeId, m_openFileHandle);
                 if (StatusCode.IsGood(closeResult.StatusCode))
                 {
                     ClearData(fileNodeId);
