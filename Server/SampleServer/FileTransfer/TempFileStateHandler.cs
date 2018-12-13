@@ -18,14 +18,9 @@ namespace SampleServer.FileTransfer
     {
         #region Public Members
 
-        #region Used to hold Open info (handle and session info
         private uint m_openFileHandle;
-        // Used by clean-up opened file state when the usage time expired
-        private ISystemContext m_openSessionContext;
-        #endregion
-
         private FileTransferNodeManager m_nodeManager;
-        private uint m_sessionId;
+        private NodeId m_sessionId;
 
         #endregion
 
@@ -36,7 +31,7 @@ namespace SampleServer.FileTransfer
         {
             m_openFileHandle = 0;
             m_nodeManager = nodeManager;
-            m_sessionId = 0;
+            m_sessionId = null;
         }
 
         #endregion
@@ -155,8 +150,7 @@ namespace SampleServer.FileTransfer
                     else
                     {
                         m_openFileHandle = fileHandle;
-                        m_openSessionContext = context;
-                        m_sessionId = (uint)context.SessionId.Identifier;
+                        m_sessionId = context.SessionId;
                         return openResult.StatusCode;
                     }
                 }
@@ -222,11 +216,9 @@ namespace SampleServer.FileTransfer
         /// <returns></returns>
         public bool IsUserAccessAllowed(ISystemContext context)
         {
-            if (context != null &&
-                context.SessionId != null)
+            if (context != null)
             {
-                uint sessionId = (uint)context.SessionId.Identifier;
-                if (m_sessionId == sessionId)
+                if (context.SessionId == m_sessionId)
                 {
                     return true;
                 }
@@ -294,23 +286,11 @@ namespace SampleServer.FileTransfer
                         {
                             try
                             {
-                                ServiceResult closeResult = m_fileState.Close.OnCall(m_openSessionContext, null,
-                                    m_fileState.NodeId, m_openFileHandle);
-                                if (closeResult.StatusCode == StatusCodes.BadUserAccessDenied)
-                                {
-                                    // clean the data wheb the time of the temporary node expired
-                                    ClearData(m_fileState.NodeId);
-                                }
-                                else if (StatusCode.IsBad(closeResult.StatusCode))
-                                {
-                                    throw new Exception(string.Format(
-                                        "Error closing the file state for the file handle: {0}", m_openFileHandle));
-                                }
+                                // Clear abandoned objects
+                                base.OnCloseMethodCall(null, null, m_fileState.NodeId, m_openFileHandle);
+                                ClearData(m_fileState.NodeId);
                             }
-                            catch (Exception e)
-                            {
-                                throw new ServiceResultException(StatusCodes.BadUnexpectedError, e.Message);
-                            }
+                            catch { }
                         }
                     }
                 }

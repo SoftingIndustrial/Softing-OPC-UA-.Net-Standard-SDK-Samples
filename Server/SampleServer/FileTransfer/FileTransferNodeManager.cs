@@ -75,7 +75,7 @@ namespace SampleServer.FileTransfer
                 CreateByteStringVariable(root, ByteStringName, ByteStringFilePath);
 
                 CreateTemporaryFileTransferState(root, TemporaryFileName);
-                
+
                 AddRootNotifier(root);
             }
         }
