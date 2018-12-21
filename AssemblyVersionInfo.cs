@@ -53,5 +53,5 @@ internal static class AssemblyVersionInfo
     public const string AssemblyProduct = "dataFEED OPC UA .NET Standard SDK";
 
     /// <summary>The product release date.</summary>
-    public const string ReleaseDate = "21/12/2018";
+    public const string ReleaseDate = "21/01/2019";
 }
