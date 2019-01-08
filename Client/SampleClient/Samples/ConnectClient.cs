@@ -73,13 +73,15 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
-        /// Creates and connects a session on opc.tcp protocol with security and a username/password user identity.
+        /// Creates and connects a session on opc.tcp protocol with security and anonimous user identity.
         /// </summary>
-        public void CreateOpcTcpSessionWithSecurity()
+        /// <param name="messageSecurityMode"> Desired security mode</param>
+        /// <param name="securityPolicy"> Desired security policy</param>
+        public void CreateOpcTcpSessionWithSecurity(MessageSecurityMode messageSecurityMode, SecurityPolicy securityPolicy)
         {
             // create the session object.
             using (ClientSession session = CreateSession("UaBinarySecureSession", Program.ServerUrl,
-                MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic256Sha256, MessageEncoding.Binary,
+                messageSecurityMode, securityPolicy, MessageEncoding.Binary,
                 new UserIdentity()))
             {
                 ConnectTest(session);
