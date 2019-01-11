@@ -80,6 +80,7 @@
   </ItemGroup>
   
   <ItemGroup>
+
     <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.4.354.23" />
 
     <PackageReference Include="System.Security.Principal.Windows" Version="4.5.1" />
@@ -87,9 +88,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Reference Include="Softing.Opc.Ua.Server">
-      <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.Server.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\..\Toolkit\Server\Softing.Opc.Ua.Server_2017.csproj" />
   </ItemGroup>
   
   <ItemGroup>    
