@@ -23,7 +23,9 @@ namespace SampleServer.NodeSetImport
     /// A node manager for a server that provides an implementation of the OPC UA features
     /// </summary>
     public class NodeSetImportNodeManager : NodeManager
-    {      
+    {
+        private uint m_nodeIdIndex = 80000;
+
         #region Constructors
         /// <summary>
         /// Initializes the node manager. 
@@ -103,6 +105,13 @@ namespace SampleServer.NodeSetImport
             // This override will receive a callback every time a new node is added
             // e.g. The extension data can be received in predefinedNode.Extensions
             return predefinedNode;
+        }
+        /// <summary>
+        /// Creates the NodeId for the specified node.
+        /// </summary>
+        public override NodeId New(ISystemContext context, NodeState node)
+        {           
+            return new NodeId(m_nodeIdIndex++, NamespaceIndex);
         }
         #endregion
 
