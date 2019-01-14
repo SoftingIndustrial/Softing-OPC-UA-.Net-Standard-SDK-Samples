@@ -8,8 +8,7 @@
   
   <ItemGroup>    
     <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.4.354.23" />    
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />	
-    <PackageReference Include="System.Security.Principal.Windows" Version="4.5.1" />
+    <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
   </ItemGroup>
 
   <ItemGroup>

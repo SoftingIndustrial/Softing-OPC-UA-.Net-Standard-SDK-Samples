@@ -9,6 +9,10 @@
     <RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.0|AnyCPU'">
+    <DefineConstants>TRACE;RELEASE;NETCOREAPP2_0;SAMPLE_SERVER</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="FileTransfer\FileStateEventArgs.cs" />
     <Compile Remove="FileTransfer\TempFileStateData.cs" />

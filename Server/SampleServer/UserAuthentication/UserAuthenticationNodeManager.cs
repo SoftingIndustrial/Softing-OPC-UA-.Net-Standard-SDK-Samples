@@ -101,6 +101,8 @@ namespace SampleServer.UserAuthentication
                     }
                 }
 
+#if SAMPLE_SERVER            
+
                 if (!String.IsNullOrEmpty(filePath))
                 {
                     FileInfo file = new FileInfo(filePath);
@@ -110,7 +112,7 @@ namespace SampleServer.UserAuthentication
                         writer.WriteLine(System.Security.Principal.WindowsIdentity.GetCurrent().Name);
                     }
                 }
-
+#endif
                 value = filePath;
             }
             catch (Exception e)
