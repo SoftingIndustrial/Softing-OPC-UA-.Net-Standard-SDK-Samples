@@ -95,7 +95,9 @@
     <AndroidResource Include="Resources\drawable\softing_logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\XamarinSampleServer.Config.xml" />
+    <AndroidAsset Include="Assets\XamarinSampleServer.Config.xml">
+      <SubType>Designer</SubType>
+    </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XamarinSampleServer\XamarinSampleServer.csproj">
