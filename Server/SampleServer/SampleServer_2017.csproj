@@ -92,7 +92,9 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Toolkit\Server\Softing.Opc.Ua.Server_2017.csproj" />
+    <Reference Include="Softing.Opc.Ua.Client">
+      <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.Server.dll</HintPath>
+    </Reference>
   </ItemGroup>
   
   <ItemGroup>    
