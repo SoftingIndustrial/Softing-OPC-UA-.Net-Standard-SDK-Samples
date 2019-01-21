@@ -13,6 +13,7 @@ using Opc.Ua;
 using Softing.Opc.Ua.Client;
 using Softing.Opc.Ua.Client.Private;
 using SampleClient.StateMachine;
+using System.IO;
 
 namespace SampleClient
 {
@@ -38,11 +39,19 @@ namespace SampleClient
             // Subscribe to certificate validation error event
             application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);
 
-            bool result = true;
+            LicenseClientStatus result = LicenseClientStatus.Ok;
+
             // TODO - design time license activation
             // Fill in your design time license activation keys here
-            //result = application.ActivateLicense(LicenseFeature.Client, "XXXX-XXXX-XXXX-XXXX-XXXX");
-            if (!result)
+            //result = application.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+            
+            if (result == LicenseClientStatus.Expired)
+            {
+                Console.WriteLine("License period expired!");
+                Console.ReadKey();
+                return;
+            }
+            if (result == LicenseClientStatus.Invalid)
             {
                 Console.WriteLine("Invalid License key!");
                 Console.ReadKey();
