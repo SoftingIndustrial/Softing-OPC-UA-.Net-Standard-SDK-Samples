@@ -9,10 +9,7 @@
  * ======================================================================*/
 
 using System;
-using System.IO;
 using System.Text;
-using Opc.Ua;
-using Opc.Ua.Configuration;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.Server.Private;
 
@@ -32,18 +29,18 @@ namespace SampleServer
 
             try
             {
-                LicenseServerStatus result = LicenseServerStatus.Ok;
+                LicensingStatus result = LicensingStatus.Ok;
                 // TODO - design time license activation
                 // Fill in your design time license activation keys here
                 //result = License.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
                 
-                if (result == LicenseServerStatus.Expired)
+                if (result == LicensingStatus.Expired)
                 {
                     Console.WriteLine("License period expired!");
                     Console.ReadKey();
                     return;
                 }
-                if (result == LicenseServerStatus.Invalid)
+                if (result == LicensingStatus.Invalid)
                 {
                     Console.WriteLine("Invalid License key!");
                     Console.ReadKey();
