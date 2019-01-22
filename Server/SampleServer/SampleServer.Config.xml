@@ -9,24 +9,37 @@
   <ProductUri>http://industrial.softing.com/OpcUaNetStandardToolkit/SampleServer</ProductUri>
   <ApplicationType>Server_0</ApplicationType>
   <SecurityConfiguration>
+    <!-- Where the application instance certificate is stored -->
     <ApplicationCertificate>
       <StoreType>Directory</StoreType>
       <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
       <SubjectName>SoftingOpcUaSampleServer</SubjectName>
     </ApplicationCertificate>
+    <!-- Where the issuer certificate are stored (certificate authorities) -->
     <TrustedIssuerCertificates>
       <StoreType>Directory</StoreType>
       <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/issuer</StorePath>
     </TrustedIssuerCertificates>
+    <!-- Where the trust list is stored (UA Applications) -->
     <TrustedPeerCertificates>
       <StoreType>Directory</StoreType>
       <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/trusted</StorePath>
     </TrustedPeerCertificates>
-    <NonceLength>32</NonceLength>
+    <!-- The directory used to store invalid certficates for later review by the administrator. -->
     <RejectedCertificateStore>
       <StoreType>Directory</StoreType>
       <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/rejected</StorePath>
     </RejectedCertificateStore>
+    <!-- Where the User issuer certificates are stored -->
+    <UserIssuerCertificates>
+      <StoreType>Directory</StoreType>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/issuerUser</StorePath>
+    </UserIssuerCertificates>
+    <!-- Where the User trust list is stored-->
+    <TrustedUserCertificates>
+      <StoreType>Directory</StoreType>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/trustedUser</StorePath>
+    </TrustedUserCertificates>
     <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
     be used for easy debugging purposes ONLY and turned off for production deployments! -->
     <AutoAcceptUntrustedCertificates>false</AutoAcceptUntrustedCertificates>
@@ -147,24 +160,7 @@
         <TimerInterval>1000</TimerInterval>
         <ClearCachedCertificatesInterval>30000</ClearCachedCertificatesInterval>
       </SampleServerConfiguration>
-    </ua:XmlElement>
-    <ua:XmlElement>
-      <ServerToolkitConfiguration>
-        <!-- add here the custom server certificates in this particular order-->
-        <TrustedIssuerUserCertificateStore>
-          <StoreType>Directory</StoreType>
-          <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/issuerUser</StorePath>
-        </TrustedIssuerUserCertificateStore>
-        <TrustedUserCertificateStore>
-          <StoreType>Directory</StoreType>
-          <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/trustedUser</StorePath>
-        </TrustedUserCertificateStore>
-        <RejectedUserCertificateStore>
-          <StoreType>Directory</StoreType>
-          <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/rejectedUser</StorePath>
-        </RejectedUserCertificateStore>
-      </ServerToolkitConfiguration>
-    </ua:XmlElement>
+    </ua:XmlElement>    
   </Extensions>
   
   <TraceConfiguration>

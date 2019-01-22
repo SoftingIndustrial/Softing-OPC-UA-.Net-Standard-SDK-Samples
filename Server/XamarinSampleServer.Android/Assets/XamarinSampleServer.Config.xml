@@ -20,19 +20,26 @@
       <StoreType>Directory</StoreType>
       <StorePath>/storage/emulated/0/Softing/pki/issuer</StorePath>
     </TrustedIssuerCertificates>
-
     <!-- Where the trust list is stored (UA Applications) -->
     <TrustedPeerCertificates>
       <StoreType>Directory</StoreType>
       <StorePath>/storage/emulated/0/Softing/pki/trusted</StorePath>
-    </TrustedPeerCertificates>
-    
-    <NonceLength>32</NonceLength>
+    </TrustedPeerCertificates>  
     <!-- The directory used to store invalid certficates for later review by the administrator. -->
     <RejectedCertificateStore>
       <StoreType>Directory</StoreType>
       <StorePath>/storage/emulated/0/Softing/pki/rejected</StorePath>
     </RejectedCertificateStore>
+    <!-- Where the User issuer certificates are stored -->
+    <UserIssuerCertificates>
+      <StoreType>Directory</StoreType>
+      <StorePath>/storage/emulated/0/Softing/pki/issuerUser</StorePath>
+    </UserIssuerCertificates>
+    <!-- Where the User trust list is stored-->
+    <TrustedUserCertificates>
+      <StoreType>Directory</StoreType>
+      <StorePath>/storage/emulated/0/Softing/pki/trustedUser</StorePath>
+    </TrustedUserCertificates>
     
     <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
     be used for easy debugging purposes ONLY and turned off for production deployments! -->
@@ -157,24 +164,7 @@
       <SampleServerConfiguration>
         <TimerInterval>1000</TimerInterval>
       </SampleServerConfiguration>
-    </ua:XmlElement>
-    <ua:XmlElement>
-      <ServerToolkitConfiguration>
-        <!-- add here the custom server certificates in this particular order-->
-        <TrustedIssuerUserCertificateStore>
-          <StoreType>Directory</StoreType>
-          <StorePath>/storage/emulated/0/Softing/pki/userIssuer</StorePath>
-        </TrustedIssuerUserCertificateStore>
-        <TrustedUserCertificateStore>
-          <StoreType>Directory</StoreType>
-          <StorePath>/storage/emulated/0/Softing/pki/userTrusted</StorePath>
-        </TrustedUserCertificateStore>
-        <RejectedUserCertificateStore>
-          <StoreType>Directory</StoreType>
-          <StorePath>/storage/emulated/0/Softing/pki/userRejected</StorePath>
-        </RejectedUserCertificateStore>
-      </ServerToolkitConfiguration>
-    </ua:XmlElement>
+    </ua:XmlElement>   
   </Extensions>
   
   <TraceConfiguration>
