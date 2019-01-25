@@ -54,6 +54,11 @@ namespace SampleClient.Samples
                 Console.WriteLine("HistoryReadRaw: The session is not initialized!");
                 return;
             }
+            if (m_session.CurrentState != State.Active)
+            {
+                Console.WriteLine("HistoryReadRaw: The session is not connected!");
+                return;
+            }
             ReadRawModifiedDetails argument = new ReadRawModifiedDetails()
             {
                 IsReadModified = false,
@@ -100,6 +105,11 @@ namespace SampleClient.Samples
                 Console.WriteLine("HistoryReadAtTime: The session is not initialized!");
                 return;
             }
+            if (m_session.CurrentState != State.Active)
+            {
+                Console.WriteLine("HistoryReadAtTime: The session is not connected!");
+                return;
+            }
             DateTimeCollection requiredTimes = new DateTimeCollection();
             requiredTimes.Add(new DateTime(2011, 1, 1, 12, 0, 0));
             requiredTimes.Add(new DateTime(2011, 7, 1, 12, 1, 0));
@@ -144,6 +154,11 @@ namespace SampleClient.Samples
             if (m_session == null)
             {
                 Console.WriteLine("HistoryReadProcessed: The session is not initialized!");
+                return;
+            }
+            if (m_session.CurrentState != State.Active)
+            {
+                Console.WriteLine("HistoryReadProcessed: The session is not connected!");
                 return;
             }
             NodeIdCollection aggregateTypes = new NodeIdCollection();
