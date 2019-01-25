@@ -131,6 +131,11 @@ namespace SampleClient.Samples
                 Console.WriteLine("CreateMonitoredItem: The session is not initialized!");
                 return;
             }
+            if (m_subscription != null && m_subscription.CurrentState == State.Disconnected)
+            {
+                Console.WriteLine("CreateMonitoredItem: The session is not connected!");
+                return;
+            }
             if (m_miInt64 != null)
             {
                 Console.WriteLine("MonitoredItem already created");
@@ -143,14 +148,30 @@ namespace SampleClient.Samples
                 m_miCurrentTime.DataChangesReceived += Monitoreditem_DataChangesReceived;
                 //set sampling interval to 1 second
                 m_miCurrentTime.SamplingInterval = 1000;
-                Console.WriteLine("Monitored item '{0}' created. Data value changes are shown:", m_miCurrentTime.DisplayName);
 
+                if (m_miCurrentTime.CurrentState == State.Active)
+                {
+                    Console.WriteLine("Monitored item '{0}' created. Data value changes are shown:", m_miCurrentTime.DisplayName);
+                }
+                else
+                {
+                    Console.WriteLine("Monitored item '{0}' created with state {1}", m_miCurrentTime.DisplayName, m_miCurrentTime.CurrentState);
+                }
                 //create monitored item for Int64 variable
                 m_miInt64 = new ClientMonitoredItem(m_subscription, m_miInt64NodeId, "Monitored Item Int64");
                 m_miInt64.DataChangesReceived += Monitoreditem_DataChangesReceived;
                 //set sampling interval to 3 seconds
                 m_miInt64.SamplingInterval = 3000;
-                Console.WriteLine("Monitored item '{0}' created. Data value changes are shown:", m_miInt64.DisplayName);
+
+                if (m_miCurrentTime.CurrentState == State.Active)
+                {
+                    Console.WriteLine("Monitored item '{0}' created. Data value changes are shown:", m_miInt64.DisplayName);
+                }
+                else
+                {
+                    Console.WriteLine("Monitored item '{0}' created with state {1}", m_miInt64.DisplayName, m_miInt64.CurrentState);
+                }
+                
             }
             catch (Exception ex)
             {
@@ -166,6 +187,11 @@ namespace SampleClient.Samples
             if (m_session == null)
             {
                 Console.WriteLine("DeleteMonitoredItem: The session is not initialized!");
+                return;
+            }
+            if (m_session.CurrentState == State.Disconnected)
+            {
+                Console.WriteLine("DeleteMonitoredItem: The session is not connected!");
                 return;
             }
             if (m_miCurrentTime == null || m_miInt64 == null)

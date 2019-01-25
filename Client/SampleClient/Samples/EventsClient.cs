@@ -129,6 +129,11 @@ namespace SampleClient.Samples
                 Console.WriteLine("The session is not initialized!");
                 return;
             }
+            if (m_subscription != null && m_subscription.CurrentState == State.Disconnected)
+            {
+                Console.WriteLine("CreateMonitoredItem: The session is not connected!");
+                return;
+            }
             if (m_eventMonitoredItem != null)
             {
                 Console.WriteLine("EventMonitoredItem is already created.");
@@ -140,7 +145,9 @@ namespace SampleClient.Samples
                 //ObjectIds.Server BrowsePath: Root\Objects\Server
                 m_eventMonitoredItem = new ClientMonitoredItem(m_subscription, ObjectIds.Server, "Sample Event Monitored Item", null);
                 m_eventMonitoredItem.EventsReceived += EventMonitoredItem_EventsReceived;
-                Console.WriteLine("Event Monitored Item is created and connected.");
+
+
+                Console.WriteLine("Event Monitored Item is created and with state {0}.", m_eventMonitoredItem.CurrentState);
             }
             catch (Exception ex)
             {
@@ -156,6 +163,11 @@ namespace SampleClient.Samples
             if (m_session == null)
             {
                 Console.WriteLine("The session is not initialized!");
+                return;
+            }
+            if (m_subscription != null && m_subscription.CurrentState == State.Disconnected)
+            {
+                Console.WriteLine("DeleteEventMonitoredItem: The session is not connected!");
                 return;
             }
             try
