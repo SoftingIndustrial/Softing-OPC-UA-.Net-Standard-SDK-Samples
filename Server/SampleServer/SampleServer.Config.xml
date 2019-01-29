@@ -24,12 +24,17 @@
     <TrustedPeerCertificates>
       <StoreType>Directory</StoreType>
       <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/trusted</StorePath>
-    </TrustedPeerCertificates>
+    </TrustedPeerCertificates>   
     <!-- The directory used to store invalid certficates for later review by the administrator. -->
     <RejectedCertificateStore>
       <StoreType>Directory</StoreType>
       <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/rejected</StorePath>
     </RejectedCertificateStore>
+     <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
+    be used for easy debugging purposes ONLY and turned off for production deployments! -->
+    <AutoAcceptUntrustedCertificates>false</AutoAcceptUntrustedCertificates>
+    <RejectSHA1SignedCertificates>false</RejectSHA1SignedCertificates>
+    <MinimumCertificateKeySize>1024</MinimumCertificateKeySize>
     <!-- Where the User issuer certificates are stored -->
     <UserIssuerCertificates>
       <StoreType>Directory</StoreType>
@@ -39,12 +44,7 @@
     <TrustedUserCertificates>
       <StoreType>Directory</StoreType>
       <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/trustedUser</StorePath>
-    </TrustedUserCertificates>
-    <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
-    be used for easy debugging purposes ONLY and turned off for production deployments! -->
-    <AutoAcceptUntrustedCertificates>false</AutoAcceptUntrustedCertificates>
-    <RejectSHA1SignedCertificates>false</RejectSHA1SignedCertificates>
-    <MinimumCertificateKeySize>1024</MinimumCertificateKeySize>
+    </TrustedUserCertificates> 
   </SecurityConfiguration>
   <TransportConfigurations></TransportConfigurations>
   <TransportQuotas>

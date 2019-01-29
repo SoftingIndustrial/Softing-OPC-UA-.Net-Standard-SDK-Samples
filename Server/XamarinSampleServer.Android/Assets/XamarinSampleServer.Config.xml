@@ -30,6 +30,9 @@
       <StoreType>Directory</StoreType>
       <StorePath>/storage/emulated/0/Softing/pki/rejected</StorePath>
     </RejectedCertificateStore>
+    <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
+    be used for easy debugging purposes ONLY and turned off for production deployments! -->
+    <AutoAcceptUntrustedCertificates>true</AutoAcceptUntrustedCertificates>
     <!-- Where the User issuer certificates are stored -->
     <UserIssuerCertificates>
       <StoreType>Directory</StoreType>
@@ -40,10 +43,6 @@
       <StoreType>Directory</StoreType>
       <StorePath>/storage/emulated/0/Softing/pki/trustedUser</StorePath>
     </TrustedUserCertificates>
-    
-    <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
-    be used for easy debugging purposes ONLY and turned off for production deployments! -->
-    <AutoAcceptUntrustedCertificates>true</AutoAcceptUntrustedCertificates>
   </SecurityConfiguration>
   
   <TransportConfigurations/>
