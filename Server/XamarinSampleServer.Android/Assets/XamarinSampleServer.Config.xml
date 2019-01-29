@@ -24,7 +24,9 @@
     <TrustedPeerCertificates>
       <StoreType>Directory</StoreType>
       <StorePath>/storage/emulated/0/Softing/pki/trusted</StorePath>
-    </TrustedPeerCertificates>  
+    </TrustedPeerCertificates>
+    <!-- The length of nonce in the CreateSession service. -->
+    <NonceLength>32</NonceLength>
     <!-- The directory used to store invalid certficates for later review by the administrator. -->
     <RejectedCertificateStore>
       <StoreType>Directory</StoreType>
@@ -33,6 +35,16 @@
     <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
     be used for easy debugging purposes ONLY and turned off for production deployments! -->
     <AutoAcceptUntrustedCertificates>true</AutoAcceptUntrustedCertificates>
+    <!--Directory which contains files representing users roles.-->
+    <UserRoleDirectory>/storage/emulated/0/Softing/userRoles</UserRoleDirectory>
+    <!-- Indicates whether SHA-1 signed certificates are accepted.-->
+    <RejectSHA1SignedCertificates>false</RejectSHA1SignedCertificates>
+    <!--Indicates which minimum certificate key strength is accepted.-->
+    <MinimumCertificateKeySize>1024</MinimumCertificateKeySize>
+    <!--Indicates whether the application cert should be copied to the trusted store.-->
+    <AddAppCertToTrustedStore>true</AddAppCertToTrustedStore>
+    <!--Indicates whether whether the application should send the complete certificate chain.-->
+    <SendCertificateChain>false</SendCertificateChain>
     <!-- Where the User issuer certificates are stored -->
     <UserIssuerCertificates>
       <StoreType>Directory</StoreType>
