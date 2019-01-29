@@ -211,7 +211,7 @@ namespace XamarinSampleServer.ViewModels
                 }
             }                
 
-            Device.StartTimer(new TimeSpan(0, 0, 5), () => {
+            Device.StartTimer(new TimeSpan(0, 0, 20), () => {
                 LoadSessionsCommand.Execute(null);
                 return CanStopServer;
             });
