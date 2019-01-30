@@ -93,11 +93,24 @@ namespace XamarinSampleClient.ViewModels
             {              
                 await SampleApplication.InitializeUaApplication();
 
-                bool result = true;
+                LicensingStatus result = LicensingStatus.Ok;
+
                 // TODO - design time license activation
                 // Fill in your design time license activation keys here
-                // result = SampleApplication.UaApplication.ActivateLicense(LicenseFeature.Client, "XXXX-XXXX-XXXX-XXXX-XXXX");
-                if (!result)
+                // result = SampleApplication.UaApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                
+                if (result == LicensingStatus.Expired)
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        WelcomeMessage = "License period expired!";
+                        Samples = new List<SampleItem>();
+                        OnPropertyChanged("WelcomeMessage");
+                        OnPropertyChanged("Samples");
+                    });
+
+                }
+                if (result == LicensingStatus.Invalid)
                 {
                     Device.BeginInvokeOnMainThread(() =>
                     {
@@ -105,7 +118,7 @@ namespace XamarinSampleClient.ViewModels
                         Samples = new List<SampleItem>();
                         OnPropertyChanged("WelcomeMessage");
                         OnPropertyChanged("Samples");
-                    });                   
+                    });
                 }
             }
             catch(Exception ex)

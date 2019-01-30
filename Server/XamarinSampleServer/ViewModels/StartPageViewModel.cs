@@ -39,7 +39,7 @@ namespace XamarinSampleServer.ViewModels
         private string m_resultsText;
         private bool m_canStartServer;
         private SampleServer.SampleServer m_sampleServer;
-        private bool m_isValidLicenseKey = true;
+        LicensingStatus m_isValidLicenseKey = LicensingStatus.Ok;
         #endregion
 
         #region Constructors
@@ -60,17 +60,24 @@ namespace XamarinSampleServer.ViewModels
            
             LoadSessionsCommand = new Command(async () => await ExecuteLoadSessionsCommand());
             m_connectedSessions = new ObservableCollection<ConnectedSession>();
-            
+
             // TODO - design time license activation
             // Fill in your design time license activation keys here
-            //m_isValidLicenseKey = License.ActivateLicense(LicenseFeature.Server, "XXXX-XXXX-XXXX-XXXX-XXXX");
-
-            if (!m_isValidLicenseKey)
+            // m_isValidLicenseKey = License.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+            
+            if (m_isValidLicenseKey == LicensingStatus.Expired)
+            {
+                ResultsText = string.Format("\n\nError starting server: License period expired!");
+                CanStartServer = false;
+                return;
+            }
+            if (m_isValidLicenseKey == LicensingStatus.Invalid)
             {
                 ResultsText = string.Format("\n\nError starting server: Invalid License key!");
                 CanStartServer = false;
                 return;
             }
+
             CanStartServer = true;
             ThreadPool.QueueUserWorkItem(o =>
             {
@@ -122,7 +129,7 @@ namespace XamarinSampleServer.ViewModels
         /// </summary>
         public bool CanStopServer
         {
-            get { return !m_canStartServer && !IsBusy && m_isValidLicenseKey; }
+            get { return !m_canStartServer && !IsBusy && m_isValidLicenseKey == LicensingStatus.Ok; }
         }
         /// <summary>
         /// Get Server ip list
