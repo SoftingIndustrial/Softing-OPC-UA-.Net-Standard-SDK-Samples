@@ -29,18 +29,19 @@ namespace SampleServer
 
             try
             {
-                LicensingStatus result = LicensingStatus.Ok;
+                LicensingStatus licensingStatus = LicensingStatus.Ok;
+
                 // TODO - design time license activation
                 // Fill in your design time license activation keys here
-                //result = License.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                // licensingStatus = License.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
                 
-                if (result == LicensingStatus.Expired)
+                if (licensingStatus == LicensingStatus.Expired)
                 {
                     Console.WriteLine("License period expired!");
                     Console.ReadKey();
                     return;
                 }
-                if (result == LicensingStatus.Invalid)
+                if (licensingStatus == LicensingStatus.Invalid)
                 {
                     Console.WriteLine("Invalid License key!");
                     Console.ReadKey();
