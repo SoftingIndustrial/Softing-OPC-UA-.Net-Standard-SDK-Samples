@@ -76,7 +76,8 @@ namespace XamarinSampleClient.Helpers
             configuration.TraceConfiguration = new TraceConfiguration()
             {
                 OutputFilePath = @"/storage/emulated/0/Softing/logs/XamarinSampleClient.log",
-                TraceMasks = 519
+                //log only errors
+                TraceMasks = 1
             };
 
             configuration.SecurityConfiguration = new SecurityConfiguration
