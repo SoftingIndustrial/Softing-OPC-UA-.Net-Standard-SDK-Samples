@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net471</TargetFrameworks>
+    <TargetFrameworks>net461</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>SampleServer</AssemblyName>
     <RootNamespace>SampleServer</RootNamespace>
