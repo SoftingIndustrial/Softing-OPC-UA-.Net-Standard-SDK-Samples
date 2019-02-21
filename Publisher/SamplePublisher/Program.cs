@@ -11,6 +11,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Opc.Ua;
+using Softing.Opc.Ua.PubSub;
 
 namespace SamplePublisher
 {
@@ -21,6 +23,80 @@ namespace SamplePublisher
         /// </summary>
         static void Main()
         {
+            try
+            {
+                // Create the PubSub application
+                UaPubSubApplication pubSubApplication = new UaPubSubApplication();
+
+                // Define a PubSub connection
+                PubSubConnectionDataType pubSubConnection = new PubSubConnectionDataType();
+                pubSubConnection.Name = "UDPConection1";
+                pubSubConnection.Enabled = true;
+                pubSubConnection.PublisherId = (UInt16)10;
+                pubSubConnection.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
+                pubSubConnection.Address = new ExtensionObject("opc.udp://239.0.0.1:4840");
+
+                // Define a WriterGroup
+                WriterGroupDataType writerGroup = new WriterGroupDataType();
+                writerGroup.Enabled = true;
+                writerGroup.WriterGroupId = 1;
+                writerGroup.PublishingInterval = 100;
+                writerGroup.KeepAliveTime = 1500;
+                writerGroup.HeaderLayoutUri = "UADP-Cyclic-Fixed";
+
+                // Define a DataSetWriter
+                DataSetWriterDataType dataSetWriter = new DataSetWriterDataType();
+                dataSetWriter.Enabled = true;
+                dataSetWriter.DataSetName = "DataSetWriterSimple";
+                dataSetWriter.DataSetWriterId = 1;
+                dataSetWriter.KeyFrameCount = 1;
+
+
+                writerGroup.DataSetWriters.Add(dataSetWriter);
+                pubSubConnection.WriterGroups.Add(writerGroup);
+
+                // Add the connection to the application
+                pubSubApplication.AddConnection(pubSubConnection);
+
+
+                Console.WriteLine("Publisher started");
+                PrintCommandParameters();
+
+                do
+                {
+                    ConsoleKeyInfo key = Console.ReadKey();
+                    if (key.KeyChar == 'q' || key.KeyChar == 'x')
+                    {
+                        Console.WriteLine("\nShutting down...");
+                        break;
+                    }
+                    else if (key.KeyChar == 's')
+                    {
+                        // list connection status
+                    }
+                    else
+                    {
+                        PrintCommandParameters();
+                    }
+                }
+                while (true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                Console.ReadKey();
+                Environment.Exit(-1);
+            }
+            finally
+            {
+                //pubSubApplication.Stop();
+            }
+        }
+
+        private static void PrintCommandParameters()
+        {
+            Console.WriteLine("Press:\n\ts: connections status");
+            Console.WriteLine("\tx,q: shutdown the server\n\n");
         }
     }
 }
