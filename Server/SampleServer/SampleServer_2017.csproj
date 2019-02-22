@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <None Remove="NodeSetImport\Refrigerators.NodeSet2.xml" />
-    <None Remove="NodeSetImport\Refrigerators2.NodeSet2.xml" />
+    <None Remove="NodeSetImport\RefrigeratorsInstances.NodeSet2.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,9 +61,7 @@
     <EmbeddedResource Include="NodeSetImport\Refrigerators.NodeSet2.xml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="NodeSetImport\Refrigerators2.NodeSet2.xml">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="NodeSetImport\RefrigeratorsInstances.NodeSet2.xml" />
     <EmbeddedResource Include="ReferenceServer\Model\ReferenceServer.NodeSet2.xml" />
   </ItemGroup>
 

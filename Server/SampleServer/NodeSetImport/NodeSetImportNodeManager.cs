@@ -157,7 +157,7 @@ namespace SampleServer.NodeSetImport
         /// <returns></returns>
         private ServiceResult OnAddRefrigerator(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
-            return ImportNodeSetFromResource(ResourceNames.NodeSetImportInitialSecondaryModel);
+            return ImportNodeSetFromResource(ResourceNames.NodeSetImportSecondaryModel);
         }
 
         /// <summary>
