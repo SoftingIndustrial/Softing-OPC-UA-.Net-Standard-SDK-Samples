@@ -16,6 +16,7 @@ using System.Xml;
 using Opc.Ua;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.Server;
+using Softing.Opc.Ua.Server.Types;
 
 namespace SampleServer.NodeSetImport
 {
@@ -58,7 +59,6 @@ namespace SampleServer.NodeSetImport
                 {
                     // Find the "NodeSetImport" node
                     NodeState nodeSetImportNode = PredefinedNodes.Values.FirstOrDefault(x => x.BrowseName.Name == "NodeSetImport");
-
                    
                     if (nodeSetImportNode != null)
                     {
@@ -83,8 +83,26 @@ namespace SampleServer.NodeSetImport
                             new Argument() { Name = "Parent NodeId", Description = "NodeId for parent node.",  DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar },
                         new Argument() { Name = "Type NodeId", Description = "NodeId for the type of the new instance node.",  DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar },
                         new Argument() { Name = "Name", Description = "Name of the new instance node.",  DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar },
-                };
+                        };
                         MethodState createinstanceMethod = CreateMethod(nodeSetImportNode, "CreateInstance", inputArguments, null, OnCreateInstance);
+
+
+                        //create instance of variable node with data type from imported nodeset dictionary
+                        FolderState referenceServerVariables = CreateFolder(nodeSetImportNode, "Imported Types Variables");
+
+                        var dataTypeRefrigeratorStatus = PredefinedNodes.Values.FirstOrDefault(x => x.BrowseName.Name == "RefrigeratorStatusDataType");
+                        var refrigeratorStatusVariable = this.CreateVariableFromType(referenceServerVariables, "RefrigeratorStatusVariable", VariableTypeIds.BaseVariableType, ReferenceTypeIds.Organizes);
+                        refrigeratorStatusVariable.DataType = dataTypeRefrigeratorStatus.NodeId;
+
+                        StructuredValue refrigeratorStatusValue = new StructuredValue();
+                        refrigeratorStatusValue.TypeId = NodeId.ToExpandedNodeId(dataTypeRefrigeratorStatus.NodeId, Server.NamespaceUris);
+                        refrigeratorStatusValue.Initialize(Server.Factory);
+                        refrigeratorStatusVariable.Value = refrigeratorStatusValue;
+
+                        var enumerationRefrigeratorState = PredefinedNodes.Values.FirstOrDefault(x => x.BrowseName.Name == "RefrigeratorState");
+                        var refrigeratorStateVariable = this.CreateVariableFromType(referenceServerVariables, "RefrigeratorStateVariable", VariableTypeIds.BaseVariableType, ReferenceTypeIds.Organizes);
+                        refrigeratorStateVariable.DataType = enumerationRefrigeratorState.NodeId;
+                        refrigeratorStateVariable.Value = 0;
                     }
                 }
                 catch (Exception ex)
