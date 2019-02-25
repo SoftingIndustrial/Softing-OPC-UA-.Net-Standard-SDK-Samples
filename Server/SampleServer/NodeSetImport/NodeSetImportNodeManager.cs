@@ -91,18 +91,11 @@ namespace SampleServer.NodeSetImport
                         FolderState referenceServerVariables = CreateFolder(nodeSetImportNode, "Imported Types Variables");
 
                         var dataTypeRefrigeratorStatus = PredefinedNodes.Values.FirstOrDefault(x => x.BrowseName.Name == "RefrigeratorStatusDataType");
-                        var refrigeratorStatusVariable = this.CreateVariableFromType(referenceServerVariables, "RefrigeratorStatusVariable", VariableTypeIds.BaseVariableType, ReferenceTypeIds.Organizes);
-                        refrigeratorStatusVariable.DataType = dataTypeRefrigeratorStatus.NodeId;
-
-                        StructuredValue refrigeratorStatusValue = new StructuredValue();
-                        refrigeratorStatusValue.TypeId = NodeId.ToExpandedNodeId(dataTypeRefrigeratorStatus.NodeId, Server.NamespaceUris);
-                        refrigeratorStatusValue.Initialize(Server.Factory);
-                        refrigeratorStatusVariable.Value = refrigeratorStatusValue;
-
+                        var refrigeratorStatusVariable = CreateVariable(referenceServerVariables, "RefrigeratorStatusVariable", dataTypeRefrigeratorStatus.NodeId);
+                        
                         var enumerationRefrigeratorState = PredefinedNodes.Values.FirstOrDefault(x => x.BrowseName.Name == "RefrigeratorState");
-                        var refrigeratorStateVariable = this.CreateVariableFromType(referenceServerVariables, "RefrigeratorStateVariable", VariableTypeIds.BaseVariableType, ReferenceTypeIds.Organizes);
-                        refrigeratorStateVariable.DataType = enumerationRefrigeratorState.NodeId;
-                        refrigeratorStateVariable.Value = 0;
+                        var refrigeratorStateVariable = CreateVariable(referenceServerVariables, "RefrigeratorStateVariable", enumerationRefrigeratorState.NodeId);
+                       
                     }
                 }
                 catch (Exception ex)
