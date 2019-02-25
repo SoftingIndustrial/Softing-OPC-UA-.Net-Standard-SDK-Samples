@@ -44,6 +44,6 @@
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" Link="_SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" />
 	<EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" />
-	<EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators2.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators2.NodeSet2.xml" />
+	<EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators2.NodeSet2.xml" Link="_SampleServer\NodeSetImport\RefrigeratorsInstances.NodeSet2.xml" />
   </ItemGroup>
 </Project>
