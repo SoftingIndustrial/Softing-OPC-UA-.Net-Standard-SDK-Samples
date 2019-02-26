@@ -40,7 +40,7 @@ namespace SamplePublisher
                 WriterGroupDataType writerGroup = new WriterGroupDataType();
                 writerGroup.Enabled = true;
                 writerGroup.WriterGroupId = 1;
-                writerGroup.PublishingInterval = 100;
+                writerGroup.PublishingInterval = 5000;
                 writerGroup.KeepAliveTime = 1500;
                 writerGroup.HeaderLayoutUri = "UADP-Cyclic-Fixed";
 
@@ -51,13 +51,11 @@ namespace SamplePublisher
                 dataSetWriter.DataSetWriterId = 1;
                 dataSetWriter.KeyFrameCount = 1;
 
-
                 writerGroup.DataSetWriters.Add(dataSetWriter);
                 pubSubConnection.WriterGroups.Add(writerGroup);
 
                 // Add the connection to the application
                 pubSubApplication.AddConnection(pubSubConnection);
-
 
                 Console.WriteLine("Publisher started");
                 PrintCommandParameters();
