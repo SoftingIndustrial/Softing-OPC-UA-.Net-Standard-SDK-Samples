@@ -111,11 +111,8 @@ namespace SampleServer.DataAccess
             m_doorOpened.Value = true;
 
             // Create ActualTemperature variable
-            AnalogItemState actualTemperature = CreateVariableFromType(refrigerator, "ActualTemperature", VariableTypeIds.AnalogItemType, ReferenceTypeIds.Organizes) as AnalogItemState;
-            actualTemperature.DataType = DataTypeIds.Double;
-            actualTemperature.EURange.Value = new Range(90, 10);
+            AnalogItemState actualTemperature = CreateAnalogVariable(refrigerator, "ActualTemperature", DataTypeIds.Double,ValueRanks.Scalar, new Range(90, 10), null);
             actualTemperature.InstrumentRange.Value = new Range(100, 0);
-            actualTemperature.ValueRank = ValueRanks.Scalar;  
             actualTemperature.Value = 2.7;
 
             // Create MotorTemperature variable

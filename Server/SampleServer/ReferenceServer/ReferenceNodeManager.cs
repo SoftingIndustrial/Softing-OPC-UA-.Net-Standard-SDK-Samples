@@ -1384,7 +1384,12 @@ namespace SampleServer.ReferenceServer
         /// <returns></returns>    
         private AnalogItemState CreateAnalogVariable(NodeState parent, string name, NodeId dataType, int valueRank = ValueRanks.Scalar, Range valueRange = null, object initialValues = null)
         {
-            AnalogItemState variable = base.CreateAnalogVariable(parent, name, dataType, valueRank, valueRange);           
+            if (valueRange == null)
+            {
+                valueRange = new Range(100, 0);
+            }
+
+            AnalogItemState variable = base.CreateAnalogVariable(parent, name, dataType, valueRank, valueRange, new EUInformation());
 
             BuiltInType builtInType = TypeInfo.GetBuiltInType(dataType, Server.TypeTree);
 
