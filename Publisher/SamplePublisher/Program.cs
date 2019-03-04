@@ -25,6 +25,9 @@ namespace SamplePublisher
         {
             try
             {
+				// fake data
+				StartPublisher();
+				
                 // Create the PubSub application
                 UaPubSubApplication pubSubApplication = new UaPubSubApplication();
 
@@ -95,6 +98,30 @@ namespace SamplePublisher
         {
             Console.WriteLine("Press:\n\ts: connections status");
             Console.WriteLine("\tx,q: shutdown the server\n\n");
+        }
+		
+		private static async void StartPublisher()
+        {
+            // configure connection
+            UadpNetworkMessage msg = new UadpNetworkMessage(new ServiceMessageContext());
+            msg.PublisherId = (byte)1;
+            msg.DataSetClassId = new Guid();
+            msg.Timestamp = DateTime.Now;
+            msg.PicoSeconds = 10;
+            
+            // Add writer group
+            msg.GroupVersion = 1;
+            msg.WriterGroupId = 1;
+            msg.NetworkMessageNumber = 1;
+            msg.SequenceNumber = 1;
+
+            // Add writer for group 1
+            // PubSubConnectionDataType has a datasetconnection and a connection config (workgroup ...)
+            // 
+
+            ServiceMessageContext messageContext = new ServiceMessageContext();
+            BinaryEncoder encoder = new BinaryEncoder(messageContext);
+            msg.Encode(encoder);
         }
     }
 }
