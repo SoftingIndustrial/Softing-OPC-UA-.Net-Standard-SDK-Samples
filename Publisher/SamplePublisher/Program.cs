@@ -35,7 +35,9 @@ namespace SamplePublisher
                 pubSubConnection.Enabled = true;
                 pubSubConnection.PublisherId = (UInt16)10;
                 pubSubConnection.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
-                pubSubConnection.Address = new ExtensionObject("opc.udp://239.0.0.1:4840");
+                NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
+                address.Url = "opc.udp://239.0.0.1:4840";
+                pubSubConnection.Address = new ExtensionObject(address);
 
                 // Define a WriterGroup
                 WriterGroupDataType writerGroup = new WriterGroupDataType();
@@ -99,46 +101,6 @@ namespace SamplePublisher
         {
             Console.WriteLine("Press:\n\ts: connections status");
             Console.WriteLine("\tx,q: shutdown the server\n\n");
-        }
-		
-		private static void StartPublisher()
-        {
-            /*
-            // configure connection
-            UadpNetworkMessage msg = new UadpNetworkMessage();
-            msg.PublisherId = (byte)1;
-            msg.DataSetClassId = new Guid();
-            msg.Timestamp = DateTime.Now;
-            msg.PicoSeconds = 10;
-
-            // Add writer group
-            msg.GroupVersion = 1;
-            msg.WriterGroupId = 1;
-            msg.NetworkMessageNumber = 1;
-            msg.SequenceNumber = 1;
-
-            // Add writer for group 1
-            // PubSubConnectionDataType has a datasetconnection and a connection config (workgroup ...)
-            UInt16 size = 1;
-            UInt16 dataSetWriterId = 1;
-            UadpDataSetMessage dataSetMessage = new UadpDataSetMessage();
-            dataSetMessage.DataSetMessageSequenceNumber = 1;
-
-            DataSetGroup dataSetGroup = new DataSetGroup(size, dataSetWriterId, dataSetMessage);
-            UadpDataSet dataSet = new UadpDataSet("Test");
-            dataSet.AddDataSetGroup(dataSetGroup);
-
-            List<UadpDataSet> dataSets = new List<UadpDataSet>();
-            msg.AddDataSetMessages(dataSets);
-
-            ServiceMessageContext messageContext = new ServiceMessageContext();
-            BinaryEncoder encoder = new BinaryEncoder(messageContext);
-            msg.Encode(encoder);
-
-            dataSetMessage.DataSetMessageSequenceNumber = 2;
-            msg.UpdateDataSetMessages(encoder);
-            */
-
-        }
+        }	
     }
 }
