@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Text;
 using Opc.Ua;
 using Softing.Opc.Ua.PubSub;
+using Softing.Opc.Ua.PubSub.Common;
 
 namespace SamplePublisher
 {
@@ -24,10 +25,7 @@ namespace SamplePublisher
         static void Main()
         {
             try
-            {
-				// fake data
-				StartPublisher();
-				
+            {	
                 // Create the PubSub application
                 UaPubSubApplication pubSubApplication = new UaPubSubApplication();
 
@@ -57,8 +55,11 @@ namespace SamplePublisher
                 writerGroup.DataSetWriters.Add(dataSetWriter);
                 pubSubConnection.WriterGroups.Add(writerGroup);
 
+                // todo: Add also the dataset (FieldMetadata into UadpDataMessage) 
+
                 // Add the connection to the application
                 pubSubApplication.AddConnection(pubSubConnection);
+
 
                 Console.WriteLine("Publisher started");
                 PrintCommandParameters();
@@ -100,15 +101,16 @@ namespace SamplePublisher
             Console.WriteLine("\tx,q: shutdown the server\n\n");
         }
 		
-		private static async void StartPublisher()
+		private static void StartPublisher()
         {
+            /*
             // configure connection
-            UadpNetworkMessage msg = new UadpNetworkMessage(new ServiceMessageContext());
+            UadpNetworkMessage msg = new UadpNetworkMessage();
             msg.PublisherId = (byte)1;
             msg.DataSetClassId = new Guid();
             msg.Timestamp = DateTime.Now;
             msg.PicoSeconds = 10;
-            
+
             // Add writer group
             msg.GroupVersion = 1;
             msg.WriterGroupId = 1;
@@ -117,11 +119,26 @@ namespace SamplePublisher
 
             // Add writer for group 1
             // PubSubConnectionDataType has a datasetconnection and a connection config (workgroup ...)
-            // 
+            UInt16 size = 1;
+            UInt16 dataSetWriterId = 1;
+            UadpDataSetMessage dataSetMessage = new UadpDataSetMessage();
+            dataSetMessage.DataSetMessageSequenceNumber = 1;
+
+            DataSetGroup dataSetGroup = new DataSetGroup(size, dataSetWriterId, dataSetMessage);
+            UadpDataSet dataSet = new UadpDataSet("Test");
+            dataSet.AddDataSetGroup(dataSetGroup);
+
+            List<UadpDataSet> dataSets = new List<UadpDataSet>();
+            msg.AddDataSetMessages(dataSets);
 
             ServiceMessageContext messageContext = new ServiceMessageContext();
             BinaryEncoder encoder = new BinaryEncoder(messageContext);
             msg.Encode(encoder);
+
+            dataSetMessage.DataSetMessageSequenceNumber = 2;
+            msg.UpdateDataSetMessages(encoder);
+            */
+
         }
     }
 }
