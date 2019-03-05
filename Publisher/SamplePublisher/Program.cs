@@ -26,8 +26,7 @@ namespace SamplePublisher
             try
             {	
                 // Create the PubSub application
-                UaPubSubApplication pubSubApplication = new UaPubSubApplication();
-                ;
+                UaPubSubApplication pubSubApplication = new UaPubSubApplication();                
 
                 // Define a PubSub connection
                 PubSubConnectionDataType pubSubConnection = new PubSubConnectionDataType();
