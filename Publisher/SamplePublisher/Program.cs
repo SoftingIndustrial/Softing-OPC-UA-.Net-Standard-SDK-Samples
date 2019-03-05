@@ -27,6 +27,7 @@ namespace SamplePublisher
             {	
                 // Create the PubSub application
                 UaPubSubApplication pubSubApplication = new UaPubSubApplication();
+                ;
 
                 // Define a PubSub connection
                 PubSubConnectionDataType pubSubConnection = new PubSubConnectionDataType();
@@ -56,11 +57,104 @@ namespace SamplePublisher
                 writerGroup.DataSetWriters.Add(dataSetWriter);
                 pubSubConnection.WriterGroups.Add(writerGroup);
 
-                // todo: Add also the dataset (FieldMetadata into UadpDataMessage) 
+                //Define a PublishedDataSet
+                PublishedDataSetDataType publishedDataSet1 = new PublishedDataSetDataType();
+                publishedDataSet1.Name = "Simple"; //name shall be unique in a configuration
+                // Define  publishedDataSet1.DataSetMetaData
+                publishedDataSet1.DataSetMetaData = new DataSetMetaDataType();
+                publishedDataSet1.DataSetMetaData.Name = publishedDataSet1.Name;
+                publishedDataSet1.DataSetMetaData.Fields = new FieldMetaDataCollection()
+                {
+                    new FieldMetaData()
+                    {
+                        Name = "BooleanValue",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        DataType = DataTypeIds.Boolean,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "Scalar.Int32.X",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        DataType = DataTypeIds.Int32,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "Scalar.Int32.Y",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        DataType = DataTypeIds.Int32,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "DateTimeValue",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        DataType = DataTypeIds.DateTime,
+                        ValueRank = ValueRanks.Scalar
+                    }
+                };
+                //initialize Extension fields collection
+                publishedDataSet1.ExtensionFields = new KeyValuePairCollection()
+                {
+                    new Opc.Ua.KeyValuePair()
+                    {
+                        Key =  new QualifiedName("BooleanValue"),
+                        Value = true
+                    },
+                    new Opc.Ua.KeyValuePair()
+                    {
+                        Key =  new QualifiedName("Scalar.Int32.X"),
+                        Value = (int)100
+                    },
+                    new Opc.Ua.KeyValuePair()
+                    {
+                        Key =  new QualifiedName("Scalar.Int32.Y"),
+                        Value = (int)50
+                    },
+                    new Opc.Ua.KeyValuePair()
+                    {
+                        Key =  new QualifiedName("DateTimeValue"),
+                        Value = DateTime.Today
+                    }
+                };
+
+                PublishedDataItemsDataType publishedDataSetSource = new PublishedDataItemsDataType();
+                publishedDataSetSource.PublishedData = new PublishedVariableDataTypeCollection()
+                {
+                    new PublishedVariableDataType()
+                    {
+                        SubstituteValue = new QualifiedName("BooleanValue")
+                    },
+                    new PublishedVariableDataType()
+                    {
+                        SubstituteValue =  new QualifiedName("Scalar.Int32.X")
+                    },
+                    new PublishedVariableDataType()
+                    {
+                        SubstituteValue =  new QualifiedName("Scalar.Int32.Y")
+                    },
+                    new PublishedVariableDataType()
+                    {
+                        SubstituteValue =  new QualifiedName("DateTimeValue")
+                    }
+                };
+                publishedDataSet1.DataSetSource = new ExtensionObject(publishedDataSetSource);   
+
+                //create  pub sub configuration root object
+                PubSubConfigurationDataType pubSubConfiguration = new PubSubConfigurationDataType();
+                pubSubConfiguration.Connections = new PubSubConnectionDataTypeCollection()
+                {
+                    pubSubConnection
+                };
+                pubSubConfiguration.PublishedDataSets = new PublishedDataSetDataTypeCollection()
+                {
+                    publishedDataSet1
+                };
+
 
                 // Add the connection to the application
-                pubSubApplication.AddConnection(pubSubConnection);
-
+                pubSubApplication.LoadConfiguration(pubSubConfiguration);
 
                 Console.WriteLine("Publisher started");
                 PrintCommandParameters();
