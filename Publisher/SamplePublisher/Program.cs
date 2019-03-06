@@ -45,6 +45,13 @@ namespace SamplePublisher
                 writerGroup.PublishingInterval = 5000;
                 writerGroup.KeepAliveTime = 1500;
                 writerGroup.HeaderLayoutUri = "UADP-Cyclic-Fixed";
+                UadpWriterGroupMessageDataType messageSettings = new UadpWriterGroupMessageDataType()
+                {
+                    DataSetOrdering = DataSetOrderingType.Undefined,
+                    GroupVersion = 0,
+                    NetworkMessageContentMask = 0x0000003F
+                };
+                writerGroup.MessageSettings = new ExtensionObject(messageSettings);
 
                 // Define a DataSetWriter
                 DataSetWriterDataType dataSetWriter = new DataSetWriterDataType();
@@ -52,6 +59,14 @@ namespace SamplePublisher
                 dataSetWriter.DataSetName = "DataSetWriterSimple";
                 dataSetWriter.DataSetWriterId = 1;
                 dataSetWriter.KeyFrameCount = 1;
+                UadpDataSetWriterMessageDataType uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
+                {
+                    DataSetMessageContentMask = 0x00000024,
+                    ConfiguredSize = 22,
+                    DataSetOffset = 15,
+                    NetworkMessageNumber = 1
+                };
+                dataSetWriter.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
 
                 writerGroup.DataSetWriters.Add(dataSetWriter);
                 pubSubConnection.WriterGroups.Add(writerGroup);
@@ -61,6 +76,7 @@ namespace SamplePublisher
                 publishedDataSet1.Name = "Simple"; //name shall be unique in a configuration
                 // Define  publishedDataSet1.DataSetMetaData
                 publishedDataSet1.DataSetMetaData = new DataSetMetaDataType();
+                publishedDataSet1.DataSetMetaData.DataSetClassId = new Uuid(Guid.Empty);
                 publishedDataSet1.DataSetMetaData.Name = publishedDataSet1.Name;
                 publishedDataSet1.DataSetMetaData.Fields = new FieldMetaDataCollection()
                 {
@@ -150,7 +166,6 @@ namespace SamplePublisher
                 {
                     publishedDataSet1
                 };
-
 
                 // Add the connection to the application
                 pubSubApplication.LoadConfiguration(pubSubConfiguration);
