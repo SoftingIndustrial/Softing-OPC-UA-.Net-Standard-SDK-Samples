@@ -47,18 +47,22 @@ namespace SamplePublisher
                 writerGroup.HeaderLayoutUri = "UADP-Cyclic-Fixed";
                 UadpWriterGroupMessageDataType messageSettings = new UadpWriterGroupMessageDataType()
                 {
-                    DataSetOrdering = DataSetOrderingType.Undefined,
+                    DataSetOrdering = DataSetOrderingType.AscendingWriterId,
                     GroupVersion = 0,
                     NetworkMessageContentMask = 0x0000003F
                 };
                 writerGroup.MessageSettings = new ExtensionObject(messageSettings);
+                DatagramWriterGroupTransportDataType transportSettings = new DatagramWriterGroupTransportDataType();
+                writerGroup.TransportSettings = new ExtensionObject(transportSettings);
 
-                // Define a DataSetWriter
-                DataSetWriterDataType dataSetWriter = new DataSetWriterDataType();
-                dataSetWriter.Enabled = true;
-                dataSetWriter.DataSetName = "DataSetWriterSimple";
-                dataSetWriter.DataSetWriterId = 1;
-                dataSetWriter.KeyFrameCount = 1;
+                // Define DataSetWriter 'Simple'
+                DataSetWriterDataType dataSetWriterSimple = new DataSetWriterDataType();
+                dataSetWriterSimple.DataSetWriterId = 1;
+                dataSetWriterSimple.Enabled = true;
+                dataSetWriterSimple.DataSetFieldContentMask = 0x00000020;
+                dataSetWriterSimple.DataSetName = "Simple";
+               
+                dataSetWriterSimple.KeyFrameCount = 1;
                 UadpDataSetWriterMessageDataType uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
                 {
                     DataSetMessageContentMask = 0x00000024,
@@ -66,9 +70,45 @@ namespace SamplePublisher
                     DataSetOffset = 15,
                     NetworkMessageNumber = 1
                 };
-                dataSetWriter.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+                dataSetWriterSimple.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+                writerGroup.DataSetWriters.Add(dataSetWriterSimple);
 
-                writerGroup.DataSetWriters.Add(dataSetWriter);
+                // Define DataSetWriter 'AllTypes'
+                DataSetWriterDataType dataSetWriterAllTypes = new DataSetWriterDataType();
+                dataSetWriterAllTypes.DataSetWriterId = 2;
+                dataSetWriterAllTypes.Enabled = true;
+                dataSetWriterAllTypes.DataSetFieldContentMask = 0x00000020;
+                dataSetWriterAllTypes.DataSetName = "AllTypes";
+                
+                dataSetWriterAllTypes.KeyFrameCount = 1;
+                uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
+                {
+                    DataSetMessageContentMask = 0x00000024,
+                    ConfiguredSize = 32,
+                    DataSetOffset = 37,
+                    NetworkMessageNumber = 1
+                };
+                dataSetWriterAllTypes.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+                writerGroup.DataSetWriters.Add(dataSetWriterAllTypes);
+
+                // Define DataSetWriter 'MassTest'
+                DataSetWriterDataType dataSetWriterMassTest = new DataSetWriterDataType();
+                dataSetWriterMassTest.DataSetWriterId = 2;
+                dataSetWriterMassTest.Enabled = true;
+                dataSetWriterMassTest.DataSetFieldContentMask = 0x00000020;
+                dataSetWriterMassTest.DataSetName = "MassTest";
+
+                dataSetWriterMassTest.KeyFrameCount = 1;
+                uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
+                {
+                    DataSetMessageContentMask = 0x00000024,
+                    ConfiguredSize = 405,
+                    DataSetOffset = 69,
+                    NetworkMessageNumber = 1
+                };
+                dataSetWriterMassTest.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+                writerGroup.DataSetWriters.Add(dataSetWriterMassTest);
+
                 pubSubConnection.WriterGroups.Add(writerGroup);
 
                 //Define a PublishedDataSet
