@@ -111,14 +111,14 @@ namespace SamplePublisher
 
                 pubSubConnection.WriterGroups.Add(writerGroup);
 
-                //Define a PublishedDataSet
-                PublishedDataSetDataType publishedDataSet1 = new PublishedDataSetDataType();
-                publishedDataSet1.Name = "Simple"; //name shall be unique in a configuration
-                // Define  publishedDataSet1.DataSetMetaData
-                publishedDataSet1.DataSetMetaData = new DataSetMetaDataType();
-                publishedDataSet1.DataSetMetaData.DataSetClassId = new Uuid(Guid.Empty);
-                publishedDataSet1.DataSetMetaData.Name = publishedDataSet1.Name;
-                publishedDataSet1.DataSetMetaData.Fields = new FieldMetaDataCollection()
+                //Define PublishedDataSet Simple
+                PublishedDataSetDataType publishedDataSetSimple = new PublishedDataSetDataType();
+                publishedDataSetSimple.Name = "Simple"; //name shall be unique in a configuration
+                // Define  publishedDataSetSimple.DataSetMetaData
+                publishedDataSetSimple.DataSetMetaData = new DataSetMetaDataType();
+                publishedDataSetSimple.DataSetMetaData.DataSetClassId = new Uuid(Guid.Empty);
+                publishedDataSetSimple.DataSetMetaData.Name = publishedDataSetSimple.Name;
+                publishedDataSetSimple.DataSetMetaData.Fields = new FieldMetaDataCollection()
                 {
                     new FieldMetaData()
                     {
@@ -150,7 +150,7 @@ namespace SamplePublisher
                     }
                 };
                 //initialize Extension fields collection
-                publishedDataSet1.ExtensionFields = new KeyValuePairCollection()
+                publishedDataSetSimple.ExtensionFields = new KeyValuePairCollection()
                 {
                     new Opc.Ua.KeyValuePair()
                     {
@@ -174,8 +174,8 @@ namespace SamplePublisher
                     }
                 };
 
-                PublishedDataItemsDataType publishedDataSetSource = new PublishedDataItemsDataType();
-                publishedDataSetSource.PublishedData = new PublishedVariableDataTypeCollection()
+                PublishedDataItemsDataType publishedDataSetSimpleSource = new PublishedDataItemsDataType();
+                publishedDataSetSimpleSource.PublishedData = new PublishedVariableDataTypeCollection()
                 {
                     new PublishedVariableDataType()
                     {
@@ -194,7 +194,175 @@ namespace SamplePublisher
                         SubstituteValue =  new QualifiedName("DateTimeValue")
                     }
                 };
-                publishedDataSet1.DataSetSource = new ExtensionObject(publishedDataSetSource);   
+                publishedDataSetSimple.DataSetSource = new ExtensionObject(publishedDataSetSimpleSource);
+
+                //Define PublishedDataSet AllTypes
+                PublishedDataSetDataType publishedDataSetAllTypes = new PublishedDataSetDataType();
+                publishedDataSetAllTypes.Name = "AllTypes"; //name shall be unique in a configuration
+                // Define  publishedDataSetAllTypes.DataSetMetaData
+                publishedDataSetAllTypes.DataSetMetaData = new DataSetMetaDataType();
+                publishedDataSetAllTypes.DataSetMetaData.DataSetClassId = new Uuid(Guid.Empty);
+                publishedDataSetAllTypes.DataSetMetaData.Name = publishedDataSetAllTypes.Name;
+                publishedDataSetAllTypes.DataSetMetaData.Fields = new FieldMetaDataCollection()
+                {
+                    new FieldMetaData()
+                    {
+                        Name = "BooleanValue",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        DataType = DataTypeIds.Boolean,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "ByteValue",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        DataType = DataTypeIds.Byte,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "Int16Value",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        DataType = DataTypeIds.Int16,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "Int32Value",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        DataType = DataTypeIds.Int32,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "SByteValue",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        DataType = DataTypeIds.SByte,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "UInt16Value",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        DataType = DataTypeIds.UInt16,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "UInt32Value",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        DataType = DataTypeIds.UInt32,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "FloatValue",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        DataType = DataTypeIds.Float,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "DoubleValue",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        DataType = DataTypeIds.Double,
+                        ValueRank = ValueRanks.Scalar
+                    }
+                };
+                //initialize Extension fields collection
+                publishedDataSetAllTypes.ExtensionFields = new KeyValuePairCollection()
+                {
+                    new Opc.Ua.KeyValuePair()
+                    {
+                        Key =  new QualifiedName("BooleanValue"),
+                        Value = true
+                    },
+                    new Opc.Ua.KeyValuePair()
+                    {
+                        Key =  new QualifiedName("ByteValue"),
+                        Value = (byte)100
+                    },
+                    new Opc.Ua.KeyValuePair()
+                    {
+                        Key =  new QualifiedName("Int16Value"),
+                        Value = (short)50
+                    },
+                    new Opc.Ua.KeyValuePair()
+                    {
+                        Key =  new QualifiedName("Int32Value"),
+                        Value = (int)1
+                    },
+                    new Opc.Ua.KeyValuePair()
+                    {
+                        Key =  new QualifiedName("SByteValue"),
+                        Value = (sbyte)11
+                    },
+                    new Opc.Ua.KeyValuePair()
+                    {
+                        Key =  new QualifiedName("UInt16Value"),
+                        Value = (ushort)111
+                    },
+                    new Opc.Ua.KeyValuePair()
+                    {
+                        Key =  new QualifiedName("UInt32Value"),
+                        Value = (uint)1111
+                    },
+                    new Opc.Ua.KeyValuePair()
+                    {
+                        Key =  new QualifiedName("FloatValue"),
+                        Value = (float)1.1
+                    },
+                    new Opc.Ua.KeyValuePair()
+                    {
+                        Key =  new QualifiedName("DoubleValue"),
+                        Value = (double)1.11
+                    }                    
+                };
+
+                PublishedDataItemsDataType publishedDataSetAllTypesSource = new PublishedDataItemsDataType();
+                publishedDataSetAllTypesSource.PublishedData = new PublishedVariableDataTypeCollection()
+                {
+                    new PublishedVariableDataType()
+                    {
+                        SubstituteValue = new QualifiedName("BooleanValue")
+                    },
+                    new PublishedVariableDataType()
+                    {
+                        SubstituteValue =  new QualifiedName("ByteValue")
+                    },
+                    new PublishedVariableDataType()
+                    {
+                        SubstituteValue =  new QualifiedName("Int16Value")
+                    },
+                    new PublishedVariableDataType()
+                    {
+                        SubstituteValue =  new QualifiedName("Int32Value")
+                    },
+                    new PublishedVariableDataType()
+                    {
+                        SubstituteValue =  new QualifiedName("SByteValue")
+                    },
+                    new PublishedVariableDataType()
+                    {
+                        SubstituteValue =  new QualifiedName("UInt16Value")
+                    },
+                    new PublishedVariableDataType()
+                    {
+                        SubstituteValue =  new QualifiedName("UInt32Value")
+                    },
+                    new PublishedVariableDataType()
+                    {
+                        SubstituteValue =  new QualifiedName("FloatValue")
+                    },
+                    new PublishedVariableDataType()
+                    {
+                        SubstituteValue =  new QualifiedName("DoubleValue")
+                    },
+                };
+                publishedDataSetAllTypes.DataSetSource = new ExtensionObject(publishedDataSetAllTypesSource);
+
+
+
 
                 //create  pub sub configuration root object
                 PubSubConfigurationDataType pubSubConfiguration = new PubSubConfigurationDataType();
@@ -204,7 +372,7 @@ namespace SamplePublisher
                 };
                 pubSubConfiguration.PublishedDataSets = new PublishedDataSetDataTypeCollection()
                 {
-                    publishedDataSet1
+                    publishedDataSetSimple, publishedDataSetAllTypes
                 };
 
                 // Add the connection to the application
