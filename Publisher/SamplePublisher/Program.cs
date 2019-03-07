@@ -43,13 +43,13 @@ namespace SamplePublisher
                 writerGroup.Enabled = true;
                 writerGroup.WriterGroupId = 1;
                 writerGroup.PublishingInterval = 5000;
-                writerGroup.KeepAliveTime = 1500;
+                writerGroup.KeepAliveTime = 5000;
                 writerGroup.HeaderLayoutUri = "UADP-Cyclic-Fixed";
                 UadpWriterGroupMessageDataType messageSettings = new UadpWriterGroupMessageDataType()
                 {
                     DataSetOrdering = DataSetOrderingType.AscendingWriterId,
                     GroupVersion = 0,
-                    NetworkMessageContentMask = 0x0000003F
+                    NetworkMessageContentMask = 0x000003fF
                 };
                 writerGroup.MessageSettings = new ExtensionObject(messageSettings);
                 DatagramWriterGroupTransportDataType transportSettings = new DatagramWriterGroupTransportDataType();
@@ -93,7 +93,7 @@ namespace SamplePublisher
 
                 // Define DataSetWriter 'MassTest'
                 DataSetWriterDataType dataSetWriterMassTest = new DataSetWriterDataType();
-                dataSetWriterMassTest.DataSetWriterId = 2;
+                dataSetWriterMassTest.DataSetWriterId = 3;
                 dataSetWriterMassTest.Enabled = true;
                 dataSetWriterMassTest.DataSetFieldContentMask = 0x00000020;
                 dataSetWriterMassTest.DataSetName = "MassTest";
