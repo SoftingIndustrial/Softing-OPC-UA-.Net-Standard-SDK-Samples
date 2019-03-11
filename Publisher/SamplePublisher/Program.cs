@@ -51,7 +51,7 @@ namespace SamplePublisher
                 {
                     DataSetOrdering = DataSetOrderingType.AscendingWriterId,
                     GroupVersion = 0,
-                    NetworkMessageContentMask = 0x0000003f
+                    NetworkMessageContentMask = 0x0000003ff
                 };
                 writerGroup1.MessageSettings = new ExtensionObject(messageSettings);
                 DatagramWriterGroupTransportDataType transportSettings = new DatagramWriterGroupTransportDataType();
@@ -66,7 +66,7 @@ namespace SamplePublisher
                 dataSetWriterSimple.KeyFrameCount = 1;
                 UadpDataSetWriterMessageDataType uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
                 {
-                    DataSetMessageContentMask = 0x00000000,
+                    DataSetMessageContentMask = 0x0000003f,
                     ConfiguredSize = 22,
                     DataSetOffset = 15,
                     NetworkMessageNumber = 1
@@ -83,7 +83,7 @@ namespace SamplePublisher
                 dataSetWriterAllTypes.KeyFrameCount = 1;
                 uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
                 {
-                    DataSetMessageContentMask = 0x00000000,
+                    DataSetMessageContentMask = 0x00000035,
                     ConfiguredSize = 32,
                     DataSetOffset = 37,
                     NetworkMessageNumber = 1
@@ -100,7 +100,7 @@ namespace SamplePublisher
                 dataSetWriterMassTest.KeyFrameCount = 1;
                 uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
                 {
-                    DataSetMessageContentMask = 0x00000000,
+                    DataSetMessageContentMask = 0x00000035,
                     ConfiguredSize = 405,
                     DataSetOffset = 69,
                     NetworkMessageNumber = 1
@@ -132,7 +132,7 @@ namespace SamplePublisher
                 DataSetWriterDataType dataSetWriterSimple2 = new DataSetWriterDataType();
                 dataSetWriterSimple2.DataSetWriterId = 11;
                 dataSetWriterSimple2.Enabled = true;
-                dataSetWriterSimple2.DataSetFieldContentMask = 0;
+                dataSetWriterSimple2.DataSetFieldContentMask = 0x00000000;
                 dataSetWriterSimple2.DataSetName = "Simple";
                 dataSetWriterSimple2.KeyFrameCount = 1;
                 UadpDataSetWriterMessageDataType uadpDataSetWriterMessage2 = new UadpDataSetWriterMessageDataType()
@@ -160,7 +160,7 @@ namespace SamplePublisher
                 DataSetWriterDataType dataSetWriterMassTest2 = new DataSetWriterDataType();
                 dataSetWriterMassTest2.DataSetWriterId = 13;
                 dataSetWriterMassTest2.Enabled = true;
-                dataSetWriterMassTest2.DataSetFieldContentMask = 0;
+                dataSetWriterMassTest2.DataSetFieldContentMask = 0x00000000;
                 dataSetWriterMassTest2.DataSetName = "MassData";
                 dataSetWriterMassTest2.KeyFrameCount = 1;
                 uadpDataSetWriterMessage2 = new UadpDataSetWriterMessageDataType()
@@ -469,7 +469,7 @@ namespace SamplePublisher
                 };
                 pubSubConfiguration.PublishedDataSets = new PublishedDataSetDataTypeCollection()
                 {
-                    publishedDataSetSimple//, publishedDataSetAllTypes, publishedDataSetMassData
+                    publishedDataSetSimple// , publishedDataSetAllTypes, publishedDataSetMassData
                 };
 
                 // Add the connection to the application
