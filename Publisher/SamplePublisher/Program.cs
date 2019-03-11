@@ -110,7 +110,7 @@ namespace SamplePublisher
             DataSetWriterDataType dataSetWriterSimple = new DataSetWriterDataType();
             dataSetWriterSimple.DataSetWriterId = 1;
             dataSetWriterSimple.Enabled = true;
-            dataSetWriterSimple.DataSetFieldContentMask = 0x00000020;
+            dataSetWriterSimple.DataSetFieldContentMask = 0x00000000;
             dataSetWriterSimple.DataSetName = "Simple";
             dataSetWriterSimple.KeyFrameCount = 1;
             UadpDataSetWriterMessageDataType uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
@@ -127,7 +127,7 @@ namespace SamplePublisher
             DataSetWriterDataType dataSetWriterAllTypes = new DataSetWriterDataType();
             dataSetWriterAllTypes.DataSetWriterId = 2;
             dataSetWriterAllTypes.Enabled = true;
-            dataSetWriterAllTypes.DataSetFieldContentMask = 0x00000020;
+            dataSetWriterAllTypes.DataSetFieldContentMask = 0x00000000;
             dataSetWriterAllTypes.DataSetName = "AllTypes";
             dataSetWriterAllTypes.KeyFrameCount = 1;
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
@@ -144,7 +144,7 @@ namespace SamplePublisher
             DataSetWriterDataType dataSetWriterMassTest = new DataSetWriterDataType();
             dataSetWriterMassTest.DataSetWriterId = 3;
             dataSetWriterMassTest.Enabled = true;
-            dataSetWriterMassTest.DataSetFieldContentMask = 0x00000020;
+            dataSetWriterMassTest.DataSetFieldContentMask = 0x00000000;
             dataSetWriterMassTest.DataSetName = "MassData";
             dataSetWriterMassTest.KeyFrameCount = 1;
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
@@ -157,8 +157,7 @@ namespace SamplePublisher
             dataSetWriterMassTest.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
             writerGroup1.DataSetWriters.Add(dataSetWriterMassTest);
 
-            //  pubSubConnection.WriterGroups.Add(writerGroup1);
-
+            pubSubConnection.WriterGroups.Add(writerGroup1);
 
             // Define a WriterGroup - UADP-Dynamic
             WriterGroupDataType writerGroup2 = new WriterGroupDataType();
@@ -182,7 +181,7 @@ namespace SamplePublisher
             DataSetWriterDataType dataSetWriterSimple2 = new DataSetWriterDataType();
             dataSetWriterSimple2.DataSetWriterId = 11;
             dataSetWriterSimple2.Enabled = true;
-                dataSetWriterSimple2.DataSetFieldContentMask = 0;
+                dataSetWriterSimple2.DataSetFieldContentMask = 0x00000000;
             dataSetWriterSimple2.DataSetName = "Simple";
             dataSetWriterSimple2.KeyFrameCount = 1;
             UadpDataSetWriterMessageDataType uadpDataSetWriterMessage2 = new UadpDataSetWriterMessageDataType()
@@ -196,7 +195,7 @@ namespace SamplePublisher
             DataSetWriterDataType dataSetWriterAllTypes2 = new DataSetWriterDataType();
             dataSetWriterAllTypes2.DataSetWriterId = 12;
             dataSetWriterAllTypes2.Enabled = true;
-            dataSetWriterAllTypes2.DataSetFieldContentMask = 0;
+            dataSetWriterAllTypes2.DataSetFieldContentMask = 0x00000000;
             dataSetWriterAllTypes2.DataSetName = "AllTypes";
             dataSetWriterAllTypes2.KeyFrameCount = 1;
             uadpDataSetWriterMessage2 = new UadpDataSetWriterMessageDataType()
