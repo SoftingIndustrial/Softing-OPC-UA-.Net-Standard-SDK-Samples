@@ -35,7 +35,8 @@ namespace SamplePublisher
                 pubSubConnection.PublisherId = (UInt16)10;
                 pubSubConnection.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
                 NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
-                address.Url = "opc.udp://239.0.0.1:4840";
+                //address.Url = "opc.udp://239.0.0.1:4840";
+                address.Url = "opc.udp://224.0.5.250:4840";
                 pubSubConnection.Address = new ExtensionObject(address);
 
                 // Define a WriterGroup - UADP-Cyclic-Fixed
@@ -60,12 +61,12 @@ namespace SamplePublisher
                 DataSetWriterDataType dataSetWriterSimple = new DataSetWriterDataType();
                 dataSetWriterSimple.DataSetWriterId = 1;
                 dataSetWriterSimple.Enabled = true;
-                dataSetWriterSimple.DataSetFieldContentMask = 0x00000020;
+                dataSetWriterSimple.DataSetFieldContentMask = 0x00000000;
                 dataSetWriterSimple.DataSetName = "Simple";               
                 dataSetWriterSimple.KeyFrameCount = 1;
                 UadpDataSetWriterMessageDataType uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
                 {
-                    DataSetMessageContentMask = 0x00000024,
+                    DataSetMessageContentMask = 0x00000000,
                     ConfiguredSize = 22,
                     DataSetOffset = 15,
                     NetworkMessageNumber = 1
@@ -77,12 +78,12 @@ namespace SamplePublisher
                 DataSetWriterDataType dataSetWriterAllTypes = new DataSetWriterDataType();
                 dataSetWriterAllTypes.DataSetWriterId = 2;
                 dataSetWriterAllTypes.Enabled = true;
-                dataSetWriterAllTypes.DataSetFieldContentMask = 0x00000020;
+                dataSetWriterAllTypes.DataSetFieldContentMask = 0x00000000;
                 dataSetWriterAllTypes.DataSetName = "AllTypes";                
                 dataSetWriterAllTypes.KeyFrameCount = 1;
                 uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
                 {
-                    DataSetMessageContentMask = 0x00000024,
+                    DataSetMessageContentMask = 0x00000000,
                     ConfiguredSize = 32,
                     DataSetOffset = 37,
                     NetworkMessageNumber = 1
@@ -94,12 +95,12 @@ namespace SamplePublisher
                 DataSetWriterDataType dataSetWriterMassTest = new DataSetWriterDataType();
                 dataSetWriterMassTest.DataSetWriterId = 3;
                 dataSetWriterMassTest.Enabled = true;
-                dataSetWriterMassTest.DataSetFieldContentMask = 0x00000020;
+                dataSetWriterMassTest.DataSetFieldContentMask = 0x00000000;
                 dataSetWriterMassTest.DataSetName = "MassData";
                 dataSetWriterMassTest.KeyFrameCount = 1;
                 uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
                 {
-                    DataSetMessageContentMask = 0x00000024,
+                    DataSetMessageContentMask = 0x00000000,
                     ConfiguredSize = 405,
                     DataSetOffset = 69,
                     NetworkMessageNumber = 1
@@ -107,8 +108,7 @@ namespace SamplePublisher
                 dataSetWriterMassTest.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
                 writerGroup1.DataSetWriters.Add(dataSetWriterMassTest);
 
-              //  pubSubConnection.WriterGroups.Add(writerGroup1);
-
+                pubSubConnection.WriterGroups.Add(writerGroup1);
 
                 // Define a WriterGroup - UADP-Dynamic
                 WriterGroupDataType writerGroup2 = new WriterGroupDataType();
@@ -170,7 +170,7 @@ namespace SamplePublisher
                 dataSetWriterMassTest2.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage2);
                 writerGroup2.DataSetWriters.Add(dataSetWriterMassTest2);
 
-                pubSubConnection.WriterGroups.Add(writerGroup2);
+                // pubSubConnection.WriterGroups.Add(writerGroup2);
 
                 #region  Define PublishedDataSet Simple
                 PublishedDataSetDataType publishedDataSetSimple = new PublishedDataSetDataType();
@@ -469,7 +469,7 @@ namespace SamplePublisher
                 };
                 pubSubConfiguration.PublishedDataSets = new PublishedDataSetDataTypeCollection()
                 {
-                    publishedDataSetSimple, publishedDataSetAllTypes, publishedDataSetMassData
+                    publishedDataSetSimple//, publishedDataSetAllTypes, publishedDataSetMassData
                 };
 
                 // Add the connection to the application
