@@ -181,7 +181,7 @@ namespace SamplePublisher
             DataSetWriterDataType dataSetWriterSimple2 = new DataSetWriterDataType();
             dataSetWriterSimple2.DataSetWriterId = 11;
             dataSetWriterSimple2.Enabled = true;
-                dataSetWriterSimple2.DataSetFieldContentMask = 0x00000000;
+            dataSetWriterSimple2.DataSetFieldContentMask = 0x00000000;
             dataSetWriterSimple2.DataSetName = "Simple";
             dataSetWriterSimple2.KeyFrameCount = 1;
             UadpDataSetWriterMessageDataType uadpDataSetWriterMessage2 = new UadpDataSetWriterMessageDataType()
@@ -202,8 +202,8 @@ namespace SamplePublisher
             {
                 DataSetMessageContentMask = 0x00000035,
             };
-            dataSetWriterAllTypes.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage2);
-            writerGroup2.DataSetWriters.Add(dataSetWriterAllTypes);
+            dataSetWriterAllTypes2.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage2);
+            writerGroup2.DataSetWriters.Add(dataSetWriterAllTypes2);
 
             // Define DataSetWriter 'MassTest'
             DataSetWriterDataType dataSetWriterMassTest2 = new DataSetWriterDataType();
