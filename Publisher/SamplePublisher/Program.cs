@@ -100,7 +100,7 @@ namespace SamplePublisher
             {
                 DataSetOrdering = DataSetOrderingType.AscendingWriterId,
                 GroupVersion = 0,
-                    NetworkMessageContentMask = 0x0000003ff
+                NetworkMessageContentMask = 0x0000003ff
             };
             writerGroup1.MessageSettings = new ExtensionObject(messageSettings);
             DatagramWriterGroupTransportDataType transportSettings = new DatagramWriterGroupTransportDataType();
