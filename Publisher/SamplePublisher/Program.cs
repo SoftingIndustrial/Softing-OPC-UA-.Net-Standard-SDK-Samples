@@ -100,8 +100,20 @@ namespace SamplePublisher
             {
                 DataSetOrdering = DataSetOrderingType.AscendingWriterId,
                 GroupVersion = 0,
-                NetworkMessageContentMask = 0x0000003ff
+                NetworkMessageContentMask = (uint) // 0x0000003f
+                 (UadpNetworkMessageContentMask.PublisherId |
+                  UadpNetworkMessageContentMask.GroupHeader |
+                  UadpNetworkMessageContentMask.WriterGroupId |
+                  UadpNetworkMessageContentMask.GroupVersion |
+                  UadpNetworkMessageContentMask.NetworkMessageNumber |
+                  UadpNetworkMessageContentMask.SequenceNumber) // |
+                  //UadpNetworkMessageContentMask.PayloadHeader |
+                  //UadpNetworkMessageContentMask.Timestamp |
+                  //UadpNetworkMessageContentMask.PicoSeconds |
+                  //UadpNetworkMessageContentMask.DataSetClassId) 
+                  //UadpNetworkMessageContentMask.PromotedFields
             };
+
             writerGroup1.MessageSettings = new ExtensionObject(messageSettings);
             DatagramWriterGroupTransportDataType transportSettings = new DatagramWriterGroupTransportDataType();
             writerGroup1.TransportSettings = new ExtensionObject(transportSettings);
