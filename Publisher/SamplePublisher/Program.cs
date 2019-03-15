@@ -11,13 +11,20 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using Opc.Ua;
+using Opc.Ua.Test;
 using Softing.Opc.Ua.PubSub;
 
 namespace SamplePublisher
 {
-    public static class Program
+    public class Program
     {
+        private const int NamespaceIndex = 5;
+        private static DataGenerator m_generator;
+        private static object m_lock = new object();
+        private static FieldMetaDataCollection m_dynamicFields = new FieldMetaDataCollection();
+        private static  UaPubSubApplication m_pubSubApplication;
         /// <summary>
         /// Entry point for application
         /// </summary>
@@ -26,14 +33,16 @@ namespace SamplePublisher
             try
             {
                 PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
-                                
+
                 // Create the PubSub application
-                UaPubSubApplication pubSubApplication = new UaPubSubApplication();
-                pubSubApplication.LoadConfiguration(pubSubConfiguration);
+                m_pubSubApplication = new UaPubSubApplication();
+                m_pubSubApplication.LoadConfiguration(pubSubConfiguration);
 
                 Console.WriteLine("Publisher started");
                 PrintCommandParameters();
 
+                //start data generator timer 
+                Timer simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
                 do
                 {
                     ConsoleKeyInfo key = Console.ReadKey();
@@ -52,6 +61,7 @@ namespace SamplePublisher
                     }
                 }
                 while (true);
+                simulationTimer.Dispose();
             }
             catch (Exception e)
             {
@@ -62,8 +72,57 @@ namespace SamplePublisher
             finally
             {
                 //pubSubApplication.Stop();
+            }            
+        }
+
+        #region Data Changes Simulation
+        /// <summary>
+        /// Simulate value changes in dynamic nodes
+        /// </summary>
+        /// <param name="state"></param>
+        private static void DoSimulation(object state)
+        {
+            try
+            {
+                lock (m_lock)
+                {
+                    foreach (FieldMetaData variable in m_dynamicFields)
+                    {
+                        DataValue newDataValue = new DataValue(new Variant(GetNewValue(variable)), StatusCodes.Good, DateTime.UtcNow);
+                        m_pubSubApplication.DataStore.WritePublishedDataItem(new NodeId(variable.Name, NamespaceIndex), Attributes.Value, newDataValue);                       
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Utils.Trace(e, "Unexpected error doing simulation.");
             }
         }
+
+
+        /// <summary>
+        /// Generate new value for variable
+        /// </summary>
+        /// <param name="variable"></param>
+        /// <returns></returns>
+        private static object GetNewValue(FieldMetaData fieldMetadata)
+        {
+            if (m_generator == null)
+            {
+                m_generator = new Opc.Ua.Test.DataGenerator(null);
+                m_generator.BoundaryValueFrequency = 0;
+            }
+
+            object value = null;
+
+            while (value == null)
+            {
+                value = m_generator.GetRandom(fieldMetadata.DataType, fieldMetadata.ValueRank, new uint[] { 10 }, null);
+            }
+
+            return value;
+        }
+        #endregion
 
         private static void PrintCommandParameters()
         {
@@ -271,6 +330,9 @@ namespace SamplePublisher
                         ValueRank = ValueRanks.Scalar
                     }
                 };
+            //remember fields to be updated 
+            m_dynamicFields.AddRange(publishedDataSetSimple.DataSetMetaData.Fields);
+
             //initialize Extension fields collection
             publishedDataSetSimple.ExtensionFields = new KeyValuePairCollection()
                 {
@@ -297,25 +359,18 @@ namespace SamplePublisher
                 };
 
             PublishedDataItemsDataType publishedDataSetSimpleSource = new PublishedDataItemsDataType();
-            publishedDataSetSimpleSource.PublishedData = new PublishedVariableDataTypeCollection()
-                {
+            publishedDataSetSimpleSource.PublishedData = new PublishedVariableDataTypeCollection();
+            //create PublishedData based on metadata names
+            foreach (var field in publishedDataSetSimple.DataSetMetaData.Fields)
+            {
+                publishedDataSetSimpleSource.PublishedData.Add(
                     new PublishedVariableDataType()
                     {
-                        SubstituteValue = new QualifiedName("BooleanValue")
-                    },
-                    new PublishedVariableDataType()
-                    {
-                        SubstituteValue =  new QualifiedName("Scalar.Int32.X")
-                    },
-                    new PublishedVariableDataType()
-                    {
-                        SubstituteValue =  new QualifiedName("Scalar.Int32.Y")
-                    },
-                    new PublishedVariableDataType()
-                    {
-                        SubstituteValue =  new QualifiedName("DateTimeValue")
-                    }
-                };
+                        PublishedVariable = new NodeId(field.Name, NamespaceIndex), 
+                        AttributeId = Attributes.Value, 
+                    });
+            }
+                
             publishedDataSetSimple.DataSetSource = new ExtensionObject(publishedDataSetSimpleSource);
             #endregion
 
@@ -392,6 +447,9 @@ namespace SamplePublisher
                         ValueRank = ValueRanks.Scalar
                     }
                 };
+            //remember fields to be updated 
+            m_dynamicFields.AddRange(publishedDataSetAllTypes.DataSetMetaData.Fields);
+
             //initialize Extension fields collection
             publishedDataSetAllTypes.ExtensionFields = new KeyValuePairCollection()
                 {
@@ -442,46 +500,17 @@ namespace SamplePublisher
                     }
                 };
 
-            PublishedDataItemsDataType publishedDataSetAllTypesSource = new PublishedDataItemsDataType();
-            publishedDataSetAllTypesSource.PublishedData = new PublishedVariableDataTypeCollection()
-                {
+            PublishedDataItemsDataType publishedDataSetAllTypesSource = new PublishedDataItemsDataType();           
+            //create PublishedData based on metadata names
+            foreach (var field in publishedDataSetAllTypes.DataSetMetaData.Fields)
+            {
+                publishedDataSetAllTypesSource.PublishedData.Add(
                     new PublishedVariableDataType()
                     {
-                        SubstituteValue = new QualifiedName("BooleanValue")
-                    },
-                    new PublishedVariableDataType()
-                    {
-                        SubstituteValue =  new QualifiedName("ByteValue")
-                    },
-                    new PublishedVariableDataType()
-                    {
-                        SubstituteValue =  new QualifiedName("Int16Value")
-                    },
-                    new PublishedVariableDataType()
-                    {
-                        SubstituteValue =  new QualifiedName("Int32Value")
-                    },
-                    new PublishedVariableDataType()
-                    {
-                        SubstituteValue =  new QualifiedName("SByteValue")
-                    },
-                    new PublishedVariableDataType()
-                    {
-                        SubstituteValue =  new QualifiedName("UInt16Value")
-                    },
-                    new PublishedVariableDataType()
-                    {
-                        SubstituteValue =  new QualifiedName("UInt32Value")
-                    },
-                    new PublishedVariableDataType()
-                    {
-                        SubstituteValue =  new QualifiedName("FloatValue")
-                    },
-                    new PublishedVariableDataType()
-                    {
-                        SubstituteValue =  new QualifiedName("DoubleValue")
-                    },
-                };
+                        PublishedVariable = new NodeId(field.Name, NamespaceIndex),
+                        AttributeId = Attributes.Value,
+                    });
+            }
             publishedDataSetAllTypes.DataSetSource = new ExtensionObject(publishedDataSetAllTypesSource);
             #endregion
 
@@ -516,9 +545,13 @@ namespace SamplePublisher
 
                 publishedDataSetMassDataSource.PublishedData.Add(new PublishedVariableDataType()
                 {
-                    SubstituteValue = new QualifiedName(name)
+                    PublishedVariable = new NodeId(name, NamespaceIndex),
+                    AttributeId = Attributes.Value,
                 });
             }
+            //remember fields to be updated 
+            m_dynamicFields.AddRange(publishedDataSetMassData.DataSetMetaData.Fields);
+
             publishedDataSetMassData.DataSetSource = new ExtensionObject(publishedDataSetMassDataSource);
             #endregion
 
