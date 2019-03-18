@@ -10,11 +10,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Xml;
+using System.Xml.Serialization;
+using System.Xml.XPath;
 using Opc.Ua;
 using Opc.Ua.Test;
 using Softing.Opc.Ua.PubSub;
+using Softing.Opc.Ua.PubSub.Configuration;
 
 namespace SamplePublisher
 {
@@ -32,8 +38,12 @@ namespace SamplePublisher
         {
             try
             {
-                PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
+                string configurationFileName = "PubSubConfiguration.xml";
+                PubSubConfigurationDataType pubSubConfiguration = LoadConfiguration(configurationFileName);
 
+             //   SaveConfiguration(pubSubConfiguration, configurationFileName);
+
+              //  PubSubConfigurationDataType pubSubConfiguration2 = LoadConfiguration(configurationFileName);
                 // Create the PubSub application
                 m_pubSubApplication = new UaPubSubApplication();
                 m_pubSubApplication.LoadConfiguration(pubSubConfiguration);
@@ -166,11 +176,11 @@ namespace SamplePublisher
                   UadpNetworkMessageContentMask.GroupVersion |
                   UadpNetworkMessageContentMask.NetworkMessageNumber |
                   UadpNetworkMessageContentMask.SequenceNumber) // |
-                  //UadpNetworkMessageContentMask.PayloadHeader |
-                  //UadpNetworkMessageContentMask.Timestamp |
-                  //UadpNetworkMessageContentMask.PicoSeconds |
-                  //UadpNetworkMessageContentMask.DataSetClassId) 
-                  //UadpNetworkMessageContentMask.PromotedFields
+                                                                //UadpNetworkMessageContentMask.PayloadHeader |
+                                                                //UadpNetworkMessageContentMask.Timestamp |
+                                                                //UadpNetworkMessageContentMask.PicoSeconds |
+                                                                //UadpNetworkMessageContentMask.DataSetClassId) 
+                                                                //UadpNetworkMessageContentMask.PromotedFields
             };
 
             writerGroup1.MessageSettings = new ExtensionObject(messageSettings);
@@ -280,7 +290,7 @@ namespace SamplePublisher
             DataSetWriterDataType dataSetWriterMassTest2 = new DataSetWriterDataType();
             dataSetWriterMassTest2.DataSetWriterId = 13;
             dataSetWriterMassTest2.Enabled = true;
-                dataSetWriterMassTest2.DataSetFieldContentMask = 0;
+            dataSetWriterMassTest2.DataSetFieldContentMask = 0;
             dataSetWriterMassTest2.DataSetName = "MassData";
             dataSetWriterMassTest2.KeyFrameCount = 1;
             uadpDataSetWriterMessage2 = new UadpDataSetWriterMessageDataType()
@@ -301,28 +311,28 @@ namespace SamplePublisher
             publishedDataSetSimple.DataSetMetaData.Name = publishedDataSetSimple.Name;
             publishedDataSetSimple.DataSetMetaData.Fields = new FieldMetaDataCollection()
                 {
-                    new FieldMetaData()
+                    new FieldMetaDataEx()
                     {
                         Name = "BooleanValue",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         DataType = DataTypeIds.Boolean,
                         ValueRank = ValueRanks.Scalar
                     },
-                    new FieldMetaData()
+                    new FieldMetaDataEx()
                     {
                         Name = "Scalar.Int32.X",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         DataType = DataTypeIds.Int32,
                         ValueRank = ValueRanks.Scalar
                     },
-                    new FieldMetaData()
+                    new FieldMetaDataEx()
                     {
                         Name = "Scalar.Int32.Y",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         DataType = DataTypeIds.Int32,
                         ValueRank = ValueRanks.Scalar
                     },
-                    new FieldMetaData()
+                    new FieldMetaDataEx()
                     {
                         Name = "DateTimeValue",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
@@ -336,24 +346,24 @@ namespace SamplePublisher
             //initialize Extension fields collection
             publishedDataSetSimple.ExtensionFields = new KeyValuePairCollection()
                 {
-                    new Opc.Ua.KeyValuePair()
+                    new KeyValuePairEx()
                     {
-                        Key =  new QualifiedName("BooleanValue"),
+                        KeyAsQualifiedName =  "BooleanValue",
                         Value = true
                     },
-                    new Opc.Ua.KeyValuePair()
+                     new KeyValuePairEx()
                     {
-                        Key =  new QualifiedName("Scalar.Int32.X"),
+                        KeyAsQualifiedName = "Scalar.Int32.X",
                         Value = (int)100
                     },
-                    new Opc.Ua.KeyValuePair()
+                     new KeyValuePairEx()
                     {
-                        Key =  new QualifiedName("Scalar.Int32.Y"),
+                        KeyAsQualifiedName = "Scalar.Int32.Y",
                         Value = (int)50
                     },
-                    new Opc.Ua.KeyValuePair()
+                    new KeyValuePairEx()
                     {
-                        Key =  new QualifiedName("DateTimeValue"),
+                        KeyAsQualifiedName = "DateTimeValue",
                         Value = DateTime.Today
                     }
                 };
@@ -364,82 +374,82 @@ namespace SamplePublisher
             foreach (var field in publishedDataSetSimple.DataSetMetaData.Fields)
             {
                 publishedDataSetSimpleSource.PublishedData.Add(
-                    new PublishedVariableDataType()
+                    new PublishedVariableDataTypeEx()
                     {
-                        PublishedVariable = new NodeId(field.Name, NamespaceIndex), 
-                        AttributeId = Attributes.Value, 
+                        PublishedVariable = new NodeId(field.Name, NamespaceIndex),
+                        AttributeId = Attributes.Value,
                     });
             }
-                
+
             publishedDataSetSimple.DataSetSource = new ExtensionObject(publishedDataSetSimpleSource);
             #endregion
 
             #region  Define PublishedDataSet AllTypes
             PublishedDataSetDataType publishedDataSetAllTypes = new PublishedDataSetDataType();
             publishedDataSetAllTypes.Name = "AllTypes"; //name shall be unique in a configuration
-                                                        // Define  publishedDataSetAllTypes.DataSetMetaData
+            // Define  publishedDataSetAllTypes.DataSetMetaData
             publishedDataSetAllTypes.DataSetMetaData = new DataSetMetaDataType();
             publishedDataSetAllTypes.DataSetMetaData.DataSetClassId = new Uuid(Guid.Empty);
             publishedDataSetAllTypes.DataSetMetaData.Name = publishedDataSetAllTypes.Name;
             publishedDataSetAllTypes.DataSetMetaData.Fields = new FieldMetaDataCollection()
                 {
-                    new FieldMetaData()
+                    new FieldMetaDataEx()
                     {
                         Name = "BooleanValue",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         DataType = DataTypeIds.Boolean,
                         ValueRank = ValueRanks.Scalar
                     },
-                    new FieldMetaData()
+                    new FieldMetaDataEx()
                     {
                         Name = "ByteValue",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         DataType = DataTypeIds.Byte,
                         ValueRank = ValueRanks.Scalar
                     },
-                    new FieldMetaData()
+                    new FieldMetaDataEx()  
                     {
                         Name = "Int16Value",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         DataType = DataTypeIds.Int16,
                         ValueRank = ValueRanks.Scalar
                     },
-                    new FieldMetaData()
+                    new FieldMetaDataEx()  
                     {
                         Name = "Int32Value",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         DataType = DataTypeIds.Int32,
                         ValueRank = ValueRanks.Scalar
                     },
-                    new FieldMetaData()
+                    new FieldMetaDataEx()  
                     {
                         Name = "SByteValue",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         DataType = DataTypeIds.SByte,
                         ValueRank = ValueRanks.Scalar
                     },
-                    new FieldMetaData()
+                    new FieldMetaDataEx()  
                     {
                         Name = "UInt16Value",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         DataType = DataTypeIds.UInt16,
                         ValueRank = ValueRanks.Scalar
                     },
-                    new FieldMetaData()
+                    new FieldMetaDataEx()  
                     {
                         Name = "UInt32Value",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         DataType = DataTypeIds.UInt32,
                         ValueRank = ValueRanks.Scalar
                     },
-                    new FieldMetaData()
+                    new FieldMetaDataEx()  
                     {
                         Name = "FloatValue",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         DataType = DataTypeIds.Float,
                         ValueRank = ValueRanks.Scalar
                     },
-                    new FieldMetaData()
+                    new FieldMetaDataEx()  
                     {
                         Name = "DoubleValue",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
@@ -450,62 +460,12 @@ namespace SamplePublisher
             //remember fields to be updated 
             m_dynamicFields.AddRange(publishedDataSetAllTypes.DataSetMetaData.Fields);
 
-            //initialize Extension fields collection
-            publishedDataSetAllTypes.ExtensionFields = new KeyValuePairCollection()
-                {
-                    new Opc.Ua.KeyValuePair()
-                    {
-                        Key =  new QualifiedName("BooleanValue"),
-                        Value = true
-                    },
-                    new Opc.Ua.KeyValuePair()
-                    {
-                        Key =  new QualifiedName("ByteValue"),
-                        Value = (byte)100
-                    },
-                    new Opc.Ua.KeyValuePair()
-                    {
-                        Key =  new QualifiedName("Int16Value"),
-                        Value = (short)50
-                    },
-                    new Opc.Ua.KeyValuePair()
-                    {
-                        Key =  new QualifiedName("Int32Value"),
-                        Value = (int)1
-                    },
-                    new Opc.Ua.KeyValuePair()
-                    {
-                        Key =  new QualifiedName("SByteValue"),
-                        Value = (sbyte)11
-                    },
-                    new Opc.Ua.KeyValuePair()
-                    {
-                        Key =  new QualifiedName("UInt16Value"),
-                        Value = (ushort)111
-                    },
-                    new Opc.Ua.KeyValuePair()
-                    {
-                        Key =  new QualifiedName("UInt32Value"),
-                        Value = (uint)1111
-                    },
-                    new Opc.Ua.KeyValuePair()
-                    {
-                        Key =  new QualifiedName("FloatValue"),
-                        Value = (float)1.1
-                    },
-                    new Opc.Ua.KeyValuePair()
-                    {
-                        Key =  new QualifiedName("DoubleValue"),
-                        Value = (double)1.11
-                    }
-                };
-
-            PublishedDataItemsDataType publishedDataSetAllTypesSource = new PublishedDataItemsDataType();           
+            PublishedDataItemsDataType publishedDataSetAllTypesSource = new PublishedDataItemsDataType();
             //create PublishedData based on metadata names
             foreach (var field in publishedDataSetAllTypes.DataSetMetaData.Fields)
             {
                 publishedDataSetAllTypesSource.PublishedData.Add(
-                    new PublishedVariableDataType()
+                    new PublishedVariableDataTypeEx()
                     {
                         PublishedVariable = new NodeId(field.Name, NamespaceIndex),
                         AttributeId = Attributes.Value,
@@ -529,7 +489,7 @@ namespace SamplePublisher
             for (int i = 0; i < 100; i++)
             {
                 string name = "Value" + i;
-                publishedDataSetMassData.DataSetMetaData.Fields.Add(new FieldMetaData()
+                publishedDataSetMassData.DataSetMetaData.Fields.Add(new FieldMetaDataEx()
                 {
                     Name = name,
                     DataSetFieldId = new Uuid(Guid.NewGuid()),
@@ -537,13 +497,7 @@ namespace SamplePublisher
                     ValueRank = ValueRanks.Scalar
                 });
 
-                publishedDataSetMassData.ExtensionFields.Add(new Opc.Ua.KeyValuePair()
-                {
-                    Key = new QualifiedName(name),
-                    Value = (uint)i
-                });
-
-                publishedDataSetMassDataSource.PublishedData.Add(new PublishedVariableDataType()
+                publishedDataSetMassDataSource.PublishedData.Add(new PublishedVariableDataTypeEx()
                 {
                     PublishedVariable = new NodeId(name, NamespaceIndex),
                     AttributeId = Attributes.Value,
@@ -565,7 +519,104 @@ namespace SamplePublisher
                 {
                     publishedDataSetSimple, publishedDataSetAllTypes, publishedDataSetMassData
                 };
+
+
             return pubSubConfiguration;
-        } 
+        }
+
+        /// <summary>
+        /// Save a <see cref="PubSubConfigurationDataType"/> instance as XML
+        /// </summary>
+        /// <param name="pubSubConfiguration"></param>
+        /// <param name="filePath"></param>
+        public static void SaveConfiguration(PubSubConfigurationDataType pubSubConfiguration, string filePath)
+        {
+            // Create an XmlRootAttribute.
+            XmlRootAttribute root = new XmlRootAttribute("PubSubConfigurationDataType");
+            XmlSerializer serializer = new XmlSerializer(typeof(PubSubConfigurationDataType), GetOverrides(),
+                new Type[] { typeof(PublishedDataItemsDataType), typeof(NetworkAddressUrlDataType),
+                    typeof(DatagramWriterGroupTransportDataType), typeof(UadpWriterGroupMessageDataType),
+                    typeof(UadpDataSetWriterMessageDataType ), typeof(QualifiedName), typeof(PublishedVariableDataTypeEx),
+                    typeof(KeyValuePairEx), typeof(FieldMetaDataEx)},
+                root, Namespaces.OpcUaXsd);
+
+            serializer.UnknownAttribute += Serializer_UnknownAttribute;
+            serializer.UnknownElement += Serializer_UnknownElement;
+            serializer.UnknownNode += Serializer_UnknownNode;
+            serializer.UnreferencedObject += Serializer_UnreferencedObject;
+            using (XmlTextWriter t = new XmlTextWriter(filePath, Encoding.Default))
+            {
+                serializer.Serialize(t, pubSubConfiguration);
+            }
+        }
+
+
+        /// <summary>
+        /// Save a <see cref="PubSubConfigurationDataType"/> instance as XML
+        /// </summary>
+        /// <param name="pubSubConfiguration"></param>
+        /// <param name="filePath"></param>
+        public static PubSubConfigurationDataType LoadConfiguration(string filePath)
+        {            
+            // Create an XmlRootAttribute.
+            XmlRootAttribute root = new XmlRootAttribute("PubSubConfigurationDataType");
+            XmlSerializer serializer = new XmlSerializer(typeof(PubSubConfigurationDataType), GetOverrides(),
+                new Type[] { typeof(PublishedDataItemsDataType), typeof(NetworkAddressUrlDataType),
+                    typeof(DatagramWriterGroupTransportDataType), typeof(UadpWriterGroupMessageDataType),
+                    typeof(UadpDataSetWriterMessageDataType ), typeof(QualifiedName), typeof(PublishedVariableDataTypeEx),
+                    typeof(KeyValuePairEx), typeof(FieldMetaDataEx)},
+                root, Namespaces.OpcUaXsd);
+
+            serializer.UnknownAttribute += Serializer_UnknownAttribute;
+            serializer.UnknownElement += Serializer_UnknownElement;
+            serializer.UnknownNode += Serializer_UnknownNode;
+            serializer.UnreferencedObject += Serializer_UnreferencedObject;
+            using (XmlTextReader t = new XmlTextReader(filePath))
+            {
+                return serializer.Deserialize(t) as PubSubConfigurationDataType;
+            }
+
+            return null;
+        }
+
+
+
+
+
+        private static void Serializer_UnreferencedObject(object sender, UnreferencedObjectEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private static void Serializer_UnknownNode(object sender, XmlNodeEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private static void Serializer_UnknownElement(object sender, XmlElementEventArgs e)
+        {
+           // throw new NotImplementedException();
+        }
+
+        private static void Serializer_UnknownAttribute(object sender, XmlAttributeEventArgs e)
+        {
+           // throw new NotImplementedException();
+        }
+        
+
+        static XmlAttributeOverrides GetOverrides()
+        {
+            XmlAttributeOverrides xmlAttributeOverrides = new XmlAttributeOverrides();
+            xmlAttributeOverrides.Add(typeof(EndpointDescription), "ProxyUrl", new XmlAttributes() { XmlIgnore = true });
+            xmlAttributeOverrides.Add(typeof(PublishedVariableDataType), "PublishedVariable", new XmlAttributes() { XmlIgnore = true });
+            xmlAttributeOverrides.Add(typeof(FieldMetaData), "DataType", new XmlAttributes() { XmlIgnore = true });
+            xmlAttributeOverrides.Add(typeof(PublishedDataSetDataType), "Name", new XmlAttributes() { XmlAttribute = new XmlAttributeAttribute() });
+            xmlAttributeOverrides.Add(typeof(PubSubConnectionDataType), "Name", new XmlAttributes() { XmlAttribute = new XmlAttributeAttribute() });
+           
+            xmlAttributeOverrides.Add(typeof(WriterGroupDataType), "WriterGroupId", new XmlAttributes() { XmlAttribute = new XmlAttributeAttribute() });
+            xmlAttributeOverrides.Add(typeof(DataSetWriterDataType), "DataSetWriterId", new XmlAttributes() { XmlAttribute = new XmlAttributeAttribute() });
+            xmlAttributeOverrides.Add(typeof(DataSetWriterDataType), "DataSetName", new XmlAttributes() { XmlAttribute = new XmlAttributeAttribute() });
+            return xmlAttributeOverrides;
+        }
     }
 }

@@ -32,6 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="PubSubConfiguration.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="SamplePublisher.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
