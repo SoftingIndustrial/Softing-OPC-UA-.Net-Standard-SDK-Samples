@@ -18,7 +18,10 @@ using System.Xml.Serialization;
 
 namespace SamplePublisher
 {
-    static class ConfigurationHelper
+    /// <summary>
+    /// Helper class for create/load/save configuration
+    /// </summary>
+    public static class ConfigurationHelper
     {
         public const int NamespaceIndex = 5;
 
