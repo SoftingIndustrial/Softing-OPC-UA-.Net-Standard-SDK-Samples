@@ -20,17 +20,16 @@ using System.Xml.XPath;
 using Opc.Ua;
 using Opc.Ua.Test;
 using Softing.Opc.Ua.PubSub;
-using Softing.Opc.Ua.PubSub.Configuration;
 
 namespace SamplePublisher
 {
     public class Program
-    {
-        
+    {        
         private static DataGenerator m_generator;
         private static object m_lock = new object();
         private static FieldMetaDataCollection m_dynamicFields = new FieldMetaDataCollection();
-        private static  UaPubSubApplication m_pubSubApplication;
+        private static UaPubSubApplication m_pubSubApplication;
+
         /// <summary>
         /// Entry point for application
         /// </summary>
@@ -39,7 +38,7 @@ namespace SamplePublisher
             try
             {
                 string configurationFileName = "PubSubConfiguration.xml";
-                PubSubConfigurationDataType pubSubConfiguration = ConfigurationHelper.LoadConfiguration(configurationFileName);
+                PubSubConfigurationDataType pubSubConfiguration =   UaPubSubConfigurationHelper.LoadConfiguration(configurationFileName);
                 
                 foreach (var publishedDataSet in pubSubConfiguration.PublishedDataSets)
                 {
@@ -99,7 +98,7 @@ namespace SamplePublisher
             {
                 lock (m_lock)
                 {
-                    foreach (FieldMetaDataEx variable in m_dynamicFields)
+                    foreach (FieldMetaData variable in m_dynamicFields)
                     {
                         DataValue newDataValue = new DataValue(new Variant(GetNewValue(variable)), StatusCodes.Good, DateTime.UtcNow);
                         m_pubSubApplication.DataStore.WritePublishedDataItem(new NodeId(variable.Name, ConfigurationHelper.NamespaceIndex), Attributes.Value, newDataValue);                       
