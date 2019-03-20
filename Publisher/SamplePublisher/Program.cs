@@ -102,7 +102,7 @@ namespace SamplePublisher
                     foreach (FieldMetaData variable in m_dynamicFields)
                     {
                         DataValue newDataValue = new DataValue(new Variant(GetNewValue(variable)), StatusCodes.Good, DateTime.UtcNow);
-                        m_pubSubApplication.DataStore.WritePublishedDataItem(new NodeId(variable.Name, ConfigurationHelper.NamespaceIndex), Attributes.Value, newDataValue);                       
+                        m_pubSubApplication.DataStore.WritePublishedDataItem(new NodeId(variable.Name, NamespaceIndex), Attributes.Value, newDataValue);                       
                     }
                 }
             }
