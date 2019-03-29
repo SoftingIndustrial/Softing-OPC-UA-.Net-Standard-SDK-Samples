@@ -536,7 +536,7 @@
         <StructureDataTypes />
         <EnumDataTypes />
         <SimpleDataTypes />
-        <Name>AllTypes</Name>
+        <Name>MassData</Name>
         <Description i:nil="true" />
         <Fields>
           <FieldMetaData>

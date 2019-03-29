@@ -468,7 +468,7 @@ namespace SamplePublisher
                                                         // Define  publishedDataSetMassData.DataSetMetaData
             publishedDataSetMassData.DataSetMetaData = new DataSetMetaDataType();
             publishedDataSetMassData.DataSetMetaData.DataSetClassId = new Uuid(Guid.Empty);
-            publishedDataSetMassData.DataSetMetaData.Name = publishedDataSetAllTypes.Name;
+            publishedDataSetMassData.DataSetMetaData.Name = publishedDataSetMassData.Name;
             publishedDataSetMassData.DataSetMetaData.Fields = new FieldMetaDataCollection();
             //initialize Extension fields collection
             publishedDataSetMassData.ExtensionFields = new KeyValuePairCollection();
