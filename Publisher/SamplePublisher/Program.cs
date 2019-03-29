@@ -9,14 +9,7 @@
  * ======================================================================*/
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Xml;
-using System.Xml.Serialization;
-using System.Xml.XPath;
 using Opc.Ua;
 using Opc.Ua.Test;
 using Softing.Opc.Ua.PubSub;
@@ -39,14 +32,14 @@ namespace SamplePublisher
             try
             {
                 string configurationFileName = "PubSubConfiguration.xml";
-                PubSubConfigurationDataType pubSubConfiguration =   UaPubSubConfigurationHelper.LoadConfiguration(configurationFileName);
-                
+                PubSubConfigurationDataType pubSubConfiguration = UaPubSubConfigurationHelper.LoadConfiguration(configurationFileName);
+
                 foreach (var publishedDataSet in pubSubConfiguration.PublishedDataSets)
                 {
                     //remember fields to be updated 
                     m_dynamicFields.AddRange(publishedDataSet.DataSetMetaData.Fields);
-                }             
-                
+                }
+
                 // Create the PubSub application
                 m_pubSubApplication = new UaPubSubApplication();
                 m_pubSubApplication.LoadConfiguration(pubSubConfiguration);
@@ -85,7 +78,7 @@ namespace SamplePublisher
             finally
             {
                 //pubSubApplication.Stop();
-            }            
+            }
         }
 
         #region Data Changes Simulation
@@ -102,7 +95,7 @@ namespace SamplePublisher
                     foreach (FieldMetaData variable in m_dynamicFields)
                     {
                         DataValue newDataValue = new DataValue(new Variant(GetNewValue(variable)), StatusCodes.Good, DateTime.UtcNow);
-                        m_pubSubApplication.DataStore.WritePublishedDataItem(new NodeId(variable.Name, NamespaceIndex), Attributes.Value, newDataValue);                       
+                        m_pubSubApplication.DataStore.WritePublishedDataItem(new NodeId(variable.Name, NamespaceIndex), Attributes.Value, newDataValue);
                     }
                 }
             }
@@ -111,7 +104,6 @@ namespace SamplePublisher
                 Utils.Trace(e, "Unexpected error doing simulation.");
             }
         }
-
 
         /// <summary>
         /// Generate new value for variable
@@ -137,9 +129,9 @@ namespace SamplePublisher
         }
         #endregion
 
-        #region Create Sample Configuration object: PubSubConfigurationDataType
+        #region Create configuration object
         /// <summary>
-        /// Create static pubsub configuration
+        /// Create a PubSubConfigurationDataType object programmatically
         /// </summary>
         /// <returns></returns>
         public static PubSubConfigurationDataType CreateConfiguration()
@@ -154,14 +146,14 @@ namespace SamplePublisher
             address.Url = "opc.udp://239.0.0.1:4840";
             pubSubConnection.Address = new ExtensionObject(address);
 
-            // Define a WriterGroup - UADP-Cyclic-Fixed
+            #region Define WriterGroup - UADP-Cyclic-Fixed
             WriterGroupDataType writerGroup1 = new WriterGroupDataType();
             writerGroup1.Enabled = true;
             writerGroup1.WriterGroupId = 1;
-            writerGroup1.PublishingInterval = 5000; //in pdf config value is 100
+            writerGroup1.PublishingInterval = 5000;
             writerGroup1.KeepAliveTime = 5000;
             writerGroup1.MaxNetworkMessageSize = 1500;
-            writerGroup1.HeaderLayoutUri = "UADP-Cyclic-Fixed"; //todo: investigate whast this setting does 
+            writerGroup1.HeaderLayoutUri = "UADP-Cyclic-Fixed";
             UadpWriterGroupMessageDataType messageSettings = new UadpWriterGroupMessageDataType()
             {
                 DataSetOrdering = DataSetOrderingType.AscendingWriterId,
@@ -231,15 +223,16 @@ namespace SamplePublisher
             writerGroup1.DataSetWriters.Add(dataSetWriterMassTest);
 
             pubSubConnection.WriterGroups.Add(writerGroup1);
+            #endregion
 
-            // Define a WriterGroup - UADP-Dynamic
+            #region Define WriterGroup - UADP-Dynamic
             WriterGroupDataType writerGroup2 = new WriterGroupDataType();
             writerGroup2.Enabled = true;
             writerGroup2.WriterGroupId = 2;
-            writerGroup2.PublishingInterval = 5000;//in pdf config value is 100
+            writerGroup2.PublishingInterval = 5000;
             writerGroup2.KeepAliveTime = 5000;
             writerGroup2.MaxNetworkMessageSize = 1500;
-            writerGroup2.HeaderLayoutUri = "UADP-Cyclic-Fixed"; //todo: investigate whast this setting does 
+            writerGroup2.HeaderLayoutUri = "UADP-Cyclic-Fixed";
             UadpWriterGroupMessageDataType messageSettings2 = new UadpWriterGroupMessageDataType()
             {
                 DataSetOrdering = DataSetOrderingType.AscendingWriterId,
@@ -293,11 +286,12 @@ namespace SamplePublisher
             writerGroup2.DataSetWriters.Add(dataSetWriterMassTest2);
 
             pubSubConnection.WriterGroups.Add(writerGroup2);
+            #endregion
 
             #region  Define PublishedDataSet Simple
             PublishedDataSetDataType publishedDataSetSimple = new PublishedDataSetDataType();
             publishedDataSetSimple.Name = "Simple"; //name shall be unique in a configuration
-                                                    // Define  publishedDataSetSimple.DataSetMetaData
+            // Define  publishedDataSetSimple.DataSetMetaData
             publishedDataSetSimple.DataSetMetaData = new DataSetMetaDataType();
             publishedDataSetSimple.DataSetMetaData.DataSetClassId = new Uuid(Guid.Empty);
             publishedDataSetSimple.DataSetMetaData.Name = publishedDataSetSimple.Name;
@@ -465,7 +459,7 @@ namespace SamplePublisher
             #region  Define PublishedDataSet MassData
             PublishedDataSetDataType publishedDataSetMassData = new PublishedDataSetDataType();
             publishedDataSetMassData.Name = "MassData"; //name shall be unique in a configuration
-                                                        // Define  publishedDataSetMassData.DataSetMetaData
+            // Define  publishedDataSetMassData.DataSetMetaData
             publishedDataSetMassData.DataSetMetaData = new DataSetMetaDataType();
             publishedDataSetMassData.DataSetMetaData.DataSetClassId = new Uuid(Guid.Empty);
             publishedDataSetMassData.DataSetMetaData.Name = publishedDataSetMassData.Name;
@@ -506,7 +500,6 @@ namespace SamplePublisher
                     publishedDataSetSimple, publishedDataSetAllTypes, publishedDataSetMassData
                 };
 
-
             return pubSubConfiguration;
         }
         #endregion
@@ -518,6 +511,6 @@ namespace SamplePublisher
         {
             Console.WriteLine("Press:\n\ts: connections status");
             Console.WriteLine("\tx,q: shutdown the server\n\n");
-        }       
+        }
     }
 }
