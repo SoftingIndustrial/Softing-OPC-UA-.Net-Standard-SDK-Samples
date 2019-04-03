@@ -32,23 +32,27 @@ namespace SamplePublisher
             try
             {
                 string configurationFileName = "PubSubConfiguration.xml";
-                PubSubConfigurationDataType pubSubConfiguration = UaPubSubConfigurationHelper.LoadConfiguration(configurationFileName);
+                // Create the PubSub application
+                m_pubSubApplication = UaPubSubApplication.Create(configurationFileName);
 
-                foreach (var publishedDataSet in pubSubConfiguration.PublishedDataSets)
+                // the PubSub application can be created from an instance of PubSubConfigurationDataType
+                // PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
+                // m_pubSubApplication = UaPubSubApplication.Create(pubSubConfiguration);
+
+                foreach (var publishedDataSet in m_pubSubApplication.PubSubConfiguration.PublishedDataSets)
                 {
                     //remember fields to be updated 
                     m_dynamicFields.AddRange(publishedDataSet.DataSetMetaData.Fields);
-                }
-
-                // Create the PubSub application
-                m_pubSubApplication = new UaPubSubApplication();
-                m_pubSubApplication.LoadConfiguration(pubSubConfiguration);
+                }               
 
                 Console.WriteLine("Publisher started");
                 PrintCommandParameters();
 
                 //start data generator timer 
                 Timer simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
+                
+                //start application
+                m_pubSubApplication.Start();
                 do
                 {
                     ConsoleKeyInfo key = Console.ReadKey();
@@ -77,7 +81,7 @@ namespace SamplePublisher
             }
             finally
             {
-                //pubSubApplication.Stop();
+                m_pubSubApplication.Dispose();
             }
         }
 
