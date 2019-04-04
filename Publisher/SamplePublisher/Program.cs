@@ -18,7 +18,7 @@ namespace SamplePublisher
 {
     public class Program
     {
-        public const int NamespaceIndex = 5;
+        public const int NamespaceIndex = 2;
         private static DataGenerator m_generator;
         private static object m_lock = new object();
         private static FieldMetaDataCollection m_dynamicFields = new FieldMetaDataCollection();
@@ -31,7 +31,7 @@ namespace SamplePublisher
         {
             try
             {
-                string configurationFileName = "PubSubConfiguration.xml";
+                string configurationFileName = "SamplePublisher.Config.xml";
                 // Create the PubSub application
                 m_pubSubApplication = UaPubSubApplication.Create(configurationFileName);
 
@@ -64,6 +64,12 @@ namespace SamplePublisher
                     else if (key.KeyChar == 's')
                     {
                         // list connection status
+                        Console.WriteLine("Connections Status:");
+                        foreach (var connection in m_pubSubApplication.PubSubConnections)
+                        {
+                            Console.WriteLine("\tConnection '{0}' - Running={1}, PublishersCount={2}", 
+                                connection.PubSubConnectionConfiguration.Name, connection.IsRunning, connection.Publishers.Count);
+                        }
                     }
                     else
                     {
