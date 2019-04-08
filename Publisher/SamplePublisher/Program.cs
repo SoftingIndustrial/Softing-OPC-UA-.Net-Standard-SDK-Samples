@@ -9,20 +9,25 @@
  * ======================================================================*/
 
 using System;
-using System.Threading;
 using Opc.Ua;
-using Opc.Ua.Test;
 using Softing.Opc.Ua.PubSub;
 
 namespace SamplePublisher
 {
     public class Program
     {
-        public const int NamespaceIndex = 2;
-        private static DataGenerator m_generator;
-        private static object m_lock = new object();
         private static FieldMetaDataCollection m_dynamicFields = new FieldMetaDataCollection();
         private static UaPubSubApplication m_pubSubApplication;
+
+        // It should match the namespace index from configuration file
+        public const ushort NamespaceIndexSimple = 2;
+        public const ushort NamespaceIndexAllTypes = 3;
+        public const ushort NamespaceIndexMassTest = 4;
+
+        /// <summary>
+        /// Init and generate data for publishers
+        /// </summary>
+        private static DataStoreValuesGenerator m_dataStoreValuesGenerator;
 
         /// <summary>
         /// Entry point for application
@@ -39,19 +44,14 @@ namespace SamplePublisher
                 //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
                 //m_pubSubApplication = UaPubSubApplication.Create(pubSubConfiguration);
 
-                foreach (var publishedDataSet in m_pubSubApplication.PubSubConfiguration.PublishedDataSets)
-                {
-                    //remember fields to be updated 
-                    m_dynamicFields.AddRange(publishedDataSet.DataSetMetaData.Fields);
-                }               
+                // Start publishing data 
+                m_dataStoreValuesGenerator = new DataStoreValuesGenerator(m_pubSubApplication);
+                m_dataStoreValuesGenerator.Start();
 
                 Console.WriteLine("Publisher started");
                 PrintCommandParameters();
 
-                //start data generator timer 
-                Timer simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
-                
-                //start application
+                // start application
                 m_pubSubApplication.Start();
                 do
                 {
@@ -77,7 +77,7 @@ namespace SamplePublisher
                     }
                 }
                 while (true);
-                simulationTimer.Dispose();
+                m_dataStoreValuesGenerator.Dispose();
             }
             catch (Exception e)
             {
@@ -87,58 +87,12 @@ namespace SamplePublisher
             }
             finally
             {
+                m_dataStoreValuesGenerator.Dispose();
                 m_pubSubApplication.Dispose();
             }
         }
 
-        #region Data Changes Simulation
-        /// <summary>
-        /// Simulate value changes in dynamic nodes
-        /// </summary>
-        /// <param name="state"></param>
-        private static void DoSimulation(object state)
-        {
-            try
-            {
-                lock (m_lock)
-                {
-                    foreach (FieldMetaData variable in m_dynamicFields)
-                    {
-                        DataValue newDataValue = new DataValue(new Variant(GetNewValue(variable)), StatusCodes.Good, DateTime.UtcNow);
-                        m_pubSubApplication.DataStore.WritePublishedDataItem(new NodeId(variable.Name, NamespaceIndex), Attributes.Value, newDataValue);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Utils.Trace(e, "Unexpected error doing simulation.");
-            }
-        }
-
-        /// <summary>
-        /// Generate new value for variable
-        /// </summary>
-        /// <param name="variable"></param>
-        /// <returns></returns>
-        private static object GetNewValue(FieldMetaData fieldMetadata)
-        {
-            if (m_generator == null)
-            {
-                m_generator = new Opc.Ua.Test.DataGenerator(null);
-                m_generator.BoundaryValueFrequency = 0;
-            }
-
-            object value = null;
-
-            while (value == null)
-            {
-                value = m_generator.GetRandom(fieldMetadata.DataType, fieldMetadata.ValueRank, new uint[] { 10 }, null);
-            }
-
-            return value;
-        }
-        #endregion
-
+        
         #region Create configuration object
         /// <summary>
         /// Create a PubSubConfigurationDataType object programmatically
@@ -232,7 +186,7 @@ namespace SamplePublisher
 
             // Define a PubSub connection with PublisherId 10
             PubSubConnectionDataType pubSubConnection2 = new PubSubConnectionDataType();
-            pubSubConnection2.Name = "UADPConection1";
+            pubSubConnection2.Name = "UADPConection2";
             pubSubConnection2.Enabled = true;
             pubSubConnection2.PublisherId = (UInt64)20;
             pubSubConnection2.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
@@ -380,7 +334,8 @@ namespace SamplePublisher
                 publishedDataSetSimpleSource.PublishedData.Add(
                     new PublishedVariableDataType()
                     {
-                        PublishedVariable = new NodeId(field.Name, NamespaceIndex),
+                        //PublishedVariable = new NodeId(field.Name, NamespaceIndex),
+                        PublishedVariable = new NodeId(field.Name, NamespaceIndexSimple),
                         AttributeId = Attributes.Value,
                     });
             }
@@ -469,7 +424,8 @@ namespace SamplePublisher
                 publishedDataSetAllTypesSource.PublishedData.Add(
                     new PublishedVariableDataType()
                     {
-                        PublishedVariable = new NodeId(field.Name, NamespaceIndex),
+                        // PublishedVariable = new NodeId(field.Name, NamespaceIndex),
+                        PublishedVariable = new NodeId(field.Name, NamespaceIndexAllTypes),
                         AttributeId = Attributes.Value,
                     });
             }
@@ -501,7 +457,8 @@ namespace SamplePublisher
 
                 publishedDataSetTestDataSource.PublishedData.Add(new PublishedVariableDataType()
                 {
-                    PublishedVariable = new NodeId(name, NamespaceIndex),
+                    //PublishedVariable = new NodeId(name, NamespaceIndex),
+                    PublishedVariable = new NodeId(name, NamespaceIndexMassTest),
                     AttributeId = Attributes.Value,
                 });
             }

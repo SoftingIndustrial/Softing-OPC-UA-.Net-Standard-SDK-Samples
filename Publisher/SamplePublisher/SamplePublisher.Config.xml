@@ -381,7 +381,7 @@
             <PublishedData>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=BoolToggle</Identifier>
+                  <Identifier>ns=3;s=BoolToggle</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -397,7 +397,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Byte</Identifier>
+                  <Identifier>ns=3;s=Byte</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -413,7 +413,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Int16</Identifier>
+                  <Identifier>ns=3;s=Int16</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -445,7 +445,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=SByte</Identifier>
+                  <Identifier>ns=3;s=SByte</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -461,7 +461,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=UInt16</Identifier>
+                  <Identifier>ns=3;s=UInt16</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -477,7 +477,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=UInt32</Identifier>
+                  <Identifier>ns=3;s=UInt32</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -493,7 +493,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Float</Identifier>
+                  <Identifier>ns=3;s=Float</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -509,7 +509,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Double</Identifier>
+                  <Identifier>ns=3;s=Double</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2158,7 +2158,7 @@
             <PublishedData>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_0</Identifier>
+                  <Identifier>ns=4;s=Mass_0</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2174,7 +2174,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_1</Identifier>
+                  <Identifier>ns=4;s=Mass_1</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2190,7 +2190,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_2</Identifier>
+                  <Identifier>ns=4;s=Mass_2</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2206,7 +2206,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_3</Identifier>
+                  <Identifier>ns=4;s=Mass_3</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2222,7 +2222,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_4</Identifier>
+                  <Identifier>ns=4;s=Mass_4</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2238,7 +2238,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_5</Identifier>
+                  <Identifier>ns=4;s=Mass_5</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2254,7 +2254,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_6</Identifier>
+                  <Identifier>ns=4;s=Mass_6</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2270,7 +2270,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_7</Identifier>
+                  <Identifier>ns=4;s=Mass_7</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2286,7 +2286,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_8</Identifier>
+                  <Identifier>ns=4;s=Mass_8</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2302,7 +2302,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_9</Identifier>
+                  <Identifier>ns=4;s=Mass_9</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2318,7 +2318,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_10</Identifier>
+                  <Identifier>ns=4;s=Mass_10</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2334,7 +2334,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_11</Identifier>
+                  <Identifier>ns=4;s=Mass_11</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2350,7 +2350,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_12</Identifier>
+                  <Identifier>ns=4;s=Mass_12</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2366,7 +2366,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_13</Identifier>
+                  <Identifier>ns=4;s=Mass_13</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2382,7 +2382,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_14</Identifier>
+                  <Identifier>ns=4;s=Mass_14</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2398,7 +2398,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_15</Identifier>
+                  <Identifier>ns=4;s=Mass_15</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2414,7 +2414,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_16</Identifier>
+                  <Identifier>ns=4;s=Mass_16</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2430,7 +2430,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_17</Identifier>
+                  <Identifier>ns=4;s=Mass_17</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2446,7 +2446,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_18</Identifier>
+                  <Identifier>ns=4;s=Mass_18</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2462,7 +2462,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_19</Identifier>
+                  <Identifier>ns=4;s=Mass_19</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2478,7 +2478,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_20</Identifier>
+                  <Identifier>ns=4;s=Mass_20</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2494,7 +2494,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_21</Identifier>
+                  <Identifier>ns=4;s=Mass_21</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2510,7 +2510,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_22</Identifier>
+                  <Identifier>ns=4;s=Mass_22</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2526,7 +2526,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_23</Identifier>
+                  <Identifier>ns=4;s=Mass_23</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2542,7 +2542,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_24</Identifier>
+                  <Identifier>ns=4;s=Mass_24</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2558,7 +2558,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_25</Identifier>
+                  <Identifier>ns=4;s=Mass_25</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2574,7 +2574,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_26</Identifier>
+                  <Identifier>ns=4;s=Mass_26</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2590,7 +2590,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_27</Identifier>
+                  <Identifier>ns=4;s=Mass_27</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2606,7 +2606,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_28</Identifier>
+                  <Identifier>ns=4;s=Mass_28</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2622,7 +2622,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_29</Identifier>
+                  <Identifier>ns=4;s=Mass_29</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2638,7 +2638,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_30</Identifier>
+                  <Identifier>ns=4;s=Mass_30</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2654,7 +2654,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_31</Identifier>
+                  <Identifier>ns=4;s=Mass_31</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2670,7 +2670,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_32</Identifier>
+                  <Identifier>ns=4;s=Mass_32</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2686,7 +2686,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_33</Identifier>
+                  <Identifier>ns=4;s=Mass_33</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2702,7 +2702,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_34</Identifier>
+                  <Identifier>ns=4;s=Mass_34</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2718,7 +2718,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_35</Identifier>
+                  <Identifier>ns=4;s=Mass_35</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2734,7 +2734,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_36</Identifier>
+                  <Identifier>ns=4;s=Mass_36</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2750,7 +2750,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_37</Identifier>
+                  <Identifier>ns=4;s=Mass_37</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2766,7 +2766,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_38</Identifier>
+                  <Identifier>ns=4;s=Mass_38</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2782,7 +2782,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_39</Identifier>
+                  <Identifier>ns=4;s=Mass_39</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2798,7 +2798,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_40</Identifier>
+                  <Identifier>ns=4;s=Mass_40</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2814,7 +2814,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_41</Identifier>
+                  <Identifier>ns=4;s=Mass_41</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2830,7 +2830,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_42</Identifier>
+                  <Identifier>ns=4;s=Mass_42</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2846,7 +2846,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_43</Identifier>
+                  <Identifier>ns=4;s=Mass_43</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2862,7 +2862,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_44</Identifier>
+                  <Identifier>ns=4;s=Mass_44</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2878,7 +2878,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_45</Identifier>
+                  <Identifier>ns=4;s=Mass_45</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2894,7 +2894,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_46</Identifier>
+                  <Identifier>ns=4;s=Mass_46</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2910,7 +2910,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_47</Identifier>
+                  <Identifier>ns=4;s=Mass_47</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2926,7 +2926,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_48</Identifier>
+                  <Identifier>ns=4;s=Mass_48</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2942,7 +2942,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_49</Identifier>
+                  <Identifier>ns=4;s=Mass_49</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2958,7 +2958,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_50</Identifier>
+                  <Identifier>ns=4;s=Mass_50</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2974,7 +2974,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_51</Identifier>
+                  <Identifier>ns=4;s=Mass_51</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -2990,7 +2990,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_52</Identifier>
+                  <Identifier>ns=4;s=Mass_52</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3006,7 +3006,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_53</Identifier>
+                  <Identifier>ns=4;s=Mass_53</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3022,7 +3022,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_54</Identifier>
+                  <Identifier>ns=4;s=Mass_54</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3038,7 +3038,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_55</Identifier>
+                  <Identifier>ns=4;s=Mass_55</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3054,7 +3054,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_56</Identifier>
+                  <Identifier>ns=4;s=Mass_56</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3070,7 +3070,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_57</Identifier>
+                  <Identifier>ns=4;s=Mass_57</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3086,7 +3086,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_58</Identifier>
+                  <Identifier>ns=4;s=Mass_58</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3102,7 +3102,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_59</Identifier>
+                  <Identifier>ns=4;s=Mass_59</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3118,7 +3118,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_60</Identifier>
+                  <Identifier>ns=4;s=Mass_60</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3134,7 +3134,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_61</Identifier>
+                  <Identifier>ns=4;s=Mass_61</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3150,7 +3150,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_62</Identifier>
+                  <Identifier>ns=4;s=Mass_62</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3166,7 +3166,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_63</Identifier>
+                  <Identifier>ns=4;s=Mass_63</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3182,7 +3182,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_64</Identifier>
+                  <Identifier>ns=4;s=Mass_64</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3198,7 +3198,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_65</Identifier>
+                  <Identifier>ns=4;s=Mass_65</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3214,7 +3214,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_66</Identifier>
+                  <Identifier>ns=4;s=Mass_66</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3230,7 +3230,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_67</Identifier>
+                  <Identifier>ns=4;s=Mass_67</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3246,7 +3246,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_68</Identifier>
+                  <Identifier>ns=4;s=Mass_68</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3262,7 +3262,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_69</Identifier>
+                  <Identifier>ns=4;s=Mass_69</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3278,7 +3278,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_70</Identifier>
+                  <Identifier>ns=4;s=Mass_70</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3294,7 +3294,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_71</Identifier>
+                  <Identifier>ns=4;s=Mass_71</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3310,7 +3310,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_72</Identifier>
+                  <Identifier>ns=4;s=Mass_72</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3326,7 +3326,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_73</Identifier>
+                  <Identifier>ns=4;s=Mass_73</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3342,7 +3342,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_74</Identifier>
+                  <Identifier>ns=4;s=Mass_74</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3358,7 +3358,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_75</Identifier>
+                  <Identifier>ns=4;s=Mass_75</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3374,7 +3374,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_76</Identifier>
+                  <Identifier>ns=4;s=Mass_76</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3390,7 +3390,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_77</Identifier>
+                  <Identifier>ns=4;s=Mass_77</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3406,7 +3406,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_78</Identifier>
+                  <Identifier>ns=4;s=Mass_78</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3422,7 +3422,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_79</Identifier>
+                  <Identifier>ns=4;s=Mass_79</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3438,7 +3438,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_80</Identifier>
+                  <Identifier>ns=4;s=Mass_80</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3454,7 +3454,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_81</Identifier>
+                  <Identifier>ns=4;s=Mass_81</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3470,7 +3470,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_82</Identifier>
+                  <Identifier>ns=4;s=Mass_82</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3486,7 +3486,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_83</Identifier>
+                  <Identifier>ns=4;s=Mass_83</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3502,7 +3502,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_84</Identifier>
+                  <Identifier>ns=4;s=Mass_84</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3518,7 +3518,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_85</Identifier>
+                  <Identifier>ns=4;s=Mass_85</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3534,7 +3534,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_86</Identifier>
+                  <Identifier>ns=4;s=Mass_86</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3550,7 +3550,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_87</Identifier>
+                  <Identifier>ns=4;s=Mass_87</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3566,7 +3566,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_88</Identifier>
+                  <Identifier>ns=4;s=Mass_88</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3582,7 +3582,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_89</Identifier>
+                  <Identifier>ns=4;s=Mass_89</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3598,7 +3598,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_90</Identifier>
+                  <Identifier>ns=4;s=Mass_90</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3614,7 +3614,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_91</Identifier>
+                  <Identifier>ns=4;s=Mass_91</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3630,7 +3630,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_92</Identifier>
+                  <Identifier>ns=4;s=Mass_92</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3646,7 +3646,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_93</Identifier>
+                  <Identifier>ns=4;s=Mass_93</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3662,7 +3662,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_94</Identifier>
+                  <Identifier>ns=4;s=Mass_94</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3678,7 +3678,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_95</Identifier>
+                  <Identifier>ns=4;s=Mass_95</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3694,7 +3694,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_96</Identifier>
+                  <Identifier>ns=4;s=Mass_96</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3710,7 +3710,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_97</Identifier>
+                  <Identifier>ns=4;s=Mass_97</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3726,7 +3726,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_98</Identifier>
+                  <Identifier>ns=4;s=Mass_98</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3742,7 +3742,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=2;s=Mass_99</Identifier>
+                  <Identifier>ns=4;s=Mass_99</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -3901,7 +3901,7 @@
       <ReaderGroups />
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
-      <Name>UADPConection1</Name>
+      <Name>UADPConection2</Name>
       <Enabled>true</Enabled>
       <PublisherId>
         <Value>
