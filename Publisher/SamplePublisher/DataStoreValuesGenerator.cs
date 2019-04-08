@@ -197,7 +197,10 @@ namespace SamplePublisher
                                     int32FastDataValue.Value = 0;
                                     WriteFieldData(variable.Name, NamespaceIndexSimple, int32FastDataValue);
                                 }
-                                IncrementValue(variable, NamespaceIndexSimple, 100);
+                                else
+                                {
+                                    IncrementValue(variable, NamespaceIndexSimple, 100);
+                                }
                                 break;
                             case "DateTime":
                                 IncrementValue(variable, NamespaceIndexSimple);
