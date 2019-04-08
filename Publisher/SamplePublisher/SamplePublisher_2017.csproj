@@ -2,13 +2,17 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
+    <TargetFrameworks>net461;netcoreapp2.0;</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>SamplePublisher</RootNamespace>
     <AssemblyName>SamplePublisher</AssemblyName>
     <RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
   </PropertyGroup>
-
+  
+  <ItemGroup>
+    <Compile Include="..\..\..\Include\AssemblyVersionInfo.cs" Link="Properties\AssemblyVersionInfo.cs" />
+  </ItemGroup>
+  
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.0|AnyCPU'">
     <DefineConstants>TRACE;RELEASE;NETCOREAPP2_0;SAMPLE_PUSUB</DefineConstants>
   </PropertyGroup>

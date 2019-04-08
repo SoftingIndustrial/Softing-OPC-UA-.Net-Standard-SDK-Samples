@@ -1,9 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿/* ========================================================================
+ * Copyright © 2011-2019 Softing Industrial Automation GmbH. 
+ * All rights reserved.
+ * 
+ * The Software is subject to the Softing Industrial Automation GmbH’s 
+ * license agreement, which can be found here:
+ * http://www.softing.com/LicenseSIA.pdf
+ * 
+ * ======================================================================*/
+
 using Opc.Ua;
 using Softing.Opc.Ua.PubSub;
+using System;
+using System.Threading;
 
 namespace SamplePublisher
 {
@@ -176,31 +184,11 @@ namespace SamplePublisher
                                     IncrementValue(variable, NamespaceIndexSimple);
                                 }
                                 break;
-                            case "Int32":
-                                DataValue int32DataValue = ReadFieldData(variable.Name, NamespaceIndexSimple);
-                                Int32 int32Value = (Int32)int32DataValue.Value;
-                                if (int32Value > SimpleInt32Limit)
-                                {
-                                    int32DataValue.Value = 0; 
-                                    WriteFieldData(variable.Name, NamespaceIndexSimple, int32DataValue);
-                                }
-                                else
-                                {
-                                    IncrementValue(variable, NamespaceIndexSimple);
-                                }
+                            case "Int32":                               
+                                IncrementValue(variable, NamespaceIndexSimple,  SimpleInt32Limit);                               
                                 break;
-                            case "Int32Fast":
-                                DataValue int32FastDataValue = ReadFieldData(variable.Name, NamespaceIndexSimple);
-                                Int32 int32FastValue = (Int32)int32FastDataValue.Value;
-                                if (int32FastValue > SimpleInt32Limit)
-                                {
-                                    int32FastDataValue.Value = 0;
-                                    WriteFieldData(variable.Name, NamespaceIndexSimple, int32FastDataValue);
-                                }
-                                else
-                                {
-                                    IncrementValue(variable, NamespaceIndexSimple, 100);
-                                }
+                            case "Int32Fast":                                
+                                IncrementValue(variable, NamespaceIndexSimple, SimpleInt32Limit, 100);
                                 break;
                             case "DateTime":
                                 IncrementValue(variable, NamespaceIndexSimple);
@@ -215,7 +203,7 @@ namespace SamplePublisher
 
                     foreach (FieldMetaData variable in m_massTestFields)
                     {
-                        IncrementValue(variable, NamespaceIndexMassTest);
+                        IncrementValue(variable, NamespaceIndexMassTest, Int32.MaxValue);
                     }
                 }
             }
@@ -230,8 +218,9 @@ namespace SamplePublisher
         /// </summary>
         /// <param name="variable"></param>
         /// <param name="namespaceIndex"></param>
-        private static void IncrementValue(FieldMetaData variable, ushort namespaceIndex, int step = 0)
+        private static void IncrementValue(FieldMetaData variable, ushort namespaceIndex, long maxAllowedValue = Int32.MaxValue, int step = 0)
         {
+            //read value to be incremwented
             DataValue dataValue = ReadFieldData(variable.Name, namespaceIndex);
             if (dataValue.Value == null)
             {
@@ -254,49 +243,28 @@ namespace SamplePublisher
                     isIncremented = true;
                     break;
                 case BuiltInType.Int16:
-                    Int16 intValue = Convert.ToInt16(dataValue.Value);
-                    if (intValue == Int16.MaxValue)
-                    {
-                        intValue = 0;
-                    }
-                    else
-                    {
-                        intValue++;
-                    }
-                    dataValue.Value = intValue;
+                    Int16 int16Value = Convert.ToInt16(dataValue.Value);
+                    int intIdentifier = int16Value;
+                    Interlocked.CompareExchange(ref intIdentifier, 0, Int16.MaxValue);
+                    dataValue.Value = (Int16)Interlocked.Increment(ref intIdentifier);
                     isIncremented = true;
                     break;
                 case BuiltInType.Int32:
-                    Int32 int32Value = Convert.ToInt32(dataValue.Value);
-                    if (int32Value == Int32.MaxValue)
+                    Int32 int32Value = Convert.ToInt32(dataValue.Value);     
+                    if (step > 0)
                     {
-                        Interlocked.CompareExchange(ref int32Value, 0, Int32.MaxValue);
+                        int32Value += (step -1);
                     }
-                    else
-                    {
-                        if (step > 0)
-                        {
-                            int32Value += step;
-                        }
-                        else
-                        {
-                            int32Value = Interlocked.Increment(ref int32Value);
-                        }
-                    }
-                    dataValue.Value = int32Value;
+                    Interlocked.CompareExchange(ref int32Value, 0, (int)maxAllowedValue);
+                    dataValue.Value = Interlocked.Increment(ref int32Value); ;
+                    isIncremented = true;
                     break;
                 case BuiltInType.SByte:
                     SByte sbyteValue = Convert.ToSByte(dataValue.Value);
-                    if (sbyteValue == SByte.MaxValue)
-                    {
-                        sbyteValue = 0;
-                    }
-                    else
-                    {
-                        sbyteValue++;
-                    }
+                    intIdentifier = sbyteValue;
+                    Interlocked.CompareExchange(ref intIdentifier, 0, SByte.MaxValue);
+                    dataValue.Value = (SByte)Interlocked.Increment(ref intIdentifier);
                     isIncremented = true;
-                    dataValue.Value = sbyteValue;
                     break;
                 case BuiltInType.UInt16:
                     UInt16 uint16Value = Convert.ToUInt16(dataValue.Value);
@@ -358,6 +326,7 @@ namespace SamplePublisher
 
             if (isIncremented)
             {
+                // Save new incremented value to data store
                 WriteFieldData(variable.Name, namespaceIndex, dataValue);
             }
         }

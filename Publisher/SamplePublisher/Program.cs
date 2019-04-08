@@ -19,11 +19,6 @@ namespace SamplePublisher
         private static FieldMetaDataCollection m_dynamicFields = new FieldMetaDataCollection();
         private static UaPubSubApplication m_pubSubApplication;
 
-        // It should match the namespace index from configuration file
-        public const ushort NamespaceIndexSimple = 2;
-        public const ushort NamespaceIndexAllTypes = 3;
-        public const ushort NamespaceIndexMassTest = 4;
-
         /// <summary>
         /// Init and generate data for publishers
         /// </summary>
@@ -334,8 +329,7 @@ namespace SamplePublisher
                 publishedDataSetSimpleSource.PublishedData.Add(
                     new PublishedVariableDataType()
                     {
-                        //PublishedVariable = new NodeId(field.Name, NamespaceIndex),
-                        PublishedVariable = new NodeId(field.Name, NamespaceIndexSimple),
+                        PublishedVariable = new NodeId(field.Name, DataStoreValuesGenerator.NamespaceIndexSimple),
                         AttributeId = Attributes.Value,
                     });
             }
@@ -424,8 +418,7 @@ namespace SamplePublisher
                 publishedDataSetAllTypesSource.PublishedData.Add(
                     new PublishedVariableDataType()
                     {
-                        // PublishedVariable = new NodeId(field.Name, NamespaceIndex),
-                        PublishedVariable = new NodeId(field.Name, NamespaceIndexAllTypes),
+                        PublishedVariable = new NodeId(field.Name, DataStoreValuesGenerator.NamespaceIndexAllTypes),
                         AttributeId = Attributes.Value,
                     });
             }
@@ -457,8 +450,7 @@ namespace SamplePublisher
 
                 publishedDataSetTestDataSource.PublishedData.Add(new PublishedVariableDataType()
                 {
-                    //PublishedVariable = new NodeId(name, NamespaceIndex),
-                    PublishedVariable = new NodeId(name, NamespaceIndexMassTest),
+                    PublishedVariable = new NodeId(name, DataStoreValuesGenerator.NamespaceIndexMassTest),
                     AttributeId = Attributes.Value,
                 });
             }
