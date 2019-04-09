@@ -214,10 +214,14 @@ namespace SamplePublisher
         }
 
         /// <summary>
-        /// Increment value 
+        /// Increment value
+        /// maxAllowedValue - maximum incremented value before reset value to beginning
+        /// step - the increment amount  
         /// </summary>
         /// <param name="variable"></param>
         /// <param name="namespaceIndex"></param>
+        /// <param name="maxAllowedValue"></param>
+        /// <param name="step"></param>
         private static void IncrementValue(FieldMetaData variable, ushort namespaceIndex, long maxAllowedValue = Int32.MaxValue, int step = 0)
         {
             // Read value to be incremented

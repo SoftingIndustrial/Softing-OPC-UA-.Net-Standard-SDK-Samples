@@ -11,7 +11,7 @@
 using System;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
-using Softing.Opc.Ua.Client.Private;
+using Softing.Opc.Ua.Private;
 using SampleClient.StateMachine;
 using System.IO;
 
@@ -43,7 +43,7 @@ namespace SampleClient
 
             // TODO - design time license activation
             // Fill in your design time license activation keys here
-            // licensingStatus = application.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+            //licensingStatus = application.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
             
             if (licensingStatus == LicensingStatus.Expired)
             {

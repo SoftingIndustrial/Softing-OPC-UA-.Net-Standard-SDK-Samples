@@ -11,6 +11,7 @@
 using System;
 using System.Text;
 using Opc.Ua.Server;
+using Softing.Opc.Ua.Private;
 using Softing.Opc.Ua.Server.Private;
 
 namespace SampleServer
@@ -33,7 +34,7 @@ namespace SampleServer
 
                 // TODO - design time license activation
                 // Fill in your design time license activation keys here
-                // licensingStatus = License.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                //licensingStatus = License.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
                 
                 if (licensingStatus == LicensingStatus.Expired)
                 {

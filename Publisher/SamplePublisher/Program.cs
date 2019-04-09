@@ -10,6 +10,7 @@
 
 using System;
 using Opc.Ua;
+using Softing.Opc.Ua.Private;
 using Softing.Opc.Ua.PubSub;
 
 namespace SamplePublisher
@@ -35,9 +36,29 @@ namespace SamplePublisher
                 // Create the PubSub application
                 m_pubSubApplication = UaPubSubApplication.Create(configurationFileName);
 
-                // the PubSub application can be created from an instance of PubSubConfigurationDataType
+                // the PubSub application can be also created from an instance of PubSubConfigurationDataType
                 //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
                 //m_pubSubApplication = UaPubSubApplication.Create(pubSubConfiguration);
+
+                LicensingStatus licensingStatus = LicensingStatus.Ok;
+
+                // TODO - design time license activation
+                // Fill in your design time license activation keys here Client or Server
+                //licensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                //licensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                
+                if (licensingStatus == LicensingStatus.Expired)
+                {
+                    Console.WriteLine("License period expired!");
+                    Console.ReadKey();
+                    return;
+                }
+                if (licensingStatus == LicensingStatus.Invalid)
+                {
+                    Console.WriteLine("Invalid License key!");
+                    Console.ReadKey();
+                    return;
+                }
 
                 // Start publishing data 
                 m_dataStoreValuesGenerator = new DataStoreValuesGenerator(m_pubSubApplication);
