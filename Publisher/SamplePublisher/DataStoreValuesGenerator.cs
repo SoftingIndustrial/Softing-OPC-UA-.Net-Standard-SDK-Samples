@@ -220,7 +220,7 @@ namespace SamplePublisher
         /// <param name="namespaceIndex"></param>
         private static void IncrementValue(FieldMetaData variable, ushort namespaceIndex, long maxAllowedValue = Int32.MaxValue, int step = 0)
         {
-            //read value to be incremwented
+            // Read value to be incremented
             DataValue dataValue = ReadFieldData(variable.Name, namespaceIndex);
             if (dataValue.Value == null)
             {
@@ -253,10 +253,13 @@ namespace SamplePublisher
                     Int32 int32Value = Convert.ToInt32(dataValue.Value);     
                     if (step > 0)
                     {
-                        int32Value += (step -1);
+                        int32Value += (step - 1);
                     }
-                    Interlocked.CompareExchange(ref int32Value, 0, (int)maxAllowedValue);
-                    dataValue.Value = Interlocked.Increment(ref int32Value); ;
+                    if (int32Value > maxAllowedValue)
+                    {
+                       int32Value = 0;
+                    }
+                    dataValue.Value = Interlocked.Increment(ref int32Value); 
                     isIncremented = true;
                     break;
                 case BuiltInType.SByte:
@@ -268,54 +271,28 @@ namespace SamplePublisher
                     break;
                 case BuiltInType.UInt16:
                     UInt16 uint16Value = Convert.ToUInt16(dataValue.Value);
-                    if (uint16Value == UInt16.MaxValue)
-                    {
-                        uint16Value = 0;
-                    }
-                    else
-                    {
-                        uint16Value++;
-                    }
-                    dataValue.Value = uint16Value;
+                    intIdentifier = uint16Value;
+                    Interlocked.CompareExchange(ref intIdentifier, 0, UInt16.MaxValue);
+                    dataValue.Value = (UInt16)Interlocked.Increment(ref intIdentifier);
                     isIncremented = true;
                     break;
                 case BuiltInType.UInt32:
                     UInt32 uint32Value = Convert.ToUInt32(dataValue.Value);
-                    if (uint32Value == UInt32.MaxValue)
-                    {
-                        uint32Value = 0;
-                    }
-                    else
-                    {
-                        uint32Value++;
-                    }
-                    dataValue.Value = uint32Value;
+                    long longIdentifier = uint32Value;
+                    Interlocked.CompareExchange(ref longIdentifier, 0, UInt32.MaxValue);
+                    dataValue.Value = (UInt32)Interlocked.Increment(ref longIdentifier);
                     isIncremented = true;
                     break;
                 case BuiltInType.Float:
                     float floatValue = Convert.ToSingle(dataValue.Value);
-                    if (floatValue == float.MaxValue)
-                    {
-                        Interlocked.CompareExchange(ref floatValue, 0, float.MaxValue);
-                    }
-                    else
-                    {
-                        floatValue++;
-                    }
-                    dataValue.Value = floatValue;
+                    Interlocked.CompareExchange(ref floatValue, 0, float.MaxValue);
+                    dataValue.Value = ++floatValue;
                     isIncremented = true;
                     break;
-                case BuiltInType.DataValue:
+                case BuiltInType.Double:
                     double doubleValue = Convert.ToDouble(dataValue.Value);
-                    if (doubleValue == float.MaxValue)
-                    {
-                        Interlocked.CompareExchange(ref doubleValue, 0, double.MaxValue);
-                    }
-                    else
-                    {
-                        doubleValue++;
-                    }
-                    dataValue.Value = doubleValue;
+                    Interlocked.CompareExchange(ref doubleValue, 0, double.MaxValue);
+                    dataValue.Value = ++doubleValue;
                     isIncremented = true;
                     break;
                 case BuiltInType.DateTime:
