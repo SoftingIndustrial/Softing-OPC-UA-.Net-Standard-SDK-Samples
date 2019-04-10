@@ -46,7 +46,7 @@ namespace SamplePublisher
                 // Fill in your design time license activation keys here Client or Server
                 //licensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
                 //licensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-                
+
                 if (licensingStatus == LicensingStatus.Expired)
                 {
                     Console.WriteLine("License period expired!");
@@ -500,7 +500,7 @@ namespace SamplePublisher
         private static void PrintCommandParameters()
         {
             Console.WriteLine("Press:\n\ts: connections status");
-            Console.WriteLine("\tx,q: shutdown the server\n\n");
+            Console.WriteLine("\tx,q: shutdown the Publisher\n\n");
         }
     }
 }

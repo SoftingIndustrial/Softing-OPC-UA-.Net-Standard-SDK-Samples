@@ -12,7 +12,6 @@ using System;
 using System.Text;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.Private;
-using Softing.Opc.Ua.Server.Private;
 
 namespace SampleServer
 {
