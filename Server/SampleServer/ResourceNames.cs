@@ -19,9 +19,9 @@ namespace SampleServer
     /// </summary>
     public static class ResourceNames
     {
-        public static string NodeSetImportInitialModel = "SampleServer.NodeSetImport.Refrigerators.NodeSet2.xml";
-        public static string NodeSetImportSecondaryModel = "SampleServer.NodeSetImport.RefrigeratorsInstances.NodeSet2.xml";
+            public static string NodeSetImportInitialModel = "SampleServer.NodeSetImport.Refrigerators.NodeSet2.xml";
+            public static string NodeSetImportSecondaryModel = "SampleServer.NodeSetImport.RefrigeratorsInstances.NodeSet2.xml";
 
-        public static string ReferenceNodeSet2 = "SampleServer.ReferenceServer.Model.ReferenceServer.NodeSet2.xml";
+            public static string ReferenceNodeSet2 = "SampleServer.ReferenceServer.Model.ReferenceServer.NodeSet2.xml";
     }
 }

@@ -20,7 +20,7 @@ using XamarinSampleServer.Model;
 using XamarinSampleServer.Services;
 using Opc.Ua;
 using Opc.Ua.Configuration;
-using Softing.Opc.Ua.Server.Private;
+using Softing.Opc.Ua.Private;
 
 namespace XamarinSampleServer.ViewModels
 {

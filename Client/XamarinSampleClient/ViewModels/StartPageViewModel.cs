@@ -14,7 +14,7 @@ using XamarinSampleClient.Helpers;
 using XamarinSampleClient.Models;
 using Xamarin.Forms;
 using System;
-using Softing.Opc.Ua.Client.Private;
+using Softing.Opc.Ua.Private;
 
 namespace XamarinSampleClient.ViewModels
 {

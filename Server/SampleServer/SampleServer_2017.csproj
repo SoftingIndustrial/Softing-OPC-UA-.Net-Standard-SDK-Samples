@@ -61,7 +61,9 @@
     <EmbeddedResource Include="NodeSetImport\Refrigerators.NodeSet2.xml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="NodeSetImport\RefrigeratorsInstances.NodeSet2.xml" />
+    <EmbeddedResource Include="NodeSetImport\RefrigeratorsInstances.NodeSet2.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="ReferenceServer\Model\ReferenceServer.NodeSet2.xml" />
   </ItemGroup>
 

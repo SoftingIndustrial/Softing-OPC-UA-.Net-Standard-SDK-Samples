@@ -7,15 +7,16 @@
   </PropertyGroup>
   
   <ItemGroup>    
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.4.354.23" />    
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Softing.Opc.Ua.Server">
-      <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.Server.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Configuration\Opc.Ua.Configuration.csproj" />
+    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Server\Opc.Ua.Server.csproj" />
+    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Core\Opc.Ua.Core.csproj" />
+    <ProjectReference Include="..\..\..\Toolkit\Server\Softing.Opc.Ua.Server_2017.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="App.xaml.cs">
       <DependentUpon>*.xaml</DependentUpon>
@@ -42,8 +43,9 @@
   </ItemGroup>
   
   <ItemGroup>
+    
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" Link="_SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" />
-	<EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" />
-	<EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators2.NodeSet2.xml" Link="_SampleServer\NodeSetImport\RefrigeratorsInstances.NodeSet2.xml" />
+	  <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" />
+	  <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\RefrigeratorsInstances.NodeSet2.xml" Link="_SampleServer\NodeSetImport\RefrigeratorsInstances.NodeSet2.xml" />
   </ItemGroup>
 </Project>
