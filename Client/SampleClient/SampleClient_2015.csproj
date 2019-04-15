@@ -247,7 +247,6 @@
     <Compile Include="Helpers\TemporaryFileTransferStateHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
