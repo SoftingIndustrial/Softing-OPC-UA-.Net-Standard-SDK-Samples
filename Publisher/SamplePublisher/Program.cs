@@ -9,6 +9,7 @@
  * ======================================================================*/
 
 using System;
+using System.IO;
 using Opc.Ua;
 using Softing.Opc.Ua.Private;
 using Softing.Opc.Ua.PubSub;
@@ -17,8 +18,12 @@ namespace SamplePublisher
 {
     public class Program
     {
+        #region Fields
+        private const string SamplePublisherLogFile = "Softing/OpcUaNetStandardToolkit/logs/SamplePublisher.log";
         private static FieldMetaDataCollection m_dynamicFields = new FieldMetaDataCollection();
         private static UaPubSubApplication m_pubSubApplication;
+        private static TraceConfiguration m_traceConfiguration;
+        #endregion
 
         /// <summary>
         /// Init and generate data for publishers
@@ -39,6 +44,8 @@ namespace SamplePublisher
                 // the PubSub application can be also created from an instance of PubSubConfigurationDataType
                 //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
                 //m_pubSubApplication = UaPubSubApplication.Create(pubSubConfiguration);
+
+                LoadTraceLogger();
 
                 LicensingStatus licensingStatus = LicensingStatus.Ok;
 
@@ -494,6 +501,7 @@ namespace SamplePublisher
         }
         #endregion
 
+        #region Private Methods
         /// <summary>
         /// Print command line parameters for this console application
         /// </summary>
@@ -502,5 +510,18 @@ namespace SamplePublisher
             Console.WriteLine("Press:\n\ts: connections status");
             Console.WriteLine("\tx,q: shutdown the Publisher\n\n");
         }
+
+        /// <summary>
+        /// Load trace configuration for logging
+        /// </summary>
+        private static void LoadTraceLogger()
+        {
+            m_traceConfiguration = new TraceConfiguration();
+            m_traceConfiguration.OutputFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), SamplePublisherLogFile);
+            m_traceConfiguration.DeleteOnLoad = true;
+            m_traceConfiguration.TraceMasks = 1;
+            m_traceConfiguration.ApplySettings();
+        }
+        #endregion
     }
 }
