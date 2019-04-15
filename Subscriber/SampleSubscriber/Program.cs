@@ -11,6 +11,7 @@
 using Opc.Ua;
 using Softing.Opc.Ua.Private;
 using Softing.Opc.Ua.PubSub;
+using Softing.Opc.Ua.PubSub.PublishedData;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -51,15 +52,18 @@ namespace SamplePublisher
 
                 // PubSubConfigurationDataType config = CreateConfiguration();
                 string configurationFileName = "SampleSubscriber.Config.xml";
-               // UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
+                // UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
                 // Create the PubSub application
                 using (UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
-                    Console.WriteLine("Subscriber started");
+                    // subscribe to data events 
+                    pubSubApplication.DataReceived += PubSubApplication_DataReceived;
+                    
                     PrintCommandParameters();
 
                     //start application
                     pubSubApplication.Start();
+                    Console.WriteLine("Subscriber started");
                     do
                     {
                         ConsoleKeyInfo key = Console.ReadKey();
@@ -94,6 +98,28 @@ namespace SamplePublisher
             }
         }
 
+        #region Data Received Event Handler
+        /// <summary>
+        /// Handle <see cref="UaPubSubApplication.DataReceived"/> event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void PubSubApplication_DataReceived(object sender, SubscribedDataEventArgs e)
+        {
+            Console.WriteLine("Data Arrived, DataSet count = {0}", e.DataSets.Count);
+            int index = 0;
+            foreach(DataSet dataSet in e.DataSets)
+            {
+                Console.WriteLine("\tDataSet {0}, Name = {1}", index++, dataSet.Name);
+                for(int i =0; i < dataSet.Fields.Length; i++)
+                {
+                    Console.WriteLine("\t\tTargetNodeId: {0}, Attribute: {1}, Value: {2}", 
+                        dataSet.Fields[i].TargetNodeId, dataSet.Fields[i].TargetAttribute, dataSet.Fields[i].Value);
+                }
+            }
+            Console.WriteLine("------------------------------------------------");
+        }
+        #endregion
 
         #region Create configuration object
         /// <summary>
