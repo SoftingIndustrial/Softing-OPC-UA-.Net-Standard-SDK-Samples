@@ -9,6 +9,7 @@
  * ======================================================================*/
 
 using Opc.Ua;
+using Softing.Opc.Ua.Private;
 using Softing.Opc.Ua.PubSub;
 using System;
 using System.Collections.Generic;
@@ -29,11 +30,30 @@ namespace SamplePublisher
         {            
             try
             {
-                PubSubConfigurationDataType config = CreateConfiguration();
+                LicensingStatus licensingStatus = LicensingStatus.Ok;
+                // TODO - design time license activation
+                // Fill in your design time license activation keys here Client or Server
+                //licensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                //licensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+
+                if (licensingStatus == LicensingStatus.Expired)
+                {
+                    Console.WriteLine("License period expired!");
+                    Console.ReadKey();
+                    return;
+                }
+                if (licensingStatus == LicensingStatus.Invalid)
+                {
+                    Console.WriteLine("Invalid License key!");
+                    Console.ReadKey();
+                    return;
+                }
+
+                // PubSubConfigurationDataType config = CreateConfiguration();
                 string configurationFileName = "SampleSubscriber.Config.xml";
-                UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
+               // UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
                 // Create the PubSub application
-                using (UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(config))
+                using (UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
                     Console.WriteLine("Subscriber started");
                     PrintCommandParameters();

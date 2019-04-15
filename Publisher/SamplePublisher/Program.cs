@@ -323,6 +323,11 @@ namespace SamplePublisher
                         ValueRank = ValueRanks.Scalar
                     }
                 };
+            publishedDataSetSimple.DataSetMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
+            {
+                MinorVersion = 1,
+                MajorVersion = 1
+            };
 
             //initialize Extension fields collection
             publishedDataSetSimple.ExtensionFields = new KeyValuePairCollection()
@@ -438,7 +443,11 @@ namespace SamplePublisher
                         ValueRank = ValueRanks.Scalar
                     },                    
                 };
-
+            publishedDataSetAllTypes.DataSetMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
+            {
+                MinorVersion = 1,
+                MajorVersion = 1
+            };
             PublishedDataItemsDataType publishedDataSetAllTypesSource = new PublishedDataItemsDataType();
             //create PublishedData based on metadata names
             foreach (var field in publishedDataSetAllTypes.DataSetMetaData.Fields)
@@ -461,6 +470,11 @@ namespace SamplePublisher
             publishedDataSetMassTest.DataSetMetaData.DataSetClassId = new Uuid(Guid.Empty);
             publishedDataSetMassTest.DataSetMetaData.Name = publishedDataSetMassTest.Name;
             publishedDataSetMassTest.DataSetMetaData.Fields = new FieldMetaDataCollection();
+            publishedDataSetMassTest.DataSetMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
+            {
+                MinorVersion = 1,
+                MajorVersion = 1
+            };
             //initialize Extension fields collection
             publishedDataSetMassTest.ExtensionFields = new KeyValuePairCollection();
             PublishedDataItemsDataType publishedDataSetTestDataSource = new PublishedDataItemsDataType();

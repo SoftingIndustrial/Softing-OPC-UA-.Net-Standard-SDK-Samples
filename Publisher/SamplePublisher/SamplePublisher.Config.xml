@@ -3795,8 +3795,8 @@
           <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
           <GroupProperties />
           <WriterGroupId>1</WriterGroupId>
-          <PublishingInterval>5000</PublishingInterval>
-          <KeepAliveTime>5000</KeepAliveTime>
+          <PublishingInterval>50000</PublishingInterval>
+          <KeepAliveTime>500000</KeepAliveTime>
           <Priority>0</Priority>
           <LocaleIds />
           <HeaderLayoutUri>UADP-Cyclic-Fixed</HeaderLayoutUri>
@@ -3933,7 +3933,7 @@
           <GroupProperties />
           <WriterGroupId>2</WriterGroupId>
           <PublishingInterval>5000</PublishingInterval>
-          <KeepAliveTime>5000</KeepAliveTime>
+          <KeepAliveTime>90000</KeepAliveTime>
           <Priority>0</Priority>
           <LocaleIds />
           <HeaderLayoutUri>UADP-Dynamic</HeaderLayoutUri>
