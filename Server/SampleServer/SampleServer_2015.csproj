@@ -145,16 +145,12 @@
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Opc.Ua.Client, Version=1.4.354.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.354.23\lib\net46\Opc.Ua.Client.dll</HintPath>
+    <Reference Include="Opc.Ua.Configuration">
+      <HintPath>..\..\..\..\bin\net461\Opc.Ua.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Opc.Ua.Configuration, Version=1.4.354.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.354.23\lib\net46\Opc.Ua.Configuration.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Opc.Ua.Core, Version=1.4.354.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.354.23\lib\net46\Opc.Ua.Core.dll</HintPath>
+    <Reference Include="Opc.Ua.Core">
+      <HintPath>..\..\..\..\bin\net461\Opc.Ua.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Opc.Ua.Gds.Client.Common, Version=1.4.354.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
@@ -165,8 +161,8 @@
       <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.354.23\lib\net46\Opc.Ua.Gds.Server.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Opc.Ua.Server, Version=1.4.354.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.354.23\lib\net46\Opc.Ua.Server.dll</HintPath>
+    <Reference Include="Opc.Ua.Server">
+      <HintPath>..\..\..\..\bin\net461\Opc.Ua.Server.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Softing.Opc.Ua.Server">
@@ -343,7 +339,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="NodeSetImport\Refrigerators.NodeSet2.xml" />
-    <EmbeddedResource Include="NodeSetImport\Refrigerators2.NodeSet2.xml" />
+    <Content Include="NodeSetImport\RefrigeratorsInstances.NodeSet2.xml" />
     <Content Include="ReferenceServer\Model\ModelDesign.xml" />
     <EmbeddedResource Include="ReferenceServer\Model\ReferenceServer.NodeSet2.xml" />
     <None Include="SampleServer.Config.xml">
