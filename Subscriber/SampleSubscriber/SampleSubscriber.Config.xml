@@ -51,6 +51,212 @@
             </Body>
           </MessageSettings>
           <DataSetReaders>
+
+            <DataSetReaderDataType>
+              <Name i:nil="true" />
+              <Enabled>true</Enabled>
+              <PublisherId>
+                <Value>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+                </Value>
+              </PublisherId>
+              <WriterGroupId>1</WriterGroupId>
+              <DataSetWriterId>1</DataSetWriterId>
+              <DataSetMetaData>
+                <Namespaces />
+                <StructureDataTypes />
+                <EnumDataTypes />
+                <SimpleDataTypes />
+                <Name>Simple</Name>
+                <Description i:nil="true" />
+                <Fields>
+                  <FieldMetaData>
+                    <Name>BoolToggle</Name>
+                    <Description i:nil="true" />
+                    <FieldFlags>0</FieldFlags>
+                    <BuiltInType>0</BuiltInType>
+                    <DataType>
+                      <Identifier>i=1</Identifier>
+                    </DataType>
+                    <ValueRank>-1</ValueRank>
+                    <ArrayDimensions />
+                    <MaxStringLength>0</MaxStringLength>
+                    <DataSetFieldId>
+                      <String>3176c1c2-e270-4d34-96b3-48d19a406bc1</String>
+                    </DataSetFieldId>
+                    <Properties />
+                  </FieldMetaData>
+                  <FieldMetaData>
+                    <Name>Int32</Name>
+                    <Description i:nil="true" />
+                    <FieldFlags>0</FieldFlags>
+                    <BuiltInType>0</BuiltInType>
+                    <DataType>
+                      <Identifier>i=6</Identifier>
+                    </DataType>
+                    <ValueRank>-1</ValueRank>
+                    <ArrayDimensions />
+                    <MaxStringLength>0</MaxStringLength>
+                    <DataSetFieldId>
+                      <String>f62c3134-109f-4e35-a018-ba97020e75b5</String>
+                    </DataSetFieldId>
+                    <Properties />
+                  </FieldMetaData>
+                  <FieldMetaData>
+                    <Name>Int32Fast</Name>
+                    <Description i:nil="true" />
+                    <FieldFlags>0</FieldFlags>
+                    <BuiltInType>0</BuiltInType>
+                    <DataType>
+                      <Identifier>i=6</Identifier>
+                    </DataType>
+                    <ValueRank>-1</ValueRank>
+                    <ArrayDimensions />
+                    <MaxStringLength>0</MaxStringLength>
+                    <DataSetFieldId>
+                      <String>d29dfaaa-46fd-4c71-88a6-11ccc5df02ee</String>
+                    </DataSetFieldId>
+                    <Properties />
+                  </FieldMetaData>
+                  <FieldMetaData>
+                    <Name>DateTime</Name>
+                    <Description i:nil="true" />
+                    <FieldFlags>0</FieldFlags>
+                    <BuiltInType>0</BuiltInType>
+                    <DataType>
+                      <Identifier>i=13</Identifier>
+                    </DataType>
+                    <ValueRank>-1</ValueRank>
+                    <ArrayDimensions />
+                    <MaxStringLength>0</MaxStringLength>
+                    <DataSetFieldId>
+                      <String>a28949c5-f545-4759-b791-ca4da5717c84</String>
+                    </DataSetFieldId>
+                    <Properties />
+                  </FieldMetaData>
+                </Fields>
+                <DataSetClassId>
+                  <String>00000000-0000-0000-0000-000000000000</String>
+                </DataSetClassId>
+                <ConfigurationVersion>
+                  <MajorVersion>1</MajorVersion>
+                  <MinorVersion>1</MinorVersion>
+                </ConfigurationVersion>
+              </DataSetMetaData>
+              <DataSetFieldContentMask>32</DataSetFieldContentMask>
+              <MessageReceiveTimeout>0</MessageReceiveTimeout>
+              <KeyFrameCount>1</KeyFrameCount>
+              <HeaderLayoutUri i:nil="true" />
+              <SecurityMode>Invalid_0</SecurityMode>
+              <SecurityGroupId i:nil="true" />
+              <SecurityKeyServices />
+              <DataSetReaderProperties />
+              <TransportSettings i:nil="true" />
+              <MessageSettings>
+                <TypeId>
+                  <Identifier>i=16016</Identifier>
+                </TypeId>
+                <Body>
+                  <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <GroupVersion>0</GroupVersion>
+                    <NetworkMessageNumber>0</NetworkMessageNumber>
+                    <DataSetOffset>15</DataSetOffset>
+                    <DataSetClassId>
+                      <String>00000000-0000-0000-0000-000000000000</String>
+                    </DataSetClassId>
+                    <NetworkMessageContentMask>63</NetworkMessageContentMask>
+                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
+                    <PublishingInterval>0</PublishingInterval>
+                    <ReceiveOffset>0</ReceiveOffset>
+                    <ProcessingOffset>0</ProcessingOffset>
+                  </UadpDataSetReaderMessageDataType>
+                </Body>
+              </MessageSettings>
+              <SubscribedDataSet>
+                <TypeId>
+                  <Identifier>i=16011</Identifier>
+                </TypeId>
+                <Body>
+                  <TargetVariablesDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <TargetVariables>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>3176c1c2-e270-4d34-96b3-48d19a406bc1</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=2;s=BoolToggle</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Boolean>true</Boolean>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>f62c3134-109f-4e35-a018-ba97020e75b5</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=2;s=Int32</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Int32>111</Int32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>d29dfaaa-46fd-4c71-88a6-11ccc5df02ee</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=2;s=Int32Fast</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Int32>5555</Int32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>a28949c5-f545-4759-b791-ca4da5717c84</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=2;s=DateTime</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <DateTime>0001-01-01T00:00:00</DateTime>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                    </TargetVariables>
+                  </TargetVariablesDataType>
+                </Body>
+              </SubscribedDataSet>
+            </DataSetReaderDataType>
+            
+            
+            
+            
+            
             <DataSetReaderDataType>
               <Name i:nil="true" />
               <Enabled>true</Enabled>

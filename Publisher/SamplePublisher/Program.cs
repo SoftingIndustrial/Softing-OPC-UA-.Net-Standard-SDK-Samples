@@ -148,7 +148,8 @@ namespace SamplePublisher
                 GroupVersion = 0,
                 NetworkMessageContentMask = (uint) (UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
                         | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
-                        | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber)
+                        | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber
+                        | UadpNetworkMessageContentMask.PayloadHeader)
             };
 
             writerGroup1.MessageSettings = new ExtensionObject(messageSettings);
