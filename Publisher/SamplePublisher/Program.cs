@@ -20,9 +20,10 @@ namespace SamplePublisher
     {
         #region Fields
         private const string SamplePublisherLogFile = "Softing/OpcUaNetStandardToolkit/logs/SamplePublisher.log";
+        private static TraceConfiguration m_traceConfiguration;
+
         private static FieldMetaDataCollection m_dynamicFields = new FieldMetaDataCollection();
         private static UaPubSubApplication m_pubSubApplication;
-        private static TraceConfiguration m_traceConfiguration;
         #endregion
 
         /// <summary>
@@ -37,16 +38,6 @@ namespace SamplePublisher
         {
             try
             {
-                string configurationFileName = "SamplePublisher.Config.xml";
-                // Create the PubSub application
-                m_pubSubApplication = UaPubSubApplication.Create(configurationFileName);
-
-                // the PubSub application can be also created from an instance of PubSubConfigurationDataType
-                //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
-                //m_pubSubApplication = UaPubSubApplication.Create(pubSubConfiguration);
-
-                LoadTraceLogger();
-
                 LicensingStatus licensingStatus = LicensingStatus.Ok;
 
                 // TODO - design time license activation
@@ -66,6 +57,16 @@ namespace SamplePublisher
                     Console.ReadKey();
                     return;
                 }
+
+                LoadTraceLogger();
+
+                string configurationFileName = "SamplePublisher.Config.xml";
+                // Create the PubSub application
+                m_pubSubApplication = UaPubSubApplication.Create(configurationFileName);
+
+                // the PubSub application can be also created from an instance of PubSubConfigurationDataType
+                //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
+                //m_pubSubApplication = UaPubSubApplication.Create(pubSubConfiguration);
 
                 // Start publishing data 
                 m_dataStoreValuesGenerator = new DataStoreValuesGenerator(m_pubSubApplication);

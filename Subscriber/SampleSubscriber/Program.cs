@@ -14,16 +14,23 @@ using Softing.Opc.Ua.PubSub;
 using Softing.Opc.Ua.PubSub.PublishedData;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace SampleSubscriber
 {
     static class Program
     {
+        #region Fields
+        private const string SampleSubscriberLogFile = "Softing/OpcUaNetStandardToolkit/logs/SampleSubscriber.log";
+        private static TraceConfiguration m_traceConfiguration;
+
         // It should match the namespace index from configuration file
         public const ushort NamespaceIndexSimple = 2;
         public const ushort NamespaceIndexAllTypes = 3;
         public const ushort NamespaceIndexMassTest = 4;
+        #endregion
+
         /// <summary>
         /// Entry point for application
         /// </summary>
@@ -49,6 +56,8 @@ namespace SampleSubscriber
                     Console.ReadKey();
                     return;
                 }
+
+                LoadTraceLogger();
 
                 // PubSubConfigurationDataType config = CreateConfiguration();
                 string configurationFileName = "SampleSubscriber.Config.xml";
@@ -372,6 +381,7 @@ namespace SampleSubscriber
         }
         #endregion
 
+        #region Private Methods
         /// <summary>
         /// Print command line parameters for this console application
         /// </summary>
@@ -380,5 +390,19 @@ namespace SampleSubscriber
             Console.WriteLine("Press:\n\ts: connections status");
             Console.WriteLine("\tx,q: shutdown the server\n\n");
         }
+
+        /// <summary>
+        /// Load trace configuration for logging
+        /// </summary>
+        private static void LoadTraceLogger()
+        {
+            m_traceConfiguration = new TraceConfiguration();
+            m_traceConfiguration.OutputFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), SampleSubscriberLogFile);
+            m_traceConfiguration.DeleteOnLoad = true;
+            m_traceConfiguration.TraceMasks = 1;
+            m_traceConfiguration.ApplySettings();
+        }
+        #endregion
+
     }
 }
