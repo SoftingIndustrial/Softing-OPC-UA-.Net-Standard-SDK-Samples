@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SamplePublisher
+namespace SampleSubscriber
 {
     static class Program
     {
