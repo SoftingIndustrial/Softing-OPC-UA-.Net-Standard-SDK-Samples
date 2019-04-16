@@ -101,7 +101,6 @@ namespace SamplePublisher
                     }
                 }
                 while (true);
-                m_dataStoreValuesGenerator.Dispose();
             }
             catch (Exception e)
             {

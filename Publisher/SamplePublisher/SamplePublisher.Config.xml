@@ -3932,7 +3932,7 @@
           <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
           <GroupProperties />
           <WriterGroupId>2</WriterGroupId>
-          <PublishingInterval>13000</PublishingInterval>
+          <PublishingInterval>5000</PublishingInterval>
           <KeepAliveTime>5000</KeepAliveTime>
           <Priority>0</Priority>
           <LocaleIds />
