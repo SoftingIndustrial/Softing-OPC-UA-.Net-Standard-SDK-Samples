@@ -7,7 +7,7 @@
       <Enabled>true</Enabled>
       <PublisherId>
         <Value>
-          <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
+          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
         </Value>
       </PublisherId>
       <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp</TransportProfileUri>
@@ -51,7 +51,6 @@
             </Body>
           </MessageSettings>
           <DataSetReaders>
-
             <DataSetReaderDataType>
               <Name i:nil="true" />
               <Enabled>true</Enabled>
@@ -60,8 +59,8 @@
                   <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>1</WriterGroupId>
-              <DataSetWriterId>1</DataSetWriterId>
+              <WriterGroupId>0</WriterGroupId>
+              <DataSetWriterId>15</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -82,7 +81,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>3176c1c2-e270-4d34-96b3-48d19a406bc1</String>
+                      <String>301072c7-5cd6-4fc4-98f8-d12e083af466</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -98,7 +97,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>f62c3134-109f-4e35-a018-ba97020e75b5</String>
+                      <String>5f580257-5afd-4c50-8fec-23d35c302938</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -114,7 +113,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>d29dfaaa-46fd-4c71-88a6-11ccc5df02ee</String>
+                      <String>d80e0a63-8fdf-422c-8005-2c23c9106f86</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -130,7 +129,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>a28949c5-f545-4759-b791-ca4da5717c84</String>
+                      <String>cd8cbde5-1cff-44d1-89a0-9a38cea7fccf</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -181,7 +180,7 @@
                     <TargetVariables>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>3176c1c2-e270-4d34-96b3-48d19a406bc1</String>
+                          <String>301072c7-5cd6-4fc4-98f8-d12e083af466</String>
                         </DataSetFieldId>
                         <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
                         <TargetNodeId>
@@ -192,13 +191,13 @@
                         <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
                         <OverrideValue>
                           <Value>
-                            <Boolean>true</Boolean>
+                            <Boolean>false</Boolean>
                           </Value>
                         </OverrideValue>
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>f62c3134-109f-4e35-a018-ba97020e75b5</String>
+                          <String>5f580257-5afd-4c50-8fec-23d35c302938</String>
                         </DataSetFieldId>
                         <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
                         <TargetNodeId>
@@ -209,13 +208,13 @@
                         <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
                         <OverrideValue>
                           <Value>
-                            <Int32>111</Int32>
+                            <Int32>0</Int32>
                           </Value>
                         </OverrideValue>
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>d29dfaaa-46fd-4c71-88a6-11ccc5df02ee</String>
+                          <String>d80e0a63-8fdf-422c-8005-2c23c9106f86</String>
                         </DataSetFieldId>
                         <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
                         <TargetNodeId>
@@ -226,13 +225,13 @@
                         <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
                         <OverrideValue>
                           <Value>
-                            <Int32>5555</Int32>
+                            <Int32>0</Int32>
                           </Value>
                         </OverrideValue>
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>a28949c5-f545-4759-b791-ca4da5717c84</String>
+                          <String>cd8cbde5-1cff-44d1-89a0-9a38cea7fccf</String>
                         </DataSetFieldId>
                         <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
                         <TargetNodeId>
@@ -252,27 +251,22 @@
                 </Body>
               </SubscribedDataSet>
             </DataSetReaderDataType>
-            
-            
-            
-            
-            
             <DataSetReaderDataType>
               <Name i:nil="true" />
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
-                  <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
                 </Value>
               </PublisherId>
               <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>11</DataSetWriterId>
+              <DataSetWriterId>2</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
                 <EnumDataTypes />
                 <SimpleDataTypes />
-                <Name>Simple</Name>
+                <Name>AllTypes</Name>
                 <Description i:nil="true" />
                 <Fields>
                   <FieldMetaData>
@@ -287,7 +281,39 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>3176c1c2-e270-4d34-96b3-48d19a406bc1</String>
+                      <String>476bfcdb-03fe-4443-9bb7-93b0180ad4f5</String>
+                    </DataSetFieldId>
+                    <Properties />
+                  </FieldMetaData>
+                  <FieldMetaData>
+                    <Name>Byte</Name>
+                    <Description i:nil="true" />
+                    <FieldFlags>0</FieldFlags>
+                    <BuiltInType>0</BuiltInType>
+                    <DataType>
+                      <Identifier>i=3</Identifier>
+                    </DataType>
+                    <ValueRank>-1</ValueRank>
+                    <ArrayDimensions />
+                    <MaxStringLength>0</MaxStringLength>
+                    <DataSetFieldId>
+                      <String>688e08a8-554a-45ef-89bc-0ec0303332b8</String>
+                    </DataSetFieldId>
+                    <Properties />
+                  </FieldMetaData>
+                  <FieldMetaData>
+                    <Name>Int16</Name>
+                    <Description i:nil="true" />
+                    <FieldFlags>0</FieldFlags>
+                    <BuiltInType>0</BuiltInType>
+                    <DataType>
+                      <Identifier>i=4</Identifier>
+                    </DataType>
+                    <ValueRank>-1</ValueRank>
+                    <ArrayDimensions />
+                    <MaxStringLength>0</MaxStringLength>
+                    <DataSetFieldId>
+                      <String>fa037563-46c9-4cf8-ad0d-87b985423c97</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -303,39 +329,87 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>f62c3134-109f-4e35-a018-ba97020e75b5</String>
+                      <String>1b064ce3-9caa-47c2-91ae-51116c684943</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
                   <FieldMetaData>
-                    <Name>Int32Fast</Name>
+                    <Name>SByte</Name>
                     <Description i:nil="true" />
                     <FieldFlags>0</FieldFlags>
                     <BuiltInType>0</BuiltInType>
                     <DataType>
-                      <Identifier>i=6</Identifier>
+                      <Identifier>i=2</Identifier>
                     </DataType>
                     <ValueRank>-1</ValueRank>
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>d29dfaaa-46fd-4c71-88a6-11ccc5df02ee</String>
+                      <String>85226152-29bc-4a0e-82a7-42afb808b28f</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
                   <FieldMetaData>
-                    <Name>DateTime</Name>
+                    <Name>UInt16</Name>
                     <Description i:nil="true" />
                     <FieldFlags>0</FieldFlags>
                     <BuiltInType>0</BuiltInType>
                     <DataType>
-                      <Identifier>i=13</Identifier>
+                      <Identifier>i=5</Identifier>
                     </DataType>
                     <ValueRank>-1</ValueRank>
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>a28949c5-f545-4759-b791-ca4da5717c84</String>
+                      <String>dd072e79-25c4-40df-afd6-274667fd9d32</String>
+                    </DataSetFieldId>
+                    <Properties />
+                  </FieldMetaData>
+                  <FieldMetaData>
+                    <Name>UInt32</Name>
+                    <Description i:nil="true" />
+                    <FieldFlags>0</FieldFlags>
+                    <BuiltInType>0</BuiltInType>
+                    <DataType>
+                      <Identifier>i=7</Identifier>
+                    </DataType>
+                    <ValueRank>-1</ValueRank>
+                    <ArrayDimensions />
+                    <MaxStringLength>0</MaxStringLength>
+                    <DataSetFieldId>
+                      <String>5e47fa82-1965-4dc5-bb1f-85d63ea96f6e</String>
+                    </DataSetFieldId>
+                    <Properties />
+                  </FieldMetaData>
+                  <FieldMetaData>
+                    <Name>Float</Name>
+                    <Description i:nil="true" />
+                    <FieldFlags>0</FieldFlags>
+                    <BuiltInType>0</BuiltInType>
+                    <DataType>
+                      <Identifier>i=10</Identifier>
+                    </DataType>
+                    <ValueRank>-1</ValueRank>
+                    <ArrayDimensions />
+                    <MaxStringLength>0</MaxStringLength>
+                    <DataSetFieldId>
+                      <String>32c88f79-f51d-484b-afde-4a5f46fd9cf8</String>
+                    </DataSetFieldId>
+                    <Properties />
+                  </FieldMetaData>
+                  <FieldMetaData>
+                    <Name>Double</Name>
+                    <Description i:nil="true" />
+                    <FieldFlags>0</FieldFlags>
+                    <BuiltInType>0</BuiltInType>
+                    <DataType>
+                      <Identifier>i=11</Identifier>
+                    </DataType>
+                    <ValueRank>-1</ValueRank>
+                    <ArrayDimensions />
+                    <MaxStringLength>0</MaxStringLength>
+                    <DataSetFieldId>
+                      <String>6c99df58-8a70-438a-b607-79513b0d9b79</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -386,69 +460,154 @@
                     <TargetVariables>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>3176c1c2-e270-4d34-96b3-48d19a406bc1</String>
+                          <String>476bfcdb-03fe-4443-9bb7-93b0180ad4f5</String>
                         </DataSetFieldId>
                         <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
                         <TargetNodeId>
-                          <Identifier>ns=2;s=BoolToggle</Identifier>
+                          <Identifier>ns=3;s=BoolToggle</Identifier>
                         </TargetNodeId>
                         <AttributeId>13</AttributeId>
                         <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
                         <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
                         <OverrideValue>
                           <Value>
-                            <Boolean>true</Boolean>
+                            <Boolean>false</Boolean>
                           </Value>
                         </OverrideValue>
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>f62c3134-109f-4e35-a018-ba97020e75b5</String>
+                          <String>688e08a8-554a-45ef-89bc-0ec0303332b8</String>
                         </DataSetFieldId>
                         <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
                         <TargetNodeId>
-                          <Identifier>ns=2;s=Int32</Identifier>
+                          <Identifier>ns=3;s=Byte</Identifier>
                         </TargetNodeId>
                         <AttributeId>13</AttributeId>
                         <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
                         <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
                         <OverrideValue>
                           <Value>
-                            <Int32>111</Int32>
+                            <Byte>0</Byte>
                           </Value>
                         </OverrideValue>
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>d29dfaaa-46fd-4c71-88a6-11ccc5df02ee</String>
+                          <String>fa037563-46c9-4cf8-ad0d-87b985423c97</String>
                         </DataSetFieldId>
                         <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
                         <TargetNodeId>
-                          <Identifier>ns=2;s=Int32Fast</Identifier>
+                          <Identifier>ns=3;s=Int16</Identifier>
                         </TargetNodeId>
                         <AttributeId>13</AttributeId>
                         <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
                         <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
                         <OverrideValue>
                           <Value>
-                            <Int32>5555</Int32>
+                            <Int16>0</Int16>
                           </Value>
                         </OverrideValue>
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>a28949c5-f545-4759-b791-ca4da5717c84</String>
+                          <String>1b064ce3-9caa-47c2-91ae-51116c684943</String>
                         </DataSetFieldId>
                         <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
                         <TargetNodeId>
-                          <Identifier>ns=2;s=DateTime</Identifier>
+                          <Identifier>ns=3;s=Int32</Identifier>
                         </TargetNodeId>
                         <AttributeId>13</AttributeId>
                         <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
                         <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
                         <OverrideValue>
                           <Value>
-                            <DateTime>0001-01-01T00:00:00</DateTime>
+                            <Int32>0</Int32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>85226152-29bc-4a0e-82a7-42afb808b28f</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=3;s=SByte</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <SByte>0</SByte>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>dd072e79-25c4-40df-afd6-274667fd9d32</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=3;s=UInt16</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt16>0</UInt16>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>5e47fa82-1965-4dc5-bb1f-85d63ea96f6e</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=3;s=UInt32</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>32c88f79-f51d-484b-afde-4a5f46fd9cf8</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=3;s=Float</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Float>0</Float>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>6c99df58-8a70-438a-b607-79513b0d9b79</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=3;s=Double</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Double>0</Double>
                           </Value>
                         </OverrideValue>
                       </FieldTargetDataType>
