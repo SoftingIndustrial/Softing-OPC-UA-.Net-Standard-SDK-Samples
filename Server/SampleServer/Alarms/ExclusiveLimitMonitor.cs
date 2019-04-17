@@ -111,6 +111,7 @@ namespace SampleServer.Alarms
             m_alarm.LowLowLimit = new PropertyState<double>(m_alarm);
 
             // Add optional components
+            m_alarm.LocalTime = new PropertyState<TimeZoneDataType>(m_alarm);
             m_alarm.Comment = new ConditionVariableState<LocalizedText>(m_alarm);
             m_alarm.ClientUserId = new PropertyState<string>(m_alarm);
             m_alarm.AddComment = new AddCommentMethodState(m_alarm);
