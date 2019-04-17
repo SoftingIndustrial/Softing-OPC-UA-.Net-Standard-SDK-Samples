@@ -388,7 +388,7 @@ namespace SampleSubscriber
         private static void PrintCommandParameters()
         {
             Console.WriteLine("Press:\n\ts: connections status");
-            Console.WriteLine("\tx,q: shutdown the server\n\n");
+            Console.WriteLine("\tx,q: shutdown the Subscriber\n\n");
         }
 
         /// <summary>
