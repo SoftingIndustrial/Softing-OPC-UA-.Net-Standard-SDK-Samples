@@ -276,7 +276,7 @@ namespace SampleSubscriber
             #region Define 'MassTest' MetaData
             DataSetMetaDataType massTestMetaData = new DataSetMetaDataType();
             massTestMetaData.DataSetClassId = new Uuid(Guid.Empty);
-            massTestMetaData.Name = "Simple";
+            massTestMetaData.Name = "MassData";
             massTestMetaData.Fields = new FieldMetaDataCollection();
             for (int i = 0; i < 100; i++)
             {

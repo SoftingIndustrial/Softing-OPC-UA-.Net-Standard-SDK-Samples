@@ -631,7 +631,7 @@
                 <StructureDataTypes />
                 <EnumDataTypes />
                 <SimpleDataTypes />
-                <Name>Simple</Name>
+                <Name>MassData</Name>
                 <Description i:nil="true" />
                 <Fields>
                   <FieldMetaData>
@@ -4591,7 +4591,7 @@
                 <StructureDataTypes />
                 <EnumDataTypes />
                 <SimpleDataTypes />
-                <Name>Simple</Name>
+                <Name>MassData</Name>
                 <Description i:nil="true" />
                 <Fields>
                   <FieldMetaData>
