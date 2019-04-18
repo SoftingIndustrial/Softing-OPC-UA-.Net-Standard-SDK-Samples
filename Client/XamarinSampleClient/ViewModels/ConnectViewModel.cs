@@ -51,7 +51,8 @@ namespace XamarinSampleClient.ViewModels
             MessageSecurityModes = new List<MessageSecurityMode>() { MessageSecurityMode.None, MessageSecurityMode.Sign, MessageSecurityMode.SignAndEncrypt };
             SelectedMessageSecurityMode = MessageSecurityModes[0];
 
-            SecurityPolicies = new List<SecurityPolicy>() { SecurityPolicy.None, SecurityPolicy.Basic256, SecurityPolicy.Basic128Rsa15, SecurityPolicy.Basic256Sha256, SecurityPolicy.Aes128_Sha256_RsaOaep };
+            SecurityPolicies = new List<SecurityPolicy>() { SecurityPolicy.None, SecurityPolicy.Basic256, SecurityPolicy.Basic128Rsa15,
+                SecurityPolicy.Basic256Sha256, SecurityPolicy.Aes128_Sha256_RsaOaep, SecurityPolicy.Aes256_Sha256_RsaPss };
             SelectedSecurityPolicy = SecurityPolicies[0];
 
             MessageEncodings = new List<MessageEncoding>() { MessageEncoding.Binary };
