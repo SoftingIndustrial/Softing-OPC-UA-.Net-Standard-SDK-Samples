@@ -87,7 +87,7 @@ namespace SampleSubscriber
                             foreach (var connection in pubSubApplication.PubSubConnections)
                             {
                                 Console.WriteLine("\tConnection '{0}' - Running={1}, DataSetReadersCount={2}",
-                                    connection.PubSubConnectionConfiguration.Name, connection.IsRunning, connection.DataSetReaders.Count);
+                                    connection.PubSubConnectionConfiguration.Name, connection.IsRunning);
                             }
                         }
                         else
