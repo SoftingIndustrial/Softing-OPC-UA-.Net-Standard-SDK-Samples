@@ -91,8 +91,8 @@ namespace SamplePublisher
                         Console.WriteLine("Connections Status:");
                         foreach (var connection in m_pubSubApplication.PubSubConnections)
                         {
-                            Console.WriteLine("\tConnection '{0}' - Running={1}, PublishersCount={2}", 
-                                connection.PubSubConnectionConfiguration.Name, connection.IsRunning, connection.Publishers.Count);
+                            Console.WriteLine("\tConnection '{0}' - Running={1}", 
+                                connection.PubSubConnectionConfiguration.Name, connection.IsRunning);
                         }
                     }
                     else
