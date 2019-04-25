@@ -39,31 +39,31 @@ namespace SampleSubscriber
         {            
             try
             {
-                LicensingStatus licensingStatus = LicensingStatus.Ok;
-                // TODO - design time license activation
-                // Fill in your design time license activation keys here Client or Server
-                //licensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-                //licensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-
-                if (licensingStatus == LicensingStatus.Expired)
-                {
-                    Console.WriteLine("License period expired!");
-                    Console.ReadKey();
-                    return;
-                }
-                if (licensingStatus == LicensingStatus.Invalid)
-                {
-                    Console.WriteLine("Invalid License key!");
-                    Console.ReadKey();
-                    return;
-                }
-
                 LoadTraceLogger();
                 
                 string configurationFileName = "SampleSubscriber.Config.xml";
                 // Create the PubSub application
                 using (UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
+                    LicensingStatus licensingStatus = LicensingStatus.Ok;
+                    // TODO - design time license activation
+                    // Fill in your design time license activation keys here Client or Server
+                    //licensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                    //licensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+
+                    if (licensingStatus == LicensingStatus.Expired)
+                    {
+                        Console.WriteLine("License period expired!");
+                        Console.ReadKey();
+                        return;
+                    }
+                    if (licensingStatus == LicensingStatus.Invalid)
+                    {
+                        Console.WriteLine("Invalid License key!");
+                        Console.ReadKey();
+                        return;
+                    }
+
                     // subscribe to data events 
                     pubSubApplication.DataReceived += PubSubApplication_DataReceived;
                     

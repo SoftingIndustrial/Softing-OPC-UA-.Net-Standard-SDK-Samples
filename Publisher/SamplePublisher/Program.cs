@@ -38,6 +38,16 @@ namespace SamplePublisher
         {
             try
             {
+                LoadTraceLogger();
+
+                string configurationFileName = "SamplePublisher.Config.xml";
+                // Create the PubSub application
+                m_pubSubApplication = UaPubSubApplication.Create(configurationFileName);
+
+                // the PubSub application can be also created from an instance of PubSubConfigurationDataType
+                //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
+                //m_pubSubApplication = UaPubSubApplication.Create(pubSubConfiguration);
+
                 LicensingStatus licensingStatus = LicensingStatus.Ok;
 
                 // TODO - design time license activation
@@ -57,16 +67,6 @@ namespace SamplePublisher
                     Console.ReadKey();
                     return;
                 }
-
-                LoadTraceLogger();
-
-                string configurationFileName = "SamplePublisher.Config.xml";
-                // Create the PubSub application
-                m_pubSubApplication = UaPubSubApplication.Create(configurationFileName);
-
-                // the PubSub application can be also created from an instance of PubSubConfigurationDataType
-                //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
-                //m_pubSubApplication = UaPubSubApplication.Create(pubSubConfiguration);
 
                 // Start publishing data 
                 m_dataStoreValuesGenerator = new DataStoreValuesGenerator(m_pubSubApplication);
