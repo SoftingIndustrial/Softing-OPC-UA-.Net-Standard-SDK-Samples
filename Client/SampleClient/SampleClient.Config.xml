@@ -60,7 +60,7 @@
     <!-- The directory used to store invalid certificates for later review by the administrator. -->
     <RejectedCertificateStore>
       <StoreType>Directory</StoreType>
-      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStdToolkit/pki/rejected</StorePath>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/rejected</StorePath>
     </RejectedCertificateStore>
 
     <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
