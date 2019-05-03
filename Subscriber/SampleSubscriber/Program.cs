@@ -83,10 +83,10 @@ namespace SampleSubscriber
                         else if (key.KeyChar == 's')
                         {
                             // list connection status
-                            Console.WriteLine("Connections Status:");
+                            Console.WriteLine("\tConnections Status:");
                             foreach (var connection in pubSubApplication.PubSubConnections)
                             {
-                                Console.WriteLine("\tConnection '{0}' - Running={1}, DataSetReadersCount={2}",
+                                Console.WriteLine("\tConnection '{0}' - Running={1}",
                                     connection.PubSubConnectionConfiguration.Name, connection.IsRunning);
                             }
                         }
