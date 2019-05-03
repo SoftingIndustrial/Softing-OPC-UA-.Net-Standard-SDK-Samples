@@ -308,7 +308,7 @@ namespace SampleSubscriber
             DataSetReaderDataType dataSetReaderSimple = new DataSetReaderDataType();
             dataSetReaderSimple.PublisherId = (UInt16)10;
             dataSetReaderSimple.WriterGroupId = 0;
-            dataSetReaderSimple.DataSetWriterId = 1;
+            dataSetReaderSimple.DataSetWriterId = 0;
             dataSetReaderSimple.Enabled = true;
             dataSetReaderSimple.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
             dataSetReaderSimple.KeyFrameCount = 1;
@@ -347,7 +347,7 @@ namespace SampleSubscriber
             DataSetReaderDataType dataSetReaderAllTypes = new DataSetReaderDataType();
             dataSetReaderAllTypes.PublisherId = (UInt16)10;
             dataSetReaderAllTypes.WriterGroupId = 0;
-            dataSetReaderAllTypes.DataSetWriterId = 2;
+            dataSetReaderAllTypes.DataSetWriterId = 0;
             dataSetReaderAllTypes.Enabled = true;
             dataSetReaderAllTypes.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
             dataSetReaderAllTypes.KeyFrameCount = 1;
@@ -356,7 +356,7 @@ namespace SampleSubscriber
             uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
-                DataSetOffset = 15,
+                DataSetOffset = 37,
                 NetworkMessageNumber = 0,
                 NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
                         | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
@@ -386,7 +386,7 @@ namespace SampleSubscriber
             DataSetReaderDataType dataSetReaderMassTest = new DataSetReaderDataType();
             dataSetReaderMassTest.PublisherId = (UInt16)10;
             dataSetReaderMassTest.WriterGroupId = 0;
-            dataSetReaderMassTest.DataSetWriterId = 3;
+            dataSetReaderMassTest.DataSetWriterId = 0;
             dataSetReaderMassTest.Enabled = true;
             dataSetReaderMassTest.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
             dataSetReaderMassTest.KeyFrameCount = 1;
@@ -395,7 +395,7 @@ namespace SampleSubscriber
             uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
-                DataSetOffset = 15,
+                DataSetOffset = 69,
                 NetworkMessageNumber = 0,
                 NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
                         | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
@@ -444,7 +444,7 @@ namespace SampleSubscriber
             uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
-                DataSetOffset = 15,
+                DataSetOffset = 0,
                 NetworkMessageNumber = 0,
                 NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.PayloadHeader),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Timestamp | UadpDataSetMessageContentMask.Status
@@ -482,7 +482,7 @@ namespace SampleSubscriber
             uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
-                DataSetOffset = 15,
+                DataSetOffset = 0,
                 NetworkMessageNumber = 0,
                 NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.PayloadHeader),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Timestamp | UadpDataSetMessageContentMask.Status
@@ -520,7 +520,7 @@ namespace SampleSubscriber
             uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
-                DataSetOffset = 15,
+                DataSetOffset = 0,
                 NetworkMessageNumber = 0,
                 NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.PayloadHeader),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Timestamp | UadpDataSetMessageContentMask.Status

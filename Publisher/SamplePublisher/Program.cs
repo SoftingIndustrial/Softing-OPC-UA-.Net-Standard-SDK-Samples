@@ -147,8 +147,7 @@ namespace SamplePublisher
                 GroupVersion = 0,
                 NetworkMessageContentMask = (uint) (UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
                         | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
-                        | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber
-                        | UadpNetworkMessageContentMask.PayloadHeader)
+                        | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber)
             };
 
             writerGroup1.MessageSettings = new ExtensionObject(messageSettings);
@@ -163,8 +162,8 @@ namespace SamplePublisher
             dataSetWriter1.KeyFrameCount = 1;
             UadpDataSetWriterMessageDataType uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
-                ConfiguredSize = 22,
-                DataSetOffset = 15, 
+                ConfiguredSize = 0,
+                DataSetOffset = 0, 
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
@@ -180,8 +179,8 @@ namespace SamplePublisher
             dataSetWriter2.KeyFrameCount = 1;
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
-                ConfiguredSize = 32,
-                DataSetOffset = 37,
+                ConfiguredSize = 0,
+                DataSetOffset = 0,
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
@@ -197,8 +196,8 @@ namespace SamplePublisher
             dataSetWriter3.KeyFrameCount = 1;
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
-                ConfiguredSize = 405,
-                DataSetOffset = 69,
+                ConfiguredSize = 0,
+                DataSetOffset = 0,
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };

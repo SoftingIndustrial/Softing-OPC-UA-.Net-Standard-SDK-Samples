@@ -60,7 +60,7 @@
                 </Value>
               </PublisherId>
               <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>1</DataSetWriterId>
+              <DataSetWriterId>0</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -260,7 +260,7 @@
                 </Value>
               </PublisherId>
               <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>2</DataSetWriterId>
+              <DataSetWriterId>0</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -439,7 +439,7 @@
                   <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <GroupVersion>0</GroupVersion>
                     <NetworkMessageNumber>0</NetworkMessageNumber>
-                    <DataSetOffset>15</DataSetOffset>
+                    <DataSetOffset>37</DataSetOffset>
                     <DataSetClassId>
                       <String>00000000-0000-0000-0000-000000000000</String>
                     </DataSetClassId>
@@ -625,7 +625,7 @@
                 </Value>
               </PublisherId>
               <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>3</DataSetWriterId>
+              <DataSetWriterId>0</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -2260,7 +2260,7 @@
                   <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <GroupVersion>0</GroupVersion>
                     <NetworkMessageNumber>0</NetworkMessageNumber>
-                    <DataSetOffset>15</DataSetOffset>
+                    <DataSetOffset>69</DataSetOffset>
                     <DataSetClassId>
                       <String>00000000-0000-0000-0000-000000000000</String>
                     </DataSetClassId>
@@ -4119,7 +4119,7 @@
                   <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <GroupVersion>0</GroupVersion>
                     <NetworkMessageNumber>0</NetworkMessageNumber>
-                    <DataSetOffset>15</DataSetOffset>
+                    <DataSetOffset>0</DataSetOffset>
                     <DataSetClassId>
                       <String>00000000-0000-0000-0000-000000000000</String>
                     </DataSetClassId>
@@ -4399,7 +4399,7 @@
                   <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <GroupVersion>0</GroupVersion>
                     <NetworkMessageNumber>0</NetworkMessageNumber>
-                    <DataSetOffset>15</DataSetOffset>
+                    <DataSetOffset>0</DataSetOffset>
                     <DataSetClassId>
                       <String>00000000-0000-0000-0000-000000000000</String>
                     </DataSetClassId>
@@ -6220,7 +6220,7 @@
                   <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <GroupVersion>0</GroupVersion>
                     <NetworkMessageNumber>0</NetworkMessageNumber>
-                    <DataSetOffset>15</DataSetOffset>
+                    <DataSetOffset>0</DataSetOffset>
                     <DataSetClassId>
                       <String>00000000-0000-0000-0000-000000000000</String>
                     </DataSetClassId>
