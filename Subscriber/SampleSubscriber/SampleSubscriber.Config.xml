@@ -439,7 +439,7 @@
                   <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <GroupVersion>0</GroupVersion>
                     <NetworkMessageNumber>0</NetworkMessageNumber>
-                    <DataSetOffset>37</DataSetOffset>
+                    <DataSetOffset>47</DataSetOffset>
                     <DataSetClassId>
                       <String>00000000-0000-0000-0000-000000000000</String>
                     </DataSetClassId>
@@ -2260,7 +2260,7 @@
                   <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <GroupVersion>0</GroupVersion>
                     <NetworkMessageNumber>0</NetworkMessageNumber>
-                    <DataSetOffset>69</DataSetOffset>
+                    <DataSetOffset>79</DataSetOffset>
                     <DataSetClassId>
                       <String>00000000-0000-0000-0000-000000000000</String>
                     </DataSetClassId>

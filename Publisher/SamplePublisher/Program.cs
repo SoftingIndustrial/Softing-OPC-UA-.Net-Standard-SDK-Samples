@@ -162,8 +162,8 @@ namespace SamplePublisher
             dataSetWriter1.KeyFrameCount = 1;
             UadpDataSetWriterMessageDataType uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
-                ConfiguredSize = 0,
-                DataSetOffset = 0, 
+                ConfiguredSize = 22,
+                DataSetOffset = 15, 
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
@@ -179,8 +179,8 @@ namespace SamplePublisher
             dataSetWriter2.KeyFrameCount = 1;
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
-                ConfiguredSize = 0,
-                DataSetOffset = 0,
+                ConfiguredSize = 32,
+                DataSetOffset = 37,
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
@@ -196,8 +196,8 @@ namespace SamplePublisher
             dataSetWriter3.KeyFrameCount = 1;
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
-                ConfiguredSize = 0,
-                DataSetOffset = 0,
+                ConfiguredSize = 405,
+                DataSetOffset = 69,
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };

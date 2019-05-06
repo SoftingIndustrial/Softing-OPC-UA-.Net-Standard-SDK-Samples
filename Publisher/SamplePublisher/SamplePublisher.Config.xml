@@ -3795,7 +3795,7 @@
           <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
           <GroupProperties />
           <WriterGroupId>1</WriterGroupId>
-          <PublishingInterval>5000</PublishingInterval>
+          <PublishingInterval>20000</PublishingInterval>
           <KeepAliveTime>5000</KeepAliveTime>
           <Priority>0</Priority>
           <LocaleIds />
@@ -3842,9 +3842,9 @@
                 <Body>
                   <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <DataSetMessageContentMask>36</DataSetMessageContentMask>
-                    <ConfiguredSize>0</ConfiguredSize>
+                    <ConfiguredSize>32</ConfiguredSize>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>0</DataSetOffset>
+                    <DataSetOffset>15</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
                 </Body>
               </MessageSettings>
@@ -3865,9 +3865,9 @@
                 <Body>
                   <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <DataSetMessageContentMask>36</DataSetMessageContentMask>
-                    <ConfiguredSize>0</ConfiguredSize>
+                    <ConfiguredSize>32</ConfiguredSize>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>0</DataSetOffset>
+                    <DataSetOffset>47</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
                 </Body>
               </MessageSettings>
@@ -3888,9 +3888,9 @@
                 <Body>
                   <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <DataSetMessageContentMask>36</DataSetMessageContentMask>
-                    <ConfiguredSize>0</ConfiguredSize>
+                    <ConfiguredSize>405</ConfiguredSize>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>0</DataSetOffset>
+                    <DataSetOffset>79</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
                 </Body>
               </MessageSettings>
@@ -3902,7 +3902,7 @@
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
       <Name>UADPConection2</Name>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <PublisherId>
         <Value>
           <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
