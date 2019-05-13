@@ -91,6 +91,10 @@ namespace SampleServer.NodeSetImport
                         FolderState referenceServerVariables = CreateFolder(nodeSetImportNode, "Imported Types Variables");
 
                         var dataTypeRefrigeratorStatus = PredefinedNodes.Values.FirstOrDefault(x => x.BrowseName.Name == "RefrigeratorStatusDataType");
+                       
+                        StructuredValue refrigeratorStatusValue = GetDefaultValueForDatatype(dataTypeRefrigeratorStatus.NodeId) as StructuredValue;
+                        refrigeratorStatusValue["MotorTemperature"] = 5.6;
+
                         var refrigeratorStatusVariable = CreateVariable(referenceServerVariables, "RefrigeratorStatusVariable", dataTypeRefrigeratorStatus.NodeId);
                         
                         var enumerationRefrigeratorState = PredefinedNodes.Values.FirstOrDefault(x => x.BrowseName.Name == "RefrigeratorState");
