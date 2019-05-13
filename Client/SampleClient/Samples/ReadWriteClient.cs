@@ -446,22 +446,16 @@ namespace SampleClient.Samples
                 DataValueEx dataValuetypeId = m_session.Read(readValueId);
 
                 //Get Default value for data type
-                StructuredValue defaultValue = m_session.GetDefaultValueForDatatype(dataValuetypeId.Value as NodeId, ValueRanks.Scalar) as StructuredValue;
+                StructuredValue defaultValue = m_session.GetDefaultValueForDatatype(dataValuetypeId.Value as NodeId) as StructuredValue;
 
                 if (defaultValue != null)
                 {
                     //change some fields for default object
-                    foreach (var field in defaultValue.Fields)
-                    {
-                        if (field.Value is string)
-                        {
-                            field.Value = "new string value";
-                        }
-                        else if (field.Value is int)
-                        {
-                            field.Value = 100;
-                        }
-                    }
+                    defaultValue["Int32Field"] = 100;
+                    defaultValue["FloatField"] = 100f;
+                    defaultValue["StringField"] = "dummy string value";
+                    defaultValue["EnumerationType1Field"] = 2;
+
                     //write new value to node StaticComplexNodeId
                     DataValue valueToWrite = new DataValue();
                     valueToWrite.Value = defaultValue;
