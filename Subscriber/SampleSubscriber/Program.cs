@@ -116,7 +116,7 @@ namespace SampleSubscriber
         {
             lock (m_lock)
             {
-                Console.WriteLine("Data Arrived, DataSet count = {0}", e.DataSets.Count);
+                Console.WriteLine("Data Arrived from Source = {0}, DataSet count = {1}", e.SourceEndPoint, e.DataSets.Count);
                 int index = 0;
                 foreach (DataSet dataSet in e.DataSets)
                 {

@@ -3843,7 +3843,7 @@
                 <Body>
                   <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <DataSetMessageContentMask>36</DataSetMessageContentMask>
-                    <ConfiguredSize>22</ConfiguredSize>
+                    <ConfiguredSize>32</ConfiguredSize>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
                     <DataSetOffset>15</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
@@ -3868,7 +3868,7 @@
                     <DataSetMessageContentMask>36</DataSetMessageContentMask>
                     <ConfiguredSize>32</ConfiguredSize>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>37</DataSetOffset>
+                    <DataSetOffset>47</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
                 </Body>
               </MessageSettings>
@@ -3891,7 +3891,7 @@
                     <DataSetMessageContentMask>36</DataSetMessageContentMask>
                     <ConfiguredSize>405</ConfiguredSize>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>69</DataSetOffset>
+                    <DataSetOffset>79</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
                 </Body>
               </MessageSettings>
