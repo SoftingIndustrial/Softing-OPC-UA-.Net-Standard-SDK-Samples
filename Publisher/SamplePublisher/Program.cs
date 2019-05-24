@@ -533,7 +533,7 @@ namespace SamplePublisher
             m_traceConfiguration = new TraceConfiguration();
             m_traceConfiguration.OutputFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), SamplePublisherLogFile);
             m_traceConfiguration.DeleteOnLoad = true;
-            m_traceConfiguration.TraceMasks = 1;
+            m_traceConfiguration.TraceMasks = Utils.TraceMasks.All;
             m_traceConfiguration.ApplySettings();
         }
         #endregion
