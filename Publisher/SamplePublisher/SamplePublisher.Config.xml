@@ -3779,8 +3779,9 @@
         <Body>
           <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
             <!--<NetworkInterface>vEthernet (Default Switch)</NetworkInterface>-->
-            <NetworkInterface>Ethernet9999</NetworkInterface>
-            <Url>opc.udp://224.0.0.1:4840</Url>
+            <NetworkInterface>Ethernet</NetworkInterface>
+            <Url>opc.udp://239.0.0.1:4840</Url>
+            <!--<Url>opc.udp://192.168.150.156:4840</Url>-->
           </NetworkAddressUrlDataType>
         </Body>
       </Address>
@@ -3796,7 +3797,7 @@
           <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
           <GroupProperties />
           <WriterGroupId>1</WriterGroupId>
-          <PublishingInterval>20000</PublishingInterval>
+          <PublishingInterval>5000</PublishingInterval>
           <KeepAliveTime>5000</KeepAliveTime>
           <Priority>0</Priority>
           <LocaleIds />
