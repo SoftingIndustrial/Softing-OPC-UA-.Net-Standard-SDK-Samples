@@ -116,14 +116,14 @@ namespace SampleSubscriber
         {
             lock (m_lock)
             {
-                Console.WriteLine("Data Arrived from Source = {0}, DataSet count = {1}", e.SourceEndPoint, e.DataSets.Count);
+                Console.WriteLine("Data Arrived from Source={0}, SequenceNo={1}, DataSet count={2}", e.SourceEndPoint, e.NetworkMessageSequenceNumber, e.DataSets.Count);
                 int index = 0;
                 foreach (DataSet dataSet in e.DataSets)
                 {
-                    Console.WriteLine("\tDataSet {0}, Name = {1}, DataSetWriterId = {2}", index++, dataSet.Name, dataSet.DataSetWriterId);
+                    Console.WriteLine("\tDataSet {0}, Name={1}, DataSetWriterId={2}", index++, dataSet.Name, dataSet.DataSetWriterId);
                     for (int i = 0; i < dataSet.Fields.Length; i++)
                     {
-                        Console.WriteLine("\t\tTargetNodeId: {0}, Attribute: {1}, Value: {2}",
+                        Console.WriteLine("\t\tTargetNodeId:{0}, Attribute:{1}, Value:{2}",
                             dataSet.Fields[i].TargetNodeId, dataSet.Fields[i].TargetAttribute, dataSet.Fields[i].Value);
                         if (i > 10)
                         {

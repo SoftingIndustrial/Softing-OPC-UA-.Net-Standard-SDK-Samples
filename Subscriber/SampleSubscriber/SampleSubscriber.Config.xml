@@ -20,8 +20,8 @@
             <!--<NetworkInterface>vEthernet (Default Switch)</NetworkInterface>-->
             <NetworkInterface>Ethernet</NetworkInterface>
             <!--<Url>opc.udp://239.0.0.1:4840</Url>-->
-            <!--<Url>opc.udp://239.0.0.1:4840</Url>-->
             <Url>opc.udp://239.0.0.1:4840</Url>
+            <!--<Url>opc.udp://192.168.170.20:4840</Url>-->
           </NetworkAddressUrlDataType>
         </Body>
       </Address>

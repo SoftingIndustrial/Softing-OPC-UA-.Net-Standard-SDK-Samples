@@ -3780,6 +3780,7 @@
           <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
             <!--<NetworkInterface>vEthernet (Default Switch)</NetworkInterface>-->
             <NetworkInterface>Ethernet</NetworkInterface>
+            <!--<Url>opc.udp://192.168.170.20:4840</Url>-->
             <Url>opc.udp://239.0.0.1:4840</Url>
             <!--<Url>opc.udp://192.168.150.156:4840</Url>-->
           </NetworkAddressUrlDataType>
@@ -3904,7 +3905,7 @@
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
       <Name>UADPConection2</Name>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <PublisherId>
         <Value>
           <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
@@ -3917,7 +3918,7 @@
         </TypeId>
         <Body>
           <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-            <NetworkInterface></NetworkInterface>
+            <NetworkInterface>Ethernet</NetworkInterface>
             <Url>opc.udp://239.0.0.1:4840</Url>
           </NetworkAddressUrlDataType>
         </Body>
