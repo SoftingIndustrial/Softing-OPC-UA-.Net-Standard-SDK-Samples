@@ -42,6 +42,8 @@ namespace SampleSubscriber
                 LoadTraceLogger();
                 
                 string configurationFileName = "SampleSubscriber.Config.xml";
+                var config = CreateConfiguration();
+                UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
                 // Create the PubSub application
                 using (UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
@@ -151,6 +153,7 @@ namespace SampleSubscriber
             pubSubConnection1.PublisherId = (UInt16)10;
             pubSubConnection1.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
+            address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.1:4840";
             pubSubConnection1.Address = new ExtensionObject(address);
             
@@ -164,6 +167,7 @@ namespace SampleSubscriber
                     {
                         Name = "BoolToggle",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte) DataTypes.Boolean,
                         DataType = DataTypeIds.Boolean,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -171,6 +175,7 @@ namespace SampleSubscriber
                     {
                         Name = "Int32",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte) DataTypes.Int32,
                         DataType = DataTypeIds.Int32,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -178,6 +183,7 @@ namespace SampleSubscriber
                     {
                         Name = "Int32Fast",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte) DataTypes.Int32,
                         DataType = DataTypeIds.Int32,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -185,6 +191,7 @@ namespace SampleSubscriber
                     {
                         Name = "DateTime",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte) DataTypes.Int32,
                         DataType = DataTypeIds.DateTime,
                         ValueRank = ValueRanks.Scalar
                     }
@@ -206,6 +213,7 @@ namespace SampleSubscriber
                     {
                         Name = "BoolToggle",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte) DataTypes.Boolean,
                         DataType = DataTypeIds.Boolean,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -213,6 +221,7 @@ namespace SampleSubscriber
                     {
                         Name = "Byte",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte) DataTypes.Byte,
                         DataType = DataTypeIds.Byte,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -220,6 +229,7 @@ namespace SampleSubscriber
                     {
                         Name = "Int16",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte) DataTypes.Int16,
                         DataType = DataTypeIds.Int16,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -227,6 +237,7 @@ namespace SampleSubscriber
                     {
                         Name = "Int32",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte) DataTypes.Int32,
                         DataType = DataTypeIds.Int32,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -234,6 +245,7 @@ namespace SampleSubscriber
                     {
                         Name = "SByte",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte) DataTypes.SByte,
                         DataType = DataTypeIds.SByte,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -241,6 +253,7 @@ namespace SampleSubscriber
                     {
                         Name = "UInt16",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte) DataTypes.UInt16,
                         DataType = DataTypeIds.UInt16,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -248,6 +261,7 @@ namespace SampleSubscriber
                     {
                         Name = "UInt32",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte) DataTypes.UInt32,
                         DataType = DataTypeIds.UInt32,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -255,6 +269,7 @@ namespace SampleSubscriber
                     {
                         Name = "Float",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte) DataTypes.Float,
                         DataType = DataTypeIds.Float,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -262,6 +277,7 @@ namespace SampleSubscriber
                     {
                         Name = "Double",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte) DataTypes.Double,
                         DataType = DataTypeIds.Double,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -285,6 +301,7 @@ namespace SampleSubscriber
                 {
                     Name = name,
                     DataSetFieldId = new Uuid(Guid.NewGuid()),
+                    BuiltInType = (byte)DataTypes.Int32,
                     DataType = DataTypeIds.UInt32,
                     ValueRank = ValueRanks.Scalar
                 });              
@@ -356,7 +373,7 @@ namespace SampleSubscriber
             uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
-                DataSetOffset = 37,
+                DataSetOffset = 47,
                 NetworkMessageNumber = 0,
                 NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
                         | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
@@ -395,7 +412,7 @@ namespace SampleSubscriber
             uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
-                DataSetOffset = 69,
+                DataSetOffset = 79,
                 NetworkMessageNumber = 0,
                 NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
                         | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion

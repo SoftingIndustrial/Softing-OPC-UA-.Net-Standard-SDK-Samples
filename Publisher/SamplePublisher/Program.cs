@@ -41,6 +41,8 @@ namespace SamplePublisher
                 LoadTraceLogger();
 
                 string configurationFileName = "SamplePublisher.Config.xml";
+                //var config = CreateConfiguration();
+                //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
                 // Create the PubSub application
                 m_pubSubApplication = UaPubSubApplication.Create(configurationFileName);
 
@@ -130,6 +132,7 @@ namespace SamplePublisher
             pubSubConnection1.PublisherId = (UInt16)10;
             pubSubConnection1.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
+            address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.1:4840";
             pubSubConnection1.Address = new ExtensionObject(address);
 
@@ -162,7 +165,7 @@ namespace SamplePublisher
             dataSetWriter1.KeyFrameCount = 1;
             UadpDataSetWriterMessageDataType uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
-                ConfiguredSize = 22,
+                ConfiguredSize = 32,
                 DataSetOffset = 15, 
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
@@ -180,7 +183,7 @@ namespace SamplePublisher
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
                 ConfiguredSize = 32,
-                DataSetOffset = 37,
+                DataSetOffset = 47,
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
@@ -197,7 +200,7 @@ namespace SamplePublisher
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
                 ConfiguredSize = 405,
-                DataSetOffset = 69,
+                DataSetOffset = 79,
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
@@ -214,6 +217,7 @@ namespace SamplePublisher
             pubSubConnection2.PublisherId = (UInt64)20;
             pubSubConnection2.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
             address = new NetworkAddressUrlDataType();
+            address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.1:4840";
             pubSubConnection2.Address = new ExtensionObject(address);
 
@@ -298,6 +302,7 @@ namespace SamplePublisher
                     {
                         Name = "BoolToggle",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Boolean,
                         DataType = DataTypeIds.Boolean,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -305,6 +310,7 @@ namespace SamplePublisher
                     {
                         Name = "Int32",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Int32,
                         DataType = DataTypeIds.Int32,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -312,6 +318,7 @@ namespace SamplePublisher
                     {
                         Name = "Int32Fast",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Int32,
                         DataType = DataTypeIds.Int32,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -319,6 +326,7 @@ namespace SamplePublisher
                     {
                         Name = "DateTime",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Int32,
                         DataType = DataTypeIds.DateTime,
                         ValueRank = ValueRanks.Scalar
                     }
@@ -383,6 +391,7 @@ namespace SamplePublisher
                     {
                         Name = "BoolToggle",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Boolean,
                         DataType = DataTypeIds.Boolean,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -390,6 +399,7 @@ namespace SamplePublisher
                     {
                         Name = "Byte",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Byte,
                         DataType = DataTypeIds.Byte,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -397,6 +407,7 @@ namespace SamplePublisher
                     {
                         Name = "Int16",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Int16,
                         DataType = DataTypeIds.Int16,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -404,6 +415,7 @@ namespace SamplePublisher
                     {
                         Name = "Int32",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Int32,
                         DataType = DataTypeIds.Int32,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -411,6 +423,7 @@ namespace SamplePublisher
                     {
                         Name = "SByte",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.SByte,
                         DataType = DataTypeIds.SByte,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -418,6 +431,7 @@ namespace SamplePublisher
                     {
                         Name = "UInt16",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.UInt16,
                         DataType = DataTypeIds.UInt16,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -425,6 +439,7 @@ namespace SamplePublisher
                     {
                         Name = "UInt32",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                         BuiltInType = (byte)DataTypes.UInt32,
                         DataType = DataTypeIds.UInt32,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -432,6 +447,7 @@ namespace SamplePublisher
                     {
                         Name = "Float",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Float,
                         DataType = DataTypeIds.Float,
                         ValueRank = ValueRanks.Scalar
                     },
@@ -439,6 +455,7 @@ namespace SamplePublisher
                     {
                         Name = "Double",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Double,
                         DataType = DataTypeIds.Double,
                         ValueRank = ValueRanks.Scalar
                     },                    
@@ -486,6 +503,7 @@ namespace SamplePublisher
                 {
                     Name = name,
                     DataSetFieldId = new Uuid(Guid.NewGuid()),
+                    BuiltInType = (byte)DataTypes.UInt32,
                     DataType = DataTypeIds.UInt32,
                     ValueRank = ValueRanks.Scalar
                 });
