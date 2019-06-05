@@ -41,8 +41,8 @@ namespace SamplePublisher
                 LoadTraceLogger();
 
                 string configurationFileName = "SamplePublisher.Config.xml";
-                //var config = CreateConfiguration();
-                //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
+                var config = CreateConfiguration();
+                UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
                 // Create the PubSub application
                 m_pubSubApplication = UaPubSubApplication.Create(configurationFileName);
 
@@ -294,7 +294,7 @@ namespace SamplePublisher
             publishedDataSetSimple.Name = "Simple"; //name shall be unique in a configuration
             // Define  publishedDataSetSimple.DataSetMetaData
             publishedDataSetSimple.DataSetMetaData = new DataSetMetaDataType();
-            publishedDataSetSimple.DataSetMetaData.DataSetClassId = new Uuid(Guid.Empty);
+            publishedDataSetSimple.DataSetMetaData.DataSetClassId = Uuid.Empty;
             publishedDataSetSimple.DataSetMetaData.Name = publishedDataSetSimple.Name;
             publishedDataSetSimple.DataSetMetaData.Fields = new FieldMetaDataCollection()
                 {
@@ -326,11 +326,28 @@ namespace SamplePublisher
                     {
                         Name = "DateTime",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte)DataTypes.Int32,
+                        BuiltInType = (byte)DataTypes.DateTime,
                         DataType = DataTypeIds.DateTime,
                         ValueRank = ValueRanks.Scalar
-                    }
-                };
+                    },
+                    //enumeration from Opc.Ua
+                    new FieldMetaData()
+                    {
+                        Name = "NodeClass",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Enumeration,
+                        DataType = DataTypeIds.NodeClass,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    //new FieldMetaData()
+                    //{
+                    //    Name = "QualifiedName",
+                    //    DataSetFieldId = new Uuid(Guid.NewGuid()),
+                    //    BuiltInType = (byte)DataTypes.Structure,
+                    //    DataType = DataTypeIds.QualifiedName,
+                    //    ValueRank = ValueRanks.Scalar
+                    //}
+                };            
             publishedDataSetSimple.DataSetMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
             {
                 MinorVersion = 1,
@@ -360,6 +377,12 @@ namespace SamplePublisher
                         Key =  new QualifiedName("DateTime"),
                         Value = DateTime.Today
                     }
+                    ,
+                    new Opc.Ua.KeyValuePair()
+                    {
+                        Key =  new QualifiedName("QualifiedName"),
+                        Value = new QualifiedName("QualifiedNameValue")
+                    }
                 };
 
             PublishedDataItemsDataType publishedDataSetSimpleSource = new PublishedDataItemsDataType();
@@ -383,7 +406,7 @@ namespace SamplePublisher
             publishedDataSetAllTypes.Name = "AllTypes"; //name shall be unique in a configuration
             // Define  publishedDataSetAllTypes.DataSetMetaData
             publishedDataSetAllTypes.DataSetMetaData = new DataSetMetaDataType();
-            publishedDataSetAllTypes.DataSetMetaData.DataSetClassId = new Uuid(Guid.Empty);
+            publishedDataSetAllTypes.DataSetMetaData.DataSetClassId = Uuid.Empty;
             publishedDataSetAllTypes.DataSetMetaData.Name = publishedDataSetAllTypes.Name;
             publishedDataSetAllTypes.DataSetMetaData.Fields = new FieldMetaDataCollection()
                 {
@@ -484,7 +507,7 @@ namespace SamplePublisher
             publishedDataSetMassTest.Name = "MassTest"; //name shall be unique in a configuration
             // Define  publishedDataSetMassTest.DataSetMetaData
             publishedDataSetMassTest.DataSetMetaData = new DataSetMetaDataType();
-            publishedDataSetMassTest.DataSetMetaData.DataSetClassId = new Uuid(Guid.Empty);
+            publishedDataSetMassTest.DataSetMetaData.DataSetClassId = Uuid.Empty;
             publishedDataSetMassTest.DataSetMetaData.Name = publishedDataSetMassTest.Name;
             publishedDataSetMassTest.DataSetMetaData.Fields = new FieldMetaDataCollection();
             publishedDataSetMassTest.DataSetMetaData.ConfigurationVersion = new ConfigurationVersionDataType()

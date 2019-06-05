@@ -120,6 +120,7 @@ namespace SamplePublisher
             WriteFieldData("Int32", NamespaceIndexSimple, new DataValue(new Variant(0), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("Int32Fast", NamespaceIndexSimple, new DataValue(new Variant(0), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("DateTime", NamespaceIndexSimple, new DataValue(new Variant(DateTime.UtcNow), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("NodeClass", NamespaceIndexSimple, new DataValue(new Variant(NodeClass.Object), StatusCodes.Good, DateTime.UtcNow));
 
             #endregion
 
@@ -200,6 +201,15 @@ namespace SamplePublisher
                             case "DateTime":
                                 IncrementValue(variable, NamespaceIndexSimple);
                                 break;
+                            case "NodeClass":
+                                IncrementValue(variable, NamespaceIndexSimple);
+                                break;
+                                //case "QualifiedName":
+                                //    DataValue dataValue = new DataValue();
+                                //    dataValue.Value = new ExtensionObject( new QualifiedName("QualifiedName generated at:" + DateTime.UtcNow));
+                                //    // Save new incremented value to data store
+                                //    WriteFieldData(variable.Name, NamespaceIndexSimple, dataValue);                      
+                                //    break;
                         }
                     }
 
@@ -240,7 +250,7 @@ namespace SamplePublisher
 
             bool isIncremented = false;
 
-            BuiltInType expectedType = TypeInfo.GetBuiltInType(variable.DataType, null);
+            BuiltInType expectedType = TypeInfo.GetBuiltInType(variable.DataType);
             switch (expectedType)
             {
                 case BuiltInType.Boolean:
@@ -308,6 +318,11 @@ namespace SamplePublisher
                     break;
                 case BuiltInType.DateTime:
                     dataValue.Value = DateTime.UtcNow;
+                    isIncremented = true;
+                    break;
+                case (BuiltInType) DataTypes.NodeClass:
+                    uint value = (uint)((NodeClass)dataValue.Value);
+                    dataValue.Value = value == 0? NodeClass.Object: (value == 128 ? NodeClass.Unspecified : (NodeClass)(value * 2));
                     isIncremented = true;
                     break;
             }

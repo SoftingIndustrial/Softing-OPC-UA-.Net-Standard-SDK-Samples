@@ -42,8 +42,8 @@ namespace SampleSubscriber
                 LoadTraceLogger();
                 
                 string configurationFileName = "SampleSubscriber.Config.xml";
-                var config = CreateConfiguration();
-                UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
+                //var config = CreateConfiguration();
+                //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
                 // Create the PubSub application
                 using (UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
@@ -191,10 +191,19 @@ namespace SampleSubscriber
                     {
                         Name = "DateTime",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte) DataTypes.Int32,
+                        BuiltInType = (byte) DataTypes.DateTime,
                         DataType = DataTypeIds.DateTime,
                         ValueRank = ValueRanks.Scalar
-                    }
+                    }, 
+                     //enumeration from Opc.Ua
+                    new FieldMetaData()
+                    {
+                        Name = "NodeClass",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Enumeration,
+                        DataType = DataTypeIds.NodeClass,
+                        ValueRank = ValueRanks.Scalar
+                    },
                 };
             simpleMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
             {
