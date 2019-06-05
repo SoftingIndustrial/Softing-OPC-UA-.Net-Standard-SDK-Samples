@@ -50,7 +50,7 @@ namespace SamplePublisher
                     }
                 }
 
-                //var config = CreateConfiguration();
+                //var config = CreateConfigurationAllDataTypes();
                 //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
                 // Create the PubSub application
                 m_pubSubApplication = UaPubSubApplication.Create(configurationFileName);
@@ -740,6 +740,15 @@ namespace SamplePublisher
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         BuiltInType = (byte)DataTypes.Enumeration,
                         DataType = DataTypeIds.NodeClass,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    //structure data type from opc.ua
+                    new FieldMetaData()
+                    {
+                        Name = "EUInformation",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Structure,
+                        DataType = DataTypeIds.EUInformation,
                         ValueRank = ValueRanks.Scalar
                     },
                 };

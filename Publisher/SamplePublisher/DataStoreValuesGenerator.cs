@@ -134,6 +134,14 @@ namespace SamplePublisher
             WriteFieldData("Float", NamespaceIndexAllTypes, new DataValue(new Variant((float)0), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("Double", NamespaceIndexAllTypes, new DataValue(new Variant((double)0), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("NodeClass", NamespaceIndexAllTypes, new DataValue(new Variant(NodeClass.Object), StatusCodes.Good, DateTime.UtcNow));
+            var euInformation = new EUInformation()
+            {
+                Description = "Sample EuInformation. Will change UnitId",
+                DisplayName = new LocalizedText("Sample"),
+                UnitId = 1
+            };
+            WriteFieldData("EUInformation", NamespaceIndexAllTypes, new DataValue(new ExtensionObject(euInformation), StatusCodes.Good, DateTime.UtcNow));
+            
             #endregion
 
             #region DataSet 'MassTest' fill with data
@@ -198,13 +206,7 @@ namespace SamplePublisher
                                 break;
                             case "DateTime":
                                 IncrementValue(variable, NamespaceIndexSimple);
-                                break;                           
-                                //case "QualifiedName":
-                                //    DataValue dataValue = new DataValue();
-                                //    dataValue.Value = new ExtensionObject( new QualifiedName("QualifiedName generated at:" + DateTime.UtcNow));
-                                //    // Save new incremented value to data store
-                                //    WriteFieldData(variable.Name, NamespaceIndexSimple, dataValue);                      
-                                //    break;
+                                break;         
                         }
                     }
 
@@ -318,6 +320,15 @@ namespace SamplePublisher
                 case (BuiltInType) DataTypes.NodeClass:
                     uint value = (uint)((NodeClass)dataValue.Value);
                     dataValue.Value = value == 0? NodeClass.Object: (value == 128 ? NodeClass.Unspecified : (NodeClass)(value * 2));
+                    isIncremented = true;
+                    break;
+                case (BuiltInType)DataTypes.EUInformation:
+                    var extensionObject = (ExtensionObject)dataValue.Value;
+                    var euInformation = extensionObject.Body as EUInformation;
+                    if (euInformation!= null)
+                    {
+                        euInformation.UnitId = euInformation.UnitId + 1;
+                    }
                     isIncremented = true;
                     break;
             }

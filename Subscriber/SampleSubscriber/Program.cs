@@ -686,6 +686,16 @@ namespace SampleSubscriber
                         DataType = DataTypeIds.NodeClass,
                         ValueRank = ValueRanks.Scalar
                     },
+                    //structure data type from opc.ua
+                    new FieldMetaData()
+                    {
+                        Name = "EUInformation",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Structure,
+                        DataType = DataTypeIds.EUInformation,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    
             };
             allTypesMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
             {
