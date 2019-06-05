@@ -24,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="SamplePublisher.AllTypes.Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="SamplePublisher.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

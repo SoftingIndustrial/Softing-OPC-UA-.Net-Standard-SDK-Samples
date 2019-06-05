@@ -1,0 +1,543 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PubSubConfigurationDataType xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+  <PublishedDataSets>
+    <PublishedDataSetDataType>
+      <Name>AllTypes</Name>
+      <DataSetFolder />
+      <DataSetMetaData>
+        <Namespaces />
+        <StructureDataTypes />
+        <EnumDataTypes />
+        <SimpleDataTypes />
+        <Name>AllTypes</Name>
+        <Description i:nil="true" />
+        <Fields>
+          <FieldMetaData>
+            <Name>BoolToggle</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>1</BuiltInType>
+            <DataType>
+              <Identifier>i=1</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>c95d6ab7-da34-4f7b-be8b-29007f9d6e41</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>Byte</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>3</BuiltInType>
+            <DataType>
+              <Identifier>i=3</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>b067f910-1b59-419f-a9cb-ffec0198f4d3</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>Int16</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>4</BuiltInType>
+            <DataType>
+              <Identifier>i=4</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>1615c7b7-4991-499c-9f2f-82f7b374fc1c</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>Int32</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>6</BuiltInType>
+            <DataType>
+              <Identifier>i=6</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>f00fb3db-2152-45c2-860f-b78dae0f1aa0</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>SByte</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>2</BuiltInType>
+            <DataType>
+              <Identifier>i=2</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>72e83813-55c9-4f52-b14a-6e9114b24913</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>UInt16</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>5</BuiltInType>
+            <DataType>
+              <Identifier>i=5</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>93225def-8437-4121-b266-06520ad28d00</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>UInt32</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>7</BuiltInType>
+            <DataType>
+              <Identifier>i=7</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>c136680f-3d92-4cb4-bc63-7fc69af834ac</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>Float</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>10</BuiltInType>
+            <DataType>
+              <Identifier>i=10</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>b262ae4f-c00d-47d4-b223-a8f5e8afbd05</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>Double</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>11</BuiltInType>
+            <DataType>
+              <Identifier>i=11</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>070b2eb4-d740-48be-b834-59602489919c</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>NodeClass</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>29</BuiltInType>
+            <DataType>
+              <Identifier>i=257</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>57865361-c4bd-404a-8bf3-b5cb7cd71437</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+        </Fields>
+        <DataSetClassId>
+          <String>00000000-0000-0000-0000-000000000000</String>
+        </DataSetClassId>
+        <ConfigurationVersion>
+          <MajorVersion>1</MajorVersion>
+          <MinorVersion>1</MinorVersion>
+        </ConfigurationVersion>
+      </DataSetMetaData>
+      <ExtensionFields />
+      <DataSetSource>
+        <TypeId>
+          <Identifier>i=15953</Identifier>
+        </TypeId>
+        <Body>
+          <PublishedDataItemsDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+            <PublishedData>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=BoolToggle</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=Byte</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=Int16</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=Int32</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=SByte</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=UInt16</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=UInt32</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=Float</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=Double</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=NodeClass</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+            </PublishedData>
+          </PublishedDataItemsDataType>
+        </Body>
+      </DataSetSource>
+    </PublishedDataSetDataType>
+  </PublishedDataSets>
+  <Connections>
+    <PubSubConnectionDataType>
+      <Name>UADPConection1</Name>
+      <Enabled>true</Enabled>
+      <PublisherId>
+        <Value>
+          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">11</UInt16>
+        </Value>
+      </PublisherId>
+      <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp</TransportProfileUri>
+      <Address>
+        <TypeId>
+          <Identifier>i=21176</Identifier>
+        </TypeId>
+        <Body>
+          <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+            <NetworkInterface>Ethernet</NetworkInterface>
+            <Url>opc.udp://239.0.0.1:4840</Url>
+          </NetworkAddressUrlDataType>
+        </Body>
+      </Address>
+      <ConnectionProperties />
+      <TransportSettings i:nil="true" />
+      <WriterGroups>
+        <WriterGroupDataType>
+          <Name i:nil="true" />
+          <Enabled>true</Enabled>
+          <SecurityMode>Invalid_0</SecurityMode>
+          <SecurityGroupId i:nil="true" />
+          <SecurityKeyServices />
+          <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
+          <GroupProperties />
+          <WriterGroupId>1</WriterGroupId>
+          <PublishingInterval>5000</PublishingInterval>
+          <KeepAliveTime>5000</KeepAliveTime>
+          <Priority>0</Priority>
+          <LocaleIds />
+          <HeaderLayoutUri>UADP-Cyclic-Fixed</HeaderLayoutUri>
+          <TransportSettings>
+            <TypeId>
+              <Identifier>i=21179</Identifier>
+            </TypeId>
+            <Body>
+              <DatagramWriterGroupTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                <MessageRepeatCount>0</MessageRepeatCount>
+                <MessageRepeatDelay>0</MessageRepeatDelay>
+              </DatagramWriterGroupTransportDataType>
+            </Body>
+          </TransportSettings>
+          <MessageSettings>
+            <TypeId>
+              <Identifier>i=16014</Identifier>
+            </TypeId>
+            <Body>
+              <UadpWriterGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                <GroupVersion>0</GroupVersion>
+                <DataSetOrdering>AscendingWriterId_1</DataSetOrdering>
+                <NetworkMessageContentMask>63</NetworkMessageContentMask>
+                <SamplingOffset>0</SamplingOffset>
+                <PublishingOffset />
+              </UadpWriterGroupMessageDataType>
+            </Body>
+          </MessageSettings>
+          <DataSetWriters>
+            <DataSetWriterDataType>
+              <Name i:nil="true" />
+              <Enabled>true</Enabled>
+              <DataSetWriterId>1</DataSetWriterId>
+              <DataSetFieldContentMask>32</DataSetFieldContentMask>
+              <KeyFrameCount>1</KeyFrameCount>
+              <DataSetName>AllTypes</DataSetName>
+              <DataSetWriterProperties />
+              <TransportSettings i:nil="true" />
+              <MessageSettings>
+                <TypeId>
+                  <Identifier>i=16015</Identifier>
+                </TypeId>
+                <Body>
+                  <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
+                    <ConfiguredSize>0</ConfiguredSize>
+                    <NetworkMessageNumber>1</NetworkMessageNumber>
+                    <DataSetOffset>15</DataSetOffset>
+                  </UadpDataSetWriterMessageDataType>
+                </Body>
+              </MessageSettings>
+            </DataSetWriterDataType>
+          </DataSetWriters>
+        </WriterGroupDataType>
+      </WriterGroups>
+      <ReaderGroups />
+    </PubSubConnectionDataType>
+    <PubSubConnectionDataType>
+      <Name>UADPConection2</Name>
+      <Enabled>true</Enabled>
+      <PublisherId>
+        <Value>
+          <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">21</UInt64>
+        </Value>
+      </PublisherId>
+      <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp</TransportProfileUri>
+      <Address>
+        <TypeId>
+          <Identifier>i=21176</Identifier>
+        </TypeId>
+        <Body>
+          <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+            <NetworkInterface>Ethernet</NetworkInterface>
+            <Url>opc.udp://239.0.0.1:4840</Url>
+          </NetworkAddressUrlDataType>
+        </Body>
+      </Address>
+      <ConnectionProperties />
+      <TransportSettings i:nil="true" />
+      <WriterGroups>
+        <WriterGroupDataType>
+          <Name i:nil="true" />
+          <Enabled>true</Enabled>
+          <SecurityMode>Invalid_0</SecurityMode>
+          <SecurityGroupId i:nil="true" />
+          <SecurityKeyServices />
+          <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
+          <GroupProperties />
+          <WriterGroupId>2</WriterGroupId>
+          <PublishingInterval>5000</PublishingInterval>
+          <KeepAliveTime>5000</KeepAliveTime>
+          <Priority>0</Priority>
+          <LocaleIds />
+          <HeaderLayoutUri>UADP-Dynamic</HeaderLayoutUri>
+          <TransportSettings>
+            <TypeId>
+              <Identifier>i=21179</Identifier>
+            </TypeId>
+            <Body>
+              <DatagramWriterGroupTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                <MessageRepeatCount>0</MessageRepeatCount>
+                <MessageRepeatDelay>0</MessageRepeatDelay>
+              </DatagramWriterGroupTransportDataType>
+            </Body>
+          </TransportSettings>
+          <MessageSettings>
+            <TypeId>
+              <Identifier>i=16014</Identifier>
+            </TypeId>
+            <Body>
+              <UadpWriterGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                <GroupVersion>0</GroupVersion>
+                <DataSetOrdering>Undefined_0</DataSetOrdering>
+                <NetworkMessageContentMask>65</NetworkMessageContentMask>
+                <SamplingOffset>0</SamplingOffset>
+                <PublishingOffset />
+              </UadpWriterGroupMessageDataType>
+            </Body>
+          </MessageSettings>
+          <DataSetWriters>
+            <DataSetWriterDataType>
+              <Name i:nil="true" />
+              <Enabled>true</Enabled>
+              <DataSetWriterId>11</DataSetWriterId>
+              <DataSetFieldContentMask>0</DataSetFieldContentMask>
+              <KeyFrameCount>1</KeyFrameCount>
+              <DataSetName>AllTypes</DataSetName>
+              <DataSetWriterProperties />
+              <TransportSettings i:nil="true" />
+              <MessageSettings>
+                <TypeId>
+                  <Identifier>i=16015</Identifier>
+                </TypeId>
+                <Body>
+                  <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <DataSetMessageContentMask>53</DataSetMessageContentMask>
+                    <ConfiguredSize>0</ConfiguredSize>
+                    <NetworkMessageNumber>0</NetworkMessageNumber>
+                    <DataSetOffset>0</DataSetOffset>
+                  </UadpDataSetWriterMessageDataType>
+                </Body>
+              </MessageSettings>
+            </DataSetWriterDataType>
+          </DataSetWriters>
+        </WriterGroupDataType>
+      </WriterGroups>
+      <ReaderGroups />
+    </PubSubConnectionDataType>
+  </Connections>
+  <Enabled>true</Enabled>
+</PubSubConfigurationDataType>

@@ -41,8 +41,17 @@ namespace SamplePublisher
                 LoadTraceLogger();
 
                 string configurationFileName = "SamplePublisher.Config.xml";
-                var config = CreateConfiguration();
-                UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
+                string[] commandLineArguments = Environment.GetCommandLineArgs();
+                if (commandLineArguments.Length > 1)
+                {
+                    if (File.Exists(commandLineArguments[1]))
+                    {
+                        configurationFileName = commandLineArguments[1];
+                    }
+                }
+
+                //var config = CreateConfiguration();
+                //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
                 // Create the PubSub application
                 m_pubSubApplication = UaPubSubApplication.Create(configurationFileName);
 
@@ -329,24 +338,7 @@ namespace SamplePublisher
                         BuiltInType = (byte)DataTypes.DateTime,
                         DataType = DataTypeIds.DateTime,
                         ValueRank = ValueRanks.Scalar
-                    },
-                    //enumeration from Opc.Ua
-                    new FieldMetaData()
-                    {
-                        Name = "NodeClass",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte)DataTypes.Enumeration,
-                        DataType = DataTypeIds.NodeClass,
-                        ValueRank = ValueRanks.Scalar
-                    },
-                    //new FieldMetaData()
-                    //{
-                    //    Name = "QualifiedName",
-                    //    DataSetFieldId = new Uuid(Guid.NewGuid()),
-                    //    BuiltInType = (byte)DataTypes.Structure,
-                    //    DataType = DataTypeIds.QualifiedName,
-                    //    ValueRank = ValueRanks.Scalar
-                    //}
+                    },                    
                 };            
             publishedDataSetSimple.DataSetMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
             {
@@ -554,6 +546,237 @@ namespace SamplePublisher
 
             return pubSubConfiguration;
         }
+
+        /// <summary>
+        /// Create a PubSubConfigurationDataType object programmatically for a dataset with all datatypes
+        /// </summary>
+        /// <returns></returns>
+        public static PubSubConfigurationDataType CreateConfigurationAllDataTypes()
+        {
+            // Define a PubSub connection with PublisherId 10
+            PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
+            pubSubConnection1.Name = "UADPConection1";
+            pubSubConnection1.Enabled = true;
+            pubSubConnection1.PublisherId = (UInt16)11;
+            pubSubConnection1.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
+            NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
+            address.NetworkInterface = "Ethernet";
+            address.Url = "opc.udp://239.0.0.1:4840";
+            pubSubConnection1.Address = new ExtensionObject(address);
+
+            #region Define WriterGroup1
+            WriterGroupDataType writerGroup1 = new WriterGroupDataType();
+            writerGroup1.Enabled = true;
+            writerGroup1.WriterGroupId = 1;
+            writerGroup1.PublishingInterval = 5000;
+            writerGroup1.KeepAliveTime = 5000;
+            writerGroup1.MaxNetworkMessageSize = 1500;
+            writerGroup1.HeaderLayoutUri = "UADP-Cyclic-Fixed";
+            UadpWriterGroupMessageDataType messageSettings = new UadpWriterGroupMessageDataType()
+            {
+                DataSetOrdering = DataSetOrderingType.AscendingWriterId,
+                GroupVersion = 0,
+                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
+                        | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
+                        | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber)
+            };
+
+            writerGroup1.MessageSettings = new ExtensionObject(messageSettings);
+            writerGroup1.TransportSettings = new ExtensionObject(new DatagramWriterGroupTransportDataType());
+
+            // Define DataSetWriter 'Simple'
+            DataSetWriterDataType dataSetWriter1 = new DataSetWriterDataType();
+            dataSetWriter1.DataSetWriterId = 1;
+            dataSetWriter1.Enabled = true;
+            dataSetWriter1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetWriter1.DataSetName = "AllTypes";
+            dataSetWriter1.KeyFrameCount = 1;
+            UadpDataSetWriterMessageDataType uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
+            {
+                ConfiguredSize = 0,
+                DataSetOffset = 15,
+                NetworkMessageNumber = 1,
+                DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
+            };
+            dataSetWriter1.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+            writerGroup1.DataSetWriters.Add(dataSetWriter1);
+
+            pubSubConnection1.WriterGroups.Add(writerGroup1);
+            #endregion
+
+            // Define a PubSub connection with PublisherId 10
+            PubSubConnectionDataType pubSubConnection2 = new PubSubConnectionDataType();
+            pubSubConnection2.Name = "UADPConection2";
+            pubSubConnection2.Enabled = true;
+            pubSubConnection2.PublisherId = (UInt64)21;
+            pubSubConnection2.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
+            address = new NetworkAddressUrlDataType();
+            address.NetworkInterface = "Ethernet";
+            address.Url = "opc.udp://239.0.0.1:4840";
+            pubSubConnection2.Address = new ExtensionObject(address);
+
+            #region Define WriterGroup2
+            WriterGroupDataType writerGroup2 = new WriterGroupDataType();
+            writerGroup2.Enabled = true;
+            writerGroup2.WriterGroupId = 2;
+            writerGroup2.PublishingInterval = 5000;
+            writerGroup2.KeepAliveTime = 5000;
+            writerGroup2.MaxNetworkMessageSize = 1500;
+            writerGroup2.HeaderLayoutUri = "UADP-Dynamic";
+            messageSettings = new UadpWriterGroupMessageDataType()
+            {
+                DataSetOrdering = DataSetOrderingType.Undefined,
+                GroupVersion = 0,
+                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.PayloadHeader)
+            };
+
+            writerGroup2.MessageSettings = new ExtensionObject(messageSettings);
+            writerGroup2.TransportSettings = new ExtensionObject(new DatagramWriterGroupTransportDataType());
+
+            // Define DataSetWriter 'AllTypes'
+            DataSetWriterDataType dataSetWriter11 = new DataSetWriterDataType();
+            dataSetWriter11.DataSetWriterId = 11;
+            dataSetWriter11.Enabled = true;
+            dataSetWriter11.DataSetFieldContentMask = (uint)DataSetFieldContentMask.None; //Variant encoding
+            dataSetWriter11.DataSetName = "AllTypes";
+            dataSetWriter11.KeyFrameCount = 1;
+            uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
+            {
+                //DataValue Encoding
+                DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Timestamp | UadpDataSetMessageContentMask.Status
+                        | UadpDataSetMessageContentMask.MinorVersion | UadpDataSetMessageContentMask.SequenceNumber),
+            };
+            dataSetWriter11.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+            writerGroup2.DataSetWriters.Add(dataSetWriter11);
+            
+            pubSubConnection2.WriterGroups.Add(writerGroup2);
+            #endregion                        
+
+            #region  Define PublishedDataSet AllTypes
+            PublishedDataSetDataType publishedDataSetAllTypes = new PublishedDataSetDataType();
+            publishedDataSetAllTypes.Name = "AllTypes"; //name shall be unique in a configuration
+            // Define  publishedDataSetAllTypes.DataSetMetaData
+            publishedDataSetAllTypes.DataSetMetaData = new DataSetMetaDataType();
+            publishedDataSetAllTypes.DataSetMetaData.DataSetClassId = Uuid.Empty;
+            publishedDataSetAllTypes.DataSetMetaData.Name = publishedDataSetAllTypes.Name;
+            publishedDataSetAllTypes.DataSetMetaData.Fields = new FieldMetaDataCollection()
+                {
+                    new FieldMetaData()
+                    {
+                        Name = "BoolToggle",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Boolean,
+                        DataType = DataTypeIds.Boolean,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "Byte",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Byte,
+                        DataType = DataTypeIds.Byte,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "Int16",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Int16,
+                        DataType = DataTypeIds.Int16,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "Int32",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Int32,
+                        DataType = DataTypeIds.Int32,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "SByte",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.SByte,
+                        DataType = DataTypeIds.SByte,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "UInt16",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.UInt16,
+                        DataType = DataTypeIds.UInt16,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "UInt32",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                         BuiltInType = (byte)DataTypes.UInt32,
+                        DataType = DataTypeIds.UInt32,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "Float",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Float,
+                        DataType = DataTypeIds.Float,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "Double",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Double,
+                        DataType = DataTypeIds.Double,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                     //enumeration from Opc.Ua
+                    new FieldMetaData()
+                    {
+                        Name = "NodeClass",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Enumeration,
+                        DataType = DataTypeIds.NodeClass,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                };
+            publishedDataSetAllTypes.DataSetMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
+            {
+                MinorVersion = 1,
+                MajorVersion = 1
+            };
+            PublishedDataItemsDataType publishedDataSetAllTypesSource = new PublishedDataItemsDataType();
+            //create PublishedData based on metadata names
+            foreach (var field in publishedDataSetAllTypes.DataSetMetaData.Fields)
+            {
+                publishedDataSetAllTypesSource.PublishedData.Add(
+                    new PublishedVariableDataType()
+                    {
+                        PublishedVariable = new NodeId(field.Name, DataStoreValuesGenerator.NamespaceIndexAllTypes),
+                        AttributeId = Attributes.Value,
+                    });
+            }
+            publishedDataSetAllTypes.DataSetSource = new ExtensionObject(publishedDataSetAllTypesSource);
+            #endregion
+
+            //create  pub sub configuration root object
+            PubSubConfigurationDataType pubSubConfiguration = new PubSubConfigurationDataType();
+            pubSubConfiguration.Connections = new PubSubConnectionDataTypeCollection()
+                {
+                    pubSubConnection1, pubSubConnection2
+                };
+            pubSubConfiguration.PublishedDataSets = new PublishedDataSetDataTypeCollection()
+                {
+                    publishedDataSetAllTypes
+                };
+
+            return pubSubConfiguration;
+        }
+
+
         #endregion
 
         #region Private Methods

@@ -24,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="SampleSubscriber.AllTypes.Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="SampleSubscriber.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

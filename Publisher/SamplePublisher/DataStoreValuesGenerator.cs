@@ -120,8 +120,6 @@ namespace SamplePublisher
             WriteFieldData("Int32", NamespaceIndexSimple, new DataValue(new Variant(0), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("Int32Fast", NamespaceIndexSimple, new DataValue(new Variant(0), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("DateTime", NamespaceIndexSimple, new DataValue(new Variant(DateTime.UtcNow), StatusCodes.Good, DateTime.UtcNow));
-            WriteFieldData("NodeClass", NamespaceIndexSimple, new DataValue(new Variant(NodeClass.Object), StatusCodes.Good, DateTime.UtcNow));
-
             #endregion
 
             #region DataSet 'AllTypes' fill with data
@@ -135,7 +133,7 @@ namespace SamplePublisher
             WriteFieldData("UInt32", NamespaceIndexAllTypes, new DataValue(new Variant((UInt32)0), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("Float", NamespaceIndexAllTypes, new DataValue(new Variant((float)0), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("Double", NamespaceIndexAllTypes, new DataValue(new Variant((double)0), StatusCodes.Good, DateTime.UtcNow));
-
+            WriteFieldData("NodeClass", NamespaceIndexAllTypes, new DataValue(new Variant(NodeClass.Object), StatusCodes.Good, DateTime.UtcNow));
             #endregion
 
             #region DataSet 'MassTest' fill with data
@@ -200,10 +198,7 @@ namespace SamplePublisher
                                 break;
                             case "DateTime":
                                 IncrementValue(variable, NamespaceIndexSimple);
-                                break;
-                            case "NodeClass":
-                                IncrementValue(variable, NamespaceIndexSimple);
-                                break;
+                                break;                           
                                 //case "QualifiedName":
                                 //    DataValue dataValue = new DataValue();
                                 //    dataValue.Value = new ExtensionObject( new QualifiedName("QualifiedName generated at:" + DateTime.UtcNow));
