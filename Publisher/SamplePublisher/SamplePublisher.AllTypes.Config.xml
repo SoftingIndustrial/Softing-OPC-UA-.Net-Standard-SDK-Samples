@@ -210,11 +210,11 @@
             <FieldFlags>0</FieldFlags>
             <BuiltInType>12</BuiltInType>
             <DataType>
-              <Identifier>i=11</Identifier>
+              <Identifier>i=12</Identifier>
             </DataType>
             <ValueRank>-1</ValueRank>
             <ArrayDimensions />
-            <MaxStringLength>0</MaxStringLength>
+            <MaxStringLength>5</MaxStringLength>
             <DataSetFieldId>
               <String>a498d921-fc52-4636-a2d4-cfcca395da78</String>
             </DataSetFieldId>
@@ -226,11 +226,11 @@
             <FieldFlags>0</FieldFlags>
             <BuiltInType>15</BuiltInType>
             <DataType>
-              <Identifier>i=11</Identifier>
+              <Identifier>i=15</Identifier>
             </DataType>
             <ValueRank>-1</ValueRank>
             <ArrayDimensions />
-            <MaxStringLength>0</MaxStringLength>
+            <MaxStringLength>3</MaxStringLength>
             <DataSetFieldId>
               <String>5cfd765f-503b-4ad8-9cf7-9fd6aa691c55</String>
             </DataSetFieldId>
