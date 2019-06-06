@@ -24,7 +24,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>e82380dd-bf1d-4106-bdda-75913d461cfc</String>
+              <String>0393230b-7a12-464a-bc8e-3c9ebb44ffed</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -40,7 +40,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>328f62f6-b326-4c00-89a0-f20fda8999b9</String>
+              <String>e7435ca3-7b91-4611-ab63-93bc6df01624</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -56,7 +56,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>9b0f8a7b-6bef-4876-9452-587e9e5f52e2</String>
+              <String>6bb83c5c-882e-48ce-9a06-6376685ad971</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -72,7 +72,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>036ff44e-0999-4288-849c-59eee24fe19d</String>
+              <String>6214f9a7-d1f7-4529-bad2-2e358892fba4</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -88,7 +88,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>5fbb3964-1409-460e-8efa-51f46250635d</String>
+              <String>f4b254b4-5984-4e6d-92d6-52ade2f18b26</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -104,7 +104,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>eeedac31-9f26-4c6c-9171-3245d15d644f</String>
+              <String>a22d186a-6eba-4c5a-96be-accf9e446c63</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -120,7 +120,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>b38e0db9-7859-4267-aa41-b616fc5df022</String>
+              <String>831b54bd-5faa-4174-a37a-9a4728af1ed4</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -136,7 +136,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>6ee18b20-2334-4502-8bdf-ec4dddc06272</String>
+              <String>556c983c-32ba-417e-8f5a-438ada1f3fd8</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -152,7 +152,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>d67e04c9-1243-4028-80c4-88d52fd4208d</String>
+              <String>e7751572-9fc1-46b4-9467-33b40b04c48c</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -168,7 +168,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>6861568f-8090-4b95-abec-d6ee5d3f9524</String>
+              <String>613aabba-9177-4a5c-a9dc-848d50700cca</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -184,7 +184,23 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>cee63c53-4b0f-45dd-9a84-ef8fb7ae3e5c</String>
+              <String>5ce5951c-35a4-4045-b795-3f37c20497e9</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>Time</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>12</BuiltInType>
+            <DataType>
+              <Identifier>i=292</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>831c9a97-c1fb-4da0-ae7a-93cb312e82fe</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -194,13 +210,13 @@
             <FieldFlags>0</FieldFlags>
             <BuiltInType>12</BuiltInType>
             <DataType>
-              <Identifier>i=12</Identifier>
+              <Identifier>i=11</Identifier>
             </DataType>
             <ValueRank>-1</ValueRank>
             <ArrayDimensions />
-            <MaxStringLength>5</MaxStringLength>
+            <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>9b0f8a7b-6bef-4876-9452-587e9e5f52e2</String>
+              <String>a498d921-fc52-4636-a2d4-cfcca395da78</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -210,13 +226,13 @@
             <FieldFlags>0</FieldFlags>
             <BuiltInType>15</BuiltInType>
             <DataType>
-              <Identifier>i=15</Identifier>
+              <Identifier>i=11</Identifier>
             </DataType>
             <ValueRank>-1</ValueRank>
             <ArrayDimensions />
-            <MaxStringLength>3</MaxStringLength>
+            <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>9b0f8a7b-6bef-4876-9452-587e9e5f52e2</String>
+              <String>5cfd765f-503b-4ad8-9cf7-9fd6aa691c55</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -400,6 +416,22 @@
               <PublishedVariableDataType>
                 <PublishedVariable>
                   <Identifier>ns=3;s=EUInformation</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=Time</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>

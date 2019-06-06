@@ -134,6 +134,7 @@ namespace SamplePublisher
             WriteFieldData("Float", NamespaceIndexAllTypes, new DataValue(new Variant((float)0), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("Double", NamespaceIndexAllTypes, new DataValue(new Variant((double)0), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("NodeClass", NamespaceIndexAllTypes, new DataValue(new Variant(NodeClass.Object), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("Time", NamespaceIndexAllTypes, new DataValue(new Variant(DateTime.UtcNow.ToString("HH:mm")), StatusCodes.Good, DateTime.UtcNow));
             var euInformation = new EUInformation()
             {
                 Description = "Sample EuInformation. Will change UnitId",
@@ -317,6 +318,10 @@ namespace SamplePublisher
                     break;
                 case BuiltInType.DateTime:
                     dataValue.Value = DateTime.UtcNow;
+                    isIncremented = true;
+                    break;
+                case (BuiltInType) DataTypes.Time:
+                    dataValue.Value = DateTime.UtcNow.ToString("HH:mm");
                     isIncremented = true;
                     break;
                 case (BuiltInType) DataTypes.NodeClass:

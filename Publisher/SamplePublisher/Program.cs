@@ -751,6 +751,15 @@ namespace SamplePublisher
                         DataType = DataTypeIds.EUInformation,
                         ValueRank = ValueRanks.Scalar
                     },
+                    //DataTypes derived from built-in types have
+                    new FieldMetaData()
+                    {
+                        Name = "Time",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.String,
+                        DataType = DataTypeIds.Time,
+                        ValueRank = ValueRanks.Scalar
+                    },
                     new FieldMetaData()
                     {
                         Name = "String",

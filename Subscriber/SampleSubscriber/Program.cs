@@ -29,6 +29,7 @@ namespace SampleSubscriber
         public const ushort NamespaceIndexSimple = 2;
         public const ushort NamespaceIndexAllTypes = 3;
         public const ushort NamespaceIndexMassTest = 4;
+        private const int MaximumNumberOfFieldsDisplayed = 20;
         private static object m_lock = new object();
         #endregion
 
@@ -131,12 +132,12 @@ namespace SampleSubscriber
                 int index = 0;
                 foreach (DataSet dataSet in e.DataSets)
                 {
-                    Console.WriteLine("\tDataSet {0}, Name={1}, DataSetWriterId={2}", index++, dataSet.Name, dataSet.DataSetWriterId);
+                    Console.WriteLine("\tDataSet.Name={0}, DataSetWriterId={1}", dataSet.Name, dataSet.DataSetWriterId);
                     for (int i = 0; i < dataSet.Fields.Length; i++)
                     {
                         Console.WriteLine("\t\tTargetNodeId:{0}, Attribute:{1}, Value:{2}",
                             dataSet.Fields[i].TargetNodeId, dataSet.Fields[i].TargetAttribute, dataSet.Fields[i].Value);
-                        if (i > 10)
+                        if (i > MaximumNumberOfFieldsDisplayed)
                         {
                             Console.WriteLine("\t\t... the rest of {0} elements are ommited.", dataSet.Fields.Length - i);
                             break;
@@ -695,7 +696,16 @@ namespace SampleSubscriber
                         DataType = DataTypeIds.EUInformation,
                         ValueRank = ValueRanks.Scalar
                     },
-                    
+                    //DataTypes derived from built-in types have
+                    new FieldMetaData()
+                    {
+                        Name = "Time",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.String,
+                        DataType = DataTypeIds.Time,
+                        ValueRank = ValueRanks.Scalar
+                    },
+
             };
             allTypesMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
             {
