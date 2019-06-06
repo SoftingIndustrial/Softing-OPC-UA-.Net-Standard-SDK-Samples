@@ -141,7 +141,9 @@ namespace SamplePublisher
                 UnitId = 1
             };
             WriteFieldData("EUInformation", NamespaceIndexAllTypes, new DataValue(new ExtensionObject(euInformation), StatusCodes.Good, DateTime.UtcNow));
-            
+            WriteFieldData("String", NamespaceIndexAllTypes, new DataValue(new Variant(""), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("ByteString", NamespaceIndexAllTypes, new DataValue(new Variant(new byte[1]{0}), StatusCodes.Good, DateTime.UtcNow));
+
             #endregion
 
             #region DataSet 'MassTest' fill with data
@@ -329,6 +331,14 @@ namespace SamplePublisher
                     {
                         euInformation.UnitId = euInformation.UnitId + 1;
                     }
+                    isIncremented = true;
+                    break;
+                case BuiltInType.String:
+                    dataValue.Value = "Hello World";
+                    isIncremented = true;
+                    break;
+                case BuiltInType.ByteString:
+                    dataValue.Value = new byte[10] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
                     isIncremented = true;
                     break;
             }

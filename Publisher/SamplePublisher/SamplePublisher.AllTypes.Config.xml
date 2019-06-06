@@ -188,6 +188,38 @@
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
+          <FieldMetaData>
+            <Name>String</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>12</BuiltInType>
+            <DataType>
+              <Identifier>i=12</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>5</MaxStringLength>
+            <DataSetFieldId>
+              <String>9b0f8a7b-6bef-4876-9452-587e9e5f52e2</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>ByteString</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>15</BuiltInType>
+            <DataType>
+              <Identifier>i=15</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>3</MaxStringLength>
+            <DataSetFieldId>
+              <String>9b0f8a7b-6bef-4876-9452-587e9e5f52e2</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
         </Fields>
         <DataSetClassId>
           <String>00000000-0000-0000-0000-000000000000</String>
@@ -368,6 +400,38 @@
               <PublishedVariableDataType>
                 <PublishedVariable>
                   <Identifier>ns=3;s=EUInformation</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=String</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=ByteString</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>

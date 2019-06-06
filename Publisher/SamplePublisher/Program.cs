@@ -751,6 +751,22 @@ namespace SamplePublisher
                         DataType = DataTypeIds.EUInformation,
                         ValueRank = ValueRanks.Scalar
                     },
+                    new FieldMetaData()
+                    {
+                        Name = "String",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.String,
+                        DataType = DataTypeIds.Double,
+                        ValueRank = ValueRanks.Scalar
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "ByteString",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.ByteString,
+                        DataType = DataTypeIds.Double,
+                        ValueRank = ValueRanks.Scalar
+                    },
                 };
             publishedDataSetAllTypes.DataSetMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
             {
