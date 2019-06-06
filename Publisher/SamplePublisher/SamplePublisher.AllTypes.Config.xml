@@ -236,6 +236,22 @@
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
+          <FieldMetaData>
+            <Name>StringOneDimension</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>12</BuiltInType>
+            <DataType>
+              <Identifier>i=12</Identifier>
+            </DataType>
+            <ValueRank>1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>14</MaxStringLength>
+            <DataSetFieldId>
+              <String>a498d921-fc52-4636-a2d4-cfcca395da78</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
         </Fields>
         <DataSetClassId>
           <String>00000000-0000-0000-0000-000000000000</String>
@@ -464,6 +480,22 @@
               <PublishedVariableDataType>
                 <PublishedVariable>
                   <Identifier>ns=3;s=ByteString</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=StringOneDimension</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>

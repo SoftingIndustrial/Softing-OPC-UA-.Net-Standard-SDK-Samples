@@ -293,6 +293,22 @@
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
+                  <FieldMetaData>
+                    <Name>StringOneDimension</Name>
+                    <Description i:nil="true" />
+                    <FieldFlags>0</FieldFlags>
+                    <BuiltInType>12</BuiltInType>
+                    <DataType>
+                      <Identifier>i=12</Identifier>
+                    </DataType>
+                    <ValueRank>1</ValueRank>
+                    <ArrayDimensions />
+                    <MaxStringLength>14</MaxStringLength>
+                    <DataSetFieldId>
+                      <String>a498d921-fc52-4636-a2d4-cfcca395da78</String>
+                    </DataSetFieldId>
+                    <Properties />
+                  </FieldMetaData>
                 </Fields>
                 <DataSetClassId>
                   <String>00000000-0000-0000-0000-000000000000</String>
@@ -566,6 +582,23 @@
                         <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
                         <TargetNodeId>
                           <Identifier>ns=3;s=ByteString</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Null />
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>ffb9f94a-2b8d-4e50-8e91-209c12faed0a</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=3;s=StringOneDimension</Identifier>
                         </TargetNodeId>
                         <AttributeId>13</AttributeId>
                         <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />

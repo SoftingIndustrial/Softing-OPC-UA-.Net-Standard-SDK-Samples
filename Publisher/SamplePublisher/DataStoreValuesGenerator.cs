@@ -144,7 +144,8 @@ namespace SamplePublisher
             WriteFieldData("EUInformation", NamespaceIndexAllTypes, new DataValue(new ExtensionObject(euInformation), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("String", NamespaceIndexAllTypes, new DataValue(new Variant(""), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("ByteString", NamespaceIndexAllTypes, new DataValue(new Variant(new byte[1]{0}), StatusCodes.Good, DateTime.UtcNow));
-
+            WriteFieldData("StringOneDimension", NamespaceIndexAllTypes, new DataValue(new Variant(new string[1] {""}), StatusCodes.Good, DateTime.UtcNow));
+            
             #endregion
 
             #region DataSet 'MassTest' fill with data
@@ -339,7 +340,16 @@ namespace SamplePublisher
                     isIncremented = true;
                     break;
                 case BuiltInType.String:
-                    dataValue.Value = "Hello World";
+                    switch (variable.ValueRank)
+                    {
+                        case ValueRanks.Scalar:
+                            dataValue.Value = "Hello World";
+                            break;
+                        case ValueRanks.OneDimension:
+                            dataValue.Value = new string[1] {"One dimension sample!"};
+                            break;
+                    }
+
                     isIncremented = true;
                     break;
                 case BuiltInType.ByteString:
