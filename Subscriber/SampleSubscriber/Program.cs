@@ -705,6 +705,24 @@ namespace SampleSubscriber
                         DataType = DataTypeIds.Time,
                         ValueRank = ValueRanks.Scalar
                     },
+                    new FieldMetaData()
+                    {
+                        Name = "String",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.String,
+                        DataType = DataTypeIds.String,
+                        ValueRank = ValueRanks.Scalar,
+                        MaxStringLength = 5,
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "ByteString",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.ByteString,
+                        DataType = DataTypeIds.ByteString,
+                        ValueRank = ValueRanks.Scalar,
+                        MaxStringLength = 3,
+                    },
 
             };
             allTypesMetaData.ConfigurationVersion = new ConfigurationVersionDataType()

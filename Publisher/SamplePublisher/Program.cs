@@ -765,16 +765,18 @@ namespace SamplePublisher
                         Name = "String",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         BuiltInType = (byte)DataTypes.String,
-                        DataType = DataTypeIds.Double,
-                        ValueRank = ValueRanks.Scalar
+                        DataType = DataTypeIds.String,
+                        ValueRank = ValueRanks.Scalar, 
+                        MaxStringLength = 5, 
                     },
                     new FieldMetaData()
                     {
                         Name = "ByteString",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         BuiltInType = (byte)DataTypes.ByteString,
-                        DataType = DataTypeIds.Double,
-                        ValueRank = ValueRanks.Scalar
+                        DataType = DataTypeIds.ByteString,
+                        ValueRank = ValueRanks.Scalar,
+                        MaxStringLength = 3, 
                     },
                 };
             publishedDataSetAllTypes.DataSetMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
