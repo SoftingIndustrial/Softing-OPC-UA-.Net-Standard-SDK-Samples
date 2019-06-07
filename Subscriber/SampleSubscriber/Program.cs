@@ -41,7 +41,7 @@ namespace SampleSubscriber
             try
             {
                 LoadTraceLogger();
-                
+
                 string configurationFileName = "SampleSubscriber.Config.xml";
 
                 string[] commandLineArguments = Environment.GetCommandLineArgs();
@@ -52,8 +52,10 @@ namespace SampleSubscriber
                         configurationFileName = commandLineArguments[1];
                     }
                 }
+                
                 //var config = CreateConfigurationAllDataTypes();
                 //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
+                
                 // Create the PubSub application
                 using (UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
@@ -132,7 +134,7 @@ namespace SampleSubscriber
                 int index = 0;
                 foreach (DataSet dataSet in e.DataSets)
                 {
-                    Console.WriteLine("\tDataSet.Name={0}, DataSetWriterId={1}, DataSet.SequenceNumber={2}", dataSet.Name, dataSet.DataSetWriterId, dataSet.SequenceNumber);
+                    Console.WriteLine("\tDataSet.Name={0}, DataSetWriterId={1}", dataSet.Name, dataSet.DataSetWriterId);
                     for (int i = 0; i < dataSet.Fields.Length; i++)
                     {
                         Console.WriteLine("\t\tTargetNodeId:{0}, Attribute:{1}, Value:{2}",
@@ -716,6 +718,15 @@ namespace SampleSubscriber
                     },
                     new FieldMetaData()
                     {
+                        Name = "StringOneDimension",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.String,
+                        DataType = DataTypeIds.String,
+                        ValueRank = ValueRanks.Scalar,
+                        MaxStringLength = 14,
+                    },
+                    new FieldMetaData()
+                    {
                         Name = "ByteString",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         BuiltInType = (byte)DataTypes.ByteString,
@@ -723,7 +734,15 @@ namespace SampleSubscriber
                         ValueRank = ValueRanks.Scalar,
                         MaxStringLength = 3,
                     },
-
+                    new FieldMetaData()
+                    {
+                        Name = "ByteStringOneDimension",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.ByteString,
+                        DataType = DataTypeIds.ByteString,
+                        ValueRank = ValueRanks.OneDimension,
+                        MaxStringLength = 5,
+                    },
             };
             allTypesMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
             {

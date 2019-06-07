@@ -52,6 +52,7 @@ namespace SamplePublisher
 
                 //var config = CreateConfigurationAllDataTypes();
                 //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
+
                 // Create the PubSub application
                 m_pubSubApplication = UaPubSubApplication.Create(configurationFileName);
 
@@ -771,12 +772,30 @@ namespace SamplePublisher
                     },
                     new FieldMetaData()
                     {
+                        Name = "StringOneDimension",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.String,
+                        DataType = DataTypeIds.String,
+                        ValueRank = ValueRanks.OneDimension,
+                        MaxStringLength = 14,
+                    },
+                    new FieldMetaData()
+                    {
                         Name = "ByteString",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         BuiltInType = (byte)DataTypes.ByteString,
                         DataType = DataTypeIds.ByteString,
                         ValueRank = ValueRanks.Scalar,
                         MaxStringLength = 3, 
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "ByteStringOneDimension",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.ByteString,
+                        DataType = DataTypeIds.ByteString,
+                        ValueRank = ValueRanks.OneDimension,
+                        MaxStringLength = 5,
                     },
                 };
             publishedDataSetAllTypes.DataSetMetaData.ConfigurationVersion = new ConfigurationVersionDataType()

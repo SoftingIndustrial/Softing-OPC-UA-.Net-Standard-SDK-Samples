@@ -143,8 +143,9 @@ namespace SamplePublisher
             };
             WriteFieldData("EUInformation", NamespaceIndexAllTypes, new DataValue(new ExtensionObject(euInformation), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("String", NamespaceIndexAllTypes, new DataValue(new Variant(""), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("StringOneDimension", NamespaceIndexAllTypes, new DataValue(new Variant(new string[1] { "" }), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("ByteString", NamespaceIndexAllTypes, new DataValue(new Variant(new byte[1]{0}), StatusCodes.Good, DateTime.UtcNow));
-            WriteFieldData("StringOneDimension", NamespaceIndexAllTypes, new DataValue(new Variant(new string[1] {""}), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("ByteStringOneDimension", NamespaceIndexAllTypes, new DataValue(new Variant(new byte[1] { 0 }), StatusCodes.Good, DateTime.UtcNow));
             
             #endregion
 
@@ -348,12 +349,47 @@ namespace SamplePublisher
                         case ValueRanks.OneDimension:
                             dataValue.Value = new string[1] {"One dimension sample!"};
                             break;
+                        case ValueRanks.TwoDimensions:
+                            dataValue.Value = new string[,] { {"Two dimension 1 sample!", "Two dimension 2 sample!"} };
+                            break;
+                        case ValueRanks.OneOrMoreDimensions:
+                            dataValue.Value = new string[2][,]
+                            {
+                                new string[,] {{"first string", "second string"}},
+                                new string[,] {{"third string", "forth string"}}
+                            };
+                            break;
                     }
 
                     isIncremented = true;
                     break;
                 case BuiltInType.ByteString:
-                    dataValue.Value = new byte[10] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+                    switch (variable.ValueRank)
+                    {
+                        case ValueRanks.Scalar:
+                            dataValue.Value = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+                            break;
+                        case ValueRanks.OneDimension:
+                            dataValue.Value = new byte[1][]
+                            {
+                                new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+                            };
+                            break;
+                        case ValueRanks.TwoDimensions:
+                            dataValue.Value = new byte[,]
+                            {
+                                {1,1}, {2,2}, {3,3}, {4,4}, {5,5}, {6,6}, {7,7}, {8,8}, {9,9}
+                            };
+                            break;
+                        case ValueRanks.OneOrMoreDimensions:
+                            dataValue.Value = new byte[2][,]
+                            {
+                                new byte[,] { { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 }, { 9, 9 } },
+                                new byte[,] { { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 }, { 9, 9 } },
+                            };
+                            break;
+                    }
+
                     isIncremented = true;
                     break;
             }
