@@ -131,8 +131,8 @@ namespace SamplePublisher
             WriteFieldData("SByte", NamespaceIndexAllTypes, new DataValue(new Variant((sbyte)0), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("UInt16", NamespaceIndexAllTypes, new DataValue(new Variant((UInt16)0), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("UInt32", NamespaceIndexAllTypes, new DataValue(new Variant((UInt32)0), StatusCodes.Good, DateTime.UtcNow));
-            WriteFieldData("Float", NamespaceIndexAllTypes, new DataValue(new Variant((float)0), StatusCodes.Good, DateTime.UtcNow));
-            WriteFieldData("Double", NamespaceIndexAllTypes, new DataValue(new Variant((double)0), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("Float", NamespaceIndexAllTypes, new DataValue(new Variant((float)0F), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("Double", NamespaceIndexAllTypes, new DataValue(new Variant((double)0.0), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("NodeClass", NamespaceIndexAllTypes, new DataValue(new Variant(NodeClass.Object), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("Time", NamespaceIndexAllTypes, new DataValue(new Variant(DateTime.UtcNow.ToString("HH:mm")), StatusCodes.Good, DateTime.UtcNow));
             var euInformation = new EUInformation()
@@ -143,10 +143,45 @@ namespace SamplePublisher
             };
             WriteFieldData("EUInformation", NamespaceIndexAllTypes, new DataValue(new ExtensionObject(euInformation), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("String", NamespaceIndexAllTypes, new DataValue(new Variant(""), StatusCodes.Good, DateTime.UtcNow));
-            WriteFieldData("StringOneDimension", NamespaceIndexAllTypes, new DataValue(new Variant(new string[1] { "" }), StatusCodes.Good, DateTime.UtcNow));
-            WriteFieldData("ByteString", NamespaceIndexAllTypes, new DataValue(new Variant(new byte[1]{0}), StatusCodes.Good, DateTime.UtcNow));
-            WriteFieldData("ByteStringOneDimension", NamespaceIndexAllTypes, new DataValue(new Variant(new byte[1] { 0 }), StatusCodes.Good, DateTime.UtcNow));
-            
+            WriteFieldData("ByteString", NamespaceIndexAllTypes, new DataValue(new Variant(new byte[1] { 0 }), StatusCodes.Good, DateTime.UtcNow));
+
+            WriteFieldData("BoolToggleArray", NamespaceIndexAllTypes, new DataValue(new Variant(new bool[] { true, true, true }), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("ByteArray", NamespaceIndexAllTypes, new DataValue(new Variant(new byte[] { 0, 0, 0 }), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("Int16Array", NamespaceIndexAllTypes, new DataValue(new Variant(new Int16[] { 0, 0, 0 }), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("Int32Array", NamespaceIndexAllTypes, new DataValue(new Variant(new Int32[] { 0, 0, 0 }), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("SByteArray", NamespaceIndexAllTypes, new DataValue(new Variant(new sbyte[] { 0, 0, 0 }), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("UInt16Array", NamespaceIndexAllTypes, new DataValue(new Variant(new UInt16[] { 0, 0, 0 }), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("UInt32Array", NamespaceIndexAllTypes, new DataValue(new Variant(new UInt32[] { 0, 0, 0 }), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("FloatArray", NamespaceIndexAllTypes, new DataValue(new Variant(new float[] { 0F, 0F, 0F }), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("DoubleArray", NamespaceIndexAllTypes, new DataValue(new Variant(new double[] { 0.0, 0.0, 0.0 }), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("NodeClassArray", NamespaceIndexAllTypes, new DataValue(new Variant[]{new Variant(NodeClass.Object),
+                            new Variant(NodeClass.Object),
+                            new Variant(NodeClass.Object)},
+                            StatusCodes.Good, DateTime.UtcNow));
+
+            WriteFieldData("TimeArray", NamespaceIndexAllTypes, new DataValue(new Variant(new string[] {DateTime.UtcNow.ToString("HH:mm"), DateTime.UtcNow.ToString("HH:mm"), DateTime.UtcNow.ToString("HH:mm") }), StatusCodes.Good, DateTime.UtcNow));
+            var euInformation1 = new EUInformation()
+            {
+                Description = "Sample EuInformation1. Will change UnitId",
+                DisplayName = new LocalizedText("Sample"),
+                UnitId = 1
+            };
+            var euInformation2 = new EUInformation()
+            {
+                Description = "Sample EuInformation2. Will change UnitId",
+                DisplayName = new LocalizedText("Sample"),
+                UnitId = 1
+            };
+            var euInformation3 = new EUInformation()
+            {
+                Description = "Sample EuInformation3. Will change UnitId",
+                DisplayName = new LocalizedText("Sample"),
+                UnitId = 1
+            };
+            ExtensionObject[] euInfArray = new ExtensionObject[] { new ExtensionObject(euInformation1), new ExtensionObject(euInformation2), new ExtensionObject(euInformation3) };
+            WriteFieldData("EUInformationArray", NamespaceIndexAllTypes, new DataValue(euInfArray, StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("StringArray", NamespaceIndexAllTypes, new DataValue(new Variant(new string[] {"" , "", "" }), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("ByteStringArray", NamespaceIndexAllTypes, new DataValue(new Variant(new byte[][]{ new byte[1] {0}, new byte[1] { 0 }, new byte[1] { 0 } }), StatusCodes.Good, DateTime.UtcNow));
             #endregion
 
             #region DataSet 'MassTest' fill with data
@@ -256,140 +291,313 @@ namespace SamplePublisher
             switch (expectedType)
             {
                 case BuiltInType.Boolean:
-                    Boolean boolValue = Convert.ToBoolean(dataValue.Value);
-                    dataValue.Value = !boolValue;
+                    if (variable.ValueRank == ValueRanks.Scalar)
+                    {
+                        Boolean boolValue = Convert.ToBoolean(dataValue.Value);
+                        dataValue.Value = !boolValue;
+                    }
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
+                    {
+                        bool[] valueArray = (bool[])dataValue.Value;
+                        for (int i = 0; i < valueArray.Length; i++)
+                        {
+                            valueArray[i] = !valueArray[i];
+                        }
+                        dataValue.Value = valueArray;
+                    }
                     isIncremented = true;
                     break;
                 case BuiltInType.Byte:
-                    Byte byteValue = Convert.ToByte(dataValue.Value);
-                    dataValue.Value = ++byteValue;
+                    if (variable.ValueRank == ValueRanks.Scalar)
+                    {
+                        Byte byteValue = Convert.ToByte(dataValue.Value);
+                        dataValue.Value = ++byteValue;
+                    }
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
+                    {
+                        byte[] valueArray = (byte[])dataValue.Value;
+                        for (int i = 0; i < valueArray.Length; i++)
+                        {
+                            valueArray[i] = ++valueArray[i];
+                        }
+                        dataValue.Value = valueArray;
+                    }
                     isIncremented = true;
                     break;
                 case BuiltInType.Int16:
-                    Int16 int16Value = Convert.ToInt16(dataValue.Value);
-                    int intIdentifier = int16Value;
-                    Interlocked.CompareExchange(ref intIdentifier, 0, Int16.MaxValue);
-                    dataValue.Value = (Int16)Interlocked.Increment(ref intIdentifier);
+                    if (variable.ValueRank == ValueRanks.Scalar)
+                    {
+                        Int16 int16Value = Convert.ToInt16(dataValue.Value);
+                        int intIdentifier = int16Value;
+                        Interlocked.CompareExchange(ref intIdentifier, 0, Int16.MaxValue);
+                        dataValue.Value = (Int16)Interlocked.Increment(ref intIdentifier);
+                    }
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
+                    {
+                        Int16[] valueArray = (Int16[])dataValue.Value;
+                        for (int i = 0; i < valueArray.Length; i++)
+                        {
+                            int intIdentifier = valueArray[i];
+                            Interlocked.CompareExchange(ref intIdentifier, 0, Int16.MaxValue);
+                            valueArray[i] = (Int16)Interlocked.Increment(ref intIdentifier);
+                        }
+                        dataValue.Value = valueArray;
+                    }
+                    
                     isIncremented = true;
                     break;
                 case BuiltInType.Int32:
-                    Int32 int32Value = Convert.ToInt32(dataValue.Value);     
-                    if (step > 0)
+
+                    if (variable.ValueRank == ValueRanks.Scalar)
                     {
-                        int32Value += (step - 1);
+                        Int32 int32Value = Convert.ToInt32(dataValue.Value);
+                        if (step > 0)
+                        {
+                            int32Value += (step - 1);
+                        }
+                        if (int32Value > maxAllowedValue)
+                        {
+                            int32Value = 0;
+                        }
+                        dataValue.Value = Interlocked.Increment(ref int32Value);
+
                     }
-                    if (int32Value > maxAllowedValue)
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
                     {
-                       int32Value = 0;
+                        Int32[] valueArray = (Int32[])dataValue.Value;
+                        for(int i = 0; i < valueArray.Length; i++)
+                        {
+                            if (step > 0)
+                            {
+                                valueArray[i] += (step - 1);
+                            }
+                            if (valueArray[i] > maxAllowedValue)
+                            {
+                                valueArray[i] = 0;
+                            }
+                            valueArray[i] = Interlocked.Increment(ref valueArray[i]);
+                        }
+                        dataValue.Value = valueArray;
                     }
-                    dataValue.Value = Interlocked.Increment(ref int32Value); 
                     isIncremented = true;
+
                     break;
                 case BuiltInType.SByte:
-                    SByte sbyteValue = Convert.ToSByte(dataValue.Value);
-                    intIdentifier = sbyteValue;
-                    Interlocked.CompareExchange(ref intIdentifier, 0, SByte.MaxValue);
-                    dataValue.Value = (SByte)Interlocked.Increment(ref intIdentifier);
+                    if (variable.ValueRank == ValueRanks.Scalar)
+                    {
+                        SByte sbyteValue = Convert.ToSByte(dataValue.Value);
+                        int intIdentifier = sbyteValue;
+                        Interlocked.CompareExchange(ref intIdentifier, 0, SByte.MaxValue);
+                        dataValue.Value = (SByte)Interlocked.Increment(ref intIdentifier);
+                    }
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
+                    {
+                        SByte[] valueArray = (SByte[])dataValue.Value;
+                        for (int i = 0; i < valueArray.Length; i++)
+                        {
+                            int intIdentifier = valueArray[i];
+                            Interlocked.CompareExchange(ref intIdentifier, 0, SByte.MaxValue);
+                            valueArray[i] = (SByte)Interlocked.Increment(ref intIdentifier);
+                        }
+                        dataValue.Value = valueArray;
+                    }
+                    
                     isIncremented = true;
                     break;
                 case BuiltInType.UInt16:
-                    UInt16 uint16Value = Convert.ToUInt16(dataValue.Value);
-                    intIdentifier = uint16Value;
-                    Interlocked.CompareExchange(ref intIdentifier, 0, UInt16.MaxValue);
-                    dataValue.Value = (UInt16)Interlocked.Increment(ref intIdentifier);
+                    if (variable.ValueRank == ValueRanks.Scalar)
+                    {
+                        UInt16 uint16Value = Convert.ToUInt16(dataValue.Value);
+                        int intIdentifier = uint16Value;
+                        Interlocked.CompareExchange(ref intIdentifier, 0, UInt16.MaxValue);
+                        dataValue.Value = (UInt16)Interlocked.Increment(ref intIdentifier);
+                    }
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
+                    {
+                        UInt16[] valueArray = (UInt16[])dataValue.Value;
+                        for (int i = 0; i < valueArray.Length; i++)
+                        {
+                            int intIdentifier = valueArray[i];
+                            Interlocked.CompareExchange(ref intIdentifier, 0, UInt16.MaxValue);
+                            valueArray[i] = (UInt16)Interlocked.Increment(ref intIdentifier);
+                        }
+                        dataValue.Value = valueArray;
+                    }
+                    
                     isIncremented = true;
                     break;
                 case BuiltInType.UInt32:
-                    UInt32 uint32Value = Convert.ToUInt32(dataValue.Value);
-                    long longIdentifier = uint32Value;
-                    Interlocked.CompareExchange(ref longIdentifier, 0, UInt32.MaxValue);
-                    dataValue.Value = (UInt32)Interlocked.Increment(ref longIdentifier);
+                    if (variable.ValueRank == ValueRanks.Scalar)
+                    {
+                        UInt32 uint32Value = Convert.ToUInt32(dataValue.Value);
+                        long longIdentifier = uint32Value;
+                        Interlocked.CompareExchange(ref longIdentifier, 0, UInt32.MaxValue);
+                        dataValue.Value = (UInt32)Interlocked.Increment(ref longIdentifier);
+                    }
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
+                    {
+                        UInt32[] valueArray = (UInt32[])dataValue.Value;
+                        for (int i = 0; i < valueArray.Length; i++)
+                        {
+                            long intIdentifier = valueArray[i];
+                            Interlocked.CompareExchange(ref intIdentifier, 0, UInt32.MaxValue);
+                            valueArray[i] = (UInt32)Interlocked.Increment(ref intIdentifier);
+                        }
+                        dataValue.Value = valueArray;
+                    }
+                   
                     isIncremented = true;
                     break;
                 case BuiltInType.Float:
-                    float floatValue = Convert.ToSingle(dataValue.Value);
-                    Interlocked.CompareExchange(ref floatValue, 0, float.MaxValue);
-                    dataValue.Value = ++floatValue;
+                    if (variable.ValueRank == ValueRanks.Scalar)
+                    {
+                        float floatValue = Convert.ToSingle(dataValue.Value);
+                        Interlocked.CompareExchange(ref floatValue, 0, float.MaxValue);
+                        dataValue.Value = ++floatValue;
+                    }
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
+                    {
+                        float[] valueArray = (float[])dataValue.Value;
+                        for (int i = 0; i < valueArray.Length; i++)
+                        {
+                            float floatValue = valueArray[i];
+                            Interlocked.CompareExchange(ref floatValue, 0, float.MaxValue);
+                            valueArray[i] = ++floatValue;
+                        }
+                        dataValue.Value = valueArray;
+                    }
+                    
                     isIncremented = true;
                     break;
                 case BuiltInType.Double:
-                    double doubleValue = Convert.ToDouble(dataValue.Value);
-                    Interlocked.CompareExchange(ref doubleValue, 0, double.MaxValue);
-                    dataValue.Value = ++doubleValue;
+                    if (variable.ValueRank == ValueRanks.Scalar)
+                    {
+                        double doubleValue = Convert.ToDouble(dataValue.Value);
+                        Interlocked.CompareExchange(ref doubleValue, 0, double.MaxValue);
+                        dataValue.Value = ++doubleValue;
+                    }
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
+                    {
+                        double[] valueArray = (double[])dataValue.Value;
+                        for (int i = 0; i < valueArray.Length; i++)
+                        {
+                            double doubleValue = valueArray[i];
+                            Interlocked.CompareExchange(ref doubleValue, 0, double.MaxValue);
+                            valueArray[i] = ++doubleValue;
+                        }
+                        dataValue.Value = valueArray;
+                    }
+                   
                     isIncremented = true;
                     break;
                 case BuiltInType.DateTime:
-                    dataValue.Value = DateTime.UtcNow;
+                    if (variable.ValueRank == ValueRanks.Scalar)
+                    {
+                        dataValue.Value = DateTime.UtcNow;
+                    }
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
+                    {
+                        DateTime[] valueArray = (DateTime[])dataValue.Value;
+                        for (int i = 0; i < valueArray.Length; i++)
+                        {
+                            valueArray[i] = DateTime.UtcNow;
+                        }
+                        dataValue.Value = valueArray;
+                    }
+                    
                     isIncremented = true;
                     break;
                 case (BuiltInType) DataTypes.Time:
-                    dataValue.Value = DateTime.UtcNow.ToString("HH:mm");
+                    if (variable.ValueRank == ValueRanks.Scalar)
+                    {
+                        dataValue.Value = DateTime.UtcNow.ToString("HH:mm");
+                    }
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
+                    {
+                        string[] valueArray = (string[])dataValue.Value;
+                        for (int i = 0; i < valueArray.Length; i++)
+                        {
+                            valueArray[i] = DateTime.UtcNow.ToString("HH:mm");
+                        }
+                        dataValue.Value = valueArray;
+                    }
+                    
                     isIncremented = true;
                     break;
                 case (BuiltInType) DataTypes.NodeClass:
-                    uint value = (uint)((NodeClass)dataValue.Value);
-                    dataValue.Value = value == 0? NodeClass.Object: (value == 128 ? NodeClass.Unspecified : (NodeClass)(value * 2));
+                    if (variable.ValueRank == ValueRanks.Scalar)
+                    {
+                        uint value = (uint)((NodeClass)dataValue.Value);
+                        dataValue.Value = value == 0 ? NodeClass.Object : (value == 128 ? NodeClass.Unspecified : (NodeClass)(value * 2));
+                    }
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
+                    {
+                        Variant[] varArray = (Variant[])dataValue.Value;
+                        for (int i = 0; i < varArray.Length; i++)
+                        {
+                            NodeClass valNC = (NodeClass)varArray[i].Value;
+                            valNC = valNC == 0 ? NodeClass.Object : ((int)valNC == 128 ? NodeClass.Unspecified : ((NodeClass)((int)valNC * 2)));
+                            varArray[i].Value = valNC;
+                        }
+                        dataValue.Value = varArray;
+                    }
+                   
                     isIncremented = true;
                     break;
                 case (BuiltInType)DataTypes.EUInformation:
-                    var extensionObject = (ExtensionObject)dataValue.Value;
-                    var euInformation = extensionObject.Body as EUInformation;
-                    if (euInformation!= null)
+                    if (variable.ValueRank == ValueRanks.Scalar)
                     {
-                        euInformation.UnitId = euInformation.UnitId + 1;
+                        var extensionObject = (ExtensionObject)dataValue.Value;
+                        if (extensionObject.Body is EUInformation euInformation)
+                        {
+                            euInformation.UnitId = euInformation.UnitId + 1;
+                        }
                     }
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
+                    {
+                        ExtensionObject[] eoArray = (ExtensionObject[])dataValue.Value;
+                        for (int i = 0; i < eoArray.Length; i++)
+                        {
+                            EUInformation euInformation = (EUInformation)eoArray[i].Body;
+                            euInformation.UnitId = euInformation.UnitId + 1;
+                            eoArray[i].Body = euInformation;
+                        }
+                        dataValue.Value = eoArray;
+                    }
+                   
                     isIncremented = true;
                     break;
                 case BuiltInType.String:
-                    switch (variable.ValueRank)
+                    if (variable.ValueRank == ValueRanks.Scalar)
                     {
-                        case ValueRanks.Scalar:
-                            dataValue.Value = "Hello World";
-                            break;
-                        case ValueRanks.OneDimension:
-                            dataValue.Value = new string[1] {"One dimension sample!"};
-                            break;
-                        case ValueRanks.TwoDimensions:
-                            dataValue.Value = new string[,] { {"Two dimension 1 sample!", "Two dimension 2 sample!"} };
-                            break;
-                        case ValueRanks.OneOrMoreDimensions:
-                            dataValue.Value = new string[2][,]
-                            {
-                                new string[,] {{"first string", "second string"}},
-                                new string[,] {{"third string", "forth string"}}
-                            };
-                            break;
+                        dataValue.Value = "Hello World stamped at: " + DateTime.Now.ToString();
                     }
-
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
+                    {
+                        string[] valueArray = (string[])dataValue.Value;
+                        for (int i = 0; i < valueArray.Length; i++)
+                        {
+                            valueArray[i] = "Hello World stamped at: " + DateTime.Now.ToString();
+                        }
+                        dataValue.Value = valueArray;
+                    }
+                    
                     isIncremented = true;
                     break;
                 case BuiltInType.ByteString:
-                    switch (variable.ValueRank)
+                    if (variable.ValueRank == ValueRanks.Scalar)
                     {
-                        case ValueRanks.Scalar:
-                            dataValue.Value = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-                            break;
-                        case ValueRanks.OneDimension:
-                            dataValue.Value = new byte[1][]
-                            {
-                                new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
-                            };
-                            break;
-                        case ValueRanks.TwoDimensions:
-                            dataValue.Value = new byte[,]
-                            {
-                                {1,1}, {2,2}, {3,3}, {4,4}, {5,5}, {6,6}, {7,7}, {8,8}, {9,9}
-                            };
-                            break;
-                        case ValueRanks.OneOrMoreDimensions:
-                            dataValue.Value = new byte[2][,]
-                            {
-                                new byte[,] { { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 }, { 9, 9 } },
-                                new byte[,] { { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 }, { 9, 9 } },
-                            };
-                            break;
+                        dataValue.Value = new byte[10] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
                     }
-
+                    else if (variable.ValueRank == ValueRanks.OneDimension)
+                    {
+                        byte[][] valueArray = (byte[][])dataValue.Value;
+                        for (int i = 0; i < valueArray.Length; i++)
+                        {
+                            valueArray[i] = new byte[10] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+                        }
+                    }
+                   
                     isIncremented = true;
                     break;
             }

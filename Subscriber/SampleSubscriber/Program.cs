@@ -43,6 +43,7 @@ namespace SampleSubscriber
                 LoadTraceLogger();
 
                 string configurationFileName = "SampleSubscriber.Config.xml";
+                //string configurationFileName = "SampleSubscriber.AllTypes.Config.xml";
 
                 string[] commandLineArguments = Environment.GetCommandLineArgs();
                 if (commandLineArguments.Length > 1)
@@ -141,7 +142,7 @@ namespace SampleSubscriber
                             dataSet.Fields[i].TargetNodeId, dataSet.Fields[i].TargetAttribute, dataSet.Fields[i].Value);
                         if (i > MaximumNumberOfFieldsDisplayed)
                         {
-                            Console.WriteLine("\t\t... the rest of {0} elements are ommited.", dataSet.Fields.Length - i);
+                            Console.WriteLine("\t\t... the rest of {0} elements are omitted.", dataSet.Fields.Length - i);
                             break;
                         }
                     }
@@ -293,6 +294,7 @@ namespace SampleSubscriber
                         DataType = DataTypeIds.Double,
                         ValueRank = ValueRanks.Scalar
                     },
+
             };
             allTypesMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
             {
@@ -598,8 +600,8 @@ namespace SampleSubscriber
             pubSubConnection1.PublisherId = (UInt16)11;
             pubSubConnection1.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
-            address.NetworkInterface = "Ethernet";
-            address.Url = "opc.udp://239.0.0.1:4840";
+            address.NetworkInterface = "Local Area Connection";
+            address.Url = "opc.udp://255.255.255.255:4840";
             pubSubConnection1.Address = new ExtensionObject(address);
             
             #region Define 'AllTypes' Metadata
@@ -718,15 +720,6 @@ namespace SampleSubscriber
                     },
                     new FieldMetaData()
                     {
-                        Name = "StringOneDimension",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte)DataTypes.String,
-                        DataType = DataTypeIds.String,
-                        ValueRank = ValueRanks.Scalar,
-                        MaxStringLength = 14,
-                    },
-                    new FieldMetaData()
-                    {
                         Name = "ByteString",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         BuiltInType = (byte)DataTypes.ByteString,
@@ -736,13 +729,118 @@ namespace SampleSubscriber
                     },
                     new FieldMetaData()
                     {
-                        Name = "ByteStringOneDimension",
+                        Name = "BoolToggleArray",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Boolean,
+                        DataType = DataTypeIds.Boolean,
+                        ValueRank = ValueRanks.OneDimension
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "ByteArray",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Byte,
+                        DataType = DataTypeIds.Byte,
+                        ValueRank = ValueRanks.OneDimension
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "Int16Array",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Int16,
+                        DataType = DataTypeIds.Int16,
+                        ValueRank = ValueRanks.OneDimension
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "Int32Array",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Int32,
+                        DataType = DataTypeIds.Int32,
+                        ValueRank = ValueRanks.OneDimension
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "SByteArray",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.SByte,
+                        DataType = DataTypeIds.SByte,
+                        ValueRank = ValueRanks.OneDimension
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "UInt16Array",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.UInt16,
+                        DataType = DataTypeIds.UInt16,
+                        ValueRank = ValueRanks.OneDimension
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "UInt32Array",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.UInt32,
+                        DataType = DataTypeIds.UInt32,
+                        ValueRank = ValueRanks.OneDimension
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "FloatArray",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Float,
+                        DataType = DataTypeIds.Float,
+                        ValueRank = ValueRanks.OneDimension
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "DoubleArray",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Double,
+                        DataType = DataTypeIds.Double,
+                        ValueRank = ValueRanks.OneDimension
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "NodeClassArray",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Enumeration,
+                        DataType = DataTypeIds.NodeClass,
+                        ValueRank = ValueRanks.OneDimension
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "TimeArray",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.String,
+                        DataType = DataTypeIds.Time,
+                        ValueRank = ValueRanks.OneDimension
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "EUInformationArray",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.Structure,
+                        DataType = DataTypeIds.EUInformation,
+                        ValueRank = ValueRanks.OneDimension
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "StringArray",
+                        DataSetFieldId = new Uuid(Guid.NewGuid()),
+                        BuiltInType = (byte)DataTypes.String,
+                        DataType = DataTypeIds.String,
+                        ValueRank = ValueRanks.OneDimension,
+                        MaxStringLength = 14
+                    },
+                    new FieldMetaData()
+                    {
+                        Name = "ByteStringArray",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         BuiltInType = (byte)DataTypes.ByteString,
                         DataType = DataTypeIds.ByteString,
                         ValueRank = ValueRanks.OneDimension,
                         MaxStringLength = 5,
-                    },
+                    }
             };
             allTypesMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
             {
