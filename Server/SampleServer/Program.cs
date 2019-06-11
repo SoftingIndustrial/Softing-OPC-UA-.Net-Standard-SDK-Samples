@@ -38,13 +38,13 @@ namespace SampleServer
                 
                 if (licensingStatusServer == Softing.Opc.Ua.Server.LicensingStatus.Expired)
                 {
-                    Console.WriteLine("License period expired!");
+                    Console.WriteLine("Server license period expired!");
                     Console.ReadKey();
                     return;
                 }
                 if (licensingStatusServer == Softing.Opc.Ua.Server.LicensingStatus.Invalid)
                 {
-                    Console.WriteLine("Invalid License key!");
+                    Console.WriteLine("Invalid Server license key!");
                     Console.ReadKey();
                     return;
                 }
@@ -53,17 +53,18 @@ namespace SampleServer
 
                 // TODO - design time license activation
                 // Fill in your design time license activation keys here
+                //licensingStatusPubSub = Softing.Opc.Ua.PubSub.License.ActivateLicense(Softing.Opc.Ua.PubSub.LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
                 //licensingStatusPubSub = Softing.Opc.Ua.PubSub.License.ActivateLicense(Softing.Opc.Ua.PubSub.LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-                
+
                 if (licensingStatusPubSub == Softing.Opc.Ua.PubSub.LicensingStatus.Expired)
                 {
-                    Console.WriteLine("License period expired!");
+                    Console.WriteLine("PubSub license period expired!");
                     Console.ReadKey();
                     return;
                 }
                 if (licensingStatusPubSub == Softing.Opc.Ua.PubSub.LicensingStatus.Invalid)
                 {
-                    Console.WriteLine("Invalid License key!");
+                    Console.WriteLine("Invalid PubSub license key!");
                     Console.ReadKey();
                     return;
                 }

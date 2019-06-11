@@ -61,22 +61,22 @@ namespace SamplePublisher
                 //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
                 //m_pubSubApplication = UaPubSubApplication.Create(pubSubConfiguration);
 
-                LicensingStatus licensingStatus = LicensingStatus.Ok;
+                LicensingStatus licensingStatusPubSub = LicensingStatus.Ok;
 
                 // TODO - design time license activation
                 // Fill in your design time license activation keys here Client or Server
-                //licensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-                //licensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                //licensingStatusPubSub = m_pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                //licensingStatusPubSub = m_pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
 
-                if (licensingStatus == LicensingStatus.Expired)
+                if (licensingStatusPubSub == LicensingStatus.Expired)
                 {
-                    Console.WriteLine("License period expired!");
+                    Console.WriteLine("PubSub license period expired!");
                     Console.ReadKey();
                     return;
                 }
-                if (licensingStatus == LicensingStatus.Invalid)
+                if (licensingStatusPubSub == LicensingStatus.Invalid)
                 {
-                    Console.WriteLine("Invalid License key!");
+                    Console.WriteLine("Invalid PubSub license key!");
                     Console.ReadKey();
                     return;
                 }

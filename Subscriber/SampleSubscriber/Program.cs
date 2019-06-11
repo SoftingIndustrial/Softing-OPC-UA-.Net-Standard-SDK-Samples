@@ -59,21 +59,22 @@ namespace SampleSubscriber
                 // Create the PubSub application
                 using (UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
-                    LicensingStatus licensingStatus = LicensingStatus.Ok;
+                    LicensingStatus licensingStatusPubSub = LicensingStatus.Ok;
+
                     // TODO - design time license activation
                     // Fill in your design time license activation keys here Client or Server
-                    //licensingStatus = pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-                    //licensingStatus = pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                    //licensingStatusPubSub = pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                    //licensingStatusPubSub = pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
 
-                    if (licensingStatus == LicensingStatus.Expired)
+                    if (licensingStatusPubSub == LicensingStatus.Expired)
                     {
-                        Console.WriteLine("License period expired!");
+                        Console.WriteLine("PubSub license period expired!");
                         Console.ReadKey();
                         return;
                     }
-                    if (licensingStatus == LicensingStatus.Invalid)
+                    if (licensingStatusPubSub == LicensingStatus.Invalid)
                     {
-                        Console.WriteLine("Invalid License key!");
+                        Console.WriteLine("Invalid PubSub license key!");
                         Console.ReadKey();
                         return;
                     }
