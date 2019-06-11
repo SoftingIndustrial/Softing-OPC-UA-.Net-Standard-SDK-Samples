@@ -20,7 +20,6 @@ using XamarinSampleServer.Model;
 using XamarinSampleServer.Services;
 using Opc.Ua;
 using Opc.Ua.Configuration;
-using Softing.Opc.Ua.Private;
 
 namespace XamarinSampleServer.ViewModels
 {
@@ -39,7 +38,7 @@ namespace XamarinSampleServer.ViewModels
         private string m_resultsText;
         private bool m_canStartServer;
         private SampleServer.SampleServer m_sampleServer;
-        LicensingStatus m_isValidLicenseKey = LicensingStatus.Ok;
+        Softing.Opc.Ua.Server.LicensingStatus m_isValidLicenseKey = Softing.Opc.Ua.Server.LicensingStatus.Ok;
         #endregion
 
         #region Constructors
@@ -65,13 +64,13 @@ namespace XamarinSampleServer.ViewModels
             // Fill in your design time license activation keys here
             // m_isValidLicenseKey = License.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
             
-            if (m_isValidLicenseKey == LicensingStatus.Expired)
+            if (m_isValidLicenseKey == Softing.Opc.Ua.Server.LicensingStatus.Expired)
             {
                 ResultsText = string.Format("\n\nError starting server: License period expired!");
                 CanStartServer = false;
                 return;
             }
-            if (m_isValidLicenseKey == LicensingStatus.Invalid)
+            if (m_isValidLicenseKey == Softing.Opc.Ua.Server.LicensingStatus.Invalid)
             {
                 ResultsText = string.Format("\n\nError starting server: Invalid License key!");
                 CanStartServer = false;
@@ -129,7 +128,7 @@ namespace XamarinSampleServer.ViewModels
         /// </summary>
         public bool CanStopServer
         {
-            get { return !m_canStartServer && !IsBusy && m_isValidLicenseKey == LicensingStatus.Ok; }
+            get { return !m_canStartServer && !IsBusy && m_isValidLicenseKey == Softing.Opc.Ua.Server.LicensingStatus.Ok; }
         }
         /// <summary>
         /// Get Server ip list

@@ -14,7 +14,6 @@ using XamarinSampleClient.Helpers;
 using XamarinSampleClient.Models;
 using Xamarin.Forms;
 using System;
-using Softing.Opc.Ua.Private;
 
 namespace XamarinSampleClient.ViewModels
 {
@@ -93,13 +92,13 @@ namespace XamarinSampleClient.ViewModels
             {              
                 await SampleApplication.InitializeUaApplication();
 
-                LicensingStatus result = LicensingStatus.Ok;
+                Softing.Opc.Ua.Client.LicensingStatus result = Softing.Opc.Ua.Client.LicensingStatus.Ok;
 
                 // TODO - design time license activation
                 // Fill in your design time license activation keys here
-                // result = SampleApplication.UaApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                //result = SampleApplication.UaApplication.ActivateLicense(Softing.Opc.Ua.Client.LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
                 
-                if (result == LicensingStatus.Expired)
+                if (result == Softing.Opc.Ua.Client.LicensingStatus.Expired)
                 {
                     Device.BeginInvokeOnMainThread(() =>
                     {
@@ -110,7 +109,7 @@ namespace XamarinSampleClient.ViewModels
                     });
 
                 }
-                if (result == LicensingStatus.Invalid)
+                if (result == Softing.Opc.Ua.Client.LicensingStatus.Invalid)
                 {
                     Device.BeginInvokeOnMainThread(() =>
                     {
@@ -120,6 +119,8 @@ namespace XamarinSampleClient.ViewModels
                         OnPropertyChanged("Samples");
                     });
                 }
+
+
             }
             catch(Exception ex)
             {

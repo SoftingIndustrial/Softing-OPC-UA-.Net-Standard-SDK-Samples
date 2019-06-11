@@ -9,9 +9,9 @@
  * ======================================================================*/
 
 using System;
+using System.Reflection.Emit;
 using System.Text;
 using Opc.Ua.Server;
-using Softing.Opc.Ua.Private;
 
 namespace SampleServer
 {
@@ -29,19 +29,39 @@ namespace SampleServer
 
             try
             {
-                LicensingStatus licensingStatus = LicensingStatus.Ok;
+
+                Softing.Opc.Ua.Server.LicensingStatus licensingStatusServer = Softing.Opc.Ua.Server.LicensingStatus.Ok;
 
                 // TODO - design time license activation
                 // Fill in your design time license activation keys here
-                //licensingStatus = License.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                //licensingStatusServer = Softing.Opc.Ua.Server.License.ActivateLicense(Softing.Opc.Ua.Server.LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
                 
-                if (licensingStatus == LicensingStatus.Expired)
+                if (licensingStatusServer == Softing.Opc.Ua.Server.LicensingStatus.Expired)
                 {
                     Console.WriteLine("License period expired!");
                     Console.ReadKey();
                     return;
                 }
-                if (licensingStatus == LicensingStatus.Invalid)
+                if (licensingStatusServer == Softing.Opc.Ua.Server.LicensingStatus.Invalid)
+                {
+                    Console.WriteLine("Invalid License key!");
+                    Console.ReadKey();
+                    return;
+                }
+
+                Softing.Opc.Ua.PubSub.LicensingStatus licensingStatusPubSub = Softing.Opc.Ua.PubSub.LicensingStatus.Ok;
+
+                // TODO - design time license activation
+                // Fill in your design time license activation keys here
+                //licensingStatusPubSub = Softing.Opc.Ua.PubSub.License.ActivateLicense(Softing.Opc.Ua.PubSub.LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                
+                if (licensingStatusPubSub == Softing.Opc.Ua.PubSub.LicensingStatus.Expired)
+                {
+                    Console.WriteLine("License period expired!");
+                    Console.ReadKey();
+                    return;
+                }
+                if (licensingStatusPubSub == Softing.Opc.Ua.PubSub.LicensingStatus.Invalid)
                 {
                     Console.WriteLine("Invalid License key!");
                     Console.ReadKey();
@@ -109,7 +129,7 @@ namespace SampleServer
             }
         }
 
-        #region Print State
+#region Print State
         private static void PrintCommandParameters()
         {
             Console.WriteLine("Press:\n\ts: session list");
@@ -142,6 +162,6 @@ namespace SampleServer
                 Console.WriteLine(line);
             }
         }
-        #endregion
+#endregion
     }
 }

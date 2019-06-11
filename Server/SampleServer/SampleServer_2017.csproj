@@ -93,6 +93,9 @@
     <Reference Include="Softing.Opc.Ua.Server">
       <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.Server.dll</HintPath>
     </Reference>
+    <Reference Include="Softing.Opc.Ua.PubSub">
+      <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.PubSub.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

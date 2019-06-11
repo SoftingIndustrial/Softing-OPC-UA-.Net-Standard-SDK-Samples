@@ -9,7 +9,6 @@
  * ======================================================================*/
 
 using Opc.Ua;
-using Softing.Opc.Ua.Private;
 using Softing.Opc.Ua.PubSub;
 using Softing.Opc.Ua.PubSub.PublishedData;
 using System;

@@ -11,7 +11,6 @@
 using System;
 using System.IO;
 using Opc.Ua;
-using Softing.Opc.Ua.Private;
 using Softing.Opc.Ua.PubSub;
 
 namespace SamplePublisher
