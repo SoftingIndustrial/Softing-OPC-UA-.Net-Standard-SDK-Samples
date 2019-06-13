@@ -31,7 +31,7 @@ namespace SamplePublisher
             {
                 LoadTraceLogger();
 
-                string configurationFileName = "SamplePublisher.AllTypes.Config.xml";// "SamplePublisher.Config.xml";
+                string configurationFileName = "SamplePublisher.Config.xml";
                 
                 string[] commandLineArguments = Environment.GetCommandLineArgs();
                 if (commandLineArguments.Length > 1)
