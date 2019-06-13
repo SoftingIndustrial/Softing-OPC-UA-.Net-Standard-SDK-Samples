@@ -19,28 +19,19 @@ namespace SamplePublisher
     {
         #region Fields
         private const string SamplePublisherLogFile = "Softing/OpcUaNetStandardToolkit/logs/SamplePublisher.log";
-        private static TraceConfiguration m_traceConfiguration;
-
-        private static FieldMetaDataCollection m_dynamicFields = new FieldMetaDataCollection();
-        private static UaPubSubApplication m_pubSubApplication;
         #endregion
-
-        /// <summary>
-        /// Init and generate data for publishers
-        /// </summary>
-        private static DataStoreValuesGenerator m_dataStoreValuesGenerator;
-
+        
         /// <summary>
         /// Entry point for application
         /// </summary>
         static void Main()
         {
+            DataStoreValuesGenerator dataStoreValuesGenerator = null;           
             try
             {
                 LoadTraceLogger();
                 
                 string configurationFileName = "SamplePublisher.Config.xml";
-                //string configurationFileName = "SamplePublisher.AllTypes.Config.xml";
                 
                 string[] commandLineArguments = Environment.GetCommandLineArgs();
                 if (commandLineArguments.Length > 1)
@@ -51,16 +42,7 @@ namespace SamplePublisher
                     }
                 }
 
-                //var config = CreateConfigurationAllDataTypes();
-                //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
-
-                // Create the PubSub application
-                m_pubSubApplication = UaPubSubApplication.Create(configurationFileName);
-
-                // the PubSub application can be also created from an instance of PubSubConfigurationDataType
-                //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
-                //m_pubSubApplication = UaPubSubApplication.Create(pubSubConfiguration);
-
+                #region Licensing
                 LicensingStatus licensingStatusPubSub = LicensingStatus.Ok;
 
                 // TODO - design time license activation
@@ -80,40 +62,52 @@ namespace SamplePublisher
                     Console.ReadKey();
                     return;
                 }
+                #endregion
 
-                // Start publishing data 
-                m_dataStoreValuesGenerator = new DataStoreValuesGenerator(m_pubSubApplication);
-                m_dataStoreValuesGenerator.Start();
+                //var config = CreateConfigurationAllDataTypes();
+                //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
 
-                Console.WriteLine("Publisher started");
-                PrintCommandParameters();
-
-                // start application
-                m_pubSubApplication.Start();
-                do
+                // Create the PubSub application
+                using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
-                    ConsoleKeyInfo key = Console.ReadKey();
-                    if (key.KeyChar == 'q' || key.KeyChar == 'x')
+                    // the PubSub application can be also created from an instance of PubSubConfigurationDataType returned by CreateConfiguration() method
+                    //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
+                    //using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(pubSubConfiguration)) {
+
+                    // Start publishing data 
+                    dataStoreValuesGenerator = new DataStoreValuesGenerator(uaPubSubApplication);
+                    dataStoreValuesGenerator.Start();
+
+                    Console.WriteLine("Publisher started");
+                    PrintCommandParameters();
+
+                    // start application
+                    uaPubSubApplication.Start();
+                    do
                     {
-                        Console.WriteLine("\nShutting down...");
-                        break;
-                    }
-                    else if (key.KeyChar == 's')
-                    {
-                        // list connection status
-                        Console.WriteLine("Connections Status:");
-                        foreach (var connection in m_pubSubApplication.PubSubConnections)
+                        ConsoleKeyInfo key = Console.ReadKey();
+                        if (key.KeyChar == 'q' || key.KeyChar == 'x')
                         {
-                            Console.WriteLine("\tConnection '{0}' - Running={1}", 
-                                connection.PubSubConnectionConfiguration.Name, connection.IsRunning);
+                            Console.WriteLine("\nShutting down...");
+                            break;
+                        }
+                        else if (key.KeyChar == 's')
+                        {
+                            // list connection status
+                            Console.WriteLine("Connections Status:");
+                            foreach (var connection in uaPubSubApplication.PubSubConnections)
+                            {
+                                Console.WriteLine("\tConnection '{0}' - Running={1}",
+                                    connection.PubSubConnectionConfiguration.Name, connection.IsRunning);
+                            }
+                        }
+                        else
+                        {
+                            PrintCommandParameters();
                         }
                     }
-                    else
-                    {
-                        PrintCommandParameters();
-                    }
+                    while (true);
                 }
-                while (true);
             }
             catch (Exception e)
             {
@@ -123,8 +117,10 @@ namespace SamplePublisher
             }
             finally
             {
-                m_dataStoreValuesGenerator.Dispose();
-                m_pubSubApplication.Dispose();
+                if (dataStoreValuesGenerator != null)
+                {
+                    dataStoreValuesGenerator.Dispose();
+                } 
             }
         }
 
@@ -945,13 +941,15 @@ namespace SamplePublisher
         /// <summary>
         /// Load trace configuration for logging
         /// </summary>
-        private static void LoadTraceLogger()
+        private static TraceConfiguration LoadTraceLogger()
         {
-            m_traceConfiguration = new TraceConfiguration();
-            m_traceConfiguration.OutputFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), SamplePublisherLogFile);
-            m_traceConfiguration.DeleteOnLoad = true;
-            m_traceConfiguration.TraceMasks = Utils.TraceMasks.All;
-            m_traceConfiguration.ApplySettings();
+            TraceConfiguration traceConfiguration = new TraceConfiguration();
+            traceConfiguration.OutputFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), SamplePublisherLogFile);
+            traceConfiguration.DeleteOnLoad = true;
+            traceConfiguration.TraceMasks = Utils.TraceMasks.All;
+            traceConfiguration.ApplySettings();
+
+            return traceConfiguration;
         }
         #endregion
     }

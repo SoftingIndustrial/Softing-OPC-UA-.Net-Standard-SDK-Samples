@@ -22,8 +22,7 @@ namespace SampleSubscriber
     {
         #region Fields
         private const string SampleSubscriberLogFile = "Softing/OpcUaNetStandardToolkit/logs/SampleSubscriber.log";
-        private static TraceConfiguration m_traceConfiguration;
-
+       
         // It should match the namespace index from configuration file
         public const ushort NamespaceIndexSimple = 2;
         public const ushort NamespaceIndexAllTypes = 3;
@@ -42,7 +41,6 @@ namespace SampleSubscriber
                 LoadTraceLogger();
 
                 string configurationFileName = "SampleSubscriber.Config.xml";
-                //string configurationFileName = "SampleSubscriber.AllTypes.Config.xml";
 
                 string[] commandLineArguments = Environment.GetCommandLineArgs();
                 if (commandLineArguments.Length > 1)
@@ -52,33 +50,39 @@ namespace SampleSubscriber
                         configurationFileName = commandLineArguments[1];
                     }
                 }
-                
+
+                #region Licensing
+                LicensingStatus licensingStatusPubSub = LicensingStatus.Ok;
+
+                // TODO - design time license activation
+                // Fill in your design time license activation keys here Client or Server
+                //licensingStatusPubSub = m_pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                //licensingStatusPubSub = m_pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+
+                if (licensingStatusPubSub == LicensingStatus.Expired)
+                {
+                    Console.WriteLine("PubSub license period expired!");
+                    Console.ReadKey();
+                    return;
+                }
+                if (licensingStatusPubSub == LicensingStatus.Invalid)
+                {
+                    Console.WriteLine("Invalid PubSub license key!");
+                    Console.ReadKey();
+                    return;
+                }
+                #endregion
+
                 //var config = CreateConfigurationAllDataTypes();
                 //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
-                
+
                 // Create the PubSub application
                 using (UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
-                    LicensingStatus licensingStatusPubSub = LicensingStatus.Ok;
-
-                    // TODO - design time license activation
-                    // Fill in your design time license activation keys here Client or Server
-                    //licensingStatusPubSub = pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-                    //licensingStatusPubSub = pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-
-                    if (licensingStatusPubSub == LicensingStatus.Expired)
-                    {
-                        Console.WriteLine("PubSub license period expired!");
-                        Console.ReadKey();
-                        return;
-                    }
-                    if (licensingStatusPubSub == LicensingStatus.Invalid)
-                    {
-                        Console.WriteLine("Invalid PubSub license key!");
-                        Console.ReadKey();
-                        return;
-                    }
-
+                    // the PubSub application can be also created from an instance of PubSubConfigurationDataType
+                    //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
+                    //using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(pubSubConfiguration)) {
+                                 
                     // subscribe to data events 
                     pubSubApplication.DataReceived += PubSubApplication_DataReceived;
                     
@@ -972,13 +976,12 @@ namespace SampleSubscriber
         /// </summary>
         private static void LoadTraceLogger()
         {
-            m_traceConfiguration = new TraceConfiguration();
-            m_traceConfiguration.OutputFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), SampleSubscriberLogFile);
-            m_traceConfiguration.DeleteOnLoad = true;
-            m_traceConfiguration.TraceMasks = Utils.TraceMasks.All;
-            m_traceConfiguration.ApplySettings();
+            TraceConfiguration traceConfiguration = new TraceConfiguration();
+            traceConfiguration.OutputFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), SampleSubscriberLogFile);
+            traceConfiguration.DeleteOnLoad = true;
+            traceConfiguration.TraceMasks = Utils.TraceMasks.All;
+            traceConfiguration.ApplySettings();
         }
         #endregion
-
     }
 }

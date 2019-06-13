@@ -21,30 +21,29 @@ namespace SamplePublisher
     public class DataStoreValuesGenerator : IDisposable
     {
         #region Fields
-
-        // simulate for BoolToogle changes to 3 seconds
-        private static int m_boolToogleCount = 0;
-        private const int BoolToogleLimit = 2;
-        private const int SimpleInt32Limit = 10000;
-
-        private const string DataSetNameSimple = "Simple";
-        private const string DataSetNameAllTypes = "AllTypes";
-        private const string DataSetNameMassTest = "MassTest";
-
-        private static FieldMetaDataCollection m_simpleFields = new FieldMetaDataCollection();
-        private static FieldMetaDataCollection m_allTypesFields = new FieldMetaDataCollection();
-        private static FieldMetaDataCollection m_massTestFields = new FieldMetaDataCollection();
-
         // It should match the namespace index from configuration file
         public const ushort NamespaceIndexSimple = 2;
         public const ushort NamespaceIndexAllTypes = 3;
         public const ushort NamespaceIndexMassTest = 4;
 
-        private static UaPubSubApplication m_pubSubApplication;
+        private const string DataSetNameSimple = "Simple";
+        private const string DataSetNameAllTypes = "AllTypes";
+        private const string DataSetNameMassTest = "MassTest";
 
+        // simulate for BoolToogle changes to 3 seconds
+        private int m_boolToogleCount = 0;
+        private const int BoolToogleLimit = 2;
+        private const int SimpleInt32Limit = 10000;
+       
+        private FieldMetaDataCollection m_simpleFields = new FieldMetaDataCollection();
+        private FieldMetaDataCollection m_allTypesFields = new FieldMetaDataCollection();
+        private FieldMetaDataCollection m_massTestFields = new FieldMetaDataCollection();      
+        
+        private PublishedDataSetDataTypeCollection m_publishedDataSets;
+        private UaPubSubDataStore m_dataStore;
         private Timer m_updateValuesTimer;
 
-        private static object m_lock = new object();
+        private object m_lock = new object();
 
         #endregion
 
@@ -53,9 +52,10 @@ namespace SamplePublisher
         /// Constructor
         /// </summary>
         /// <param name="pubSubApplication"></param>
-        public DataStoreValuesGenerator(UaPubSubApplication pubSubApplication)
+        public DataStoreValuesGenerator(UaPubSubApplication uaPubSubApplication)
         {
-            m_pubSubApplication = pubSubApplication;
+            m_publishedDataSets = uaPubSubApplication.PubSubConfiguration.PublishedDataSets;
+            m_dataStore = uaPubSubApplication.DataStore;
         }
         #endregion
 
@@ -74,10 +74,10 @@ namespace SamplePublisher
         /// </summary>
         public void Start()
         {
-            if (m_pubSubApplication != null)
+            if (m_publishedDataSets != null)
             {
                 // Remember the fields to be updated 
-                foreach (var publishedDataSet in m_pubSubApplication.PubSubConfiguration.PublishedDataSets)
+                foreach (var publishedDataSet in m_publishedDataSets)
                 {
                     switch (publishedDataSet.Name)
                     {
@@ -113,7 +113,7 @@ namespace SamplePublisher
         /// <summary>
         /// Load initial demo data
         /// </summary>
-        private static void LoadInitialData()
+        private void LoadInitialData()
         {
             #region DataSet 'Simple' fill with data
             WriteFieldData("BoolToggle", NamespaceIndexSimple, new DataValue(new Variant(false), StatusCodes.Good, DateTime.UtcNow));
@@ -201,9 +201,9 @@ namespace SamplePublisher
         /// </summary>
         /// <param name="metaDatafieldName"></param>
         /// <returns></returns>
-        private static DataValue ReadFieldData(string metaDatafieldName, ushort namespaceIndex)
+        private DataValue ReadFieldData(string metaDatafieldName, ushort namespaceIndex)
         {
-            return m_pubSubApplication.DataStore.ReadPublishedDataItem(new NodeId(metaDatafieldName, namespaceIndex), Attributes.Value);
+            return m_dataStore.ReadPublishedDataItem(new NodeId(metaDatafieldName, namespaceIndex), Attributes.Value);
         }
 
         /// <summary>
@@ -211,16 +211,16 @@ namespace SamplePublisher
         /// </summary>
         /// <param name="metaDatafieldName"></param>
         /// <param name="dataValue"></param>
-        private static void WriteFieldData(string metaDatafieldName, ushort namespaceIndex, DataValue dataValue)
+        private void WriteFieldData(string metaDatafieldName, ushort namespaceIndex, DataValue dataValue)
         {
-            m_pubSubApplication.DataStore.WritePublishedDataItem(new NodeId(metaDatafieldName, namespaceIndex), Attributes.Value, dataValue);
+            m_dataStore.WritePublishedDataItem(new NodeId(metaDatafieldName, namespaceIndex), Attributes.Value, dataValue);
         }
 
         /// <summary>
         /// Simulate value changes in dynamic nodes
         /// </summary>
         /// <param name="state"></param>
-        private static void UpdateValues(object state)
+        private void UpdateValues(object state)
         {
             try
             {
@@ -276,7 +276,7 @@ namespace SamplePublisher
         /// <param name="namespaceIndex"></param>
         /// <param name="maxAllowedValue"></param>
         /// <param name="step"></param>
-        private static void IncrementValue(FieldMetaData variable, ushort namespaceIndex, long maxAllowedValue = Int32.MaxValue, int step = 0)
+        private void IncrementValue(FieldMetaData variable, ushort namespaceIndex, long maxAllowedValue = Int32.MaxValue, int step = 0)
         {
             // Read value to be incremented
             DataValue dataValue = ReadFieldData(variable.Name, namespaceIndex);

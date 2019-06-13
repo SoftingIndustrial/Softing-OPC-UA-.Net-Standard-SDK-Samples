@@ -24,7 +24,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>1896c36c-f1b0-4bc8-b3da-5917b0b4240c</String>
+              <String>e3558826-076d-4b1e-80b1-5e4230d85e7f</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -40,7 +40,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>ca5e41d1-f743-4c7e-af2e-524dfddcf9d6</String>
+              <String>0cf03534-6586-4389-9808-5ae7f540d560</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -56,7 +56,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>3e9ed86e-42a4-41de-8e7e-ccfdf79fa044</String>
+              <String>984ccf3c-7276-4f76-b3ed-3fe36dea7e04</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -72,7 +72,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>ed87ad29-486a-4877-80df-ad12d67d72c0</String>
+              <String>9d74746a-bee4-4fe8-a6eb-081c29a3e38b</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -88,7 +88,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>ee442734-c62a-4aee-8f0a-ad88ba5a18f7</String>
+              <String>f4a80e3d-c811-4417-8b19-34f61eeb1051</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -104,7 +104,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>189b11b1-aee4-4cbd-b351-f9c528d355b4</String>
+              <String>566b6276-a378-4bf3-8398-d8db592aa068</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -120,7 +120,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>218f611d-752c-4377-a7f8-dfbede269112</String>
+              <String>3a1f51c7-88a0-43b1-b5ed-55903da33aeb</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -136,7 +136,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>467ff67b-c858-46ac-b3c6-21d894e99197</String>
+              <String>f7ae513f-57f0-4f48-abf1-201f9a84bf4f</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -152,7 +152,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>23fccc65-6f72-4255-8822-25103ae09e17</String>
+              <String>c02a1e13-8e9a-43c0-a30e-63cd7733c884</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -168,7 +168,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>896dea3b-fd71-4a4f-9c23-d209f5fada08</String>
+              <String>68b32d25-f40e-436d-b1e6-dfd4fc4ddbfa</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -184,7 +184,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>cfb46ad3-688d-4563-9b1c-3939d8eeae8e</String>
+              <String>b3b31fe5-f6a7-40db-bc63-50b6a9b0cec5</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -200,7 +200,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>238acff1-f7d3-4b8d-89da-5a8c11bc6de8</String>
+              <String>df7b5dcf-5fc2-4829-9b36-c2d9c9653172</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -216,23 +216,7 @@
             <ArrayDimensions />
             <MaxStringLength>5</MaxStringLength>
             <DataSetFieldId>
-              <String>7752aa71-a179-4c08-863f-b73df876648a</String>
-            </DataSetFieldId>
-            <Properties />
-          </FieldMetaData>
-          <FieldMetaData>
-            <Name>StringOneDimension</Name>
-            <Description i:nil="true" />
-            <FieldFlags>0</FieldFlags>
-            <BuiltInType>12</BuiltInType>
-            <DataType>
-              <Identifier>i=12</Identifier>
-            </DataType>
-            <ValueRank>1</ValueRank>
-            <ArrayDimensions />
-            <MaxStringLength>14</MaxStringLength>
-            <DataSetFieldId>
-              <String>2db495f4-8dae-43b2-8708-870f73529b8e</String>
+              <String>4aa6f5bd-9ea0-4400-8002-e8555adb050f</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -248,12 +232,220 @@
             <ArrayDimensions />
             <MaxStringLength>3</MaxStringLength>
             <DataSetFieldId>
-              <String>209ca65e-4ae3-4e5f-a796-110e29cb9af3</String>
+              <String>18feedf6-1b88-4c1d-b706-175d74928426</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
           <FieldMetaData>
-            <Name>ByteStringOneDimension</Name>
+            <Name>BoolToggleArray</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>1</BuiltInType>
+            <DataType>
+              <Identifier>i=1</Identifier>
+            </DataType>
+            <ValueRank>1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>5b3b1866-8c22-42e3-88e4-df2584424182</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>ByteArray</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>3</BuiltInType>
+            <DataType>
+              <Identifier>i=3</Identifier>
+            </DataType>
+            <ValueRank>1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>d7c7f501-427a-4a26-be42-cda85da93b66</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>Int16Array</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>4</BuiltInType>
+            <DataType>
+              <Identifier>i=4</Identifier>
+            </DataType>
+            <ValueRank>1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>02d03f9f-d045-45a5-8bd2-285f713fb1ab</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>Int32Array</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>6</BuiltInType>
+            <DataType>
+              <Identifier>i=6</Identifier>
+            </DataType>
+            <ValueRank>1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>9356f2f0-aad6-4583-8b92-17f6f5475e60</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>SByteArray</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>2</BuiltInType>
+            <DataType>
+              <Identifier>i=2</Identifier>
+            </DataType>
+            <ValueRank>1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>9769be9e-5da3-4476-b2c8-49c3f51dec8f</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>UInt16Array</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>5</BuiltInType>
+            <DataType>
+              <Identifier>i=5</Identifier>
+            </DataType>
+            <ValueRank>1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>07f34132-ea54-4b02-bfc7-6bd2a7de74ca</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>UInt32Array</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>7</BuiltInType>
+            <DataType>
+              <Identifier>i=7</Identifier>
+            </DataType>
+            <ValueRank>1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>23417a25-801f-4dae-aebe-9dfd4929585b</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>FloatArray</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>10</BuiltInType>
+            <DataType>
+              <Identifier>i=10</Identifier>
+            </DataType>
+            <ValueRank>1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>26fdceab-a607-42ea-a6dd-243d7ae4c789</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>DoubleArray</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>11</BuiltInType>
+            <DataType>
+              <Identifier>i=11</Identifier>
+            </DataType>
+            <ValueRank>1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>6529aa24-dca9-4dfe-960c-5fe9e8bb316b</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>NodeClassArray</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>29</BuiltInType>
+            <DataType>
+              <Identifier>i=257</Identifier>
+            </DataType>
+            <ValueRank>1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>56753ab3-d715-4d1e-913f-3757164909f3</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>TimeArray</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>12</BuiltInType>
+            <DataType>
+              <Identifier>i=292</Identifier>
+            </DataType>
+            <ValueRank>1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>fae8fee0-4d4b-4ada-b4fa-851d485c9e36</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>EUInformationArray</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>22</BuiltInType>
+            <DataType>
+              <Identifier>i=887</Identifier>
+            </DataType>
+            <ValueRank>1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>5642dc69-41f7-4029-ae21-cc3d8e146988</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>StringArray</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>12</BuiltInType>
+            <DataType>
+              <Identifier>i=12</Identifier>
+            </DataType>
+            <ValueRank>1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>14</MaxStringLength>
+            <DataSetFieldId>
+              <String>c7fd44ab-8509-49f9-a61b-9b4489f7e916</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>ByteStringArray</Name>
             <Description i:nil="true" />
             <FieldFlags>0</FieldFlags>
             <BuiltInType>15</BuiltInType>
@@ -264,7 +456,7 @@
             <ArrayDimensions />
             <MaxStringLength>5</MaxStringLength>
             <DataSetFieldId>
-              <String>b9386fc1-d95c-4f30-aa8e-dc520f9e713c</String>
+              <String>420277dc-a281-4334-87c8-0358b36b77a9</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -495,22 +687,6 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=3;s=StringOneDimension</Identifier>
-                </PublishedVariable>
-                <AttributeId>13</AttributeId>
-                <SamplingIntervalHint>0</SamplingIntervalHint>
-                <DeadbandType>0</DeadbandType>
-                <DeadbandValue>0</DeadbandValue>
-                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
-                <SubstituteValue>
-                  <Value>
-                    <Null />
-                  </Value>
-                </SubstituteValue>
-                <MetaDataProperties />
-              </PublishedVariableDataType>
-              <PublishedVariableDataType>
-                <PublishedVariable>
                   <Identifier>ns=3;s=ByteString</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
@@ -527,7 +703,215 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=3;s=ByteStringOneDimension</Identifier>
+                  <Identifier>ns=3;s=BoolToggleArray</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=ByteArray</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=Int16Array</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=Int32Array</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=SByteArray</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=UInt16Array</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=UInt32Array</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=FloatArray</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=DoubleArray</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=NodeClassArray</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=TimeArray</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=EUInformationArray</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=StringArray</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=3;s=ByteStringArray</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -654,8 +1038,8 @@
         </TypeId>
         <Body>
           <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-            <NetworkInterface>Ethernet</NetworkInterface>
-            <Url>opc.udp://239.0.0.1:4840</Url>
+            <NetworkInterface>Local Area Connection</NetworkInterface>
+            <Url>opc.udp://255.255.255.255:4840</Url>
           </NetworkAddressUrlDataType>
         </Body>
       </Address>
