@@ -54,8 +54,7 @@ namespace SamplePublisher
         /// <param name="pubSubApplication"></param>
         public DataStoreValuesGenerator(UaPubSubApplication uaPubSubApplication)
         {
-            //m_publishedDataSets = uaPubSubApplication.PubSubConfiguration.PublishedDataSets;
-            m_publishedDataSets = uaPubSubApplication.GetPublisherDataSets();
+            m_publishedDataSets = uaPubSubApplication.UaPubSubConfigurator.PublishedDataSets;            
             m_dataStore = uaPubSubApplication.DataStore;
         }
         #endregion
