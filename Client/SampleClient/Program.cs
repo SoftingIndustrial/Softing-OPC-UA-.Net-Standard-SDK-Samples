@@ -38,41 +38,21 @@ namespace SampleClient
             // Subscribe to certificate validation error event
             application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);
 
-            LicensingStatus licensingStatusClient = LicensingStatus.Ok;
+            LicensingStatus clientLicensingStatus = LicensingStatus.Ok;
 
             // TODO - design time license activation
             // Fill in your design time license activation keys here
-            //licensingStatus = application.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-            
-            if (licensingStatusClient == LicensingStatus.Expired)
+            //clientLicensingStatus = application.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+
+            if (clientLicensingStatus == LicensingStatus.Expired)
             {
                 Console.WriteLine("Client license period expired!");
                 Console.ReadKey();
                 return;
             }
-            if (licensingStatusClient == LicensingStatus.Invalid)
+            if (clientLicensingStatus == LicensingStatus.Invalid)
             {
                 Console.WriteLine("Invalid Client license key!");
-                Console.ReadKey();
-                return;
-            }
-
-            Softing.Opc.Ua.PubSub.LicensingStatus licensingStatusPubSub = Softing.Opc.Ua.PubSub.LicensingStatus.Ok;
-
-            // TODO - design time license activation
-            // Fill in your design time license activation keys here
-            //licensingStatusPubSub = Softing.Opc.Ua.PubSub.License.ActivateLicense(Softing.Opc.Ua.PubSub.LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-            //licensingStatusPubSub = Softing.Opc.Ua.PubSub.License.ActivateLicense(Softing.Opc.Ua.PubSub.LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-
-            if (licensingStatusPubSub == Softing.Opc.Ua.PubSub.LicensingStatus.Expired)
-            {
-                Console.WriteLine("PubSub license period expired!");
-                Console.ReadKey();
-                return;
-            }
-            if (licensingStatusPubSub == Softing.Opc.Ua.PubSub.LicensingStatus.Invalid)
-            {
-                Console.WriteLine("Invalid PubSub License key!");
                 Console.ReadKey();
                 return;
             }

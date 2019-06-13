@@ -54,7 +54,8 @@ namespace SamplePublisher
         /// <param name="pubSubApplication"></param>
         public DataStoreValuesGenerator(UaPubSubApplication uaPubSubApplication)
         {
-            m_publishedDataSets = uaPubSubApplication.PubSubConfiguration.PublishedDataSets;
+            //m_publishedDataSets = uaPubSubApplication.PubSubConfiguration.PublishedDataSets;
+            m_publishedDataSets = uaPubSubApplication.GetPublisherDataSets();
             m_dataStore = uaPubSubApplication.DataStore;
         }
         #endregion
@@ -134,7 +135,6 @@ namespace SamplePublisher
             WriteFieldData("Float", NamespaceIndexAllTypes, new DataValue(new Variant((float)0F), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("Double", NamespaceIndexAllTypes, new DataValue(new Variant((double)0.0), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("NodeClass", NamespaceIndexAllTypes, new DataValue(new Variant(NodeClass.Object), StatusCodes.Good, DateTime.UtcNow));
-            WriteFieldData("Time", NamespaceIndexAllTypes, new DataValue(new Variant(DateTime.UtcNow.ToString("HH:mm")), StatusCodes.Good, DateTime.UtcNow));
             var euInformation = new EUInformation()
             {
                 Description = "Sample EuInformation. Will change UnitId",
@@ -142,6 +142,7 @@ namespace SamplePublisher
                 UnitId = 1
             };
             WriteFieldData("EUInformation", NamespaceIndexAllTypes, new DataValue(new ExtensionObject(euInformation), StatusCodes.Good, DateTime.UtcNow));
+            WriteFieldData("Time", NamespaceIndexAllTypes, new DataValue(new Variant(DateTime.UtcNow.ToString("HH:mm")), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("String", NamespaceIndexAllTypes, new DataValue(new Variant(""), StatusCodes.Good, DateTime.UtcNow));
             WriteFieldData("ByteString", NamespaceIndexAllTypes, new DataValue(new Variant(new byte[1] { 0 }), StatusCodes.Good, DateTime.UtcNow));
 

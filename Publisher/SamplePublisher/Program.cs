@@ -30,8 +30,8 @@ namespace SamplePublisher
             try
             {
                 LoadTraceLogger();
-                
-                string configurationFileName = "SamplePublisher.Config.xml";
+
+                string configurationFileName = "SamplePublisher.AllTypes.Config.xml";// "SamplePublisher.Config.xml";
                 
                 string[] commandLineArguments = Environment.GetCommandLineArgs();
                 if (commandLineArguments.Length > 1)
@@ -43,20 +43,20 @@ namespace SamplePublisher
                 }
 
                 #region Licensing
-                LicensingStatus licensingStatusPubSub = LicensingStatus.Ok;
+                LicensingStatus pubsubLicensingStatus = LicensingStatus.Ok;
 
                 // TODO - design time license activation
                 // Fill in your design time license activation keys here Client or Server
-                //licensingStatusPubSub = m_pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-                //licensingStatusPubSub = m_pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                //pubsubLicensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                //pubsubLicensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
 
-                if (licensingStatusPubSub == LicensingStatus.Expired)
+                if (pubsubLicensingStatus == LicensingStatus.Expired)
                 {
                     Console.WriteLine("PubSub license period expired!");
                     Console.ReadKey();
                     return;
                 }
-                if (licensingStatusPubSub == LicensingStatus.Invalid)
+                if (pubsubLicensingStatus == LicensingStatus.Invalid)
                 {
                     Console.WriteLine("Invalid PubSub license key!");
                     Console.ReadKey();

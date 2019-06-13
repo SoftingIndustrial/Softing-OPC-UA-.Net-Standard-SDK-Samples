@@ -52,20 +52,20 @@ namespace SampleSubscriber
                 }
 
                 #region Licensing
-                LicensingStatus licensingStatusPubSub = LicensingStatus.Ok;
+                LicensingStatus pubSubLicensingStatus = LicensingStatus.Ok;
 
                 // TODO - design time license activation
                 // Fill in your design time license activation keys here Client or Server
-                //licensingStatusPubSub = m_pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-                //licensingStatusPubSub = m_pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                //pubSubLicensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                //pubSubLicensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
 
-                if (licensingStatusPubSub == LicensingStatus.Expired)
+                if (pubSubLicensingStatus == LicensingStatus.Expired)
                 {
                     Console.WriteLine("PubSub license period expired!");
                     Console.ReadKey();
                     return;
                 }
-                if (licensingStatusPubSub == LicensingStatus.Invalid)
+                if (pubSubLicensingStatus == LicensingStatus.Invalid)
                 {
                     Console.WriteLine("Invalid PubSub license key!");
                     Console.ReadKey();
