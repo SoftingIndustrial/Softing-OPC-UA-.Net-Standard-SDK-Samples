@@ -50,39 +50,39 @@ namespace SampleSubscriber
                         configurationFileName = commandLineArguments[1];
                     }
                 }
-
-                #region Licensing
-                LicensingStatus pubSubLicensingStatus = LicensingStatus.Ok;
-
-                // TODO - design time license activation
-                // Fill in your design time license activation keys here Client or Server
-                //pubSubLicensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-                //pubSubLicensingStatus = m_pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-
-                if (pubSubLicensingStatus == LicensingStatus.Expired)
-                {
-                    Console.WriteLine("PubSub license period expired!");
-                    Console.ReadKey();
-                    return;
-                }
-                if (pubSubLicensingStatus == LicensingStatus.Invalid)
-                {
-                    Console.WriteLine("Invalid PubSub license key!");
-                    Console.ReadKey();
-                    return;
-                }
-                #endregion
-
+                
                 //var config = CreateConfigurationAllDataTypes();
                 //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
 
                 // Create the PubSub application
                 using (UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
+                    #region Licensing
+                    LicensingStatus pubSubLicensingStatus = LicensingStatus.Ok;
+
+                    // TODO - design time license activation
+                    // Fill in your design time license activation keys here Client or Server
+                    //pubSubLicensingStatus = pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                    //pubSubLicensingStatus = pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+
+                    if (pubSubLicensingStatus == LicensingStatus.Expired)
+                    {
+                        Console.WriteLine("PubSub license period expired!");
+                        Console.ReadKey();
+                        return;
+                    }
+                    if (pubSubLicensingStatus == LicensingStatus.Invalid)
+                    {
+                        Console.WriteLine("Invalid PubSub license key!");
+                        Console.ReadKey();
+                        return;
+                    }
+                    #endregion
+                    
                     // the PubSub application can be also created from an instance of PubSubConfigurationDataType
                     //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
                     //using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(pubSubConfiguration)) {
-                                 
+
                     // subscribe to data events 
                     pubSubApplication.DataReceived += PubSubApplication_DataReceived;
                     

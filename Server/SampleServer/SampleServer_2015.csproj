@@ -169,6 +169,9 @@
       <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.355.26\lib\net46\Opc.Ua.Server.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Softing.Opc.Ua.PubSub">
+      <HintPath>..\..\..\..\bin\net461\Softing.Opc.Ua.PubSub.dll</HintPath>
+    </Reference>
     <Reference Include="Softing.Opc.Ua.Server">
       <HintPath>..\..\..\..\bin\net461\Softing.Opc.Ua.Server.dll</HintPath>
     </Reference>

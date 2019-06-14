@@ -548,9 +548,13 @@ namespace SamplePublisher
                     if (variable.ValueRank == ValueRanks.Scalar)
                     {
                         var extensionObject = (ExtensionObject)dataValue.Value;
-                        if (extensionObject.Body is EUInformation euInformation)
+                        if (extensionObject.Body is EUInformation)
                         {
-                            euInformation.UnitId = euInformation.UnitId + 1;
+                            EUInformation euInformation = (EUInformation)extensionObject.Body;
+                            if (euInformation != null)
+                            {
+                                euInformation.UnitId = euInformation.UnitId + 1;
+                            }
                         }
                     }
                     else if (variable.ValueRank == ValueRanks.OneDimension)
