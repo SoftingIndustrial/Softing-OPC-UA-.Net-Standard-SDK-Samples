@@ -19,6 +19,7 @@ namespace SamplePublisher
     {
         #region Fields
         private const string SamplePublisherLogFile = "Softing/OpcUaNetStandardToolkit/logs/SamplePublisher.log";
+        private static ushort m_dataSetWriterId = 3;
         #endregion
         
         /// <summary>
@@ -94,12 +95,22 @@ namespace SamplePublisher
                         else if (key.KeyChar == 's')
                         {
                             // list connection status
-                            Console.WriteLine("Connections Status:");
-                            foreach (var connection in uaPubSubApplication.PubSubConnections)
-                            {
-                                Console.WriteLine("\tConnection '{0}' - Running={1}",
-                                    connection.PubSubConnectionConfiguration.Name, connection.IsRunning);
-                            }
+                            DisplayConfigurationState(uaPubSubApplication.UaPubSubConfigurator);
+                        }
+                        else if (key.KeyChar == 'e')
+                        {
+                            // list connection status
+                            EnableConfigurationObjectById(uaPubSubApplication.UaPubSubConfigurator);
+                        }
+                        else if (key.KeyChar == 'd')
+                        {
+                            // list connection status
+                            DisableConfigurationObjectById(uaPubSubApplication.UaPubSubConfigurator);
+                        }
+                        else if (key.KeyChar == 'a')
+                        {
+                            Console.WriteLine("Adding new DataSetWriter");
+                            //uaPubSubApplication.UaPubSubConfigurator.AddDataSetWriter(uaPubSubApplication.PubSubConnections[0].pub CreateDataSetWriterDataTypeSimple(++m_dataSetWriterId));
                         }
                         else
                         {
@@ -124,8 +135,34 @@ namespace SamplePublisher
             }
         }
 
-        
+       
+
+
         #region Create configuration object
+
+        private static DataSetWriterDataType CreateDataSetWriterDataTypeSimple(ushort writerId)
+        {
+            // Define DataSetWriter 'Simple'
+            DataSetWriterDataType dataSetWriterSimple = new DataSetWriterDataType();
+            dataSetWriterSimple.DataSetWriterId = writerId;
+            dataSetWriterSimple.Enabled = true;
+            dataSetWriterSimple.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetWriterSimple.DataSetName = "AllTypes";
+            dataSetWriterSimple.KeyFrameCount = 1;
+            UadpDataSetWriterMessageDataType uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
+            {
+                ConfiguredSize = 0,
+                DataSetOffset = 15,
+                NetworkMessageNumber = 1,
+                DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
+            };
+            dataSetWriterSimple.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+
+            return dataSetWriterSimple;
+        }
+
+
+
         /// <summary>
         /// Create a PubSubConfigurationDataType object programmatically
         /// </summary>
@@ -934,8 +971,94 @@ namespace SamplePublisher
         /// </summary>
         private static void PrintCommandParameters()
         {
-            Console.WriteLine("Press:\n\ts: connections status");
+            Console.WriteLine("Press:\n\ts: display configuration status");
+            Console.WriteLine("\te: enable configuration object specified by id");
+            Console.WriteLine("\td: disable configuration object specified by id");
             Console.WriteLine("\tx,q: shutdown the Publisher\n\n");
+        }
+
+        /// <summary>
+        /// Handle Enable confgi metthod call from command line
+        /// </summary>
+        /// <param name="uaPubSubConfigurator"></param>
+        private static void EnableConfigurationObjectById(UaPubSubConfigurator uaPubSubConfigurator)
+        {
+            DisplayConfigurationState(uaPubSubConfigurator);
+            Console.Write("\nEnter the ConfigId of the object you want to enable:");
+            string idStr = Console.ReadLine();
+            uint id = 0;
+            if (uint.TryParse(idStr, out id))
+            {
+                var configurationObject = uaPubSubConfigurator.FindObjectById(id);
+                if (configurationObject != null)
+                {
+                    var result = uaPubSubConfigurator.Enable(configurationObject);
+                    Console.WriteLine("\nThe Enable method returned code: {0}\n", result);
+                    DisplayConfigurationState(uaPubSubConfigurator);
+                    return;
+                }               
+            }
+            Console.WriteLine("\nCould not find the object with the specified id: {0}", idStr);
+        }
+
+        /// <summary>
+        /// Handle Disable config metthod call from command line
+        /// </summary>
+        /// <param name="uaPubSubConfigurator"></param>
+        private static void DisableConfigurationObjectById(UaPubSubConfigurator uaPubSubConfigurator)
+        {
+            DisplayConfigurationState(uaPubSubConfigurator);
+            Console.Write("\nEnter the ConfigId of the object you want to disable:");
+            string idStr = Console.ReadLine();
+            uint id = 0;
+            if (uint.TryParse(idStr, out id))
+            {
+                var configurationObject = uaPubSubConfigurator.FindObjectById(id);
+                if (configurationObject != null)
+                {
+                    var result = uaPubSubConfigurator.Disable(configurationObject);
+                    Console.WriteLine("\nThe Disable method returned code: {0}\n", result);
+                    DisplayConfigurationState(uaPubSubConfigurator);
+                    return;
+                }
+            }
+            Console.WriteLine("\nCould not find the object with the specified id: {0}", idStr);
+        }
+
+        /// <summary>
+        /// Display state for configured objects
+        /// </summary>
+        /// <param name="configurator"></param>
+        private static void DisplayConfigurationState(UaPubSubConfigurator configurator)
+        {
+            object configurationObject = configurator.PubSubConfiguration;
+            Console.WriteLine("\nConfiguration  \t\t\t\t-ConfigId={0}, State={1}",
+                configurator.FindIdForObject(configurationObject), configurator.FindStateForObject(configurationObject));
+            foreach (var connection in configurator.PubSubConfiguration.Connections)
+            {
+                Console.WriteLine("Connection '{0}'\t\t-ConfigId={1}, State={2}",
+                    connection.Name, configurator.FindIdForObject(connection),  configurator.FindStateForObject(connection));
+                foreach (var writerGroup in connection.WriterGroups)
+                {
+                    Console.WriteLine("  WriterGroup WriterGroupId={0}\t\t-ConfigId={1}, State={2}",
+                        writerGroup.WriterGroupId, configurator.FindIdForObject(writerGroup), configurator.FindStateForObject(writerGroup));
+                    foreach (var dataSetWriter in writerGroup.DataSetWriters)
+                    {
+                        Console.WriteLine("    DataSetWriter DataSetWriterId={0}\t-ConfigId={1}, State={2}",
+                            dataSetWriter.DataSetWriterId, configurator.FindIdForObject(dataSetWriter), configurator.FindStateForObject(dataSetWriter));
+                    }
+                }
+                foreach (var readerGroup in connection.ReaderGroups)
+                {
+                    Console.WriteLine("  ReaderGroup Name ='{0}'\t\t-ConfigId={1}, State={2}",
+                        readerGroup.Name, configurator.FindIdForObject(readerGroup), configurator.FindStateForObject(readerGroup));
+                    foreach (var dataSetReader in readerGroup.DataSetReaders)
+                    {
+                        Console.WriteLine("    DataSetReader DataSetMetaData.Name ='{0}'\t-ConfigId={1}, State={2}",
+                            dataSetReader.DataSetMetaData.Name, configurator.FindIdForObject(dataSetReader), configurator.FindStateForObject(dataSetReader));
+                    }
+                }
+            }
         }
 
         /// <summary>
