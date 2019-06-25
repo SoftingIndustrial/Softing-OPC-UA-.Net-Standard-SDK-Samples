@@ -44,7 +44,7 @@ namespace SamplePublisher
                     }
                 }
 
-                //var config = CreateConfigurationAllDataTypes();
+                //var config = CreateConfiguration();
                 //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
 
                 // Create the PubSub application
@@ -136,9 +136,6 @@ namespace SamplePublisher
             }
         }
 
-       
-
-
         #region Create configuration object
 
         private static DataSetWriterDataType CreateDataSetWriterDataTypeSimple(ushort writerId)
@@ -175,7 +172,7 @@ namespace SamplePublisher
             pubSubConnection1.Name = "UADPConection1";
             pubSubConnection1.Enabled = true;
             pubSubConnection1.PublisherId = (UInt16)10;
-            pubSubConnection1.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
+            pubSubConnection1.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.1:4840";
@@ -183,6 +180,7 @@ namespace SamplePublisher
 
             #region Define WriterGroup1
             WriterGroupDataType writerGroup1 = new WriterGroupDataType();
+            writerGroup1.Name = "WriterGroup 1";
             writerGroup1.Enabled = true;
             writerGroup1.WriterGroupId = 1;
             writerGroup1.PublishingInterval = 5000;
@@ -203,6 +201,7 @@ namespace SamplePublisher
 
             // Define DataSetWriter 'Simple'
             DataSetWriterDataType dataSetWriter1 = new DataSetWriterDataType();
+            dataSetWriter1.Name = "Writer 1";
             dataSetWriter1.DataSetWriterId = 1;
             dataSetWriter1.Enabled = true;
             dataSetWriter1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
@@ -220,6 +219,7 @@ namespace SamplePublisher
 
             // Define DataSetWriter 'AllTypes'
             DataSetWriterDataType dataSetWriter2 = new DataSetWriterDataType();
+            dataSetWriter2.Name = "Writer 2";
             dataSetWriter2.DataSetWriterId = 2;
             dataSetWriter2.Enabled = true;
             dataSetWriter2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
@@ -237,6 +237,7 @@ namespace SamplePublisher
 
             // Define DataSetWriter 'MassTest'
             DataSetWriterDataType dataSetWriter3 = new DataSetWriterDataType();
+            dataSetWriter3.Name = "Writer 3";
             dataSetWriter3.DataSetWriterId = 3;
             dataSetWriter3.Enabled = true;
             dataSetWriter3.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
@@ -260,7 +261,7 @@ namespace SamplePublisher
             pubSubConnection2.Name = "UADPConection2";
             pubSubConnection2.Enabled = true;
             pubSubConnection2.PublisherId = (UInt64)20;
-            pubSubConnection2.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
+            pubSubConnection2.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
             address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.1:4840";
@@ -268,6 +269,7 @@ namespace SamplePublisher
 
             #region Define WriterGroup2
             WriterGroupDataType writerGroup2 = new WriterGroupDataType();
+            writerGroup2.Name = "WriterGroup 2";
             writerGroup2.Enabled = true;
             writerGroup2.WriterGroupId = 2;
             writerGroup2.PublishingInterval = 5000;
@@ -286,6 +288,7 @@ namespace SamplePublisher
 
             // Define DataSetWriter 'Simple'
             DataSetWriterDataType dataSetWriter11 = new DataSetWriterDataType();
+            dataSetWriter11.Name = "Writer 11";
             dataSetWriter11.DataSetWriterId = 11;
             dataSetWriter11.Enabled = true;
             dataSetWriter11.DataSetFieldContentMask = (uint)DataSetFieldContentMask.None; //Variant encoding
@@ -302,6 +305,7 @@ namespace SamplePublisher
 
             // Define DataSetWriter 'AllTypes'
             DataSetWriterDataType dataSetWriter12 = new DataSetWriterDataType();
+            dataSetWriter12.Name = "Writer 12";
             dataSetWriter12.DataSetWriterId = 12;
             dataSetWriter12.Enabled = true;
             dataSetWriter12.DataSetFieldContentMask = (uint)DataSetFieldContentMask.None; //Variant encoding
@@ -317,6 +321,7 @@ namespace SamplePublisher
 
             // Define DataSetWriter 'MassTest'
             DataSetWriterDataType dataSetWriter13 = new DataSetWriterDataType();
+            dataSetWriter13.Name = "Writer 13";
             dataSetWriter13.DataSetWriterId = 13;
             dataSetWriter13.Enabled = true;
             dataSetWriter13.DataSetFieldContentMask = (uint)DataSetFieldContentMask.None; //Variant encoding
@@ -594,7 +599,7 @@ namespace SamplePublisher
             pubSubConnection1.Name = "UADPConection1";
             pubSubConnection1.Enabled = true;
             pubSubConnection1.PublisherId = (UInt16)11;
-            pubSubConnection1.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
+            pubSubConnection1.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.1:4840";
@@ -602,6 +607,7 @@ namespace SamplePublisher
 
             #region Define WriterGroup1
             WriterGroupDataType writerGroup1 = new WriterGroupDataType();
+            writerGroup1.Name = "WriterGroup 1";
             writerGroup1.Enabled = true;
             writerGroup1.WriterGroupId = 1;
             writerGroup1.PublishingInterval = 5000;
@@ -622,6 +628,7 @@ namespace SamplePublisher
 
             // Define DataSetWriter 'Simple'
             DataSetWriterDataType dataSetWriter1 = new DataSetWriterDataType();
+            dataSetWriter1.Name = "Writer 1";
             dataSetWriter1.DataSetWriterId = 1;
             dataSetWriter1.Enabled = true;
             dataSetWriter1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
@@ -645,7 +652,7 @@ namespace SamplePublisher
             pubSubConnection2.Name = "UADPConection2";
             pubSubConnection2.Enabled = true;
             pubSubConnection2.PublisherId = (UInt64)21;
-            pubSubConnection2.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
+            pubSubConnection2.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
             address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Local Area Connection";
             address.Url = "opc.udp://255.255.255.255:4840";
@@ -653,6 +660,7 @@ namespace SamplePublisher
 
             #region Define WriterGroup2
             WriterGroupDataType writerGroup2 = new WriterGroupDataType();
+            writerGroup2.Name = "WriterGroup 2";
             writerGroup2.Enabled = true;
             writerGroup2.WriterGroupId = 2;
             writerGroup2.PublishingInterval = 5000;
@@ -671,6 +679,7 @@ namespace SamplePublisher
 
             // Define DataSetWriter 'AllTypes'
             DataSetWriterDataType dataSetWriter11 = new DataSetWriterDataType();
+            dataSetWriter11.Name = "Writer 11";
             dataSetWriter11.DataSetWriterId = 11;
             dataSetWriter11.Enabled = true;
             dataSetWriter11.DataSetFieldContentMask = (uint)DataSetFieldContentMask.None; //Variant encoding

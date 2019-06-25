@@ -25,5 +25,6 @@ namespace SampleServer
         public const string Refrigerators = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/Refrigerators";
         public const string UserAuthentication = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/UserAuthentication";
         public const string FileTransfer = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/FileTransferServer";
+        public const string PubSub = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/PubSubServer";
     }
 }

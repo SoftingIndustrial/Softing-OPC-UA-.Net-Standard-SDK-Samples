@@ -10,6 +10,7 @@
 
 using Opc.Ua;
 using Softing.Opc.Ua.PubSub;
+using Softing.Opc.Ua.PubSub.Configuration;
 using Softing.Opc.Ua.PubSub.PublishedData;
 using System;
 using System.Collections.Generic;
@@ -50,9 +51,9 @@ namespace SampleSubscriber
                         configurationFileName = commandLineArguments[1];
                     }
                 }
-                
-                //var config = CreateConfigurationAllDataTypes();
-                //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
+
+                var config = CreateConfiguration();
+                UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
 
                 // Create the PubSub application
                 using (UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(configurationFileName))
@@ -168,7 +169,7 @@ namespace SampleSubscriber
             pubSubConnection1.Name = "UADPConection1";
             pubSubConnection1.Enabled = true;
             pubSubConnection1.PublisherId = (UInt16)10;
-            pubSubConnection1.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
+            pubSubConnection1.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.1:4840";
@@ -333,7 +334,7 @@ namespace SampleSubscriber
 
             #region Define ReaderGroup1
             ReaderGroupDataType readerGroup1 = new ReaderGroupDataType();
-           
+            readerGroup1.Name = "ReaderGroup 1";
             readerGroup1.Enabled = true;
             readerGroup1.MaxNetworkMessageSize = 1500;       
             readerGroup1.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
@@ -341,6 +342,7 @@ namespace SampleSubscriber
 
             #region Define DataSetReader 'Simple' for PublisherId = (UInt16)10, DataSetWriterId = 1
             DataSetReaderDataType dataSetReaderSimple = new DataSetReaderDataType();
+            dataSetReaderSimple.Name = "Reader 1";
             dataSetReaderSimple.PublisherId = (UInt16)10;
             dataSetReaderSimple.WriterGroupId = 0;
             dataSetReaderSimple.DataSetWriterId = 0;
@@ -380,6 +382,7 @@ namespace SampleSubscriber
 
             #region Define DataSetReader 'AllTypes' for PublisherId = (UInt16)10, DataSetWriterId = 2
             DataSetReaderDataType dataSetReaderAllTypes = new DataSetReaderDataType();
+            dataSetReaderAllTypes.Name = "Reader 2";
             dataSetReaderAllTypes.PublisherId = (UInt16)10;
             dataSetReaderAllTypes.WriterGroupId = 0;
             dataSetReaderAllTypes.DataSetWriterId = 0;
@@ -419,6 +422,7 @@ namespace SampleSubscriber
 
             #region Define DataSetReader 'MassTest' for PublisherId = (UInt16)10, DataSetWriterId = 3
             DataSetReaderDataType dataSetReaderMassTest = new DataSetReaderDataType();
+            dataSetReaderMassTest.Name = "Reader 3";
             dataSetReaderMassTest.PublisherId = (UInt16)10;
             dataSetReaderMassTest.WriterGroupId = 0;
             dataSetReaderMassTest.DataSetWriterId = 0;
@@ -460,7 +464,7 @@ namespace SampleSubscriber
 
             #region Define ReaderGroup2
             ReaderGroupDataType readerGroup2 = new ReaderGroupDataType();
-
+            readerGroup2.Name = "ReaderGroup 2";
             readerGroup2.Enabled = true;
             readerGroup2.MaxNetworkMessageSize = 1500;
             readerGroup2.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
@@ -468,6 +472,7 @@ namespace SampleSubscriber
 
             #region Define DataSetReader 'Simple' for PublisherId = (UInt64)20, DataSetWriterId = 11
             DataSetReaderDataType dataSetReaderSimple2 = new DataSetReaderDataType();
+            dataSetReaderSimple2.Name = "Reader 11";
             dataSetReaderSimple2.PublisherId = (UInt64)20;
             dataSetReaderSimple2.WriterGroupId = 0;
             dataSetReaderSimple2.DataSetWriterId = 11;
@@ -506,6 +511,7 @@ namespace SampleSubscriber
 
             #region Define DataSetReader 'AllTypes' for PublisherId = (UInt64)20, DataSetWriterId = 12
             DataSetReaderDataType dataSetReaderAllTypes2 = new DataSetReaderDataType();
+            dataSetReaderAllTypes2.Name = "Reader 12";
             dataSetReaderAllTypes2.PublisherId = (UInt64)20;
             dataSetReaderAllTypes2.WriterGroupId = 0;
             dataSetReaderAllTypes2.DataSetWriterId = 12;
@@ -544,6 +550,7 @@ namespace SampleSubscriber
 
             #region Define DataSetReader 'MassTest' for PublisherId = (UInt64)20,  DataSetWriterId = 13
             DataSetReaderDataType dataSetReaderMassTest2 = new DataSetReaderDataType();
+            dataSetReaderMassTest2.Name = "Reader 13";
             dataSetReaderMassTest2.PublisherId = (UInt64)20;
             dataSetReaderMassTest2.WriterGroupId = 0;
             dataSetReaderMassTest2.DataSetWriterId = 13;
@@ -602,7 +609,7 @@ namespace SampleSubscriber
             pubSubConnection1.Name = "UADPConection1";
             pubSubConnection1.Enabled = true;
             pubSubConnection1.PublisherId = (UInt16)11;
-            pubSubConnection1.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
+            pubSubConnection1.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Local Area Connection";
             address.Url = "opc.udp://255.255.255.255:4840";

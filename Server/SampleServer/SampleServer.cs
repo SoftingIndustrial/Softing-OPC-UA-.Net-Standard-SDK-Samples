@@ -18,6 +18,7 @@ using SampleServer.FileTransfer;
 using SampleServer.HistoricalDataAccess;
 using SampleServer.Methods;
 using SampleServer.NodeSetImport;
+using SampleServer.PubSub;
 using SampleServer.ReferenceServer;
 using SampleServer.UserAuthentication;
 using Softing.Opc.Ua.Server;
@@ -110,6 +111,7 @@ namespace SampleServer
             nodeManagers.Add(new ReferenceNodeManager(server, configuration));
             nodeManagers.Add(new UserAuthenticationNodeManager(server, configuration));
             nodeManagers.Add(new FileTransferNodeManager(server, configuration));
+            nodeManagers.Add(new PubSubNodeManager(server, configuration));
 
             // Create master node manager
             return new MasterNodeManager(server, configuration, null, nodeManagers.ToArray());
