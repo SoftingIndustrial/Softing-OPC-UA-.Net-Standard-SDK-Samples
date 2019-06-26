@@ -28,10 +28,15 @@ namespace SampleServer.PubSub
     /// </summary>
     public class PubSubNodeManager : NodeManager
     {
+        #region Private Fields
         private UaPubSubConfigurator m_uaPubSubConfigurator;
         private PublishSubscribeState m_publishSubscribeState;
+        // used to generate unique node ids
         private uint m_nodeIdentifierNumber = 1;
+        // maps config id to the corespondiong NodeState object created from it
         private Dictionary<uint, NodeState> m_configIdToNodeState = new Dictionary<uint, NodeState>();
+        #endregion
+
         #region Constructors
         /// <summary>
         /// Initializes the node manager.
@@ -42,6 +47,7 @@ namespace SampleServer.PubSub
         }
 
         #endregion
+
         /// <summary>
         /// Does any initialization required before the address space can be used.
         /// </summary>
@@ -71,34 +77,29 @@ namespace SampleServer.PubSub
                 m_uaPubSubConfigurator.ConnectionAdded += UaPubSubConfigurator_ConnectionAdded;
                 m_uaPubSubConfigurator.ConnectionRemoved += UaPubSubConfigurator_ConnectionRemoved;
 
-
                 m_uaPubSubConfigurator.WriterGroupAdded += UaPubSubConfigurator_WriterGroupAdded;
                 m_uaPubSubConfigurator.WriterGroupRemoved += UaPubSubConfigurator_WriterGroupRemoved;
-
+                m_uaPubSubConfigurator.DataSetWriterAdded += UaPubSubConfigurator_DataSetWriterAdded;
+                m_uaPubSubConfigurator.DataSetWriterRemoved += UaPubSubConfigurator_DataSetWriterRemoved;
+                m_uaPubSubConfigurator.ReaderGroupAdded += UaPubSubConfigurator_ReaderGroupAdded;                
+                m_uaPubSubConfigurator.ReaderGroupRemoved += UaPubSubConfigurator_ReaderGroupRemoved;
+                m_uaPubSubConfigurator.DataSetReaderAdded += UaPubSubConfigurator_DataSetReaderAdded;
+                m_uaPubSubConfigurator.DataSetReaderRemoved += UaPubSubConfigurator_DataSetReaderRemoved;
                 // load configuration
-                string configurationFileName = "SamplePublisher.Config.xml";
-                m_uaPubSubConfigurator.LoadConfiguration(configurationFileName);
+                string pubConfigurationFileName = "SamplePublisher.Config.xml";
+                m_uaPubSubConfigurator.LoadConfiguration(pubConfigurationFileName);
+
+                string subConfigurationFileName = "SampleSubscriber.Config.xml";
+                m_uaPubSubConfigurator.LoadConfiguration(subConfigurationFileName, false);
 
                 MapConfigIdToPubSubNodeState(m_uaPubSubConfigurator.FindIdForObject(m_uaPubSubConfigurator.PubSubConfiguration), m_publishSubscribeState);
                 InitializePubSubStatusStateMethods(m_publishSubscribeState.Status, m_uaPubSubConfigurator.PubSubConfiguration);
 
-                m_publishSubscribeState.AddConnection.OnCall = OnAddConnectionMethodCallHandler;
-                m_publishSubscribeState.RemoveConnection.OnCall = OnRemoveConnectionMethodCallHandler;
+                m_publishSubscribeState.AddConnection.OnCall = OnCallAddConnectionMethodHandler;
+                m_publishSubscribeState.RemoveConnection.OnCall = OnCallRemoveConnectionMethodHandler;
 
             }
         }
-
-
-        private byte[] ReadBytes(Stream stream)
-        {
-            stream.Position = 0;
-            using (MemoryStream ms = new MemoryStream())
-            {
-                stream.CopyTo(ms);
-                return ms.ToArray();
-            }
-        }
-
         /// <summary>
         /// Handler for <see cref="UaPubSubConfigurator.PubSubStateChanged"/> event.
         /// </summary>
@@ -166,9 +167,9 @@ namespace SampleServer.PubSub
             MapConfigIdToPubSubNodeState(e.ConnectionId, pubSubConnectionState);
             InitializePubSubStatusStateMethods(pubSubConnectionState.Status, e.PubSubConnectionDataType);
 
-            pubSubConnectionState.AddWriterGroup.OnCall = AddWriterGroupMethodCallHandler;
-            pubSubConnectionState.AddReaderGroup.OnCall = AddReaderGroupMethodCallHandler;
-            pubSubConnectionState.RemoveGroup.OnCall = RemoveGroupMethodCallHandler;
+            pubSubConnectionState.AddWriterGroup.OnCall = OnCallAddWriterGroupMethodHandler;
+            pubSubConnectionState.AddReaderGroup.OnCall = OnCallAddReaderGroupMethodHandler;
+            pubSubConnectionState.RemoveGroup.OnCall = OnCallRemoveGroupMethodHandler;
         }
 
         /// <summary>
@@ -239,14 +240,9 @@ namespace SampleServer.PubSub
                 MapConfigIdToPubSubNodeState(e.WriterGroupId, writerGroupState);
                 InitializePubSubStatusStateMethods(writerGroupState.Status, e.WriterGroupDataType);
 
-                //pubSubConnectionState.AddWriterGroup.OnCall = AddWriterGroupMethodCallHandler;
-                //pubSubConnectionState.AddReaderGroup.OnCall = AddReaderGroupMethodCallHandler;
-                //pubSubConnectionState.RemoveGroup.OnCall = RemoveGroupMethodCallHandler;
-            }
-
-
-
-            
+                writerGroupState.AddDataSetWriter.OnCall = OnCallAddDataSetWriterHandler;
+                writerGroupState.RemoveDataSetWriter.OnCall = OnCallRemoveDataSetWriterHandler;
+            }            
         }
 
         /// <summary>
@@ -256,15 +252,258 @@ namespace SampleServer.PubSub
         /// <param name="e"></param>
         private void UaPubSubConfigurator_WriterGroupRemoved(object sender, WriterGroupEventArgs e)
         {
-            throw new NotImplementedException();
+            // locate the writerGroup node and delete it from address space
+            WriterGroupState writerGroupState = FindPubSubNodeState(e.WriterGroupId) as WriterGroupState;
+            if (writerGroupState != null)
+            {
+                //find parent connection
+                PubSubConnectionState parentConnection = writerGroupState.Parent as PubSubConnectionState;
+                if (parentConnection != null)
+                {
+                    // remove from children list
+                    parentConnection.RemoveChild(writerGroupState);
+                    // remove from predefined nodes
+                    PredefinedNodes.Remove(writerGroupState.NodeId);
+                    RemoveConfigIdToPubSubNodeStateMapping(writerGroupState);
+                }
+            }
         }
 
+        /// <summary>
+        ///  Handler for <see cref="UaPubSubConfigurator.DataSetWriterAdded"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UaPubSubConfigurator_DataSetWriterAdded(object sender, DataSetWriterEventArgs e)
+        {
+            //find parent writerGroup object 
+            WriterGroupState parentWriterGroupState = FindPubSubNodeState(e.WriterGroupId) as WriterGroupState;
+            if (parentWriterGroupState != null)
+            {
+                // create dataset writer state and add it to the address space
+                DataSetWriterState dataSetWriterState = CreateObjectFromType(parentWriterGroupState, e.DataSetWriterDataType.Name,
+                    ObjectTypeIds.DataSetWriterType, ReferenceTypeIds.HasDataSetWriter) as DataSetWriterState;
 
+                //copy properties of configuration ito node state object
+                dataSetWriterState.DataSetWriterId.Value = e.DataSetWriterDataType.DataSetWriterId;
+                dataSetWriterState.DataSetFieldContentMask.Value = e.DataSetWriterDataType.DataSetFieldContentMask;
+               // dataSetWriterGroupState.KeyFrameCount.Value = e.DataSetWriterDataType.KeyFrameCount;
+                //.MessageSettings
+                UadpDataSetWriterMessageDataType messageSettings = ExtensionObject.ToEncodeable(e.DataSetWriterDataType.MessageSettings)
+                      as UadpDataSetWriterMessageDataType;
+                if (messageSettings != null)
+                {
+                    UadpDataSetWriterMessageState messageSettingsState = CreateObjectFromType(dataSetWriterState, BrowseNames.MessageSettings, ObjectTypeIds.UadpDataSetWriterMessageType)
+                        as UadpDataSetWriterMessageState;
+                    messageSettingsState.ConfiguredSize.Value = messageSettings.ConfiguredSize;
+                    messageSettingsState.DataSetOffset.Value = messageSettings.DataSetOffset;
+                    messageSettingsState.DataSetMessageContentMask.Value = messageSettings.DataSetMessageContentMask;
+                    messageSettingsState.NetworkMessageNumber.Value = messageSettings.NetworkMessageNumber;
+
+                    dataSetWriterState.MessageSettings = messageSettingsState;
+                }
+
+                //.TransportSettings              
+
+                MapConfigIdToPubSubNodeState(e.DataSetWriterId, dataSetWriterState);
+                InitializePubSubStatusStateMethods(dataSetWriterState.Status, e.DataSetWriterDataType);
+            }
+        }
+
+        /// <summary>
+        ///  Handler for <see cref="UaPubSubConfigurator.DataSetWriterRemoved"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UaPubSubConfigurator_DataSetWriterRemoved(object sender, DataSetWriterEventArgs e)
+        {
+            // locate the Group node and delete it from address space
+            DataSetWriterState dataSetWriterState = FindPubSubNodeState(e.DataSetWriterId) as DataSetWriterState;
+            if (dataSetWriterState != null)
+            {
+                //find parent connection
+                WriterGroupState parentWriterGroup = dataSetWriterState.Parent as WriterGroupState;
+                if (parentWriterGroup != null)
+                {
+                    // remove from children list
+                    parentWriterGroup.RemoveChild(dataSetWriterState);
+                    // remove from predefined nodes
+                    PredefinedNodes.Remove(dataSetWriterState.NodeId);
+                    RemoveConfigIdToPubSubNodeStateMapping(dataSetWriterState);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handler for <see cref="UaPubSubConfigurator.ReaderGroupAdded"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UaPubSubConfigurator_ReaderGroupAdded(object sender, ReaderGroupEventArgs e)
+        {
+            //find parent connection object 
+            PubSubConnectionState parentConnectionState = FindPubSubNodeState(e.ConnectionId) as PubSubConnectionState;
+            if (parentConnectionState != null)
+            {
+                // create reader group state and add it to the address space
+                ReaderGroupState readerGroupState = CreateObjectFromType(parentConnectionState, e.ReaderGroupDataType.Name,
+                    ObjectTypeIds.ReaderGroupType, ReferenceTypeIds.HasComponent) as ReaderGroupState;
+
+                //ReaderGroupState.MessageSettings
+                ReaderGroupMessageDataType messageSettings = ExtensionObject.ToEncodeable(e.ReaderGroupDataType.MessageSettings)
+                      as ReaderGroupMessageDataType;
+                if (messageSettings != null)
+                {
+                    ReaderGroupMessageState messageSettingsState = CreateObjectFromType(readerGroupState, BrowseNames.MessageSettings, ObjectTypeIds.ReaderGroupMessageType)
+                        as ReaderGroupMessageState;
+                    readerGroupState.MessageSettings = messageSettingsState;
+                }
+
+                //ReaderGroupState.TransportSettings
+                ReaderGroupTransportDataType transportSettings = ExtensionObject.ToEncodeable(e.ReaderGroupDataType.TransportSettings)
+                      as ReaderGroupTransportDataType;
+                if (transportSettings != null)
+                {
+                    ReaderGroupTransportState readerGroupTransportState = CreateObjectFromType(readerGroupState, BrowseNames.TransportSettings, ObjectTypeIds.ReaderGroupTransportType)
+                        as ReaderGroupTransportState;
+
+                    readerGroupState.TransportSettings = readerGroupTransportState;
+                }
+
+                MapConfigIdToPubSubNodeState(e.ReaderGroupId, readerGroupState);
+                InitializePubSubStatusStateMethods(readerGroupState.Status, e.ReaderGroupDataType);
+
+                readerGroupState.AddDataSetReader.OnCall = OnCallAddDataSetReaderHandler;
+                readerGroupState.RemoveDataSetReader.OnCall = OnCallRemoveDataSetReaderHandler;
+            }
+        }
+
+        /// <summary>
+        /// Handler for <see cref="UaPubSubConfigurator.ReaderGroupRemoved"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UaPubSubConfigurator_ReaderGroupRemoved(object sender, ReaderGroupEventArgs e)
+        {
+            // locate the readerGroup node and delete it from address space
+            ReaderGroupState readerGroupState = FindPubSubNodeState(e.ReaderGroupId) as ReaderGroupState;
+            if (readerGroupState != null)
+            {
+                //find parent connection
+                PubSubConnectionState parentConnection = readerGroupState.Parent as PubSubConnectionState;
+                if (parentConnection != null)
+                {
+                    // remove from children list
+                    parentConnection.RemoveChild(readerGroupState);
+                    // remove from predefined nodes
+                    PredefinedNodes.Remove(readerGroupState.NodeId);
+                    RemoveConfigIdToPubSubNodeStateMapping(readerGroupState);
+                }
+            }
+        }
+
+        /// <summary>
+        ///  Handler for <see cref="UaPubSubConfigurator.DataSetReaderAdded"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UaPubSubConfigurator_DataSetReaderAdded(object sender, DataSetReaderEventArgs e)
+        {
+            //find parent readerGroup object 
+            ReaderGroupState parentReaderGroupState = FindPubSubNodeState(e.ReaderGroupId) as ReaderGroupState;
+            if (parentReaderGroupState != null)
+            {
+                // create dataset reader state and add it to the address space
+                DataSetReaderState dataSetreaderState = CreateObjectFromType(parentReaderGroupState, e.DataSetReaderDataType.Name,
+                    ObjectTypeIds.DataSetReaderType, ReferenceTypeIds.HasDataSetReader) as DataSetReaderState;
+
+                //copy properties of configuration ito node state object
+                dataSetreaderState.PublisherId.Value = e.DataSetReaderDataType.PublisherId;
+                dataSetreaderState.WriterGroupId.Value = e.DataSetReaderDataType.WriterGroupId;
+                dataSetreaderState.DataSetWriterId.Value = e.DataSetReaderDataType.DataSetWriterId;
+                dataSetreaderState.DataSetMetaData.Value = e.DataSetReaderDataType.DataSetMetaData;
+                dataSetreaderState.DataSetFieldContentMask.Value = e.DataSetReaderDataType.DataSetFieldContentMask;
+                dataSetreaderState.MessageReceiveTimeout.Value = e.DataSetReaderDataType.MessageReceiveTimeout;
+
+                //SubscribedDataSet
+                TargetVariablesDataType subscribedDataSet = ExtensionObject.ToEncodeable(e.DataSetReaderDataType.SubscribedDataSet)
+                      as TargetVariablesDataType;
+                if (subscribedDataSet != null)
+                {
+                    TargetVariablesState targetVariablesState = CreateObjectFromType(dataSetreaderState, BrowseNames.SubscribedDataSet, ObjectTypeIds.TargetVariablesType)
+                        as TargetVariablesState;
+                    targetVariablesState.TargetVariables.Value = subscribedDataSet.TargetVariables.ToArray();
+                    //if (dataSetreaderState.SubscribedDataSet != null)
+                    //{
+                    //    dataSetreaderState.ReplaceChild(SystemContext, targetVariablesState);
+                    //}
+                    //else
+                    {
+                        dataSetreaderState.SubscribedDataSet = targetVariablesState;
+                    }
+                }
+
+                //.MessageSettings
+                UadpDataSetReaderMessageDataType messageSettings = ExtensionObject.ToEncodeable(e.DataSetReaderDataType.MessageSettings)
+                    as UadpDataSetReaderMessageDataType;
+                if (messageSettings != null)
+                {
+                    UadpDataSetReaderMessageState messageSettingsState = CreateObjectFromType(dataSetreaderState, BrowseNames.MessageSettings, ObjectTypeIds.UadpDataSetReaderMessageType)
+                        as UadpDataSetReaderMessageState;
+                    messageSettingsState.GroupVersion.Value = messageSettings.GroupVersion;
+                    messageSettingsState.DataSetOffset.Value = messageSettings.DataSetOffset;                    
+                    messageSettingsState.NetworkMessageNumber.Value = messageSettings.NetworkMessageNumber;
+                    messageSettingsState.DataSetMessageContentMask.Value = messageSettings.DataSetMessageContentMask;
+                    messageSettingsState.NetworkMessageContentMask.Value = messageSettings.NetworkMessageContentMask;
+
+                    dataSetreaderState.MessageSettings = messageSettingsState;
+                }
+
+                //.TransportSettings              
+
+                MapConfigIdToPubSubNodeState(e.DataSetReaderId, dataSetreaderState);
+                InitializePubSubStatusStateMethods(dataSetreaderState.Status, e.DataSetReaderDataType);
+            }
+        }
+        /// <summary>
+        /// Handler for <see cref="UaPubSubConfigurator.DataSetReaderRemoved"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UaPubSubConfigurator_DataSetReaderRemoved(object sender, DataSetReaderEventArgs e)
+        {
+            // locate the Group node and delete it from address space
+            DataSetReaderState dataSetReaderState = FindPubSubNodeState(e.DataSetReaderId) as DataSetReaderState;
+            if (dataSetReaderState != null)
+            {
+                //find parent group
+                ReaderGroupState parentReaderGroup = dataSetReaderState.Parent as ReaderGroupState;
+                if (parentReaderGroup != null)
+                {
+                    // remove from children list
+                    parentReaderGroup.RemoveChild(dataSetReaderState);
+                    // remove from predefined nodes
+                    PredefinedNodes.Remove(dataSetReaderState.NodeId);
+                    RemoveConfigIdToPubSubNodeStateMapping(dataSetReaderState);
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Handler for <see cref="UaPubSubConfigurator.PublishedDataSetRemoved"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UaPubSubConfigurator_PublishedDataSetRemoved(object sender, PublishedDataSetEventArgs e)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Handler for <see cref="UaPubSubConfigurator.PublishedDataSetAdded"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UaPubSubConfigurator_PublishedDataSetAdded(object sender, PublishedDataSetEventArgs e)
         {
             throw new NotImplementedException();
@@ -293,7 +532,7 @@ namespace SampleServer.PubSub
         /// <param name="configuration"></param>
         /// <param name="connectionId"></param>
         /// <returns></returns>
-        private ServiceResult OnAddConnectionMethodCallHandler(ISystemContext context,  MethodState method, NodeId objectId,  PubSubConnectionDataType configuration, ref NodeId connectionId)
+        private ServiceResult OnCallAddConnectionMethodHandler(ISystemContext context,  MethodState method, NodeId objectId,  PubSubConnectionDataType configuration, ref NodeId connectionId)
         {
             if (configuration != null)
             {
@@ -324,7 +563,7 @@ namespace SampleServer.PubSub
         /// <param name="objectId"></param>
         /// <param name="connectionId"></param>
         /// <returns></returns>
-        private ServiceResult OnRemoveConnectionMethodCallHandler(ISystemContext context, MethodState method, NodeId objectId, NodeId connectionId)
+        private ServiceResult OnCallRemoveConnectionMethodHandler(ISystemContext context, MethodState method, NodeId objectId, NodeId connectionId)
         {
             // find connection node to be removed
             PubSubConnectionState pubSubConnectionState = FindNodeInAddressSpace(connectionId) as PubSubConnectionState;
@@ -345,7 +584,7 @@ namespace SampleServer.PubSub
         /// <param name="configuration"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        private ServiceResult AddWriterGroupMethodCallHandler(ISystemContext context, MethodState method, NodeId objectId, WriterGroupDataType configuration, ref NodeId groupId)
+        private ServiceResult OnCallAddWriterGroupMethodHandler(ISystemContext context, MethodState method, NodeId objectId, WriterGroupDataType configuration, ref NodeId groupId)
         {
             if (configuration != null)
             {
@@ -373,6 +612,62 @@ namespace SampleServer.PubSub
         }
 
         /// <summary>
+        /// Handler for OnCall event of <see cref="WriterGroupState.AddDataSetWriter"/> method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="configuration"></param>
+        /// <param name="dataSetWriterNodeId"></param>
+        /// <returns></returns>
+        private ServiceResult OnCallAddDataSetWriterHandler(ISystemContext context, MethodState method, NodeId objectId, DataSetWriterDataType configuration, ref NodeId dataSetWriterNodeId)
+        {
+            if (configuration != null)
+            {
+                //locate parent writer group[
+                WriterGroupState writerGroupNodeState = method.Parent as WriterGroupState;
+
+                if (writerGroupNodeState != null && writerGroupNodeState.Handle is uint)
+                {
+                    uint writerGroupConfigId = (uint)writerGroupNodeState.Handle;
+                    StatusCode resultStatusCode = m_uaPubSubConfigurator.AddDataSetWriter(writerGroupConfigId, configuration);
+                    if (StatusCode.IsBad(resultStatusCode))
+                    {
+                        return resultStatusCode;
+                    }
+                    uint dataSetWriterConfigId = m_uaPubSubConfigurator.FindIdForObject(configuration);
+                    NodeState dataSetWriterNodeState = FindPubSubNodeState(dataSetWriterConfigId);
+                    if (dataSetWriterNodeState != null)
+                    {
+                        dataSetWriterNodeId = dataSetWriterNodeState.NodeId;
+                        return StatusCodes.Good;
+                    }
+                }
+            }
+            return StatusCodes.BadInvalidArgument;
+        }
+
+        /// <summary>
+        /// Handler for OnCall event of <see cref="WriterGroupState.RemoveDataSetWriter"/> method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="dataSetWriterNodeId"></param>
+        /// <returns></returns>
+        private ServiceResult OnCallRemoveDataSetWriterHandler(ISystemContext context, MethodState method, NodeId objectId, NodeId dataSetWriterNodeId)
+        {
+            // find node to be removed
+            DataSetWriterState dataSetWriterState = FindNodeInAddressSpace(dataSetWriterNodeId) as DataSetWriterState;
+            if (dataSetWriterState != null && dataSetWriterState.Handle is uint)
+            {
+                uint configId = (uint)dataSetWriterState.Handle;
+                return m_uaPubSubConfigurator.RemoveDataSetWriter(configId);
+            }
+            return StatusCodes.BadInvalidArgument;
+        }
+
+        /// <summary>
         /// Handler for OnCall event of <see cref="PubSubConnectionState.AddReaderGroup"/> method.
         /// </summary>
         /// <param name="context"></param>
@@ -381,7 +676,7 @@ namespace SampleServer.PubSub
         /// <param name="configuration"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        private ServiceResult AddReaderGroupMethodCallHandler(ISystemContext context, MethodState method, NodeId objectId, ReaderGroupDataType configuration, ref NodeId groupId)
+        private ServiceResult OnCallAddReaderGroupMethodHandler(ISystemContext context, MethodState method, NodeId objectId, ReaderGroupDataType configuration, ref NodeId groupId)
         {
             if (configuration != null)
             {
@@ -409,6 +704,62 @@ namespace SampleServer.PubSub
         }
 
         /// <summary>
+        /// Handler for OnCall event of <see cref="ReaderGroupState.AddDataSetReader"/> method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="configuration"></param>
+        /// <param name="dataSetReaderNodeId"></param>
+        /// <returns></returns>
+        private ServiceResult OnCallAddDataSetReaderHandler(ISystemContext context, MethodState method, NodeId objectId, DataSetReaderDataType configuration, ref NodeId dataSetReaderNodeId)
+        {
+            if (configuration != null)
+            {
+                //locate parent writer group[
+                ReaderGroupState readerGroupState = method.Parent as ReaderGroupState;
+
+                if (readerGroupState != null && readerGroupState.Handle is uint)
+                {
+                    uint readerGroupConfigId = (uint)readerGroupState.Handle;
+                    StatusCode resultStatusCode = m_uaPubSubConfigurator.AddDataSetReader(readerGroupConfigId, configuration);
+                    if (StatusCode.IsBad(resultStatusCode))
+                    {
+                        return resultStatusCode;
+                    }
+                    uint dataSetReaderConfigId = m_uaPubSubConfigurator.FindIdForObject(configuration);
+                    NodeState dataSetReaderNodeState = FindPubSubNodeState(dataSetReaderConfigId);
+                    if (dataSetReaderNodeState != null)
+                    {
+                        dataSetReaderNodeId = dataSetReaderNodeState.NodeId;
+                        return StatusCodes.Good;
+                    }
+                }
+            }
+            return StatusCodes.BadInvalidArgument;
+        }
+
+        /// <summary>
+        /// Handler for OnCall event of <see cref="ReaderGroupState.RemoveDataSetReader"/> method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="dataSetReaderNodeId"></param>
+        /// <returns></returns>
+        private ServiceResult OnCallRemoveDataSetReaderHandler(ISystemContext context, MethodState method, NodeId objectId, NodeId dataSetReaderNodeId)
+        {
+            // find node to be removed
+            DataSetReaderState dataSeReaderState = FindNodeInAddressSpace(dataSetReaderNodeId) as DataSetReaderState;
+            if (dataSeReaderState != null && dataSeReaderState.Handle is uint)
+            {
+                uint configId = (uint)dataSeReaderState.Handle;
+                return m_uaPubSubConfigurator.RemoveDataSetReader(configId);
+            }
+            return StatusCodes.BadInvalidArgument;
+        }
+
+        /// <summary>
         /// Handler for OnCall event of <see cref="PubSubConnectionState.RemoveGroup"/> method.
         /// </summary>
         /// <param name="context"></param>
@@ -416,7 +767,7 @@ namespace SampleServer.PubSub
         /// <param name="objectId"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        private ServiceResult RemoveGroupMethodCallHandler(ISystemContext context, MethodState method, NodeId objectId, NodeId groupId)
+        private ServiceResult OnCallRemoveGroupMethodHandler(ISystemContext context, MethodState method, NodeId objectId, NodeId groupId)
         {
             // find group node to be removed
             NodeState groupNodeState = FindNodeInAddressSpace(groupId);
@@ -431,8 +782,7 @@ namespace SampleServer.PubSub
                 if (groupNodeState is ReaderGroupState)
                 {
                     return m_uaPubSubConfigurator.RemoveReaderGroup(groupConfigId);
-                }
-                 
+                }                 
             }
             return StatusCodes.BadNodeIdUnknown;
         }
@@ -446,7 +796,7 @@ namespace SampleServer.PubSub
         /// <param name="inputArguments"></param>
         /// <param name="outputArguments"></param>
         /// <returns></returns>
-        private ServiceResult OnPubSubStatusDisableCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        private ServiceResult OnCallPubSubStatusDisableHandler(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
             if (method != null && method.Handle is uint)
             {
@@ -466,7 +816,7 @@ namespace SampleServer.PubSub
         /// <param name="inputArguments"></param>
         /// <param name="outputArguments"></param>
         /// <returns></returns>
-        private ServiceResult OnPubSubStatusEnableCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        private ServiceResult OnCallPubSubStatusEnableHandler(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
             if (method != null && method.Handle is uint)
             {
@@ -488,12 +838,12 @@ namespace SampleServer.PubSub
             uint configId = m_uaPubSubConfigurator.FindIdForObject(configurationObject);
             if (statusNode.Enable == null)
             {
-                statusNode.Enable = CreateMethod(statusNode, BrowseNames.Enable, null, null, OnPubSubStatusEnableCall);
+                statusNode.Enable = CreateMethod(statusNode, BrowseNames.Enable, null, null, OnCallPubSubStatusEnableHandler);
                 statusNode.Enable.Handle = configId;
             }
             if (statusNode.Disable == null)
             {
-                statusNode.Disable = CreateMethod(statusNode, BrowseNames.Disable, null, null, OnPubSubStatusDisableCall);
+                statusNode.Disable = CreateMethod(statusNode, BrowseNames.Disable, null, null, OnCallPubSubStatusDisableHandler);
                 statusNode.Disable.Handle = configId;
             }
 

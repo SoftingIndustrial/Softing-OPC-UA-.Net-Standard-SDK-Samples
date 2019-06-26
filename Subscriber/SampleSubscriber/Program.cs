@@ -52,8 +52,8 @@ namespace SampleSubscriber
                     }
                 }
 
-                var config = CreateConfiguration();
-                UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
+                //var config = CreateConfiguration();
+                //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
 
                 // Create the PubSub application
                 using (UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(configurationFileName))
