@@ -52,11 +52,11 @@ namespace SampleSubscriber
                     }
                 }
 
-                //var config = CreateConfiguration();
+                //var config = CreateConfigurationAllDataTypes();
                 //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
 
                 // Create the PubSub application
-                using (UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(configurationFileName))
+                using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
                     #region Licensing
                     LicensingStatus pubSubLicensingStatus = LicensingStatus.Ok;
@@ -85,12 +85,12 @@ namespace SampleSubscriber
                     //using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(pubSubConfiguration)) {
 
                     // subscribe to data events 
-                    pubSubApplication.DataReceived += PubSubApplication_DataReceived;
+                    uaPubSubApplication.DataReceived += PubSubApplication_DataReceived;
                     
                     PrintCommandParameters();
 
                     //start application
-                    pubSubApplication.Start();
+                    uaPubSubApplication.Start();
                     Console.WriteLine("Subscriber started");
                     do
                     {
@@ -103,12 +103,17 @@ namespace SampleSubscriber
                         else if (key.KeyChar == 's')
                         {
                             // list connection status
-                            Console.WriteLine("\tConnections Status:");
-                            foreach (var connection in pubSubApplication.PubSubConnections)
-                            {
-                                Console.WriteLine("\tConnection '{0}' - Running={1}",
-                                    connection.PubSubConnectionConfiguration.Name, connection.IsRunning);
-                            }
+                            DisplayConfigurationState(uaPubSubApplication.UaPubSubConfigurator);
+                        }
+                        else if (key.KeyChar == 'e')
+                        {
+                            // list connection status
+                            EnableConfigurationObjectById(uaPubSubApplication.UaPubSubConfigurator);
+                        }
+                        else if (key.KeyChar == 'd')
+                        {
+                            // list connection status
+                            DisableConfigurationObjectById(uaPubSubApplication.UaPubSubConfigurator);
                         }
                         else
                         {
@@ -862,7 +867,7 @@ namespace SampleSubscriber
 
             #region Define ReaderGroup1
             ReaderGroupDataType readerGroup1 = new ReaderGroupDataType();
-
+            readerGroup1.Name = "ReaderGroup1";
             readerGroup1.Enabled = true;
             readerGroup1.MaxNetworkMessageSize = 1500;
             readerGroup1.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
@@ -870,6 +875,7 @@ namespace SampleSubscriber
 
             #region Define DataSetReader 'Simple' for PublisherId = (UInt16)11, DataSetWriterId = 1
             DataSetReaderDataType dataSetReaderSimple = new DataSetReaderDataType();
+            dataSetReaderSimple.Name = "Reader Simple";
             dataSetReaderSimple.PublisherId = (UInt16)11;
             dataSetReaderSimple.WriterGroupId = 0;
             dataSetReaderSimple.DataSetWriterId = 0;
@@ -912,7 +918,7 @@ namespace SampleSubscriber
 
             #region Define ReaderGroup2
             ReaderGroupDataType readerGroup2 = new ReaderGroupDataType();
-
+            readerGroup2.Name = "ReaderGroup 2";
             readerGroup2.Enabled = true;
             readerGroup2.MaxNetworkMessageSize = 1500;
             readerGroup2.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
@@ -920,6 +926,7 @@ namespace SampleSubscriber
 
             #region Define DataSetReader 'AllTypes' for PublisherId = (UInt64)21, DataSetWriterId = 11
             DataSetReaderDataType dataSetReaderSimple2 = new DataSetReaderDataType();
+            dataSetReaderSimple2.Name = "Reader Simple";
             dataSetReaderSimple2.PublisherId = (UInt64)21;
             dataSetReaderSimple2.WriterGroupId = 0;
             dataSetReaderSimple2.DataSetWriterId = 11;
@@ -974,10 +981,95 @@ namespace SampleSubscriber
         /// </summary>
         private static void PrintCommandParameters()
         {
-            Console.WriteLine("Press:\n\ts: connections status");
+            Console.WriteLine("Press:\n\ts: display configuration status");
+            Console.WriteLine("\te: enable configuration object specified by id");
+            Console.WriteLine("\td: disable configuration object specified by id");
             Console.WriteLine("\tx,q: shutdown the Subscriber\n\n");
         }
 
+        /// <summary>
+        /// Handle Enable confgi metthod call from command line
+        /// </summary>
+        /// <param name="uaPubSubConfigurator"></param>
+        private static void EnableConfigurationObjectById(UaPubSubConfigurator uaPubSubConfigurator)
+        {
+            DisplayConfigurationState(uaPubSubConfigurator);
+            Console.Write("\nEnter the ConfigId of the object you want to enable:");
+            string idStr = Console.ReadLine();
+            uint id = 0;
+            if (uint.TryParse(idStr, out id))
+            {
+                var configurationObject = uaPubSubConfigurator.FindObjectById(id);
+                if (configurationObject != null)
+                {
+                    var result = uaPubSubConfigurator.Enable(configurationObject);
+                    Console.WriteLine("\nThe Enable method returned code: {0}\n", result);
+                    DisplayConfigurationState(uaPubSubConfigurator);
+                    return;
+                }
+            }
+            Console.WriteLine("\nCould not find the object with the specified id: {0}", idStr);
+        }
+
+        /// <summary>
+        /// Handle Disable config metthod call from command line
+        /// </summary>
+        /// <param name="uaPubSubConfigurator"></param>
+        private static void DisableConfigurationObjectById(UaPubSubConfigurator uaPubSubConfigurator)
+        {
+            DisplayConfigurationState(uaPubSubConfigurator);
+            Console.Write("\nEnter the ConfigId of the object you want to disable:");
+            string idStr = Console.ReadLine();
+            uint id = 0;
+            if (uint.TryParse(idStr, out id))
+            {
+                var configurationObject = uaPubSubConfigurator.FindObjectById(id);
+                if (configurationObject != null)
+                {
+                    var result = uaPubSubConfigurator.Disable(configurationObject);
+                    Console.WriteLine("\nThe Disable method returned code: {0}\n", result);
+                    DisplayConfigurationState(uaPubSubConfigurator);
+                    return;
+                }
+            }
+            Console.WriteLine("\nCould not find the object with the specified id: {0}", idStr);
+        }
+
+        /// <summary>
+        /// Display state for configured objects
+        /// </summary>
+        /// <param name="configurator"></param>
+        private static void DisplayConfigurationState(UaPubSubConfigurator configurator)
+        {
+            object configurationObject = configurator.PubSubConfiguration;
+            Console.WriteLine("\nConfiguration  \t\t\t\t-ConfigId={0}, State={1}",
+                configurator.FindIdForObject(configurationObject), configurator.FindStateForObject(configurationObject));
+            foreach (var connection in configurator.PubSubConfiguration.Connections)
+            {
+                Console.WriteLine("Connection '{0}'\t\t-ConfigId={1}, State={2}",
+                    connection.Name, configurator.FindIdForObject(connection), configurator.FindStateForObject(connection));
+                foreach (var writerGroup in connection.WriterGroups)
+                {
+                    Console.WriteLine("  WriterGroup Name ='{0}' WriterGroupId={1}\t-ConfigId={2}, State={3}",
+                        writerGroup.Name, writerGroup.WriterGroupId, configurator.FindIdForObject(writerGroup), configurator.FindStateForObject(writerGroup));
+                    foreach (var dataSetWriter in writerGroup.DataSetWriters)
+                    {
+                        Console.WriteLine("    DataSetWriter Name ='{0}' DataSetWriterId={1}\t-ConfigId={2}, State={3}",
+                           dataSetWriter.Name, dataSetWriter.DataSetWriterId, configurator.FindIdForObject(dataSetWriter), configurator.FindStateForObject(dataSetWriter));
+                    }
+                }
+                foreach (var readerGroup in connection.ReaderGroups)
+                {
+                    Console.WriteLine("  ReaderGroup Name ='{0}'\t-ConfigId={1}, State={2}",
+                        readerGroup.Name, configurator.FindIdForObject(readerGroup), configurator.FindStateForObject(readerGroup));
+                    foreach (var dataSetReader in readerGroup.DataSetReaders)
+                    {
+                        Console.WriteLine("    DataSetReader Name ='{0}'\t-ConfigId={1}, State={2}",
+                            dataSetReader.Name, configurator.FindIdForObject(dataSetReader), configurator.FindStateForObject(dataSetReader));
+                    }
+                }
+            }
+        }
         /// <summary>
         /// Load trace configuration for logging
         /// </summary>
