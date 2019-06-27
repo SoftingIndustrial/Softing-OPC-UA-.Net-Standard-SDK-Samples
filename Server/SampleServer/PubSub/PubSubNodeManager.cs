@@ -851,7 +851,7 @@ namespace SampleServer.PubSub
         /// <param name="inputArguments"></param>
         /// <param name="outputArguments"></param>
         /// <returns></returns>
-        private ServiceResult OnCallPubSubStatusDisableHandler(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        private ServiceResult OnCallDisableHandler(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
             if (method != null && method.Handle is uint)
             {
@@ -871,7 +871,7 @@ namespace SampleServer.PubSub
         /// <param name="inputArguments"></param>
         /// <param name="outputArguments"></param>
         /// <returns></returns>
-        private ServiceResult OnCallPubSubStatusEnableHandler(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        private ServiceResult OnCallEnableHandler(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
             if (method != null && method.Handle is uint)
             {
@@ -896,12 +896,12 @@ namespace SampleServer.PubSub
             uint configId = m_uaPubSubConfigurator.FindIdForObject(configurationObject);
             if (statusNode.Enable == null)
             {
-                statusNode.Enable = CreateMethod(statusNode, BrowseNames.Enable, null, null, OnCallPubSubStatusEnableHandler);
+                statusNode.Enable = CreateMethod(statusNode, BrowseNames.Enable, null, null, OnCallEnableHandler);
                 statusNode.Enable.Handle = configId;
             }
             if (statusNode.Disable == null)
             {
-                statusNode.Disable = CreateMethod(statusNode, BrowseNames.Disable, null, null, OnCallPubSubStatusDisableHandler);
+                statusNode.Disable = CreateMethod(statusNode, BrowseNames.Disable, null, null, OnCallDisableHandler);
                 statusNode.Disable.Handle = configId;
             }
 
