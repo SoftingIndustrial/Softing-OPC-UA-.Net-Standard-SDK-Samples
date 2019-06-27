@@ -13,12 +13,7 @@ using Opc.Ua.Server;
 using Softing.Opc.Ua.PubSub;
 using Softing.Opc.Ua.PubSub.Configuration;
 using Softing.Opc.Ua.Server;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SampleServer.PubSub
 {
@@ -48,6 +43,7 @@ namespace SampleServer.PubSub
 
         #endregion
 
+        #region CreateAddressSpace Method
         /// <summary>
         /// Does any initialization required before the address space can be used.
         /// </summary>
@@ -63,6 +59,13 @@ namespace SampleServer.PubSub
                 // Execute base class CreateAddressSpace
                 base.CreateAddressSpace(externalReferences);
                 m_publishSubscribeState = FindNodeInAddressSpace(ObjectIds.PublishSubscribe) as PublishSubscribeState;
+
+                //update m_publishSubscribeState.SupportedTransportProfiles with existing implementations in PubSub library
+                m_publishSubscribeState.SupportedTransportProfiles.Value = UaPubSubApplication.SupportedTransportProfiles;
+
+                FolderState root = CreateFolder(null, "Folder");
+                AddPredefinedNode(SystemContext, root);
+                AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
                 // initialize PubSub objects     
                 UaPubSubApplication pubSubApplication = UaPubSubApplication.Create();
@@ -81,10 +84,11 @@ namespace SampleServer.PubSub
                 m_uaPubSubConfigurator.WriterGroupRemoved += UaPubSubConfigurator_WriterGroupRemoved;
                 m_uaPubSubConfigurator.DataSetWriterAdded += UaPubSubConfigurator_DataSetWriterAdded;
                 m_uaPubSubConfigurator.DataSetWriterRemoved += UaPubSubConfigurator_DataSetWriterRemoved;
-                m_uaPubSubConfigurator.ReaderGroupAdded += UaPubSubConfigurator_ReaderGroupAdded;                
+                m_uaPubSubConfigurator.ReaderGroupAdded += UaPubSubConfigurator_ReaderGroupAdded;
                 m_uaPubSubConfigurator.ReaderGroupRemoved += UaPubSubConfigurator_ReaderGroupRemoved;
                 m_uaPubSubConfigurator.DataSetReaderAdded += UaPubSubConfigurator_DataSetReaderAdded;
                 m_uaPubSubConfigurator.DataSetReaderRemoved += UaPubSubConfigurator_DataSetReaderRemoved;
+
                 // load configuration
                 string pubConfigurationFileName = "SamplePublisher.Config.xml";
                 m_uaPubSubConfigurator.LoadConfiguration(pubConfigurationFileName);
@@ -95,11 +99,29 @@ namespace SampleServer.PubSub
                 MapConfigIdToPubSubNodeState(m_uaPubSubConfigurator.FindIdForObject(m_uaPubSubConfigurator.PubSubConfiguration), m_publishSubscribeState);
                 InitializePubSubStatusStateMethods(m_publishSubscribeState.Status, m_uaPubSubConfigurator.PubSubConfiguration);
 
+                // add OnCall handlers for m_publishSubscribeState methods 
                 m_publishSubscribeState.AddConnection.OnCall = OnCallAddConnectionMethodHandler;
                 m_publishSubscribeState.RemoveConnection.OnCall = OnCallRemoveConnectionMethodHandler;
 
+                InitializeDataSetFolderState(m_publishSubscribeState.PublishedDataSets);
             }
         }
+        #endregion
+
+        #region INodeIdFactory Members
+        /// <summary>
+        /// Creates the NodeId for the specified node.
+        /// </summary>
+        public override NodeId New(ISystemContext context, NodeState node)
+        {
+            lock (Lock)
+            {
+                return new NodeId(m_nodeIdentifierNumber++, NamespaceIndex);
+            }
+        }
+        #endregion
+
+        #region UaPubSubConfigurator Event Handlers
         /// <summary>
         /// Handler for <see cref="UaPubSubConfigurator.PubSubStateChanged"/> event.
         /// </summary>
@@ -138,7 +160,47 @@ namespace SampleServer.PubSub
                 pubSubStatusState.State.ClearChangeMasks(SystemContext, false);
             }
         }
-        
+
+        /// <summary>
+        /// Handler for <see cref="UaPubSubConfigurator.PublishedDataSetAdded"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UaPubSubConfigurator_PublishedDataSetAdded(object sender, PublishedDataSetEventArgs e)
+        {
+            NodeState parentNodeState = m_publishSubscribeState.PublishedDataSets;
+
+            PublishedDataItemsDataType publishedDataItemsDataType = ExtensionObject.ToEncodeable(e.PublishedDataSetDataType.DataSetSource)
+                      as PublishedDataItemsDataType;
+            if (publishedDataItemsDataType != null)
+            {
+                //create published data set and add it to the address space
+                PublishedDataItemsState publishedDataItemsState = CreateObjectFromType(parentNodeState, e.PublishedDataSetDataType.Name,
+                    ObjectTypeIds.PublishedDataItemsType, ReferenceTypeIds.HasComponent) as PublishedDataItemsState;
+
+                //copy properties of configuration into node state object
+                publishedDataItemsState.ConfigurationVersion.Value = e.PublishedDataSetDataType.DataSetMetaData.ConfigurationVersion;
+                publishedDataItemsState.DataSetMetaData.Value = e.PublishedDataSetDataType.DataSetMetaData;
+                publishedDataItemsState.PublishedData.Value = publishedDataItemsDataType.PublishedData.ToArray();
+
+
+
+                MapConfigIdToPubSubNodeState(e.PublishedDataSetId, publishedDataItemsState);
+            }
+        }
+
+        /// <summary>
+        /// Handler for Removed events from <see cref="UaPubSubConfigurator"/>. Tha 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UaPubSubConfigurator_PublishedDataSetRemoved(object sender, PublishedDataSetEventArgs e)
+        {
+            // locate the UOP UA Server node and delete it from address space
+            BaseInstanceState nodeToRemove = FindPubSubNodeState(e.PublishedDataSetId) as BaseInstanceState;
+            RemoveNodeFromAddressSpace(nodeToRemove);
+        }
+
         /// <summary>
         /// Handler for <see cref="UaPubSubConfigurator.ConnectionAdded"/> event.
         /// </summary>
@@ -147,7 +209,7 @@ namespace SampleServer.PubSub
         private void UaPubSubConfigurator_ConnectionAdded(object sender, ConnectionEventArgs e)
         {
             //create connection and add it to the address space
-            PubSubConnectionState pubSubConnectionState = CreateObjectFromType(m_publishSubscribeState, e.PubSubConnectionDataType.Name, 
+            PubSubConnectionState pubSubConnectionState = CreateObjectFromType(m_publishSubscribeState, e.PubSubConnectionDataType.Name,
                 ObjectTypeIds.PubSubConnectionType, ReferenceTypeIds.HasPubSubConnection) as PubSubConnectionState;
 
             //copy properties of configuration ito node state object
@@ -163,7 +225,7 @@ namespace SampleServer.PubSub
                 address.Url.Value = networkAddressUrlState.Url;
                 pubSubConnectionState.Address = address;
             }
-            
+
             MapConfigIdToPubSubNodeState(e.ConnectionId, pubSubConnectionState);
             InitializePubSubStatusStateMethods(pubSubConnectionState.Status, e.PubSubConnectionDataType);
 
@@ -181,14 +243,7 @@ namespace SampleServer.PubSub
         {
             // locate the connection node and delete it from address space
             PubSubConnectionState pubSubConnectionState = FindPubSubNodeState(e.ConnectionId) as PubSubConnectionState;
-            if (pubSubConnectionState != null)
-            {
-                // remove from children list
-                m_publishSubscribeState.RemoveChild(pubSubConnectionState);
-                // remove from predefined nodes
-                PredefinedNodes.Remove(pubSubConnectionState.NodeId);
-                RemoveConfigIdToPubSubNodeStateMapping(pubSubConnectionState);
-            }
+            RemoveNodeFromAddressSpace(pubSubConnectionState);
         }
 
         /// <summary>
@@ -216,7 +271,7 @@ namespace SampleServer.PubSub
                       as UadpWriterGroupMessageDataType;
                 if (messageSettings != null)
                 {
-                    UadpWriterGroupMessageState messageSettingsState = CreateObjectFromType(writerGroupState, BrowseNames.MessageSettings, ObjectTypeIds.UadpWriterGroupMessageType) 
+                    UadpWriterGroupMessageState messageSettingsState = CreateObjectFromType(writerGroupState, BrowseNames.MessageSettings, ObjectTypeIds.UadpWriterGroupMessageType)
                         as UadpWriterGroupMessageState;
                     messageSettingsState.GroupVersion.Value = messageSettings.GroupVersion;
                     messageSettingsState.DataSetOrdering.Value = messageSettings.DataSetOrdering;
@@ -242,7 +297,7 @@ namespace SampleServer.PubSub
 
                 writerGroupState.AddDataSetWriter.OnCall = OnCallAddDataSetWriterHandler;
                 writerGroupState.RemoveDataSetWriter.OnCall = OnCallRemoveDataSetWriterHandler;
-            }            
+            }
         }
 
         /// <summary>
@@ -254,19 +309,7 @@ namespace SampleServer.PubSub
         {
             // locate the writerGroup node and delete it from address space
             WriterGroupState writerGroupState = FindPubSubNodeState(e.WriterGroupId) as WriterGroupState;
-            if (writerGroupState != null)
-            {
-                //find parent connection
-                PubSubConnectionState parentConnection = writerGroupState.Parent as PubSubConnectionState;
-                if (parentConnection != null)
-                {
-                    // remove from children list
-                    parentConnection.RemoveChild(writerGroupState);
-                    // remove from predefined nodes
-                    PredefinedNodes.Remove(writerGroupState.NodeId);
-                    RemoveConfigIdToPubSubNodeStateMapping(writerGroupState);
-                }
-            }
+            RemoveNodeFromAddressSpace(writerGroupState);
         }
 
         /// <summary>
@@ -287,7 +330,7 @@ namespace SampleServer.PubSub
                 //copy properties of configuration ito node state object
                 dataSetWriterState.DataSetWriterId.Value = e.DataSetWriterDataType.DataSetWriterId;
                 dataSetWriterState.DataSetFieldContentMask.Value = e.DataSetWriterDataType.DataSetFieldContentMask;
-               // dataSetWriterGroupState.KeyFrameCount.Value = e.DataSetWriterDataType.KeyFrameCount;
+                // dataSetWriterGroupState.KeyFrameCount.Value = e.DataSetWriterDataType.KeyFrameCount;
                 //.MessageSettings
                 UadpDataSetWriterMessageDataType messageSettings = ExtensionObject.ToEncodeable(e.DataSetWriterDataType.MessageSettings)
                       as UadpDataSetWriterMessageDataType;
@@ -303,7 +346,24 @@ namespace SampleServer.PubSub
                     dataSetWriterState.MessageSettings = messageSettingsState;
                 }
 
-                //.TransportSettings              
+                //.TransportSettings  
+
+                // add reference to published data set
+                /*The Object has a list of DataSetWriters. A DataSetWriter sends DataSetMessages created from DataSets through a Message Oriented Middleware. 
+                 * The link between the PublishedDataSet Object and a DataSetWriter shall be created when an instance of the DataSetWriterType is created. 
+                 * The DataSetWriterType is defined in 9.1.7.2. If a DataSetWriter is created for the PublishedDataSet, it is added to the list using the ReferenceType DataSetToWriter. 
+                 * The DataSetToWriter ReferenceType is defined in 9.1.4.2.5. If a DataSetWriter for the PublishedDataSet is removed from a group, 
+                 * the Reference to this DataSetWriter shall also be removed from this list. The group model is defined in 9.1.6.*/
+
+                PublishedDataSetDataType publishedDataSetDataType = m_uaPubSubConfigurator.FindPublishedDataSetByName(e.DataSetWriterDataType.DataSetName);
+                if (publishedDataSetDataType != null)
+                {
+                    NodeState publishedDataSetNode = FindPubSubNodeState(m_uaPubSubConfigurator.FindIdForObject(publishedDataSetDataType));
+                    if (publishedDataSetNode != null)
+                    {
+                        AddReference(publishedDataSetNode, ReferenceTypeIds.DataSetToWriter, false, dataSetWriterState.NodeId, true);
+                    }
+                }
 
                 MapConfigIdToPubSubNodeState(e.DataSetWriterId, dataSetWriterState);
                 InitializePubSubStatusStateMethods(dataSetWriterState.Status, e.DataSetWriterDataType);
@@ -319,19 +379,29 @@ namespace SampleServer.PubSub
         {
             // locate the Group node and delete it from address space
             DataSetWriterState dataSetWriterState = FindPubSubNodeState(e.DataSetWriterId) as DataSetWriterState;
-            if (dataSetWriterState != null)
+            RemoveNodeFromAddressSpace(dataSetWriterState);
+
+            //remove reference from publisheddataset node
+            PublishedDataSetDataType publishedDataSetDataType = m_uaPubSubConfigurator.FindPublishedDataSetByName(e.DataSetWriterDataType.DataSetName);
+            if (publishedDataSetDataType != null)
             {
-                //find parent connection
-                WriterGroupState parentWriterGroup = dataSetWriterState.Parent as WriterGroupState;
-                if (parentWriterGroup != null)
+                NodeState publishedDataSetNode = FindPubSubNodeState(m_uaPubSubConfigurator.FindIdForObject(publishedDataSetDataType));
+                if (publishedDataSetNode != null)
                 {
-                    // remove from children list
-                    parentWriterGroup.RemoveChild(dataSetWriterState);
-                    // remove from predefined nodes
-                    PredefinedNodes.Remove(dataSetWriterState.NodeId);
-                    RemoveConfigIdToPubSubNodeStateMapping(dataSetWriterState);
+                    List<IReference> references = new List<IReference>();
+                    publishedDataSetNode.GetReferences(SystemContext, references, ReferenceTypeIds.DataSetToWriter, false);
+
+                    foreach (var reference in references.ToArray())
+                    {
+                        NodeId writerNodeId = ExpandedNodeId.ToNodeId(reference.TargetId, SystemContext.NamespaceUris);
+                        if (writerNodeId == dataSetWriterState.NodeId)
+                        {
+                            publishedDataSetNode.RemoveReference(reference.ReferenceTypeId, reference.IsInverse, reference.TargetId);
+                        }                       
+                    }
                 }
             }
+
         }
 
         /// <summary>
@@ -387,19 +457,7 @@ namespace SampleServer.PubSub
         {
             // locate the readerGroup node and delete it from address space
             ReaderGroupState readerGroupState = FindPubSubNodeState(e.ReaderGroupId) as ReaderGroupState;
-            if (readerGroupState != null)
-            {
-                //find parent connection
-                PubSubConnectionState parentConnection = readerGroupState.Parent as PubSubConnectionState;
-                if (parentConnection != null)
-                {
-                    // remove from children list
-                    parentConnection.RemoveChild(readerGroupState);
-                    // remove from predefined nodes
-                    PredefinedNodes.Remove(readerGroupState.NodeId);
-                    RemoveConfigIdToPubSubNodeStateMapping(readerGroupState);
-                }
-            }
+            RemoveNodeFromAddressSpace(readerGroupState);
         }
 
         /// <summary>
@@ -451,7 +509,7 @@ namespace SampleServer.PubSub
                     UadpDataSetReaderMessageState messageSettingsState = CreateObjectFromType(dataSetreaderState, BrowseNames.MessageSettings, ObjectTypeIds.UadpDataSetReaderMessageType)
                         as UadpDataSetReaderMessageState;
                     messageSettingsState.GroupVersion.Value = messageSettings.GroupVersion;
-                    messageSettingsState.DataSetOffset.Value = messageSettings.DataSetOffset;                    
+                    messageSettingsState.DataSetOffset.Value = messageSettings.DataSetOffset;
                     messageSettingsState.NetworkMessageNumber.Value = messageSettings.NetworkMessageNumber;
                     messageSettingsState.DataSetMessageContentMask.Value = messageSettings.DataSetMessageContentMask;
                     messageSettingsState.NetworkMessageContentMask.Value = messageSettings.NetworkMessageContentMask;
@@ -474,54 +532,52 @@ namespace SampleServer.PubSub
         {
             // locate the Group node and delete it from address space
             DataSetReaderState dataSetReaderState = FindPubSubNodeState(e.DataSetReaderId) as DataSetReaderState;
-            if (dataSetReaderState != null)
-            {
-                //find parent group
-                ReaderGroupState parentReaderGroup = dataSetReaderState.Parent as ReaderGroupState;
-                if (parentReaderGroup != null)
-                {
-                    // remove from children list
-                    parentReaderGroup.RemoveChild(dataSetReaderState);
-                    // remove from predefined nodes
-                    PredefinedNodes.Remove(dataSetReaderState.NodeId);
-                    RemoveConfigIdToPubSubNodeStateMapping(dataSetReaderState);
-                }
-            }
-        }
-        
-        /// <summary>
-        /// Handler for <see cref="UaPubSubConfigurator.PublishedDataSetRemoved"/> event.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UaPubSubConfigurator_PublishedDataSetRemoved(object sender, PublishedDataSetEventArgs e)
-        {
-            throw new NotImplementedException();
+            RemoveNodeFromAddressSpace(dataSetReaderState);
         }
 
-        /// <summary>
-        /// Handler for <see cref="UaPubSubConfigurator.PublishedDataSetAdded"/> event.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UaPubSubConfigurator_PublishedDataSetAdded(object sender, PublishedDataSetEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        #region INodeIdFactory Members
-        /// <summary>
-        /// Creates the NodeId for the specified node.
-        /// </summary>
-
-        public override NodeId New(ISystemContext context, NodeState node)
-        {
-            lock (Lock)
-            {
-                return new NodeId(m_nodeIdentifierNumber++, NamespaceIndex);
-            }
-        }
         #endregion
+
+        #region OnCall method handlers for OPC UA Server Method nodes
+
+        /// <summary>
+        /// Handler for OnCall event of <see cref="DataSetFolderState.AddPublishedDataItems"/> method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="name"></param>
+        /// <param name="fieldNameAliases"></param>
+        /// <param name="fieldFlags"></param>
+        /// <param name="variablesToAdd"></param>
+        /// <param name="dataSetNodeId"></param>
+        /// <param name="configurationVersion"></param>
+        /// <param name="addResults"></param>
+        /// <returns></returns>
+        private ServiceResult OnCallAddPublishedDataItemsHandler(ISystemContext context, MethodState method, NodeId objectId, string name, string[] fieldNameAliases, ushort[] fieldFlags,
+                PublishedVariableDataType[] variablesToAdd, ref NodeId dataSetNodeId, ref ConfigurationVersionDataType configurationVersion, ref StatusCode[] addResults)
+        {
+            return StatusCodes.BadNotImplemented;
+        }
+
+        /// <summary>
+        /// Handler for OnCall event of <see cref="DataSetFolderState.RemovePublishedDataSet"/> method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="dataSetNodeId"></param>
+        /// <returns></returns>
+        private ServiceResult OnCallRemovePublishedDataSetHandler(ISystemContext context, MethodState method, NodeId objectId, NodeId dataSetNodeId)
+        {
+            // find node to be removed
+            NodeState publishedDataSetState = FindNodeInAddressSpace(dataSetNodeId);
+            if (publishedDataSetState != null && publishedDataSetState.Handle is uint)
+            {
+                uint publishedDataSetConfigId = (uint)publishedDataSetState.Handle;
+                return m_uaPubSubConfigurator.RemovePublishedDataSet(publishedDataSetConfigId);
+            }
+            return StatusCodes.BadNodeIdUnknown;
+        }
 
         /// <summary>
         /// Handler for OnCall event of <see cref="PublishSubscribeState.AddConnection"/> method.
@@ -532,7 +588,7 @@ namespace SampleServer.PubSub
         /// <param name="configuration"></param>
         /// <param name="connectionId"></param>
         /// <returns></returns>
-        private ServiceResult OnCallAddConnectionMethodHandler(ISystemContext context,  MethodState method, NodeId objectId,  PubSubConnectionDataType configuration, ref NodeId connectionId)
+        private ServiceResult OnCallAddConnectionMethodHandler(ISystemContext context, MethodState method, NodeId objectId, PubSubConnectionDataType configuration, ref NodeId connectionId)
         {
             if (configuration != null)
             {
@@ -541,16 +597,16 @@ namespace SampleServer.PubSub
                 StatusCode resultStatusCode = m_uaPubSubConfigurator.AddConnection(configuration);
                 if (StatusCode.IsBad(resultStatusCode))
                 {
-                    return resultStatusCode;                   
+                    return resultStatusCode;
                 }
-                uint connectionConfigId = m_uaPubSubConfigurator.FindIdForObject(configuration);   
+                uint connectionConfigId = m_uaPubSubConfigurator.FindIdForObject(configuration);
                 //find node state created by ConnectionAdded event hadler in address space 
                 NodeState connectionNodeState = FindPubSubNodeState(connectionConfigId);
                 if (connectionNodeState != null)
                 {
                     connectionId = connectionNodeState.NodeId;
                     return StatusCodes.Good;
-                }                
+                }
             }
             return StatusCodes.BadInvalidArgument;
         }
@@ -570,7 +626,7 @@ namespace SampleServer.PubSub
             if (pubSubConnectionState != null && pubSubConnectionState.Handle is uint)
             {
                 uint connectionConfigId = (uint)pubSubConnectionState.Handle;
-                return m_uaPubSubConfigurator.RemoveConnection(connectionConfigId);                
+                return m_uaPubSubConfigurator.RemoveConnection(connectionConfigId);
             }
             return StatusCodes.BadInvalidArgument;
         }
@@ -782,11 +838,10 @@ namespace SampleServer.PubSub
                 if (groupNodeState is ReaderGroupState)
                 {
                     return m_uaPubSubConfigurator.RemoveReaderGroup(groupConfigId);
-                }                 
+                }
             }
             return StatusCodes.BadNodeIdUnknown;
         }
-
 
         /// <summary>
         /// Handler for OnCall event of <see cref="PubSubStatusState.Disable"/> method.
@@ -828,6 +883,9 @@ namespace SampleServer.PubSub
             return StatusCodes.Bad;
         }
 
+        #endregion
+
+        #region Private Helper Methods
         /// <summary>
         /// Initialize <see cref="PubSubStatusState.Enable"/> and  <see cref="PubSubStatusState.Disable"/> methods of a <see cref="PubSubStatusState"/> object.
         /// </summary>
@@ -852,6 +910,67 @@ namespace SampleServer.PubSub
             {
                 statusNode.State.Value = initialState;
                 statusNode.State.ClearChangeMasks(SystemContext, false);
+            }
+        }
+
+        /// <summary>
+        /// Initializes the methods and what is needed for an instance of <see cref="DataSetFolderState"/>
+        /// </summary>
+        /// <param name="dataSetFolderState"></param>
+        private void InitializeDataSetFolderState(DataSetFolderState dataSetFolderState)
+        {
+            /*
+            if (dataSetFolderState.AddDataSetFolder == null)
+            {
+                Argument[] inputArguments = new Argument[]
+                {
+                    new Argument(){Name = "Name", DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar, Description = "Name of the Object to create."}
+                };
+                Argument[] outputArguments = new Argument[]
+                {
+                    new Argument(){Name = "DataSetFolderNodeId", DataType = DataTypeIds.NodeId,  ValueRank = ValueRanks.Scalar, Description = "NodeId of the created DataSetFolderType Object."}
+                };
+                dataSetFolderState.AddDataSetFolder = CreateMethod(dataSetFolderState, BrowseNames.AddDataSetFolder, inputArguments, outputArguments, null,
+                    typeof(AddDataSetFolderMethodState), MethodIds.DataSetFolderType_AddDataSetFolder) as AddDataSetFolderMethodState;
+               
+            }
+            if (dataSetFolderState.RemoveDataSetFolder == null)
+            {
+                Argument[] inputArguments = new Argument[]
+                {
+                    new Argument(){Name = "DataSetFolderNodeId", DataType = DataTypeIds.NodeId,  ValueRank = ValueRanks.Scalar, Description = "NodeId of the DataSetFolderType Object to remove from the Server."}
+                };
+                dataSetFolderState.RemoveDataSetFolder = CreateMethod(dataSetFolderState, BrowseNames.RemoveDataSetFolder, inputArguments, null, null,
+                    typeof(RemoveDataSetFolderMethodState), MethodIds.DataSetFolderType_RemoveDataSetFolder) as RemoveDataSetFolderMethodState;
+            }
+            if (dataSetFolderState.AddPublishedDataItems == null)
+            {
+                Argument[] inputArguments = new Argument[]
+                {
+                    new Argument(){Name = "Name", DataType = DataTypeIds.String,  ValueRank = ValueRanks.Scalar, Description = "Name of the Object to create."},
+                    new Argument(){Name = "FieldNameAliases", DataType = DataTypeIds.String,  ValueRank = ValueRanks.OneDimension, Description = "The names assigned to the selected Variables for the fields in the DataSetMetaData and in the DataSetMessages for tagged message encoding."},
+                    new Argument(){Name = "FieldFlags", DataType = DataTypeIds.DataSetFieldFlags,  ValueRank = ValueRanks.OneDimension, Description = "The field flags assigned to the selected Variables for the fields in the DataSetMetaData."},
+                    new Argument(){Name = "VariablesToAdd", DataType = DataTypeIds.PublishedVariableDataType,  ValueRank = ValueRanks.OneDimension, Description = "Array of Variables to add to PublishedData and the related configuration settings."},
+                };
+                Argument[] outputArguments = new Argument[]
+                {
+                    new Argument(){Name = "DataSetNodeId", DataType = DataTypeIds.NodeId,  ValueRank = ValueRanks.Scalar, Description = "NodeId of the created PublishedDataSets Object."},
+                    new Argument(){Name = "ConfigurationVersion", DataType = DataTypeIds.ConfigurationVersionDataType,  ValueRank = ValueRanks.Scalar, Description = "Returns the initial configuration version of the DataSet."},
+                    new Argument(){Name = "AddResults", DataType = DataTypeIds.StatusCode,  ValueRank = ValueRanks.OneDimension, Description = "The result codes for the variables to add."},
+                };
+                dataSetFolderState.AddPublishedDataItems = CreateMethod(dataSetFolderState, BrowseNames.AddPublishedDataItems, inputArguments, outputArguments, null,
+                    typeof(AddPublishedDataItemsMethodState), MethodIds.DataSetFolderType_AddPublishedDataItems) as AddPublishedDataItemsMethodState;
+                dataSetFolderState.AddPublishedDataItems.OnCall = OnCallAddPublishedDataItemsHandler;
+            }*/
+            if (dataSetFolderState.RemovePublishedDataSet == null)
+            {
+                Argument[] inputArguments = new Argument[]
+                {
+                    new Argument(){Name = "DataSetNodeId", DataType = DataTypeIds.NodeId,  ValueRank = ValueRanks.Scalar, Description = "NodeId of the PublishedDataSets Object to remove from the Server."},
+                };
+                dataSetFolderState.RemovePublishedDataSet = CreateMethod(dataSetFolderState, BrowseNames.RemovePublishedDataSet, inputArguments, null, null,
+                    typeof(RemovePublishedDataSetMethodState), MethodIds.DataSetFolderType_RemovePublishedDataSet) as RemovePublishedDataSetMethodState;
+                dataSetFolderState.RemovePublishedDataSet.OnCall = OnCallRemovePublishedDataSetHandler;
             }
         }
 
@@ -904,5 +1023,22 @@ namespace SampleServer.PubSub
             }
             return null;
         }
+
+        /// <summary>
+        /// Removes a node from the address space
+        /// </summary>
+        /// <param name="nodeToRemove"></param>
+        private void RemoveNodeFromAddressSpace(BaseInstanceState nodeToRemove)
+        {
+            if (nodeToRemove != null && nodeToRemove.Parent != null)
+            {
+                // remove from children list
+                nodeToRemove.Parent.RemoveChild(nodeToRemove);
+                // remove from predefined nodes
+                PredefinedNodes.Remove(nodeToRemove.NodeId);
+                RemoveConfigIdToPubSubNodeStateMapping(nodeToRemove);
+            }
+        }
+        #endregion
     }
 }
