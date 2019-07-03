@@ -1,17 +1,25 @@
-﻿using Opc.Ua;
+﻿/* ========================================================================
+ * Copyright © 2011-2019 Softing Industrial Automation GmbH. 
+ * All rights reserved.
+ * 
+ * The Software is subject to the Softing Industrial Automation GmbH’s 
+ * license agreement, which can be found here:
+ * http://www.softing.com/LicenseSIA.pdf
+ *  
+ * ======================================================================*/
+
+using Opc.Ua;
 using Softing.Opc.Ua.Client;
-using Softing.Opc.Ua.Client.Nodes;
 using Softing.Opc.Ua.PubSub.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SampleClient.Samples
 {
     class PubSubStateCfgReader
     {
-        #region Public Members
+        #region Public Methods
         public static void PubSubConfigurationRead(UaPubSubConfigurator pubSubConfigurator, ClientSession clientSession)
         {
 
@@ -55,6 +63,10 @@ namespace SampleClient.Samples
             pubSubConfigurator.LoadConfiguration(pubSubConfiguration);
         }
 
+
+        #endregion
+
+        #region Private Methods
         private static void HandleAddPublishedDataSets(PubSubConfigurationDataType pubSubConfiguration, ClientSession clientSession, IList<ReferenceDescriptionEx> referenceDescriptions)
         {
             ReferenceDescriptionEx publishedDataSetsNode = (from refDsc in referenceDescriptions
@@ -93,7 +105,7 @@ namespace SampleClient.Samples
                 var results = clientSession.Read(new List<ReadValueId> { readConfigurationVersion, readDataSetMetaData, readPublishedData });
                 ConfigurationVersionDataType configurationVersionDataType = (ConfigurationVersionDataType)((ExtensionObject)results?.ElementAt(0).Value).Body;
                 DataSetMetaDataType dataSetMetaDataValue = (DataSetMetaDataType)((ExtensionObject)results?.ElementAt(1).Value).Body;
-                
+
                 PublishedVariableDataTypeCollection publishedVariables = new PublishedVariableDataTypeCollection();
                 foreach (ExtensionObject publishedVariableDataType in (ExtensionObject[])results?.ElementAt(2).Value)
                 {
@@ -109,13 +121,10 @@ namespace SampleClient.Samples
                         PublishedData = publishedVariables,
                     }),
                 };
-           
+
                 pubSubConfiguration.PublishedDataSets.Add(publishedDataSetDataType);
             }
         }
-        #endregion
-
-        #region Private Members
         private static void HandleAddConnection(PubSubConfigurationDataType pubSubConfiguration, ClientSession clientSession, ReferenceDescriptionEx referenceDescription)
         {
             NodeId nodeId = new NodeId(referenceDescription.NodeId.Identifier, referenceDescription.NodeId.NamespaceIndex);

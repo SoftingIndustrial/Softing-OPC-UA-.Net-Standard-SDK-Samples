@@ -9,15 +9,10 @@
  * ======================================================================*/
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
-using SampleClient.Helpers;
-using System.IO;
 using Opc.Ua.Client;
 using Softing.Opc.Ua.PubSub.Configuration;
-using Softing.Opc.Ua.Client.Nodes;
 
 namespace SampleClient.Samples
 {
