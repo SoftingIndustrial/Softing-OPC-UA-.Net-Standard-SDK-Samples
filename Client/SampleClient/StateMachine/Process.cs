@@ -36,6 +36,7 @@ namespace SampleClient.StateMachine
         private AlarmsClient m_alarmsClient;
         private FileTransferClient m_fileTransferClient;
 
+        private PubSubClient m_pubSubClient;
         #endregion
 
         #region Constructor
@@ -68,6 +69,8 @@ namespace SampleClient.StateMachine
             InitializeHistoryTransitions();
             // add file transfer menu - 8
             InitializeFileTransferTransitions();
+            // add PubSub menu - 9
+            InitializePubSubTransitions();
 
             //add all exit commands
             StateTransition exit = new StateTransition(State.Main, Command.Exit, "x", "Exit Client Application");
@@ -109,6 +112,7 @@ namespace SampleClient.StateMachine
             DisplayListOfCommands();
         }
 
+      
         #endregion
 
         #region Properties
@@ -117,6 +121,7 @@ namespace SampleClient.StateMachine
         /// Get current state of process
         /// </summary>
         public State CurrentState { get; private set; }
+      
 
         #endregion
 
@@ -347,6 +352,24 @@ namespace SampleClient.StateMachine
             StateTransition endFileTransfer = new StateTransition(State.FileTransfer, Command.EndFileTransfer, "0", "Back to Main Menu");
             endFileTransfer.ExecuteCommand += EndFileTransfer_ExecuteCommand;
             m_transitions.Add(endFileTransfer, State.Main);
+        }
+
+        /// <summary>
+        /// Initializes all sub menu transitions for PubSub (9)
+        /// </summary>
+        private void InitializePubSubTransitions()
+        {
+            //commands for reading PubSubStateMachine
+            StateTransition startPubSubMenu = new StateTransition(State.Main, Command.PubSubConfigMenu, "9", "Enter PubSub menu");
+            startPubSubMenu.ExecuteCommand += StartPubSubCfgMenu_ExecuteCommand;
+            m_transitions.Add(startPubSubMenu, State.PubSub);//commands for PubSub
+            StateTransition startPubSubReadCfg = new StateTransition(State.PubSub, Command.PubSubReadConfig, "1", "Read PubSubConfiguration");
+            startPubSubReadCfg.ExecuteCommand += StartPubSubReadCfg_ExecuteCommand;
+            m_transitions.Add(startPubSubReadCfg, State.PubSub);
+
+            StateTransition exitPubSubSession = new StateTransition(State.PubSub, Command.EndFileTransfer, "0", "Back to Main Menu");
+            exitPubSubSession.ExecuteCommand += ExitPubSubCfgMenu_ExecuteCommand;
+            m_transitions.Add(exitPubSubSession, State.Main);
         }
 
         #endregion
@@ -743,6 +766,34 @@ namespace SampleClient.StateMachine
                 m_fileTransferClient = null;
             }
         }
+
+        private void StartPubSubCfgMenu_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_pubSubClient == null)
+            {
+                m_pubSubClient = new PubSubClient(m_application);
+                m_pubSubClient.Initialize();
+            }
+        }
+
+        private void StartPubSubReadCfg_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_pubSubClient != null)
+            {
+                m_pubSubClient.PubSubReadCfg();
+            }
+        }
+
+        private void ExitPubSubCfgMenu_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_pubSubClient != null)
+            {
+                m_pubSubClient.Disconnect();
+                m_pubSubClient = null;
+            }
+        }
+        
+
         #endregion
 
         #region ExecuteCommand Handler for Exit

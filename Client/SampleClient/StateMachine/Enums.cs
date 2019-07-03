@@ -26,6 +26,7 @@ namespace SampleClient.StateMachine
         Alarms,
         ReadWrite,
         FileTransfer,
+        PubSub,
         Exit
     }
 
@@ -84,6 +85,9 @@ namespace SampleClient.StateMachine
         DownloadTemporaryFileTransfer,
         UploadTemporaryFileTransfer,
         EndFileTransfer,
+
+        PubSubConfigMenu,
+        PubSubReadConfig,
 
         Exit
     }
