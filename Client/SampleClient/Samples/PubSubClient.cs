@@ -12,7 +12,6 @@ using System;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
 using Opc.Ua.Client;
-using Softing.Opc.Ua.PubSub.Configuration;
 
 namespace SampleClient.Samples
 {
@@ -124,7 +123,6 @@ namespace SampleClient.Samples
 
             try
             {
-                UaPubSubConfigurator uaPubSubConfigurator = new UaPubSubConfigurator();
                 PubSubConfigurationDataType pubSubConfigurationData = PubSubStateCfgReader.PubSubConfigurationRead(m_session);
             }
             catch (Exception e)

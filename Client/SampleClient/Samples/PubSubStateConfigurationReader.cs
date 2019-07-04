@@ -10,7 +10,7 @@
 
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
-using Softing.Opc.Ua.PubSub.Configuration;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
