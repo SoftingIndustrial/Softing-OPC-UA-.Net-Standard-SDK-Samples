@@ -12,6 +12,7 @@ using Opc.Ua;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.PubSub;
 using Softing.Opc.Ua.PubSub.Configuration;
+using Softing.Opc.Ua.PubSub.PublishedData;
 using Softing.Opc.Ua.Server;
 using System;
 using System.Collections.Generic;
@@ -113,6 +114,7 @@ namespace SampleServer.PubSub
                 FolderState root = CreateFolder(null, "PubSub");
                 AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
+                #region Add Publisher Source Nodes
                 FolderState publisher = CreateFolder(root, "Publisher");
 
                 BaseDataVariableState variable = CreateVariable(publisher, "BoolToggle", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("BoolToggle", NamespaceIndex));
@@ -144,9 +146,32 @@ namespace SampleServer.PubSub
                     m_dynamicNodes.Add(variable);
                 }
                 m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
+                #endregion
+
+                #region Add Subscriber Destination Nodes
+                FolderState subscriber = CreateFolder(root, "Subscriber");
+
+                variable = CreateVariable(subscriber, "BoolToggle", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_BoolToggle", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Int32", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Int32Fast", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Int32Fast", NamespaceIndex));
+                variable = CreateVariable(subscriber, "DateTime", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("Sub_DateTime", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Sub_Byte", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Sub_Int16", NamespaceIndex));
+                variable = CreateVariable(subscriber, "SByte", DataTypeIds.SByte, ValueRanks.Scalar, new NodeId("Sub_SByte", NamespaceIndex));
+                variable = CreateVariable(subscriber, "UInt16", DataTypeIds.UInt16, ValueRanks.Scalar, new NodeId("Sub_UInt16", NamespaceIndex));
+                variable = CreateVariable(subscriber, "UInt32", DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("Sub_UInt32", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Float", DataTypeIds.Float, ValueRanks.Scalar, new NodeId("Sub_Float", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Double", DataTypeIds.Double, ValueRanks.Scalar, new NodeId("Sub_Double", NamespaceIndex));
+                for (int i = 0; i < 100; i++)
+                {
+                    string name = "Sub_Mass_" + i;
+                    variable = CreateVariable(subscriber, name, DataTypeIds.Int32, ValueRanks.Scalar, new NodeId(name, NamespaceIndex));
+                }
+                #endregion
 
                 if (m_canStartPubSubApplication)
-                {                    
+                {
+                    pubSubApplication.DataReceived += PubSubApplication_DataReceived;
                     pubSubApplication.Start();
                 }
             }
@@ -580,6 +605,33 @@ namespace SampleServer.PubSub
             RemoveNodeFromAddressSpace(dataSetReaderState);
         }
 
+        #endregion
+
+        #region PubSubApplication_DataReceived event handler
+        /// <summary>
+        /// Hander for <see cref="UaPubSubApplication.DataReceived"/> event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PubSubApplication_DataReceived(object sender, SubscribedDataEventArgs e)
+        {
+            foreach(DataSet dataSet in e.DataSets)
+            {
+                foreach(Field field in dataSet.Fields)
+                {
+                    // find target node
+                    if (field.TargetNodeId != null && field.Value != null)
+                    {
+                        BaseVariableState targetNode = FindNodeInAddressSpace(field.TargetNodeId) as BaseVariableState;
+                        if (targetNode != null)
+                        {
+                            targetNode.Value = field.Value.Value;
+                            targetNode.ClearChangeMasks(SystemContext, false);
+                        }
+                    }
+                }
+            }
+        }
         #endregion
 
         #region OnCall method handlers for OPC UA Server Method nodes
@@ -1141,7 +1193,6 @@ namespace SampleServer.PubSub
 
 
         #endregion
-
 
         #region Data Changes Simulation
         /// <summary>
