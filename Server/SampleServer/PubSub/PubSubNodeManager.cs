@@ -117,32 +117,32 @@ namespace SampleServer.PubSub
                 #region Add Publisher Source Nodes
                 FolderState publisher = CreateFolder(root, "Publisher");
 
-                BaseDataVariableState variable = CreateVariable(publisher, "BoolToggle", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("BoolToggle", NamespaceIndex));
+                BaseDataVariableState variable = CreateVariable(publisher, "BoolToggle", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Pub_BoolToggle", NamespaceIndex));
                 m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Int32", NamespaceIndex));
+                variable = CreateVariable(publisher, "Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Int32", NamespaceIndex));
                 m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "Int32Fast", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Int32Fast", NamespaceIndex));
+                variable = CreateVariable(publisher, "Int32Fast", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Int32Fast", NamespaceIndex));
                 m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "DateTime", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("DateTime", NamespaceIndex));
+                variable = CreateVariable(publisher, "DateTime", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("Pub_DateTime", NamespaceIndex));
                 m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Byte", NamespaceIndex));
+                variable = CreateVariable(publisher, "Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Pub_Byte", NamespaceIndex));
                 m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Int16", NamespaceIndex));
+                variable = CreateVariable(publisher, "Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Pub_Int16", NamespaceIndex));
                 m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "SByte", DataTypeIds.SByte, ValueRanks.Scalar, new NodeId("SByte", NamespaceIndex));
+                variable = CreateVariable(publisher, "SByte", DataTypeIds.SByte, ValueRanks.Scalar, new NodeId("Pub_SByte", NamespaceIndex));
                 m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "UInt16", DataTypeIds.UInt16, ValueRanks.Scalar, new NodeId("UInt16", NamespaceIndex));
+                variable = CreateVariable(publisher, "UInt16", DataTypeIds.UInt16, ValueRanks.Scalar, new NodeId("Pub_UInt16", NamespaceIndex));
                 m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "UInt32", DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("UInt32", NamespaceIndex));
+                variable = CreateVariable(publisher, "UInt32", DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("Pub_UInt32", NamespaceIndex));
                 m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "Float", DataTypeIds.Float, ValueRanks.Scalar, new NodeId("Float", NamespaceIndex));
+                variable = CreateVariable(publisher, "Float", DataTypeIds.Float, ValueRanks.Scalar, new NodeId("Pub_Float", NamespaceIndex));
                 m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "Double", DataTypeIds.Double, ValueRanks.Scalar, new NodeId("Double", NamespaceIndex));
+                variable = CreateVariable(publisher, "Double", DataTypeIds.Double, ValueRanks.Scalar, new NodeId("Pub_Double", NamespaceIndex));
                 m_dynamicNodes.Add(variable);
                 for(int i= 0; i < 100; i++)
                 {
                     string name = "Mass_" + i;
-                    variable = CreateVariable(publisher, name, DataTypeIds.Int32, ValueRanks.Scalar, new NodeId(name, NamespaceIndex));
+                    variable = CreateVariable(publisher, name, DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_" + name, NamespaceIndex));
                     m_dynamicNodes.Add(variable);
                 }
                 m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
@@ -164,8 +164,8 @@ namespace SampleServer.PubSub
                 variable = CreateVariable(subscriber, "Double", DataTypeIds.Double, ValueRanks.Scalar, new NodeId("Sub_Double", NamespaceIndex));
                 for (int i = 0; i < 100; i++)
                 {
-                    string name = "Sub_Mass_" + i;
-                    variable = CreateVariable(subscriber, name, DataTypeIds.Int32, ValueRanks.Scalar, new NodeId(name, NamespaceIndex));
+                    string name = "Mass_" + i;
+                    variable = CreateVariable(subscriber, name, DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_" + name, NamespaceIndex));
                 }
                 #endregion
 
