@@ -35,15 +35,17 @@ namespace SampleServer.PubSub
 
         // simulation for value nodes
         private Timer m_simulationTimer;
-        private readonly List<BaseDataVariableState> m_dynamicNodes;       
+        private readonly List<BaseDataVariableState> m_dynamicNodes;
+        private bool m_canStartPubSubApplication = false;
         #endregion
 
         #region Constructors
         /// <summary>
         /// Initializes the node manager.
         /// </summary>
-        public PubSubNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration, Namespaces.PubSub)
+        public PubSubNodeManager(IServerInternal server, ApplicationConfiguration configuration, bool canStartPubSubApplication = false) : base(server, configuration, Namespaces.PubSub)
         {
+            m_canStartPubSubApplication = canStartPubSubApplication;
             m_dynamicNodes = new List<BaseDataVariableState>();
         }
 
@@ -140,10 +142,13 @@ namespace SampleServer.PubSub
                     string name = "Mass_" + i;
                     variable = CreateVariable(publisher, name, DataTypeIds.Int32, ValueRanks.Scalar, new NodeId(name, NamespaceIndex));
                     m_dynamicNodes.Add(variable);
-                }   
-
+                }
                 m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
-                pubSubApplication.Start();
+
+                if (m_canStartPubSubApplication)
+                {                    
+                    pubSubApplication.Start();
+                }
             }
         }
         #endregion

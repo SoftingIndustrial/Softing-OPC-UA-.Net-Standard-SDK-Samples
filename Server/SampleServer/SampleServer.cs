@@ -111,7 +111,7 @@ namespace SampleServer
             nodeManagers.Add(new ReferenceNodeManager(server, configuration));
             nodeManagers.Add(new UserAuthenticationNodeManager(server, configuration));
             nodeManagers.Add(new FileTransferNodeManager(server, configuration));
-            nodeManagers.Add(new PubSubNodeManager(server, configuration));
+            nodeManagers.Add(new PubSubNodeManager(server, configuration, true));
 
             // Create master node manager
             return new MasterNodeManager(server, configuration, null, nodeManagers.ToArray());
