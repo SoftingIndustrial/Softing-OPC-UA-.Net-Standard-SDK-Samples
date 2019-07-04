@@ -20,7 +20,7 @@ namespace SampleClient.Samples
     class PubSubStateCfgReader
     {
         #region Public Methods
-        public static void PubSubConfigurationRead(UaPubSubConfigurator pubSubConfigurator, ClientSession clientSession)
+        public static PubSubConfigurationDataType PubSubConfigurationRead(ClientSession clientSession)
         {
 
             NodeId publishSubscribeBase = new NodeId("ns=0;i=14443");
@@ -60,7 +60,7 @@ namespace SampleClient.Samples
             // Handle the published data
             HandleAddPublishedDataSets(pubSubConfiguration, clientSession, referenceDescriptions);
 
-            pubSubConfigurator.LoadConfiguration(pubSubConfiguration);
+            return pubSubConfiguration;
         }
 
 

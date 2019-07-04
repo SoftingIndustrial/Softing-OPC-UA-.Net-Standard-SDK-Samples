@@ -125,7 +125,7 @@ namespace SampleClient.Samples
             try
             {
                 UaPubSubConfigurator uaPubSubConfigurator = new UaPubSubConfigurator();
-                PubSubStateCfgReader.PubSubConfigurationRead(uaPubSubConfigurator, m_session);
+                PubSubConfigurationDataType pubSubConfigurationData = PubSubStateCfgReader.PubSubConfigurationRead(m_session);
             }
             catch (Exception e)
             {
