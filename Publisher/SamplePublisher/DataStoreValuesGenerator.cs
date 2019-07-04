@@ -40,7 +40,7 @@ namespace SamplePublisher
         private FieldMetaDataCollection m_massTestFields = new FieldMetaDataCollection();      
         
         private PublishedDataSetDataTypeCollection m_publishedDataSets;
-        private UaPubSubDataStore m_dataStore;
+        private IUaPubSubDataStore m_dataStore;
         private Timer m_updateValuesTimer;
 
         private object m_lock = new object();
@@ -197,16 +197,6 @@ namespace SamplePublisher
         }
 
         /// <summary>
-        /// Read field data
-        /// </summary>
-        /// <param name="metaDatafieldName"></param>
-        /// <returns></returns>
-        private DataValue ReadFieldData(string metaDatafieldName, ushort namespaceIndex)
-        {
-            return m_dataStore.ReadPublishedDataItem(new NodeId(metaDatafieldName, namespaceIndex), Attributes.Value);
-        }
-
-        /// <summary>
         /// Write (update) field data
         /// </summary>
         /// <param name="metaDatafieldName"></param>
@@ -279,7 +269,7 @@ namespace SamplePublisher
         private void IncrementValue(FieldMetaData variable, ushort namespaceIndex, long maxAllowedValue = Int32.MaxValue, int step = 0)
         {
             // Read value to be incremented
-            DataValue dataValue = ReadFieldData(variable.Name, namespaceIndex);
+            DataValue dataValue = m_dataStore.ReadPublishedDataItem(new NodeId(variable.Name, namespaceIndex), Attributes.Value);
             if (dataValue.Value == null)
             {
                 return;
@@ -612,7 +602,6 @@ namespace SamplePublisher
                 WriteFieldData(variable.Name, namespaceIndex, dataValue);
             }
         }
-
         #endregion
     }
 }

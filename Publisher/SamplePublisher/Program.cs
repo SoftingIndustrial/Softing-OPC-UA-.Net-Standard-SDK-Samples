@@ -48,7 +48,7 @@ namespace SamplePublisher
                 //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
 
                 // Create the PubSub application
-                using (UaPubSubApplication uaPubSubApplication = Softing.Opc.Ua.PubSub.UaPubSubApplication.Create(configurationFileName))
+                using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
                     #region Licensing
                     LicensingStatus pubsubLicensingStatus = LicensingStatus.Ok;

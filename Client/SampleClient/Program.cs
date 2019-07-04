@@ -18,6 +18,7 @@ namespace SampleClient
 {
     static class Program
     {
+        public static string ServerUrl { get; private set; }
         /// <summary>
         /// Entry point for application
         /// </summary>
@@ -79,6 +80,6 @@ namespace SampleClient
             e.Accept = (e.Error.StatusCode == StatusCodes.BadCertificateUntrusted);
         }
 
-        public static string ServerUrl { get; private set; }
+        
     }
 }

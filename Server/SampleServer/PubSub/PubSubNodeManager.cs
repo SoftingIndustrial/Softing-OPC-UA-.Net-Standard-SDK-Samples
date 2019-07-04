@@ -13,7 +13,9 @@ using Opc.Ua.Server;
 using Softing.Opc.Ua.PubSub;
 using Softing.Opc.Ua.PubSub.Configuration;
 using Softing.Opc.Ua.Server;
+using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace SampleServer.PubSub
 {
@@ -30,6 +32,10 @@ namespace SampleServer.PubSub
         private uint m_nodeIdentifierNumber = 1;
         // maps config id to the corespondiong NodeState object created from it
         private Dictionary<uint, NodeState> m_configIdToNodeState = new Dictionary<uint, NodeState>();
+
+        // simulation for value nodes
+        private Timer m_simulationTimer;
+        private readonly List<BaseDataVariableState> m_dynamicNodes;       
         #endregion
 
         #region Constructors
@@ -38,7 +44,7 @@ namespace SampleServer.PubSub
         /// </summary>
         public PubSubNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration, Namespaces.PubSub)
         {
-
+            m_dynamicNodes = new List<BaseDataVariableState>();
         }
 
         #endregion
@@ -63,12 +69,8 @@ namespace SampleServer.PubSub
                 //update m_publishSubscribeState.SupportedTransportProfiles with existing implementations in PubSub library
                 m_publishSubscribeState.SupportedTransportProfiles.Value = UaPubSubApplication.SupportedTransportProfiles;
 
-                FolderState root = CreateFolder(null, "Folder");
-                AddPredefinedNode(SystemContext, root);
-                AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
-
                 // initialize PubSub objects     
-                UaPubSubApplication pubSubApplication = UaPubSubApplication.Create();
+                UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(new UaServerDataStore(this));
                 //remember refernce to UaPubSubConfigurator
                 m_uaPubSubConfigurator = pubSubApplication.UaPubSubConfigurator;
 
@@ -104,6 +106,44 @@ namespace SampleServer.PubSub
                 m_publishSubscribeState.RemoveConnection.OnCall = OnCallRemoveConnectionMethodHandler;
 
                 InitializeDataSetFolderState(m_publishSubscribeState.PublishedDataSets);
+
+                // create Publisher Source Nodes
+                FolderState root = CreateFolder(null, "PubSub");
+                AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
+
+                FolderState publisher = CreateFolder(root, "Publisher");
+
+                BaseDataVariableState variable = CreateVariable(publisher, "BoolToggle", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("BoolToggle", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Int32", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Int32Fast", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Int32Fast", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "DateTime", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("DateTime", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Byte", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Int16", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "SByte", DataTypeIds.SByte, ValueRanks.Scalar, new NodeId("SByte", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "UInt16", DataTypeIds.UInt16, ValueRanks.Scalar, new NodeId("UInt16", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "UInt32", DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("UInt32", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Float", DataTypeIds.Float, ValueRanks.Scalar, new NodeId("Float", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Double", DataTypeIds.Double, ValueRanks.Scalar, new NodeId("Double", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                for(int i= 0; i < 100; i++)
+                {
+                    string name = "Mass_" + i;
+                    variable = CreateVariable(publisher, name, DataTypeIds.Int32, ValueRanks.Scalar, new NodeId(name, NamespaceIndex));
+                    m_dynamicNodes.Add(variable);
+                }   
+
+                m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
+                pubSubApplication.Start();
             }
         }
         #endregion
@@ -1038,6 +1078,142 @@ namespace SampleServer.PubSub
                 PredefinedNodes.Remove(nodeToRemove.NodeId);
                 RemoveConfigIdToPubSubNodeStateMapping(nodeToRemove);
             }
+        }
+
+        /// <summary>
+        /// Creates a new variable.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="dataType"></param>
+        /// <param name="valueRank"></param>
+        /// <returns></returns>
+        private BaseDataVariableState CreateVariable(NodeState parent, string name, NodeId dataType, int valueRank = ValueRanks.Scalar, NodeId nodeId = null)
+        {
+            BaseDataVariableState variable = new BaseDataVariableState(parent);
+            if (nodeId == null)
+            {
+                nodeId = New(SystemContext, variable);
+            }
+            variable.NodeId = nodeId;
+            variable.BrowseName = new QualifiedName(name, NamespaceIndex);
+            variable.DisplayName = variable.BrowseName.Name;
+            variable.SymbolicName = variable.BrowseName.Name;
+
+            variable.ReferenceTypeId = ReferenceTypes.Organizes;
+            variable.TypeDefinitionId = VariableTypeIds.BaseDataVariableType;
+
+            variable.DataType = dataType;
+            variable.ValueRank = valueRank;
+            variable.AccessLevel = AccessLevels.CurrentReadOrWrite;
+            variable.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
+            variable.Historizing = false;
+            variable.StatusCode = StatusCodes.Good;
+            variable.Timestamp = DateTime.UtcNow;
+
+            if (valueRank == ValueRanks.OneDimension)
+            {
+                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> { 0 });
+            }
+            else if (valueRank == ValueRanks.TwoDimensions)
+            {
+                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> { 0, 0 });
+            }
+
+            if (parent != null)
+            {
+                parent.AddChild(variable);
+            }
+            AddPredefinedNode(SystemContext, variable);
+
+
+            variable.WriteMask = AttributeWriteMask.DisplayName | AttributeWriteMask.Description;
+            variable.UserWriteMask = AttributeWriteMask.DisplayName | AttributeWriteMask.Description;
+            variable.Value = GetDefaultValueForDatatype(dataType);
+
+            return variable;
+        }
+
+
+        #endregion
+
+
+        #region Data Changes Simulation
+        /// <summary>
+        /// Simulate value changes in dynamic nodes
+        /// </summary>
+        /// <param name="state"></param>
+        private void DoSimulation(object state)
+        {
+            try
+            {
+                lock (Lock)
+                {
+                    foreach (BaseDataVariableState variable in m_dynamicNodes)
+                    {
+                        variable.Value = GetNewValue(variable);
+                        variable.Timestamp = DateTime.UtcNow;
+                        variable.ClearChangeMasks(SystemContext, false);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Utils.Trace(e, "Unexpected error doing simulation.");
+            }
+        }
+
+        /// <summary>
+        /// Generates new value for a specific variable node
+        /// </summary>
+        /// <param name="variable"></param>
+        /// <returns></returns>
+        private object GetNewValue(BaseDataVariableState variable)
+        {
+            switch (variable.BrowseName.Name)
+            {
+                case "BoolToggle":
+                    bool boolValue = (bool)variable.Value;
+                    return !boolValue;
+                case "Int32":
+                    int intValue = (int)variable.Value;
+                    return (int)(intValue + 1);
+                case "UInt32":
+                    uint uintValue = (uint)variable.Value;
+                    return (uint)(uintValue + 1);
+                case "Int32Fast":
+                    intValue = (int)variable.Value;
+                    return (int)(intValue + 100);
+                case "DateTime":
+                    return DateTime.Now;
+                case "Byte":
+                    byte byteValue = (byte)variable.Value;
+                    return (byte)(byteValue + 1);
+                case "Int16":
+                    Int16 int16Value = (Int16)variable.Value;
+                    return (Int16)(int16Value + 1);
+                case "UInt16":
+                    UInt16 uint16Value = (UInt16)variable.Value;
+                    return (UInt16)(uint16Value + 1);
+                case "SByte":
+                    sbyte sbyteValue = (sbyte)variable.Value;
+                    return (sbyte)(sbyteValue + 1);
+                case "Float":
+                    float floatValue = (float)variable.Value;
+                    return (float)(floatValue + 1);
+                case "Double":
+                    double doubleValue = (double)variable.Value;
+                    return (double)(doubleValue + 1);
+                default:
+                    if (variable.BrowseName.Name.StartsWith("Mass"))
+                    {
+                        intValue = (int)variable.Value;
+                        return (int)(intValue + 1);
+                    }
+                    break;
+            }
+
+            return null;
         }
         #endregion
     }
