@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace SampleClient.Samples
 {
-    class PubSubStateCfgReader
+    public class PubSubStateCfgReader
     {
         #region Public Methods
         public static PubSubConfigurationDataType PubSubConfigurationRead(ClientSession clientSession)
