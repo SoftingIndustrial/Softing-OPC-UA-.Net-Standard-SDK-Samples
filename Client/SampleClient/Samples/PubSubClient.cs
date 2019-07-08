@@ -123,7 +123,7 @@ namespace SampleClient.Samples
 
             try
             {
-                PubSubConfigurationDataType pubSubConfigurationData = PubSubStateCfgReader.PubSubConfigurationRead(m_session);
+                PubSubConfigurationDataType pubSubConfigurationData = PubSubStateConfigurationReader.PubSubConfigurationRead(m_session);
             }
             catch (Exception e)
             {

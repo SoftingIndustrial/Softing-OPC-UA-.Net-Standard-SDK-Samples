@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace SampleClient.Samples
 {
-    public class PubSubStateCfgReader
+    public class PubSubStateConfigurationReader
     {
         #region Public Methods
         public static PubSubConfigurationDataType PubSubConfigurationRead(ClientSession clientSession)
@@ -154,7 +154,16 @@ namespace SampleClient.Samples
             readValue.AttributeId = Attributes.Value;
 
             dataValue = clientSession.Read(readValue);
-            var publisherIdValue = dataValue.Value.GetType() == typeof(UInt16) ? (UInt16)dataValue.Value : (UInt64)dataValue.Value;
+            
+            Variant publisherIdValue;
+            if (dataValue.Value.GetType() == typeof(UInt16))
+            {
+                publisherIdValue = (UInt16)dataValue.Value;
+            }
+            else if (dataValue.Value.GetType() == typeof(UInt64))
+            {
+                publisherIdValue = (UInt64)dataValue.Value;
+            }
 
             // Read TransportProfileUri
             var transportProfileUriNodeId = (from refDsc in connectionReferenceDescriptions
@@ -295,7 +304,16 @@ namespace SampleClient.Samples
                 readValue.NodeId = (NodeId)publisherIdNodeId.NodeId;
                 readValue.AttributeId = Attributes.Value;
                 dataValue = clientSession.Read(readValue);
-                var publisherIdValue = dataValue.Value.GetType() == typeof(UInt16) ? (UInt16)dataValue.Value : (UInt64)dataValue.Value; 
+
+                Variant publisherIdValue;
+                if (dataValue.Value.GetType() == typeof(UInt16))
+                {
+                    publisherIdValue = (UInt16)dataValue.Value;
+                }
+                else if (dataValue.Value.GetType() == typeof(UInt64))
+                {
+                    publisherIdValue = (UInt64)dataValue.Value;
+                }
 
                 // Read WriterGroupId
                 var writerGroupIdNodeId = (from refDsc in dataSetReaderReferenceDescriptions
