@@ -238,22 +238,35 @@ namespace SampleServer.PubSub
         /// <param name="e"></param>
         private void UaPubSubConfigurator_PublishedDataSetAdded(object sender, PublishedDataSetEventArgs e)
         {
-            NodeState parentNodeState = m_publishSubscribeState.PublishedDataSets;
+            DataSetFolderState parentDataSetFolderState = m_publishSubscribeState.PublishedDataSets;
 
             PublishedDataItemsDataType publishedDataItemsDataType = ExtensionObject.ToEncodeable(e.PublishedDataSetDataType.DataSetSource)
                       as PublishedDataItemsDataType;
             if (publishedDataItemsDataType != null)
             {
+                // locate parent folder
+                if (e.PublishedDataSetDataType.DataSetFolder != null)
+                {
+                    foreach(string folderName in e.PublishedDataSetDataType.DataSetFolder)
+                    {                        
+                        DataSetFolderState folder = parentDataSetFolderState.FindChild(SystemContext, new QualifiedName(folderName, NamespaceIndex)) as DataSetFolderState;
+                        if (folder == null)
+                        {
+                            folder = CreateObjectFromType(parentDataSetFolderState, folderName, ObjectTypeIds.DataSetFolderType, ReferenceTypeIds.Organizes) as DataSetFolderState;
+                        }
+                        parentDataSetFolderState = folder;
+                    }
+                }
+
                 //create published data set and add it to the address space
-                PublishedDataItemsState publishedDataItemsState = CreateObjectFromType(parentNodeState, e.PublishedDataSetDataType.Name,
+                PublishedDataItemsState publishedDataItemsState = CreateObjectFromType(parentDataSetFolderState, e.PublishedDataSetDataType.Name,
                     ObjectTypeIds.PublishedDataItemsType, ReferenceTypeIds.HasComponent) as PublishedDataItemsState;
 
                 //copy properties of configuration into node state object
                 publishedDataItemsState.ConfigurationVersion.Value = e.PublishedDataSetDataType.DataSetMetaData.ConfigurationVersion;
                 publishedDataItemsState.DataSetMetaData.Value = e.PublishedDataSetDataType.DataSetMetaData;
                 publishedDataItemsState.PublishedData.Value = publishedDataItemsDataType.PublishedData.ToArray();
-
-
+                InitializePublishedDataItemsState(publishedDataItemsState);
 
                 MapConfigIdToPubSubNodeState(e.PublishedDataSetId, publishedDataItemsState);
             }
@@ -635,7 +648,69 @@ namespace SampleServer.PubSub
         #endregion
 
         #region OnCall method handlers for OPC UA Server Method nodes
+        /// <summary>
+        /// Handler for OnCall event of <see cref="DataSetFolderState.AddDataSetFolder"/> method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="name"></param>
+        /// <param name="dataSetFolderNodeId"></param>
+        /// <returns></returns>
+        private ServiceResult OnCallAddDataSetFolderHandler(ISystemContext context, MethodState method, NodeId objectId, string name, ref NodeId dataSetFolderNodeId)
+        {
+            // find folder
+            DataSetFolderState parentFolder = method.Parent as DataSetFolderState;
+            if (parentFolder != null)
+            {
+                //check childeren names for duplicate name
+                if (parentFolder.FindChild(SystemContext, new QualifiedName(name, NamespaceIndex)) != null)
+                {
+                    return StatusCodes.BadBrowseNameDuplicated;
+                }               
+                
+                DataSetFolderState dataSetFolderState = CreateObjectFromType(parentFolder, name, ObjectTypeIds.DataSetFolderType, ReferenceTypeIds.Organizes) as DataSetFolderState;
+                if (dataSetFolderState!= null)
+                {
+                    InitializeDataSetFolderState(dataSetFolderState);
+                    dataSetFolderNodeId = dataSetFolderState.NodeId;
+                    return StatusCodes.Good;
+                }
+            }
+            return StatusCodes.Bad;
+        }
 
+        /// <summary>
+        /// Handler for OnCall event of <see cref="DataSetFolderState.RemoveDataSetFolder"/> method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="dataSetFolderNodeId"></param>
+        /// <returns></returns>
+        private ServiceResult OnCallRemoveDataSetFolderHandler(ISystemContext context, MethodState method, NodeId objectId, NodeId dataSetFolderNodeId)
+        {
+            // find folder
+            DataSetFolderState dataSetFolderState = FindNodeInAddressSpace(dataSetFolderNodeId) as DataSetFolderState;
+            if (dataSetFolderState != null)
+            {
+                IList<BaseInstanceState> children = new List<BaseInstanceState>();
+                dataSetFolderState.GetChildren(SystemContext, children);
+
+                //remove all published datasets from folder
+                foreach(var child in children)
+                {
+                    if (child is PublishedDataItemsState)
+                    {
+                        NodeId dataSetNodeId = null;
+                        OnCallRemovePublishedDataSetHandler(context, dataSetFolderState.RemovePublishedDataSet, dataSetFolderState.NodeId, dataSetNodeId);
+                    }
+                }
+                RemoveNodeFromAddressSpace(dataSetFolderState);
+                return StatusCodes.Good;
+            }
+            return StatusCodes.BadNodeIdInvalid;
+        }
         /// <summary>
         /// Handler for OnCall event of <see cref="DataSetFolderState.AddPublishedDataItems"/> method.
         /// </summary>
@@ -653,7 +728,93 @@ namespace SampleServer.PubSub
         private ServiceResult OnCallAddPublishedDataItemsHandler(ISystemContext context, MethodState method, NodeId objectId, string name, string[] fieldNameAliases, ushort[] fieldFlags,
                 PublishedVariableDataType[] variablesToAdd, ref NodeId dataSetNodeId, ref ConfigurationVersionDataType configurationVersion, ref StatusCode[] addResults)
         {
-            return StatusCodes.BadNotImplemented;
+            //validate parameters
+            if (name == null)
+            {
+                return StatusCodes.BadInvalidArgument;
+            }
+            if (fieldNameAliases == null || fieldFlags == null || variablesToAdd == null
+                || fieldNameAliases.Length != fieldFlags.Length || fieldFlags.Length != variablesToAdd.Length 
+                || variablesToAdd.Length != fieldNameAliases.Length)
+            {
+                return StatusCodes.BadInvalidArgument;
+            }
+
+            PublishedDataSetDataType publishedDataSetDataType = new PublishedDataSetDataType();
+            publishedDataSetDataType.Name = name;           
+            //locate parent folder
+            DataSetFolderState dataSetFolderState = method.Parent as DataSetFolderState;
+            // If no grouping is needed the DataSetFolder is a null
+            if (dataSetFolderState != null && dataSetFolderState != m_publishSubscribeState.PublishedDataSets)
+            {
+                // set folder value
+                publishedDataSetDataType.DataSetFolder = new StringCollection();
+               
+                while (dataSetFolderState.Parent is DataSetFolderState && dataSetFolderState != m_publishSubscribeState.PublishedDataSets)
+                {
+                    publishedDataSetDataType.DataSetFolder.Add(dataSetFolderState.BrowseName.Name);
+                    dataSetFolderState = dataSetFolderState.Parent as DataSetFolderState;                    
+                }
+            }
+            else
+            {
+                return StatusCodes.BadInvalidArgument;
+            }
+            //set DataSetSource
+            PublishedDataItemsDataType publishedDataItemsDataType = new PublishedDataItemsDataType();
+            publishedDataItemsDataType.PublishedData = new PublishedVariableDataTypeCollection();
+            publishedDataItemsDataType.PublishedData.AddRange(variablesToAdd);
+            publishedDataSetDataType.DataSetSource = new ExtensionObject(publishedDataItemsDataType);
+
+            // set DataSetMetaData
+            publishedDataSetDataType.DataSetMetaData = new DataSetMetaDataType();
+            publishedDataSetDataType.DataSetMetaData.DataSetClassId = Uuid.Empty;
+            publishedDataSetDataType.DataSetMetaData.Name = name;
+            publishedDataSetDataType.DataSetMetaData.Fields = new FieldMetaDataCollection();
+            addResults = new StatusCode[fieldNameAliases.Length];
+
+            for (int i =0; i < fieldNameAliases.Length; i++)
+            {
+                FieldMetaData fieldMetaData = new FieldMetaData()
+                {
+                    Name = fieldNameAliases[i],
+                    DataSetFieldId = new Uuid(Guid.NewGuid()),
+                };
+                
+                BaseDataVariableState variableState = FindNodeInAddressSpace(variablesToAdd[i].PublishedVariable) as BaseDataVariableState;
+                if (variableState == null)
+                {
+                    addResults[i] = StatusCodes.BadNodeIdUnknown;
+                }
+                else
+                {                    
+                    fieldMetaData.DataType = variableState.DataType;
+                    fieldMetaData.BuiltInType = (byte)TypeInfo.GetBuiltInType(variableState.DataType, Server.TypeTree);
+                    fieldMetaData.ValueRank = variableState.ValueRank;
+                }
+                publishedDataSetDataType.DataSetMetaData.Fields.Add(fieldMetaData);                
+            }
+            publishedDataSetDataType.DataSetMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
+            {
+                MinorVersion = 1,
+                MajorVersion = 1
+            };
+
+            StatusCode resultStatusCode = m_uaPubSubConfigurator.AddPublishedDataSet(publishedDataSetDataType);
+            if (StatusCode.IsBad(resultStatusCode))
+            {
+                return resultStatusCode;
+            }           
+            configurationVersion = publishedDataSetDataType.DataSetMetaData.ConfigurationVersion;
+            uint publishedDataSetConfigId = m_uaPubSubConfigurator.FindIdForObject(publishedDataSetDataType);
+            //find node state created by PublishedDataSetAdded event handler in address space 
+            NodeState dataSetNodeState = FindPubSubNodeState(publishedDataSetConfigId);
+            if (dataSetNodeState != null)
+            {
+                dataSetNodeId = dataSetNodeState.NodeId;
+                return StatusCodes.Good;
+            }           
+            return StatusCodes.BadInvalidArgument;
         }
 
         /// <summary>
@@ -674,6 +835,27 @@ namespace SampleServer.PubSub
                 return m_uaPubSubConfigurator.RemovePublishedDataSet(publishedDataSetConfigId);
             }
             return StatusCodes.BadNodeIdUnknown;
+        }
+
+        /// <summary>
+        /// Handler for OnCall event of <see cref="PublishedDataItemsState.AddVariables"/> method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="configurationVersion"></param>
+        /// <param name="fieldNameAliases"></param>
+        /// <param name="promotedFields"></param>
+        /// <param name="variablesToAdd"></param>
+        /// <param name="newConfigurationVersion"></param>
+        /// <param name="addResults"></param>
+        /// <returns></returns>
+        private ServiceResult OnCallPublishedDataItemsAddVariablesHandler(ISystemContext context, MethodState method, NodeId objectId,
+            ConfigurationVersionDataType configurationVersion, string[] fieldNameAliases,
+            bool[] promotedFields, PublishedVariableDataType[] variablesToAdd,
+            ref ConfigurationVersionDataType newConfigurationVersion, ref StatusCode[] addResults)
+        {
+            return StatusCodes.BadNotImplemented;
         }
 
         /// <summary>
@@ -1015,8 +1197,7 @@ namespace SampleServer.PubSub
         /// </summary>
         /// <param name="dataSetFolderState"></param>
         private void InitializeDataSetFolderState(DataSetFolderState dataSetFolderState)
-        {
-            /*
+        {            
             if (dataSetFolderState.AddDataSetFolder == null)
             {
                 Argument[] inputArguments = new Argument[]
@@ -1028,9 +1209,9 @@ namespace SampleServer.PubSub
                     new Argument(){Name = "DataSetFolderNodeId", DataType = DataTypeIds.NodeId,  ValueRank = ValueRanks.Scalar, Description = "NodeId of the created DataSetFolderType Object."}
                 };
                 dataSetFolderState.AddDataSetFolder = CreateMethod(dataSetFolderState, BrowseNames.AddDataSetFolder, inputArguments, outputArguments, null,
-                    typeof(AddDataSetFolderMethodState), MethodIds.DataSetFolderType_AddDataSetFolder) as AddDataSetFolderMethodState;
-               
+                    typeof(AddDataSetFolderMethodState), MethodIds.DataSetFolderType_AddDataSetFolder) as AddDataSetFolderMethodState;               
             }
+            dataSetFolderState.AddDataSetFolder.OnCall = OnCallAddDataSetFolderHandler;
             if (dataSetFolderState.RemoveDataSetFolder == null)
             {
                 Argument[] inputArguments = new Argument[]
@@ -1040,6 +1221,7 @@ namespace SampleServer.PubSub
                 dataSetFolderState.RemoveDataSetFolder = CreateMethod(dataSetFolderState, BrowseNames.RemoveDataSetFolder, inputArguments, null, null,
                     typeof(RemoveDataSetFolderMethodState), MethodIds.DataSetFolderType_RemoveDataSetFolder) as RemoveDataSetFolderMethodState;
             }
+            dataSetFolderState.RemoveDataSetFolder.OnCall = OnCallRemoveDataSetFolderHandler;
             if (dataSetFolderState.AddPublishedDataItems == null)
             {
                 Argument[] inputArguments = new Argument[]
@@ -1056,9 +1238,9 @@ namespace SampleServer.PubSub
                     new Argument(){Name = "AddResults", DataType = DataTypeIds.StatusCode,  ValueRank = ValueRanks.OneDimension, Description = "The result codes for the variables to add."},
                 };
                 dataSetFolderState.AddPublishedDataItems = CreateMethod(dataSetFolderState, BrowseNames.AddPublishedDataItems, inputArguments, outputArguments, null,
-                    typeof(AddPublishedDataItemsMethodState), MethodIds.DataSetFolderType_AddPublishedDataItems) as AddPublishedDataItemsMethodState;
-                dataSetFolderState.AddPublishedDataItems.OnCall = OnCallAddPublishedDataItemsHandler;
-            }*/
+                    typeof(AddPublishedDataItemsMethodState), MethodIds.DataSetFolderType_AddPublishedDataItems) as AddPublishedDataItemsMethodState;                
+            }
+            dataSetFolderState.AddPublishedDataItems.OnCall = OnCallAddPublishedDataItemsHandler;
             if (dataSetFolderState.RemovePublishedDataSet == null)
             {
                 Argument[] inputArguments = new Argument[]
@@ -1066,9 +1248,49 @@ namespace SampleServer.PubSub
                     new Argument(){Name = "DataSetNodeId", DataType = DataTypeIds.NodeId,  ValueRank = ValueRanks.Scalar, Description = "NodeId of the PublishedDataSets Object to remove from the Server."},
                 };
                 dataSetFolderState.RemovePublishedDataSet = CreateMethod(dataSetFolderState, BrowseNames.RemovePublishedDataSet, inputArguments, null, null,
-                    typeof(RemovePublishedDataSetMethodState), MethodIds.DataSetFolderType_RemovePublishedDataSet) as RemovePublishedDataSetMethodState;
-                dataSetFolderState.RemovePublishedDataSet.OnCall = OnCallRemovePublishedDataSetHandler;
+                    typeof(RemovePublishedDataSetMethodState), MethodIds.DataSetFolderType_RemovePublishedDataSet) as RemovePublishedDataSetMethodState;                
             }
+            dataSetFolderState.RemovePublishedDataSet.OnCall = OnCallRemovePublishedDataSetHandler;
+            if (dataSetFolderState.AddPublishedDataItemsTemplate != null)
+            {
+                dataSetFolderState.AddPublishedDataItemsTemplate = null;
+            }
+            if (dataSetFolderState.AddPublishedEvents != null)
+            {
+                dataSetFolderState.AddPublishedEvents = null;
+            }
+            if (dataSetFolderState.AddPublishedEventsTemplate != null)
+            {
+                dataSetFolderState.AddPublishedEventsTemplate = null;
+            }
+        }
+
+        /// <summary>
+        /// Initializes methods of a <see cref="PublishedDataItemsState"/> instancee
+        /// </summary>
+        /// <param name="publishedDataItemsState"></param>
+        private void InitializePublishedDataItemsState(PublishedDataItemsState publishedDataItemsState)
+        {
+            /* if (publishedDataItemsState.AddVariables == null)
+             {
+                 Argument[] inputArguments = new Argument[]
+                 {
+                     new Argument(){Name = "ConfigurationVersion", DataType = DataTypeIds.ConfigurationVersionDataType, ValueRank = ValueRanks.Scalar, Description = "Configuration version of the DataSet."},
+                     new Argument(){Name = "FieldNameAliases", DataType = DataTypeIds.String,  ValueRank = ValueRanks.OneDimension, Description = "The names assigned to the selected Variables for the fields in the DataSetMetaData and in the DataSetMessages for tagged message encoding."},
+                     new Argument(){Name = "PromotedFields", DataType = DataTypeIds.Boolean,  ValueRank = ValueRanks.OneDimension, Description = "The flags indicating if the corresponding field is promoted to the DataSetMessage header."},
+                     new Argument(){Name = "VariablesToAdd", DataType = DataTypeIds.PublishedVariableDataType,  ValueRank = ValueRanks.OneDimension, Description = "Array of Variables to add to PublishedData and the related configuration settings."},
+                 };
+                 Argument[] outputArguments = new Argument[]
+                 {
+                     new Argument(){Name = "NewConfigurationVersion", DataType = DataTypeIds.ConfigurationVersionDataType,  ValueRank = ValueRanks.Scalar, Description = "Returns the new configuration version of the PublishedDataSet."},
+                     new Argument(){Name = "AddResults", DataType = DataTypeIds.StatusCode,  ValueRank = ValueRanks.OneDimension, Description = "The result codes for the variables to add."},
+                 };
+                 publishedDataItemsState.AddVariables = CreateMethod(publishedDataItemsState, BrowseNames.AddVariables, inputArguments, outputArguments, null,
+                     typeof(PublishedDataItemsAddVariablesMethodState), MethodIds.PublishedDataItemsType_AddVariables) as PublishedDataItemsAddVariablesMethodState;
+             }
+             publishedDataItemsState.AddVariables.OnCall = OnCallPublishedDataItemsAddVariablesHandler;*/
+            publishedDataItemsState.AddVariables = null;
+            publishedDataItemsState.RemoveVariables = null;
         }
 
         /// <summary>
