@@ -142,7 +142,7 @@ namespace SampleServer.PubSub
                 for(int i= 0; i < 100; i++)
                 {
                     string name = "Mass_" + i;
-                    variable = CreateVariable(publisher, name, DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_" + name, NamespaceIndex));
+                    variable = CreateVariable(publisher, name, DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("Pub_" + name, NamespaceIndex));
                     m_dynamicNodes.Add(variable);
                 }
                 m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
@@ -165,7 +165,7 @@ namespace SampleServer.PubSub
                 for (int i = 0; i < 100; i++)
                 {
                     string name = "Mass_" + i;
-                    variable = CreateVariable(subscriber, name, DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_" + name, NamespaceIndex));
+                    variable = CreateVariable(subscriber, name, DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("Sub_" + name, NamespaceIndex));
                 }
                 #endregion
 
@@ -273,7 +273,7 @@ namespace SampleServer.PubSub
         }
 
         /// <summary>
-        /// Handler for Removed events from <see cref="UaPubSubConfigurator"/>. Tha 
+        /// Handler for Removed events from <see cref="UaPubSubConfigurator"/>.  
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1485,8 +1485,8 @@ namespace SampleServer.PubSub
                 default:
                     if (variable.BrowseName.Name.StartsWith("Mass"))
                     {
-                        intValue = (int)variable.Value;
-                        return (int)(intValue + 1);
+                        uintValue = (uint)variable.Value;
+                        return (uint)(uintValue + 1);
                     }
                     break;
             }

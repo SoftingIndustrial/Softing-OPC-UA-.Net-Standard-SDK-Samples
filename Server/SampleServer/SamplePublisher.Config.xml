@@ -3778,7 +3778,7 @@
   </PublishedDataSets>
   <Connections>
     <PubSubConnectionDataType>
-      <Name>UADPConection1</Name>
+      <Name>UADPConection_Publisher</Name>
       <Enabled>true</Enabled>
       <PublisherId>
         <Value>
@@ -3911,32 +3911,7 @@
             </DataSetWriterDataType>
           </DataSetWriters>
         </WriterGroupDataType>
-      </WriterGroups>
-      <ReaderGroups />
-    </PubSubConnectionDataType>
-    <PubSubConnectionDataType>
-      <Name>UADPConection2</Name>
-      <Enabled>true</Enabled>
-      <PublisherId>
-        <Value>
-          <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
-        </Value>
-      </PublisherId>
-      <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp</TransportProfileUri>
-      <Address>
-        <TypeId>
-          <Identifier>i=21176</Identifier>
-        </TypeId>
-        <Body>
-          <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-            <NetworkInterface>Ethernet</NetworkInterface>
-            <Url>opc.udp://239.0.0.1:4840</Url>
-          </NetworkAddressUrlDataType>
-        </Body>
-      </Address>
-      <ConnectionProperties />
-      <TransportSettings i:nil="true" />
-      <WriterGroups>
+
         <WriterGroupDataType>
           <Name>WriterGroup 2</Name>
           <Enabled>true</Enabled>
