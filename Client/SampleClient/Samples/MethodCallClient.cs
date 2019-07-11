@@ -47,7 +47,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Call the a method on server.
         /// </summary>
-        internal void CallMethod_old()
+        internal void CallMethod()
         {
             if (m_session == null)
             {
@@ -92,53 +92,6 @@ namespace SampleClient.Samples
                 Console.WriteLine("Method call exception: " + ex.Message);
             }
         }
-
-        internal void CallMethod()
-        {
-            if (m_session == null)
-            {
-                Console.WriteLine("CallMethod: The session is not initialized!");
-                return;
-            }
-
-            /*Select the method from the address space*/
-            //Browse Path: Root\Objects\Methods
-            NodeId parentObjectId = new NodeId("ns=10;i=1");
-
-            //Browse Path: Root\Objects\Methods\Add
-            string methodPath = "Root\\Objects\\Methods\\Add";
-            NodeId methodId = new NodeId("ns=10;i=52");
-
-            /*initialize input arguments*/
-            WriterGroupDataType arg1 = new WriterGroupDataType();
-            UInt32 arg2 = 100;
-
-            List<object> inputArguments = new List<object> { arg1 };
-            Console.WriteLine("\nMethod '{0}' is called with the following arguments:", methodPath);
-            for (int i = 0; i < inputArguments.Count; i++)
-            {
-                Console.WriteLine("input[{0}]= {1}", i, inputArguments[i]);
-            }
-
-            StatusCode statusCode = new StatusCode();
-            try
-            {
-                IList<object> outputArgs;
-                statusCode = m_session.Call(parentObjectId, methodId, inputArguments, out outputArgs);
-
-                Console.WriteLine("Output arguments are:");
-                for (int i = 0; i < outputArgs.Count; i++)
-                {
-                    Console.WriteLine("output[{0}]= {1}", i, outputArgs[i]);
-                }
-                Console.WriteLine("Status Code is: {0}", statusCode);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Method call exception: " + ex.Message);
-            }
-        }
-
 
         /// <summary>
         /// Call a methods on server asynchronously
