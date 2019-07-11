@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * http://www.softing.com/LicenseSIA.pdf
+ * https://data-intelligence.softing.com/LA-SDK-en/
  * 
  * ======================================================================*/
 
@@ -741,11 +741,11 @@ namespace SampleServer.PubSub
             }
 
             PublishedDataSetDataType publishedDataSetDataType = new PublishedDataSetDataType();
-            publishedDataSetDataType.Name = name;           
+            publishedDataSetDataType.Name = name;
             //locate parent folder
             DataSetFolderState dataSetFolderState = method.Parent as DataSetFolderState;
             // If no grouping is needed the DataSetFolder is a null
-            if (dataSetFolderState != null && dataSetFolderState != m_publishSubscribeState.PublishedDataSets)
+            if (dataSetFolderState != null) // && dataSetFolderState != m_publishSubscribeState.PublishedDataSets)
             {
                 // set folder value
                 publishedDataSetDataType.DataSetFolder = new StringCollection();
@@ -1349,10 +1349,12 @@ namespace SampleServer.PubSub
         /// <param name="nodeToRemove"></param>
         private void RemoveNodeFromAddressSpace(BaseInstanceState nodeToRemove)
         {
-            if (nodeToRemove != null)
+            if (nodeToRemove != null && nodeToRemove.Parent != null)
             {
                 // remove from children list
-                DeleteNode(SystemContext, nodeToRemove.NodeId);               
+                nodeToRemove.Parent.RemoveChild(nodeToRemove);
+                // remove from predefined nodes
+                PredefinedNodes.Remove(nodeToRemove.NodeId);
                 RemoveConfigIdToPubSubNodeStateMapping(nodeToRemove);
             }
         }
