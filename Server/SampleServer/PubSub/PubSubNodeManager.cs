@@ -1349,12 +1349,10 @@ namespace SampleServer.PubSub
         /// <param name="nodeToRemove"></param>
         private void RemoveNodeFromAddressSpace(BaseInstanceState nodeToRemove)
         {
-            if (nodeToRemove != null && nodeToRemove.Parent != null)
+            if (nodeToRemove != null)
             {
                 // remove from children list
-                nodeToRemove.Parent.RemoveChild(nodeToRemove);
-                // remove from predefined nodes
-                PredefinedNodes.Remove(nodeToRemove.NodeId);
+                DeleteNode(SystemContext, nodeToRemove.NodeId);               
                 RemoveConfigIdToPubSubNodeStateMapping(nodeToRemove);
             }
         }
