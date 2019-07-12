@@ -12,11 +12,6 @@ using Opc.Ua;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.PubSub;
 using Softing.Opc.Ua.Server;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SampleServer.PubSub
 {
@@ -79,7 +74,23 @@ namespace SampleServer.PubSub
         /// <param name="dataValue">Default value is null. </param>
         public void WritePublishedDataItem(NodeId nodeId, uint attributeId = 13, DataValue dataValue = null)
         {
-            //throw new NotImplementedException();
+            if (nodeId == null)
+            {
+                return;
+            }
+            if (m_associatedNodeManager != null)
+            {
+                INodeManager typeDefinitionNodeManager = null;
+                m_associatedNodeManager.Server.NodeManager.GetManagerHandle(nodeId, out typeDefinitionNodeManager);
+
+                if (typeDefinitionNodeManager is CustomNodeManager2)
+                {
+                    NodeState nodeState = ((CustomNodeManager2)typeDefinitionNodeManager).FindPredefinedNode(nodeId, typeof(object));
+                                        
+                    nodeState.WriteAttribute(m_associatedNodeManager.SystemContext, attributeId, NumericRange.Empty, dataValue);
+                    nodeState.ClearChangeMasks(m_associatedNodeManager.SystemContext, false);
+                }
+            }
         }
         #endregion
     }

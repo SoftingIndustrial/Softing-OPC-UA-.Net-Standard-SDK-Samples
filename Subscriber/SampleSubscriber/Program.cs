@@ -325,7 +325,7 @@ namespace SampleSubscriber
                 {
                     Name = name,
                     DataSetFieldId = new Uuid(Guid.NewGuid()),
-                    BuiltInType = (byte)DataTypes.Int32,
+                    BuiltInType = (byte)DataTypes.UInt32,
                     DataType = DataTypeIds.UInt32,
                     ValueRank = ValueRanks.Scalar
                 });              

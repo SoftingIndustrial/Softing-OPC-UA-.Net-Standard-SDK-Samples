@@ -636,16 +636,7 @@ namespace SampleServer.PubSub
             {
                 foreach(Field field in dataSet.Fields)
                 {
-                    // find target node
-                    if (field.TargetNodeId != null && field.Value != null)
-                    {
-                        BaseVariableState targetNode = FindNodeInAddressSpace(field.TargetNodeId) as BaseVariableState;
-                        if (targetNode != null)
-                        {
-                            targetNode.Value = field.Value.Value;
-                            targetNode.ClearChangeMasks(SystemContext, false);
-                        }
-                    }
+                    ((UaPubSubApplication)sender).DataStore.WritePublishedDataItem(field.TargetNodeId, field.TargetAttribute, field.Value);                    
                 }
             }
         }
