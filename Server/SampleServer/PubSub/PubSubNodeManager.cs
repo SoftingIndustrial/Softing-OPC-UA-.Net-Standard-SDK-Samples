@@ -349,6 +349,7 @@ namespace SampleServer.PubSub
                 writerGroupState.PublishingInterval.Value = e.WriterGroupDataType.PublishingInterval;
                 writerGroupState.KeepAliveTime.Value = e.WriterGroupDataType.KeepAliveTime;
                 writerGroupState.HeaderLayoutUri.Value = e.WriterGroupDataType.HeaderLayoutUri;
+                writerGroupState.MaxNetworkMessageSize.Value = e.WriterGroupDataType.MaxNetworkMessageSize;
                 //writerGroupState.MessageSettings
                 UadpWriterGroupMessageDataType messageSettings = ExtensionObject.ToEncodeable(e.WriterGroupDataType.MessageSettings)
                       as UadpWriterGroupMessageDataType;
@@ -410,10 +411,10 @@ namespace SampleServer.PubSub
                 DataSetWriterState dataSetWriterState = CreateObjectFromType(parentWriterGroupState, e.DataSetWriterDataType.Name,
                     ObjectTypeIds.DataSetWriterType, ReferenceTypeIds.HasDataSetWriter) as DataSetWriterState;
 
-                //copy properties of configuration ito node state object
+                //copy properties of configuration into node state object
                 dataSetWriterState.DataSetWriterId.Value = e.DataSetWriterDataType.DataSetWriterId;
                 dataSetWriterState.DataSetFieldContentMask.Value = e.DataSetWriterDataType.DataSetFieldContentMask;
-                // dataSetWriterGroupState.KeyFrameCount.Value = e.DataSetWriterDataType.KeyFrameCount;
+                dataSetWriterState.KeyFrameCount.Value = e.DataSetWriterDataType.KeyFrameCount;
                 //.MessageSettings
                 UadpDataSetWriterMessageDataType messageSettings = ExtensionObject.ToEncodeable(e.DataSetWriterDataType.MessageSettings)
                       as UadpDataSetWriterMessageDataType;
@@ -523,6 +524,9 @@ namespace SampleServer.PubSub
                     readerGroupState.TransportSettings = readerGroupTransportState;
                 }
 
+                // ReaderGroupState.MaxNetworkMessageSize
+                readerGroupState.MaxNetworkMessageSize.Value = e.ReaderGroupDataType.MaxNetworkMessageSize;
+
                 MapConfigIdToPubSubNodeState(e.ReaderGroupId, readerGroupState);
                 InitializePubSubStatusStateMethods(readerGroupState.Status, e.ReaderGroupDataType);
 
@@ -565,7 +569,7 @@ namespace SampleServer.PubSub
                 dataSetreaderState.DataSetMetaData.Value = e.DataSetReaderDataType.DataSetMetaData;
                 dataSetreaderState.DataSetFieldContentMask.Value = e.DataSetReaderDataType.DataSetFieldContentMask;
                 dataSetreaderState.MessageReceiveTimeout.Value = e.DataSetReaderDataType.MessageReceiveTimeout;
-
+                dataSetreaderState.KeyFrameCount.Value = e.DataSetReaderDataType.KeyFrameCount;
                 //SubscribedDataSet
                 TargetVariablesDataType subscribedDataSet = ExtensionObject.ToEncodeable(e.DataSetReaderDataType.SubscribedDataSet)
                       as TargetVariablesDataType;
