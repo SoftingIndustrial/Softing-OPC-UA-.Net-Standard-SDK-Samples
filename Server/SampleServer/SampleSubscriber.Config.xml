@@ -4016,7 +4016,7 @@
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
-                  <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
                 </Value>
               </PublisherId>
               <WriterGroupId>0</WriterGroupId>
@@ -4216,7 +4216,7 @@
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
-                  <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
                 </Value>
               </PublisherId>
               <WriterGroupId>0</WriterGroupId>
@@ -4581,7 +4581,7 @@
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
-                  <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
                 </Value>
               </PublisherId>
               <WriterGroupId>0</WriterGroupId>
