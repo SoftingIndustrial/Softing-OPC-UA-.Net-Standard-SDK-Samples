@@ -3,7 +3,7 @@
   <PublishedDataSets />
   <Connections>
     <PubSubConnectionDataType>
-      <Name>UADPConection1_sub</Name>
+      <Name>UADPConection_Subscriber</Name>
       <Enabled>true</Enabled>
       <PublisherId>
         <Value>
@@ -18,7 +18,7 @@
         <Body>
           <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
             <NetworkInterface>Ethernet</NetworkInterface>
-            <Url>opc.udp://239.0.0.1:4840</Url>
+            <Url>opc.udp://239.0.0.11:4840</Url>
           </NetworkAddressUrlDataType>
         </Body>
       </Address>

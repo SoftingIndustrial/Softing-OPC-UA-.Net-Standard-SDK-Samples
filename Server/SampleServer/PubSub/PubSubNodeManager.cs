@@ -745,11 +745,15 @@ namespace SampleServer.PubSub
             }
 
             PublishedDataSetDataType publishedDataSetDataType = new PublishedDataSetDataType();
-            publishedDataSetDataType.Name = name;
+            publishedDataSetDataType.Name = name;           
             //locate parent folder
-            DataSetFolderState dataSetFolderState = method.Parent as DataSetFolderState;
-            // If no grouping is needed the DataSetFolder is a null
-            if (dataSetFolderState != null) // && dataSetFolderState != m_publishSubscribeState.PublishedDataSets)
+            DataSetFolderState dataSetFolderState = method.Parent as DataSetFolderState;            
+            if (dataSetFolderState == null)
+            {
+                return StatusCodes.BadInvalidArgument;
+            }
+            // build DataSetFolder collection if needed
+            if (dataSetFolderState != m_publishSubscribeState.PublishedDataSets)
             {
                 // set folder value
                 publishedDataSetDataType.DataSetFolder = new StringCollection();
@@ -760,10 +764,7 @@ namespace SampleServer.PubSub
                     dataSetFolderState = dataSetFolderState.Parent as DataSetFolderState;                    
                 }
             }
-            else
-            {
-                return StatusCodes.BadInvalidArgument;
-            }
+           
             //set DataSetSource
             PublishedDataItemsDataType publishedDataItemsDataType = new PublishedDataItemsDataType();
             publishedDataItemsDataType.PublishedData = new PublishedVariableDataTypeCollection();
