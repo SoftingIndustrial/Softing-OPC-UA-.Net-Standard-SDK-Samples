@@ -106,7 +106,7 @@ namespace SampleServer.PubSub
 
                 // add OnCall handlers for m_publishSubscribeState methods 
                 m_publishSubscribeState.AddConnection.OnCall = OnCallAddConnectionMethodHandler;
-                m_publishSubscribeState.RemoveConnection.OnCall = OnCallRemoveConnectionMethodHandler;
+                m_publishSubscribeState.RemoveConnection.OnCall = OnCallRemoveConnectionHandler;
 
                 InitializeDataSetFolderState(m_publishSubscribeState.PublishedDataSets);
 
@@ -312,7 +312,7 @@ namespace SampleServer.PubSub
             MapConfigIdToPubSubNodeState(e.ConnectionId, pubSubConnectionState);
             InitializePubSubStatusStateMethods(pubSubConnectionState.Status, e.PubSubConnectionDataType);
 
-            pubSubConnectionState.AddWriterGroup.OnCall = OnCallAddWriterGroupMethodHandler;
+            pubSubConnectionState.AddWriterGroup.OnCall = OnCallAddWriterGroupHandler;
             pubSubConnectionState.AddReaderGroup.OnCall = OnCallAddReaderGroupMethodHandler;
             pubSubConnectionState.RemoveGroup.OnCall = OnCallRemoveGroupMethodHandler;
         }
@@ -894,7 +894,7 @@ namespace SampleServer.PubSub
         /// <param name="objectId"></param>
         /// <param name="connectionId"></param>
         /// <returns></returns>
-        private ServiceResult OnCallRemoveConnectionMethodHandler(ISystemContext context, MethodState method, NodeId objectId, NodeId connectionId)
+        private ServiceResult OnCallRemoveConnectionHandler(ISystemContext context, MethodState method, NodeId objectId, NodeId connectionId)
         {
             // find connection node to be removed
             PubSubConnectionState pubSubConnectionState = FindNodeInAddressSpace(connectionId) as PubSubConnectionState;
@@ -903,7 +903,7 @@ namespace SampleServer.PubSub
                 uint connectionConfigId = (uint)pubSubConnectionState.Handle;
                 return m_uaPubSubConfigurator.RemoveConnection(connectionConfigId);
             }
-            return StatusCodes.BadInvalidArgument;
+            return StatusCodes.BadNodeIdUnknown;
         }
 
         /// <summary>
@@ -915,7 +915,7 @@ namespace SampleServer.PubSub
         /// <param name="configuration"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        private ServiceResult OnCallAddWriterGroupMethodHandler(ISystemContext context, MethodState method, NodeId objectId, WriterGroupDataType configuration, ref NodeId groupId)
+        private ServiceResult OnCallAddWriterGroupHandler(ISystemContext context, MethodState method, NodeId objectId, WriterGroupDataType configuration, ref NodeId groupId)
         {
             if (configuration != null)
             {
@@ -995,7 +995,7 @@ namespace SampleServer.PubSub
                 uint configId = (uint)dataSetWriterState.Handle;
                 return m_uaPubSubConfigurator.RemoveDataSetWriter(configId);
             }
-            return StatusCodes.BadInvalidArgument;
+            return StatusCodes.BadNodeIdUnknown;
         }
 
         /// <summary>
@@ -1087,7 +1087,7 @@ namespace SampleServer.PubSub
                 uint configId = (uint)dataSeReaderState.Handle;
                 return m_uaPubSubConfigurator.RemoveDataSetReader(configId);
             }
-            return StatusCodes.BadInvalidArgument;
+            return StatusCodes.BadNodeIdUnknown;
         }
 
         /// <summary>
@@ -1103,7 +1103,7 @@ namespace SampleServer.PubSub
             // find group node to be removed
             NodeState groupNodeState = FindNodeInAddressSpace(groupId);
 
-            if (groupNodeState.Handle is uint)
+            if (groupNodeState != null && groupNodeState.Handle is uint)
             {
                 uint groupConfigId = (uint)groupNodeState.Handle;
                 if (groupNodeState is WriterGroupState)
