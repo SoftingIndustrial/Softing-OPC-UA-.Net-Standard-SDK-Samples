@@ -20,6 +20,7 @@ using XamarinSampleServer.Model;
 using XamarinSampleServer.Services;
 using Opc.Ua;
 using Opc.Ua.Configuration;
+using Softing.Opc.Ua.Server;
 
 namespace XamarinSampleServer.ViewModels
 {
@@ -38,7 +39,7 @@ namespace XamarinSampleServer.ViewModels
         private string m_resultsText;
         private bool m_canStartServer;
         private SampleServer.SampleServer m_sampleServer;
-        Softing.Opc.Ua.Server.LicensingStatus m_isValidLicenseKey = Softing.Opc.Ua.Server.LicensingStatus.Ok;
+        LicensingStatus m_isValidLicenseKey = LicensingStatus.Ok;
         #endregion
 
         #region Constructors
@@ -64,13 +65,13 @@ namespace XamarinSampleServer.ViewModels
             // Fill in your design time license activation keys here
             // m_isValidLicenseKey = License.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
             
-            if (m_isValidLicenseKey == Softing.Opc.Ua.Server.LicensingStatus.Expired)
+            if (m_isValidLicenseKey == LicensingStatus.Expired)
             {
                 ResultsText = string.Format("\n\nError starting server: License period expired!");
                 CanStartServer = false;
                 return;
             }
-            if (m_isValidLicenseKey == Softing.Opc.Ua.Server.LicensingStatus.Invalid)
+            if (m_isValidLicenseKey == LicensingStatus.Invalid)
             {
                 ResultsText = string.Format("\n\nError starting server: Invalid License key!");
                 CanStartServer = false;
