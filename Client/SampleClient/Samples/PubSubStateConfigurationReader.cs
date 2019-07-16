@@ -60,7 +60,7 @@ namespace SampleClient.Samples
             }
 
             // Handle the published data
-            HandleAddPublishedDataSets(pubSubConfiguration, clientSession, referenceDescriptions);
+            HandleAddPublishedDataSets(pubSubConfiguration, clientSession, referenceDescriptions, new StringCollection());
 
             return pubSubConfiguration;
         }
@@ -69,64 +69,81 @@ namespace SampleClient.Samples
         #endregion
 
         #region Private Methods
-        private static void HandleAddPublishedDataSets(PubSubConfigurationDataType pubSubConfiguration, ClientSession clientSession, IList<ReferenceDescriptionEx> referenceDescriptions)
+        private static void HandleAddPublishedDataSets(PubSubConfigurationDataType pubSubConfiguration,
+                                                       ClientSession clientSession,
+                                                       IList<ReferenceDescriptionEx> referenceDescriptions,
+                                                       StringCollection dataSetFolder)
         {
-            ReferenceDescriptionEx publishedDataSetsNode = (from refDsc in referenceDescriptions
-                                                            where refDsc.TypeDefinition.IdType == IdType.Numeric &&
-                                                                  (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.DataSetFolderType
-                                                            select refDsc).First();
-            NodeId publishedDataSetFolderNodeId = (NodeId)publishedDataSetsNode.NodeId;
-            var publishedDataSetFoldersReferenceDescriptions = clientSession.Browse(publishedDataSetFolderNodeId);
 
+            IEnumerable<ReferenceDescriptionEx> publishedDataSetsNodes = from refDsc in referenceDescriptions
+                                                           where refDsc.TypeDefinition.IdType == IdType.Numeric &&
+                                                                 (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.DataSetFolderType
+                                                           select refDsc;
 
-            var publishedDataItemsReferenceDescriptions = from refDsc in publishedDataSetFoldersReferenceDescriptions
-                                                          where refDsc.TypeDefinition.IdType == IdType.Numeric &&
-                                                                (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.PublishedDataItemsType
-                                                          select refDsc;
-
-            foreach (var publishedDataItemReference in publishedDataItemsReferenceDescriptions)
+            foreach (var publishedDataSetsNode in publishedDataSetsNodes)
             {
-                NodeId publishedDataItemNodeId = (NodeId)publishedDataItemReference.NodeId;
+                StringCollection dataSetFolderValue = (StringCollection)dataSetFolder.MemberwiseClone();
+                dataSetFolderValue.Add(publishedDataSetsNode.BrowseName.Name);
 
-                //Read ConfigurationVersion, DataSetMetaData and PublishedData
-                var translateResults = clientSession.TranslateBrowsePathToNodeIds(publishedDataItemNodeId, new List<QualifiedName> { BrowseNames.ConfigurationVersion });
-                var readConfigurationVersion = new ReadValueId();
-                readConfigurationVersion.NodeId = translateResults?.First();
-                readConfigurationVersion.AttributeId = Attributes.Value;
+                NodeId publishedDataSetFolderNodeId = (NodeId)publishedDataSetsNode.NodeId;
+                var publishedDataSetFoldersReferenceDescriptions = clientSession.Browse(publishedDataSetFolderNodeId);
 
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(publishedDataItemNodeId, new List<QualifiedName> { BrowseNames.DataSetMetaData });
-                var readDataSetMetaData = new ReadValueId();
-                readDataSetMetaData.NodeId = translateResults?.First();
-                readDataSetMetaData.AttributeId = Attributes.Value;
 
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(publishedDataItemNodeId, new List<QualifiedName> { BrowseNames.PublishedData });
-                var readPublishedData = new ReadValueId();
-                readPublishedData.NodeId = translateResults?.First();
-                readPublishedData.AttributeId = Attributes.Value;
+                var publishedDataItemsReferenceDescriptions = from refDsc in publishedDataSetFoldersReferenceDescriptions
+                                                              where refDsc.TypeDefinition.IdType == IdType.Numeric &&
+                                                                    (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.PublishedDataItemsType
+                                                              select refDsc;
 
-                var results = clientSession.Read(new List<ReadValueId> { readConfigurationVersion, readDataSetMetaData, readPublishedData });
-                ConfigurationVersionDataType configurationVersionDataType = (ConfigurationVersionDataType)((ExtensionObject)results?.ElementAt(0).Value).Body;
-                DataSetMetaDataType dataSetMetaDataValue = (DataSetMetaDataType)((ExtensionObject)results?.ElementAt(1).Value).Body;
-
-                PublishedVariableDataTypeCollection publishedVariables = new PublishedVariableDataTypeCollection();
-                foreach (ExtensionObject publishedVariableDataType in (ExtensionObject[])results?.ElementAt(2).Value)
+                foreach (var publishedDataItemReference in publishedDataItemsReferenceDescriptions)
                 {
-                    publishedVariables.Add((PublishedVariableDataType)publishedVariableDataType.Body);
-                }
+                    NodeId publishedDataItemNodeId = (NodeId)publishedDataItemReference.NodeId;
 
-                PublishedDataSetDataType publishedDataSetDataType = new PublishedDataSetDataType
-                {
-                    Name = publishedDataItemReference.BrowseName.Name,
-                    DataSetMetaData = dataSetMetaDataValue,
-                    DataSetSource = new ExtensionObject(new PublishedDataItemsDataType
+                    //Read ConfigurationVersion, DataSetMetaData and PublishedData
+                    var translateResults = clientSession.TranslateBrowsePathToNodeIds(publishedDataItemNodeId, new List<QualifiedName> { BrowseNames.ConfigurationVersion });
+                    var readConfigurationVersion = new ReadValueId();
+                    readConfigurationVersion.NodeId = translateResults?.First();
+                    readConfigurationVersion.AttributeId = Attributes.Value;
+
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(publishedDataItemNodeId, new List<QualifiedName> { BrowseNames.DataSetMetaData });
+                    var readDataSetMetaData = new ReadValueId();
+                    readDataSetMetaData.NodeId = translateResults?.First();
+                    readDataSetMetaData.AttributeId = Attributes.Value;
+
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(publishedDataItemNodeId, new List<QualifiedName> { BrowseNames.PublishedData });
+                    var readPublishedData = new ReadValueId();
+                    readPublishedData.NodeId = translateResults?.First();
+                    readPublishedData.AttributeId = Attributes.Value;
+
+                    var results = clientSession.Read(new List<ReadValueId> { readConfigurationVersion, readDataSetMetaData, readPublishedData });
+                    ConfigurationVersionDataType configurationVersionDataType = (ConfigurationVersionDataType)((ExtensionObject)results?.ElementAt(0).Value).Body;
+                    DataSetMetaDataType dataSetMetaDataValue = (DataSetMetaDataType)((ExtensionObject)results?.ElementAt(1).Value).Body;
+
+                    PublishedVariableDataTypeCollection publishedVariables = new PublishedVariableDataTypeCollection();
+                    foreach (ExtensionObject publishedVariableDataType in (ExtensionObject[])results?.ElementAt(2).Value)
                     {
-                        PublishedData = publishedVariables,
-                    }),
-                };
+                        publishedVariables.Add((PublishedVariableDataType)publishedVariableDataType.Body);
+                    }
 
-                pubSubConfiguration.PublishedDataSets.Add(publishedDataSetDataType);
+                    
+
+                    PublishedDataSetDataType publishedDataSetDataType = new PublishedDataSetDataType
+                    {
+                        Name = publishedDataItemReference.BrowseName.Name,
+                        DataSetFolder = dataSetFolderValue,
+                        DataSetMetaData = dataSetMetaDataValue,
+                        DataSetSource = new ExtensionObject(new PublishedDataItemsDataType
+                        {
+                            PublishedData = publishedVariables,
+                        }),
+                    };
+
+                    pubSubConfiguration.PublishedDataSets.Add(publishedDataSetDataType);
+                }
+                // Recurse on its children
+                HandleAddPublishedDataSets(pubSubConfiguration, clientSession, publishedDataSetFoldersReferenceDescriptions, dataSetFolderValue);
             }
         }
+
         private static void HandleAddConnection(PubSubConfigurationDataType pubSubConfiguration, ClientSession clientSession, ReferenceDescriptionEx referenceDescription)
         {
             NodeId nodeId = new NodeId(referenceDescription.NodeId.Identifier, referenceDescription.NodeId.NamespaceIndex);
