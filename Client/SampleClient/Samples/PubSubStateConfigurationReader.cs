@@ -114,6 +114,9 @@ namespace SampleClient.Samples
                     readPublishedData.NodeId = translateResults?.First();
                     readPublishedData.AttributeId = Attributes.Value;
 
+                   
+                    
+
                     var results = clientSession.Read(new List<ReadValueId> { readConfigurationVersion, readDataSetMetaData, readPublishedData });
                     ConfigurationVersionDataType configurationVersionDataType = (ConfigurationVersionDataType)((ExtensionObject)results?.ElementAt(0).Value).Body;
                     DataSetMetaDataType dataSetMetaDataValue = (DataSetMetaDataType)((ExtensionObject)results?.ElementAt(1).Value).Body;
@@ -124,8 +127,44 @@ namespace SampleClient.Samples
                         publishedVariables.Add((PublishedVariableDataType)publishedVariableDataType.Body);
                     }
 
-                    
+                    // Read ExtensionFields
+                    var pubDataItemReferences = clientSession.Browse(publishedDataItemNodeId);
+                    var extensionFieldReference = (from  refDsc in pubDataItemReferences
+                                                   where refDsc.TypeDefinition.IdType == IdType.Numeric &&
+                                                   (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.ExtensionFieldsType
+                                                   select refDsc).FirstOrDefault();
+                   
+                    var readExtensionFieldsNodeId = (NodeId)extensionFieldReference?.NodeId;
+                    var allExtensionFieldsReferences = clientSession.Browse(readExtensionFieldsNodeId);
+                    var varExtensionFieldsReferences = from reff in allExtensionFieldsReferences
+                                                       where reff.TypeDefinition.IdType == IdType.Numeric &&
+                                                       (uint)reff.TypeDefinition.Identifier == (uint)VariableTypeIds.BaseDataVariableType.Identifier
+                                                       select reff;
 
+
+                    KeyValuePairCollection extensionFieldsValues = new KeyValuePairCollection();
+
+                    foreach (var extensionFieldRef in varExtensionFieldsReferences)
+                    {
+                        NodeId extensionFieldNodeId = (NodeId)extensionFieldRef.NodeId;
+                        var readValue = new ReadValueId
+                        {
+                            AttributeId = Attributes.Value,
+                            NodeId = extensionFieldNodeId, 
+                        };
+                        DataValueEx dataValue = clientSession.Read(readValue);
+
+                        Opc.Ua.KeyValuePair newExtensionField = new Opc.Ua.KeyValuePair
+                        {
+                            Key = extensionFieldReference.BrowseName.Name,
+                            Value = new Variant(dataValue.Value),
+                        };
+
+                        extensionFieldsValues.Add(newExtensionField);
+                    }
+                    // End Read ExtensionFields
+
+                  
                     PublishedDataSetDataType publishedDataSetDataType = new PublishedDataSetDataType
                     {
                         Name = publishedDataItemReference.BrowseName.Name,
@@ -135,6 +174,7 @@ namespace SampleClient.Samples
                         {
                             PublishedData = publishedVariables,
                         }),
+                        ExtensionFields = extensionFieldsValues,
                     };
 
                     pubSubConfiguration.PublishedDataSets.Add(publishedDataSetDataType);
