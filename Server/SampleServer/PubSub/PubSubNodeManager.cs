@@ -17,6 +17,7 @@ using Softing.Opc.Ua.Server;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using KeyValuePair = Opc.Ua.KeyValuePair;
 
 namespace SampleServer.PubSub
 {
@@ -81,10 +82,10 @@ namespace SampleServer.PubSub
                 m_uaPubSubConfigurator.PubSubStateChanged += UaPubSubConfigurator_PubSubStateChanged;
                 m_uaPubSubConfigurator.PublishedDataSetAdded += UaPubSubConfigurator_PublishedDataSetAdded;
                 m_uaPubSubConfigurator.PublishedDataSetRemoved += UaPubSubConfigurator_PublishedDataSetRemoved;
-
+                m_uaPubSubConfigurator.ExtensionFieldAdded += UaPubSubConfigurator_ExtensionFieldAdded;
+                m_uaPubSubConfigurator.ExtensionFieldRemoved += UaPubSubConfigurator_ExtensionFieldRemoved;
                 m_uaPubSubConfigurator.ConnectionAdded += UaPubSubConfigurator_ConnectionAdded;
                 m_uaPubSubConfigurator.ConnectionRemoved += UaPubSubConfigurator_ConnectionRemoved;
-
                 m_uaPubSubConfigurator.WriterGroupAdded += UaPubSubConfigurator_WriterGroupAdded;
                 m_uaPubSubConfigurator.WriterGroupRemoved += UaPubSubConfigurator_WriterGroupRemoved;
                 m_uaPubSubConfigurator.DataSetWriterAdded += UaPubSubConfigurator_DataSetWriterAdded;
@@ -176,6 +177,7 @@ namespace SampleServer.PubSub
                 }
             }
         }
+        
         #endregion
 
         #region INodeIdFactory Members
@@ -266,6 +268,37 @@ namespace SampleServer.PubSub
                 publishedDataItemsState.ConfigurationVersion.Value = e.PublishedDataSetDataType.DataSetMetaData.ConfigurationVersion;
                 publishedDataItemsState.DataSetMetaData.Value = e.PublishedDataSetDataType.DataSetMetaData;
                 publishedDataItemsState.PublishedData.Value = publishedDataItemsDataType.PublishedData.ToArray();
+
+                if (publishedDataItemsState.ExtensionFields == null)
+                {
+                    publishedDataItemsState.ExtensionFields = CreateObjectFromType(publishedDataItemsState, BrowseNames.ExtensionFields,
+                        ObjectTypeIds.ExtensionFieldsType, ReferenceTypeIds.HasComponent) as ExtensionFieldsState;                    
+                    if (publishedDataItemsState.ExtensionFields.AddExtensionField == null)
+                    {
+                        Argument[] inputArguments = new Argument[]
+                         {
+                             new Argument(){Name = "FieldName", DataType = DataTypeIds.QualifiedName, ValueRank = ValueRanks.Scalar, Description = "Name of the field to add."},
+                             new Argument(){Name = "FieldValue", DataType = DataTypeIds.BaseDataType,  ValueRank = ValueRanks.Scalar, Description = "The value of the field to add."},
+                         };
+                        Argument[] outputArguments = new Argument[]
+                        {
+                         new Argument(){Name = "FieldId", DataType = DataTypeIds.NodeId,  ValueRank = ValueRanks.Scalar, Description = "The NodeId of the added field Property."},
+                        };
+                        publishedDataItemsState.ExtensionFields.AddExtensionField = CreateMethod(publishedDataItemsState.ExtensionFields, BrowseNames.AddExtensionField, inputArguments, outputArguments, null,
+                            typeof(AddExtensionFieldMethodState), MethodIds.ExtensionFieldsType_AddExtensionField) as AddExtensionFieldMethodState;
+                    }
+                    publishedDataItemsState.ExtensionFields.AddExtensionField.OnCall = OnCallAddExtensionFieldHandler;
+                    if (publishedDataItemsState.ExtensionFields.RemoveExtensionField == null)
+                    {
+                        Argument[] inputArguments = new Argument[]
+                        {
+                         new Argument(){Name = "FieldId", DataType = DataTypeIds.NodeId,  ValueRank = ValueRanks.Scalar, Description = "The NodeId field Property to remove."},
+                        };
+                        publishedDataItemsState.ExtensionFields.RemoveExtensionField = CreateMethod(publishedDataItemsState.ExtensionFields, BrowseNames.AddExtensionField, inputArguments, null, null,
+                            typeof(RemoveExtensionFieldMethodState), MethodIds.ExtensionFieldsType_RemoveExtensionField) as RemoveExtensionFieldMethodState;
+                    }
+                    publishedDataItemsState.ExtensionFields.RemoveExtensionField.OnCall = OnCallRemoveExtensionFieldHandler;
+                }
                 InitializePublishedDataItemsState(publishedDataItemsState);
 
                 MapConfigIdToPubSubNodeState(e.PublishedDataSetId, publishedDataItemsState);
@@ -284,6 +317,37 @@ namespace SampleServer.PubSub
             RemoveNodeFromAddressSpace(nodeToRemove);
         }
 
+        /// <summary>
+        /// Handler for ExtensionFieldAdded events from <see cref="UaPubSubConfigurator"/>.  
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UaPubSubConfigurator_ExtensionFieldAdded(object sender, ExtensionFieldEventArgs e)
+        {
+            // find parent published data set 
+            PublishedDataSetState publishedDataSetState = FindPubSubNodeState(e.PublishedDataSetId) as PublishedDataSetState;
+            if (publishedDataSetState != null)
+            {
+                NodeId dataTypeId = TypeInfo.GetDataTypeId(e.ExtensionField.Value);
+                var variable = CreateVariable(publishedDataSetState.ExtensionFields, e.ExtensionField.Key.Name, dataTypeId);
+                variable.ReferenceTypeId = ReferenceTypeIds.HasProperty;
+                variable.Value = e.ExtensionField.Value;
+
+                MapConfigIdToPubSubNodeState(e.ExtensionFieldId, variable);
+            }           
+        }
+
+        /// <summary>
+        /// Handler for ExtensionFieldAdded events from <see cref="UaPubSubConfigurator"/>.  
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UaPubSubConfigurator_ExtensionFieldRemoved(object sender, ExtensionFieldEventArgs e)
+        {
+            // locate the extensionField node and delete it from address space
+            BaseInstanceState extensionFieldNode = FindPubSubNodeState(e.ExtensionFieldId) as BaseInstanceState;
+            RemoveNodeFromAddressSpace(extensionFieldNode);
+        }
         /// <summary>
         /// Handler for <see cref="UaPubSubConfigurator.ConnectionAdded"/> event.
         /// </summary>
@@ -829,6 +893,76 @@ namespace SampleServer.PubSub
             {
                 uint publishedDataSetConfigId = (uint)publishedDataSetState.Handle;
                 return m_uaPubSubConfigurator.RemovePublishedDataSet(publishedDataSetConfigId);
+            }
+            return StatusCodes.BadNodeIdUnknown;
+        }
+
+        /// <summary>
+        /// Handler for OnCall event of <see cref="ExtensionFieldsState.AddExtensionField"/> method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="fieldName"></param>
+        /// <param name="fieldValue"></param>
+        /// <param name="fieldId"></param>
+        /// <returns></returns>
+        private ServiceResult OnCallAddExtensionFieldHandler(ISystemContext context, MethodState method, NodeId objectId, QualifiedName fieldName, object fieldValue, ref NodeId fieldId)
+        {
+            //locate parent published data set
+            ExtensionFieldsState extensionFieldsState = method.Parent as ExtensionFieldsState;
+            if (extensionFieldsState != null)
+            {
+                PublishedDataSetState publishedDataSetState = extensionFieldsState.Parent as PublishedDataSetState;
+                if (publishedDataSetState != null && publishedDataSetState.Handle is uint)
+                {
+                    uint publishedDataSetConfigId = (uint)publishedDataSetState.Handle;
+                    KeyValuePair newExtensionField = new KeyValuePair()
+                    {
+                        Key = fieldName,
+                        Value = new Variant(fieldValue)
+                    };
+                    StatusCode resultStatusCode = m_uaPubSubConfigurator.AddExtensionField(publishedDataSetConfigId, newExtensionField);
+                    uint configId = m_uaPubSubConfigurator.FindIdForObject(newExtensionField);
+                    //find node state created by PublishedDataSetAdded event handler in address space 
+                    NodeState extensionFieldNodeState = FindPubSubNodeState(configId);
+                    if (extensionFieldNodeState != null)
+                    {
+                        fieldId = extensionFieldNodeState.NodeId;
+                        return StatusCodes.Good;
+                    }
+                }
+            }
+            return StatusCodes.BadInvalidArgument;
+        }
+
+        /// <summary>
+        ///  Handler for OnCall event of <see cref="ExtensionFieldsState.RemoveExtensionField"/> method.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="objectId"></param>
+        /// <param name="fieldId"></param>
+        /// <returns></returns>
+        private ServiceResult OnCallRemoveExtensionFieldHandler(ISystemContext context, MethodState method, NodeId objectId, NodeId fieldId)
+        {
+            // locate the extension field node
+            NodeState extensionFieldNodeState = FindNodeInAddressSpace(fieldId);
+            if (extensionFieldNodeState != null && extensionFieldNodeState.Handle is uint)
+            {
+                uint extensionFieldConfigId = (uint)extensionFieldNodeState.Handle;
+
+                //locate parent published data set
+                ExtensionFieldsState extensionFieldsState = method.Parent as ExtensionFieldsState;
+                if (extensionFieldsState != null)
+                {
+                    PublishedDataSetState publishedDataSetState = extensionFieldsState.Parent as PublishedDataSetState;
+                    if (publishedDataSetState != null && publishedDataSetState.Handle is uint)
+                    {
+                        uint publishedDataSetConfigId = (uint)publishedDataSetState.Handle;
+                        return m_uaPubSubConfigurator.RemoveExtensionField(publishedDataSetConfigId, extensionFieldConfigId);
+                    }
+                }
             }
             return StatusCodes.BadNodeIdUnknown;
         }
