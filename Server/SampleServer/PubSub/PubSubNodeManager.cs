@@ -72,9 +72,9 @@ namespace SampleServer.PubSub
                 //update m_publishSubscribeState.SupportedTransportProfiles with existing implementations in PubSub library
                 m_publishSubscribeState.SupportedTransportProfiles.Value = UaPubSubApplication.SupportedTransportProfiles;
 
-                // initialize PubSub objects     
+                // create PubSub application     
                 UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(new UaServerDataStore(this));
-                //remember refernce to UaPubSubConfigurator
+                // remember reference to UaPubSubConfigurator
                 m_uaPubSubConfigurator = pubSubApplication.UaPubSubConfigurator;
 
                 //attach to events
@@ -295,7 +295,7 @@ namespace SampleServer.PubSub
             PubSubConnectionState pubSubConnectionState = CreateObjectFromType(m_publishSubscribeState, e.PubSubConnectionDataType.Name,
                 ObjectTypeIds.PubSubConnectionType, ReferenceTypeIds.HasPubSubConnection) as PubSubConnectionState;
 
-            //copy properties of configuration ito node state object
+            //copy properties of configuration to node state object
             pubSubConnectionState.PublisherId.Value = e.PubSubConnectionDataType.PublisherId;
             pubSubConnectionState.TransportProfileUri.Value = e.PubSubConnectionDataType.TransportProfileUri;
 
@@ -919,7 +919,7 @@ namespace SampleServer.PubSub
         {
             if (configuration != null)
             {
-                //locate parent connnection
+                //locate parent connection
                 PubSubConnectionState connectionNodeState = method.Parent as PubSubConnectionState;
 
                 if (connectionNodeState != null && connectionNodeState.Handle is uint)

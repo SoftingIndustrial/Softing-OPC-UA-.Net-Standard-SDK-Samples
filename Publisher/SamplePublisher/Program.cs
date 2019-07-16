@@ -1074,7 +1074,7 @@ namespace SamplePublisher
             TraceConfiguration traceConfiguration = new TraceConfiguration();
             traceConfiguration.OutputFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), SamplePublisherLogFile);
             traceConfiguration.DeleteOnLoad = true;
-            traceConfiguration.TraceMasks = Utils.TraceMasks.All;
+            traceConfiguration.TraceMasks = Utils.TraceMasks.Error; // Use other flag if necessary (e.g Utils.TraceMasks.All)
             traceConfiguration.ApplySettings();
 
             return traceConfiguration;
