@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net461</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>SampleServer</AssemblyName>
     <RootNamespace>SampleServer</RootNamespace>
@@ -11,10 +11,6 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.0|AnyCPU'">
     <DefineConstants>TRACE;RELEASE;NETCOREAPP2_0;SAMPLE_SERVER</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net461|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NET461</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -88,16 +84,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.4.355.26" />
     <PackageReference Include="System.Security.Principal.Windows" Version="4.5.1" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.5.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Configuration\Opc.Ua.Configuration.csproj" />
-    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Server\Opc.Ua.Server.csproj" />
-    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Core\Opc.Ua.Core.csproj" />
-    <ProjectReference Include="..\..\..\Toolkit\PubSub\Softing.Opc.Ua.PubSub_2017.csproj" />
-    <ProjectReference Include="..\..\..\Toolkit\Server\Softing.Opc.Ua.Server_2017.csproj" />
+    <Reference Include="Softing.Opc.Ua.Server">
+      <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.Server.dll</HintPath>
+    </Reference>
+    <Reference Include="Softing.Opc.Ua.PubSub">
+      <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.PubSub.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
