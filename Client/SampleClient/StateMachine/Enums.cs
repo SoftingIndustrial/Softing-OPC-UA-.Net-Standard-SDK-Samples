@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * http://www.softing.com/LicenseSIA.pdf
+ * https://data-intelligence.softing.com/LA-SDK-en/
  *  
  * ======================================================================*/
  
