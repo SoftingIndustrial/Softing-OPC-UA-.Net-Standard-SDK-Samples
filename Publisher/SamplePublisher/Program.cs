@@ -20,7 +20,6 @@ namespace SamplePublisher
     {
         #region Fields
         private const string SamplePublisherLogFile = "Softing/OpcUaNetStandardToolkit/logs/SamplePublisher.log";
-        private static ushort m_dataSetWriterId = 3;
         #endregion
         
         /// <summary>
