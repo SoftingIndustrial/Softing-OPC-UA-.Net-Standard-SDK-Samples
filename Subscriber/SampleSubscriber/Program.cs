@@ -142,7 +142,6 @@ namespace SampleSubscriber
             lock (m_lock)
             {
                 Console.WriteLine("Data Arrived from Source={0}, SequenceNumber={1}, DataSet count={2}", e.SourceEndPoint, e.NetworkMessageSequenceNumber, e.DataSets.Count);
-                int index = 0;
                 foreach (DataSet dataSet in e.DataSets)
                 {
                     Console.WriteLine("\tDataSet.Name={0}, DataSetWriterId={1}", dataSet.Name, dataSet.DataSetWriterId);
