@@ -987,7 +987,7 @@ namespace SampleSubscriber
         }
 
         /// <summary>
-        /// Handle Enable confgi metthod call from command line
+        /// Handle Enable config method call from command line
         /// </summary>
         /// <param name="uaPubSubConfigurator"></param>
         private static void EnableConfigurationObjectById(UaPubSubConfigurator uaPubSubConfigurator)
@@ -1011,7 +1011,7 @@ namespace SampleSubscriber
         }
 
         /// <summary>
-        /// Handle Disable config metthod call from command line
+        /// Handle Disable config method call from command line
         /// </summary>
         /// <param name="uaPubSubConfigurator"></param>
         private static void DisableConfigurationObjectById(UaPubSubConfigurator uaPubSubConfigurator)

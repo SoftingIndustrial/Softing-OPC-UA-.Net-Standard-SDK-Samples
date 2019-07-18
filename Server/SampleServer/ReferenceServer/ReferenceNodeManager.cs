@@ -2153,7 +2153,7 @@ namespace SampleServer.ReferenceServer
         }
 
         /// <summary>
-        /// Execute handle for inpuit method
+        /// Execute handle for input method
         /// </summary>
         /// <param name="context"></param>
         /// <param name="method"></param>

@@ -110,7 +110,7 @@ namespace SampleServer.NodeSetImport
         }
 
         /// <summary>
-        /// Add behaviour to predefined node
+        /// Add behavior to predefined node
         /// </summary>
         /// <param name="context"></param>
         /// <param name="predefinedNode"></param>

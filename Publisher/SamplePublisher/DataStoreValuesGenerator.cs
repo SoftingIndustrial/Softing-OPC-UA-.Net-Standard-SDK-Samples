@@ -16,7 +16,7 @@ using System.Threading;
 namespace SamplePublisher
 {
     /// <summary>
-    /// Initialize and change datastore data 
+    /// Initialize and change data-store data 
     /// </summary>
     public class DataStoreValuesGenerator : IDisposable
     {

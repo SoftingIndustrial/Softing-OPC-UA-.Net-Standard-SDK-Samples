@@ -15,7 +15,7 @@ using System.Text;
 namespace SampleServer
 {
     /// <summary>
-    /// Static lclass that provides resource names
+    /// Static class that provides resource names
     /// </summary>
     public static class ResourceNames
     {

@@ -70,7 +70,7 @@ namespace SampleServer.PubSub
         /// The DataValue is identified by node NodeId and Attribute.
         /// </summary>
         /// <param name="nodeId">NodeId identifier for DataValue that will be stored</param>
-        /// <param name="attributeId">Defayult value is <see cref="Attributes.Value"/>.</param>
+        /// <param name="attributeId">Default value is <see cref="Attributes.Value"/>.</param>
         /// <param name="dataValue">Default value is null. </param>
         public void WritePublishedDataItem(NodeId nodeId, uint attributeId = 13, DataValue dataValue = null)
         {

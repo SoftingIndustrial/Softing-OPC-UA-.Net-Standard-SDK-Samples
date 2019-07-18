@@ -231,7 +231,7 @@ namespace SampleClient.Samples
 
                     if (totalSize == 0)
                     {
-                        Console.WriteLine("The file can not be written becacuse has the size 0.");
+                        Console.WriteLine("The file can not be written because has the size 0.");
 
                         return;
                     }
@@ -358,7 +358,7 @@ namespace SampleClient.Samples
                     ulong totalSize = fileState.Size;
                     if (totalSize == 0)
                     {
-                        Console.WriteLine("The file to be written becacuse has the size 0.");
+                        Console.WriteLine("The file to be written because has the size 0.");
                         return;
                     }
 
@@ -448,7 +448,7 @@ namespace SampleClient.Samples
 
                         if (totalSize == 0)
                         {
-                            Console.WriteLine("The file to be written becacuse has the size 0.");
+                            Console.WriteLine("The file to be written because has the size 0.");
                             return;
                         }
 

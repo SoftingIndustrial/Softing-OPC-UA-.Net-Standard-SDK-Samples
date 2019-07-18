@@ -79,7 +79,7 @@ namespace SampleServer.HistoricalDataAccess
         #region Public Methods - Overrides
         /// <summary>
         /// Create address space for current node manager
-        /// Invoked during the initialisation of the address space.
+        /// Invoked during the initialization of the address space.
         /// </summary>
         /// <param name="externalReferences"></param>
         public override void CreateAddressSpace(IDictionary<NodeId, IList<IReference>> externalReferences)

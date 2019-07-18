@@ -55,7 +55,7 @@ namespace SampleServer.FileTransfer
         #region Public Methods
 
         /// <summary>
-        /// Initialize: set write permission atributes and set callbacks;
+        /// Initialize: set write permission attributes and set callbacks;
         /// Set timer to release temporary file states after 'ClientProcessingTimeout' time period  
         /// </summary>
         /// <param name="clientProcessingTimeoutPeriod"></param>
@@ -83,7 +83,7 @@ namespace SampleServer.FileTransfer
         }
 
         /// <summary>
-        /// Set file offset position to the begining  
+        /// Set file offset position to the beginning  
         /// </summary>
         /// <param name="context"></param>
         /// <param name="method"></param>

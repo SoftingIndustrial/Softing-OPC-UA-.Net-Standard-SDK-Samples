@@ -125,7 +125,7 @@ namespace SampleClient.Helpers
         /// <summary>
         /// Opens the file into the specified mode.
         /// </summary>
-        /// <param name="mode">The file open mode. It is bitmask of the following possible values
+        /// <param name="mode">The file open mode. It is bit-mask of the following possible values
         /// Read - 0
         /// Write - 1
         /// EraseExisting - 2

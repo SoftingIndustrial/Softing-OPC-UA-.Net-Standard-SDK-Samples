@@ -211,7 +211,7 @@ namespace SampleServer.FileTransfer
 
 
         /// <summary>
-        /// Read content of the file related to the Bytestring node and pass it to the client
+        /// Read content of the file related to the Byte-string node and pass it to the client
         /// </summary>
         /// <param name="context"></param>
         /// <param name="node"></param>

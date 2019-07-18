@@ -95,7 +95,7 @@ namespace SampleServer.FileTransfer
         #region Public Methods
 
         /// <summary>
-        /// Initialize: set write permission atributes and set callbacks
+        /// Initialize: set write permission attributes and set callbacks
         /// </summary>
         public void Initialize()
         {

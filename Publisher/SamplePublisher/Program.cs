@@ -583,7 +583,7 @@ namespace SamplePublisher
         }
 
         /// <summary>
-        /// Create a PubSubConfigurationDataType object programmatically for a dataset with all datatypes
+        /// Create a PubSubConfigurationDataType object programmatically for a dataset with all data types
         /// </summary>
         /// <returns></returns>
         public static PubSubConfigurationDataType CreateConfigurationAllDataTypes()
@@ -982,7 +982,7 @@ namespace SamplePublisher
         }
 
         /// <summary>
-        /// Handle Enable confgi metthod call from command line
+        /// Handle Enable configuration method call from command line
         /// </summary>
         /// <param name="uaPubSubConfigurator"></param>
         private static void EnableConfigurationObjectById(UaPubSubConfigurator uaPubSubConfigurator)
@@ -1006,7 +1006,7 @@ namespace SamplePublisher
         }
 
         /// <summary>
-        /// Handle Disable config metthod call from command line
+        /// Handle Disable config method call from command line
         /// </summary>
         /// <param name="uaPubSubConfigurator"></param>
         private static void DisableConfigurationObjectById(UaPubSubConfigurator uaPubSubConfigurator)

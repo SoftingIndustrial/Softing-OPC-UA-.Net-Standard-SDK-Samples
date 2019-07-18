@@ -87,7 +87,7 @@ namespace SampleServer
         }
         #endregion
 
-        #region Overridde CreateMasterNodeManager
+        #region Override CreateMasterNodeManager
 
         /// <summary>
         /// Creates the node managers for the server.

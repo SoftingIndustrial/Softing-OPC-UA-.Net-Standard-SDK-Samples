@@ -121,7 +121,7 @@ namespace SampleClient.Samples
                             continue;
                         }
 
-                        // ignore Urls with unsuported transport profiles.
+                        // ignore Urls with unsupported transport profiles.
                         if (!serverOnNetwork.DiscoveryUrl.StartsWith(Utils.UriSchemeOpcTcp))
                         {
                             continue;

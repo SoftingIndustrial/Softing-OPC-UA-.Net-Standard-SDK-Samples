@@ -55,7 +55,7 @@ namespace SampleClient.StateMachine
             InitializeDiscoveryConnectTransitions();
             //add browse menu item - 2
             InitializeBrowseTransitions();
-            //readwrite - 3
+            //read-write - 3
             InitializeReadWriteTransitions();
             //add monitored item / events menu - 4
             InitializeMonitoredItemEventsTransitions();

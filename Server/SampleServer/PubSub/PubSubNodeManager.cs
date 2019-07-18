@@ -32,7 +32,7 @@ namespace SampleServer.PubSub
         private PublishSubscribeState m_publishSubscribeState;
         // used to generate unique node ids
         private uint m_nodeIdentifierNumber = 1;
-        // maps config id to the corespondiong NodeState object created from it
+        // maps config id to the corresponding NodeState object created from it
         private Dictionary<uint, NodeState> m_configIdToNodeState = new Dictionary<uint, NodeState>();
 
         // simulation for value nodes
@@ -225,7 +225,7 @@ namespace SampleServer.PubSub
                     pubSubStatusState = ((DataSetReaderState)nodeState).Status;
                     break;
             }
-            // set new stoate to the status node
+            // set new state to the status node
             if (pubSubStatusState != null)
             {
                 pubSubStatusState.State.Value = e.NewState;
@@ -408,7 +408,7 @@ namespace SampleServer.PubSub
                 WriterGroupState writerGroupState = CreateObjectFromType(parentConnectionState, e.WriterGroupDataType.Name,
                     ObjectTypeIds.WriterGroupType, ReferenceTypeIds.HasComponent) as WriterGroupState;
 
-                //copy properties of configuration ito node state object
+                //copy properties of configuration to node state object
                 writerGroupState.WriterGroupId.Value = e.WriterGroupDataType.WriterGroupId;
                 writerGroupState.PublishingInterval.Value = e.WriterGroupDataType.PublishingInterval;
                 writerGroupState.KeepAliveTime.Value = e.WriterGroupDataType.KeepAliveTime;
@@ -529,7 +529,7 @@ namespace SampleServer.PubSub
             DataSetWriterState dataSetWriterState = FindPubSubNodeState(e.DataSetWriterId) as DataSetWriterState;
             RemoveNodeFromAddressSpace(dataSetWriterState);
 
-            //remove reference from publisheddataset node
+            //remove reference from published dataset node
             PublishedDataSetDataType publishedDataSetDataType = m_uaPubSubConfigurator.FindPublishedDataSetByName(e.DataSetWriterDataType.DataSetName);
             if (publishedDataSetDataType != null)
             {
@@ -626,7 +626,7 @@ namespace SampleServer.PubSub
                 DataSetReaderState dataSetreaderState = CreateObjectFromType(parentReaderGroupState, e.DataSetReaderDataType.Name,
                     ObjectTypeIds.DataSetReaderType, ReferenceTypeIds.HasDataSetReader) as DataSetReaderState;
 
-                //copy properties of configuration ito node state object
+                //copy properties of configuration to node state object
                 dataSetreaderState.PublisherId.Value = e.DataSetReaderDataType.PublisherId;
                 dataSetreaderState.WriterGroupId.Value = e.DataSetReaderDataType.WriterGroupId;
                 dataSetreaderState.DataSetWriterId.Value = e.DataSetReaderDataType.DataSetWriterId;
@@ -722,7 +722,7 @@ namespace SampleServer.PubSub
             DataSetFolderState parentFolder = method.Parent as DataSetFolderState;
             if (parentFolder != null)
             {
-                //check childeren names for duplicate name
+                //check children names for duplicate name
                 if (parentFolder.FindChild(SystemContext, new QualifiedName(name, NamespaceIndex)) != null)
                 {
                     return StatusCodes.BadBrowseNameDuplicated;
@@ -1009,7 +1009,7 @@ namespace SampleServer.PubSub
                     return resultStatusCode;
                 }
                 uint connectionConfigId = m_uaPubSubConfigurator.FindIdForObject(configuration);
-                //find node state created by ConnectionAdded event hadler in address space 
+                //find node state created by ConnectionAdded event handler in address space 
                 NodeState connectionNodeState = FindPubSubNodeState(connectionConfigId);
                 if (connectionNodeState != null)
                 {
@@ -1145,7 +1145,7 @@ namespace SampleServer.PubSub
         {
             if (configuration != null)
             {
-                //locate parent connnection
+                //locate parent connection
                 PubSubConnectionState connectionNodeState = method.Parent as PubSubConnectionState;
 
                 if (connectionNodeState != null && connectionNodeState.Handle is uint)
@@ -1264,7 +1264,7 @@ namespace SampleServer.PubSub
         {
             if (method != null && method.Handle is uint)
             {
-                //find coresponding configObjectId 
+                //find corresponding configObjectId 
                 uint configId = (uint)method.Handle;
 
                 return m_uaPubSubConfigurator.Disable(configId);
@@ -1284,7 +1284,7 @@ namespace SampleServer.PubSub
         {
             if (method != null && method.Handle is uint)
             {
-                //find coresponding configObjectId 
+                //find corresponding configObjectId 
                 uint configId = (uint)method.Handle;
 
                 return m_uaPubSubConfigurator.Enable(configId);
@@ -1396,7 +1396,7 @@ namespace SampleServer.PubSub
         }
 
         /// <summary>
-        /// Initializes methods of a <see cref="PublishedDataItemsState"/> instancee
+        /// Initializes methods of a <see cref="PublishedDataItemsState"/> instance
         /// </summary>
         /// <param name="publishedDataItemsState"></param>
         private void InitializePublishedDataItemsState(PublishedDataItemsState publishedDataItemsState)
@@ -1433,7 +1433,7 @@ namespace SampleServer.PubSub
         {
             if (m_configIdToNodeState.ContainsKey(configId))
             {
-                //throw wxception or something
+                //throw exception or something
                 return;
             }
             m_configIdToNodeState.Add(configId, nodeState);

@@ -18,7 +18,7 @@ using Opc.Ua;
 namespace SampleServer.HistoricalDataAccess
 {
     /// <summary>
-    /// Saple implementation of a histtorical data access node manager
+    /// Sample implementation of a historical data access node manager
     /// </summary>
     class SampleHDANodeManager : HistoricalDataAccessNodeManager
     {
@@ -42,7 +42,7 @@ namespace SampleServer.HistoricalDataAccess
         #region Overridden Methods
         /// <summary>
         /// Create address space for current node manager
-        /// Invoked during the initialisation of the address space.
+        /// Invoked during the initialization of the address space.
         /// </summary>
         /// <param name="externalReferences"></param>
         public override void CreateAddressSpace(IDictionary<NodeId, IList<IReference>> externalReferences)
@@ -78,7 +78,7 @@ namespace SampleServer.HistoricalDataAccess
 
         #region Private Methods
         /// <summary>
-        /// Create a set of statc historical variables and add them to the porovided root node
+        /// Create a set of static historical variables and add them to the provided root node
         /// </summary>
         /// <param name="root"></param>
         private void CreateStaticHistoricalVariables(BaseObjectState root)
@@ -110,7 +110,7 @@ namespace SampleServer.HistoricalDataAccess
         }
 
         /// <summary>
-        /// Create a set of dynamic histyorical variables and add them to the provided root node
+        /// Create a set of dynamic historical variables and add them to the provided root node
         /// </summary>
         /// <param name="root"></param>
         private void CreateDynamicHistoricalVariables(BaseObjectState root)
