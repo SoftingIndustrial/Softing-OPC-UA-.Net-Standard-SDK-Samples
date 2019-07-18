@@ -299,6 +299,8 @@
     <Compile Include="NodeManagement\DynamicASNodeManager.cs" />
     <Compile Include="NodeManagement\NodeMangementNodeManager.cs" />
     <Compile Include="NodeSetImport\NodeSetImportNodeManager.cs" />
+    <Compile Include="PubSub\PubSubNodeManager.cs" />
+    <Compile Include="PubSub\UaServerDataStore.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferenceServer\ReferenceNodeManager.cs" />

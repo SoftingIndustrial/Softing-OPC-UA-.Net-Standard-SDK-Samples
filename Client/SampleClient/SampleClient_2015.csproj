@@ -238,6 +238,8 @@
     <Compile Include="Samples\MethodCallClient.cs" />
     <Compile Include="Samples\MonitoredItemClient.cs" />
     <Compile Include="Samples\ReadWriteClient.cs" />
+    <Compile Include="Samples\PubSubClient.cs" />
+    <Compile Include="Samples\PubSubStateConfigurationReader.cs" />
     <Compile Include="StateMachine\CommandDescriptor.cs" />
     <Compile Include="StateMachine\Enums.cs" />
     <Compile Include="StateMachine\Process.cs" />
