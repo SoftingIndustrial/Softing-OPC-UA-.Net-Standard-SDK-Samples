@@ -63,8 +63,8 @@ namespace SampleSubscriber
 
                     // TODO - design time license activation
                     // Fill in your design time license activation keys here Client or Server
-                    //pubSubLicensingStatus = pubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-                    //pubSubLicensingStatus = pubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                    //pubSubLicensingStatus = uaPubSubApplication.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+                    //pubSubLicensingStatus = uaPubSubApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
 
                     if (pubSubLicensingStatus == LicensingStatus.Expired)
                     {
