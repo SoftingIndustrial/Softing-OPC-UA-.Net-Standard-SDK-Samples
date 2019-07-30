@@ -615,8 +615,8 @@ namespace SampleSubscriber
             pubSubConnection1.PublisherId = (UInt16)11;
             pubSubConnection1.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
-            address.NetworkInterface = "Local Area Connection";
-            address.Url = "opc.udp://255.255.255.255:4840";
+            address.NetworkInterface = "Ethernet";
+            address.Url = "opc.udp://239.0.0.13:4840";
             pubSubConnection1.Address = new ExtensionObject(address);
             
             #region Define 'AllTypes' Metadata

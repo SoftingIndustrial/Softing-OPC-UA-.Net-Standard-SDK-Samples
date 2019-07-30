@@ -43,7 +43,7 @@ namespace SamplePublisher
                     }
                 }
 
-                //var config = CreateConfiguration();
+                //var config = CreateConfigurationAllDataTypes();
                 //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
 
                 // Create the PubSub application
@@ -596,7 +596,7 @@ namespace SamplePublisher
             pubSubConnection1.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Ethernet";
-            address.Url = "opc.udp://239.0.0.1:4840";
+            address.Url = "opc.udp://239.0.0.13:4840";
             pubSubConnection1.Address = new ExtensionObject(address);
 
             #region Define WriterGroup1
@@ -648,8 +648,8 @@ namespace SamplePublisher
             pubSubConnection2.PublisherId = (UInt64)21;
             pubSubConnection2.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
             address = new NetworkAddressUrlDataType();
-            address.NetworkInterface = "Local Area Connection";
-            address.Url = "opc.udp://255.255.255.255:4840";
+            address.NetworkInterface = "Ethernet";
+            address.Url = "opc.udp://239.0.0.13:4840";
             pubSubConnection2.Address = new ExtensionObject(address);
 
             #region Define WriterGroup2
@@ -700,7 +700,7 @@ namespace SamplePublisher
             publishedDataSetAllTypes.DataSetMetaData.Name = publishedDataSetAllTypes.Name;
             publishedDataSetAllTypes.DataSetMetaData.Fields = new FieldMetaDataCollection()
             {
-                                   new FieldMetaData()
+                    new FieldMetaData()
                     {
                         Name = "BoolToggle",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),

@@ -236,6 +236,8 @@ namespace XamarinSampleServer.ViewModels
             {
                 m_sampleServer.Stop();
                 m_connectedSessions.Clear();
+                m_sampleServer.Dispose();
+                m_sampleServer = null;
             }
             CanStartServer = true;
             ResultsText = "Server was stopped.";
@@ -251,9 +253,9 @@ namespace XamarinSampleServer.ViewModels
                 return;
             IsRefreshingSessions = true;
 
+            m_connectedSessions.Clear();
             if (m_sampleServer != null)
-            {
-                m_connectedSessions.Clear();
+            {               
                 IList<Opc.Ua.Server.Session> sessions = m_sampleServer.CurrentInstance.SessionManager.GetSessions();
                 IList<Opc.Ua.Server.Subscription> subscriptions = m_sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
                 foreach (var session in sessions)
