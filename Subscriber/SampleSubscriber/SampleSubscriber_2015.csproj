@@ -138,28 +138,28 @@
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Opc.Ua.Client, Version=1.4.356.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.356.27\lib\net46\Opc.Ua.Client.dll</HintPath>
+    <Reference Include="Opc.Ua.Client, Version=1.4.357.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.357.28\lib\net46\Opc.Ua.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Opc.Ua.Configuration, Version=1.4.356.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.356.27\lib\net46\Opc.Ua.Configuration.dll</HintPath>
+    <Reference Include="Opc.Ua.Configuration, Version=1.4.357.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.357.28\lib\net46\Opc.Ua.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Opc.Ua.Core, Version=1.4.356.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.356.27\lib\net46\Opc.Ua.Core.dll</HintPath>
+    <Reference Include="Opc.Ua.Core, Version=1.4.357.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.357.28\lib\net46\Opc.Ua.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Opc.Ua.Gds.Client.Common, Version=1.4.356.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.356.27\lib\net46\Opc.Ua.Gds.Client.Common.dll</HintPath>
+    <Reference Include="Opc.Ua.Gds.Client.Common, Version=1.4.357.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.357.28\lib\net46\Opc.Ua.Gds.Client.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Opc.Ua.Gds.Server.Common, Version=1.4.356.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.356.27\lib\net46\Opc.Ua.Gds.Server.Common.dll</HintPath>
+    <Reference Include="Opc.Ua.Gds.Server.Common, Version=1.4.357.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.357.28\lib\net46\Opc.Ua.Gds.Server.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Opc.Ua.Server, Version=1.4.356.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.356.27\lib\net46\Opc.Ua.Server.dll</HintPath>
+    <Reference Include="Opc.Ua.Server, Version=1.4.357.0, Culture=neutral, PublicKeyToken=bfa7a73c5cf4b6e8, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OPCFoundation.NetStandard.Opc.Ua.1.4.357.28\lib\net46\Opc.Ua.Server.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Softing.Opc.Ua.PubSub">
@@ -230,6 +230,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
