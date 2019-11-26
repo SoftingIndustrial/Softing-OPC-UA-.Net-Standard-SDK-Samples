@@ -43,7 +43,7 @@ namespace SampleClient.Samples
         //Browse path: Root\Objects\CTT\StructuredTypeVariables\EnumerationType1Variable
         const string StaticEnumNodeId = "ns=7;i=14";
         //Browse path: Root\Objects\CTT\StructuredTypeVariables\DataType5Variable
-        const string StaticComplexNodeId = "ns=7;i=13";
+         const string StaticComplexNodeId = "ns=7;i=13";
         #endregion
 
         #region Constructor
@@ -242,8 +242,8 @@ namespace SampleClient.Samples
                         Console.WriteLine("  Value is 'Structured Value' with fields: ");
                         foreach (StructuredField field in complexData.Fields)
                         {
-                            Console.WriteLine("   Field: {0} Value:{1} Type:{2} ", field.Name, complexData[field.Name],
-                                complexData[field.Name].GetType().Name);
+                            Console.WriteLine("   Field: {0} Value:{1} Type:{2} ", field.Name, complexData[field.Name] == null ? "<null>" : complexData[field.Name],
+                                complexData[field.Name] == null ? "N/A" : complexData[field.Name].GetType().Name);
                         }
                     }
                 }
@@ -455,7 +455,6 @@ namespace SampleClient.Samples
                     defaultValue["FloatField"] = 100f;
                     defaultValue["StringField"] = "dummy string value";
                     defaultValue["EnumerationType1Field"] = 2;
-
                     //write new value to node StaticComplexNodeId
                     DataValue valueToWrite = new DataValue();
                     valueToWrite.Value = defaultValue;
@@ -586,10 +585,11 @@ namespace SampleClient.Samples
 
                 Console.WriteLine("Session is connected.");
 
-                //wait until type dictionaries are loaded
-                if (m_application.ClientToolkitConfiguration.DecodeCustomDataTypes)
+                //wait until custom data types are loaded
+                if (m_application.ClientToolkitConfiguration.DecodeCustomDataTypes || m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries)
                 {
-                    while (!m_session.TypeDictionariesLoaded)
+                    //wait until all data types are loaded (data type definitions and dictionaries)
+                    while (!m_session.TypeDictionariesLoaded && !m_session.DataTypeDefinitionsLoaded)
                     {
                         Task.Delay(500).Wait();
                     }

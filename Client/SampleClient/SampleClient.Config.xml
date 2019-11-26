@@ -155,6 +155,7 @@
         <DefaultMiQueueSize>1</DefaultMiQueueSize>
         <DefaultEventMiQueueSize>0</DefaultEventMiQueueSize>
         <DecodeCustomDataTypes>true</DecodeCustomDataTypes>
+        <DecodeDataTypeDictionaries>true</DecodeDataTypeDictionaries>
       </ClientToolkitConfiguration>
     </ua:XmlElement>
   </Extensions>
