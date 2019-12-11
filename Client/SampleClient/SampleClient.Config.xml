@@ -135,7 +135,7 @@
     <ua:XmlElement>
       <SampleClientConfiguration>
         <!-- Configurable URL of the OPC UA Server where this OPC UA Client will connect -->
-        <ServerUrl> opc.tcp://wboaw10:48010</ServerUrl>
+        <ServerUrl>opc.tcp://localhost:61510/SampleServer</ServerUrl>
         <ServerUrlHttps>https://localhost:61511/SampleServer</ServerUrlHttps>
       </SampleClientConfiguration>
     </ua:XmlElement>
