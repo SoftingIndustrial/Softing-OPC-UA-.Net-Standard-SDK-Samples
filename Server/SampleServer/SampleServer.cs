@@ -13,6 +13,7 @@ using System.Threading;
 using Opc.Ua;
 using Opc.Ua.Server;
 using SampleServer.Alarms;
+using SampleServer.ComplexTypes;
 using SampleServer.DataAccess;
 using SampleServer.FileTransfer;
 using SampleServer.HistoricalDataAccess;
@@ -112,6 +113,7 @@ namespace SampleServer
             nodeManagers.Add(new UserAuthenticationNodeManager(server, configuration));
             nodeManagers.Add(new FileTransferNodeManager(server, configuration));
             nodeManagers.Add(new PubSubNodeManager(server, configuration, true));
+            nodeManagers.Add(new CustomTypesNodeManager(server, configuration));
 
             // Create master node manager
             return new MasterNodeManager(server, configuration, null, nodeManagers.ToArray());

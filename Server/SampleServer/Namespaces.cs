@@ -26,5 +26,6 @@ namespace SampleServer
         public const string UserAuthentication = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/UserAuthentication";
         public const string FileTransfer = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/FileTransferServer";
         public const string PubSub = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/PubSubServer";
+        public const string CustomTypes = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/CustomTypesServer";
     }
 }
