@@ -101,16 +101,16 @@ namespace SampleServer.ComplexTypes
             };
             DataTypeState displayWarningType = CreateComplexDataType(DataTypeIds.UInt16, "DisplayWarning", displayWarningEnum);
 
-            //// define option set type
-            //EnumDefinition featuresEnum = new EnumDefinition();
-            //featuresEnum.Fields = new EnumFieldCollection()
-            //{
-            //    new EnumField() { Name = "ABS", Value = 1},
-            //    new EnumField() { Name = "ESP", Value = 2},
-            //    new EnumField() { Name = "AirbagPassenger", Value = 4},
-            //    new EnumField() { Name = "AirbagSides", Value = 8},
-            //};
-            //DataTypeState featuresOptionSetType = CreateComplexDataType(DataTypeIds.OptionSet, "FeaturesOptionSet", featuresEnum);
+            // define option set type
+            EnumDefinition featuresEnum = new EnumDefinition();
+            featuresEnum.Fields = new EnumFieldCollection()
+            {
+                new EnumField() { Name = "ABS", Value = 1},
+                new EnumField() { Name = "ESP", Value = 2},
+                new EnumField() { Name = "AirbagPassenger", Value = 4},
+                new EnumField() { Name = "AirbagSides", Value = 8},
+            };
+            DataTypeState featuresOptionSetType = CreateComplexDataType(DataTypeIds.OptionSet, "FeaturesOptionSet", featuresEnum);
 
 
             //// define structure with optional fields
@@ -152,7 +152,8 @@ namespace SampleServer.ComplexTypes
             // add variables of custom type     
             var engineStateVariable = CreateVariable(m_rootCustomTypesFolder, "EngineState", engineStateType.NodeId);
             var displayWarningVariable = CreateVariable(m_rootCustomTypesFolder, "DisplayWarning", displayWarningType.NodeId);
-            //var featuresOptionSetVariable = CreateVariable(m_rootCustomTypesFolder, "FeaturesOptionSet", featuresOptionSetType.NodeId);
+            var featuresOptionSetVariable = CreateVariable(m_rootCustomTypesFolder, "FeaturesOptionSet", featuresOptionSetType.NodeId);
+            featuresOptionSetVariable.Value = null;
             //var ownerVariable = CreateVariable(m_rootCustomTypesFolder, "Owner", ownerType.NodeId);
             //var fuelLevelVariable = CreateVariable(m_rootCustomTypesFolder, "FuelLevel", fuelLevelDetailsType.NodeId);
 
@@ -166,6 +167,7 @@ namespace SampleServer.ComplexTypes
             // add array variables
             var engineStateArrayVariable = CreateVariable(m_arraysFolder, "EngineStates", engineStateType.NodeId, ValueRanks.OneDimension);
             var displayWarningArrayVariable = CreateVariable(m_arraysFolder, "DisplayWarnings", displayWarningType.NodeId, ValueRanks.OneDimension);
+            var featuresOptionSetArrayVariable = CreateVariable(m_arraysFolder, "FeaturesOptionSets", featuresOptionSetType.NodeId, ValueRanks.OneDimension);
         }
     }
 }
