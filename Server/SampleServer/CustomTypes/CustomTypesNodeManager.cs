@@ -113,61 +113,64 @@ namespace SampleServer.ComplexTypes
             DataTypeState featuresOptionSetType = CreateComplexDataType(DataTypeIds.OptionSet, "FeaturesOptionSet", featuresEnum);
 
 
-            //// define structure with optional fields
-            //StructureDefinition ownerStructure = new StructureDefinition();
-            //ownerStructure.StructureType = StructureType.StructureWithOptionalFields;
-            //ownerStructure.Fields = new StructureFieldCollection()
-            //{
-            //    new StructureField(){Name = "Name", DataType = DataTypeIds.String, IsOptional = false, ValueRank = ValueRanks.Scalar},
-            //    new StructureField(){Name = "Age", DataType = DataTypeIds.Byte, IsOptional = true, ValueRank = ValueRanks.Scalar},
-            //    new StructureField(){Name = "Details", DataType = DataTypeIds.String, IsOptional = true, ValueRank = ValueRanks.Scalar},
-            //};
-            //DataTypeState ownerType = CreateComplexDataType(DataTypeIds.Structure, "OwnerDetails", ownerStructure);
+            // define structure with optional fields
+            StructureDefinition ownerStructure = new StructureDefinition();
+            ownerStructure.StructureType = StructureType.StructureWithOptionalFields;
+            ownerStructure.Fields = new StructureFieldCollection()
+            {
+                new StructureField(){Name = "Name", DataType = DataTypeIds.String, IsOptional = false, ValueRank = ValueRanks.Scalar},
+                new StructureField(){Name = "Age", DataType = DataTypeIds.Byte, IsOptional = true, ValueRank = ValueRanks.Scalar},
+                new StructureField(){Name = "Details", DataType = DataTypeIds.String, IsOptional = true, ValueRank = ValueRanks.Scalar},
+            };
+            DataTypeState ownerType = CreateComplexDataType(DataTypeIds.Structure, "OwnerDetails", ownerStructure);
 
-            //// define union structure
-            //StructureDefinition fuelLevelDetailsUnion = new StructureDefinition();
-            //fuelLevelDetailsUnion.StructureType = StructureType.Union;
-            //fuelLevelDetailsUnion.Fields = new StructureFieldCollection()
-            //{
-            //    new StructureField(){Name = "IsEmpty", DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar},
-            //    new StructureField(){Name = "IsFull", DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar},
-            //    new StructureField(){Name = "Liters", DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar},
-            //};
-            //DataTypeState fuelLevelDetailsType = CreateComplexDataType(DataTypeIds.Union, "FuelLevelDetails", fuelLevelDetailsUnion);
+            // define union structure
+            StructureDefinition fuelLevelDetailsUnion = new StructureDefinition();
+            fuelLevelDetailsUnion.StructureType = StructureType.Union;
+            fuelLevelDetailsUnion.Fields = new StructureFieldCollection()
+            {
+                new StructureField(){Name = "IsEmpty", DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar},
+                new StructureField(){Name = "IsFull", DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar},
+                new StructureField(){Name = "Liters", DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar},
+            };
+            DataTypeState fuelLevelDetailsType = CreateComplexDataType(DataTypeIds.Union, "FuelLevelDetails", fuelLevelDetailsUnion);
 
-            //StructureDefinition vehicleStructure = new StructureDefinition();
-            //vehicleStructure.StructureType = StructureType.Structure;
-            //vehicleStructure.Fields = new StructureFieldCollection()
-            //{
-            //    new StructureField(){Name = "Name", DataType = DataTypeIds.String, IsOptional = false, ValueRank = ValueRanks.Scalar},
-            //    new StructureField(){Name = "Owner", DataType = ownerType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
-            //    new StructureField(){Name = "Features", DataType = featuresOptionSetType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
-            //    new StructureField(){Name = "FuelLevel", DataType = fuelLevelDetailsType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
-            //    new StructureField(){Name = "DisplayWarning", DataType = displayWarningType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
-            //    new StructureField(){Name = "State", DataType = engineStateType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
-            //};
+            StructureDefinition vehicleStructure = new StructureDefinition();
+            vehicleStructure.StructureType = StructureType.Structure;
+            vehicleStructure.Fields = new StructureFieldCollection()
+            {
+                new StructureField(){Name = "Name", DataType = DataTypeIds.String, IsOptional = false, ValueRank = ValueRanks.Scalar},
+                new StructureField(){Name = "Owner", DataType = ownerType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
+                new StructureField(){Name = "Features", DataType = featuresOptionSetType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
+                new StructureField(){Name = "FuelLevel", DataType = fuelLevelDetailsType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
+                new StructureField(){Name = "DisplayWarning", DataType = displayWarningType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
+                new StructureField(){Name = "State", DataType = engineStateType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
+            };
 
-            //DataTypeState vehicleType = CreateComplexDataType(DataTypeIds.Structure, "Vehicle", vehicleStructure);
+            DataTypeState vehicleType = CreateComplexDataType(DataTypeIds.Structure, "Vehicle", vehicleStructure);
 
             // add variables of custom type     
             var engineStateVariable = CreateVariable(m_rootCustomTypesFolder, "EngineState", engineStateType.NodeId);
             var displayWarningVariable = CreateVariable(m_rootCustomTypesFolder, "DisplayWarning", displayWarningType.NodeId);
             var featuresOptionSetVariable = CreateVariable(m_rootCustomTypesFolder, "FeaturesOptionSet", featuresOptionSetType.NodeId);
             featuresOptionSetVariable.Value = null;
-            //var ownerVariable = CreateVariable(m_rootCustomTypesFolder, "Owner", ownerType.NodeId);
-            //var fuelLevelVariable = CreateVariable(m_rootCustomTypesFolder, "FuelLevel", fuelLevelDetailsType.NodeId);
+            var ownerVariable = CreateVariable(m_rootCustomTypesFolder, "Owner", ownerType.NodeId);
+            var fuelLevelVariable = CreateVariable(m_rootCustomTypesFolder, "FuelLevel", fuelLevelDetailsType.NodeId);
 
-            //var vehicle1Variable = CreateVariable(m_rootCustomTypesFolder, "Vehicle1", vehicleType.NodeId);
-            //StructuredValue vehicle1 = vehicle1Variable.Value as StructuredValue;
-            //if (vehicle1 != null)
-            //{
-            //    vehicle1["Name"] = "BMW";
-            //}
+            var vehicle1Variable = CreateVariable(m_rootCustomTypesFolder, "Vehicle1", vehicleType.NodeId);
+            StructuredValue vehicle1 = vehicle1Variable.Value as StructuredValue;
+            if (vehicle1 != null)
+            {
+                vehicle1["Name"] = "BMW";
+            }
 
             // add array variables
             var engineStateArrayVariable = CreateVariable(m_arraysFolder, "EngineStates", engineStateType.NodeId, ValueRanks.OneDimension);
             var displayWarningArrayVariable = CreateVariable(m_arraysFolder, "DisplayWarnings", displayWarningType.NodeId, ValueRanks.OneDimension);
             var featuresOptionSetArrayVariable = CreateVariable(m_arraysFolder, "FeaturesOptionSets", featuresOptionSetType.NodeId, ValueRanks.OneDimension);
+            var ownerArrayVariable = CreateVariable(m_arraysFolder, "Owners", ownerType.NodeId, ValueRanks.OneDimension);
+            var fuelLevelArrayVariable = CreateVariable(m_arraysFolder, "FuelLevels", fuelLevelDetailsType.NodeId, ValueRanks.OneDimension);
+            var vehicleArrayVariable = CreateVariable(m_arraysFolder, "Vehicles", vehicleType.NodeId, ValueRanks.OneDimension);
         }
     }
 }
