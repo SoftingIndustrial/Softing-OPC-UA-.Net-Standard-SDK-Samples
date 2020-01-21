@@ -44,6 +44,26 @@ namespace SampleClient.Samples
         const string StaticEnumNodeId = "ns=7;i=14";
         //Browse path: Root\Objects\CTT\StructuredTypeVariables\DataType5Variable
          const string StaticComplexNodeId = "ns=7;i=13";
+
+        //Browse path: Root\Objects\CustomTypes\EngineState
+        const string StaticCustomEnumerationNodeId = "ns=11;i=16";
+        //Browse path: Root\Objects\CustomTypes\Arrays\EngineStates
+        const string StaticCustomEnumerationArrayNodeId = "ns=11;i=22";
+
+        //Browse path: Root\Objects\CustomTypes\DisplayWarning
+        const string StaticCustomOptionSetEnumerationNodeId = "ns=11;i=17";
+        //Browse path: Root\Objects\CustomTypes\Arrays\DisplayWarnings
+        const string StaticCustomOptionSetEnumerationArrayNodeId = "ns=11;i=23";
+
+        //Browse path: Root\Objects\CustomTypes\FeaturesOptionSet
+        const string StaticCustomOptionSetNodeId = "ns=11;i=18";
+        //Browse path: Root\Objects\CustomTypes\Arrays\FeaturesOptionSets
+        const string StaticCustomOptionSetArrayNodeId = "ns=11;i=24";
+
+        //Browse path: Root\Objects\CustomTypes\Owner
+        const string StaticCustomStructureWithOptionalFieldsNodeId = "ns=11;i=19";
+        //Browse path: Root\Objects\CustomTypes\Arrays\Owners
+        const string StaticCustomStructureWithOptionalFieldsArrayNodeId = "ns=11;i=25";
         #endregion
 
         #region Constructor
@@ -145,7 +165,7 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
-        /// Reads value for an uint node providing the NodeID and without read the whole node information.
+        /// Reads value for an uint node providing the NodeID without reading the whole node information.
         /// </summary>
         public void ReadValueForNode ()
         {
@@ -172,7 +192,7 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
-        ///  Reads value for an array node providing the NodeID and without read the whole node information.
+        ///  Reads value for an array node providing the NodeID without reading the whole node information.
         /// </summary>
         public void ReadArrayValue()
         {
@@ -282,7 +302,7 @@ namespace SampleClient.Samples
                         Console.WriteLine("\n Read enum value for Node: {0} (NodeId:{1})", variableNode.DisplayName, StaticEnumNodeId);
 
                         DataValueEx dataValue = m_session.Read(readValueId);
-                        //convert int32 value read from node to a well known enumeration type
+                        ////convert int32 value read from node to a well known enumeration type
                         dataValue.TryConvertToEnumValue(m_session, variableNode.DataTypeId, variableNode.ValueRank);
 
                         //display information for read value
@@ -353,6 +373,68 @@ namespace SampleClient.Samples
                 Console.WriteLine(e.Message);
             }
         }
+
+        /// <summary>
+        /// Call all simple ReadCmplexValue* methods to read values from variable nodes defined using custom complex data types
+        /// </summary>
+        public void ReadComplexValues()
+        {
+            ReadComplexValuesForCustomEnumerationDataType();
+        }
+
+
+        /// <summary>
+        /// Read value of variable nodes created with custom Enumeration data types  
+        /// </summary>
+        public void ReadComplexValuesForCustomEnumerationDataType()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("ReadComplexValuesForCustomEnumerationDataType: The session is not initialized!");
+                return;
+            }
+
+            try
+            {
+                //read data type id for node StaticComplexNodeId
+                ReadValueId readValueId = new ReadValueId();
+                readValueId.NodeId = new NodeId(StaticCustomEnumerationNodeId);
+                readValueId.AttributeId = Attributes.DataType;
+
+                Console.WriteLine("\n Read DataType Id for NodeId:{0}", StaticCustomEnumerationNodeId);
+
+                DataValueEx dataValuetypeId = m_session.Read(readValueId);
+
+                //Get Default value for data type
+                EnumValue defaultValue = m_session.GetDefaultValueForDatatype(dataValuetypeId.Value as NodeId) as EnumValue;
+
+                if (defaultValue != null)
+                {
+                    //change some fields for default object
+                    defaultValue.Value = 1;
+                    //write new value to node 
+                    DataValue valueToWrite = new DataValue();
+                    valueToWrite.Value = defaultValue.GetValueToEncode();
+
+                    //create WriteValue that will be sent to the ClientSession instance 
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(StaticCustomEnumerationNodeId);
+                    writeValue.Value = valueToWrite;
+
+                    StatusCode statusCode = m_session.Write(writeValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomEnumerationNodeId, defaultValue);
+                    Console.WriteLine(" Status code is {0}", statusCode);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+
+        }
+
         #endregion
 
         #region Public Methods - Write
@@ -454,7 +536,10 @@ namespace SampleClient.Samples
                     defaultValue["Int32Field"] = 100;
                     defaultValue["FloatField"] = 100f;
                     defaultValue["StringField"] = "dummy string value";
-                    defaultValue["EnumerationType1Field"] = 2;
+                    ((StructuredValue)defaultValue["DataType2Field"])["Int32Field"] = 10;
+                    ((StructuredValue)defaultValue["DataType2Field"])["FloatField"] = 10f;
+                    ((StructuredValue)defaultValue["DataType2Field"])["StringField"] = "another dummy value";
+                    ((EnumValue)(defaultValue["EnumerationType1Field"])).Value = 2;
                     //write new value to node StaticComplexNodeId
                     DataValue valueToWrite = new DataValue();
                     valueToWrite.Value = defaultValue;
@@ -565,6 +650,336 @@ namespace SampleClient.Samples
                 Console.WriteLine(e.Message);
             }
         }
+
+        /// <summary>
+        /// Call all simple WriteComplexValue* methods to write values in variable nodes defined using custom complex data types
+        /// </summary>
+        public void WriteComplexValues()
+        {
+            WriteComplexValuesForCustomEnumerationDataType();
+            WriteComplexValuesForCustomOptionSetEnumerationDataType();
+            WriteComplexValuesForCustomOptionSetDataType();
+            WriteComplexValuesForStructureWithOptionalFieldsDataType();
+        }
+
+
+        /// <summary>
+        /// Writes values in variable nodes created with custom Enumeration data types  
+        /// </summary>
+        public void WriteComplexValuesForCustomEnumerationDataType()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteComplexValuesForCustomEnumerationDataType: The session is not initialized!");
+                return;
+            }
+
+            try
+            {
+                //read data type id for node StaticComplexNodeId
+                ReadValueId readValueId = new ReadValueId();
+                readValueId.NodeId = new NodeId(StaticCustomEnumerationNodeId);
+                readValueId.AttributeId = Attributes.DataType;
+
+                Console.WriteLine("\n Read DataType Id for NodeId:{0}", StaticCustomEnumerationNodeId);
+
+                DataValueEx dataValueTypeId = m_session.Read(readValueId);
+                NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
+
+                //Get Default value for data type
+                EnumValue defaultValue = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId) as EnumValue;
+
+                if (defaultValue != null)
+                {
+                    //change some fields for default object
+                    defaultValue.Value = 1;                    
+                    //write new value to node 
+                    DataValue valueToWrite = new DataValue();
+                    valueToWrite.Value = defaultValue.GetValueToEncode();
+
+                    //create WriteValue that will be sent to the ClientSession instance 
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(StaticCustomEnumerationNodeId);
+                    writeValue.Value = valueToWrite;
+
+                    StatusCode statusCode = m_session.Write(writeValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomEnumerationNodeId, defaultValue);
+                    Console.WriteLine(" Status code is {0}", statusCode);
+                }
+
+                EnumValue[] defaultValueArray = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId, ValueRanks.OneDimension, 3) as EnumValue[];
+                // write value into array variable node
+                if (defaultValueArray != null)
+                {
+                    //change some fields for default object
+                    defaultValueArray[0].Value = 1;
+                    defaultValueArray[1].Value = 1;
+                    defaultValueArray[2].Value = 0;
+
+                    //write new value to node 
+                    DataValue valueToWrite = new DataValue();
+                    // get the EnumTypeInfo that describes this particular Enumeration data type 
+                    EnumTypeInfo enumTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId) as EnumTypeInfo;
+                    // get the actual values as an array of values of the type the server expects
+                    valueToWrite.Value = EnumValue.GetValueToEncode(enumTypeInfo, defaultValueArray);
+
+                    //create WriteValue that will be sent to the ClientSession instance
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(StaticCustomEnumerationArrayNodeId);
+                    writeValue.Value = valueToWrite;
+
+                    StatusCode statusCode = m_session.Write(writeValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomEnumerationArrayNodeId, defaultValueArray);
+                    Console.WriteLine(" Status code is {0}", statusCode);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Writes values in variable nodes created with custom OptionSetEnumeration data types  
+        /// </summary>
+        public void WriteComplexValuesForCustomOptionSetEnumerationDataType()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteComplexValuesForCustomOptionSetEnumerationDataType: The session is not initialized!");
+                return;
+            }
+
+            try
+            {
+                //read data type id for node StaticComplexNodeId
+                ReadValueId readValueId = new ReadValueId();
+                readValueId.NodeId = new NodeId(StaticCustomOptionSetEnumerationNodeId);
+                readValueId.AttributeId = Attributes.DataType;
+
+                Console.WriteLine("\n Read DataType Id for NodeId:{0}", StaticCustomOptionSetEnumerationNodeId);
+
+                DataValueEx dataValueTypeId = m_session.Read(readValueId);
+                NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
+
+                //Get Default value for data type
+                EnumValue defaultValue = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId) as EnumValue;
+
+                if (defaultValue != null)
+                {
+                    //change some fields for default object
+                    defaultValue.Value = 11;
+                    //write new value to node 
+                    DataValue valueToWrite = new DataValue();
+                    valueToWrite.Value = defaultValue.GetValueToEncode();
+
+                    //create WriteValue that will be sent to the ClientSession instance 
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(StaticCustomOptionSetEnumerationNodeId);
+                    writeValue.Value = valueToWrite;
+
+                    StatusCode statusCode = m_session.Write(writeValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomOptionSetEnumerationNodeId, defaultValue);
+                    Console.WriteLine(" Status code is {0}", statusCode);
+                }
+
+                EnumValue[] defaultValueArray = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId, ValueRanks.OneDimension, 3) as EnumValue[];
+                // write value into array variable node
+                if (defaultValueArray != null)
+                {
+                    //change some fields for default object
+                    defaultValueArray[0].Value = 1;
+                    defaultValueArray[1].Value = 5;
+                    defaultValueArray[2].Value = 15;
+
+                    //write new value to node 
+                    DataValue valueToWrite = new DataValue();
+                    // get the EnumTypeInfo that describes this particular Enumeration data type 
+                    EnumTypeInfo enumTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId) as EnumTypeInfo;
+                    // get the actual values as an array of values of the type the server expects
+                    valueToWrite.Value = EnumValue.GetValueToEncode(enumTypeInfo, defaultValueArray);
+
+                    //create WriteValue that will be sent to the ClientSession instance
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(StaticCustomOptionSetEnumerationArrayNodeId);
+                    writeValue.Value = valueToWrite;
+
+                    StatusCode statusCode = m_session.Write(writeValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomOptionSetEnumerationArrayNodeId, defaultValueArray);
+                    Console.WriteLine(" Status code is {0}", statusCode);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Writes values in variable nodes created with custom OptionSet data types  
+        /// </summary>
+        public void WriteComplexValuesForCustomOptionSetDataType()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteComplexValuesForCustomOptionSetDataType: The session is not initialized!");
+                return;
+            }
+
+            try
+            {
+                //read data type id for node StaticComplexNodeId
+                ReadValueId readValueId = new ReadValueId();
+                readValueId.NodeId = new NodeId(StaticCustomOptionSetNodeId);
+                readValueId.AttributeId = Attributes.DataType;
+
+                Console.WriteLine("\n Read DataType Id for NodeId:{0}", StaticCustomOptionSetNodeId);
+
+                DataValueEx dataValueTypeId = m_session.Read(readValueId);
+                NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
+
+                //Get Default value for data type
+                OptionSetValue defaultValue = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId) as OptionSetValue;
+
+                if (defaultValue != null)
+                {
+                    //change some fields for default object
+                    defaultValue["ABS"] = true;
+                    defaultValue["AirbagSides"] = true;
+                    //write new value to node 
+                    DataValue valueToWrite = new DataValue();
+                    valueToWrite.Value = defaultValue;
+
+                    //create WriteValue that will be sent to the ClientSession instance 
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(StaticCustomOptionSetNodeId);
+                    writeValue.Value = valueToWrite;
+
+                    StatusCode statusCode = m_session.Write(writeValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomOptionSetNodeId, defaultValue);
+                    Console.WriteLine(" Status code is {0}", statusCode);
+                }
+                // For this data type the default value is of type OptionSetValue
+                OptionSetValue[] defaultValueArray = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId, ValueRanks.OneDimension, 3) as OptionSetValue[];
+                // write value into array variable node
+                if (defaultValueArray != null)
+                {
+                    //change some fields for default object
+                    defaultValueArray[0]["ABS"] = true;
+                    defaultValueArray[1]["ABS"] = true;
+                    defaultValueArray[2]["ABS"] = true;
+
+                    //write new value to node 
+                    DataValue valueToWrite = new DataValue();
+                    // get the actual values as an array of values of the type the server expects
+                    valueToWrite.Value = defaultValueArray;
+
+                    //create WriteValue that will be sent to the ClientSession instance
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(StaticCustomOptionSetArrayNodeId);
+                    writeValue.Value = valueToWrite;
+
+                    StatusCode statusCode = m_session.Write(writeValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomOptionSetArrayNodeId, defaultValueArray);
+                    Console.WriteLine(" Status code is {0}", statusCode);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// Writes values in variable nodes created with custom Structure with optional fields data types  
+        /// </summary>
+        public void WriteComplexValuesForStructureWithOptionalFieldsDataType()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteComplexValuesForStructureWithOptionalFieldsDataType: The session is not initialized!");
+                return;
+            }
+
+            try
+            {
+                //read data type id for node StaticComplexNodeId
+                ReadValueId readValueId = new ReadValueId();
+                readValueId.NodeId = new NodeId(StaticCustomStructureWithOptionalFieldsNodeId);
+                readValueId.AttributeId = Attributes.DataType;
+
+                Console.WriteLine("\n Read DataType Id for NodeId:{0}", StaticCustomStructureWithOptionalFieldsNodeId);
+
+                DataValueEx dataValueTypeId = m_session.Read(readValueId);
+                NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
+
+                //Get Default value for data type
+                OptionalFieldsStructuredValue defaultValue = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId) as OptionalFieldsStructuredValue;
+
+                if (defaultValue != null)
+                {
+                    //change some fields for default object
+                    defaultValue["Name"] = "John Smith";
+                    defaultValue["Age"] = null;
+                    defaultValue["Details"] = "bla bla";
+                    //write new value to node 
+                    DataValue valueToWrite = new DataValue();
+                    valueToWrite.Value = defaultValue;
+
+                    //create WriteValue that will be sent to the ClientSession instance 
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(StaticCustomStructureWithOptionalFieldsNodeId);
+                    writeValue.Value = valueToWrite;
+
+                    StatusCode statusCode = m_session.Write(writeValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomStructureWithOptionalFieldsNodeId, defaultValue);
+                    Console.WriteLine(" Status code is {0}", statusCode);
+                }
+                // For this data type the default value is of type StructuredValue
+                OptionalFieldsStructuredValue[] defaultValueArray = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId, ValueRanks.OneDimension, 2) as OptionalFieldsStructuredValue[];
+                // write value into array variable node
+                if (defaultValueArray != null)
+                {
+                    //change some fields for default object
+                    defaultValueArray[0]["Name"] = "John Smith";
+                    defaultValueArray[0]["Age"] = (byte)30;
+                    defaultValueArray[0]["Details"] = "bla bla";
+                    defaultValueArray[0].EncodingMask = 2; // second optional field will be saved
+                    defaultValueArray[1]["Name"] = "John Smith";
+                    defaultValueArray[1]["Age"] = (byte)30;
+                    defaultValueArray[1]["Details"] = "bla bla";
+                    defaultValueArray[1].EncodingMask = 1; // first optional field will be saved
+                    //write new value to node 
+                    DataValue valueToWrite = new DataValue();
+                    // get the actual values as an array of values of the type the server expects
+                    valueToWrite.Value = defaultValueArray;
+
+                    //create WriteValue that will be sent to the ClientSession instance
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(StaticCustomStructureWithOptionalFieldsArrayNodeId);
+                    writeValue.Value = valueToWrite;
+
+                    StatusCode statusCode = m_session.Write(writeValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomStructureWithOptionalFieldsArrayNodeId, defaultValueArray);
+                    Console.WriteLine(" Status code is {0}", statusCode);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+
         #endregion
 
         #region InitializeSession & DisconnectSession
