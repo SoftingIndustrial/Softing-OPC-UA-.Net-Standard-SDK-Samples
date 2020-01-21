@@ -679,7 +679,7 @@ namespace SampleClient.StateMachine
                 m_readWriteClient.WriteComplexValueForNode();
                 m_readWriteClient.WriteEnumValueForNode();
                 m_readWriteClient.WriteMultipleNodesValues();
-                m_readWriteClient.WriteComplexValues();
+                m_readWriteClient.WriteValuesForCustomDataTypes();
             }
         }
 
@@ -694,7 +694,7 @@ namespace SampleClient.StateMachine
                 m_readWriteClient.ReadComplexValue();
                 m_readWriteClient.ReadEnumValue();
                 m_readWriteClient.ReadMultipleNodesValues();
-                m_readWriteClient.ReadComplexValues();
+                m_readWriteClient.ReadValuesForCustomDataTypes();
             }
         }
 

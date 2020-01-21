@@ -64,6 +64,16 @@ namespace SampleClient.Samples
         const string StaticCustomStructureWithOptionalFieldsNodeId = "ns=11;i=19";
         //Browse path: Root\Objects\CustomTypes\Arrays\Owners
         const string StaticCustomStructureWithOptionalFieldsArrayNodeId = "ns=11;i=25";
+
+        //Browse path: Root\Objects\CustomTypes\FuelLevel
+        const string StaticCustomUnionNodeId = "ns=11;i=20";
+        //Browse path: Root\Objects\CustomTypes\Arrays\FuelLevels
+        const string StaticCustomUnionArrayNodeId = "ns=11;i=26";
+
+        //Browse path: Root\Objects\CustomTypes\Vehicle
+        const string StaticCustomStructuredValueNodeId = "ns=11;i=21";
+        //Browse path: Root\Objects\CustomTypes\Arrays\Vehicles
+        const string StaticCustomStructuredValueArrayNodeId = "ns=11;i=27";
         #endregion
 
         #region Constructor
@@ -288,6 +298,7 @@ namespace SampleClient.Samples
             NodeId nodeId =  new NodeId(StaticEnumNodeId);
             try
             {
+                // we need the data type id and this is why we read node
                 BaseNode baseNode = m_session.ReadNode(nodeId);
                 
                 if (baseNode.NodeClass == NodeClass.Variable)
@@ -302,7 +313,7 @@ namespace SampleClient.Samples
                         Console.WriteLine("\n Read enum value for Node: {0} (NodeId:{1})", variableNode.DisplayName, StaticEnumNodeId);
 
                         DataValueEx dataValue = m_session.Read(readValueId);
-                        ////convert int32 value read from node to a well known enumeration type
+                        // attempt to convert the integer value read from node to an EnumValue instance
                         dataValue.TryConvertToEnumValue(m_session, variableNode.DataTypeId, variableNode.ValueRank);
 
                         //display information for read value
@@ -375,66 +386,446 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
-        /// Call all simple ReadCmplexValue* methods to read values from variable nodes defined using custom complex data types
+        /// Call all simple ReadValuesForCustom* methods to read values from variable nodes defined using custom complex data types
         /// </summary>
-        public void ReadComplexValues()
+        public void ReadValuesForCustomDataTypes()
         {
-            ReadComplexValuesForCustomEnumerationDataType();
+            ReadValuesForCustomEnumerationDataType();
+            ReadValuesForCustomOptionSetEnumerationDataType();
+            ReadValuesForCustomOptionSetDataType();
+            ReadValuesForCustomStructureWithOptionalFieldsDataType();
+            ReadValuesForCustomUnionDataType();
+            ReadValuesForCustomStructuredValueDataType();
         }
-
 
         /// <summary>
         /// Read value of variable nodes created with custom Enumeration data types  
         /// </summary>
-        public void ReadComplexValuesForCustomEnumerationDataType()
+        public void ReadValuesForCustomEnumerationDataType()
         {
             if (m_session == null)
             {
-                Console.WriteLine("ReadComplexValuesForCustomEnumerationDataType: The session is not initialized!");
+                Console.WriteLine("ReadValuesForCustomEnumerationDataType: The session is not initialized!");
                 return;
             }
 
             try
             {
-                //read data type id for node StaticComplexNodeId
+                //read data type id for node StaticCustomEnumerationNodeId
                 ReadValueId readValueId = new ReadValueId();
                 readValueId.NodeId = new NodeId(StaticCustomEnumerationNodeId);
                 readValueId.AttributeId = Attributes.DataType;
+                Console.WriteLine("\n Read values for custom Enumeration data type");
+                Console.WriteLine(" Read DataType Id for NodeId:{0}", StaticCustomEnumerationNodeId);
 
-                Console.WriteLine("\n Read DataType Id for NodeId:{0}", StaticCustomEnumerationNodeId);
-
-                DataValueEx dataValuetypeId = m_session.Read(readValueId);
-
-                //Get Default value for data type
-                EnumValue defaultValue = m_session.GetDefaultValueForDatatype(dataValuetypeId.Value as NodeId) as EnumValue;
-
-                if (defaultValue != null)
+                DataValueEx dataValueTypeId = m_session.Read(readValueId);
+                NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
+                
+                if (dataValueTypeNodeId != null)
                 {
-                    //change some fields for default object
-                    defaultValue.Value = 1;
-                    //write new value to node 
-                    DataValue valueToWrite = new DataValue();
-                    valueToWrite.Value = defaultValue.GetValueToEncode();
+                    readValueId.NodeId = StaticCustomEnumerationNodeId;
+                    readValueId.AttributeId = Attributes.Value;
+                    Console.WriteLine("\n Read value for NodeId: {0} ", StaticCustomEnumerationNodeId);
 
-                    //create WriteValue that will be sent to the ClientSession instance 
-                    WriteValue writeValue = new WriteValue();
-                    writeValue.AttributeId = Attributes.Value;
-                    writeValue.NodeId = new NodeId(StaticCustomEnumerationNodeId);
-                    writeValue.Value = valueToWrite;
+                    DataValueEx dataValue = m_session.Read(readValueId);
+                    // attempt to convert the integer value read from node to an EnumValue instance
+                    dataValue.TryConvertToEnumValue(m_session, dataValueTypeNodeId);
 
-                    StatusCode statusCode = m_session.Write(writeValue);
-                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomEnumerationNodeId, defaultValue);
-                    Console.WriteLine(" Status code is {0}", statusCode);
+                    //display information for read value
+                    Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
+                    EnumValue enumValue = dataValue.ProcessedValue as EnumValue;
+                    if (enumValue != null)
+                    {
+                        Console.WriteLine("  All possible values for {0} Enumeration are:", enumValue.TypeName.Name);
+                        for (int i = 0; i < enumValue.ValueStrings.Count; i++)
+                        {
+                            Console.WriteLine("   {0}   ", enumValue.ValueStrings[i]);
+                        }
+
+                        Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}({3})", StaticCustomEnumerationNodeId, enumValue.TypeName.Name, enumValue.ValueString, enumValue.Value);                        
+                    }
+
+                    // read array value 
+                    readValueId.NodeId = StaticCustomEnumerationArrayNodeId;
+                    Console.WriteLine("\n Read value for NodeId: {0} ", StaticCustomEnumerationArrayNodeId);
+                    dataValue = m_session.Read(readValueId);
+                    Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
+
+                    // attempt to convert the integer value read from node to an EnumValue instance
+                    dataValue.TryConvertToEnumValue(m_session, dataValueTypeNodeId, ValueRanks.OneDimension);
+                    EnumValue[] enumValues = dataValue.ProcessedValue as EnumValue[];
+                    if (enumValues != null)
+                    {                       
+                        Console.Write("  The Value of NodeId {0} is an instance of {1}[{2}]:", StaticCustomEnumerationArrayNodeId, enumValue.TypeName.Name, enumValues.Length);
+                        for (int i = 0; i < enumValues.Length; i++)
+                        {
+                            Console.Write("{0}({1}), ", enumValues[i].ValueString, enumValues[i].Value);
+                        }
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        Console.WriteLine("  The Value of NodeId {0} is null.", StaticCustomEnumerationArrayNodeId);
+                    }
+                }                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Read value of variable nodes created with custom OptionSet Enumeration data types  
+        /// </summary>
+        public void ReadValuesForCustomOptionSetEnumerationDataType()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("ReadValuesForCustomOptionSetEnumerationDataType: The session is not initialized!");
+                return;
+            }
+
+            try
+            {
+                //read data type id for node StaticCustomOptionSetEnumerationNodeId
+                ReadValueId readValueId = new ReadValueId();
+                readValueId.NodeId = new NodeId(StaticCustomOptionSetEnumerationNodeId);
+                readValueId.AttributeId = Attributes.DataType;
+                Console.WriteLine("\n Read values for custom OptionSet Enumeration data type");
+                Console.WriteLine(" Read DataType Id for NodeId:{0}", StaticCustomOptionSetEnumerationNodeId);
+
+                DataValueEx dataValueTypeId = m_session.Read(readValueId);
+                NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
+
+                if (dataValueTypeNodeId != null)
+                {
+                    readValueId.NodeId = StaticCustomOptionSetEnumerationNodeId;
+                    readValueId.AttributeId = Attributes.Value;
+                    Console.WriteLine("\n Read value for NodeId: {0} ", StaticCustomOptionSetEnumerationNodeId);
+
+                    DataValueEx dataValue = m_session.Read(readValueId);
+                    // attempt to convert the integer value read from node to an EnumValue instance
+                    dataValue.TryConvertToEnumValue(m_session, dataValueTypeNodeId);
+
+                    //display information for read value
+                    Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
+                    EnumValue enumValue = dataValue.ProcessedValue as EnumValue;
+                    if (enumValue != null)
+                    {
+                        Console.WriteLine("  All possible values for {0} OptionSet Enumeration are:", enumValue.TypeName.Name);
+                        for (int i = 0; i < enumValue.ValueStrings.Count; i++)
+                        {
+                            Console.WriteLine("   {0}   ", enumValue.ValueStrings[i]);
+                        }
+
+                        Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2} ({3})", StaticCustomOptionSetEnumerationNodeId, enumValue.TypeName.Name, enumValue.ValueString, enumValue.Value);
+                    }
+
+                    // read array value 
+                    readValueId.NodeId = StaticCustomOptionSetEnumerationArrayNodeId;
+                    Console.WriteLine("\n Read value for NodeId: {0} ", StaticCustomOptionSetEnumerationArrayNodeId);
+                    dataValue = m_session.Read(readValueId);
+                    Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
+
+                    // attempt to convert the integer value read from node to an EnumValue instance
+                    dataValue.TryConvertToEnumValue(m_session, dataValueTypeNodeId, ValueRanks.OneDimension);
+                    EnumValue[] enumValues = dataValue.ProcessedValue as EnumValue[];
+                    if (enumValues != null)
+                    {
+                        Console.Write("  The Value of NodeId {0} is an instance of {1}[{2}]:", StaticCustomOptionSetEnumerationArrayNodeId, enumValue.TypeName.Name, enumValues.Length);
+                        for (int i = 0; i < enumValues.Length; i++)
+                        {
+                            Console.Write("{0}({1}), ", enumValues[i].ValueString, enumValues[i].Value);
+                        }
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        Console.WriteLine("  The Value of NodeId {0} is null.", StaticCustomOptionSetEnumerationArrayNodeId);
+                    }
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
-
-
         }
 
+        /// <summary>
+        /// Read value of variable nodes created with custom OptionSet data types  
+        /// </summary>
+        public void ReadValuesForCustomOptionSetDataType()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("ReadValuesForCustomOptionSetDataType: The session is not initialized!");
+                return;
+            }
+
+            try
+            {
+                //read data type id for node StaticCustomOptionSetNodeId
+                ReadValueId readValueId = new ReadValueId();
+                Console.WriteLine("\n Read values for custom OptionSet data type");
+                readValueId.NodeId = StaticCustomOptionSetNodeId;
+                readValueId.AttributeId = Attributes.Value;
+                Console.WriteLine("\n Read value for NodeId: {0} ", StaticCustomOptionSetNodeId);
+
+                DataValueEx dataValue = m_session.Read(readValueId);
+
+                //display information for read value
+                Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
+                ExtensionObject extensionObjectValue = dataValue.Value as ExtensionObject;
+                if (extensionObjectValue != null)
+                {
+                    OptionSetValue optionSetValue = extensionObjectValue.Body as OptionSetValue;
+                    if (optionSetValue != null)
+                    {
+                        Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomOptionSetNodeId, optionSetValue.TypeName.Name, optionSetValue);
+                    }                    
+                }
+                else
+                {
+                    Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomOptionSetNodeId);
+                }
+
+                // read value for array node
+                readValueId.NodeId = StaticCustomOptionSetArrayNodeId;
+                readValueId.AttributeId = Attributes.Value;
+                Console.WriteLine("\n Read value for NodeId: {0} ", StaticCustomOptionSetArrayNodeId);
+
+                dataValue = m_session.Read(readValueId);
+
+                //display information for read value
+                Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
+                ExtensionObject[] extensionObjectValueArray = dataValue.Value as ExtensionObject[];
+                if (extensionObjectValueArray != null)
+                {
+                    Console.Write("  The Value of NodeId {0} is an OptionSetValue[{1}]:", StaticCustomOptionSetArrayNodeId, extensionObjectValueArray.Length);
+                    foreach (var extensionObject in extensionObjectValueArray)
+                    {
+                        OptionSetValue optionSetValue = extensionObject.Body as OptionSetValue;
+                        Console.Write("{0}, ", optionSetValue);
+                    }
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomOptionSetArrayNodeId);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Read value of variable nodes created with custom Structure with Optional fields data types  
+        /// </summary>
+        public void ReadValuesForCustomStructureWithOptionalFieldsDataType()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("ReadValuesForCustomStructureWithOptionalFieldsDataType: The session is not initialized!");
+                return;
+            }
+
+            try
+            {
+                //read data type id for node StaticCustomStructureWithOptionalFieldsNodeId
+                ReadValueId readValueId = new ReadValueId();
+                Console.WriteLine("\n Read values for custom OptionalFieldsStructuredValue data type");
+                readValueId.NodeId = StaticCustomStructureWithOptionalFieldsNodeId;
+                readValueId.AttributeId = Attributes.Value;
+                Console.WriteLine("\n Read value for NodeId: {0} ", StaticCustomStructureWithOptionalFieldsNodeId);
+
+                DataValueEx dataValue = m_session.Read(readValueId);
+
+                //display information for read value
+                Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
+                ExtensionObject extensionObjectValue = dataValue.Value as ExtensionObject;
+                if (extensionObjectValue != null)
+                {
+                    OptionalFieldsStructuredValue optionalFieldsStructuredValue = extensionObjectValue.Body as OptionalFieldsStructuredValue;
+                    if (optionalFieldsStructuredValue != null)
+                    {
+                        Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomStructureWithOptionalFieldsNodeId, optionalFieldsStructuredValue.TypeName.Name, optionalFieldsStructuredValue);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomStructureWithOptionalFieldsNodeId);
+                }
+
+                // read value for array node
+                readValueId.NodeId = StaticCustomStructureWithOptionalFieldsArrayNodeId;
+                readValueId.AttributeId = Attributes.Value;
+                Console.WriteLine("\n Read value for NodeId: {0} ", StaticCustomStructureWithOptionalFieldsNodeId);
+
+                dataValue = m_session.Read(readValueId);
+
+                //display information for read value
+                Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
+                ExtensionObject[] extensionObjectValueArray = dataValue.Value as ExtensionObject[];
+                if (extensionObjectValueArray != null)
+                {
+                    Console.Write("  The Value of NodeId {0} is an OptionalFieldsStructuredValue[{1}]:", StaticCustomStructureWithOptionalFieldsNodeId, extensionObjectValueArray.Length);
+                    foreach (var extensionObject in extensionObjectValueArray)
+                    {
+                        OptionalFieldsStructuredValue optionalFieldsStructuredValue = extensionObject.Body as OptionalFieldsStructuredValue;
+                        Console.Write("{0}, ", optionalFieldsStructuredValue);
+                    }
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomStructureWithOptionalFieldsNodeId);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Read value of variable nodes created with custom Union data types  
+        /// </summary>
+        public void ReadValuesForCustomUnionDataType()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("ReadValuesForCustomUnionDataType: The session is not initialized!");
+                return;
+            }
+
+            try
+            {
+                //read data type id for node StaticCustomUnionNodeId
+                ReadValueId readValueId = new ReadValueId();
+                Console.WriteLine("\n Read values for custom Union data type");
+                readValueId.NodeId = StaticCustomUnionNodeId;
+                readValueId.AttributeId = Attributes.Value;
+                Console.WriteLine("\n Read value for NodeId: {0} ", StaticCustomUnionNodeId);
+
+                DataValueEx dataValue = m_session.Read(readValueId);
+
+                //display information for read value
+                Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
+                ExtensionObject extensionObjectValue = dataValue.Value as ExtensionObject;
+                if (extensionObjectValue != null)
+                {
+                    UnionStructuredValue unionStructuredValue = extensionObjectValue.Body as UnionStructuredValue;
+                    if (unionStructuredValue != null)
+                    {
+                        Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomUnionNodeId, unionStructuredValue.TypeName.Name, unionStructuredValue);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomUnionNodeId);
+                }
+
+                // read value for array node
+                readValueId.NodeId = StaticCustomUnionArrayNodeId;
+                readValueId.AttributeId = Attributes.Value;
+                Console.WriteLine("\n Read value for NodeId: {0} ", StaticCustomUnionArrayNodeId);
+
+                dataValue = m_session.Read(readValueId);
+
+                //display information for read value
+                Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
+                ExtensionObject[] extensionObjectValueArray = dataValue.Value as ExtensionObject[];
+                if (extensionObjectValueArray != null)
+                {
+                    Console.Write("  The Value of NodeId {0} is an UnionStructuredValue[{1}]:", StaticCustomUnionArrayNodeId, extensionObjectValueArray.Length);
+                    foreach (var extensionObject in extensionObjectValueArray)
+                    {
+                        UnionStructuredValue unionStructuredValue = extensionObject.Body as UnionStructuredValue;
+                        Console.Write("{0}, ", unionStructuredValue);
+                    }
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomUnionArrayNodeId);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Read value of variable nodes created with custom StructuredValyue data types  
+        /// </summary>
+        public void ReadValuesForCustomStructuredValueDataType()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("ReadValuesForCustomStructuredValueDataType: The session is not initialized!");
+                return;
+            }
+
+            try
+            {
+                //read data type id for node StaticCustomStructuredValueNodeId
+                ReadValueId readValueId = new ReadValueId();
+                Console.WriteLine("\n Read values for custom StructuredValue data type");
+                readValueId.NodeId = StaticCustomStructuredValueNodeId;
+                readValueId.AttributeId = Attributes.Value;
+                Console.WriteLine("\n Read value for NodeId: {0} ", StaticCustomStructuredValueNodeId);
+
+                DataValueEx dataValue = m_session.Read(readValueId);
+
+                //display information for read value
+                Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
+                ExtensionObject extensionObjectValue = dataValue.Value as ExtensionObject;
+                if (extensionObjectValue != null)
+                {
+                    StructuredValue structuredValue = extensionObjectValue.Body as StructuredValue;
+                    if (structuredValue != null)
+                    {
+                        Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomStructuredValueNodeId, structuredValue.TypeName.Name, structuredValue);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomStructuredValueNodeId);
+                }
+
+                // read value for array node
+                readValueId.NodeId = StaticCustomStructuredValueArrayNodeId;
+                readValueId.AttributeId = Attributes.Value;
+                Console.WriteLine("\n Read value for NodeId: {0} ", StaticCustomStructuredValueArrayNodeId);
+
+                dataValue = m_session.Read(readValueId);
+
+                //display information for read value
+                Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
+                ExtensionObject[] extensionObjectValueArray = dataValue.Value as ExtensionObject[];
+                if (extensionObjectValueArray != null)
+                {
+                    Console.WriteLine("  The Value of NodeId {0} is an StructuredValue[{1}]:", StaticCustomStructuredValueArrayNodeId, extensionObjectValueArray.Length);
+                    foreach (var extensionObject in extensionObjectValueArray)
+                    {
+                        StructuredValue structuredValue = extensionObject.Body as StructuredValue;
+                        Console.WriteLine("      {0}, ", structuredValue);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomStructuredValueArrayNodeId);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
         #endregion
 
         #region Public Methods - Write
@@ -652,21 +1043,22 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
-        /// Call all simple WriteComplexValue* methods to write values in variable nodes defined using custom complex data types
+        /// Call all WriteValuesForCustom* methods to write values in variable nodes defined using custom complex data types
         /// </summary>
-        public void WriteComplexValues()
+        public void WriteValuesForCustomDataTypes()
         {
-            WriteComplexValuesForCustomEnumerationDataType();
-            WriteComplexValuesForCustomOptionSetEnumerationDataType();
-            WriteComplexValuesForCustomOptionSetDataType();
-            WriteComplexValuesForStructureWithOptionalFieldsDataType();
+            WriteValuesForCustomEnumerationDataType();
+            WriteValuesForCustomOptionSetEnumerationDataType();
+            WriteValuesForCustomOptionSetDataType();
+            WriteValuesForCustomStructureWithOptionalFieldsDataType();
+            WriteValuesForCustomUnionDataType();
+            WriteValuesForCustomStructuredValueDataType();
         }
-
 
         /// <summary>
         /// Writes values in variable nodes created with custom Enumeration data types  
         /// </summary>
-        public void WriteComplexValuesForCustomEnumerationDataType()
+        public void WriteValuesForCustomEnumerationDataType()
         {
             if (m_session == null)
             {
@@ -676,7 +1068,7 @@ namespace SampleClient.Samples
 
             try
             {
-                //read data type id for node StaticComplexNodeId
+                //read data type id for node StaticCustomEnumerationNodeId
                 ReadValueId readValueId = new ReadValueId();
                 readValueId.NodeId = new NodeId(StaticCustomEnumerationNodeId);
                 readValueId.AttributeId = Attributes.DataType;
@@ -744,7 +1136,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Writes values in variable nodes created with custom OptionSetEnumeration data types  
         /// </summary>
-        public void WriteComplexValuesForCustomOptionSetEnumerationDataType()
+        public void WriteValuesForCustomOptionSetEnumerationDataType()
         {
             if (m_session == null)
             {
@@ -754,7 +1146,7 @@ namespace SampleClient.Samples
 
             try
             {
-                //read data type id for node StaticComplexNodeId
+                //read data type id for node StaticCustomOptionSetEnumerationNodeId
                 ReadValueId readValueId = new ReadValueId();
                 readValueId.NodeId = new NodeId(StaticCustomOptionSetEnumerationNodeId);
                 readValueId.AttributeId = Attributes.DataType;
@@ -822,7 +1214,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Writes values in variable nodes created with custom OptionSet data types  
         /// </summary>
-        public void WriteComplexValuesForCustomOptionSetDataType()
+        public void WriteValuesForCustomOptionSetDataType()
         {
             if (m_session == null)
             {
@@ -832,7 +1224,7 @@ namespace SampleClient.Samples
 
             try
             {
-                //read data type id for node StaticComplexNodeId
+                //read data type id for node StaticCustomOptionSetNodeId
                 ReadValueId readValueId = new ReadValueId();
                 readValueId.NodeId = new NodeId(StaticCustomOptionSetNodeId);
                 readValueId.AttributeId = Attributes.DataType;
@@ -896,11 +1288,10 @@ namespace SampleClient.Samples
             }
         }
 
-
         /// <summary>
         /// Writes values in variable nodes created with custom Structure with optional fields data types  
         /// </summary>
-        public void WriteComplexValuesForStructureWithOptionalFieldsDataType()
+        public void WriteValuesForCustomStructureWithOptionalFieldsDataType()
         {
             if (m_session == null)
             {
@@ -910,7 +1301,7 @@ namespace SampleClient.Samples
 
             try
             {
-                //read data type id for node StaticComplexNodeId
+                //read data type id for node StaticCustomStructureWithOptionalFieldsNodeId
                 ReadValueId readValueId = new ReadValueId();
                 readValueId.NodeId = new NodeId(StaticCustomStructureWithOptionalFieldsNodeId);
                 readValueId.AttributeId = Attributes.DataType;
@@ -920,7 +1311,7 @@ namespace SampleClient.Samples
                 DataValueEx dataValueTypeId = m_session.Read(readValueId);
                 NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
 
-                //Get Default value for data type
+                //Get Default value for data type. It will be an instance of OptionalFieldsStructuredValue
                 OptionalFieldsStructuredValue defaultValue = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId) as OptionalFieldsStructuredValue;
 
                 if (defaultValue != null)
@@ -943,7 +1334,7 @@ namespace SampleClient.Samples
                     Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomStructureWithOptionalFieldsNodeId, defaultValue);
                     Console.WriteLine(" Status code is {0}", statusCode);
                 }
-                // For this data type the default value is of type StructuredValue
+                // For this data type the default value is of type OptionalFieldsStructuredValue
                 OptionalFieldsStructuredValue[] defaultValueArray = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId, ValueRanks.OneDimension, 2) as OptionalFieldsStructuredValue[];
                 // write value into array variable node
                 if (defaultValueArray != null)
@@ -952,11 +1343,12 @@ namespace SampleClient.Samples
                     defaultValueArray[0]["Name"] = "John Smith";
                     defaultValueArray[0]["Age"] = (byte)30;
                     defaultValueArray[0]["Details"] = "bla bla";
-                    defaultValueArray[0].EncodingMask = 2; // second optional field will be saved
+                    defaultValueArray[0].EncodingMask = 1; // first optional field will be saved
+                    
                     defaultValueArray[1]["Name"] = "John Smith";
                     defaultValueArray[1]["Age"] = (byte)30;
                     defaultValueArray[1]["Details"] = "bla bla";
-                    defaultValueArray[1].EncodingMask = 1; // first optional field will be saved
+                    defaultValueArray[1].EncodingMask = 2; // second optional field will be saved
                     //write new value to node 
                     DataValue valueToWrite = new DataValue();
                     // get the actual values as an array of values of the type the server expects
@@ -979,7 +1371,210 @@ namespace SampleClient.Samples
             }
         }
 
+        /// <summary>
+        /// Writes values in variable nodes created with custom Union Structure data types  
+        /// </summary>
+        public void WriteValuesForCustomUnionDataType()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteComplexValuesForUnionDataType: The session is not initialized!");
+                return;
+            }
 
+            try
+            {
+                //read data type id for node StaticCustomUnionNodeId
+                ReadValueId readValueId = new ReadValueId();
+                readValueId.NodeId = new NodeId(StaticCustomUnionNodeId);
+                readValueId.AttributeId = Attributes.DataType;
+
+                Console.WriteLine("\n Read DataType Id for NodeId:{0}", StaticCustomUnionNodeId);
+
+                DataValueEx dataValueTypeId = m_session.Read(readValueId);
+                NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
+
+                //Get Default value for data type. It will be an instance of UnionStructuredValue
+                UnionStructuredValue defaultValue = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId) as UnionStructuredValue;
+
+                if (defaultValue != null)
+                {
+                    //change some fields for default object
+                    defaultValue["IsEmpty"] = true;
+                    defaultValue.SwitchFieldPosition = 1; // use first field as Union Value
+                    //write new value to node 
+                    DataValue valueToWrite = new DataValue();
+                    valueToWrite.Value = defaultValue;
+
+                    //create WriteValue that will be sent to the ClientSession instance 
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(StaticCustomUnionNodeId);
+                    writeValue.Value = valueToWrite;
+
+                    StatusCode statusCode = m_session.Write(writeValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomUnionNodeId, defaultValue);
+                    Console.WriteLine(" Status code is {0}", statusCode);
+                }
+                // For this data type the default value is of type UnionStructuredValue
+                UnionStructuredValue[] defaultValueArray = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId, ValueRanks.OneDimension, 3) as UnionStructuredValue[];
+                // write value into array variable node
+                if (defaultValueArray != null)
+                {
+                    //change some fields for default object
+                    defaultValueArray[0]["IsEmpty"] = false;
+                    defaultValueArray[0].SwitchFieldPosition = 1; // use first field as Union Value
+
+                    defaultValueArray[1]["IsFull"] = true;
+                    defaultValueArray[1].SwitchFieldPosition = 2; // use second field as Union Value
+
+                    defaultValueArray[2]["Liters"] = (float)50;
+                    defaultValueArray[2].SwitchFieldPosition = 3; // use third field as Union Value
+                    //write new value to node 
+                    DataValue valueToWrite = new DataValue();
+                    // get the actual values as an array of values of the type the server expects
+                    valueToWrite.Value = defaultValueArray;
+
+                    //create WriteValue that will be sent to the ClientSession instance
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(StaticCustomUnionArrayNodeId);
+                    writeValue.Value = valueToWrite;
+
+                    StatusCode statusCode = m_session.Write(writeValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomUnionArrayNodeId, defaultValueArray);
+                    Console.WriteLine(" Status code is {0}", statusCode);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Writes values in variable nodes created with custom StructuredValue data types  
+        /// </summary>
+        public void WriteValuesForCustomStructuredValueDataType()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteValuesForCustomStructuredValueDataType: The session is not initialized!");
+                return;
+            }
+
+            try
+            {
+                //read data type id for node StaticCustomStructuredValueNodeId
+                ReadValueId readValueId = new ReadValueId();
+                readValueId.NodeId = new NodeId(StaticCustomStructuredValueNodeId);
+                readValueId.AttributeId = Attributes.DataType;
+
+                Console.WriteLine("\n Read DataType Id for NodeId:{0}", StaticCustomStructuredValueNodeId);
+
+                DataValueEx dataValueTypeId = m_session.Read(readValueId);
+                NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
+
+                //Get Default value for data type. It will be an instance of StructuredValue
+                StructuredValue defaultValue = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId) as StructuredValue;
+
+                if (defaultValue != null)
+                {
+                    //change some fields for default object
+                    defaultValue["Name"] = "Mazda";
+                    OptionalFieldsStructuredValue owner = defaultValue["Owner"] as OptionalFieldsStructuredValue;
+                    if (owner != null)
+                    {
+                        owner["Name"] = "John Doe";
+                        owner["Age"] = (byte)50;
+                        owner.EncodingMask = 1; // use first optional field
+                    }
+                    OptionSetValue features =  defaultValue["Features"] as OptionSetValue;
+                    if (features != null)
+                    {
+                        features["ABS"] = true;
+                        features["ESP"] = true;
+                        features["AirbagSides"] = true;
+                    }
+                    UnionStructuredValue fuelLevel = defaultValue["FuelLevel"] as UnionStructuredValue;
+                    if (features != null)
+                    {
+                        fuelLevel["Liters"] = (float)34;
+                        fuelLevel.SwitchFieldPosition = 3; // use third field as value for Union
+                    }
+                    EnumValue displayWarning = defaultValue["DisplayWarning"] as EnumValue;
+                    if (displayWarning != null)
+                    {
+                        // this is an option set enum instance
+                        displayWarning.Value = 7;
+                    }
+                    EnumValue state = defaultValue["State"] as EnumValue;
+                    if (state != null)
+                    {
+                        // this a simple enum instance
+                        state.ValueString = state.ValueStrings[1];
+                    }
+                    //write new value to node 
+                    DataValue valueToWrite = new DataValue();
+                    valueToWrite.Value = defaultValue;
+
+                    //create WriteValue that will be sent to the ClientSession instance 
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(StaticCustomStructuredValueNodeId);
+                    writeValue.Value = valueToWrite;
+
+                    StatusCode statusCode = m_session.Write(writeValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomStructuredValueNodeId, defaultValue);
+                    Console.WriteLine(" Status code is {0}", statusCode);
+                }
+                // For this data type the default value is of type StructuredValue
+               StructuredValue[] defaultValueArray = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId, ValueRanks.OneDimension, 3) as StructuredValue[];
+                // write value into array variable node
+                if (defaultValueArray != null)
+                {
+                    //change some fields for objects in the array
+                    OptionalFieldsStructuredValue owner = defaultValueArray[0]["Owner"] as OptionalFieldsStructuredValue;
+                    if (owner != null)
+                    {
+                        owner["Name"] = "John Doe";
+                        owner["Age"] = (byte)50;
+                        owner.EncodingMask = 1; // use first optional field
+                    }
+                    OptionSetValue features = defaultValueArray[1]["Features"] as OptionSetValue;
+                    if (features != null)
+                    {
+                        features["ABS"] = true;
+                        features["ESP"] = true;
+                        features["AirbagSides"] = true;
+                    }
+                    UnionStructuredValue fuelLevel = defaultValueArray[2]["FuelLevel"] as UnionStructuredValue;
+                    if (features != null)
+                    {
+                        fuelLevel["Liters"] = (float)34;
+                        fuelLevel.SwitchFieldPosition = 3; // use third field as value for Union
+                    }                   
+                    //write new value to node 
+                    DataValue valueToWrite = new DataValue();
+                    // get the actual values as an array of values of the type the server expects
+                    valueToWrite.Value = defaultValueArray;
+
+                    //create WriteValue that will be sent to the ClientSession instance
+                    WriteValue writeValue = new WriteValue();
+                    writeValue.AttributeId = Attributes.Value;
+                    writeValue.NodeId = new NodeId(StaticCustomStructuredValueArrayNodeId);
+                    writeValue.Value = valueToWrite;
+
+                    StatusCode statusCode = m_session.Write(writeValue);
+                    Console.WriteLine("\n The NodeId:{0} was written with the complex value {1} ", StaticCustomStructuredValueArrayNodeId, defaultValueArray);
+                    Console.WriteLine(" Status code is {0}", statusCode);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
         #endregion
 
         #region InitializeSession & DisconnectSession

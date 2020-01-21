@@ -112,7 +112,6 @@ namespace SampleServer.ComplexTypes
             };
             DataTypeState featuresOptionSetType = CreateComplexDataType(DataTypeIds.OptionSet, "FeaturesOptionSet", featuresEnum);
 
-
             // define structure with optional fields
             StructureDefinition ownerStructure = new StructureDefinition();
             ownerStructure.StructureType = StructureType.StructureWithOptionalFields;
@@ -152,16 +151,14 @@ namespace SampleServer.ComplexTypes
             // add variables of custom type     
             var engineStateVariable = CreateVariable(m_rootCustomTypesFolder, "EngineState", engineStateType.NodeId);
             var displayWarningVariable = CreateVariable(m_rootCustomTypesFolder, "DisplayWarning", displayWarningType.NodeId);
-            var featuresOptionSetVariable = CreateVariable(m_rootCustomTypesFolder, "FeaturesOptionSet", featuresOptionSetType.NodeId);
-            featuresOptionSetVariable.Value = null;
+            var featuresOptionSetVariable = CreateVariable(m_rootCustomTypesFolder, "FeaturesOptionSet", featuresOptionSetType.NodeId);            
             var ownerVariable = CreateVariable(m_rootCustomTypesFolder, "Owner", ownerType.NodeId);
             var fuelLevelVariable = CreateVariable(m_rootCustomTypesFolder, "FuelLevel", fuelLevelDetailsType.NodeId);
-
-            var vehicle1Variable = CreateVariable(m_rootCustomTypesFolder, "Vehicle1", vehicleType.NodeId);
-            StructuredValue vehicle1 = vehicle1Variable.Value as StructuredValue;
-            if (vehicle1 != null)
+            var vehicle1Variable = CreateVariable(m_rootCustomTypesFolder, "Vehicle", vehicleType.NodeId);
+            StructuredValue vehicle = vehicle1Variable.Value as StructuredValue;
+            if (vehicle != null)
             {
-                vehicle1["Name"] = "BMW";
+                vehicle["Name"] = "BMW";
             }
 
             // add array variables
