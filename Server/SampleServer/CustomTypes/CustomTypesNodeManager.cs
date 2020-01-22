@@ -132,11 +132,17 @@ namespace SampleServer.ComplexTypes
 
                 // add variables of custom type     
                 var engineStateVariable = CreateVariable(m_rootCustomTypesFolder, "EngineState", engineStateType.NodeId);
+                engineStateVariable.Description = "Variable with data type defined as custom Enumeration";
                 var displayWarningVariable = CreateVariable(m_rootCustomTypesFolder, "DisplayWarning", displayWarningType.NodeId);
+                displayWarningVariable.Description = "Variable with data type defined as custom OptionSet Enumeration";
                 var featuresOptionSetVariable = CreateVariable(m_rootCustomTypesFolder, "FeaturesOptionSet", featuresOptionSetType.NodeId);
+                featuresOptionSetVariable.Description = "Variable with data type defined as custom OptionSet";
                 var ownerVariable = CreateVariable(m_rootCustomTypesFolder, "Owner", ownerType.NodeId);
+                ownerVariable.Description = "Variable with data type defined as StructuredValue with optional fields";
                 var fuelLevelVariable = CreateVariable(m_rootCustomTypesFolder, "FuelLevel", fuelLevelDetailsType.NodeId);
+                fuelLevelVariable.Description = "Variable with data type defined as Union";
                 var vehicle1Variable = CreateVariable(m_rootCustomTypesFolder, "Vehicle", vehicleType.NodeId);
+                vehicle1Variable.Description = "Variable with data type defined as StructuredValue";
                 StructuredValue vehicle = vehicle1Variable.Value as StructuredValue;
                 if (vehicle != null)
                 {
@@ -152,12 +158,12 @@ namespace SampleServer.ComplexTypes
                 var vehicleArrayVariable = CreateVariable(m_arraysFolder, "Vehicles", vehicleType.NodeId, ValueRanks.OneDimension);
                 #endregion
 
-                #region  create custom variable types and instances
+                #region  create custom Variable types and instances
                 BaseVariableTypeState customVariableType = CreateVariableType(VariableTypeIds.BaseDataVariableType, "CustomVariableType", DataTypeIds.UInt32);
 
                 // Create a variable type that has data type = complex data vehicle type 
                 BaseVariableTypeState vehicleVariableType = CreateVariableType(customVariableType.NodeId, "VehicleVariableType", vehicleType.NodeId, ValueRanks.OneDimension);
-
+                vehicleVariableType.Description = "Custom Variable type with DataType=VehicleType";
                 // set variable type default value
                 StructuredValue[] vehicleDefault = GetDefaultValueForDatatype(vehicleType.NodeId, ValueRanks.OneDimension, 3) as StructuredValue[];
                 vehicleVariableType.Value = vehicleDefault;
@@ -174,8 +180,45 @@ namespace SampleServer.ComplexTypes
 
                 // create instance form new variable type
                 var variable = CreateVariableFromType(m_rootCustomTypesFolder, "CustomVariableInstance", customVariableType.NodeId, ReferenceTypeIds.Organizes);
+                variable.Description = "Variable instance of custom VariableType: CustomVariableType ";
                 var vehicleVariable = CreateVariableFromType(m_rootCustomTypesFolder, "VehicleVariableInstance", vehicleVariableType.NodeId, ReferenceTypeIds.HasComponent);
+                vehicleVariable.Description = "Variable instance of custom VariableType: VehicleVariableType ";
                 #endregion
+
+                #region  create custom Object types and instances
+                BaseObjectTypeState customObjectType = CreateObjectType(ObjectTypeIds.BaseObjectType, "CustomObjectType", true);
+                customObjectType.Description = "Custom abstract object Type with one mandatory property";
+                PropertyState propertyState = CreateProperty(customObjectType, "MandatoryFloatProperty", DataTypeIds.Float);
+                // for properties that need to be created on instances of type the modeling rule has to be specified
+                propertyState.ModellingRuleId = Objects.ModellingRule_Mandatory;
+
+
+                // Create a derived object type 
+                BaseObjectTypeState parkingObjectType = CreateObjectType(customObjectType.NodeId, "ParkingObjectType", false);
+                vehicleVariableType.Description = "Custom Object type with DataType=VehicleType";
+
+                var folderVariable = CreateFolder(parkingObjectType, "Vehicles");
+                // for properties that need to be created on instances of type the modeling rule has to be specified
+                folderVariable.ModellingRuleId = Objects.ModellingRule_Mandatory;
+                folderVariable.Description = "Folder that will contain all Vehicles associated with this parking lot";               
+
+                propertyState = CreateProperty(folderVariable, "<Vehicle>", vehicleType.NodeId, ValueRanks.Scalar);
+                // for properties that need to be created on instances of type the modeling rule has to be specified
+                propertyState.ModellingRuleId = Objects.ModellingRule_OptionalPlaceholder;
+
+                propertyState = CreateProperty(parkingObjectType, "Address", DataTypeIds.String);
+                // for properties that need to be created on instances of type the modeling rule has to be specified
+                propertyState.ModellingRuleId = Objects.ModellingRule_Optional;
+
+                // create instance form new variable type
+                var parkingLotInstance = CreateObjectFromType(m_rootCustomTypesFolder, "ParkingLotInstance", parkingObjectType.NodeId, ReferenceTypeIds.Organizes);
+                parkingLotInstance.Description = "Object instance of custom ObjectType: ParkingObjectType ";
+               
+
+
+                #endregion
+
+
             }
         }
 
