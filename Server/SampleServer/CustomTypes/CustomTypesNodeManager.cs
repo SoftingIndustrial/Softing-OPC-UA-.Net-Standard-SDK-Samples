@@ -61,7 +61,9 @@ namespace SampleServer.ComplexTypes
                 m_arraysFolder = CreateObjectFromType(m_rootCustomTypesFolder, "Arrays", ObjectTypeIds.FolderType, ReferenceTypeIds.Organizes) as FolderState;
                 AddReference(m_arraysFolder, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
-                CreateCustomComplexTypes();
+                CreateCustomComplexTypesAndInstances();
+
+                CreateCustomVariableTypesAndInstances();
             }
         }
 
@@ -76,9 +78,9 @@ namespace SampleServer.ComplexTypes
 
 
         /// <summary>
-        /// Creates a set of custom complex types
+        /// Creates a set of custom complex types and instances 
         /// </summary>
-        private void CreateCustomComplexTypes()
+        private void CreateCustomComplexTypesAndInstances()
         {
             // define enum with EnumStrings
             EnumDefinition engineStateEnum = new EnumDefinition();
@@ -87,7 +89,7 @@ namespace SampleServer.ComplexTypes
                 new EnumField() { Name = "Stopped", Value = 0},
                 new EnumField() { Name = "Running", Value = 1}
             };
-            DataTypeState engineStateType = CreateComplexDataType(DataTypeIds.Enumeration, "EngineState", engineStateEnum);
+            DataTypeState engineStateType = CreateComplexDataType(DataTypeIds.Enumeration, "EngineStateType", engineStateEnum);
 
             // define option set enum
             EnumDefinition displayWarningEnum = new EnumDefinition();
@@ -99,7 +101,7 @@ namespace SampleServer.ComplexTypes
                 new EnumField() { Name = "CheckEngine", Value = 8},
                 new EnumField() { Name = "OpenDoor", Value = 16},
             };
-            DataTypeState displayWarningType = CreateComplexDataType(DataTypeIds.UInt16, "DisplayWarning", displayWarningEnum);
+            DataTypeState displayWarningType = CreateComplexDataType(DataTypeIds.UInt16, "DisplayWarningType", displayWarningEnum);
 
             // define option set type
             EnumDefinition featuresEnum = new EnumDefinition();
@@ -110,7 +112,7 @@ namespace SampleServer.ComplexTypes
                 new EnumField() { Name = "AirbagPassenger", Value = 4},
                 new EnumField() { Name = "AirbagSides", Value = 8},
             };
-            DataTypeState featuresOptionSetType = CreateComplexDataType(DataTypeIds.OptionSet, "FeaturesOptionSet", featuresEnum);
+            DataTypeState featuresOptionSetType = CreateComplexDataType(DataTypeIds.OptionSet, "FeaturesOptionSetType", featuresEnum);
 
             // define structure with optional fields
             StructureDefinition ownerStructure = new StructureDefinition();
@@ -121,7 +123,7 @@ namespace SampleServer.ComplexTypes
                 new StructureField(){Name = "Age", DataType = DataTypeIds.Byte, IsOptional = true, ValueRank = ValueRanks.Scalar},
                 new StructureField(){Name = "Details", DataType = DataTypeIds.String, IsOptional = true, ValueRank = ValueRanks.Scalar},
             };
-            DataTypeState ownerType = CreateComplexDataType(DataTypeIds.Structure, "OwnerDetails", ownerStructure);
+            DataTypeState ownerType = CreateComplexDataType(DataTypeIds.Structure, "OwnerDetailsType", ownerStructure);
 
             // define union structure
             StructureDefinition fuelLevelDetailsUnion = new StructureDefinition();
@@ -132,7 +134,7 @@ namespace SampleServer.ComplexTypes
                 new StructureField(){Name = "IsFull", DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar},
                 new StructureField(){Name = "Liters", DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar},
             };
-            DataTypeState fuelLevelDetailsType = CreateComplexDataType(DataTypeIds.Union, "FuelLevelDetails", fuelLevelDetailsUnion);
+            DataTypeState fuelLevelDetailsType = CreateComplexDataType(DataTypeIds.Union, "FuelLevelDetailsType", fuelLevelDetailsUnion);
 
             StructureDefinition vehicleStructure = new StructureDefinition();
             vehicleStructure.StructureType = StructureType.Structure;
@@ -146,7 +148,7 @@ namespace SampleServer.ComplexTypes
                 new StructureField(){Name = "State", DataType = engineStateType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
             };
 
-            DataTypeState vehicleType = CreateComplexDataType(DataTypeIds.Structure, "Vehicle", vehicleStructure);
+            DataTypeState vehicleType = CreateComplexDataType(DataTypeIds.Structure, "VehicleType", vehicleStructure);
 
             // add variables of custom type     
             var engineStateVariable = CreateVariable(m_rootCustomTypesFolder, "EngineState", engineStateType.NodeId);
@@ -168,6 +170,29 @@ namespace SampleServer.ComplexTypes
             var ownerArrayVariable = CreateVariable(m_arraysFolder, "Owners", ownerType.NodeId, ValueRanks.OneDimension);
             var fuelLevelArrayVariable = CreateVariable(m_arraysFolder, "FuelLevels", fuelLevelDetailsType.NodeId, ValueRanks.OneDimension);
             var vehicleArrayVariable = CreateVariable(m_arraysFolder, "Vehicles", vehicleType.NodeId, ValueRanks.OneDimension);
+        }
+
+        /// <summary>
+        /// Creates a set of custom VariableTypes and instances for them
+        /// </summary>
+        private void CreateCustomVariableTypesAndInstances()
+        {
+            BaseVariableTypeState customVariableType = CreateVariableType(VariableTypeIds.BaseDataVariableType, "CustomVariableType", DataTypeIds.UInt32);
+
+            BaseVariableTypeState customVariable3PropertiesType = CreateVariableType(customVariableType.NodeId, "CustomVariable3PropertiesType", DataTypeIds.Byte);
+            PropertyState propertyState1 = CreateProperty(customVariable3PropertiesType, "MandatoryBoolProperty", DataTypeIds.Boolean);
+            propertyState1.ModellingRuleId = Objects.ModellingRule_Mandatory;
+
+            PropertyState propertyState2 = CreateProperty(customVariable3PropertiesType, "OptionalBoolProperty", DataTypeIds.Boolean);
+            propertyState2.ModellingRuleId = Objects.ModellingRule_Optional;
+
+            PropertyState propertyState3 = CreateProperty(customVariable3PropertiesType, "MandatoryInt32Property", DataTypeIds.Int32);
+            propertyState3.ModellingRuleId = Objects.ModellingRule_Mandatory;
+
+
+            // create instance form new variable type
+            var variable = CreateVariableFromType(m_rootCustomTypesFolder, "CustomVariableInstance", customVariableType.NodeId, ReferenceTypeIds.Organizes);
+            var variable3Props = CreateVariableFromType(m_rootCustomTypesFolder, "CustomVariable3PropertiesInstance", customVariable3PropertiesType.NodeId, ReferenceTypeIds.HasComponent);
         }
     }
 }
