@@ -24,11 +24,14 @@ namespace SampleServer.ComplexTypes
     /// </summary>
     public class CustomTypesNodeManager : NodeManager
     {
+        #region Private Fields
         private uint m_nodeIdIndex = 1;
         private FolderState m_rootCustomTypesFolder;
         private FolderState m_arraysFolder;
 
         private NodeId m_vehicleDataTypeNodeId;
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -241,8 +244,9 @@ namespace SampleServer.ComplexTypes
         }
         #endregion
 
+        #region Private implementation
         /// <summary>
-        /// 
+        /// Handler for AddVehicle method
         /// </summary>
         /// <param name="context"></param>
         /// <param name="method"></param>
@@ -274,6 +278,6 @@ namespace SampleServer.ComplexTypes
 
             return new ServiceResult(StatusCodes.Bad);
         }
-
+        #endregion
     }
 }
