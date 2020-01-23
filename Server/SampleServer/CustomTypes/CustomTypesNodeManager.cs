@@ -26,7 +26,9 @@ namespace SampleServer.ComplexTypes
     {
         private uint m_nodeIdIndex = 1;
         private FolderState m_rootCustomTypesFolder;
-       private  FolderState m_arraysFolder;
+        private FolderState m_arraysFolder;
+
+        private NodeId m_vehicleDataTypeNodeId;
         #region Constructors
 
         /// <summary>
@@ -129,6 +131,7 @@ namespace SampleServer.ComplexTypes
                 };
 
                 DataTypeState vehicleType = CreateComplexDataType(DataTypeIds.Structure, "VehicleType", vehicleStructure);
+                m_vehicleDataTypeNodeId = vehicleType.NodeId;
 
                 // add variables of custom type     
                 var engineStateVariable = CreateVariable(m_rootCustomTypesFolder, "EngineState", engineStateType.NodeId);
@@ -176,7 +179,7 @@ namespace SampleServer.ComplexTypes
                 // for properties that need to be created on instances of type the modeling rule has to be specified
                 propertyState2.ModellingRuleId = Objects.ModellingRule_Optional;
 
-                PropertyState propertyState3 = CreateProperty(vehicleVariableType, "Int32PropertyWithoutModellingRule", DataTypeIds.Int32);               
+                PropertyState propertyState3 = CreateProperty(vehicleVariableType, "Int32PropertyWithoutModellingRule", DataTypeIds.Int32);
 
                 // create instance form new variable type
                 var variable = CreateVariableFromType(m_rootCustomTypesFolder, "CustomVariableInstance", customVariableType.NodeId, ReferenceTypeIds.Organizes);
@@ -200,7 +203,7 @@ namespace SampleServer.ComplexTypes
                 var folderVariable = CreateFolder(parkingObjectType, "Vehicles");
                 // for properties that need to be created on instances of type the modeling rule has to be specified
                 folderVariable.ModellingRuleId = Objects.ModellingRule_Mandatory;
-                folderVariable.Description = "Folder that will contain all Vehicles associated with this parking lot";               
+                folderVariable.Description = "Folder that will contain all Vehicles associated with this parking lot";
 
                 propertyState = CreateProperty(folderVariable, "<Vehicle>", vehicleType.NodeId, ValueRanks.Scalar);
                 // for properties that need to be created on instances of type the modeling rule has to be specified
@@ -210,15 +213,22 @@ namespace SampleServer.ComplexTypes
                 // for properties that need to be created on instances of type the modeling rule has to be specified
                 propertyState.ModellingRuleId = Objects.ModellingRule_Optional;
 
+                // create a method and associate it with the object type
+                Argument[] addVehicleInputArguments = new Argument[] { new Argument() { Name = "NewVehicle", DataType = vehicleType.NodeId, ValueRank = ValueRanks.Scalar, Description = "Vehicle data type instance to be added to Vehicles folder" } };
+                Argument[] addVehicleOutputArguments = new Argument[] { new Argument() { Name = "NodeId", DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar, Description ="New Vehicle NodeId" } };
+                var addVehicleMethod = CreateMethod(parkingObjectType, "AddVehicle", addVehicleInputArguments, addVehicleOutputArguments);
+                addVehicleMethod.ModellingRuleId = Objects.ModellingRule_Mandatory;
+
                 // create instance form new variable type
                 var parkingLotInstance = CreateObjectFromType(m_rootCustomTypesFolder, "ParkingLotInstance", parkingObjectType.NodeId, ReferenceTypeIds.Organizes);
                 parkingLotInstance.Description = "Object instance of custom ObjectType: ParkingObjectType ";
-               
-
+                MethodState addVehicleMethodInstance = parkingLotInstance.FindChild(SystemContext, addVehicleMethod.BrowseName) as MethodState;
+                if (addVehicleMethodInstance != null)
+                {
+                    addVehicleMethodInstance.OnCallMethod = ParkingLotAddVehicleOnCallHandler;
+                }
 
                 #endregion
-
-
             }
         }
 
@@ -230,6 +240,40 @@ namespace SampleServer.ComplexTypes
             return new NodeId(m_nodeIdIndex++, NamespaceIndex);
         }
         #endregion
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="inputArguments"></param>
+        /// <param name="outputArguments"></param>
+        /// <returns></returns>
+        private ServiceResult ParkingLotAddVehicleOnCallHandler(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            if (inputArguments != null && inputArguments.Count == 1)
+            {
+                ExtensionObject extensionObject = inputArguments[0] as ExtensionObject;
+                if (extensionObject != null)
+                {
+                    StructuredValue vehicle = extensionObject.Body as StructuredValue;
+                    if (method.Parent != null)
+                    {
+                        FolderState vehiclesFolder = method.Parent.FindChild(SystemContext, new QualifiedName("Vehicles", NamespaceIndex)) as FolderState;
+                        // create new vehicle variable instance 
+                        var vehicleVariable = CreateVariable(vehiclesFolder, vehicle["Name"] as String, m_vehicleDataTypeNodeId);
+                        vehicleVariable.Description = "Variable instance added by AddVehicleMethod";
+                        vehicleVariable.Value = vehicle;
+
+                        // set output arguments
+                        outputArguments[0] = vehicleVariable.NodeId;
+                        return ServiceResult.Good;
+                    }
+                }
+            }
+
+            return new ServiceResult(StatusCodes.Bad);
+        }
+
     }
 }
