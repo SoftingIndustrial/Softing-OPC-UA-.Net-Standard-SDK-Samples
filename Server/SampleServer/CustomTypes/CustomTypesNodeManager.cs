@@ -168,10 +168,10 @@ namespace SampleServer.ComplexTypes
                 BaseVariableTypeState customVariableType = CreateVariableType(VariableTypeIds.BaseDataVariableType, "CustomVariableType", DataTypeIds.UInt32);
 
                 // Create a variable type that has data type = complex data vehicle type 
-                BaseVariableTypeState vehicleVariableType = CreateVariableType(customVariableType.NodeId, "VehicleVariableType", vehicleType.NodeId, ValueRanks.OneDimension);
+                BaseVariableTypeState vehicleVariableType = CreateVariableType(customVariableType.NodeId, "VehicleVariableType", vehicleType.NodeId, ValueRanks.Scalar);
                 vehicleVariableType.Description = "Custom Variable type with DataType=VehicleType";
                 // set variable type default value
-                StructuredValue[] vehicleDefault = GetDefaultValueForDatatype(vehicleType.NodeId, ValueRanks.OneDimension, 3) as StructuredValue[];
+                StructuredValue vehicleDefault = GetDefaultValueForDatatype(vehicleType.NodeId) as StructuredValue;
                 vehicleVariableType.Value = vehicleDefault;
 
                 PropertyState propertyState1 = CreateProperty(vehicleVariableType, "MandatoryBoolProperty", DataTypeIds.Boolean);
@@ -217,7 +217,11 @@ namespace SampleServer.ComplexTypes
                 propertyState.ModellingRuleId = Objects.ModellingRule_Optional;
 
                 // create a method and associate it with the object type
-                Argument[] addVehicleInputArguments = new Argument[] { new Argument() { Name = "NewVehicle", DataType = vehicleType.NodeId, ValueRank = ValueRanks.Scalar, Description = "Vehicle data type instance to be added to Vehicles folder" } };
+                Argument[] addVehicleInputArguments = new Argument[] 
+                {
+                    new Argument() { Name = "NewVehicle", DataType = vehicleType.NodeId, ValueRank = ValueRanks.Scalar, Description = "Vehicle data type instance to be added to Vehicles folder" },
+                    new Argument() { Name = "FieldsFlag", DataType = DataTypeIds.DataSetFieldFlags, ValueRank = ValueRanks.OneDimension, Description = "Vehicle data type instance to be added to Vehicles folder" }
+                };
                 Argument[] addVehicleOutputArguments = new Argument[] { new Argument() { Name = "NodeId", DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar, Description ="New Vehicle NodeId" } };
                 var addVehicleMethod = CreateMethod(parkingObjectType, "AddVehicle", addVehicleInputArguments, addVehicleOutputArguments);
                 addVehicleMethod.ModellingRuleId = Objects.ModellingRule_Mandatory;
