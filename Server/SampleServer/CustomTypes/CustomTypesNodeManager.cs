@@ -220,9 +220,11 @@ namespace SampleServer.ComplexTypes
                 Argument[] addVehicleInputArguments = new Argument[] 
                 {
                     new Argument() { Name = "NewVehicle", DataType = vehicleType.NodeId, ValueRank = ValueRanks.Scalar, Description = "Vehicle data type instance to be added to Vehicles folder" },
-                    new Argument() { Name = "FieldsFlag", DataType = DataTypeIds.DataSetFieldFlags, ValueRank = ValueRanks.OneDimension, Description = "Vehicle data type instance to be added to Vehicles folder" }
                 };
-                Argument[] addVehicleOutputArguments = new Argument[] { new Argument() { Name = "NodeId", DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar, Description ="New Vehicle NodeId" } };
+                Argument[] addVehicleOutputArguments = new Argument[] 
+                {
+                    new Argument() { Name = "NodeId", DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar, Description ="New Vehicle NodeId" }
+                };
                 var addVehicleMethod = CreateMethod(parkingObjectType, "AddVehicle", addVehicleInputArguments, addVehicleOutputArguments);
                 addVehicleMethod.ModellingRuleId = Objects.ModellingRule_Mandatory;
 
@@ -232,6 +234,7 @@ namespace SampleServer.ComplexTypes
                 MethodState addVehicleMethodInstance = parkingLotInstance.FindChild(SystemContext, addVehicleMethod.BrowseName) as MethodState;
                 if (addVehicleMethodInstance != null)
                 {
+                    // Add event handler for object instance method call
                     addVehicleMethodInstance.OnCallMethod = ParkingLotAddVehicleOnCallHandler;
                 }
 
