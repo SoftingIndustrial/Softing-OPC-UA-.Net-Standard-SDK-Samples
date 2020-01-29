@@ -64,7 +64,6 @@ namespace SampleServer.ComplexTypes
                 AddReference(m_rootCustomTypesFolder, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
                 m_arraysFolder = CreateObjectFromType(m_rootCustomTypesFolder, "Arrays", ObjectTypeIds.FolderType, ReferenceTypeIds.Organizes) as FolderState;
-                AddReference(m_arraysFolder, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
                 #region  Create custom complex types and instances
                 // define enum with EnumStrings
