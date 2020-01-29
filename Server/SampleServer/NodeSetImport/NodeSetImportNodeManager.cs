@@ -150,7 +150,7 @@ namespace SampleServer.NodeSetImport
                         throw ServiceResultException.Create(StatusCodes.BadDecodingError, "Could not load nodes from resource: {0}", resourceName);
                     }
 
-                    ImportNodeSet(SystemContext, stream);
+                    ImportNodeSet(SystemContext, stream, DuplicateNodeHandling.OverwriteNode);
                 }                
             }
             catch (Exception ex)
