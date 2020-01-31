@@ -17,7 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SampleServer.ComplexTypes
+namespace SampleServer.CustomTypes
 {
     /// <summary>
     /// A node manager for a server that manages the custom types

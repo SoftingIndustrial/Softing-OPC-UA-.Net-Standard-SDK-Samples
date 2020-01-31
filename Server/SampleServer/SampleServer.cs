@@ -13,7 +13,7 @@ using System.Threading;
 using Opc.Ua;
 using Opc.Ua.Server;
 using SampleServer.Alarms;
-using SampleServer.ComplexTypes;
+using SampleServer.CustomTypes;
 using SampleServer.DataAccess;
 using SampleServer.FileTransfer;
 using SampleServer.HistoricalDataAccess;
