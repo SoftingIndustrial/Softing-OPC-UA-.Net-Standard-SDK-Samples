@@ -392,10 +392,12 @@ namespace SampleClient.Samples
         {
             ReadValuesForCustomEnumerationDataType();
             ReadValuesForCustomOptionSetEnumerationDataType();
-            ReadValuesForCustomOptionSetDataType();
+
+            ReadValuesForCustomStructuredValueDataType();           
             ReadValuesForCustomStructureWithOptionalFieldsDataType();
             ReadValuesForCustomUnionDataType();
-            ReadValuesForCustomStructuredValueDataType();
+
+            ReadValuesForCustomOptionSetDataType();
         }
 
         /// <summary>
@@ -420,7 +422,18 @@ namespace SampleClient.Samples
 
                 DataValueEx dataValueTypeId = m_session.Read(readValueId);
                 NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
-                
+
+                Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
+
+                // try to get the complex type info for the specified node
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
+                if (baseComplexTypeInfo == null)
+                {
+                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomEnumerationNodeId}. " +
+                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    return;
+                }
+
                 if (dataValueTypeNodeId != null)
                 {
                     readValueId.NodeId = StaticCustomEnumerationNodeId;
@@ -498,6 +511,16 @@ namespace SampleClient.Samples
                 DataValueEx dataValueTypeId = m_session.Read(readValueId);
                 NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
 
+                Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
+
+                // try to get the complex type info for the specified node
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
+                if (baseComplexTypeInfo == null)
+                {
+                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomOptionSetEnumerationNodeId}. " +
+                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    return;
+                }
                 if (dataValueTypeNodeId != null)
                 {
                     readValueId.NodeId = StaticCustomOptionSetEnumerationNodeId;
@@ -583,7 +606,11 @@ namespace SampleClient.Samples
                     if (optionSetValue != null)
                     {
                         Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomOptionSetNodeId, optionSetValue.TypeName.Name, optionSetValue);
-                    }                    
+                    }
+                    else
+                    {
+                        Console.WriteLine("  The Value of NodeId {0} cannot be decoded as an OptionSetValue instance ", StaticCustomOptionSetNodeId);
+                    }
                 }
                 else
                 {
@@ -652,6 +679,10 @@ namespace SampleClient.Samples
                     if (optionalFieldsStructuredValue != null)
                     {
                         Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomStructureWithOptionalFieldsNodeId, optionalFieldsStructuredValue.TypeName.Name, optionalFieldsStructuredValue);
+                    }
+                    else
+                    {
+                        Console.WriteLine("  The Value of NodeId {0} cannot be decoded as an OptionalFieldsStructuredValue instance ", StaticCustomStructureWithOptionalFieldsNodeId);
                     }
                 }
                 else
@@ -722,6 +753,10 @@ namespace SampleClient.Samples
                     {
                         Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomUnionNodeId, unionStructuredValue.TypeName.Name, unionStructuredValue);
                     }
+                    else
+                    {
+                        Console.WriteLine("  The Value of NodeId {0} cannot be decoded as a UnionStructuredValue instance ", StaticCustomUnionNodeId);
+                    }
                 }
                 else
                 {
@@ -740,11 +775,14 @@ namespace SampleClient.Samples
                 ExtensionObject[] extensionObjectValueArray = dataValue.Value as ExtensionObject[];
                 if (extensionObjectValueArray != null)
                 {
-                    Console.Write("  The Value of NodeId {0} is an UnionStructuredValue[{1}]:", StaticCustomUnionArrayNodeId, extensionObjectValueArray.Length);
+                    Console.Write("  The Value of NodeId {0} is a UnionStructuredValue[{1}]:", StaticCustomUnionArrayNodeId, extensionObjectValueArray.Length);
                     foreach (var extensionObject in extensionObjectValueArray)
                     {
                         UnionStructuredValue unionStructuredValue = extensionObject.Body as UnionStructuredValue;
-                        Console.Write("{0}, ", unionStructuredValue);
+                        if (unionStructuredValue != null)
+                        {
+                            Console.Write("{0}, ", unionStructuredValue);
+                        }                        
                     }
                     Console.WriteLine();
                 }
@@ -809,7 +847,7 @@ namespace SampleClient.Samples
                 ExtensionObject[] extensionObjectValueArray = dataValue.Value as ExtensionObject[];
                 if (extensionObjectValueArray != null)
                 {
-                    Console.WriteLine("  The Value of NodeId {0} is an StructuredValue[{1}]:", StaticCustomStructuredValueArrayNodeId, extensionObjectValueArray.Length);
+                    Console.WriteLine("  The Value of NodeId {0} is a StructuredValue[{1}]:", StaticCustomStructuredValueArrayNodeId, extensionObjectValueArray.Length);
                     foreach (var extensionObject in extensionObjectValueArray)
                     {
                         StructuredValue structuredValue = extensionObject.Body as StructuredValue;
@@ -1049,10 +1087,12 @@ namespace SampleClient.Samples
         {
             WriteValuesForCustomEnumerationDataType();
             WriteValuesForCustomOptionSetEnumerationDataType();
-            WriteValuesForCustomOptionSetDataType();
+
+            WriteValuesForCustomStructuredValueDataType();            
             WriteValuesForCustomStructureWithOptionalFieldsDataType();
             WriteValuesForCustomUnionDataType();
-            WriteValuesForCustomStructuredValueDataType();
+
+            WriteValuesForCustomOptionSetDataType();
         }
 
         /// <summary>
@@ -1077,6 +1117,17 @@ namespace SampleClient.Samples
 
                 DataValueEx dataValueTypeId = m_session.Read(readValueId);
                 NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
+
+                Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
+
+                // try to get the complex type info for the specified node
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
+                if (baseComplexTypeInfo == null)
+                {
+                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomEnumerationNodeId}. " +
+                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    return;
+                }
 
                 //Get Default value for data type
                 EnumValue defaultValue = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId) as EnumValue;
@@ -1156,13 +1207,23 @@ namespace SampleClient.Samples
                 DataValueEx dataValueTypeId = m_session.Read(readValueId);
                 NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
 
+                Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
+
+                // try to get the complex type info for the specified node
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
+                if (baseComplexTypeInfo == null)
+                {
+                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomOptionSetEnumerationNodeId}. " +
+                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    return;
+                }
                 //Get Default value for data type
                 EnumValue defaultValue = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId) as EnumValue;
 
                 if (defaultValue != null)
                 {
                     //change some fields for default object
-                    defaultValue.Value = 11;
+                    defaultValue.ValueString = "ABS|ESP";
                     //write new value to node 
                     DataValue valueToWrite = new DataValue();
                     valueToWrite.Value = defaultValue.GetValueToEncode();
@@ -1234,6 +1295,16 @@ namespace SampleClient.Samples
                 DataValueEx dataValueTypeId = m_session.Read(readValueId);
                 NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
 
+                Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
+
+                // try to get the complex type info for the specified node
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
+                if (baseComplexTypeInfo == null)
+                {
+                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomOptionSetNodeId}. " +
+                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    return;
+                }
                 //Get Default value for data type
                 OptionSetValue defaultValue = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId) as OptionSetValue;
 
@@ -1311,6 +1382,16 @@ namespace SampleClient.Samples
                 DataValueEx dataValueTypeId = m_session.Read(readValueId);
                 NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
 
+                Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
+
+                // try to get the complex type info for the specified node
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
+                if (baseComplexTypeInfo == null)
+                {
+                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomStructureWithOptionalFieldsNodeId}. " +
+                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    return;
+                }
                 //Get Default value for data type. It will be an instance of OptionalFieldsStructuredValue
                 OptionalFieldsStructuredValue defaultValue = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId) as OptionalFieldsStructuredValue;
 
@@ -1394,6 +1475,16 @@ namespace SampleClient.Samples
                 DataValueEx dataValueTypeId = m_session.Read(readValueId);
                 NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
 
+                Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
+
+                // try to get the complex type info for the specified node
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
+                if (baseComplexTypeInfo == null)
+                {
+                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomUnionNodeId}. " +
+                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    return;
+                }
                 //Get Default value for data type. It will be an instance of UnionStructuredValue
                 UnionStructuredValue defaultValue = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId) as UnionStructuredValue;
 
@@ -1475,6 +1566,16 @@ namespace SampleClient.Samples
                 DataValueEx dataValueTypeId = m_session.Read(readValueId);
                 NodeId dataValueTypeNodeId = dataValueTypeId.Value as NodeId;
 
+                Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
+
+                // try to get the complex type info for the specified node
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
+                if (baseComplexTypeInfo == null)
+                {
+                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomStructuredValueNodeId}. " +
+                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    return;
+                }
                 //Get Default value for data type. It will be an instance of StructuredValue
                 StructuredValue defaultValue = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId) as StructuredValue;
 
