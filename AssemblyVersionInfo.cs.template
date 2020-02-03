@@ -1,19 +1,19 @@
 /* ========================================================================
- * Copyright © 2011-2019 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2020 Softing Industrial Automation GmbH.
  * All rights reserved.
- * 
- * The Software is subject to the Softing Industrial Automation GmbH’s 
+ *
+ * The Software is subject to the Softing Industrial Automation GmbH’s
  * license agreement, which can be found here:
  * https://data-intelligence.softing.com/LA-SDK-en/
- * 
- * The Software is based on the OPC Foundation, Inc.’s software. This 
+ *
+ * The Software is based on the OPC Foundation, Inc.’s software. This
  * original OPC Foundation’s software can be found here:
  * http://www.opcfoundation.org
- * 
+ *
  * The original OPC Foundation’s software is subject to the OPC Foundation
  * MIT License 1.00, which can be found here:
  * http://opcfoundation.org/License/MIT/1.00/
- * 
+ *
  * ======================================================================*/
 
 using System.Reflection;
@@ -37,8 +37,8 @@ using System.Reflection;
 internal static class AssemblyVersionInfo
 {
     /// <summary> The current copy right notice. </summary>
-    public const string Copyright = "© 2019 Softing Industrial Automation GmbH";
-    
+    public const string Copyright = "© 2020 Softing Industrial Automation GmbH";
+
     /// BEWARE THAT IN VS 2017 THE USAGE OF * PLACEHOLDER IS NOT ALLOWED
     /// <summary> The current build version. </summary>
     public const string CurrentVersion = "2.40.0.$WCREV$";
@@ -51,7 +51,7 @@ internal static class AssemblyVersionInfo
 
     /// <summary>The product name.</summary>
     public const string AssemblyProduct = "dataFEED OPC UA .NET Standard SDK";
-	
+
 	/// <summary>The product release date.</summary>
     public const string ReleaseDate = "$WCNOW$";
 }
