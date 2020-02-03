@@ -1,74 +1,85 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" LastModified="2019-02-22T16:00:54.0196837Z" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+<UANodeSet xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
   <NamespaceUris>
     <Uri>http://industrial.softing.com/UA/Refrigerators</Uri>
   </NamespaceUris>
+  <Models>
+    <Model ModelUri="http://industrial.softing.com/UA/Refrigerators">
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.04.4" PublicationDate="2020-01-08T00:00:00Z" />
+    </Model>
+  </Models>
   <Aliases>
-    <Alias Alias="Boolean">ns=0;i=1</Alias>
-    <Alias Alias="SByte">ns=0;i=2</Alias>
-    <Alias Alias="Byte">ns=0;i=3</Alias>
-    <Alias Alias="Int16">ns=0;i=4</Alias>
-    <Alias Alias="UInt16">ns=0;i=5</Alias>
-    <Alias Alias="Int32">ns=0;i=6</Alias>
-    <Alias Alias="UInt32">ns=0;i=7</Alias>
-    <Alias Alias="Int64">ns=0;i=8</Alias>
-    <Alias Alias="UInt64">ns=0;i=9</Alias>
-    <Alias Alias="Float">ns=0;i=10</Alias>
-    <Alias Alias="Double">ns=0;i=11</Alias>
-    <Alias Alias="DateTime">ns=0;i=13</Alias>
-    <Alias Alias="String">ns=0;i=12</Alias>
-    <Alias Alias="ByteString">ns=0;i=15</Alias>
-    <Alias Alias="Guid">ns=0;i=14</Alias>
-    <Alias Alias="XmlElement">ns=0;i=16</Alias>
-    <Alias Alias="NodeId">ns=0;i=17</Alias>
-    <Alias Alias="ExpandedNodeId">ns=0;i=18</Alias>
-    <Alias Alias="QualifiedName">ns=0;i=20</Alias>
-    <Alias Alias="LocalizedText">ns=0;i=21</Alias>
-    <Alias Alias="StatusCode">ns=0;i=19</Alias>
-    <Alias Alias="Structure">ns=0;i=22</Alias>
-    <Alias Alias="Number">ns=0;i=26</Alias>
-    <Alias Alias="Integer">ns=0;i=27</Alias>
-    <Alias Alias="UInteger">ns=0;i=28</Alias>
-    <Alias Alias="HasComponent">ns=0;i=47</Alias>
-    <Alias Alias="HasProperty">ns=0;i=46</Alias>
-    <Alias Alias="Organizes">ns=0;i=35</Alias>
-    <Alias Alias="HasEventSource">ns=0;i=36</Alias>
-    <Alias Alias="HasNotifier">ns=0;i=48</Alias>
-    <Alias Alias="HasSubtype">ns=0;i=45</Alias>
-    <Alias Alias="HasTypeDefinition">ns=0;i=40</Alias>
-    <Alias Alias="HasModellingRule">ns=0;i=37</Alias>
-    <Alias Alias="HasEncoding">ns=0;i=38</Alias>
-    <Alias Alias="HasDescription">ns=0;i=39</Alias>
+    <Alias Alias="Boolean">i=1</Alias>
+    <Alias Alias="SByte">i=2</Alias>
+    <Alias Alias="Byte">i=3</Alias>
+    <Alias Alias="Int16">i=4</Alias>
+    <Alias Alias="UInt16">i=5</Alias>
+    <Alias Alias="Int32">i=6</Alias>
+    <Alias Alias="UInt32">i=7</Alias>
+    <Alias Alias="Int64">i=8</Alias>
+    <Alias Alias="UInt64">i=9</Alias>
+    <Alias Alias="Float">i=10</Alias>
+    <Alias Alias="Double">i=11</Alias>
+    <Alias Alias="DateTime">i=13</Alias>
+    <Alias Alias="String">i=12</Alias>
+    <Alias Alias="ByteString">i=15</Alias>
+    <Alias Alias="Guid">i=14</Alias>
+    <Alias Alias="XmlElement">i=16</Alias>
+    <Alias Alias="NodeId">i=17</Alias>
+    <Alias Alias="ExpandedNodeId">i=18</Alias>
+    <Alias Alias="QualifiedName">i=20</Alias>
+    <Alias Alias="LocalizedText">i=21</Alias>
+    <Alias Alias="StatusCode">i=19</Alias>
+    <Alias Alias="Structure">i=22</Alias>
+    <Alias Alias="Number">i=26</Alias>
+    <Alias Alias="Integer">i=27</Alias>
+    <Alias Alias="UInteger">i=28</Alias>
+    <Alias Alias="HasComponent">i=47</Alias>
+    <Alias Alias="HasProperty">i=46</Alias>
+    <Alias Alias="Organizes">i=35</Alias>
+    <Alias Alias="HasEventSource">i=36</Alias>
+    <Alias Alias="HasNotifier">i=48</Alias>
+    <Alias Alias="HasSubtype">i=45</Alias>
+    <Alias Alias="HasTypeDefinition">i=40</Alias>
+    <Alias Alias="HasModellingRule">i=37</Alias>
+    <Alias Alias="HasEncoding">i=38</Alias>
+    <Alias Alias="HasDescription">i=39</Alias>
   </Aliases>
-  <UADataType NodeId="ns=1;i=1" BrowseName="1:RefrigeratorStatusDataType">
+  <UADataType NodeId="ns=1;i=15001" BrowseName="1:RefrigeratorStatusDataType">
     <DisplayName>RefrigeratorStatusDataType</DisplayName>
     <References>
-      <Reference ReferenceType="HasSubtype" IsForward="false">ns=0;i=22</Reference>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
     </References>
-    <Definition Name="0:RefrigeratorStatusDataType">
-      <Field Name="MotorRunning" DataType="ns=0;i=1" />
-      <Field Name="MotorTemperature" DataType="ns=0;i=11" />
-      <Field Name="ActualTemperature" DataType="ns=0;i=11" />
+    <Definition Name="1:RefrigeratorStatusDataType">
+      <Field Name="MotorRunning" DataType="i=1" />
+      <Field Name="MotorTemperature" DataType="i=11" />
+      <Field Name="ActualTemperature" DataType="i=11" />
     </Definition>
   </UADataType>
-  <UADataType NodeId="ns=1;i=2" BrowseName="1:RefrigeratorState">
+  <UADataType NodeId="ns=1;i=15002" BrowseName="1:RefrigeratorState">
     <DisplayName>RefrigeratorState</DisplayName>
     <References>
-      <Reference ReferenceType="HasProperty">ns=1;i=3</Reference>
-      <Reference ReferenceType="HasSubtype" IsForward="false">ns=0;i=29</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=15003</Reference>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
     </References>
-    <Definition Name="0:RefrigeratorState">
-      <Field Name="Stopped" DataType="ns=0;i=24" Value="0" />
-      <Field Name="Running" DataType="ns=0;i=24" Value="1" />
-      <Field Name="Fault" DataType="ns=0;i=24" Value="2" />
+    <Definition Name="1:RefrigeratorState">
+      <Field Name="Stopped" Value="0">
+        <DisplayName>Stopped</DisplayName>
+      </Field>
+      <Field Name="Running" Value="1">
+        <DisplayName>Running</DisplayName>
+      </Field>
+      <Field Name="Fault" Value="2">
+        <DisplayName>Fault</DisplayName>
+      </Field>
     </Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3" BrowseName="0:EnumStrings" ParentNodeId="ns=1;i=2" DataType="LocalizedText" ValueRank="1">
+  <UAVariable NodeId="ns=1;i=15003" BrowseName="EnumStrings" ParentNodeId="ns=1;i=15002" DataType="LocalizedText" ValueRank="1" ArrayDimensions="0">
     <DisplayName>EnumStrings</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=68</Reference>
-      <Reference ReferenceType="HasModellingRule">ns=0;i=78</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=2</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=15002</Reference>
     </References>
     <Value>
       <ListOfLocalizedText xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
@@ -90,309 +101,410 @@
       </ListOfLocalizedText>
     </Value>
   </UAVariable>
-  <UAVariableType NodeId="ns=1;i=6" BrowseName="1:RefrigeratorAnalogType" DataType="Number">
+  <UAVariableType NodeId="ns=1;i=15006" BrowseName="1:RefrigeratorAnalogType" DataType="Number">
     <DisplayName>RefrigeratorAnalogType</DisplayName>
     <Description>Analog Variable for Refrigerator.</Description>
     <References>
-      <Reference ReferenceType="HasSubtype" IsForward="false">ns=0;i=2368</Reference>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=2368</Reference>
     </References>
   </UAVariableType>
-  <UAVariableType NodeId="ns=1;i=12" BrowseName="1:RefrigeratorSetpointType" DataType="Number">
+  <UAVariableType NodeId="ns=1;i=15012" BrowseName="1:RefrigeratorSetpointType" DataType="Number">
     <DisplayName>RefrigeratorSetpointType</DisplayName>
     <Description>SetPoint for Refrigerator.</Description>
     <References>
-      <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=6</Reference>
+      <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=15006</Reference>
     </References>
   </UAVariableType>
-  <UAObjectType NodeId="ns=1;i=18" BrowseName="1:RefrigeratorObjectType">
+  <UAObjectType NodeId="ns=1;i=15018" BrowseName="1:RefrigeratorObjectType">
     <DisplayName>RefrigeratorObjectType</DisplayName>
     <Description>A generic object defining a refrigerator model.</Description>
     <References>
-      <Reference ReferenceType="HasComponent">ns=1;i=19</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=20</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=21</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=27</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=30</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=33</Reference>
-      <Reference ReferenceType="HasSubtype" IsForward="false">ns=0;i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15019</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15020</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15021</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15027</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15030</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15033</Reference>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=1;i=19" BrowseName="1:State" ParentNodeId="ns=1;i=18" DataType="ns=1;i=2" AccessLevel="3" UserAccessLevel="3">
+  <UAVariable NodeId="ns=1;i=15019" BrowseName="1:State" ParentNodeId="ns=1;i=15018" DataType="ns=1;i=15002" AccessLevel="3">
     <DisplayName>State</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=63</Reference>
-      <Reference ReferenceType="HasModellingRule">ns=0;i=78</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=18</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15018</Reference>
     </References>
     <Value>
       <Int32 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">1</Int32>
     </Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=20" BrowseName="1:Status" ParentNodeId="ns=1;i=18" DataType="ns=1;i=1" AccessLevel="3" UserAccessLevel="3">
+  <UAVariable NodeId="ns=1;i=15020" BrowseName="1:Status" ParentNodeId="ns=1;i=15018" DataType="ns=1;i=15001" AccessLevel="3">
     <DisplayName>Status</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=63</Reference>
-      <Reference ReferenceType="HasModellingRule">ns=0;i=78</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=18</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15018</Reference>
     </References>
+    <Value>
+      <ExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+        <TypeId>
+          <Identifier>ns=1;i=15061</Identifier>
+        </TypeId>
+        <Body>
+          <RefrigeratorStatusDataType xmlns="http://industrial.softing.com/UA/Refrigerators">
+            <MotorRunning>false</MotorRunning>
+            <MotorTemperature>30.0</MotorTemperature>
+            <ActualTemperature>5.0</ActualTemperature>
+          </RefrigeratorStatusDataType>
+        </Body>
+      </ExtensionObject>
+    </Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=21" BrowseName="1:SetPoint" ParentNodeId="ns=1;i=18" DataType="Double" AccessLevel="3" UserAccessLevel="3">
+  <UAVariable NodeId="ns=1;i=15021" BrowseName="1:SetPoint" ParentNodeId="ns=1;i=15018" DataType="Double" AccessLevel="3">
     <DisplayName>SetPoint</DisplayName>
     <References>
-      <Reference ReferenceType="HasProperty">ns=1;i=25</Reference>
-      <Reference ReferenceType="HasTypeDefinition">ns=1;i=12</Reference>
-      <Reference ReferenceType="HasModellingRule">ns=0;i=78</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=18</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=15025</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=15012</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15018</Reference>
     </References>
     <Value>
       <Double xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">5</Double>
     </Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=25" BrowseName="0:EURange" ParentNodeId="ns=1;i=21" DataType="ns=0;i=884">
+  <UAVariable NodeId="ns=1;i=15025" BrowseName="EURange" ParentNodeId="ns=1;i=15021" DataType="i=884">
     <DisplayName>EURange</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=68</Reference>
-      <Reference ReferenceType="HasModellingRule">ns=0;i=78</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=21</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=15021</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=27" BrowseName="1:DoorOpened" ParentNodeId="ns=1;i=18" DataType="Boolean">
+  <UAVariable NodeId="ns=1;i=15027" BrowseName="1:DoorOpened" ParentNodeId="ns=1;i=15018" DataType="Boolean">
     <DisplayName>DoorOpened</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=2365</Reference>
-      <Reference ReferenceType="HasModellingRule">ns=0;i=78</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=18</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2365</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15018</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=30" BrowseName="1:LightStatus" ParentNodeId="ns=1;i=18" DataType="Boolean">
+  <UAVariable NodeId="ns=1;i=15030" BrowseName="1:LightStatus" ParentNodeId="ns=1;i=15018" DataType="Boolean">
     <DisplayName>LightStatus</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=2365</Reference>
-      <Reference ReferenceType="HasModellingRule">ns=0;i=78</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=18</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2365</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15018</Reference>
     </References>
   </UAVariable>
-  <UAMethod NodeId="ns=1;i=33" BrowseName="1:OpenCloseDoor" ParentNodeId="ns=1;i=18">
+  <UAMethod NodeId="ns=1;i=15033" BrowseName="1:OpenCloseDoor" ParentNodeId="ns=1;i=15018">
     <DisplayName>OpenCloseDoor</DisplayName>
     <References>
-      <Reference ReferenceType="HasProperty">ns=1;i=34</Reference>
-      <Reference ReferenceType="HasTypeDefinition">ns=1;i=33</Reference>
-      <Reference ReferenceType="HasModellingRule">ns=0;i=78</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=18</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=15034</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15018</Reference>
     </References>
   </UAMethod>
-  <UAVariable NodeId="ns=1;i=34" BrowseName="0:InputArguments" ParentNodeId="ns=1;i=33" DataType="ns=0;i=296" ValueRank="1">
+  <UAVariable NodeId="ns=1;i=15034" BrowseName="InputArguments" ParentNodeId="ns=1;i=15033" DataType="i=296" ValueRank="1" ArrayDimensions="0">
     <DisplayName>InputArguments</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=68</Reference>
-      <Reference ReferenceType="HasModellingRule">ns=0;i=78</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=33</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=15033</Reference>
     </References>
     <Value>
       <ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
         <ExtensionObject>
           <TypeId>
-            <Identifier>ns=0;i=297</Identifier>
+            <Identifier>i=297</Identifier>
           </TypeId>
           <Body>
             <Argument>
               <Name>Open/Close Door</Name>
               <DataType>
-                <Identifier>ns=0;i=1</Identifier>
+                <Identifier>i=1</Identifier>
               </DataType>
               <ValueRank>-1</ValueRank>
               <ArrayDimensions />
-              <Description p5:nil="true" xmlns:p5="http://www.w3.org/2001/XMLSchema-instance" />
             </Argument>
           </Body>
         </ExtensionObject>
       </ListOfExtensionObject>
     </Value>
   </UAVariable>
-  <UAObject NodeId="ns=1;i=35" BrowseName="1:NodeSetImport">
+  <UAObject NodeId="ns=1;i=15035" BrowseName="1:NodeSetImport">
     <DisplayName>NodeSetImport</DisplayName>
     <References>
-      <Reference ReferenceType="Organizes" IsForward="false">ns=0;i=85</Reference>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=61</Reference>
+      <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="ns=1;i=36" BrowseName="1:Refrigerator1">
+  <UAObject NodeId="ns=1;i=15036" BrowseName="1:Refrigerator1">
     <DisplayName>Refrigerator1</DisplayName>
     <References>
-      <Reference ReferenceType="HasComponent">ns=1;i=37</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=38</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=39</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=45</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=48</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=51</Reference>
-      <Reference ReferenceType="Organizes" IsForward="false">ns=1;i=35</Reference>
-      <Reference ReferenceType="HasTypeDefinition">ns=1;i=18</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15037</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15038</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15039</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15045</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15048</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15051</Reference>
+      <Reference ReferenceType="Organizes" IsForward="false">ns=1;i=15035</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=15018</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=37" BrowseName="1:State" ParentNodeId="ns=1;i=36" DataType="ns=1;i=2" AccessLevel="3" UserAccessLevel="3">
+  <UAVariable NodeId="ns=1;i=15037" BrowseName="1:State" ParentNodeId="ns=1;i=15036" DataType="ns=1;i=15002" AccessLevel="3">
     <DisplayName>State</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=63</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=36</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15036</Reference>
     </References>
     <Value>
       <Int32 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">1</Int32>
     </Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=38" BrowseName="1:Status" ParentNodeId="ns=1;i=36" DataType="ns=1;i=1" AccessLevel="3" UserAccessLevel="3">
+  <UAVariable NodeId="ns=1;i=15038" BrowseName="1:Status" ParentNodeId="ns=1;i=15036" DataType="ns=1;i=15001" AccessLevel="3">
     <DisplayName>Status</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=63</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=36</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15036</Reference>
     </References>
+    <Value>
+      <ExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+        <TypeId>
+          <Identifier>ns=1;i=15061</Identifier>
+        </TypeId>
+        <Body>
+          <RefrigeratorStatusDataType xmlns="http://industrial.softing.com/UA/Refrigerators">
+            <MotorRunning>false</MotorRunning>
+            <MotorTemperature>30.0</MotorTemperature>
+            <ActualTemperature>5.0</ActualTemperature>
+          </RefrigeratorStatusDataType>
+        </Body>
+      </ExtensionObject>
+    </Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=39" BrowseName="1:SetPoint" ParentNodeId="ns=1;i=36" DataType="Double" AccessLevel="3" UserAccessLevel="3">
+  <UAVariable NodeId="ns=1;i=15039" BrowseName="1:SetPoint" ParentNodeId="ns=1;i=15036" DataType="Double" AccessLevel="3">
     <DisplayName>SetPoint</DisplayName>
     <References>
-      <Reference ReferenceType="HasProperty">ns=1;i=43</Reference>
-      <Reference ReferenceType="HasTypeDefinition">ns=1;i=12</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=36</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=15043</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=15012</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15036</Reference>
     </References>
     <Value>
       <Double xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">5</Double>
     </Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=43" BrowseName="0:EURange" ParentNodeId="ns=1;i=39" DataType="ns=0;i=884">
+  <UAVariable NodeId="ns=1;i=15043" BrowseName="EURange" ParentNodeId="ns=1;i=15039" DataType="i=884">
     <DisplayName>EURange</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=39</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=15039</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=45" BrowseName="1:DoorOpened" ParentNodeId="ns=1;i=36" DataType="Boolean">
+  <UAVariable NodeId="ns=1;i=15045" BrowseName="1:DoorOpened" ParentNodeId="ns=1;i=15036" DataType="Boolean">
     <DisplayName>DoorOpened</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=2365</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=36</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2365</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15036</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=48" BrowseName="1:LightStatus" ParentNodeId="ns=1;i=36" DataType="Boolean">
+  <UAVariable NodeId="ns=1;i=15048" BrowseName="1:LightStatus" ParentNodeId="ns=1;i=15036" DataType="Boolean">
     <DisplayName>LightStatus</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=2365</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=36</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2365</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15036</Reference>
     </References>
   </UAVariable>
-  <UAMethod NodeId="ns=1;i=51" BrowseName="1:OpenCloseDoor" ParentNodeId="ns=1;i=36">
+  <UAMethod NodeId="ns=1;i=15051" BrowseName="1:OpenCloseDoor" ParentNodeId="ns=1;i=15036" MethodDeclarationId="ns=1;i=15033">
     <DisplayName>OpenCloseDoor</DisplayName>
     <References>
-      <Reference ReferenceType="HasProperty">ns=1;i=52</Reference>
-      <Reference ReferenceType="HasTypeDefinition">ns=1;i=33</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=36</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=15052</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15036</Reference>
     </References>
   </UAMethod>
-  <UAVariable NodeId="ns=1;i=52" BrowseName="0:InputArguments" ParentNodeId="ns=1;i=51" DataType="ns=0;i=296" ValueRank="1">
+  <UAVariable NodeId="ns=1;i=15052" BrowseName="InputArguments" ParentNodeId="ns=1;i=15051" DataType="i=296" ValueRank="1" ArrayDimensions="0">
     <DisplayName>InputArguments</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=51</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=15051</Reference>
     </References>
     <Value>
       <ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
         <ExtensionObject>
           <TypeId>
-            <Identifier>ns=0;i=297</Identifier>
+            <Identifier>i=297</Identifier>
           </TypeId>
           <Body>
             <Argument>
               <Name>Open/Close Door</Name>
               <DataType>
-                <Identifier>ns=0;i=1</Identifier>
+                <Identifier>i=1</Identifier>
               </DataType>
               <ValueRank>-1</ValueRank>
               <ArrayDimensions />
-              <Description p5:nil="true" xmlns:p5="http://www.w3.org/2001/XMLSchema-instance" />
             </Argument>
           </Body>
         </ExtensionObject>
       </ListOfExtensionObject>
     </Value>
   </UAVariable>
-  <UAObject NodeId="ns=1;i=53" BrowseName="0:Default XML" SymbolicName="DefaultXml">
-    <DisplayName>Default XML</DisplayName>
-    <References>
-      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=1</Reference>
-      <Reference ReferenceType="HasDescription">ns=1;i=57</Reference>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=76</Reference>
-    </References>
-  </UAObject>
-  <UAVariable NodeId="ns=1;i=54" BrowseName="1:Refrigerators" SymbolicName="Refrigerators_XmlSchema" DataType="ByteString">
-    <DisplayName>Refrigerators</DisplayName>
-    <References>
-      <Reference ReferenceType="HasProperty">ns=1;i=56</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=57</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=0;i=92</Reference>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=72</Reference>
-    </References>
-    <Value>
-      <ByteString xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">PHhzOnNjaGVtYQ0KICB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiDQogIHhtbG5zOnVhPSJodHRwOi8vb3BjZm91bmRhdGlvbi5vcmcvVUEvMjAwOC8wMi9UeXBlcy54c2QiDQogIHhtbG5zOnRucz0iaHR0cDovL2luZHVzdHJpYWwuc29mdGluZy5jb20vVUEvUmVmcmlnZXJhdG9ycyINCiAgdGFyZ2V0TmFtZXNwYWNlPSJodHRwOi8vaW5kdXN0cmlhbC5zb2Z0aW5nLmNvbS9VQS9SZWZyaWdlcmF0b3JzIg0KICBlbGVtZW50Rm9ybURlZmF1bHQ9InF1YWxpZmllZCINCj4NCiAgPHhzOmltcG9ydCBuYW1lc3BhY2U9Imh0dHA6Ly9vcGNmb3VuZGF0aW9uLm9yZy9VQS8yMDA4LzAyL1R5cGVzLnhzZCIgLz4NCg0KICA8eHM6Y29tcGxleFR5cGUgbmFtZT0iUmVmcmlnZXJhdG9yU3RhdHVzRGF0YVR5cGUiPg0KICAgIDx4czpzZXF1ZW5jZT4NCiAgICAgIDx4czplbGVtZW50IG5hbWU9Ik1vdG9yUnVubmluZyIgdHlwZT0ieHM6Ym9vbGVhbiIgbWluT2NjdXJzPSIwIiAvPg0KICAgICAgPHhzOmVsZW1lbnQgbmFtZT0iTW90b3JUZW1wZXJhdHVyZSIgdHlwZT0ieHM6ZG91YmxlIiBtaW5PY2N1cnM9IjAiIC8+DQogICAgICA8eHM6ZWxlbWVudCBuYW1lPSJBY3R1YWxUZW1wZXJhdHVyZSIgdHlwZT0ieHM6ZG91YmxlIiBtaW5PY2N1cnM9IjAiIC8+DQogICAgPC94czpzZXF1ZW5jZT4NCiAgPC94czpjb21wbGV4VHlwZT4NCiAgPHhzOmVsZW1lbnQgbmFtZT0iUmVmcmlnZXJhdG9yU3RhdHVzRGF0YVR5cGUiIHR5cGU9InRuczpSZWZyaWdlcmF0b3JTdGF0dXNEYXRhVHlwZSIgLz4NCg0KICA8eHM6Y29tcGxleFR5cGUgbmFtZT0iTGlzdE9mUmVmcmlnZXJhdG9yU3RhdHVzRGF0YVR5cGUiPg0KICAgIDx4czpzZXF1ZW5jZT4NCiAgICAgIDx4czplbGVtZW50IG5hbWU9IlJlZnJpZ2VyYXRvclN0YXR1c0RhdGFUeXBlIiB0eXBlPSJ0bnM6UmVmcmlnZXJhdG9yU3RhdHVzRGF0YVR5cGUiIG1pbk9jY3Vycz0iMCIgbWF4T2NjdXJzPSJ1bmJvdW5kZWQiIG5pbGxhYmxlPSJ0cnVlIiAvPg0KICAgIDwveHM6c2VxdWVuY2U+DQogIDwveHM6Y29tcGxleFR5cGU+DQogIDx4czplbGVtZW50IG5hbWU9Ikxpc3RPZlJlZnJpZ2VyYXRvclN0YXR1c0RhdGFUeXBlIiB0eXBlPSJ0bnM6TGlzdE9mUmVmcmlnZXJhdG9yU3RhdHVzRGF0YVR5cGUiIG5pbGxhYmxlPSJ0cnVlIj48L3hzOmVsZW1lbnQ+DQoNCiAgPHhzOnNpbXBsZVR5cGUgIG5hbWU9IlJlZnJpZ2VyYXRvclN0YXRlIj4NCiAgICA8eHM6cmVzdHJpY3Rpb24gYmFzZT0ieHM6c3RyaW5nIj4NCiAgICAgIDx4czplbnVtZXJhdGlvbiB2YWx1ZT0iU3RvcHBlZF8wIiAvPg0KICAgICAgPHhzOmVudW1lcmF0aW9uIHZhbHVlPSJSdW5uaW5nXzEiIC8+DQogICAgICA8eHM6ZW51bWVyYXRpb24gdmFsdWU9IkZhdWx0XzIiIC8+DQogICAgPC94czpyZXN0cmljdGlvbj4NCiAgPC94czpzaW1wbGVUeXBlPg0KICA8eHM6ZWxlbWVudCBuYW1lPSJSZWZyaWdlcmF0b3JTdGF0ZSIgdHlwZT0idG5zOlJlZnJpZ2VyYXRvclN0YXRlIiAvPg0KDQogIDx4czpjb21wbGV4VHlwZSBuYW1lPSJMaXN0T2ZSZWZyaWdlcmF0b3JTdGF0ZSI+DQogICAgPHhzOnNlcXVlbmNlPg0KICAgICAgPHhzOmVsZW1lbnQgbmFtZT0iUmVmcmlnZXJhdG9yU3RhdGUiIHR5cGU9InRuczpSZWZyaWdlcmF0b3JTdGF0ZSIgbWluT2NjdXJzPSIwIiBtYXhPY2N1cnM9InVuYm91bmRlZCIgLz4NCiAgICA8L3hzOnNlcXVlbmNlPg0KICA8L3hzOmNvbXBsZXhUeXBlPg0KICA8eHM6ZWxlbWVudCBuYW1lPSJMaXN0T2ZSZWZyaWdlcmF0b3JTdGF0ZSIgdHlwZT0idG5zOkxpc3RPZlJlZnJpZ2VyYXRvclN0YXRlIiBuaWxsYWJsZT0idHJ1ZSI+PC94czplbGVtZW50Pg0KDQo8L3hzOnNjaGVtYT4=</ByteString>
-    </Value>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=56" BrowseName="0:NamespaceUri" ParentNodeId="ns=1;i=54" DataType="String">
-    <DisplayName>NamespaceUri</DisplayName>
-    <Description>A URI that uniquely identifies the dictionary.</Description>
-    <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=54</Reference>
-    </References>
-    <Value>
-      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">http://industrial.softing.com/UA/Refrigerators</String>
-    </Value>
-  </UAVariable>
-  <UAVariable NodeId="ns=1;i=57" BrowseName="1:RefrigeratorStatusDataType" ParentNodeId="ns=1;i=54" DataType="String">
-    <DisplayName>RefrigeratorStatusDataType</DisplayName>
-    <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=69</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=54</Reference>
-    </References>
-    <Value>
-      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">//xs:element[@name='RefrigeratorStatusDataType']</String>
-    </Value>
-  </UAVariable>
-  <UAObject NodeId="ns=1;i=60" BrowseName="0:Default Binary" SymbolicName="DefaultBinary">
+  <UAObject NodeId="ns=1;i=15053" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>
     <References>
-      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=1</Reference>
-      <Reference ReferenceType="HasDescription">ns=1;i=64</Reference>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15001</Reference>
+      <Reference ReferenceType="HasDescription">ns=1;i=15058</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=61" BrowseName="1:Refrigerators" SymbolicName="Refrigerators_BinarySchema" DataType="ByteString">
+  <UAVariable NodeId="ns=1;i=15054" BrowseName="1:Refrigerators" SymbolicName="Refrigerators_BinarySchema" DataType="ByteString">
     <DisplayName>Refrigerators</DisplayName>
     <References>
-      <Reference ReferenceType="HasProperty">ns=1;i=63</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;i=64</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=0;i=93</Reference>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=72</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=15056</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=15057</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15058</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=93</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=72</Reference>
     </References>
     <Value>
-      <ByteString xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">PG9wYzpUeXBlRGljdGlvbmFyeQ0KICB4bWxuczpvcGM9Imh0dHA6Ly9vcGNmb3VuZGF0aW9uLm9yZy9CaW5hcnlTY2hlbWEvIg0KICB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIg0KICB4bWxuczp1YT0iaHR0cDovL29wY2ZvdW5kYXRpb24ub3JnL1VBLyINCiAgeG1sbnM6dG5zPSJodHRwOi8vaW5kdXN0cmlhbC5zb2Z0aW5nLmNvbS9VQS9SZWZyaWdlcmF0b3JzIg0KICBEZWZhdWx0Qnl0ZU9yZGVyPSJMaXR0bGVFbmRpYW4iDQogIFRhcmdldE5hbWVzcGFjZT0iaHR0cDovL2luZHVzdHJpYWwuc29mdGluZy5jb20vVUEvUmVmcmlnZXJhdG9ycyINCj4NCiAgPCEtLSBUaGlzIEZpbGUgd2FzIGdlbmVyYXRlZCBvbiAyMDE5LTAyLTIyIGFuZCBzdXBwb3J0cyB0aGUgc3BlY2lmaWNhdGlvbnMgc3VwcG9ydGVkIGJ5IHZlcnNpb24gMS40My4wLjcwNjQgb2YgdGhlIE9QQyBVQSBkZWxpdmVyYWJsZXMuIC0tPg0KICA8b3BjOkltcG9ydCBOYW1lc3BhY2U9Imh0dHA6Ly9vcGNmb3VuZGF0aW9uLm9yZy9VQS8iIExvY2F0aW9uPSJTb2Z0aW5nLk9wYy5VYS5TZGsuQmluYXJ5U2NoZW1hLmJzZCIvPg0KDQogIDxvcGM6U3RydWN0dXJlZFR5cGUgTmFtZT0iUmVmcmlnZXJhdG9yU3RhdHVzRGF0YVR5cGUiIEJhc2VUeXBlPSJ1YTpFeHRlbnNpb25PYmplY3QiPg0KICAgIDxvcGM6RmllbGQgTmFtZT0iTW90b3JSdW5uaW5nIiBUeXBlTmFtZT0ib3BjOkJvb2xlYW4iIC8+DQogICAgPG9wYzpGaWVsZCBOYW1lPSJNb3RvclRlbXBlcmF0dXJlIiBUeXBlTmFtZT0ib3BjOkRvdWJsZSIgLz4NCiAgICA8b3BjOkZpZWxkIE5hbWU9IkFjdHVhbFRlbXBlcmF0dXJlIiBUeXBlTmFtZT0ib3BjOkRvdWJsZSIgLz4NCiAgPC9vcGM6U3RydWN0dXJlZFR5cGU+DQoNCiAgPG9wYzpFbnVtZXJhdGVkVHlwZSBOYW1lPSJSZWZyaWdlcmF0b3JTdGF0ZSIgTGVuZ3RoSW5CaXRzPSIzMiI+DQogICAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iU3RvcHBlZCIgVmFsdWU9IjAiIC8+DQogICAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iUnVubmluZyIgVmFsdWU9IjEiIC8+DQogICAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iRmF1bHQiIFZhbHVlPSIyIiAvPg0KICA8L29wYzpFbnVtZXJhdGVkVHlwZT4NCg0KPC9vcGM6VHlwZURpY3Rpb25hcnk+</ByteString>
+      <ByteString xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">PG9wYzpUeXBlRGljdGlvbmFyeQ0KICB4bWxuczpvcGM9Imh0dHA6Ly9vcGNmb3VuZGF0aW9uLm9y
+Zy9CaW5hcnlTY2hlbWEvIg0KICB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1M
+U2NoZW1hLWluc3RhbmNlIg0KICB4bWxuczp1YT0iaHR0cDovL29wY2ZvdW5kYXRpb24ub3JnL1VB
+LyINCiAgeG1sbnM6dG5zPSJodHRwOi8vaW5kdXN0cmlhbC5zb2Z0aW5nLmNvbS9VQS9SZWZyaWdl
+cmF0b3JzIg0KICBEZWZhdWx0Qnl0ZU9yZGVyPSJMaXR0bGVFbmRpYW4iDQogIFRhcmdldE5hbWVz
+cGFjZT0iaHR0cDovL2luZHVzdHJpYWwuc29mdGluZy5jb20vVUEvUmVmcmlnZXJhdG9ycyINCj4N
+CiAgPG9wYzpJbXBvcnQgTmFtZXNwYWNlPSJodHRwOi8vb3BjZm91bmRhdGlvbi5vcmcvVUEvIiBM
+b2NhdGlvbj0iU29mdGluZy5PcGMuVWEuU2RrLkJpbmFyeVNjaGVtYS5ic2QiLz4NCg0KICA8b3Bj
+OlN0cnVjdHVyZWRUeXBlIE5hbWU9IlJlZnJpZ2VyYXRvclN0YXR1c0RhdGFUeXBlIiBCYXNlVHlw
+ZT0idWE6RXh0ZW5zaW9uT2JqZWN0Ij4NCiAgICA8b3BjOkZpZWxkIE5hbWU9Ik1vdG9yUnVubmlu
+ZyIgVHlwZU5hbWU9Im9wYzpCb29sZWFuIiAvPg0KICAgIDxvcGM6RmllbGQgTmFtZT0iTW90b3JU
+ZW1wZXJhdHVyZSIgVHlwZU5hbWU9Im9wYzpEb3VibGUiIC8+DQogICAgPG9wYzpGaWVsZCBOYW1l
+PSJBY3R1YWxUZW1wZXJhdHVyZSIgVHlwZU5hbWU9Im9wYzpEb3VibGUiIC8+DQogIDwvb3BjOlN0
+cnVjdHVyZWRUeXBlPg0KDQogIDxvcGM6RW51bWVyYXRlZFR5cGUgTmFtZT0iUmVmcmlnZXJhdG9y
+U3RhdGUiIExlbmd0aEluQml0cz0iMzIiPg0KICAgIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hbWU9
+IlN0b3BwZWQiIFZhbHVlPSIwIiAvPg0KICAgIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hbWU9IlJ1
+bm5pbmciIFZhbHVlPSIxIiAvPg0KICAgIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hbWU9IkZhdWx0
+IiBWYWx1ZT0iMiIgLz4NCiAgPC9vcGM6RW51bWVyYXRlZFR5cGU+DQoNCjwvb3BjOlR5cGVEaWN0
+aW9uYXJ5Pg==</ByteString>
     </Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=63" BrowseName="0:NamespaceUri" ParentNodeId="ns=1;i=61" DataType="String">
+  <UAVariable NodeId="ns=1;i=15056" BrowseName="NamespaceUri" ParentNodeId="ns=1;i=15054" DataType="String">
     <DisplayName>NamespaceUri</DisplayName>
-    <Description>A URI that uniquely identifies the dictionary.</Description>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=61</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=15054</Reference>
     </References>
     <Value>
       <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">http://industrial.softing.com/UA/Refrigerators</String>
     </Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=64" BrowseName="1:RefrigeratorStatusDataType" ParentNodeId="ns=1;i=61" DataType="String">
+  <UAVariable NodeId="ns=1;i=15057" BrowseName="Deprecated" ParentNodeId="ns=1;i=15054" DataType="Boolean">
+    <DisplayName>Deprecated</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=15054</Reference>
+    </References>
+    <Value>
+      <Boolean xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">true</Boolean>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15058" BrowseName="1:RefrigeratorStatusDataType" ParentNodeId="ns=1;i=15054" DataType="String">
     <DisplayName>RefrigeratorStatusDataType</DisplayName>
     <References>
-      <Reference ReferenceType="HasTypeDefinition">ns=0;i=69</Reference>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=61</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=69</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15054</Reference>
     </References>
     <Value>
       <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">RefrigeratorStatusDataType</String>
     </Value>
   </UAVariable>
+  <UAObject NodeId="ns=1;i=15061" BrowseName="Default XML" SymbolicName="DefaultXml">
+    <DisplayName>Default XML</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15001</Reference>
+      <Reference ReferenceType="HasDescription">ns=1;i=15066</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=15062" BrowseName="1:Refrigerators" SymbolicName="Refrigerators_XmlSchema" DataType="ByteString">
+    <DisplayName>Refrigerators</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty">ns=1;i=15064</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=15065</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15066</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=92</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=72</Reference>
+    </References>
+    <Value>
+      <ByteString xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">PHhzOnNjaGVtYQ0KICB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEi
+DQogIHhtbG5zOnVhPSJodHRwOi8vb3BjZm91bmRhdGlvbi5vcmcvVUEvMjAwOC8wMi9UeXBlcy54
+c2QiDQogIHhtbG5zOnRucz0iaHR0cDovL2luZHVzdHJpYWwuc29mdGluZy5jb20vVUEvUmVmcmln
+ZXJhdG9ycyINCiAgdGFyZ2V0TmFtZXNwYWNlPSJodHRwOi8vaW5kdXN0cmlhbC5zb2Z0aW5nLmNv
+bS9VQS9SZWZyaWdlcmF0b3JzIg0KICBlbGVtZW50Rm9ybURlZmF1bHQ9InF1YWxpZmllZCINCj4N
+CiAgPHhzOmltcG9ydCBuYW1lc3BhY2U9Imh0dHA6Ly9vcGNmb3VuZGF0aW9uLm9yZy9VQS8yMDA4
+LzAyL1R5cGVzLnhzZCIgLz4NCg0KICA8eHM6Y29tcGxleFR5cGUgbmFtZT0iUmVmcmlnZXJhdG9y
+U3RhdHVzRGF0YVR5cGUiPg0KICAgIDx4czpzZXF1ZW5jZT4NCiAgICAgIDx4czplbGVtZW50IG5h
+bWU9Ik1vdG9yUnVubmluZyIgdHlwZT0ieHM6Ym9vbGVhbiIgbWluT2NjdXJzPSIwIiAvPg0KICAg
+ICAgPHhzOmVsZW1lbnQgbmFtZT0iTW90b3JUZW1wZXJhdHVyZSIgdHlwZT0ieHM6ZG91YmxlIiBt
+aW5PY2N1cnM9IjAiIC8+DQogICAgICA8eHM6ZWxlbWVudCBuYW1lPSJBY3R1YWxUZW1wZXJhdHVy
+ZSIgdHlwZT0ieHM6ZG91YmxlIiBtaW5PY2N1cnM9IjAiIC8+DQogICAgPC94czpzZXF1ZW5jZT4N
+CiAgPC94czpjb21wbGV4VHlwZT4NCiAgPHhzOmVsZW1lbnQgbmFtZT0iUmVmcmlnZXJhdG9yU3Rh
+dHVzRGF0YVR5cGUiIHR5cGU9InRuczpSZWZyaWdlcmF0b3JTdGF0dXNEYXRhVHlwZSIgLz4NCg0K
+ICA8eHM6Y29tcGxleFR5cGUgbmFtZT0iTGlzdE9mUmVmcmlnZXJhdG9yU3RhdHVzRGF0YVR5cGUi
+Pg0KICAgIDx4czpzZXF1ZW5jZT4NCiAgICAgIDx4czplbGVtZW50IG5hbWU9IlJlZnJpZ2VyYXRv
+clN0YXR1c0RhdGFUeXBlIiB0eXBlPSJ0bnM6UmVmcmlnZXJhdG9yU3RhdHVzRGF0YVR5cGUiIG1p
+bk9jY3Vycz0iMCIgbWF4T2NjdXJzPSJ1bmJvdW5kZWQiIG5pbGxhYmxlPSJ0cnVlIiAvPg0KICAg
+IDwveHM6c2VxdWVuY2U+DQogIDwveHM6Y29tcGxleFR5cGU+DQogIDx4czplbGVtZW50IG5hbWU9
+Ikxpc3RPZlJlZnJpZ2VyYXRvclN0YXR1c0RhdGFUeXBlIiB0eXBlPSJ0bnM6TGlzdE9mUmVmcmln
+ZXJhdG9yU3RhdHVzRGF0YVR5cGUiIG5pbGxhYmxlPSJ0cnVlIj48L3hzOmVsZW1lbnQ+DQoNCiAg
+PHhzOnNpbXBsZVR5cGUgIG5hbWU9IlJlZnJpZ2VyYXRvclN0YXRlIj4NCiAgICA8eHM6cmVzdHJp
+Y3Rpb24gYmFzZT0ieHM6c3RyaW5nIj4NCiAgICAgIDx4czplbnVtZXJhdGlvbiB2YWx1ZT0iU3Rv
+cHBlZF8wIiAvPg0KICAgICAgPHhzOmVudW1lcmF0aW9uIHZhbHVlPSJSdW5uaW5nXzEiIC8+DQog
+ICAgICA8eHM6ZW51bWVyYXRpb24gdmFsdWU9IkZhdWx0XzIiIC8+DQogICAgPC94czpyZXN0cmlj
+dGlvbj4NCiAgPC94czpzaW1wbGVUeXBlPg0KICA8eHM6ZWxlbWVudCBuYW1lPSJSZWZyaWdlcmF0
+b3JTdGF0ZSIgdHlwZT0idG5zOlJlZnJpZ2VyYXRvclN0YXRlIiAvPg0KDQogIDx4czpjb21wbGV4
+VHlwZSBuYW1lPSJMaXN0T2ZSZWZyaWdlcmF0b3JTdGF0ZSI+DQogICAgPHhzOnNlcXVlbmNlPg0K
+ICAgICAgPHhzOmVsZW1lbnQgbmFtZT0iUmVmcmlnZXJhdG9yU3RhdGUiIHR5cGU9InRuczpSZWZy
+aWdlcmF0b3JTdGF0ZSIgbWluT2NjdXJzPSIwIiBtYXhPY2N1cnM9InVuYm91bmRlZCIgLz4NCiAg
+ICA8L3hzOnNlcXVlbmNlPg0KICA8L3hzOmNvbXBsZXhUeXBlPg0KICA8eHM6ZWxlbWVudCBuYW1l
+PSJMaXN0T2ZSZWZyaWdlcmF0b3JTdGF0ZSIgdHlwZT0idG5zOkxpc3RPZlJlZnJpZ2VyYXRvclN0
+YXRlIiBuaWxsYWJsZT0idHJ1ZSI+PC94czplbGVtZW50Pg0KDQo8L3hzOnNjaGVtYT4=</ByteString>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15064" BrowseName="NamespaceUri" ParentNodeId="ns=1;i=15062" DataType="String">
+    <DisplayName>NamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=15062</Reference>
+    </References>
+    <Value>
+      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">http://industrial.softing.com/UA/Refrigerators</String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15065" BrowseName="Deprecated" ParentNodeId="ns=1;i=15062" DataType="Boolean">
+    <DisplayName>Deprecated</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=15062</Reference>
+    </References>
+    <Value>
+      <Boolean xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">true</Boolean>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15066" BrowseName="1:RefrigeratorStatusDataType" ParentNodeId="ns=1;i=15062" DataType="String">
+    <DisplayName>RefrigeratorStatusDataType</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=69</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15062</Reference>
+    </References>
+    <Value>
+      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">//xs:element[@name='RefrigeratorStatusDataType']</String>
+    </Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=15069" BrowseName="Default JSON" SymbolicName="DefaultJson">
+    <DisplayName>Default JSON</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15001</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
 </UANodeSet>
