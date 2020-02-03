@@ -3778,7 +3778,7 @@
   </PublishedDataSets>
   <Connections>
     <PubSubConnectionDataType>
-      <Name>UADPConection_Publisher</Name>
+      <Name>UADPConnection_Publisher</Name>
       <Enabled>false</Enabled>
       <PublisherId>
         <Value>

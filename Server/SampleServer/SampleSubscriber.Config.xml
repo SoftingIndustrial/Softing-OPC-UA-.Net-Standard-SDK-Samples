@@ -3,7 +3,7 @@
   <PublishedDataSets />
   <Connections>
     <PubSubConnectionDataType>
-      <Name>UADPConection_Subscriber</Name>
+      <Name>UADPConnection_Subscriber</Name>
       <Enabled>false</Enabled>
       <PublisherId>
         <Value>
