@@ -75,7 +75,7 @@ namespace SampleServer.CustomTypes
                 };
                 DataTypeState engineStateType = CreateComplexDataType(DataTypeIds.Enumeration, "EngineStateType", engineStateEnum);
 
-                // define option set enum
+                // define option set enumeration. All EnumField values must be a power of 2
                 EnumDefinition displayWarningEnum = new EnumDefinition();
                 displayWarningEnum.Fields = new EnumFieldCollection()
                 {
@@ -87,7 +87,7 @@ namespace SampleServer.CustomTypes
                 };
                 DataTypeState displayWarningType = CreateComplexDataType(DataTypeIds.UInt16, "DisplayWarningType", displayWarningEnum);
 
-                // define option set type
+                // define option set type. All EnumField values must be a power of 2
                 EnumDefinition featuresEnum = new EnumDefinition();
                 featuresEnum.Fields = new EnumFieldCollection()
                 {
@@ -98,8 +98,9 @@ namespace SampleServer.CustomTypes
                 };
                 DataTypeState featuresOptionSetType = CreateComplexDataType(DataTypeIds.OptionSet, "FeaturesOptionSetType", featuresEnum);
 
-                // define structure with optional fields
+                // create a StructureDefinition object and specify which fields are optional 
                 StructureDefinition ownerStructure = new StructureDefinition();
+                // set the StructureType property to StructureWithOptionalFields
                 ownerStructure.StructureType = StructureType.StructureWithOptionalFields;
                 ownerStructure.Fields = new StructureFieldCollection()
                 {
@@ -109,8 +110,9 @@ namespace SampleServer.CustomTypes
                 };
                 DataTypeState ownerType = CreateComplexDataType(DataTypeIds.Structure, "OwnerDetailsType", ownerStructure);
 
-                // define union structure
+                // create a StructureDefinition object that describes a union data type 
                 StructureDefinition fuelLevelDetailsUnion = new StructureDefinition();
+                // set the StructureType property to Union
                 fuelLevelDetailsUnion.StructureType = StructureType.Union;
                 fuelLevelDetailsUnion.Fields = new StructureFieldCollection()
                 {
@@ -120,6 +122,7 @@ namespace SampleServer.CustomTypes
                 };
                 DataTypeState fuelLevelDetailsType = CreateComplexDataType(DataTypeIds.Union, "FuelLevelDetailsType", fuelLevelDetailsUnion);
 
+                // create a StructureDefinition object, specify IsOptional = false for all fields 
                 StructureDefinition vehicleStructure = new StructureDefinition();
                 vehicleStructure.StructureType = StructureType.Structure;
                 vehicleStructure.Fields = new StructureFieldCollection()
@@ -131,7 +134,7 @@ namespace SampleServer.CustomTypes
                     new StructureField(){Name = "DisplayWarning", DataType = displayWarningType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
                     new StructureField(){Name = "State", DataType = engineStateType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
                 };
-
+                // call CreateComplexDataType with baseDataTypeId = DataTypeIds.Structure 
                 DataTypeState vehicleType = CreateComplexDataType(DataTypeIds.Structure, "VehicleType", vehicleStructure);
                 m_vehicleDataTypeNodeId = vehicleType.NodeId;
 
@@ -146,13 +149,13 @@ namespace SampleServer.CustomTypes
                 ownerVariable.Description = "Variable with data type defined as StructuredValue with optional fields";
                 var fuelLevelVariable = CreateVariable(m_rootCustomTypesFolder, "FuelLevel", fuelLevelDetailsType.NodeId);
                 fuelLevelVariable.Description = "Variable with data type defined as Union";
-                var vehicle1Variable = CreateVariable(m_rootCustomTypesFolder, "Vehicle", vehicleType.NodeId);
-                vehicle1Variable.Description = "Variable with data type defined as StructuredValue";
-                StructuredValue vehicle = vehicle1Variable.Value as StructuredValue;
-                if (vehicle != null)
-                {
-                    vehicle["Name"] = "BMW";
-                }
+var vehicle1Variable = CreateVariable(m_rootCustomTypesFolder, "Vehicle", vehicleType.NodeId);
+vehicle1Variable.Description = "Variable with data type defined as StructuredValue";
+StructuredValue vehicle = vehicle1Variable.Value as StructuredValue;
+if (vehicle != null)
+{
+    vehicle["Name"] = "BMW";
+}
 
                 // add array variables
                 var engineStateArrayVariable = CreateVariable(m_arraysFolder, "EngineStates", engineStateType.NodeId, ValueRanks.OneDimension);
@@ -180,7 +183,7 @@ namespace SampleServer.CustomTypes
                 PropertyState propertyState2 = CreateProperty(vehicleVariableType, "OptionalBoolProperty", DataTypeIds.Boolean);
                 // for properties that need to be created on instances of type the modeling rule has to be specified
                 propertyState2.ModellingRuleId = Objects.ModellingRule_Optional;
-
+                // this property will not be created for any instance of the variable type
                 PropertyState propertyState3 = CreateProperty(vehicleVariableType, "Int32PropertyWithoutModellingRule", DataTypeIds.Int32);
 
                 // create instance form new variable type
@@ -227,7 +230,7 @@ namespace SampleServer.CustomTypes
                 var addVehicleMethod = CreateMethod(parkingObjectType, "AddVehicle", addVehicleInputArguments, addVehicleOutputArguments);
                 addVehicleMethod.ModellingRuleId = Objects.ModellingRule_Mandatory;
 
-                // create instance form new variable type
+                // create instance form new object type
                 var parkingLotInstance = CreateObjectFromType(m_rootCustomTypesFolder, "ParkingLotInstance", parkingObjectType.NodeId, ReferenceTypeIds.Organizes);
                 parkingLotInstance.Description = "Object instance of custom ObjectType: ParkingObjectType ";
                 MethodState addVehicleMethodInstance = parkingLotInstance.FindChild(SystemContext, addVehicleMethod.BrowseName) as MethodState;
