@@ -393,7 +393,7 @@ namespace SampleClient.Samples
             ReadValuesForCustomEnumerationDataType();
             ReadValuesForCustomOptionSetEnumerationDataType();
 
-            ReadValuesForCustomStructuredValueDataType();           
+            ReadValuesForCustomStructuredValueDataType();
             ReadValuesForCustomStructureWithOptionalFieldsDataType();
             ReadValuesForCustomUnionDataType();
 
@@ -413,7 +413,7 @@ namespace SampleClient.Samples
 
             try
             {
-                //read data type id for node StaticCustomEnumerationNodeId
+                //read DataType attribute for node StaticCustomEnumerationNodeId
                 ReadValueId readValueId = new ReadValueId();
                 readValueId.NodeId = new NodeId(StaticCustomEnumerationNodeId);
                 readValueId.AttributeId = Attributes.DataType;
@@ -425,7 +425,7 @@ namespace SampleClient.Samples
 
                 Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
 
-                // try to get the complex type info for the specified node
+                // try to get the complex type info for the specified data type Id
                 BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
@@ -468,7 +468,7 @@ namespace SampleClient.Samples
                     dataValue.TryConvertToEnumValue(m_session, dataValueTypeNodeId, ValueRanks.OneDimension);
                     EnumValue[] enumValues = dataValue.ProcessedValue as EnumValue[];
                     if (enumValues != null)
-                    {                       
+                    {
                         Console.Write("  The Value of NodeId {0} is an instance of {1}[{2}]:", StaticCustomEnumerationArrayNodeId, enumValue.TypeName.Name, enumValues.Length);
                         for (int i = 0; i < enumValues.Length; i++)
                         {
@@ -480,7 +480,7 @@ namespace SampleClient.Samples
                     {
                         Console.WriteLine("  The Value of NodeId {0} is null.", StaticCustomEnumerationArrayNodeId);
                     }
-                }                
+                }
             }
             catch (Exception e)
             {
@@ -501,7 +501,7 @@ namespace SampleClient.Samples
 
             try
             {
-                //read data type id for node StaticCustomOptionSetEnumerationNodeId
+                //read  DataType attribute for node StaticCustomOptionSetEnumerationNodeId
                 ReadValueId readValueId = new ReadValueId();
                 readValueId.NodeId = new NodeId(StaticCustomOptionSetEnumerationNodeId);
                 readValueId.AttributeId = Attributes.DataType;
@@ -513,7 +513,7 @@ namespace SampleClient.Samples
 
                 Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
 
-                // try to get the complex type info for the specified node
+                // try to get the complex type info for the specified data type Id
                 BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
@@ -588,7 +588,7 @@ namespace SampleClient.Samples
 
             try
             {
-                //read data type id for node StaticCustomOptionSetNodeId
+                //read value for node StaticCustomOptionSetNodeId
                 ReadValueId readValueId = new ReadValueId();
                 Console.WriteLine("\n Read values for custom OptionSet data type");
                 readValueId.NodeId = StaticCustomOptionSetNodeId;
@@ -661,7 +661,7 @@ namespace SampleClient.Samples
 
             try
             {
-                //read data type id for node StaticCustomStructureWithOptionalFieldsNodeId
+                //read value for node StaticCustomStructureWithOptionalFieldsNodeId
                 ReadValueId readValueId = new ReadValueId();
                 Console.WriteLine("\n Read values for custom OptionalFieldsStructuredValue data type");
                 readValueId.NodeId = StaticCustomStructureWithOptionalFieldsNodeId;
@@ -734,7 +734,7 @@ namespace SampleClient.Samples
 
             try
             {
-                //read data type id for node StaticCustomUnionNodeId
+                //read value for node StaticCustomUnionNodeId
                 ReadValueId readValueId = new ReadValueId();
                 Console.WriteLine("\n Read values for custom Union data type");
                 readValueId.NodeId = StaticCustomUnionNodeId;
@@ -810,7 +810,7 @@ namespace SampleClient.Samples
 
             try
             {
-                //read data type id for node StaticCustomStructuredValueNodeId
+                //read value for node StaticCustomStructuredValueNodeId
                 ReadValueId readValueId = new ReadValueId();
                 Console.WriteLine("\n Read values for custom StructuredValue data type");
                 readValueId.NodeId = StaticCustomStructuredValueNodeId;
@@ -962,6 +962,7 @@ namespace SampleClient.Samples
                 if (defaultValue != null)
                 {
                     //change some fields for default object
+                    //for this you need to know the exact name and type of fields from type information
                     defaultValue["Int32Field"] = 100;
                     defaultValue["FloatField"] = 100f;
                     defaultValue["StringField"] = "dummy string value";
@@ -1135,7 +1136,7 @@ namespace SampleClient.Samples
                 if (defaultValue != null)
                 {
                     //change some fields for default object
-                    defaultValue.Value = 1;                    
+                    defaultValue.Value = 1;
                     //write new value to node 
                     DataValue valueToWrite = new DataValue();
                     valueToWrite.Value = defaultValue.GetValueToEncode();
@@ -1311,6 +1312,7 @@ namespace SampleClient.Samples
                 if (defaultValue != null)
                 {
                     //change some fields for default object
+                    //for this you need to know the exact name and type of fields from type information
                     defaultValue["ABS"] = true;
                     defaultValue["AirbagSides"] = true;
                     //write new value to node 
@@ -1398,6 +1400,7 @@ namespace SampleClient.Samples
                 if (defaultValue != null)
                 {
                     //change some fields for default object
+                    //for this you need to know the exact name and type of fields from type information
                     defaultValue["Name"] = "John Smith";
                     defaultValue["Age"] = null;
                     defaultValue["Details"] = "bla bla";
@@ -1582,6 +1585,7 @@ namespace SampleClient.Samples
                 if (defaultValue != null)
                 {
                     //change some fields for default object
+                    //for this you need to know the exact name and type of fields from type information
                     defaultValue["Name"] = "Mazda";
                     OptionalFieldsStructuredValue owner = defaultValue["Owner"] as OptionalFieldsStructuredValue;
                     if (owner != null)
@@ -1654,7 +1658,7 @@ namespace SampleClient.Samples
                     {
                         fuelLevel["Liters"] = (float)34;
                         fuelLevel.SwitchFieldPosition = 3; // use third field as value for Union
-                    }                   
+                    }
                     //write new value to node 
                     DataValue valueToWrite = new DataValue();
                     // get the actual values as an array of values of the type the server expects
@@ -1718,7 +1722,6 @@ namespace SampleClient.Samples
             }
         }
 
-
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
@@ -1741,7 +1744,6 @@ namespace SampleClient.Samples
                 Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
             }
         }
-
         #endregion
 
         #region Private Methods
