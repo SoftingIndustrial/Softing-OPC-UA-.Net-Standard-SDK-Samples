@@ -81,7 +81,37 @@ namespace SampleServer.Methods
                 };
 
                 CreateMethod(root, "Multiply", inputArgumentsMultiply, outputArgumentsMultiply, OnMultiplyCall);
-                #endregion                
+                #endregion
+
+                #region Create Method with arguments of enumeration type
+                Argument[] inputArgumentsCreateNodeId = new Argument[]
+                {
+                    new Argument() {Name = "IdType value", Description = "The IdType of the new NodeId", DataType = DataTypeIds.IdType, ValueRank = ValueRanks.Scalar},
+                };
+
+                Argument[] outputArgumentsCreateNodeId = new Argument[]
+                {
+                 new Argument() {Name = "NodeId", Description = "New NodeId", DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar}
+                };
+
+                CreateMethod(root, "CreateNodeId", inputArgumentsCreateNodeId, outputArgumentsCreateNodeId, OnCreateNodeIdCall);
+                #endregion
+
+                #region Create Method with arguments of enumeration type array
+                NodeId refrigeratorStateEnumTypeId = new NodeId("ns=13;i=15002");
+
+                Argument[] inputArgumentsCountRefrigeratorStates = new Argument[]
+                {
+                    new Argument() {Name = "RefrigeratorState array", Description = "The array of Refrigerator states", DataType =refrigeratorStateEnumTypeId, ValueRank = ValueRanks.OneDimension},
+                };
+
+                Argument[] outputArgumentsCountRefrigeratorStates = new Argument[]
+                {
+                 new Argument() {Name = "Count", Description = "Count of RefrigeratorStates", DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar}
+                };
+
+                CreateMethod(root, "CountRefrigeratorStates", inputArgumentsCountRefrigeratorStates, outputArgumentsCountRefrigeratorStates, OnCountRefrigeratorStatesCall);
+                #endregion
             }
         }
 
@@ -140,6 +170,75 @@ namespace SampleServer.Methods
             }
         }
 
+        /// <summary>
+        /// Handles the method call
+        /// </summary>
+        private ServiceResult OnCreateNodeIdCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            // All arguments must be provided
+            if (inputArguments.Count < 1)
+            {
+                return StatusCodes.BadArgumentsMissing;
+            }
+
+            try
+            {
+                IdType idType = (IdType)inputArguments[0];
+
+                // Set output parameter
+                switch (idType)
+                {
+                    case IdType.Guid:
+                        outputArguments[0] = new NodeId(Guid.NewGuid(), NamespaceIndex);
+                        break;
+                    case IdType.Numeric:
+                        outputArguments[0] = new NodeId(1, NamespaceIndex);
+                        break;
+                    case IdType.String:
+                        outputArguments[0] = new NodeId("bla", NamespaceIndex);
+                        break;
+                    case IdType.Opaque:
+                        outputArguments[0] = new NodeId(new byte[0], NamespaceIndex);
+                        break;
+                }
+                
+                return ServiceResult.Good;
+            }
+            catch
+            {
+                return new ServiceResult(StatusCodes.BadInvalidArgument);
+            }
+        }
+
+        /// <summary>
+        /// Handles the method call
+        /// </summary>
+        private ServiceResult OnCountRefrigeratorStatesCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            // All arguments must be provided
+            if (inputArguments.Count < 1)
+            {
+                return StatusCodes.BadArgumentsMissing;
+            }
+
+            try
+            {
+                int[] refrigeratorStates = inputArguments[0] as int[];
+                if (refrigeratorStates != null)
+                {
+                    outputArguments[0] = refrigeratorStates.Length;
+                    return ServiceResult.Good;
+                }
+
+                return new ServiceResult(StatusCodes.BadTypeMismatch);
+            }
+            catch
+            {
+                return new ServiceResult(StatusCodes.BadInvalidArgument);
+            }
+        }
+
+        
         #endregion
 
     }
