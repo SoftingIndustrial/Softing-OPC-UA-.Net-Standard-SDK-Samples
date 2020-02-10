@@ -116,9 +116,9 @@ namespace SampleServer.CustomTypes
                 fuelLevelDetailsUnion.StructureType = StructureType.Union;
                 fuelLevelDetailsUnion.Fields = new StructureFieldCollection()
                 {
-                    new StructureField(){Name = "IsEmpty", DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar},
-                    new StructureField(){Name = "IsFull", DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar},
-                    new StructureField(){Name = "Liters", DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar},
+                    new StructureField(){Name = "IsEmpty", DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar, IsOptional = false},
+                    new StructureField(){Name = "IsFull", DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar, IsOptional = false},
+                    new StructureField(){Name = "Liters", DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar, IsOptional = false},
                 };
                 DataTypeState fuelLevelDetailsType = CreateComplexDataType(DataTypeIds.Union, "FuelLevelDetailsType", fuelLevelDetailsUnion);
 
