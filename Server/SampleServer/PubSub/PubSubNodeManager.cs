@@ -1584,27 +1584,27 @@ namespace SampleServer.PubSub
                     bool boolValue = (bool)variable.Value;
                     return !boolValue;
                 case "Int32":
-                    int intValue = (int)variable.Value;
+                    int intValue = Convert.ToInt32(variable.Value);
                     return (int)(intValue + 1);
                 case "UInt32":
-                    uint uintValue = (uint)variable.Value;
+                    uint uintValue = Convert.ToUInt32(variable.Value);
                     return (uint)(uintValue + 1);
                 case "Int32Fast":
-                    intValue = (int)variable.Value;
+                    intValue = Convert.ToInt32(variable.Value);
                     return (int)(intValue + 100);
                 case "DateTime":
                     return DateTime.Now;
                 case "Byte":
-                    byte byteValue = (byte)variable.Value;
+                    byte byteValue = Convert.ToByte(variable.Value);
                     return (byte)(byteValue + 1);
                 case "Int16":
-                    Int16 int16Value = (Int16)variable.Value;
+                    Int16 int16Value = Convert.ToInt16(variable.Value);
                     return (Int16)(int16Value + 1);
                 case "UInt16":
-                    UInt16 uint16Value = (UInt16)variable.Value;
+                    UInt16 uint16Value = Convert.ToUInt16(variable.Value);
                     return (UInt16)(uint16Value + 1);
                 case "SByte":
-                    sbyte sbyteValue = (sbyte)variable.Value;
+                    sbyte sbyteValue = Convert.ToSByte(variable.Value);
                     return (sbyte)(sbyteValue + 1);
                 case "Float":
                     float floatValue = (float)variable.Value;
@@ -1615,7 +1615,7 @@ namespace SampleServer.PubSub
                 default:
                     if (variable.BrowseName.Name.StartsWith("Mass"))
                     {
-                        uintValue = (uint)variable.Value;
+                        uintValue = Convert.ToUInt32(variable.Value);
                         return (uint)(uintValue + 1);
                     }
                     break;
