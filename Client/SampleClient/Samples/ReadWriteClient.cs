@@ -41,9 +41,9 @@ namespace SampleClient.Samples
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Arrays\Int64
         const string StaticInt64ArrayNodeId = "ns=7;s=CTT_Scalar_Scalar_Static_Arrays_Int64";
         //Browse path: Root\Objects\CTT\StructuredTypeVariables\EnumerationType1Variable
-        const string StaticEnumNodeId = "ns=7;i=14";
+        const string StaticEnumNodeId = "ns=7;i=15014";
         //Browse path: Root\Objects\CTT\StructuredTypeVariables\DataType5Variable
-         const string StaticComplexNodeId = "ns=7;i=13";
+         const string StaticComplexNodeId = "ns=7;i=15013";
 
         //Browse path: Root\Objects\CustomTypes\EngineState
         const string StaticCustomEnumerationNodeId = "ns=11;i=16";
