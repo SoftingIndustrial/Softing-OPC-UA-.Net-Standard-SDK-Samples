@@ -139,6 +139,22 @@ namespace SampleServer.CustomTypes
                 DataTypeState vehicleType = CreateComplexDataType(DataTypeIds.Structure, "VehicleType", vehicleStructure);
                 m_vehicleDataTypeNodeId = vehicleType.NodeId;
 
+                // create custom structured value type derived from a custom type
+                StructureDefinition vehicleWithExtraStructure = new StructureDefinition();
+                vehicleWithExtraStructure.StructureType = StructureType.Structure;
+                vehicleWithExtraStructure.Fields = new StructureFieldCollection()
+                {
+                    new StructureField(){Name = "Extra1", DataType = DataTypeIds.BaseDataType, IsOptional = false, ValueRank = ValueRanks.Scalar},
+                };
+                DataTypeState vehicleExtra1Type = CreateComplexDataType(vehicleType.NodeId, "VehicleWithExtra1Type", vehicleWithExtraStructure);
+
+                // create custom structured value type derived from a custom type with a structure definition that already contains base type fields
+                vehicleStructure.Fields.AddRange(new StructureFieldCollection()
+                {
+                    new StructureField() { Name = "Extra2", DataType = DataTypeIds.BaseDataType, IsOptional = false, ValueRank = ValueRanks.Scalar },
+                });
+                DataTypeState vehicleExtra2Type = CreateComplexDataType(vehicleType.NodeId, "VehicleWithExtra2Type", vehicleStructure);
+
                 // Create Variable node instances for defined DataTypes
                 var engineStateVariable = CreateVariable(m_rootCustomTypesFolder, "EngineState", engineStateType.NodeId);
                 engineStateVariable.Description = "Variable with data type defined as custom Enumeration";
@@ -150,15 +166,20 @@ namespace SampleServer.CustomTypes
                 ownerVariable.Description = "Variable with data type defined as StructuredValue with optional fields";
                 var fuelLevelVariable = CreateVariable(m_rootCustomTypesFolder, "FuelLevel", fuelLevelDetailsType.NodeId);
                 fuelLevelVariable.Description = "Variable with data type defined as Union";
-                var vehicle1Variable = CreateVariable(m_rootCustomTypesFolder, "Vehicle", vehicleType.NodeId);
-                vehicle1Variable.Description = "Variable with data type defined as StructuredValue";
-                StructuredValue vehicle = vehicle1Variable.Value as StructuredValue;
+                var vehicleVariable = CreateVariable(m_rootCustomTypesFolder, "Vehicle", vehicleType.NodeId);
+                vehicleVariable.Description = "Variable with data type defined as StructuredValue";
+                StructuredValue vehicle = vehicleVariable.Value as StructuredValue;
                 if (vehicle != null)
                 {
                     // Set the Name field of the structure
                     // For this you need to know in advance the exact name and type of the field from the type definition
                     vehicle["Name"] = "BMW";
                 }
+                var vehicleExtra1Variable = CreateVariable(m_rootCustomTypesFolder, "VehicleExtra1", vehicleExtra1Type.NodeId);
+                vehicleExtra1Variable.Description = "Variable with data type defined as StructuredValue and derived from custom type";
+
+                var vehicleExtra2Variable = CreateVariable(m_rootCustomTypesFolder, "VehicleExtra2", vehicleExtra2Type.NodeId);
+                vehicleExtra2Variable.Description = "Variable with data type defined as StructuredValue and derived from custom type";
 
                 // Create Array variable nodes for defined DataTypes
                 var engineStateArrayVariable = CreateVariable(m_arraysFolder, "EngineStates", engineStateType.NodeId, ValueRanks.OneDimension);
@@ -194,8 +215,8 @@ namespace SampleServer.CustomTypes
                 // Create Variable node instances for defined VariableTypes
                 var variable = CreateVariableFromType(m_rootCustomTypesFolder, "CustomVariableInstance", customVariableType.NodeId, ReferenceTypeIds.Organizes);
                 variable.Description = "Variable instance of custom VariableType: CustomVariableType ";
-                var vehicleVariable = CreateVariableFromType(m_rootCustomTypesFolder, "VehicleVariableInstance", vehicleVariableType.NodeId, ReferenceTypeIds.HasComponent);
-                vehicleVariable.Description = "Variable instance of custom VariableType: VehicleVariableType ";
+                var vehicleVariableInstance = CreateVariableFromType(m_rootCustomTypesFolder, "VehicleVariableInstance", vehicleVariableType.NodeId, ReferenceTypeIds.HasComponent);
+                vehicleVariableInstance.Description = "Variable instance of custom VariableType: VehicleVariableType ";
                 #endregion
 
                 #region Create custom ObjectType nodes and Object instances
