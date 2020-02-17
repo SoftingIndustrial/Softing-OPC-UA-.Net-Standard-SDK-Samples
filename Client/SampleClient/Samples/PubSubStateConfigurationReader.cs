@@ -612,7 +612,7 @@ namespace SampleClient.Samples
                 readValue.NodeId = translateResults?.First();
                 readValue.AttributeId = Attributes.Value;
                 dataValue = clientSession.Read(readValue);
-                double publishingOffsetValue = (double)dataValue.Value;
+                double[] publishingOffsetValue = (double[])dataValue.Value;
 
                 // Read MessageSettings->SamplingOffset from MessageSettings node
                 readValue = new ReadValueId();
