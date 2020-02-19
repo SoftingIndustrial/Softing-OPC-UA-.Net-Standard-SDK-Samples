@@ -11,18 +11,20 @@
 using System;
 using System.Reflection.Emit;
 using System.Text;
+using System.Threading.Tasks;
 using Opc.Ua.Server;
 
 namespace SampleServer
 {
     class Program
     {
+        static volatile bool exit = false;
         static void Main(string[] args)
         {
-            StartServer();
+            Run();
         }
 
-        private static async void StartServer()
+        private static async void Run()
         {
             string configurationFile = "SampleServer.Config.xml";
             SampleServer sampleServer = new SampleServer();
@@ -69,7 +71,7 @@ namespace SampleServer
                     return;
                 }
 
-                // Start the server
+                // Start the server                
                 await sampleServer.Start(configurationFile);
                 for (int i = 0; i < sampleServer.Configuration.ServerConfiguration.BaseAddresses.Count; i++)
                 {
@@ -84,39 +86,46 @@ namespace SampleServer
                 sampleServer.CurrentInstance.SessionManager.SessionClosing += SessionStateChanged;
                 sampleServer.CurrentInstance.SessionManager.SessionCreated += SessionStateChanged;
 
-                do
+                Task.Factory.StartNew(() =>
                 {
-                    ConsoleKeyInfo key = Console.ReadKey();
-                    if (key.KeyChar == 'q' || key.KeyChar == 'x')
+                    while (!exit)
                     {
-                        Console.WriteLine("\nShutting down...");
-                        break;
-                    }
-                    else if (key.KeyChar == 's')
-                    {
-                        // list active sessions
-                        var sessions = sampleServer.CurrentInstance.SessionManager.GetSessions();
-                        var subscriptions = sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
-
-                        if (sessions.Count > 0)
+                        ConsoleKeyInfo key = Console.ReadKey();
+                        if (key.KeyChar == 'q' || key.KeyChar == 'x')
                         {
-                            Console.WriteLine("\nSessions list:");
-                            foreach (var session in sessions)
+                            Console.WriteLine("\nShutting down...");
+                            exit = true;
+                        }
+                        else if (key.KeyChar == 's')
+                        {
+                            // list active sessions
+                            var sessions = sampleServer.CurrentInstance.SessionManager.GetSessions();
+                            var subscriptions = sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
+
+                            if (sessions.Count > 0)
                             {
-                                PrintSessionStatus(session);
+                                Console.WriteLine("\nSessions list:");
+                                foreach (var session in sessions)
+                                {
+                                    PrintSessionStatus(session);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nSessions list: empty");
                             }
                         }
                         else
                         {
-                            Console.WriteLine("\nSessions list: empty");
+                            PrintCommandParameters();
                         }
                     }
-                    else
-                    {
-                        PrintCommandParameters();
-                    }
-                }
-                while (true);
+                });
+
+                while (!exit)
+                {
+                    // wait for exit
+                }                
             }
             catch (Exception e)
             {
@@ -128,9 +137,8 @@ namespace SampleServer
             {
                 sampleServer.Stop();
             }
-        }
-
-#region Print State
+        }        
+        #region Print State
         private static void PrintCommandParameters()
         {
             Console.WriteLine("Press:\n\ts: session list");
@@ -163,6 +171,6 @@ namespace SampleServer
                 Console.WriteLine(line);
             }
         }
-#endregion
+        #endregion
     }
 }
