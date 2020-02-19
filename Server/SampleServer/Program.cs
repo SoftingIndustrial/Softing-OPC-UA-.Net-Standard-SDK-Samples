@@ -11,20 +11,26 @@
 using System;
 using System.Reflection.Emit;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Opc.Ua.Server;
 
 namespace SampleServer
 {
+    /// <summary>
+    /// SampleServer entry class
+    /// </summary>
     class Program
     {
-        static volatile bool exit = false;
         static void Main(string[] args)
         {
-            Run();
+            StartServer();
         }
 
-        private static async void Run()
+        /// <summary>
+        /// Start Server and listen for console commands 
+        /// </summary>
+        private static async void StartServer()
         {
             string configurationFile = "SampleServer.Config.xml";
             SampleServer sampleServer = new SampleServer();
@@ -71,8 +77,9 @@ namespace SampleServer
                     return;
                 }
 
-                // Start the server                
+                // Start the server         
                 await sampleServer.Start(configurationFile);
+
                 for (int i = 0; i < sampleServer.Configuration.ServerConfiguration.BaseAddresses.Count; i++)
                 {
                     Console.WriteLine(sampleServer.Configuration.ServerConfiguration.BaseAddresses[i]);
@@ -80,52 +87,40 @@ namespace SampleServer
                 Console.WriteLine("Server started");
 
                 PrintCommandParameters();
-
-                // print notification on session events
-                sampleServer.CurrentInstance.SessionManager.SessionActivated += SessionStateChanged;
-                sampleServer.CurrentInstance.SessionManager.SessionClosing += SessionStateChanged;
-                sampleServer.CurrentInstance.SessionManager.SessionCreated += SessionStateChanged;
-
-                Task.Factory.StartNew(() =>
+                
+                bool exit = false;
+                while (!exit)
                 {
-                    while (!exit)
+                    ConsoleKeyInfo key = Console.ReadKey();
+                    if (key.KeyChar == 'q' || key.KeyChar == 'x')
                     {
-                        ConsoleKeyInfo key = Console.ReadKey();
-                        if (key.KeyChar == 'q' || key.KeyChar == 'x')
-                        {
-                            Console.WriteLine("\nShutting down...");
-                            exit = true;
-                        }
-                        else if (key.KeyChar == 's')
-                        {
-                            // list active sessions
-                            var sessions = sampleServer.CurrentInstance.SessionManager.GetSessions();
-                            var subscriptions = sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
+                        Console.WriteLine("\nShutting down...");
+                        exit = true;
+                    }
+                    else if (key.KeyChar == 's')
+                    {
+                        // list active sessions
+                        var sessions = sampleServer.CurrentInstance.SessionManager.GetSessions();
+                        var subscriptions = sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
 
-                            if (sessions.Count > 0)
+                        if (sessions.Count > 0)
+                        {
+                            Console.WriteLine("\nSessions list:");
+                            foreach (var session in sessions)
                             {
-                                Console.WriteLine("\nSessions list:");
-                                foreach (var session in sessions)
-                                {
-                                    PrintSessionStatus(session);
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine("\nSessions list: empty");
+                                PrintSessionStatus(session);
                             }
                         }
                         else
                         {
-                            PrintCommandParameters();
+                            Console.WriteLine("\nSessions list: empty");
                         }
                     }
-                });
-
-                while (!exit)
-                {
-                    // wait for exit
-                }                
+                    else
+                    {
+                        PrintCommandParameters();
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -137,39 +132,38 @@ namespace SampleServer
             {
                 sampleServer.Stop();
             }
-        }        
+        }     
+        
         #region Print State
+        /// <summary>
+        /// Print command line parameters
+        /// </summary>
         private static void PrintCommandParameters()
         {
             Console.WriteLine("Press:\n\ts: session list");
             Console.WriteLine("\tx,q: shutdown the server\n\n");
         }
-        private static void SessionStateChanged(Session session, SessionEventReason reason)
-        {
-            PrintSessionStatus(session, reason.ToString());
-        }
-        private static void PrintSessionStatus(Session session, string reason = null)
-        {
-           lock (session.DiagnosticsLock)
-            {
-                StringBuilder line = new StringBuilder();
-                if (reason != null)
-                {
-                    line.AppendFormat("Session {0,9};", reason);
-                }
-                line.AppendFormat("{0,20}", session.SessionDiagnostics.SessionName);
 
-                if (session.Identity != null)
-                {
-                    line.AppendFormat(";{0,20}", session.Identity.DisplayName);
-                }
-                line.AppendFormat(";Session ID:{0}", session.Id);
-                if (reason == null)
-                {
-                    line.AppendFormat(";Subscriptions:{0}", session.SessionDiagnostics.CurrentSubscriptionsCount);
-                }
-                Console.WriteLine(line);
+        /// <summary>
+        /// Create and print to console the session information 
+        /// </summary>
+        /// <param name="session"></param>
+        private static void PrintSessionStatus(Session session)
+        {
+            StringBuilder line = new StringBuilder();
+            
+            line.AppendFormat("{0,20}", session.SessionDiagnostics.SessionName);
+            if (session.SessionDiagnostics != null && session.SessionDiagnostics.ClientConnectionTime != null)
+            {
+                line.AppendFormat(";ConnectionTime: {0}", session.SessionDiagnostics.ClientConnectionTime);
             }
+            if (session.Identity != null)
+            {
+                line.AppendFormat(";{0,20}", session.Identity.DisplayName);
+            }
+            line.AppendFormat(";Session ID:{0}", session.Id);
+            line.AppendFormat(";Subscriptions:{0}", session.SessionDiagnostics.CurrentSubscriptionsCount);
+            Console.WriteLine(line);
         }
         #endregion
     }
