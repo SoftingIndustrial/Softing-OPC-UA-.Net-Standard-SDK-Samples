@@ -1426,13 +1426,9 @@ namespace SampleClient.Samples
                     //change some fields for default object
                     defaultValueArray[0]["Name"] = "John Smith";
                     defaultValueArray[0]["Age"] = (byte)30;
-                    defaultValueArray[0]["Details"] = "bla bla";
-                    defaultValueArray[0].EncodingMask = 1; // first optional field will be saved
                     
                     defaultValueArray[1]["Name"] = "John Smith";
-                    defaultValueArray[1]["Age"] = (byte)30;
                     defaultValueArray[1]["Details"] = "bla bla";
-                    defaultValueArray[1].EncodingMask = 2; // second optional field will be saved
                     //write new value to node 
                     DataValue valueToWrite = new DataValue();
                     // get the actual values as an array of values of the type the server expects
@@ -1592,7 +1588,6 @@ namespace SampleClient.Samples
                     {
                         owner["Name"] = "John Doe";
                         owner["Age"] = (byte)50;
-                        owner.EncodingMask = 1; // use first optional field
                     }
                     OptionSetValue features =  defaultValue["Features"] as OptionSetValue;
                     if (features != null)
@@ -1644,7 +1639,6 @@ namespace SampleClient.Samples
                     {
                         owner["Name"] = "John Doe";
                         owner["Age"] = (byte)50;
-                        owner.EncodingMask = 1; // use first optional field
                     }
                     OptionSetValue features = defaultValueArray[1]["Features"] as OptionSetValue;
                     if (features != null)

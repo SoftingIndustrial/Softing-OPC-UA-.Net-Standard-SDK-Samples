@@ -73,7 +73,7 @@ namespace SampleServer.CustomTypes
                     new EnumField() { Name = "Stopped", Value = 0},
                     new EnumField() { Name = "Running", Value = 1}
                 };
-                DataTypeState engineStateType = CreateComplexDataType(DataTypeIds.Enumeration, "EngineStateType", engineStateEnum);
+                DataTypeState engineStateType = CreateDataType(DataTypeIds.Enumeration, "EngineStateType", engineStateEnum);
 
                 // Create a custom OptionSet enumeration type. All EnumField values must be a power of 2
                 EnumDefinition displayWarningEnum = new EnumDefinition();
@@ -85,7 +85,7 @@ namespace SampleServer.CustomTypes
                     new EnumField() { Name = "CheckEngine", Value = 8},
                     new EnumField() { Name = "OpenDoor", Value = 16},
                 };
-                DataTypeState displayWarningType = CreateComplexDataType(DataTypeIds.UInt16, "DisplayWarningType", displayWarningEnum);
+                DataTypeState displayWarningType = CreateDataType(DataTypeIds.UInt16, "DisplayWarningType", displayWarningEnum);
 
                 // Create a custom OptionSet structure type. All EnumField values must be a power of 2
                 EnumDefinition featuresEnum = new EnumDefinition();
@@ -96,7 +96,7 @@ namespace SampleServer.CustomTypes
                     new EnumField() { Name = "AirbagPassenger", Value = 4},
                     new EnumField() { Name = "AirbagSides", Value = 8},
                 };
-                DataTypeState featuresOptionSetType = CreateComplexDataType(DataTypeIds.OptionSet, "FeaturesOptionSetType", featuresEnum);
+                DataTypeState featuresOptionSetType = CreateDataType(DataTypeIds.OptionSet, "FeaturesOptionSetType", featuresEnum);
 
                 // Create a custom StructureWithOptionalFields type
                 // StructureType property should be set to StructureWithOptionalFields
@@ -108,7 +108,7 @@ namespace SampleServer.CustomTypes
                     new StructureField(){Name = "Age", DataType = DataTypeIds.Byte, IsOptional = true, ValueRank = ValueRanks.Scalar},
                     new StructureField(){Name = "Details", DataType = DataTypeIds.String, IsOptional = true, ValueRank = ValueRanks.Scalar},
                 };
-                DataTypeState ownerType = CreateComplexDataType(DataTypeIds.Structure, "OwnerDetailsType", ownerStructure);
+                DataTypeState ownerType = CreateDataType(DataTypeIds.Structure, "OwnerDetailsType", ownerStructure);
 
                 // Create a custom Union type
                 // StructureType property should be set to Union
@@ -120,7 +120,7 @@ namespace SampleServer.CustomTypes
                     new StructureField(){Name = "IsFull", DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar, IsOptional = false},
                     new StructureField(){Name = "Liters", DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar, IsOptional = false},
                 };
-                DataTypeState fuelLevelDetailsType = CreateComplexDataType(DataTypeIds.Union, "FuelLevelDetailsType", fuelLevelDetailsUnion);
+                DataTypeState fuelLevelDetailsType = CreateDataType(DataTypeIds.Union, "FuelLevelDetailsType", fuelLevelDetailsUnion);
 
                 // Create a custom Structure type
                 // Make sure to set StructureField.IsOptional = false for all fields because default value is true
@@ -136,7 +136,7 @@ namespace SampleServer.CustomTypes
                     new StructureField(){Name = "State", DataType = engineStateType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
                 };
                 // Set baseDataTypeId = DataTypeIds.Structure to define the type as subtype of Structure
-                DataTypeState vehicleType = CreateComplexDataType(DataTypeIds.Structure, "VehicleType", vehicleStructure);
+                DataTypeState vehicleType = CreateDataType(DataTypeIds.Structure, "VehicleType", vehicleStructure);
                 m_vehicleDataTypeNodeId = vehicleType.NodeId;
 
                 // create custom structured value type derived from a custom type
@@ -146,14 +146,14 @@ namespace SampleServer.CustomTypes
                 {
                     new StructureField(){Name = "Extra1", DataType = DataTypeIds.BaseDataType, IsOptional = false, ValueRank = ValueRanks.Scalar},
                 };
-                DataTypeState vehicleExtra1Type = CreateComplexDataType(vehicleType.NodeId, "VehicleWithExtra1Type", vehicleWithExtraStructure);
+                DataTypeState vehicleExtra1Type = CreateDataType(vehicleType.NodeId, "VehicleWithExtra1Type", vehicleWithExtraStructure);
 
                 // create custom structured value type derived from a custom type with a structure definition that already contains base type fields
                 vehicleStructure.Fields.AddRange(new StructureFieldCollection()
                 {
                     new StructureField() { Name = "Extra2", DataType = DataTypeIds.BaseDataType, IsOptional = false, ValueRank = ValueRanks.Scalar },
                 });
-                DataTypeState vehicleExtra2Type = CreateComplexDataType(vehicleType.NodeId, "VehicleWithExtra2Type", vehicleStructure);
+                DataTypeState vehicleExtra2Type = CreateDataType(vehicleType.NodeId, "VehicleWithExtra2Type", vehicleStructure);
 
                 // Create Variable node instances for defined DataTypes
                 var engineStateVariable = CreateVariable(m_rootCustomTypesFolder, "EngineState", engineStateType.NodeId);
