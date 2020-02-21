@@ -117,7 +117,7 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         public string ComplexNodeId
         {
-            get { return "ns=7;i=13"; }
+            get { return "ns=7;i=15013"; }
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace XamarinSampleClient.ViewModels
         /// </summary>
         public string EnumNodeId
         {
-            get { return "ns=7;i=14"; }
+            get { return "ns=7;i=15014"; }
         }
 
         /// <summary>
@@ -631,7 +631,7 @@ namespace XamarinSampleClient.ViewModels
             //ensure type dictionaries are loaded
             if (SampleApplication.UaApplication.ClientToolkitConfiguration.DecodeCustomDataTypes)
             {
-                while (!m_session.TypeDictionariesLoaded)
+                while (!m_session.DataTypeDefinitionsLoaded)
                 {
                     Task.Delay(500).Wait();
                 }
@@ -697,7 +697,7 @@ namespace XamarinSampleClient.ViewModels
             //ensure type dictionaries are loaded
             if (SampleApplication.UaApplication.ClientToolkitConfiguration.DecodeCustomDataTypes)
             {
-                while (!m_session.TypeDictionariesLoaded)
+                while (!m_session.DataTypeDefinitionsLoaded)
                 {
                     Task.Delay(500).Wait();
                 }
@@ -892,7 +892,7 @@ namespace XamarinSampleClient.ViewModels
             //ensure type dictionaries are loaded
             if (SampleApplication.UaApplication.ClientToolkitConfiguration.DecodeCustomDataTypes)
             {
-                while (!m_session.TypeDictionariesLoaded)
+                while (!m_session.DataTypeDefinitionsLoaded)
                 {
                     Task.Delay(500).Wait();
                 }
@@ -985,7 +985,7 @@ namespace XamarinSampleClient.ViewModels
             //ensure type dictionaries are loaded
             if (SampleApplication.UaApplication.ClientToolkitConfiguration.DecodeCustomDataTypes)
             {
-                while (!m_session.TypeDictionariesLoaded)
+                while (!m_session.DataTypeDefinitionsLoaded)
                 {
                     Task.Delay(500).Wait();
                 }
