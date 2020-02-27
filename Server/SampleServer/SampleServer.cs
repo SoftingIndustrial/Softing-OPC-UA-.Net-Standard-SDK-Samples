@@ -46,7 +46,6 @@ namespace SampleServer
             m_userNameIdentities = new Dictionary<string, string>();
             m_userNameIdentities.Add("usr", "pwd");
             m_userNameIdentities.Add("admin", "admin");
-
             ManufacturerName = "Softing";
         }
 
@@ -139,6 +138,18 @@ namespace SampleServer
                 return false;
             }
         }
+
+        /// <summary>
+        /// Validates the user and password identity for <see cref="SystemConfigurationIdentity"/>.
+        /// </summary>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>true if the user identity is valid.</returns>
+        protected override bool ValidateSystemConfigurationIdentity(string userName, string password)
+        {
+            return (userName == "admin");
+        }
+        
         #endregion
     }
 }
