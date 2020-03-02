@@ -172,14 +172,31 @@ namespace SampleClient.StateMachine
             StateTransition startDCClient = new StateTransition(State.Main, Command.DiscoveryConnect, "1", "Enter Discovery/Connect Menu");            
             m_transitions.Add(startDCClient, State.DiscoveryConnect);
 
-            //add discovery menu item
-            StateTransition discoverySample = new StateTransition(State.DiscoveryConnect, Command.DiscoverySample, "1", "Execute Discovery Sample");
-            discoverySample.ExecuteCommand += DiscoverySample_ExecuteCommand;
-            m_transitions.Add(discoverySample, State.DiscoveryConnect);
             //add connect menu item
-            StateTransition connectSample = new StateTransition(State.DiscoveryConnect, Command.ConnectSample, "2", "Execute Connect Sample");
+            StateTransition connectSample = new StateTransition(State.DiscoveryConnect, Command.ConnectSample, "1", "Execute Connect Sample");
             connectSample.ExecuteCommand += ConnectSample_ExecuteCommand;
             m_transitions.Add(connectSample, State.DiscoveryConnect);
+
+            //add discovery menu item
+            StateTransition discoverySample = new StateTransition(State.DiscoveryConnect, Command.DiscoverySample, "2", "Execute Discovery Sample");
+            discoverySample.ExecuteCommand += DiscoverySample_ExecuteCommand;
+            m_transitions.Add(discoverySample, State.DiscoveryConnect);
+
+            //add GDS menu item
+            StateTransition gdsSample = new StateTransition(State.DiscoveryConnect, Command.StartGDSSample, "3", "Enter GDS Sample Menu");            
+            m_transitions.Add(gdsSample, State.GDS);
+            //commands for GDS Pull
+            StateTransition startGDSPullSample = new StateTransition(State.GDS, Command.StartGDSPullSample, "1", "Execute GDS Pull Sample");
+            startGDSPullSample.ExecuteCommand += GDSPullSample_ExecuteCommand;
+            m_transitions.Add(startGDSPullSample, State.GDS);
+
+            //commands for GDS Push
+            StateTransition startGDSPushSample = new StateTransition(State.GDS, Command.StartGDSPushSample, "2", "Execute GDS Push Sample");
+            startGDSPushSample.ExecuteCommand += GDSPushSample_ExecuteCommand;
+            m_transitions.Add(startGDSPushSample, State.GDS);
+
+            StateTransition endGDSSample = new StateTransition(State.GDS, Command.EndGDSSample, "0", "Back to Discovery/Connect Menu");           
+            m_transitions.Add(endGDSSample, State.DiscoveryConnect);
 
             StateTransition endDiscoveryConnect = new StateTransition(State.DiscoveryConnect, Command.EndDiscoveryConnect, "0", "Back to Main Menu");            
             m_transitions.Add(endDiscoveryConnect, State.Main);
@@ -507,6 +524,30 @@ namespace SampleClient.StateMachine
             //call sample discovery methods
             discoveryClientSample.DiscoverServers();
             discoveryClientSample.DiscoverServersOnNetwork();
+        }
+
+        /// <summary>
+        /// ExeuteCommand handler for GDS Pull command
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GDSPullSample_ExecuteCommand(object sender, EventArgs e)
+        {
+            //initialize GDS sample
+            GDSClient gdsClientSample = new GDSClient();
+            
+        }
+
+        /// <summary>
+        /// ExeuteCommand handler for GDS Push command
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GDSPushSample_ExecuteCommand(object sender, EventArgs e)
+        {
+            //initialize GDS sample
+            GDSClient gdsClientSample = new GDSClient();
+
         }
 
         #endregion

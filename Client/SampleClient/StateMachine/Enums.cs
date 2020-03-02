@@ -18,6 +18,7 @@ namespace SampleClient.StateMachine
     {
         Main,
         DiscoveryConnect,
+        GDS,
         Browse,
         MonitoredItemEvents,
         MonitoredItem,
@@ -38,7 +39,12 @@ namespace SampleClient.StateMachine
         DiscoveryConnect,
         DiscoverySample,
         ConnectSample,
+        StartGDSSample,
+        EndGDSSample,
         EndDiscoveryConnect,
+
+        StartGDSPullSample,
+        StartGDSPushSample,
 
         StartBrowse,
         BrowseServer,
