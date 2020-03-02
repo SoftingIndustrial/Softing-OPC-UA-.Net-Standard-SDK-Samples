@@ -39,6 +39,8 @@
     <UserRoleDirectory>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles</UserRoleDirectory>
     <!-- Indicates whether SHA-1 signed certificates are accepted.-->
     <RejectSHA1SignedCertificates>false</RejectSHA1SignedCertificates>
+    <!-- Indicates whether certificates with unavailable revocation lists are not accepted.-->
+    <RejectUnknownRevocationStatus>false</RejectUnknownRevocationStatus>
     <!--Indicates which minimum certificate key strength is accepted.-->
     <MinimumCertificateKeySize>1024</MinimumCertificateKeySize>
     <!--Indicates whether the application cert should be copied to the trusted store.-->
