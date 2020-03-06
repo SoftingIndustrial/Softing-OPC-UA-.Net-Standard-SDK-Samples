@@ -14,11 +14,16 @@ using Opc.Ua;
 namespace SampleClient
 {
     /// <summary>
-    /// Stores the configuration the Sample Client
+    /// Stores the configuration of the Sample Client
     /// </summary>
     [DataContract(Namespace = Namespaces.OpcUaConfig)]
     public class SampleClientConfiguration
     {
+        #region Private Members
+        private string m_ServerUrl = "opc.tcp://localhost:61510/SampleServer";
+        private string m_ServerUrlHttps = "https://localhost:61511/SampleServer";
+        #endregion
+
         #region Constructors
         /// <summary>
         /// The default constructor
@@ -65,11 +70,6 @@ namespace SampleClient
             get { return m_ServerUrlHttps; }
             set { m_ServerUrlHttps = value; }
         }
-        #endregion
-
-        #region Private Members
-        private string m_ServerUrl= "opc.tcp://localhost:61510/SampleServer";
-        private string m_ServerUrlHttps= "https://localhost:61511/SampleServer";
         #endregion
     }
 }
