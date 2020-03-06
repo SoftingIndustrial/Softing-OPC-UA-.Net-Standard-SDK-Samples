@@ -35,7 +35,7 @@ namespace SampleClient.StateMachine
         private MonitoredItemClient m_monitoredItemClient;
         private AlarmsClient m_alarmsClient;
         private FileTransferClient m_fileTransferClient;
-
+        private GdsClient m_gdsClient;
         private PubSubClient m_pubSubClient;
         #endregion
 
@@ -187,7 +187,7 @@ namespace SampleClient.StateMachine
             m_transitions.Add(gdsSample, State.GDS);
             //commands for GDS Pull
             StateTransition startGDSPullSample = new StateTransition(State.GDS, Command.StartGDSPullSample, "1", "Execute GDS Pull Sample");
-            startGDSPullSample.ExecuteCommand += GDSPullSample_ExecuteCommand;
+            startGDSPullSample.ExecuteCommand += GdsPullSample_ExecuteCommand;
             m_transitions.Add(startGDSPullSample, State.GDS);
 
             //commands for GDS Push
@@ -531,11 +531,14 @@ namespace SampleClient.StateMachine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GDSPullSample_ExecuteCommand(object sender, EventArgs e)
+        private void GdsPullSample_ExecuteCommand(object sender, EventArgs e)
         {
-            //initialize GDS sample
-            GDSClient gdsClientSample = new GDSClient();
-            
+            InitializeGdsClient();
+
+            if (m_gdsClient != null)
+            {
+                m_gdsClient.ExecutePullSample();
+            }
         }
 
         /// <summary>
@@ -545,9 +548,28 @@ namespace SampleClient.StateMachine
         /// <param name="e"></param>
         private void GDSPushSample_ExecuteCommand(object sender, EventArgs e)
         {
-            //initialize GDS sample
-            GDSClient gdsClientSample = new GDSClient();
+            InitializeGdsClient();
 
+            if (m_gdsClient != null)
+            {
+                m_gdsClient.ExecutePushSample();
+            }
+        }
+
+        /// <summary>
+        ///  Initialize the <see cref="GdsClient"/> instance
+        /// </summary>
+        private void InitializeGdsClient()
+        {
+            if (m_application.GdsServerConfiguration == null)
+            {
+                Console.WriteLine("The SampleClient.Config.xml configuration file does not contain the <GdsServerConfiguration> section.");
+                return;
+            }
+            if (m_gdsClient == null)
+            {
+                m_gdsClient = new GdsClient(m_application);                
+            }
         }
 
         #endregion
