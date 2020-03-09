@@ -159,14 +159,14 @@
       </ClientToolkitConfiguration>
     </ua:XmlElement>
     <ua:XmlElement>
-      <GdsServerConfiguration>
-        <!-- GDS specific configuration please use the same order!!!!-->
+      <GdsConnectionConfiguration>
+        <!-- GDS connection configuration please use the same order!!!!-->
         <GdsUrl>opc.tcp://localhost:58810/GlobalDiscoveryTestServer</GdsUrl>
         <PreferredLocales>
           <Locale>en-us</Locale>
           <Locale>de</Locale>
         </PreferredLocales>
-      </GdsServerConfiguration>
+      </GdsConnectionConfiguration>
     </ua:XmlElement>
   </Extensions>
   

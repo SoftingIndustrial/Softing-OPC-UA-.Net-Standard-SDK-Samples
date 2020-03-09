@@ -56,7 +56,7 @@ namespace SampleClient.Samples
         public void ExecutePullSample()
         {
 
-            Console.WriteLine($"Connecting to configured GDS: '{m_application.GdsServerConfiguration.GdsUrl}'");
+            Console.WriteLine($"Connecting to configured GDS: '{m_application.GdsConnectionConfiguration.GdsUrl}'");
             Console.WriteLine("\nPlease provide GDS credentials:");
             UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
             Console.Write("Username:");
@@ -83,7 +83,7 @@ namespace SampleClient.Samples
             ClientSession gdsSession = null, uaServerSession = null;
             try
             {
-                Console.WriteLine($"Connecting to configured GDS: '{m_application.GdsServerConfiguration.GdsUrl}', " +
+                Console.WriteLine($"Connecting to configured GDS: '{m_application.GdsConnectionConfiguration.GdsUrl}', " +
                         $"SecurityMode={ConnectioSecurityMode}, SecurityPolicy={ConnectionSecurityPolicy}");
                 Console.WriteLine("\nPlease provide GDS credentials:");  
                 UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
@@ -94,7 +94,7 @@ namespace SampleClient.Samples
                 UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
 
                 // create connection to GDS 
-                gdsSession = m_application.CreateSession(m_application.GdsServerConfiguration.GdsUrl, ConnectioSecurityMode, ConnectionSecurityPolicy, MessageEncoding.Binary, gdsUserIdentity);
+                gdsSession = m_application.CreateSession(m_application.GdsConnectionConfiguration.GdsUrl, ConnectioSecurityMode, ConnectionSecurityPolicy, MessageEncoding.Binary, gdsUserIdentity);
                 gdsSession.SessionName = SessionNamePush;
                 gdsSession.Connect(true, true);   
                 Console.WriteLine($"Connection to GDS is established.");
