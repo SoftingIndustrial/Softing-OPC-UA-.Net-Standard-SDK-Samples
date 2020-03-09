@@ -179,14 +179,17 @@ namespace SampleClient.Samples
                                         null, // certificateGroupId                                        
                                         certificateTypeId,
                                         certificate,
+                                        issuerCertificates,
                                         (privateKey != null) ? "PFX" : null,
-                                        privateKey,
-                                        issuerCertificates);
+                                        privateKey);
                                     Console.WriteLine($"UpdateCertificate method returned {updateCertificateResult}.");
 
-                                    Console.WriteLine($"\n\nCall ApplyChanges on {Program.ServerUrl}.");
-                                    ApplyChanges(uaServerSession);
-                                    Console.WriteLine($"ApplyChanges was called on {Program.ServerUrl}.");
+                                    if (updateCertificateResult)
+                                    {
+                                        Console.WriteLine($"\n\nCall ApplyChanges on {Program.ServerUrl}.");
+                                        ApplyChanges(uaServerSession);
+                                        Console.WriteLine($"ApplyChanges was called on {Program.ServerUrl}.");
+                                    }
                                     break;
                                 }
                             }
@@ -436,9 +439,9 @@ namespace SampleClient.Samples
             NodeId certificateGroupId,
             NodeId certificateTypeId,
             byte[] certificate,
+            byte[][] issuerCertificates,
             string privateKeyFormat,
-            byte[] privateKey,
-            byte[][] issuerCertificates)
+            byte[] privateKey)
         {
             if (uaServerSession == null || uaServerSession.CurrentState != State.Active)
             {
