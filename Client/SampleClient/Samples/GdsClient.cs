@@ -51,9 +51,9 @@ namespace SampleClient.Samples
         #endregion
        
         /// <summary>
-        /// Executes sample code for GDS - Pull Scenario
+        /// Executes sample code for GDS - Pull Register And Sign Certificate Scenario
         /// </summary>
-        public void ExecutePullSample()
+        public void ExecutePullRegisterAndSignSample()
         {
 
             Console.WriteLine($"Connecting to configured GDS: '{m_application.GdsConnectionConfiguration.GdsUrl}'");
@@ -70,6 +70,31 @@ namespace SampleClient.Samples
                 m_application.GdsRegisterAndSignCertificate(gdsUserIdentity);
             }
             catch(Exception ex)
+            {
+                Console.WriteLine($"Error: {ex}");
+            }
+        }
+
+        /// <summary>
+        /// Executes sample code for GDS - Pull Get Trust List Scenario
+        /// </summary>
+        public void ExecutePullGetTrustListSample()
+        {
+
+            Console.WriteLine($"Connecting to configured GDS: '{m_application.GdsConnectionConfiguration.GdsUrl}'");
+            Console.WriteLine("\nPlease provide GDS credentials:");
+            UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
+            Console.Write("Username:");
+            gdsUserToken.UserName = GdsAdminUser;//Console.ReadLine();
+            Console.Write("Password:");
+            gdsUserToken.DecryptedPassword = GdsAdminPassword;//Console.ReadLine();
+            UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
+
+            try
+            {
+                TrustListDataType[] tr = m_application.GdsGetTrustList(gdsUserIdentity);
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex}");
             }

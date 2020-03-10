@@ -43,7 +43,8 @@ namespace SampleClient.StateMachine
         EndGDSSample,
         EndDiscoveryConnect,
 
-        StartGDSPullSample,
+        StartGDSPullRegSignSample,
+        StartGDSPullGetTrustListSample,
         StartGDSPushSample,
 
         StartBrowse,

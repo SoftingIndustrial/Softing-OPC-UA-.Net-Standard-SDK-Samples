@@ -185,13 +185,17 @@ namespace SampleClient.StateMachine
             //add GDS menu item
             StateTransition gdsSample = new StateTransition(State.DiscoveryConnect, Command.StartGDSSample, "3", "Enter GDS Sample Menu");            
             m_transitions.Add(gdsSample, State.GDS);
-            //commands for GDS Pull
-            StateTransition startGDSPullSample = new StateTransition(State.GDS, Command.StartGDSPullSample, "1", "Execute GDS Pull Sample");
-            startGDSPullSample.ExecuteCommand += GdsPullSample_ExecuteCommand;
-            m_transitions.Add(startGDSPullSample, State.GDS);
+            //commands for GDS Pull Register And Sign Certificate
+            StateTransition startGDSPullRegSignSample = new StateTransition(State.GDS, Command.StartGDSPullRegSignSample, "1", "Execute GDS Pull Register And Sign Certificate Sample");
+            startGDSPullRegSignSample.ExecuteCommand += GdsPullRegisterAndSignCertificateSample_ExecuteCommand;
+            m_transitions.Add(startGDSPullRegSignSample, State.GDS);
+            //commands for GDS Pull Get Trust List
+            StateTransition startGDSGetTrustListSample = new StateTransition(State.GDS, Command.StartGDSPullGetTrustListSample, "2", "Execute GDS Pull Get Trust List Sample");
+            startGDSGetTrustListSample.ExecuteCommand += GdsPullTrustListSample_ExecuteCommand;
+            m_transitions.Add(startGDSGetTrustListSample, State.GDS);
 
             //commands for GDS Push
-            StateTransition startGDSPushSample = new StateTransition(State.GDS, Command.StartGDSPushSample, "2", "Execute GDS Push Sample");
+            StateTransition startGDSPushSample = new StateTransition(State.GDS, Command.StartGDSPushSample, "3", "Execute GDS Push Sample");
             startGDSPushSample.ExecuteCommand += GDSPushSample_ExecuteCommand;
             m_transitions.Add(startGDSPushSample, State.GDS);
 
@@ -527,17 +531,32 @@ namespace SampleClient.StateMachine
         }
 
         /// <summary>
-        /// ExeuteCommand handler for GDS Pull command
+        /// ExeuteCommand handler for GDS Pull Register and Sign Certificate command
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GdsPullSample_ExecuteCommand(object sender, EventArgs e)
+        private void GdsPullRegisterAndSignCertificateSample_ExecuteCommand(object sender, EventArgs e)
         {
             InitializeGdsClient();
 
             if (m_gdsClient != null)
             {
-                m_gdsClient.ExecutePullSample();
+                m_gdsClient.ExecutePullRegisterAndSignSample();
+            }
+        }
+
+        /// <summary>
+        /// ExeuteCommand handler for GDS Pull Get Trust List command
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GdsPullTrustListSample_ExecuteCommand(object sender, EventArgs e)
+        {
+            InitializeGdsClient();
+
+            if (m_gdsClient != null)
+            {
+                m_gdsClient.ExecutePullGetTrustListSample();
             }
         }
 
