@@ -582,7 +582,7 @@ namespace SampleClient.StateMachine
         {
             if (m_application.GdsConnectionConfiguration == null)
             {
-                Console.WriteLine("The SampleClient.Config.xml configuration file does not contain the <GdsServerConfiguration> section.");
+                Console.WriteLine("The SampleClient.Config.xml configuration file does not contain the <GdsConnectionConfiguration> section.");
                 return;
             }
             if (m_gdsClient == null)
