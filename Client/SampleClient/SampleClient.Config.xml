@@ -162,13 +162,11 @@
       <GdsConnectionConfiguration>
         <!-- GDS connection configuration please use the same order!!!!-->
         <GdsUrl>opc.tcp://localhost:58810/GlobalDiscoveryTestServer</GdsUrl>
-        <!-- Used to explicitly select the endpoint exposed by the GDS server to which the connection is established
+        <!-- The next 3 elemennts are used to explicitly select the endpoint exposed by the GDS server to which the connection is established
         Comment out, to let the application use the first secure endpoint exposed by the GDS server-->
-        <ConnectionParameters>
-          <MessageSecurityMode>SignAndEncrypt</MessageSecurityMode>
-          <SecurityPolicy>Aes128_Sha256_RsaOaep</SecurityPolicy>
-          <MessageEncoding>Binary</MessageEncoding>
-        </ConnectionParameters>
+        <MessageSecurityMode>SignAndEncrypt_3</MessageSecurityMode>
+        <SecurityPolicy>Basic256Sha256</SecurityPolicy>
+        <MessageEncoding>Binary</MessageEncoding>
         <PreferredLocales>
           <Locale>en-us</Locale>
           <Locale>de</Locale>

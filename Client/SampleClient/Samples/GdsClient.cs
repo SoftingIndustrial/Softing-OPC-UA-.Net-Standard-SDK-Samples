@@ -29,9 +29,11 @@ namespace SampleClient.Samples
         private const string SessionNamePull = "GdsClient Session - Pull";
         private readonly UaApplication m_application;
 
-
         private const string GdsAdminUser = "appadmin";
         private const string GdsAdminPassword = "demo";
+
+        private const string SampleServerAdminUser = "admin";
+        private const string SampleServerAdminPassword = "admin";
 
         private const MessageSecurityMode ConnectioSecurityMode = MessageSecurityMode.SignAndEncrypt;
         private const SecurityPolicy ConnectionSecurityPolicy = SecurityPolicy.Basic256Sha256;
@@ -109,17 +111,22 @@ namespace SampleClient.Samples
             try
             {
                 Console.WriteLine($"Connecting to configured GDS: '{m_application.GdsConnectionConfiguration.GdsUrl}', " +
-                        $"SecurityMode={ConnectioSecurityMode}, SecurityPolicy={ConnectionSecurityPolicy}");
+                        $"SecurityMode={m_application.GdsConnectionConfiguration.MessageSecurityMode}, " +
+                        $"SecurityPolicy={m_application.GdsConnectionConfiguration.SecurityPolicy}");
                 Console.WriteLine("\nPlease provide GDS credentials:");  
                 UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
                 Console.Write("Username:");
-                gdsUserToken.UserName = GdsAdminUser;//Console.ReadLine();
+                gdsUserToken.UserName = GdsAdminUser; //Console.ReadLine();
                 Console.Write("Password:");
-                gdsUserToken.DecryptedPassword = GdsAdminPassword;//Console.ReadLine();
+                gdsUserToken.DecryptedPassword = GdsAdminPassword; //Console.ReadLine();
                 UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
 
                 // create connection to GDS 
-                gdsSession = m_application.CreateSession(m_application.GdsConnectionConfiguration.GdsUrl, ConnectioSecurityMode, ConnectionSecurityPolicy, MessageEncoding.Binary, gdsUserIdentity);
+                gdsSession = m_application.CreateSession(m_application.GdsConnectionConfiguration.GdsUrl,
+                            m_application.GdsConnectionConfiguration.MessageSecurityMode,
+                            m_application.GdsConnectionConfiguration.SecurityPolicy,
+                            m_application.GdsConnectionConfiguration.MessageEncoding, 
+                            gdsUserIdentity);
                 gdsSession.SessionName = SessionNamePush;
                 gdsSession.Connect(true, true);   
                 Console.WriteLine($"Connection to GDS is established.");
@@ -128,16 +135,20 @@ namespace SampleClient.Samples
                         $"SecurityMode={ConnectioSecurityMode}, SecurityPolicy={ConnectionSecurityPolicy}");
                 Console.WriteLine("\nPlease provide GDS credentials:");
 
-                // create user identity that has SystemConfigurationIdentity credentials
+                // create user identity that has SystemConfigurationIdentity credentials on PushServer
                 UserNameIdentityToken pushUserToken = new UserNameIdentityToken();
                 Console.Write("Username:");
-                pushUserToken.UserName = "admin";// Console.ReadLine();
+                pushUserToken.UserName = SampleServerAdminUser; // Console.ReadLine();
                 Console.Write("Password:");
-                pushUserToken.DecryptedPassword = "admin";//Console.ReadLine();
+                pushUserToken.DecryptedPassword = SampleServerAdminPassword; // Console.ReadLine();
                 UserIdentity pushUserIdentity = new UserIdentity(pushUserToken);
 
                 // create connection to Opc Ua Server being pushed the certificate
-                uaServerSession = m_application.CreateSession(Program.ServerUrl, ConnectioSecurityMode, ConnectionSecurityPolicy, MessageEncoding.Binary, pushUserIdentity);
+                uaServerSession = m_application.CreateSession(Program.ServerUrl, 
+                    ConnectioSecurityMode, 
+                    ConnectionSecurityPolicy,
+                    MessageEncoding.Binary, 
+                    pushUserIdentity);
                 uaServerSession.SessionName = SessionNamePush;
                 uaServerSession.Connect(true, true);
                 Console.WriteLine($"Connection to '{Program.ServerUrl}' established.");
@@ -164,7 +175,7 @@ namespace SampleClient.Samples
                     {
                         Console.WriteLine($"ApplicationID for '{Program.ServerUrl}' is {applicationId}.");
 
-                        // call StartSigningRequest on GSD 
+                        // call StartSigningRequest on GDS 
                         Console.WriteLine($"\n\nCall StartSigningRequest for ApplicationID:{applicationId}.");
                         NodeId requestId = StartSigningRequest(gdsSession, applicationId, null, null, certificateRequest);
 
@@ -239,7 +250,7 @@ namespace SampleClient.Samples
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"Error: {ex}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
             finally
             {
