@@ -73,7 +73,7 @@ namespace SampleClient.Samples
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"Error: {ex}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
 
@@ -103,9 +103,9 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
-        /// Executes sample code for GDS - Push Scenario
+        /// Executes sample code for GDS - Push Application certificate Scenario
         /// </summary>
-        public void ExecutePushSample()
+        public void ExecutePushCertificateSample()
         {
             ClientSession gdsSession = null, uaServerSession = null;
             try
@@ -265,6 +265,14 @@ namespace SampleClient.Samples
                     uaServerSession.Dispose();
                 }
             }
+        }
+
+        /// <summary>
+        /// Execute sample code for GDS - Push Trust list Scenario
+        /// </summary>
+        public void ExecutePushTrustListSample()
+        {
+            Console.WriteLine("\nzaaaaaaaaaaaaaaaaaaaaaaaaaaaa:");
         }
 
         /// <summary>

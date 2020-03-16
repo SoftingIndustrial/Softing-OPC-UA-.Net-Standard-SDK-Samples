@@ -45,7 +45,8 @@ namespace SampleClient.StateMachine
 
         StartGDSPullRegSignSample,
         StartGDSPullGetTrustListSample,
-        StartGDSPushSample,
+        StartGDSPushCertificateSample,
+        StartGDSPushTrustListSample,
 
         StartBrowse,
         BrowseServer,

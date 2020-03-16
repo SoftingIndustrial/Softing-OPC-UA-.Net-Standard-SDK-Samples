@@ -194,11 +194,17 @@ namespace SampleClient.StateMachine
             startGDSGetTrustListSample.ExecuteCommand += GdsPullTrustListSample_ExecuteCommand;
             m_transitions.Add(startGDSGetTrustListSample, State.GDS);
 
-            //commands for GDS Push
-            StateTransition startGDSPushSample = new StateTransition(State.GDS, Command.StartGDSPushSample, "3", "Execute GDS Push Sample");
-            startGDSPushSample.ExecuteCommand += GDSPushSample_ExecuteCommand;
-            m_transitions.Add(startGDSPushSample, State.GDS);
+            //commands for GDS Push Application Certificate
+            StateTransition startGDSPushCertificateSample = new StateTransition(State.GDS, Command.StartGDSPushCertificateSample, "3", "Execute GDS Push Application Certificate Sample");
+            startGDSPushCertificateSample.ExecuteCommand += GDSPushCertificateSample_ExecuteCommand;
+            m_transitions.Add(startGDSPushCertificateSample, State.GDS);
 
+            //commands for GDS Push Application Certificate
+            StateTransition startGDSPushTrustListSample = new StateTransition(State.GDS, Command.StartGDSPushTrustListSample, "4", "Execute GDS Push Trust List Sample");
+            startGDSPushTrustListSample.ExecuteCommand += GDSPushTrustListSample_ExecuteCommand;
+            m_transitions.Add(startGDSPushTrustListSample, State.GDS);
+
+            
             StateTransition endGDSSample = new StateTransition(State.GDS, Command.EndGDSSample, "0", "Back to Discovery/Connect Menu");           
             m_transitions.Add(endGDSSample, State.DiscoveryConnect);
 
@@ -565,16 +571,30 @@ namespace SampleClient.StateMachine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GDSPushSample_ExecuteCommand(object sender, EventArgs e)
+        private void GDSPushCertificateSample_ExecuteCommand(object sender, EventArgs e)
         {
             InitializeGdsClient();
 
             if (m_gdsClient != null)
             {
-                m_gdsClient.ExecutePushSample();
+                m_gdsClient.ExecutePushCertificateSample();
             }
         }
 
+        /// <summary>
+        /// ExeuteCommand handler for GDS Push command
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GDSPushTrustListSample_ExecuteCommand(object sender, EventArgs e)
+        {
+            InitializeGdsClient();
+
+            if (m_gdsClient != null)
+            {
+                m_gdsClient.ExecutePushTrustListSample();
+            }
+        }
         /// <summary>
         ///  Initialize the <see cref="GdsClient"/> instance
         /// </summary>

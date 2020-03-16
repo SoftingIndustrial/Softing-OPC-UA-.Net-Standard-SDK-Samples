@@ -147,6 +147,7 @@ namespace SampleServer
         /// <returns>true if the user identity is valid.</returns>
         protected override bool ValidateSystemConfigurationIdentity(string userName, string password)
         {
+            //  Ensure that username "admin" will be instantiated as SystemConfigurationIdentity. The Password is validated by ValidateUserPassword method.
             return (userName == "admin");
         }
         
