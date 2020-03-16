@@ -39,6 +39,10 @@ namespace SampleClient.Samples
         private const SecurityPolicy ConnectionSecurityPolicy = SecurityPolicy.Basic256Sha256;
         #endregion
 
+        #region Properties
+        GdsConnectionConfiguration GdsConnectionConfiguration { get; }
+        #endregion Properties
+
         #region Constructor
 
         /// <summary>
@@ -48,6 +52,7 @@ namespace SampleClient.Samples
         public GdsClient(UaApplication application)
         {
             m_application = application;
+            GdsConnectionConfiguration = m_application.Configuration.ParseExtension<GdsConnectionConfiguration>();
         }
 
         #endregion
@@ -58,18 +63,16 @@ namespace SampleClient.Samples
         public void ExecutePullRegisterAndSignSample()
         {
 
-            Console.WriteLine($"Connecting to configured GDS: '{m_application.GdsConnectionConfiguration.GdsUrl}'");
-            Console.WriteLine("\nPlease provide GDS credentials:");
+            Console.WriteLine($"Connecting to configured GDS: '{GdsConnectionConfiguration.GdsUrl}'");
             UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
-            Console.Write("Username:");
             gdsUserToken.UserName = GdsAdminUser;//Console.ReadLine();
-            Console.Write("Password:");
             gdsUserToken.DecryptedPassword = GdsAdminPassword;//Console.ReadLine();
             UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
 
             try
             {
-                m_application.GdsRegisterAndSignCertificate(gdsUserIdentity);
+                //get GdsConnectionConfiguration for this  UaApplication
+                m_application.GdsRegisterAndSignCertificate(GdsConnectionConfiguration, gdsUserIdentity);
             }
             catch(Exception ex)
             {
@@ -83,18 +86,16 @@ namespace SampleClient.Samples
         public void ExecutePullGetTrustListSample()
         {
 
-            Console.WriteLine($"Connecting to configured GDS: '{m_application.GdsConnectionConfiguration.GdsUrl}'");
-            Console.WriteLine("\nPlease provide GDS credentials:");
+            Console.WriteLine($"Connecting to configured GDS: '{GdsConnectionConfiguration.GdsUrl}'");
             UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
-            Console.Write("Username:");
             gdsUserToken.UserName = GdsAdminUser;//Console.ReadLine();
-            Console.Write("Password:");
             gdsUserToken.DecryptedPassword = GdsAdminPassword;//Console.ReadLine();
             UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
 
             try
             {
-                TrustListDataType[] tr = m_application.GdsGetTrustList(gdsUserIdentity);
+                GdsConnectionConfiguration gdsConnectionConfiguration = m_application.Configuration.ParseExtension<GdsConnectionConfiguration>();
+                TrustListDataType[] tr = m_application.GdsGetTrustList(gdsConnectionConfiguration, gdsUserIdentity);
             }
             catch (Exception ex)
             {
@@ -110,9 +111,9 @@ namespace SampleClient.Samples
             ClientSession gdsSession = null, uaServerSession = null;
             try
             {
-                Console.WriteLine($"Connecting to configured GDS: '{m_application.GdsConnectionConfiguration.GdsUrl}', " +
-                        $"SecurityMode={m_application.GdsConnectionConfiguration.MessageSecurityMode}, " +
-                        $"SecurityPolicy={m_application.GdsConnectionConfiguration.SecurityPolicy}");
+                Console.WriteLine($"Connecting to configured GDS: '{GdsConnectionConfiguration.GdsUrl}', " +
+                        $"SecurityMode={GdsConnectionConfiguration.MessageSecurityMode}, " +
+                        $"SecurityPolicy={GdsConnectionConfiguration.SecurityPolicy}");
                 Console.WriteLine("\nPlease provide GDS credentials:");  
                 UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
                 Console.Write("Username:");
@@ -122,10 +123,10 @@ namespace SampleClient.Samples
                 UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
 
                 // create connection to GDS 
-                gdsSession = m_application.CreateSession(m_application.GdsConnectionConfiguration.GdsUrl,
-                            m_application.GdsConnectionConfiguration.MessageSecurityMode,
-                            m_application.GdsConnectionConfiguration.SecurityPolicy,
-                            m_application.GdsConnectionConfiguration.MessageEncoding, 
+                gdsSession = m_application.CreateSession(GdsConnectionConfiguration.GdsUrl,
+                            GdsConnectionConfiguration.MessageSecurityMode,
+                            GdsConnectionConfiguration.SecurityPolicy,
+                            GdsConnectionConfiguration.MessageEncoding, 
                             gdsUserIdentity);
                 gdsSession.SessionName = SessionNamePush;
                 gdsSession.Connect(true, true);   
