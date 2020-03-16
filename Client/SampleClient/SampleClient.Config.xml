@@ -168,8 +168,8 @@
         <SecurityPolicy>Basic256Sha256</SecurityPolicy>
         <MessageEncoding>Binary</MessageEncoding>
         <PreferredLocales>
-          <Locale>en-us</Locale>
-          <Locale>de</Locale>
+          <ua:String>en-us</ua:String>
+          <ua:String>de</ua:String>
         </PreferredLocales>
       </GdsConnectionConfiguration>
     </ua:XmlElement>
