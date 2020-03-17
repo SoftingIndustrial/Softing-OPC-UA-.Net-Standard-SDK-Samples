@@ -169,7 +169,7 @@ namespace SampleClient.StateMachine
         private void InitializeDiscoveryConnectTransitions()
         {
             //commAands for browse
-            StateTransition startDCClient = new StateTransition(State.Main, Command.DiscoveryConnect, "1", "Enter Discovery/Connect Menu");            
+            StateTransition startDCClient = new StateTransition(State.Main, Command.DiscoveryConnect, "1", "Enter Connect/Discovery/GDS Menu");            
             m_transitions.Add(startDCClient, State.DiscoveryConnect);
 
             //add connect menu item

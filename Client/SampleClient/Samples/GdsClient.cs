@@ -13,6 +13,7 @@ using Opc.Ua.Gds;
 using Softing.Opc.Ua.Client;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using static Opc.Ua.Utils;
@@ -111,49 +112,12 @@ namespace SampleClient.Samples
             ClientSession gdsSession = null, uaServerSession = null;
             try
             {
-                Console.WriteLine($"Connecting to configured GDS: '{GdsConnectionConfiguration.GdsUrl}', " +
-                        $"SecurityMode={GdsConnectionConfiguration.MessageSecurityMode}, " +
-                        $"SecurityPolicy={GdsConnectionConfiguration.SecurityPolicy}");
-                Console.WriteLine("\nPlease provide GDS credentials:");  
-                UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
-                Console.Write("Username:");
-                gdsUserToken.UserName = GdsAdminUser; //Console.ReadLine();
-                Console.Write("Password:");
-                gdsUserToken.DecryptedPassword = GdsAdminPassword; //Console.ReadLine();
-                UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
+                
+ 				// create connection to GDS 
+                gdsSession = GetGdsClientSession();
 
-                // create connection to GDS 
-                gdsSession = m_application.CreateSession(GdsConnectionConfiguration.GdsUrl,
-                            GdsConnectionConfiguration.MessageSecurityMode,
-                            GdsConnectionConfiguration.SecurityPolicy,
-                            GdsConnectionConfiguration.MessageEncoding, 
-                            gdsUserIdentity);
-                gdsSession.SessionName = SessionNamePush;
-                gdsSession.Connect(true, true);   
-                Console.WriteLine($"Connection to GDS is established.");
-
-                Console.WriteLine($"\n\nConnecting to configured OPC UA Server for GDS Push: '{Program.ServerUrl}', " +
-                        $"SecurityMode={ConnectioSecurityMode}, SecurityPolicy={ConnectionSecurityPolicy}");
-                Console.WriteLine("\nPlease provide GDS credentials:");
-
-                // create user identity that has SystemConfigurationIdentity credentials on PushServer
-                UserNameIdentityToken pushUserToken = new UserNameIdentityToken();
-                Console.Write("Username:");
-                pushUserToken.UserName = SampleServerAdminUser; // Console.ReadLine();
-                Console.Write("Password:");
-                pushUserToken.DecryptedPassword = SampleServerAdminPassword; // Console.ReadLine();
-                UserIdentity pushUserIdentity = new UserIdentity(pushUserToken);
-
-                // create connection to Opc Ua Server being pushed the certificate
-                uaServerSession = m_application.CreateSession(Program.ServerUrl, 
-                    ConnectioSecurityMode, 
-                    ConnectionSecurityPolicy,
-                    MessageEncoding.Binary, 
-                    pushUserIdentity);
-                uaServerSession.SessionName = SessionNamePush;
-                uaServerSession.Connect(true, true);
-                Console.WriteLine($"Connection to '{Program.ServerUrl}' established.");
-
+                // create connection to OPC UA Server 
+uaServerSession = GetPushServerClientSession();
                 Console.WriteLine($"\n\nCreate a SigningRequest to '{Program.ServerUrl}'.");
                 NodeId certificateTypeId = Opc.Ua.ObjectTypeIds.RsaSha256ApplicationCertificateType;
                 byte[] certificateRequest = CreateSigningRequest(uaServerSession,
@@ -251,7 +215,7 @@ namespace SampleClient.Samples
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"ExecutePushCertificateSample Error: {ex.Message}");
             }
             finally
             {
@@ -269,11 +233,147 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
+        /// Creates the connection to configured GDS 
+        /// </summary>
+        /// <returns></returns>
+        private ClientSession GetGdsClientSession()
+        {
+            Console.WriteLine($"Connecting to configured GDS: '{GdsConnectionConfiguration.GdsUrl}', " +
+                       $"SecurityMode={GdsConnectionConfiguration.MessageSecurityMode}, " +
+                       $"SecurityPolicy={GdsConnectionConfiguration.SecurityPolicy}");
+
+            Console.WriteLine("\nPlease provide GDS credentials:");
+            UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
+            Console.Write("Username:");
+            gdsUserToken.UserName = GdsAdminUser; //Console.ReadLine();
+            Console.Write("Password:");
+            gdsUserToken.DecryptedPassword = GdsAdminPassword; //Console.ReadLine();
+            UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
+
+            // create connection to GDS 
+            ClientSession gdsSession = m_application.CreateSession(GdsConnectionConfiguration.GdsUrl,
+                        GdsConnectionConfiguration.MessageSecurityMode,
+                        GdsConnectionConfiguration.SecurityPolicy,
+                        GdsConnectionConfiguration.MessageEncoding,
+                        gdsUserIdentity);
+            gdsSession.SessionName = SessionNamePush;
+            gdsSession.Connect(true, true);
+            Console.WriteLine($"Connection to GDS is established.");
+
+            return gdsSession;
+        }
+
+        /// <summary>
+        /// Creates the connection to Push Server
+        /// </summary>
+        /// <returns></returns>
+        private ClientSession GetPushServerClientSession()
+        {
+            Console.WriteLine($"\n\nConnecting to configured OPC UA Server for GDS Push: '{Program.ServerUrl}', " +
+                         $"SecurityMode={ConnectioSecurityMode}, SecurityPolicy={ConnectionSecurityPolicy}");
+            Console.WriteLine("\nPlease provide GDS credentials:");
+
+            // create user identity that has SystemConfigurationIdentity credentials on PushServer
+            UserNameIdentityToken pushUserToken = new UserNameIdentityToken();
+            Console.Write("Username:");
+            pushUserToken.UserName = SampleServerAdminUser; // Console.ReadLine();
+            Console.Write("Password:");
+            pushUserToken.DecryptedPassword = SampleServerAdminPassword; // Console.ReadLine();
+            UserIdentity pushUserIdentity = new UserIdentity(pushUserToken);
+
+            // create connection to Opc Ua Server being pushed the certificate
+            ClientSession uaServerSession = m_application.CreateSession(Program.ServerUrl,
+                ConnectioSecurityMode,
+                ConnectionSecurityPolicy,
+                MessageEncoding.Binary,
+                pushUserIdentity);
+            uaServerSession.SessionName = SessionNamePush;
+            uaServerSession.Connect(true, true);
+            Console.WriteLine($"Connection to '{Program.ServerUrl}' established.");
+
+            return uaServerSession;
+        }
+
+        /// <summary>
         /// Execute sample code for GDS - Push Trust list Scenario
         /// </summary>
         public void ExecutePushTrustListSample()
         {
-            Console.WriteLine("\nzaaaaaaaaaaaaaaaaaaaaaaaaaaaa:");
+            ClientSession gdsSession = null, uaServerSession = null;
+            Console.WriteLine("\nPlease select the Update Trust List Mode:");           
+            Console.WriteLine("\t 1- Merge Server Trust List with GDS Trust List");
+            Console.WriteLine("\t 2- Replace Trust List with GDS Trust List");
+            try
+            {
+                int selectedIndex = Convert.ToInt32(Console.ReadKey());             
+                // create sesssion to GDS
+                gdsSession = GetGdsClientSession();
+                // creste session to pish server
+                uaServerSession = GetPushServerClientSession();
+
+                Console.WriteLine($"\n\nGet ApplicationID for '{Program.ServerUrl}'.");
+                // get application id for OPC UA Server
+                NodeId applicationId = GetApplicationId(gdsSession, uaServerSession.CoreSession.Endpoint.Server);
+
+                if (applicationId != null)
+                {
+                    Console.WriteLine($"ApplicationID for '{Program.ServerUrl}' is {applicationId}.");
+
+                    // Get Trust list from GDS for Application ID
+                    Console.WriteLine($" Get Trust List From GDS for Application ID: {applicationId}.");
+                    TrustListDataType gdsTrustList = GetTrustListGromGds(gdsSession, applicationId);
+
+                    if (selectedIndex == 1)
+                    {
+                        // retrieve push server trust list 
+                        Console.WriteLine($" Get Trust List for {Program.ServerUrl}");
+                        TrustListDataType serverTrustList = ReadTrustList(uaServerSession, Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList);
+                        
+                        foreach (var issuer in serverTrustList.IssuerCertificates)
+                        {
+                            gdsTrustList.IssuerCertificates.Add(issuer);
+                        }
+                        foreach (var issuerCrl in serverTrustList.IssuerCrls)
+                        {
+                            gdsTrustList.IssuerCrls.Add(issuerCrl);
+                        }
+                        foreach (var trusted in serverTrustList.TrustedCertificates)
+                        {
+                            gdsTrustList.TrustedCertificates.Add(trusted);
+                        }
+                        foreach (var trustedCrl in serverTrustList.TrustedCrls)
+                        {
+                            gdsTrustList.TrustedCrls.Add(trustedCrl);
+                        }
+                    }
+                    Console.WriteLine($" Update TrustList for DefaultapplicationGroup on {Program.ServerUrl}");
+                    bool needsApplyChnges = UpdateDefaultApplicationGroupTrustList(uaServerSession, gdsTrustList);
+
+                    if (needsApplyChnges)
+                    {
+                        Console.WriteLine($"\n\nCall ApplyChanges on {Program.ServerUrl}.");
+                        ApplyChanges(uaServerSession);
+                        Console.WriteLine($"ApplyChanges was called on {Program.ServerUrl}.");
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"ExecutePushTrustListSample Error: {ex.Message}");
+            }
+            finally
+            {
+                if (gdsSession != null)
+                {
+                    gdsSession.Disconnect(true);
+                    gdsSession.Dispose();
+                }
+                if (uaServerSession != null)
+                {
+                    uaServerSession.Disconnect(true);
+                    uaServerSession.Dispose();
+                }
+            }
         }
 
         /// <summary>
@@ -531,6 +631,207 @@ namespace SampleClient.Samples
                Opc.Ua.ObjectIds.ServerConfiguration,
                Opc.Ua.MethodIds.ServerConfiguration_ApplyChanges, new List<object>(), out outputArgumentsApplyChanges);
         }
-        
+
+        /// <summary>
+        /// Calls GetTrustList and then ReadTrustList for an application id
+        /// </summary>
+        /// <param name="gdsSession"></param>
+        /// <param name="applicationId"></param>
+        /// <returns></returns>
+        private TrustListDataType GetTrustListGromGds(ClientSession gdsSession, NodeId applicationId)
+        {           
+            List<object> inputArgumentsGetTrustList = new List<object>()
+            {
+                applicationId,
+                null
+            };
+            IList<object> outputArgumentsGetTrustList = new List<object>();
+            // Call Directory_GetTrustList to obtain the node id of the trust list
+            var result = gdsSession.Call(
+                ExpandedNodeId.ToNodeId(Opc.Ua.Gds.ObjectIds.Directory, gdsSession.CoreSession.NamespaceUris),
+                ExpandedNodeId.ToNodeId(Opc.Ua.Gds.MethodIds.Directory_GetTrustList, gdsSession.CoreSession.NamespaceUris),
+               inputArgumentsGetTrustList,
+               out outputArgumentsGetTrustList);
+
+            if (outputArgumentsGetTrustList.Count > 0)
+            {
+                NodeId trustListId = outputArgumentsGetTrustList[0] as NodeId;
+                return ReadTrustList(gdsSession, trustListId);                
+            };
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clientSession"></param>
+        /// <param name="trustListId"></param>
+        /// <returns></returns>
+        private TrustListDataType ReadTrustList(ClientSession clientSession, NodeId trustListId)
+        {
+            if (trustListId != null)
+            {
+                // open and read the trust list with id trustListId
+                List<object> inputArgumentsOpenTrustList = new List<object>()
+                        {
+                            (byte)OpenFileMode.Read
+                        };
+                IList<object> outputArgumentsOpenTrustList = new List<object>();
+
+                clientSession.Call(trustListId,
+                    Opc.Ua.MethodIds.FileType_Open,
+                    inputArgumentsOpenTrustList,
+                    out outputArgumentsOpenTrustList);
+
+                uint fileHandle = (uint)outputArgumentsOpenTrustList[0];
+                MemoryStream ostrm = new MemoryStream();
+
+                try
+                {
+                    while (true)
+                    {
+                        int length = 4096;
+                        List<object> inputArgumentsReadTrustList = new List<object>()
+                                {
+                                    fileHandle, length
+                                };
+                        IList<object> outputArgumentsReadTrustList = new List<object>();
+                        clientSession.Call(trustListId,
+                            Opc.Ua.MethodIds.FileType_Read,
+                            inputArgumentsReadTrustList,
+                            out outputArgumentsReadTrustList);
+
+                        byte[] bytes = (byte[])outputArgumentsReadTrustList[0];
+                        ostrm.Write(bytes, 0, bytes.Length);
+
+                        if (length != bytes.Length)
+                        {
+                            break;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    // close the trust list 
+                    List<object> inputArgumentsCloseTrustList = new List<object>()
+                                {
+                                    fileHandle
+                                };
+                    IList<object> outputArgumentsCloseTrustList = new List<object>();
+                    clientSession.Call(trustListId,
+                            Opc.Ua.MethodIds.FileType_Close,
+                            outputArgumentsCloseTrustList,
+                            out outputArgumentsCloseTrustList);
+                }
+
+                ostrm.Position = 0;
+
+                BinaryDecoder decoder = new BinaryDecoder(ostrm, clientSession.CoreSession.MessageContext);
+                TrustListDataType trustList = new TrustListDataType();
+                trustList.Decode(decoder);
+                decoder.Close();
+                ostrm.Close();
+
+                return trustList;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Update the trust list of DegfaultApplicationGroup on PushServer with what is stored in parameter trustList. Beware that all server certificates are updated!
+        /// </summary>
+        /// <param name="uaServerSession"></param>
+        /// <param name="trustList"></param>
+        /// <returns></returns>
+        private bool UpdateDefaultApplicationGroupTrustList(ClientSession uaServerSession, TrustListDataType trustList)
+        {
+            if (uaServerSession == null || uaServerSession.CurrentState != State.Active)
+            {
+                return false;
+            }
+
+            // get bytes from trust list
+            MemoryStream strm = new MemoryStream();
+            BinaryEncoder encoder = new BinaryEncoder(strm, uaServerSession.CoreSession.MessageContext);
+            encoder.WriteEncodeable(null, trustList, null);
+            strm.Position = 0;
+
+            List<object> inputArgumentsOpenTrustList = new List<object>()
+                {
+                    (byte)(OpenFileMode.Write | OpenFileMode.EraseExisting)
+                };
+            IList<object> outputArgumentsOpenTrustList = new List<object>();
+            // open trust list on push server
+            uaServerSession.Call(
+               Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList,
+               Opc.Ua.MethodIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList_Open,
+               inputArgumentsOpenTrustList,
+               out outputArgumentsOpenTrustList);
+            uint fileHandle = (uint)outputArgumentsOpenTrustList[0];
+
+            try
+            {
+                bool writing = true;
+                byte[] buffer = new byte[256];
+
+                while (writing)
+                {
+                    int bytesWritten = strm.Read(buffer, 0, buffer.Length);
+
+                    if (bytesWritten != buffer.Length)
+                    {
+                        byte[] copy = new byte[bytesWritten];
+                        Array.Copy(buffer, copy, bytesWritten);
+                        buffer = copy;
+                        writing = false;
+                    }
+
+                    List<object> inputArgumentsWriteTrustList = new List<object>()
+                        {
+                            fileHandle,  buffer
+                        };
+                    IList<object> outputArgumentsWriteTrustList = new List<object>();
+                    // write chuncks of trust list until ready
+                    uaServerSession.Call(
+                        Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList,
+                        Opc.Ua.MethodIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList_Write,
+                        inputArgumentsWriteTrustList,
+                        out outputArgumentsWriteTrustList);
+                }
+
+                List<object> inputArgumentsCloseAndUpdateTrustList = new List<object>()
+                        {
+                            fileHandle
+                        };
+                IList<object> outputArgumentsCloseAndUpdateTrustList = new List<object>();
+                // Call CloseAndUpdate
+                uaServerSession.Call(
+                    Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList,
+                    Opc.Ua.MethodIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList_CloseAndUpdate,
+                    inputArgumentsCloseAndUpdateTrustList, 
+                    out outputArgumentsCloseAndUpdateTrustList);
+
+                return (bool)outputArgumentsCloseAndUpdateTrustList[0];
+            }
+            catch (Exception)
+            {
+                // close the trust list 
+                List<object> inputArgumentsCloseTrustList = new List<object>()
+                                {
+                                    fileHandle
+                                };
+                IList<object> outputArgumentsCloseTrustList = new List<object>();
+                uaServerSession.Call(Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList,
+                        Opc.Ua.MethodIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList_Close,
+                        outputArgumentsCloseTrustList,
+                        out outputArgumentsCloseTrustList);
+
+                throw;
+            }
+        }
     }
 }
