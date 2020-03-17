@@ -305,7 +305,7 @@ uaServerSession = GetPushServerClientSession();
             Console.WriteLine("\t 2- Replace Trust List with GDS Trust List");
             try
             {
-                int selectedIndex = Convert.ToInt32(Console.ReadKey());             
+                int selectedIndex = Convert.ToInt32(Console.ReadKey().KeyChar);             
                 // create sesssion to GDS
                 gdsSession = GetGdsClientSession();
                 // creste session to pish server
@@ -347,9 +347,9 @@ uaServerSession = GetPushServerClientSession();
                         }
                     }
                     Console.WriteLine($" Update TrustList for DefaultapplicationGroup on {Program.ServerUrl}");
-                    bool needsApplyChnges = UpdateDefaultApplicationGroupTrustList(uaServerSession, gdsTrustList);
+                    bool needsApplyChanges = UpdateDefaultApplicationGroupTrustList(uaServerSession, gdsTrustList);
 
-                    if (needsApplyChnges)
+                    if (needsApplyChanges)
                     {
                         Console.WriteLine($"\n\nCall ApplyChanges on {Program.ServerUrl}.");
                         ApplyChanges(uaServerSession);
