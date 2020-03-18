@@ -36,7 +36,7 @@ namespace SampleClient.Samples
         private const string SampleServerAdminUser = "admin";
         private const string SampleServerAdminPassword = "admin";
 
-        private const MessageSecurityMode ConnectioSecurityMode = MessageSecurityMode.SignAndEncrypt;
+        private const MessageSecurityMode ConnectionSecurityMode = MessageSecurityMode.SignAndEncrypt;
         private const SecurityPolicy ConnectionSecurityPolicy = SecurityPolicy.Basic256Sha256;
         #endregion
 
@@ -270,7 +270,7 @@ uaServerSession = GetPushServerClientSession();
         private ClientSession GetPushServerClientSession()
         {
             Console.WriteLine($"\n\nConnecting to configured OPC UA Server for GDS Push: '{Program.ServerUrl}', " +
-                         $"SecurityMode={ConnectioSecurityMode}, SecurityPolicy={ConnectionSecurityPolicy}");
+                         $"SecurityMode={ConnectionSecurityMode}, SecurityPolicy={ConnectionSecurityPolicy}");
             Console.WriteLine("\nPlease provide GDS credentials:");
 
             // create user identity that has SystemConfigurationIdentity credentials on PushServer
@@ -283,7 +283,7 @@ uaServerSession = GetPushServerClientSession();
 
             // create connection to Opc Ua Server being pushed the certificate
             ClientSession uaServerSession = m_application.CreateSession(Program.ServerUrl,
-                ConnectioSecurityMode,
+                ConnectionSecurityMode,
                 ConnectionSecurityPolicy,
                 MessageEncoding.Binary,
                 pushUserIdentity);
@@ -321,7 +321,7 @@ uaServerSession = GetPushServerClientSession();
 
                     // Get Trust list from GDS for Application ID
                     Console.WriteLine($" Get Trust List From GDS for Application ID: {applicationId}.");
-                    TrustListDataType gdsTrustList = GetTrustListGromGds(gdsSession, applicationId);
+                    TrustListDataType gdsTrustList = GetTrustListFromGds(gdsSession, applicationId);
 
                     if (selectedIndex == 1)
                     {
@@ -638,7 +638,7 @@ uaServerSession = GetPushServerClientSession();
         /// <param name="gdsSession"></param>
         /// <param name="applicationId"></param>
         /// <returns></returns>
-        private TrustListDataType GetTrustListGromGds(ClientSession gdsSession, NodeId applicationId)
+        private TrustListDataType GetTrustListFromGds(ClientSession gdsSession, NodeId applicationId)
         {           
             List<object> inputArgumentsGetTrustList = new List<object>()
             {
