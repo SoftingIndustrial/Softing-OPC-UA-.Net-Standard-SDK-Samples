@@ -323,24 +323,30 @@ uaServerSession = GetPushServerClientSession();
                     Console.WriteLine($" Get Trust List From GDS for Application ID: {applicationId}.");
                     TrustListDataType gdsTrustList = GetTrustListFromGds(gdsSession, applicationId);
 
+                    // specify the trust lists to be updated
+                    gdsTrustList.SpecifiedLists = (uint)TrustListMasks.All;
                     if (selectedIndex == 1)
                     {
                         // retrieve push server trust list 
                         Console.WriteLine($" Get Trust List for {Program.ServerUrl}");
                         TrustListDataType serverTrustList = ReadTrustList(uaServerSession, Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList);
-                        
+
+                        // merge IssuerCertificates                        
                         foreach (var issuer in serverTrustList.IssuerCertificates)
                         {
                             gdsTrustList.IssuerCertificates.Add(issuer);
                         }
+                        // merge IssuerCrls
                         foreach (var issuerCrl in serverTrustList.IssuerCrls)
                         {
                             gdsTrustList.IssuerCrls.Add(issuerCrl);
                         }
+                        // merge TrustedCertificates
                         foreach (var trusted in serverTrustList.TrustedCertificates)
                         {
                             gdsTrustList.TrustedCertificates.Add(trusted);
                         }
+                        // merge TrustedCrls
                         foreach (var trustedCrl in serverTrustList.TrustedCrls)
                         {
                             gdsTrustList.TrustedCrls.Add(trustedCrl);
