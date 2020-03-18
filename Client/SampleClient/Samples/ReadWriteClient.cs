@@ -429,8 +429,8 @@ namespace SampleClient.Samples
                 BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
-                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomEnumerationNodeId}. " +
-                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
+                        dataValueTypeNodeId, StaticCustomEnumerationNodeId);
                     return;
                 }
 
@@ -517,8 +517,8 @@ namespace SampleClient.Samples
                 BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
-                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomOptionSetEnumerationNodeId}. " +
-                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.", 
+                        dataValueTypeNodeId, StaticCustomOptionSetEnumerationNodeId);
                     return;
                 }
                 if (dataValueTypeNodeId != null)
@@ -1125,8 +1125,8 @@ namespace SampleClient.Samples
                 BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
-                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomEnumerationNodeId}. " +
-                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.", 
+                        dataValueTypeNodeId, StaticCustomEnumerationNodeId);
                     return;
                 }
 
@@ -1214,8 +1214,8 @@ namespace SampleClient.Samples
                 BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
-                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomOptionSetEnumerationNodeId}. " +
-                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
+                        dataValueTypeNodeId, StaticCustomOptionSetEnumerationNodeId);
                     return;
                 }
                 //Get Default value for data type
@@ -1302,8 +1302,8 @@ namespace SampleClient.Samples
                 BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
-                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomOptionSetNodeId}. " +
-                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    Console.WriteLine(" Current session does not know DataType: {0} for NodeId: {0}.  Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.", 
+                        dataValueTypeNodeId, StaticCustomOptionSetNodeId);
                     return;
                 }
                 //Get Default value for data type
@@ -1390,8 +1390,8 @@ namespace SampleClient.Samples
                 BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
-                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomStructureWithOptionalFieldsNodeId}. " +
-                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
+                        dataValueTypeNodeId, StaticCustomStructureWithOptionalFieldsNodeId);
                     return;
                 }
                 //Get Default value for data type. It will be an instance of OptionalFieldsStructuredValue
@@ -1480,8 +1480,8 @@ namespace SampleClient.Samples
                 BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
-                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomUnionNodeId}. " +
-                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
+                        dataValueTypeNodeId, StaticCustomUnionNodeId);
                     return;
                 }
                 //Get Default value for data type. It will be an instance of UnionStructuredValue
@@ -1571,8 +1571,8 @@ namespace SampleClient.Samples
                 BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
-                    Console.WriteLine($"  Current session does not know DataType: {dataValueTypeNodeId} for NodeId: {StaticCustomStructuredValueNodeId}. " +
-                        $"Make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.");
+                    Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
+                        dataValueTypeNodeId, StaticCustomStructuredValueNodeId);
                     return;
                 }
                 //Get Default value for data type. It will be an instance of StructuredValue

@@ -64,7 +64,7 @@ namespace SampleClient.Samples
         public void ExecutePullRegisterAndSignSample()
         {
 
-            Console.WriteLine($"Connecting to configured GDS: '{GdsConnectionConfiguration.GdsUrl}'");
+            Console.WriteLine("Connecting to configured GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
             UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
             gdsUserToken.UserName = GdsAdminUser;//Console.ReadLine();
             gdsUserToken.DecryptedPassword = GdsAdminPassword;//Console.ReadLine();
@@ -77,7 +77,7 @@ namespace SampleClient.Samples
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("Error: {0}", ex.Message);
             }
         }
 
@@ -87,7 +87,7 @@ namespace SampleClient.Samples
         public void ExecutePullGetTrustListSample()
         {
 
-            Console.WriteLine($"Connecting to configured GDS: '{GdsConnectionConfiguration.GdsUrl}'");
+            Console.WriteLine("Connecting to configured GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
             UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
             gdsUserToken.UserName = GdsAdminUser;//Console.ReadLine();
             gdsUserToken.DecryptedPassword = GdsAdminPassword;//Console.ReadLine();
@@ -100,7 +100,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex}");
+                Console.WriteLine("Error: {0}", ex.Message);
             }
         }
 
@@ -117,8 +117,8 @@ namespace SampleClient.Samples
                 gdsSession = GetGdsClientSession();
 
                 // create connection to OPC UA Server 
-uaServerSession = GetPushServerClientSession();
-                Console.WriteLine($"\n\nCreate a SigningRequest to '{Program.ServerUrl}'.");
+                uaServerSession = GetPushServerClientSession();
+                Console.WriteLine("\n\nCreate a SigningRequest to '{0}'.", Program.ServerUrl);
                 NodeId certificateTypeId = Opc.Ua.ObjectTypeIds.RsaSha256ApplicationCertificateType;
                 byte[] certificateRequest = CreateSigningRequest(uaServerSession,
                     NodeId.Null, //certificateGroupId,
@@ -130,25 +130,25 @@ uaServerSession = GetPushServerClientSession();
                 
                 if (certificateRequest != null)
                 {
-                    Console.WriteLine($"SigningRequest was successfully created.");
+                    Console.WriteLine("SigningRequest was successfully created.");
 
-                    Console.WriteLine($"\n\nGet ApplicationID for '{Program.ServerUrl}'.");
+                    Console.WriteLine("\n\nGet ApplicationID for '{0}'.", Program.ServerUrl);
                     // get application id for OPC UA Server
                     NodeId applicationId = GetApplicationId(gdsSession, uaServerSession.CoreSession.Endpoint.Server);
 
                     if (applicationId != null)
                     {
-                        Console.WriteLine($"ApplicationID for '{Program.ServerUrl}' is {applicationId}.");
+                        Console.WriteLine("ApplicationID for '{0}' is {1}.", Program.ServerUrl, applicationId);
 
                         // call StartSigningRequest on GDS 
-                        Console.WriteLine($"\n\nCall StartSigningRequest for ApplicationID:{applicationId}.");
+                        Console.WriteLine("\n\nCall StartSigningRequest for ApplicationID:{0}.", applicationId);
                         NodeId requestId = StartSigningRequest(gdsSession, applicationId, null, null, certificateRequest);
 
                         if (requestId != null)
                         {
-                            Console.WriteLine($"StartSigningRequest for ApplicationID:{applicationId} returned RequestId:{requestId}.");
+                            Console.WriteLine("StartSigningRequest for ApplicationID:{0} returned RequestId:{1}.", applicationId, requestId);
 
-                            Console.WriteLine($"\n\nCall FinishRequest for ApplicationID:{applicationId} and RequestId:{requestId}.");
+                            Console.WriteLine("\n\nCall FinishRequest for ApplicationID:{0} and RequestId:{1}.", applicationId, requestId);
                             while (true)
                             {
                                 byte[] certificate = null;
@@ -160,15 +160,15 @@ uaServerSession = GetPushServerClientSession();
                                 if (certificate == null)
                                 {
                                     // request not done yet, try again in a few seconds
-                                    Console.WriteLine($"Request {requestId} not done yet. Try again in 1 second.");
+                                    Console.WriteLine("Request {0} not done yet. Try again in 1 second.", requestId);
                                     Thread.Sleep(1000);
                                     continue;
                                 }
                                 else
                                 {
-                                    Console.WriteLine($"Request {requestId} is finished.");
+                                    Console.WriteLine("Request {0} is finished.", requestId);
 
-                                    Console.WriteLine($"\n\nCall UpdateCertificate on {Program.ServerUrl}.");
+                                    Console.WriteLine("\n\nCall UpdateCertificate on {0}.", Program.ServerUrl);
 
                                     if (privateKey != null && privateKey.Length > 0)
                                     {
@@ -183,13 +183,13 @@ uaServerSession = GetPushServerClientSession();
                                         issuerCertificates,
                                         (privateKey != null) ? "PFX" : null,
                                         privateKey);
-                                    Console.WriteLine($"UpdateCertificate method returned {updateCertificateResult}.");
+                                    Console.WriteLine("UpdateCertificate method returned {0}.", updateCertificateResult);
 
                                     if (updateCertificateResult)
                                     {
-                                        Console.WriteLine($"\n\nCall ApplyChanges on {Program.ServerUrl}.");
+                                        Console.WriteLine("\n\nCall ApplyChanges on {0}.", Program.ServerUrl);
                                         ApplyChanges(uaServerSession);
-                                        Console.WriteLine($"ApplyChanges was called on {Program.ServerUrl}.");
+                                        Console.WriteLine("ApplyChanges was called on {0}.", Program.ServerUrl);                                        
                                     }
                                     break;
                                 }
@@ -197,25 +197,25 @@ uaServerSession = GetPushServerClientSession();
                         }
                         else
                         {
-                            Console.WriteLine($"StartSigningRequest for ApplicationID:{applicationId} returned RequestId: NULL.");
+                            Console.WriteLine("StartSigningRequest for ApplicationID:{0} returned RequestId: NULL.", applicationId);
                         }
 
-                        Console.WriteLine($"UnregisterApplication  for ApplicationID:{applicationId}.");
+                        Console.WriteLine("UnregisterApplication  for ApplicationID:{0}.", applicationId);
                         UnregisterApplication(gdsSession, applicationId);
                     }
                     else
                     {
-                        Console.WriteLine($"ApplicationID for '{Program.ServerUrl}' is NULL.");
+                        Console.WriteLine("ApplicationID for '{0}' is NULL.", Program.ServerUrl);
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"SigningRequest encountered a problem.");
+                    Console.WriteLine("SigningRequest encountered a problem.");
                 }
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"ExecutePushCertificateSample Error: {ex.Message}");
+                Console.WriteLine("ExecutePushCertificateSample Error: {0}", ex.Message);
             }
             finally
             {
@@ -238,10 +238,10 @@ uaServerSession = GetPushServerClientSession();
         /// <returns></returns>
         private ClientSession GetGdsClientSession()
         {
-            Console.WriteLine($"Connecting to configured GDS: '{GdsConnectionConfiguration.GdsUrl}', " +
-                       $"SecurityMode={GdsConnectionConfiguration.MessageSecurityMode}, " +
-                       $"SecurityPolicy={GdsConnectionConfiguration.SecurityPolicy}");
-
+            Console.WriteLine("Connecting to configured GDS: '{0}', SecurityMode={1}, SecurityPolicy={2}",
+                       GdsConnectionConfiguration.GdsUrl,
+                       GdsConnectionConfiguration.MessageSecurityMode,
+                       GdsConnectionConfiguration.SecurityPolicy);
             Console.WriteLine("\nPlease provide GDS credentials:");
             UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
             Console.Write("Username:");
@@ -258,7 +258,7 @@ uaServerSession = GetPushServerClientSession();
                         gdsUserIdentity);
             gdsSession.SessionName = SessionNamePush;
             gdsSession.Connect(true, true);
-            Console.WriteLine($"Connection to GDS is established.");
+            Console.WriteLine("Connection to GDS is established.");
 
             return gdsSession;
         }
@@ -269,8 +269,8 @@ uaServerSession = GetPushServerClientSession();
         /// <returns></returns>
         private ClientSession GetPushServerClientSession()
         {
-            Console.WriteLine($"\n\nConnecting to configured OPC UA Server for GDS Push: '{Program.ServerUrl}', " +
-                         $"SecurityMode={ConnectionSecurityMode}, SecurityPolicy={ConnectionSecurityPolicy}");
+            Console.WriteLine("\n\nConnecting to configured OPC UA Server for GDS Push: '{0}', SecurityMode={1}, SecurityPolicy={2}",
+                         Program.ServerUrl, ConnectionSecurityMode, ConnectionSecurityPolicy);
             Console.WriteLine("\nPlease provide GDS credentials:");
 
             // create user identity that has SystemConfigurationIdentity credentials on PushServer
@@ -289,7 +289,7 @@ uaServerSession = GetPushServerClientSession();
                 pushUserIdentity);
             uaServerSession.SessionName = SessionNamePush;
             uaServerSession.Connect(true, true);
-            Console.WriteLine($"Connection to '{Program.ServerUrl}' established.");
+            Console.WriteLine("Connection to '{0}' established.", Program.ServerUrl);
 
             return uaServerSession;
         }
@@ -311,16 +311,16 @@ uaServerSession = GetPushServerClientSession();
                 // creste session to pish server
                 uaServerSession = GetPushServerClientSession();
 
-                Console.WriteLine($"\n\nGet ApplicationID for '{Program.ServerUrl}'.");
+                Console.WriteLine("\n\nGet ApplicationID for '{0}'.", Program.ServerUrl);
                 // get application id for OPC UA Server
                 NodeId applicationId = GetApplicationId(gdsSession, uaServerSession.CoreSession.Endpoint.Server);
 
                 if (applicationId != null)
                 {
-                    Console.WriteLine($"ApplicationID for '{Program.ServerUrl}' is {applicationId}.");
+                    Console.WriteLine("ApplicationID for '{0}' is {1}.", Program.ServerUrl, applicationId);
 
                     // Get Trust list from GDS for Application ID
-                    Console.WriteLine($" Get Trust List From GDS for Application ID: {applicationId}.");
+                    Console.WriteLine("Get Trust List From GDS for Application ID: {0}.", applicationId);
                     TrustListDataType gdsTrustList = GetTrustListFromGds(gdsSession, applicationId);
 
                     // specify the trust lists to be updated
@@ -328,7 +328,7 @@ uaServerSession = GetPushServerClientSession();
                     if (selectedIndex == 1)
                     {
                         // retrieve push server trust list 
-                        Console.WriteLine($" Get Trust List for {Program.ServerUrl}");
+                        Console.WriteLine("Get Trust List for {0}", Program.ServerUrl);
                         TrustListDataType serverTrustList = ReadTrustList(uaServerSession, Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList);
 
                         // merge IssuerCertificates                        
@@ -352,20 +352,20 @@ uaServerSession = GetPushServerClientSession();
                             gdsTrustList.TrustedCrls.Add(trustedCrl);
                         }
                     }
-                    Console.WriteLine($" Update TrustList for DefaultapplicationGroup on {Program.ServerUrl}");
+                    Console.WriteLine("Update TrustList for DefaultapplicationGroup on {0}", Program.ServerUrl);
                     bool needsApplyChanges = UpdateDefaultApplicationGroupTrustList(uaServerSession, gdsTrustList);
 
                     if (needsApplyChanges)
                     {
-                        Console.WriteLine($"\n\nCall ApplyChanges on {Program.ServerUrl}.");
+                        Console.WriteLine("\n\nCall ApplyChanges on {0}.", Program.ServerUrl);
                         ApplyChanges(uaServerSession);
-                        Console.WriteLine($"ApplyChanges was called on {Program.ServerUrl}.");
+                        Console.WriteLine("ApplyChanges was called on {0}.", Program.ServerUrl);
                     }
                 }
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"ExecutePushTrustListSample Error: {ex.Message}");
+                Console.WriteLine("ExecutePushTrustListSample Error: {0}", ex.Message);
             }
             finally
             {
@@ -449,12 +449,12 @@ uaServerSession = GetPushServerClientSession();
                 if (applications.Length > 0)
                 {
                     NodeId applicationId = ((ApplicationRecordDataType)applications.GetValue(0)).ApplicationId;
-                    Utils.Trace(TraceMasks.Information, $"ApplicationUri: {applicationDescription.ApplicationUri} was registered with id: {applicationId}.");
+                    Utils.Trace(TraceMasks.Information, String.Format("ApplicationUri: {0} was registered with id: {1}.", applicationDescription.ApplicationUri, applicationId));
                     return applicationId;
                 }
             }
 
-            Utils.Trace(TraceMasks.Information, $"Register ApplicationUri: {applicationDescription.ApplicationUri}.");
+            Utils.Trace(TraceMasks.Information, String.Format("Register ApplicationUri: {0}.", applicationDescription.ApplicationUri));
             // register application because it was not registered yet
             List<object> inputArgumentsRegisterApplication = new List<object>() {
                 new ApplicationRecordDataType
@@ -476,7 +476,7 @@ uaServerSession = GetPushServerClientSession();
             if (outputArgumentsRegisterApplication != null && outputArgumentsRegisterApplication.Count > 0)
             {
                 NodeId applicationId = outputArgumentsRegisterApplication[0] as NodeId;
-                Utils.Trace(TraceMasks.Information, $"ApplicationUri: {applicationDescription.ApplicationUri} was registered with id: {applicationId}.");
+                Utils.Trace(TraceMasks.Information, String.Format("ApplicationUri: {0} was registered with id: {1}.", applicationDescription.ApplicationUri, applicationId));
                 return applicationId;
             }
 
@@ -501,7 +501,6 @@ uaServerSession = GetPushServerClientSession();
                 ExpandedNodeId.ToNodeId(Opc.Ua.Gds.ObjectIds.Directory, gdsSession.CoreSession.NamespaceUris),
                 ExpandedNodeId.ToNodeId(Opc.Ua.Gds.MethodIds.Directory_UnregisterApplication, gdsSession.CoreSession.NamespaceUris),
                 inputArgumentsUnregisterApplication, out outputArgumentsUnregisterApplication);
-
         }
         
         /// <summary>
