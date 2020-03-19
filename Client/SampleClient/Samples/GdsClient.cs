@@ -242,7 +242,7 @@ namespace SampleClient.Samples
                        GdsConnectionConfiguration.GdsUrl,
                        GdsConnectionConfiguration.MessageSecurityMode,
                        GdsConnectionConfiguration.SecurityPolicy);
-            UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
+            UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();           
             gdsUserToken.UserName = GdsAdminUser;
             gdsUserToken.DecryptedPassword = GdsAdminPassword;
             UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
@@ -255,7 +255,7 @@ namespace SampleClient.Samples
                         gdsUserIdentity);
             gdsSession.SessionName = SessionNamePush;
             gdsSession.Connect(true, true);
-            Console.WriteLine("Connection to GDS is established.");
+            Console.WriteLine("Connection to '{0}' established.", GdsConnectionConfiguration.GdsUrl);
 
             return gdsSession;
         }
@@ -268,7 +268,6 @@ namespace SampleClient.Samples
         {
             Console.WriteLine("\n\nConnecting to configured OPC UA Server for GDS Push: '{0}', SecurityMode={1}, SecurityPolicy={2}",
                          Program.ServerUrl, ConnectionSecurityMode, ConnectionSecurityPolicy);
-            Console.WriteLine("\nPlease provide GDS credentials:");
 
             // create user identity that has SystemConfigurationIdentity credentials on PushServer
             UserNameIdentityToken pushUserToken = new UserNameIdentityToken();
@@ -295,12 +294,9 @@ namespace SampleClient.Samples
         public void ExecutePushTrustListSample()
         {
             ClientSession gdsSession = null, uaServerSession = null;
-            Console.WriteLine("\nPlease select the Update Trust List Mode:");           
-            Console.WriteLine("\t 1- Merge Server Trust List with GDS Trust List");
-            Console.WriteLine("\t 2- Replace Trust List with GDS Trust List");
+            
             try
-            {
-                int selectedIndex = Convert.ToInt32(Console.ReadKey().KeyChar);             
+            {                        
                 // create sesssion to GDS
                 gdsSession = GetGdsClientSession();
                 // creste session to pish server
@@ -315,40 +311,70 @@ namespace SampleClient.Samples
                     Console.WriteLine("ApplicationID for '{0}' is {1}.", Program.ServerUrl, applicationId);
 
                     // Get Trust list from GDS for Application ID
-                    Console.WriteLine("Get Trust List From GDS for Application ID: {0}.", applicationId);
+                    Console.WriteLine("\nGet Trust List From GDS for Application ID: {0}.", applicationId);
                     TrustListDataType gdsTrustList = GetTrustListFromGds(gdsSession, applicationId);
 
                     // specify the trust lists to be updated
                     gdsTrustList.SpecifiedLists = (uint)TrustListMasks.All;
+                    // request user imput to wheter overwrite Trust list or merge it with the existing one
+                    Console.WriteLine("\nPlease select the Update Trust List Mode:");
+                    Console.WriteLine("\t 1- Merge Server Trust List with GDS Trust List");
+                    Console.WriteLine("\t 2- Replace Trust List with GDS Trust List");
+                    int selectedIndex = Convert.ToInt32(Console.ReadKey().KeyChar.ToString());
                     if (selectedIndex == 1)
                     {
                         // retrieve push server trust list 
-                        Console.WriteLine("Get Trust List for {0}", Program.ServerUrl);
+                        Console.WriteLine("\nGet Trust List for {0}", Program.ServerUrl);
                         TrustListDataType serverTrustList = ReadTrustList(uaServerSession, Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList);
 
+                        // get GDS issuer certificates as strings
+                        List<string> certificatesAsStrings = gdsTrustList.IssuerCertificates.ConvertAll(b => ConvertCertificateBytesToString(b));
                         // merge IssuerCertificates                        
                         foreach (var issuer in serverTrustList.IssuerCertificates)
                         {
-                            gdsTrustList.IssuerCertificates.Add(issuer);
+                            // check if the exact certificate is already added to collection
+                            if (!certificatesAsStrings.Contains(ConvertCertificateBytesToString(issuer)))
+                            {
+                                gdsTrustList.IssuerCertificates.Add(issuer);
+                            }
                         }
+                        // get GDS IssuerCrls as strings
+                        certificatesAsStrings = gdsTrustList.IssuerCrls.ConvertAll(b => ConvertCertificateBytesToString(b));
                         // merge IssuerCrls
                         foreach (var issuerCrl in serverTrustList.IssuerCrls)
                         {
-                            gdsTrustList.IssuerCrls.Add(issuerCrl);
+                            // check if the exact certificate is already added to collection
+                            if (!certificatesAsStrings.Contains(ConvertCertificateBytesToString(issuerCrl)))
+                            {
+                                gdsTrustList.IssuerCrls.Add(issuerCrl);
+                            }                            
                         }
+                        // get GDS issuer certificates as strings
+                        certificatesAsStrings = gdsTrustList.TrustedCertificates.ConvertAll(b => ConvertCertificateBytesToString(b));
                         // merge TrustedCertificates
                         foreach (var trusted in serverTrustList.TrustedCertificates)
                         {
-                            gdsTrustList.TrustedCertificates.Add(trusted);
+                            // check if the exact certificate is already added to collection
+                            if (!certificatesAsStrings.Contains(ConvertCertificateBytesToString(trusted)))
+                            {
+                                gdsTrustList.TrustedCertificates.Add(trusted);
+                            }
                         }
+                        // get GDS TrustedCrls as strings
+                        certificatesAsStrings = gdsTrustList.TrustedCrls.ConvertAll(b => ConvertCertificateBytesToString(b));                        
                         // merge TrustedCrls
                         foreach (var trustedCrl in serverTrustList.TrustedCrls)
                         {
-                            gdsTrustList.TrustedCrls.Add(trustedCrl);
+                            // check if the exact certificate is already added to collection
+                            if (!certificatesAsStrings.Contains(ConvertCertificateBytesToString(trustedCrl)))
+                            {
+                                gdsTrustList.TrustedCrls.Add(trustedCrl);
+                            }                            
                         }
                     }
-                    Console.WriteLine("Update TrustList for DefaultapplicationGroup on {0}", Program.ServerUrl);
+                    Console.WriteLine("\nUpdate TrustList for DefaultapplicationGroup on {0}", Program.ServerUrl);
                     bool needsApplyChanges = UpdateDefaultApplicationGroupTrustList(uaServerSession, gdsTrustList);
+                    Console.WriteLine("\nTrustList for DefaultapplicationGroup on {0} was successfully updated.", Program.ServerUrl);
 
                     if (needsApplyChanges)
                     {
@@ -377,6 +403,16 @@ namespace SampleClient.Samples
             }
         }
 
+        /// <summary>
+        /// Converts bytes array to string
+        /// </summary>
+        /// <param name="certificate"></param>
+        /// <returns></returns>
+        private string ConvertCertificateBytesToString(byte[] certificate)
+        {
+            return Convert.ToBase64String(certificate, Base64FormattingOptions.None);
+        }
+        
         /// <summary>
         /// Create a signing request for the opc ua Push server
         /// </summary>
@@ -809,15 +845,21 @@ namespace SampleClient.Samples
                         };
                 IList<object> outputArgumentsCloseAndUpdateTrustList = new List<object>();
                 // Call CloseAndUpdate
-                uaServerSession.Call(
+               var status = uaServerSession.Call(
                     Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList,
                     Opc.Ua.MethodIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList_CloseAndUpdate,
                     inputArgumentsCloseAndUpdateTrustList, 
                     out outputArgumentsCloseAndUpdateTrustList);
-
-                return (bool)outputArgumentsCloseAndUpdateTrustList[0];
+                if (StatusCode.IsGood(status))
+                {
+                    return (bool)outputArgumentsCloseAndUpdateTrustList[0];
+                }
+                else
+                {
+                    throw new ServiceResultException(status.Code, "CloseAndUpdate returned status code:" + status);
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // close the trust list 
                 List<object> inputArgumentsCloseTrustList = new List<object>()
