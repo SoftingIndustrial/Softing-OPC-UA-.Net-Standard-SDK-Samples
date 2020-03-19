@@ -111,13 +111,17 @@ namespace SampleClient.Samples
         {
             ClientSession gdsSession = null, uaServerSession = null;
             try
-            {
-                
+            {                
  				// create connection to GDS 
                 gdsSession = GetGdsClientSession();
+                gdsSession.Connect(true, true);
+                Console.WriteLine("Connection to '{0}' established.", gdsSession.Url);
 
                 // create connection to OPC UA Server 
                 uaServerSession = GetPushServerClientSession();
+                uaServerSession.Connect(true, true);
+                Console.WriteLine("Connection to '{0}' established.", uaServerSession.Url);
+
                 Console.WriteLine("\n\nCreate a SigningRequest to '{0}'.", Program.ServerUrl);
                 NodeId certificateTypeId = Opc.Ua.ObjectTypeIds.RsaSha256ApplicationCertificateType;
                 byte[] certificateRequest = CreateSigningRequest(uaServerSession,
@@ -254,9 +258,7 @@ namespace SampleClient.Samples
                         GdsConnectionConfiguration.MessageEncoding,
                         gdsUserIdentity);
             gdsSession.SessionName = SessionNamePush;
-            gdsSession.Connect(true, true);
-            Console.WriteLine("Connection to '{0}' established.", GdsConnectionConfiguration.GdsUrl);
-
+            
             return gdsSession;
         }
 
@@ -282,9 +284,6 @@ namespace SampleClient.Samples
                 MessageEncoding.Binary,
                 pushUserIdentity);
             uaServerSession.SessionName = SessionNamePush;
-            uaServerSession.Connect(true, true);
-            Console.WriteLine("Connection to '{0}' established.", Program.ServerUrl);
-
             return uaServerSession;
         }
 
@@ -296,11 +295,16 @@ namespace SampleClient.Samples
             ClientSession gdsSession = null, uaServerSession = null;
             
             try
-            {                        
-                // create sesssion to GDS
+            {
+                // create connection to GDS 
                 gdsSession = GetGdsClientSession();
-                // creste session to pish server
+                gdsSession.Connect(true, true);
+                Console.WriteLine("Connection to '{0}' established.", gdsSession.Url);
+
+                // create connection to OPC UA Server 
                 uaServerSession = GetPushServerClientSession();
+                uaServerSession.Connect(true, true);
+                Console.WriteLine("Connection to '{0}' established.", uaServerSession.Url);
 
                 Console.WriteLine("\n\nGet ApplicationID for '{0}'.", Program.ServerUrl);
                 // get application id for OPC UA Server
@@ -374,7 +378,7 @@ namespace SampleClient.Samples
                     }
                     Console.WriteLine("\nUpdate TrustList for DefaultapplicationGroup on {0}", Program.ServerUrl);
                     bool needsApplyChanges = UpdateDefaultApplicationGroupTrustList(uaServerSession, gdsTrustList);
-                    Console.WriteLine("\nTrustList for DefaultapplicationGroup on {0} was successfully updated.", Program.ServerUrl);
+                    Console.WriteLine("TrustList for DefaultapplicationGroup on {0} was successfully updated.", Program.ServerUrl);
 
                     if (needsApplyChanges)
                     {
