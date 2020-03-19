@@ -66,8 +66,8 @@ namespace SampleClient.Samples
 
             Console.WriteLine("Connecting to configured GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
             UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
-            gdsUserToken.UserName = GdsAdminUser;//Console.ReadLine();
-            gdsUserToken.DecryptedPassword = GdsAdminPassword;//Console.ReadLine();
+            gdsUserToken.UserName = GdsAdminUser;
+            gdsUserToken.DecryptedPassword = GdsAdminPassword;
             UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
 
             try
@@ -89,8 +89,8 @@ namespace SampleClient.Samples
 
             Console.WriteLine("Connecting to configured GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
             UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
-            gdsUserToken.UserName = GdsAdminUser;//Console.ReadLine();
-            gdsUserToken.DecryptedPassword = GdsAdminPassword;//Console.ReadLine();
+            gdsUserToken.UserName = GdsAdminUser;
+            gdsUserToken.DecryptedPassword = GdsAdminPassword;
             UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
 
             try
@@ -242,12 +242,9 @@ namespace SampleClient.Samples
                        GdsConnectionConfiguration.GdsUrl,
                        GdsConnectionConfiguration.MessageSecurityMode,
                        GdsConnectionConfiguration.SecurityPolicy);
-            Console.WriteLine("\nPlease provide GDS credentials:");
             UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
-            Console.Write("Username:");
-            gdsUserToken.UserName = GdsAdminUser; //Console.ReadLine();
-            Console.Write("Password:");
-            gdsUserToken.DecryptedPassword = GdsAdminPassword; //Console.ReadLine();
+            gdsUserToken.UserName = GdsAdminUser;
+            gdsUserToken.DecryptedPassword = GdsAdminPassword;
             UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
 
             // create connection to GDS 
@@ -275,10 +272,8 @@ namespace SampleClient.Samples
 
             // create user identity that has SystemConfigurationIdentity credentials on PushServer
             UserNameIdentityToken pushUserToken = new UserNameIdentityToken();
-            Console.Write("Username:");
-            pushUserToken.UserName = SampleServerAdminUser; // Console.ReadLine();
-            Console.Write("Password:");
-            pushUserToken.DecryptedPassword = SampleServerAdminPassword; // Console.ReadLine();
+            pushUserToken.UserName = SampleServerAdminUser;
+            pushUserToken.DecryptedPassword = SampleServerAdminPassword;
             UserIdentity pushUserIdentity = new UserIdentity(pushUserToken);
 
             // create connection to Opc Ua Server being pushed the certificate
