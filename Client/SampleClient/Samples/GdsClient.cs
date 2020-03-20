@@ -135,6 +135,10 @@ namespace SampleClient.Samples
                         }
                     }
                 }
+                else
+                {
+                    Console.WriteLine("Receiving and copying to the trusted store the application TrustList and CRL from the GDS: '{0}' FAILED", GdsConnectionConfiguration.GdsUrl);
+                }
             }
             catch (Exception ex)
             {
