@@ -73,7 +73,18 @@ namespace SampleClient.Samples
             try
             {
                 //get GdsConnectionConfiguration for this UaApplication
-                m_application.GdsRegisterAndSignCertificate(GdsConnectionConfiguration, gdsUserIdentity);
+                Console.WriteLine("Registering and signing the application certificate with the GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
+                X509Certificate2 certif = m_application.GdsRegisterAndSignCertificate(GdsConnectionConfiguration, gdsUserIdentity);
+                if (certif != null)
+                {
+                    Console.WriteLine("Successfully registered and signed the application certificate with the GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
+                    Console.WriteLine("Certificate with Issuer '{0}' and SubjectName '{1}' applied as application certificate", certif.Issuer, certif.Subject);
+                }
+                else
+                {
+                    Console.WriteLine("Registering and signing the application certificate with the GDS: '{0}' FAILED", GdsConnectionConfiguration.GdsUrl);
+                }
+
             }
             catch(Exception ex)
             {
@@ -95,8 +106,35 @@ namespace SampleClient.Samples
 
             try
             {
+                Console.WriteLine("Reading the GDS connection parameters from the configuration file: '{0}'", m_application.Configuration.SourceFilePath);
                 GdsConnectionConfiguration gdsConnectionConfiguration = m_application.Configuration.ParseExtension<GdsConnectionConfiguration>();
-                TrustListDataType[] tr = m_application.GdsGetTrustList(gdsConnectionConfiguration, gdsUserIdentity);
+                Console.WriteLine("Registering and pulling the application TrustListData from the GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
+                TrustListDataType[] trustListData = m_application.GdsGetTrustList(gdsConnectionConfiguration, gdsUserIdentity);
+                if (trustListData.Length > 0)
+                {
+                    Console.WriteLine("Successfully received and copied to the trusted store the application TrustList and CRL from the GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
+
+                    // Display results
+                    foreach (TrustListDataType trustListDataInGroup in trustListData)
+                    {
+                        if (trustListDataInGroup.TrustedCertificates != null)
+                        {
+                            foreach (byte[] certif in trustListDataInGroup.TrustedCertificates)
+                            {
+                                X509Certificate2 aCertif = new X509Certificate2(certif);
+                                Console.WriteLine("Certificate with Issuer '{0}' and SubjectName '{1}' received in Trust List", aCertif.Issuer, aCertif.Subject);
+                            }
+                        }
+                        if (trustListDataInGroup.TrustedCrls != null)
+                        {
+                            foreach (byte[] crl in trustListDataInGroup.TrustedCrls)
+                            {
+                                X509CRL aCRL = new X509CRL(crl);
+                                Console.WriteLine("CRL with Issuer '{0}'received as CRL", aCRL.Issuer);
+                            }
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
