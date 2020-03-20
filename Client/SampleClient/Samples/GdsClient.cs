@@ -72,7 +72,7 @@ namespace SampleClient.Samples
 
             try
             {
-                //get GdsConnectionConfiguration for this  UaApplication
+                //get GdsConnectionConfiguration for this UaApplication
                 m_application.GdsRegisterAndSignCertificate(GdsConnectionConfiguration, gdsUserIdentity);
             }
             catch(Exception ex)
