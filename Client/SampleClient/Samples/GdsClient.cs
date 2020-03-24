@@ -55,15 +55,14 @@ namespace SampleClient.Samples
             m_application = application;
             GdsConnectionConfiguration = m_application.Configuration.ParseExtension<GdsConnectionConfiguration>();
         }
-
         #endregion
-       
+
+        #region GDS methods
         /// <summary>
         /// Executes sample code for GDS - Pull Register And Sign Certificate Scenario
         /// </summary>
         public void ExecutePullRegisterAndSignSample()
         {
-
             Console.WriteLine("Connecting to configured GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
             UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
             gdsUserToken.UserName = GdsAdminUser;
@@ -72,7 +71,7 @@ namespace SampleClient.Samples
 
             try
             {
-                //get GdsConnectionConfiguration for this UaApplication
+                // Request GDS to sign the application instance certificate and set it as the new application certificate.
                 Console.WriteLine("Registering and signing the application certificate with the GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
                 X509Certificate2 certif = m_application.GdsRegisterAndSignCertificate(GdsConnectionConfiguration, gdsUserIdentity);
                 if (certif != null)
@@ -84,7 +83,6 @@ namespace SampleClient.Samples
                 {
                     Console.WriteLine("Registering and signing the application certificate with the GDS: '{0}' FAILED", GdsConnectionConfiguration.GdsUrl);
                 }
-
             }
             catch(Exception ex)
             {
@@ -97,7 +95,6 @@ namespace SampleClient.Samples
         /// </summary>
         public void ExecutePullGetTrustListSample()
         {
-
             Console.WriteLine("Connecting to configured GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
             UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
             gdsUserToken.UserName = GdsAdminUser;
@@ -153,8 +150,8 @@ namespace SampleClient.Samples
         {
             ClientSession gdsSession = null, uaServerSession = null;
             try
-            {                
- 				// create connection to GDS 
+            {
+                // create connection to GDS 
                 gdsSession = GetGdsClientSession();
                 gdsSession.Connect(true, true);
                 Console.WriteLine("Connection to '{0}' established.", gdsSession.Url);
@@ -172,12 +169,11 @@ namespace SampleClient.Samples
                     null,       // subjectName  -> not supported yet
                     false,      // regeneratePrivateKey -> not supported yet
                     null        // nonce -> not supported yet
-                    );              
-                
+                    );
+
                 if (certificateRequest != null)
                 {
                     Console.WriteLine("SigningRequest was successfully created.");
-
                     Console.WriteLine("\nGet ApplicationID for '{0}'.", Program.ServerUrl);
                     // get application id for OPC UA Server
                     NodeId applicationId = GetApplicationId(gdsSession, uaServerSession.CoreSession.Endpoint.Server);
@@ -334,7 +330,7 @@ namespace SampleClient.Samples
         /// </summary>
         public void ExecutePushTrustListSample()
         {
-            ClientSession gdsSession = null, uaServerSession = null;            
+            ClientSession gdsSession = null, uaServerSession = null;
             try
             {
                 // create connection to GDS 
@@ -380,7 +376,7 @@ namespace SampleClient.Samples
                         // merge TrustedCertificates    
                         MergeCertificatesLists(gdsTrustList.TrustedCertificates, serverTrustList.TrustedCertificates);
                         // merge TrustedCrls    
-                        MergeCertificatesLists(gdsTrustList.TrustedCrls, serverTrustList.TrustedCrls);                        
+                        MergeCertificatesLists(gdsTrustList.TrustedCrls, serverTrustList.TrustedCrls);
                     }
                     Console.WriteLine("\nUpdate DefaultapplicationGroup.TrustList on {0}.", Program.ServerUrl);
                     bool needsApplyChanges = UpdateDefaultApplicationGroupTrustList(uaServerSession, gdsTrustList);
@@ -436,8 +432,6 @@ namespace SampleClient.Samples
             }
         }
 
-
-
         /// <summary>
         /// Converts bytes array to string
         /// </summary>
@@ -447,7 +441,7 @@ namespace SampleClient.Samples
         {
             return Convert.ToBase64String(certificate, Base64FormattingOptions.None);
         }
-        
+
         /// <summary>
         /// Create a signing request for the opc ua Push server
         /// </summary>
@@ -472,7 +466,7 @@ namespace SampleClient.Samples
                    regeneratePrivateKey,
                    nonce
                 };
-           
+
             IList<object> outputArgumentsCreateSigningRequest = new List<object>();
 
             // create certificate request by calling CreateSigningRequest method on OPC UA Push Server
@@ -568,7 +562,7 @@ namespace SampleClient.Samples
                 ExpandedNodeId.ToNodeId(Opc.Ua.Gds.MethodIds.Directory_UnregisterApplication, gdsSession.CoreSession.NamespaceUris),
                 inputArgumentsUnregisterApplication, out outputArgumentsUnregisterApplication);
         }
-        
+
         /// <summary>
         /// Starts a signing request to the GDS
         /// </summary>
@@ -910,5 +904,6 @@ namespace SampleClient.Samples
                 throw;
             }
         }
+        #endregion
     }
 }
