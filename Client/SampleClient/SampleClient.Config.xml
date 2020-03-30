@@ -135,10 +135,8 @@
     <ua:XmlElement>
       <SampleClientConfiguration>
         <!-- Configurable URL of the OPC UA Server where this OPC UA Client will connect -->
-        <!--<ServerUrl>opc.tcp://localhost:61510/SampleServer</ServerUrl>
-        <ServerUrlHttps>https://localhost:61511/SampleServer</ServerUrlHttps>-->
-        <ServerUrl>opc.tcp://192.168.150.97:61510/SampleServer</ServerUrl>
-        <!--<ServerUrlHttps>https://192.168.150.97:61511/SampleServer</ServerUrlHttps>-->
+        <ServerUrl>opc.tcp://localhost:61510/SampleServer</ServerUrl>
+        <ServerUrlHttps>https://localhost:61511/SampleServer</ServerUrlHttps>
       </SampleClientConfiguration>
     </ua:XmlElement>
     <ua:XmlElement>
@@ -163,7 +161,7 @@
     <ua:XmlElement>
       <GdsConnectionConfiguration>
         <!-- GDS connection configuration please use the same order!!!!-->
-        <GdsUrl>opc.tcp://192.168.150.97:58810/GlobalDiscoveryTestServer</GdsUrl>
+        <GdsUrl>opc.tcp://localhost:58810</GdsUrl>
         <!-- The next 3 elemennts are used to explicitly select the endpoint exposed by the GDS server to which the connection is established
         Comment out, to let the application use the first secure endpoint exposed by the GDS server-->
         <MessageSecurityMode>SignAndEncrypt_3</MessageSecurityMode>
