@@ -241,7 +241,7 @@ namespace SampleClient.Samples
                         }
                         else
                         {
-                            Console.WriteLine("StartSigningRequest for ApplicationID:{0} returned RequestId: NULL. The Push Certificate Sample Failed!", applicationId);
+                            Console.WriteLine("Push Certificate Sample FAILED. StartSigningRequest for ApplicationID:{0} returned RequestId: NULL.", applicationId);
                         }
 
                         Console.WriteLine("\nUnregisterApplication  for ApplicationID:{0}.", applicationId);
@@ -249,17 +249,17 @@ namespace SampleClient.Samples
                     }
                     else
                     {
-                        Console.WriteLine("ApplicationID for '{0}' is NULL. The Push Certificate Sample Failed!", Program.ServerUrl);
+                        Console.WriteLine("Push Certificate Sample FAILED. ApplicationID for '{0}' is NULL.", Program.ServerUrl);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("SigningRequest encountered a problem. CreateSigningRequest method returned NULL. The Push Certificate Sample Failed!");
+                    Console.WriteLine("Push Certificate Sample FAILED. SigningRequest encountered a problem. CreateSigningRequest method returned NULL.");
                 }
             }
             catch(Exception ex)
             {
-                Console.WriteLine("ExecutePushCertificateSample Error: {0}.", ex.Message);
+                Console.WriteLine("Error: {0}.", ex.Message);
             }
             finally
             {
@@ -274,58 +274,7 @@ namespace SampleClient.Samples
                     uaServerSession.Dispose();
                 }
             }
-        }
-
-        /// <summary>
-        /// Creates the connection to configured GDS 
-        /// </summary>
-        /// <returns></returns>
-        private ClientSession GetGdsClientSession()
-        {
-            Console.WriteLine("Connecting to configured GDS: '{0}', SecurityMode={1}, SecurityPolicy={2}.",
-                       GdsConnectionConfiguration.GdsUrl,
-                       GdsConnectionConfiguration.MessageSecurityMode,
-                       GdsConnectionConfiguration.SecurityPolicy);
-            UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();           
-            gdsUserToken.UserName = GdsAdminUser;
-            gdsUserToken.DecryptedPassword = GdsAdminPassword;
-            UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
-
-            // create connection to GDS 
-            ClientSession gdsSession = m_application.CreateSession(GdsConnectionConfiguration.GdsUrl,
-                        GdsConnectionConfiguration.MessageSecurityMode,
-                        GdsConnectionConfiguration.SecurityPolicy,
-                        GdsConnectionConfiguration.MessageEncoding,
-                        gdsUserIdentity);
-            gdsSession.SessionName = SessionNamePush;
-            
-            return gdsSession;
-        }
-
-        /// <summary>
-        /// Creates the connection to Push Server
-        /// </summary>
-        /// <returns></returns>
-        private ClientSession GetPushServerClientSession()
-        {
-            Console.WriteLine("\nConnecting to configured OPC UA Server for GDS Push: '{0}', SecurityMode={1}, SecurityPolicy={2}.",
-                         Program.ServerUrl, ConnectionSecurityMode, ConnectionSecurityPolicy);
-
-            // create user identity that has SystemConfigurationIdentity credentials on PushServer
-            UserNameIdentityToken pushUserToken = new UserNameIdentityToken();
-            pushUserToken.UserName = SampleServerAdminUser;
-            pushUserToken.DecryptedPassword = SampleServerAdminPassword;
-            UserIdentity pushUserIdentity = new UserIdentity(pushUserToken);
-
-            // create connection to Opc Ua Server being pushed the certificate
-            ClientSession uaServerSession = m_application.CreateSession(Program.ServerUrl,
-                ConnectionSecurityMode,
-                ConnectionSecurityPolicy,
-                MessageEncoding.Binary,
-                pushUserIdentity);
-            uaServerSession.SessionName = SessionNamePush;
-            return uaServerSession;
-        }
+        }        
 
         /// <summary>
         /// Execute sample code for GDS - Push Trust list Scenario
@@ -356,7 +305,7 @@ namespace SampleClient.Samples
                     // Get Trust list from GDS for Application ID
                     Console.WriteLine("\nGet Trust List From GDS for Application ID: {0}.", applicationId);
                     TrustListDataType gdsTrustList = GetTrustListFromGds(gdsSession, applicationId);
-
+                    
                     // specify the trust lists to be updated
                     gdsTrustList.SpecifiedLists = (uint)TrustListMasks.All;
                     // request user imput to wheter overwrite Trust list or merge it with the existing one
@@ -405,12 +354,12 @@ namespace SampleClient.Samples
                 }
                 else
                 {
-                    Console.WriteLine("ApplicationID for '{0}' is NULL. The Push TrustList Sample Failed!", Program.ServerUrl);
+                    Console.WriteLine("Push TrustList Sample FAILED. ApplicationID for '{0}' is NULL.", Program.ServerUrl);
                 }
             }
             catch(Exception ex)
             {
-                Console.WriteLine("ExecutePushTrustListSample Error: {0}.", ex.Message);
+                Console.WriteLine("Error: {0}.", ex.Message);
             }
             finally
             {
@@ -425,6 +374,57 @@ namespace SampleClient.Samples
                     uaServerSession.Dispose();
                 }
             }
+        }
+
+        /// <summary>
+        /// Creates the connection to configured GDS 
+        /// </summary>
+        /// <returns></returns>
+        private ClientSession GetGdsClientSession()
+        {
+            Console.WriteLine("Connecting to configured GDS: '{0}', SecurityMode={1}, SecurityPolicy={2}.",
+                       GdsConnectionConfiguration.GdsUrl,
+                       GdsConnectionConfiguration.MessageSecurityMode,
+                       GdsConnectionConfiguration.SecurityPolicy);
+            UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
+            gdsUserToken.UserName = GdsAdminUser;
+            gdsUserToken.DecryptedPassword = GdsAdminPassword;
+            UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
+
+            // create connection to GDS 
+            ClientSession gdsSession = m_application.CreateSession(GdsConnectionConfiguration.GdsUrl,
+                        GdsConnectionConfiguration.MessageSecurityMode,
+                        GdsConnectionConfiguration.SecurityPolicy,
+                        GdsConnectionConfiguration.MessageEncoding,
+                        gdsUserIdentity);
+            gdsSession.SessionName = SessionNamePush;
+
+            return gdsSession;
+        }
+
+        /// <summary>
+        /// Creates the connection to Push Server
+        /// </summary>
+        /// <returns></returns>
+        private ClientSession GetPushServerClientSession()
+        {
+            Console.WriteLine("\nConnecting to configured OPC UA Server for GDS Push: '{0}', SecurityMode={1}, SecurityPolicy={2}.",
+                         Program.ServerUrl, ConnectionSecurityMode, ConnectionSecurityPolicy);
+
+            // create user identity that has SystemConfigurationIdentity credentials on PushServer
+            UserNameIdentityToken pushUserToken = new UserNameIdentityToken();
+            pushUserToken.UserName = SampleServerAdminUser;
+            pushUserToken.DecryptedPassword = SampleServerAdminPassword;
+            UserIdentity pushUserIdentity = new UserIdentity(pushUserToken);
+
+            // create connection to Opc Ua Server being pushed the certificate
+            ClientSession uaServerSession = m_application.CreateSession(Program.ServerUrl,
+                ConnectionSecurityMode,
+                ConnectionSecurityPolicy,
+                MessageEncoding.Binary,
+                pushUserIdentity);
+            uaServerSession.SessionName = SessionNamePush;
+            return uaServerSession;
         }
 
         /// <summary>
