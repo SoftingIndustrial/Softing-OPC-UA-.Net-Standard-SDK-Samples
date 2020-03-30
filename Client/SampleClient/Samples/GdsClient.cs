@@ -239,7 +239,7 @@ namespace SampleClient.Samples
                         }
                         else
                         {
-                            Console.WriteLine("StartSigningRequest for ApplicationID:{0} returned RequestId: NULL.", applicationId);
+                            Console.WriteLine("StartSigningRequest for ApplicationID:{0} returned RequestId: NULL. The Push Certificate Sample Failed!", applicationId);
                         }
 
                         Console.WriteLine("\nUnregisterApplication  for ApplicationID:{0}.", applicationId);
@@ -247,12 +247,12 @@ namespace SampleClient.Samples
                     }
                     else
                     {
-                        Console.WriteLine("ApplicationID for '{0}' is NULL.", Program.ServerUrl);
+                        Console.WriteLine("ApplicationID for '{0}' is NULL. The Push Certificate Sample Failed!", Program.ServerUrl);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("SigningRequest encountered a problem.");
+                    Console.WriteLine("SigningRequest encountered a problem. CreateSigningRequest method returned NULL. The Push Certificate Sample Failed!");
                 }
             }
             catch(Exception ex)
