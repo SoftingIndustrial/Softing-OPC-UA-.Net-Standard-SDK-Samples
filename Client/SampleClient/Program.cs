@@ -78,7 +78,8 @@ namespace SampleClient
         private static void CertificateValidator_CertificateValidation(CertificateValidator validator, CertificateValidationEventArgs e)
         {
             Console.WriteLine("Accepted Certificate: {0}", e.Certificate.Subject);
-            e.Accept = (e.Error.StatusCode == StatusCodes.BadCertificateUntrusted);
+            e.Accept = (e.Error.StatusCode == StatusCodes.BadCertificateUntrusted  
+                || e.Error.StatusCode == StatusCodes.BadCertificateChainIncomplete);
         }        
     }
 }

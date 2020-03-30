@@ -233,6 +233,8 @@ namespace SampleClient.Samples
                                         ApplyChanges(uaServerSession);
                                         Console.WriteLine("ApplyChanges was called on {0}.", Program.ServerUrl);                                        
                                     }
+
+                                    Console.WriteLine("\nThe Application Certificate for {0} was successfully updated from {1}.", Program.ServerUrl, gdsSession.Url);
                                     break;
                                 }
                             }
@@ -358,10 +360,16 @@ namespace SampleClient.Samples
                     // specify the trust lists to be updated
                     gdsTrustList.SpecifiedLists = (uint)TrustListMasks.All;
                     // request user imput to wheter overwrite Trust list or merge it with the existing one
-                    Console.WriteLine("\nPlease select the Update Trust List Mode:");
-                    Console.WriteLine("\t 1- Merge Server Trust List with GDS Trust List.");
-                    Console.WriteLine("\t 2- Replace Trust List with GDS Trust List.");
-                    int selectedIndex = Convert.ToInt32(Console.ReadKey().KeyChar.ToString());
+                    int selectedIndex = 0;
+                    do
+                    {
+                        Console.WriteLine("\nPlease select the Update Trust List Mode:");
+                        Console.WriteLine("\t 1- Merge Server Trust List with GDS Trust List.");
+                        Console.WriteLine("\t 2- Replace Trust List with GDS Trust List.");
+                        int.TryParse(Console.ReadKey().KeyChar.ToString(), out selectedIndex);
+                    }
+                    while (selectedIndex != 1 && selectedIndex != 2);
+
                     if (selectedIndex == 1)
                     {
                         // retrieve push server trust list 
@@ -378,6 +386,7 @@ namespace SampleClient.Samples
                         // merge TrustedCrls    
                         MergeCertificatesLists(gdsTrustList.TrustedCrls, serverTrustList.TrustedCrls);
                     }
+
                     Console.WriteLine("\nUpdate DefaultapplicationGroup.TrustList on {0}.", Program.ServerUrl);
                     bool needsApplyChanges = UpdateDefaultApplicationGroupTrustList(uaServerSession, gdsTrustList);
                     Console.WriteLine("DefaultapplicationGroup.TrustList on {0} was successfully updated.", Program.ServerUrl);
@@ -391,6 +400,12 @@ namespace SampleClient.Samples
 
                     Console.WriteLine("\nUnregisterApplication  for ApplicationID:{0}.", applicationId);
                     UnregisterApplication(gdsSession, applicationId);
+
+                    Console.WriteLine("\nThe TrustList for {0} was successfully updated from {1}.", Program.ServerUrl, gdsSession.Url);
+                }
+                else
+                {
+                    Console.WriteLine("ApplicationID for '{0}' is NULL. The Push TrustList Sample Failed!", Program.ServerUrl);
                 }
             }
             catch(Exception ex)
