@@ -503,7 +503,7 @@ namespace SampleClient.StateMachine
         {
             //ConnectClient sample creates its own UAApplication object with an ApplicationConfiguration object created 
             //programmatically and not loaded from config file
-            ConnectClient connectClient = new ConnectClient();
+            ConnectClient connectClient = new ConnectClient(m_application);
 
             connectClient.CreateOpcTcpSessionWithNoSecurity();
             connectClient.CreateOpcTcpSessionWithSecurity( Opc.Ua.MessageSecurityMode.Sign, SecurityPolicy.Basic256Sha256);

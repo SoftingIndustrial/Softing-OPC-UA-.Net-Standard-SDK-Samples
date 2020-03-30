@@ -32,7 +32,7 @@ namespace SampleClient.Samples
 
         /// <summary>
         /// Create new instance of ConnectClient
-        /// The constructor will create a new instance of UaApplication with an 
+        /// The constructor will create a new instance of UaApplication
         /// </summary>
         public ConnectClient()
         {
@@ -40,6 +40,18 @@ namespace SampleClient.Samples
             //ApplicationConfiguration configuration = CreateAplicationConfiguration();
             //m_application = UaApplication.Create(configuration).Result;
             m_application = UaApplication.Create("SampleClient.Config.xml").Result;
+        }
+
+        /// <summary>
+        /// Create an sintance of ConnectioClient that uses the provided<see cref="UaApplication"/>.
+        /// </summary>
+        /// <param name="uaApplication"></param>
+        public ConnectClient(UaApplication uaApplication)
+        {
+            // Alternatively, instead of providing a config XML file, we can provide instead, the custom configuration set below
+            //ApplicationConfiguration configuration = CreateAplicationConfiguration();
+            //m_application = UaApplication.Create(configuration).Result;
+            m_application = uaApplication;
         }
 
         #endregion
