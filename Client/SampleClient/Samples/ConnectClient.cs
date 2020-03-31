@@ -37,8 +37,8 @@ namespace SampleClient.Samples
         public ConnectClient()
         {
             // Alternatively, instead of providing a config XML file, we can provide instead, the custom configuration set below
-            //ApplicationConfiguration configuration = CreateAplicationConfiguration();
-            //m_application = UaApplication.Create(configuration).Result;
+            // ApplicationConfiguration configuration = CreateAplicationConfiguration();
+            // m_application = UaApplication.Create(configuration).Result;
             m_application = UaApplication.Create("SampleClient.Config.xml").Result;
         }
 
@@ -48,9 +48,6 @@ namespace SampleClient.Samples
         /// <param name="uaApplication"></param>
         public ConnectClient(UaApplication uaApplication)
         {
-            // Alternatively, instead of providing a config XML file, we can provide instead, the custom configuration set below
-            //ApplicationConfiguration configuration = CreateAplicationConfiguration();
-            //m_application = UaApplication.Create(configuration).Result;
             m_application = uaApplication;
         }
 
