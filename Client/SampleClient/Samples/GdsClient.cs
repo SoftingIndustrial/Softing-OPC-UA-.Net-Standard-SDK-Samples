@@ -64,10 +64,7 @@ namespace SampleClient.Samples
         public void ExecutePullRegisterAndSignSample()
         {
             Console.WriteLine("Connecting to configured GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
-            UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
-            gdsUserToken.UserName = GdsAdminUser;
-            gdsUserToken.DecryptedPassword = GdsAdminPassword;
-            UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
+            UserIdentity gdsUserIdentity = new UserIdentity(GdsAdminUser, GdsAdminPassword);
 
             try
             {
@@ -96,10 +93,7 @@ namespace SampleClient.Samples
         public void ExecutePullGetTrustListSample()
         {
             Console.WriteLine("Connecting to configured GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
-            UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
-            gdsUserToken.UserName = GdsAdminUser;
-            gdsUserToken.DecryptedPassword = GdsAdminPassword;
-            UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
+            UserIdentity gdsUserIdentity = new UserIdentity(GdsAdminUser, GdsAdminPassword);
 
             try
             {
@@ -386,10 +380,8 @@ namespace SampleClient.Samples
                        GdsConnectionConfiguration.GdsUrl,
                        GdsConnectionConfiguration.MessageSecurityMode,
                        GdsConnectionConfiguration.SecurityPolicy);
-            UserNameIdentityToken gdsUserToken = new UserNameIdentityToken();
-            gdsUserToken.UserName = GdsAdminUser;
-            gdsUserToken.DecryptedPassword = GdsAdminPassword;
-            UserIdentity gdsUserIdentity = new UserIdentity(gdsUserToken);
+
+            UserIdentity gdsUserIdentity = new UserIdentity(GdsAdminUser, GdsAdminPassword);
 
             // create connection to GDS 
             ClientSession gdsSession = m_application.CreateSession(GdsConnectionConfiguration.GdsUrl,
@@ -412,10 +404,7 @@ namespace SampleClient.Samples
                          Program.ServerUrl, ConnectionSecurityMode, ConnectionSecurityPolicy);
 
             // create user identity that has SystemConfigurationIdentity credentials on PushServer
-            UserNameIdentityToken pushUserToken = new UserNameIdentityToken();
-            pushUserToken.UserName = SampleServerAdminUser;
-            pushUserToken.DecryptedPassword = SampleServerAdminPassword;
-            UserIdentity pushUserIdentity = new UserIdentity(pushUserToken);
+            UserIdentity pushUserIdentity = new UserIdentity(SampleServerAdminUser, SampleServerAdminPassword);
 
             // create connection to Opc Ua Server being pushed the certificate
             ClientSession uaServerSession = m_application.CreateSession(Program.ServerUrl,
