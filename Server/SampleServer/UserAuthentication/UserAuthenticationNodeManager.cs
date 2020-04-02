@@ -56,14 +56,34 @@ namespace SampleServer.UserAuthentication
                 AddReference(process, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);                           
 
                 // A property to report the process state
-                PropertyState<string> state = CreateProperty<string>(process, "LogFilePath");               
-                state.AccessLevel = AccessLevels.CurrentReadOrWrite;
-                state.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
-                state.Value = ".\\Log.txt";
+                PropertyState<string> stateLogFilePath = CreateProperty<string>(process, "LogFilePath");               
+                stateLogFilePath.AccessLevel = AccessLevels.CurrentReadOrWrite;
+                stateLogFilePath.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
+                stateLogFilePath.Value = ".\\Log.txt";
 
-                state.OnSimpleWriteValue = OnWriteValue;
-                state.OnReadUserAccessLevel = OnReadUserAccessLevel;               
-            } 
+                stateLogFilePath.OnSimpleWriteValue = OnWriteValue;
+                stateLogFilePath.OnReadUserAccessLevel = OnReadUserAccessLevel;
+
+
+                // create a Variable node that has RolePermissions
+                BaseDataVariableState<string> variableWithRolePermissions = CreateVariable<string>(process, "VariableWithRolePermissions");
+                variableWithRolePermissions.RolePermissions = new RolePermissionTypeCollection()
+                {
+                    new RolePermissionType()
+                    {
+                        RoleId = ObjectIds.WellKnownRole_AuthenticatedUser,
+                        Permissions = (uint)(PermissionType.Read | PermissionType.Write)
+                    },
+                    new RolePermissionType()
+                    {
+                        RoleId = ObjectIds.WellKnownRole_ConfigureAdmin,
+                        Permissions = (uint)(PermissionType.WriteRolePermissions | PermissionType.Read | PermissionType.Write)
+                    },
+                };
+
+                variableWithRolePermissions.Value = ".\\Log.txt";
+
+            }
         }
 
         #endregion
