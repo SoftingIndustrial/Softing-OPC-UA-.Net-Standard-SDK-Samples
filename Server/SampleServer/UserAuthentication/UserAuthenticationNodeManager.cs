@@ -63,26 +63,6 @@ namespace SampleServer.UserAuthentication
 
                 stateLogFilePath.OnSimpleWriteValue = OnWriteValue;
                 stateLogFilePath.OnReadUserAccessLevel = OnReadUserAccessLevel;
-
-
-                // create a Variable node that has RolePermissions
-                BaseDataVariableState<string> variableWithRolePermissions = CreateVariable<string>(process, "VariableWithRolePermissions");
-                variableWithRolePermissions.RolePermissions = new RolePermissionTypeCollection()
-                {
-                    new RolePermissionType()
-                    {
-                        RoleId = ObjectIds.WellKnownRole_AuthenticatedUser,
-                        Permissions = (uint)(PermissionType.Read | PermissionType.Write)
-                    },
-                    new RolePermissionType()
-                    {
-                        RoleId = ObjectIds.WellKnownRole_ConfigureAdmin,
-                        Permissions = (uint)(PermissionType.WriteRolePermissions | PermissionType.Read | PermissionType.Write)
-                    },
-                };
-
-                variableWithRolePermissions.Value = ".\\Log.txt";
-
             }
         }
 

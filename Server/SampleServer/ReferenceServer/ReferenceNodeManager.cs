@@ -732,6 +732,43 @@ namespace SampleServer.ReferenceServer
                     arGroupRW.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
                     variables.Add(arGroupRW);
 
+                    // sub folder for "RolePermissions"
+                    FolderState folderRolePermissions = CreateFolder(folderAccessRights, "RolePermissions");
+
+                    // create a Variable node that has RolePermissions
+                    BaseDataVariableState variableWithRolePermissions = CreateVariable(folderRolePermissions, "RolePermissions", BuiltInType.Int16);
+                    variableWithRolePermissions.RolePermissions = new RolePermissionTypeCollection()
+                    {
+                        new RolePermissionType()
+                        {
+                            RoleId = ObjectIds.WellKnownRole_AuthenticatedUser,
+                            Permissions = (uint)(PermissionType.Read | PermissionType.Write)
+                        },
+                        new RolePermissionType()
+                        {
+                            RoleId = ObjectIds.WellKnownRole_ConfigureAdmin,
+                            Permissions = (uint)(PermissionType.WriteRolePermissions | PermissionType.Read | PermissionType.Write)
+                        },
+                    };
+                    variables.Add(variableWithRolePermissions);
+
+                    // create a Variable node that has UserRolePermissions
+                    BaseDataVariableState variableWithUserRolePermissions = CreateVariable(folderRolePermissions, "UserRolePermissions", BuiltInType.Int16);
+                    variableWithUserRolePermissions.UserRolePermissions = new RolePermissionTypeCollection()
+                    {
+                        new RolePermissionType()
+                        {
+                            RoleId = ObjectIds.WellKnownRole_AuthenticatedUser,
+                            Permissions = (uint)(PermissionType.Read | PermissionType.Write)
+                        },
+                        new RolePermissionType()
+                        {
+                            RoleId = ObjectIds.WellKnownRole_ConfigureAdmin,
+                            Permissions = (uint)(PermissionType.WriteRolePermissions | PermissionType.Read | PermissionType.Write)
+                        },
+                    };
+                    variables.Add(variableWithUserRolePermissions);
+
                     // sub-folder for "AccessRestrictions"
                     FolderState folderAccessRestrictions = CreateFolder(folderAccessRights, "AccessRestrictions");
 
