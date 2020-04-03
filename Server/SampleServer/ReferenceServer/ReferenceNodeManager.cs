@@ -732,6 +732,35 @@ namespace SampleServer.ReferenceServer
                     arGroupRW.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
                     variables.Add(arGroupRW);
 
+                    // sub-folder for "AccessRestrictions"
+                    FolderState folderAccessRestrictions = CreateFolder(folderAccessRights, "AccessRestrictions");
+
+                    BaseDataVariableState arNone = CreateVariable(folderAccessRestrictions, "None", BuiltInType.Int16);
+                    arNone.AccessLevel = AccessLevels.CurrentRead;
+                    arNone.UserAccessLevel = AccessLevels.CurrentRead;
+                    arNone.AccessRestrictions = AccessRestrictionType.None;
+                    variables.Add(arNone);
+
+                    BaseDataVariableState arSigningRequired = CreateVariable(folderAccessRestrictions, "SigningRequired", BuiltInType.Int16);
+                    arSigningRequired.AccessLevel = AccessLevels.CurrentRead;
+                    arSigningRequired.UserAccessLevel = AccessLevels.CurrentRead;
+                    arSigningRequired.WriteMask = AttributeWriteMask.AccessRestrictions | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
+                    arSigningRequired.UserWriteMask = AttributeWriteMask.AccessRestrictions | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
+                    arSigningRequired.AccessRestrictions = AccessRestrictionType.SigningRequired;
+                    variables.Add(arSigningRequired);
+
+                    BaseDataVariableState arEncryptionRequired = CreateVariable(folderAccessRestrictions, "EncryptionRequired", BuiltInType.Int16);
+                    arEncryptionRequired.AccessLevel = AccessLevels.CurrentRead;
+                    arEncryptionRequired.UserAccessLevel = AccessLevels.CurrentRead;
+                    arEncryptionRequired.AccessRestrictions = AccessRestrictionType.EncryptionRequired;
+                    variables.Add(arEncryptionRequired);
+
+                    BaseDataVariableState arSessionRequired = CreateVariable(folderAccessRestrictions, "SessionRequired", BuiltInType.Int16);
+                    arSessionRequired.AccessLevel = AccessLevels.CurrentRead;
+                    arSessionRequired.UserAccessLevel = AccessLevels.CurrentRead;
+                    arSessionRequired.AccessRestrictions = AccessRestrictionType.SessionRequired;
+                    variables.Add(arSessionRequired);
+
                     #endregion
 
                     #region NodeIds
