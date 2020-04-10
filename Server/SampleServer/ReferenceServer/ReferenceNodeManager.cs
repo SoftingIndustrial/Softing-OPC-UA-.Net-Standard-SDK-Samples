@@ -737,6 +737,7 @@ namespace SampleServer.ReferenceServer
 
                     // create a Variable node that has RolePermissions
                     BaseDataVariableState variableWithRolePermissions = CreateVariable(folderRolePermissions, "RolePermissions", BuiltInType.Int16);
+                    variableWithRolePermissions.WriteMask = AttributeWriteMask.WriteMask | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
                     variableWithRolePermissions.RolePermissions = new RolePermissionTypeCollection()
                     {
                         new RolePermissionType()
@@ -754,6 +755,7 @@ namespace SampleServer.ReferenceServer
 
                     // create a Variable node that has UserRolePermissions
                     BaseDataVariableState variableWithUserRolePermissions = CreateVariable(folderRolePermissions, "UserRolePermissions", BuiltInType.Int16);
+                    variableWithUserRolePermissions.WriteMask = AttributeWriteMask.WriteMask | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
                     variableWithUserRolePermissions.UserRolePermissions = new RolePermissionTypeCollection()
                     {
                         new RolePermissionType()
@@ -1297,6 +1299,13 @@ namespace SampleServer.ReferenceServer
 
                 // Import a node set file containing structured data types.
                 ImportNodeSet();
+
+                // create the NamespaceMetadata states for namespace uris from this node manager
+                foreach (string namespaceUri in this.NamespaceUris)
+                {
+                    var namespaceMetadataState = CreateOrGetExistingNamespaceMetadataState(namespaceUri);
+                    namespaceMetadataState.WriteMask = AttributeWriteMask.WriteMask;
+                }
             }
         }
 
