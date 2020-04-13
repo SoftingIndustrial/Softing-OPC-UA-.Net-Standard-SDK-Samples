@@ -105,6 +105,9 @@ namespace SampleServer.ReferenceServer
                 // Execute base class CreateAddressSpace
                 base.CreateAddressSpace(externalReferences);
 
+                var namespaceMetadata = GetNamespaceMetadataState(Namespaces.ReferenceApplications);
+                namespaceMetadata.WriteMask = AttributeWriteMask.WriteMask;
+
                 FolderState root = CreateFolder(null, "CTT");
                 AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
                 //Set SubscribeToEvents event notifier
@@ -1298,14 +1301,7 @@ namespace SampleServer.ReferenceServer
                 m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
 
                 // Import a node set file containing structured data types.
-                ImportNodeSet();
-
-                // create the NamespaceMetadata states for namespace uris from this node manager
-                foreach (string namespaceUri in this.NamespaceUris)
-                {
-                    var namespaceMetadataState = CreateOrGetExistingNamespaceMetadataState(namespaceUri);
-                    namespaceMetadataState.WriteMask = AttributeWriteMask.WriteMask;
-                }
+                ImportNodeSet();                
             }
         }
 
