@@ -32,6 +32,9 @@ namespace SampleServer
     public class SampleServer : UaServer
     {
         #region Private Members
+        private const string OperatorUser1 = "operator1";
+        private const string OperatorUser2 = "operator2";
+
         private Dictionary<string, string> m_userNameIdentities;
         private Timer m_certificatesTimer;
         #endregion
@@ -44,13 +47,15 @@ namespace SampleServer
         {
             // Initialize the list of accepted user identities.
             m_userNameIdentities = new Dictionary<string, string>();
+            m_userNameIdentities.Add(OperatorUser1, "pwd");
+            m_userNameIdentities.Add(OperatorUser2, "pwd");
             m_userNameIdentities.Add("usr", "pwd");
             m_userNameIdentities.Add("admin", "admin");
             ManufacturerName = "Softing";
         }
 
         #endregion
-
+                
         #region OnServerStarted
         /// <summary>
         /// Called after the server has been started.
@@ -58,8 +63,8 @@ namespace SampleServer
         /// <param name="server">The server.</param>
         protected override void OnServerStarted(IServerInternal server)
         {
-            base.OnServerStarted(server);
-
+            base.OnServerStarted(server);            
+            
             uint clearCertificatesInterval = 30000;
 
             //parse custom configuration extension 
@@ -70,6 +75,7 @@ namespace SampleServer
             }
 
             m_certificatesTimer = new Timer(ClearCachedCertificates, null, clearCertificatesInterval, clearCertificatesInterval);
+
         }
 
         /// <summary>
@@ -84,6 +90,39 @@ namespace SampleServer
                 CertificateValidator.Update(Configuration).Wait();
             }
             catch { }
+        }
+        #endregion
+
+        #region 
+        /// <summary>
+        /// Custom implementation of RoleSet 
+        /// </summary>
+        /// <param name="server"></param>
+        public override void OnRoleSetInitialized(IServerInternal server)
+        {
+            RoleState operatorRole = server.NodeManager.ConfigurationNodeManager.GetRoleState(ObjectIds.WellKnownRole_Operator);
+            if (operatorRole != null)
+            {
+                operatorRole.Identities.Value = new IdentityMappingRuleType[]
+                {
+                    new IdentityMappingRuleType()
+                    {
+                        CriteriaType = IdentityCriteriaType.UserName,
+                        Criteria = OperatorUser1
+                    },
+                    new IdentityMappingRuleType()
+                    {
+                        CriteriaType = IdentityCriteriaType.UserName,
+                        Criteria = OperatorUser2
+                    }
+                };
+                operatorRole.Applications.Value = new string[]
+                {
+                    "urn:localhost:Softing:UANETStandardToolkit:SampleClient"
+                };
+            }
+
+            base.OnRoleSetInitialized(server);
         }
         #endregion
 
@@ -102,7 +141,8 @@ namespace SampleServer
             Utils.Trace(Utils.TraceMasks.Information, "SampleServer.CreateMasterNodeManager", "Creating the Node Managers.");
 
             List<INodeManager> nodeManagers = new List<INodeManager>();
-
+            // add RolesNodeManager to support Role based permission handling in this server
+            nodeManagers.Add(new RolesNodeManager(server, configuration));
             nodeManagers.Add(new AlarmsNodeManager(server, configuration));
             nodeManagers.Add(new DataAccessNodeManager(server, configuration));
             nodeManagers.Add(new SampleHDANodeManager(server, configuration));
