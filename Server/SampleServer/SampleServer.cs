@@ -100,7 +100,7 @@ namespace SampleServer
         /// <param name="server"></param>
         public override void OnRoleSetInitialized(IServerInternal server)
         {
-            RoleState operatorRole = server.NodeManager.ConfigurationNodeManager.GetRoleState(ObjectIds.WellKnownRole_Operator);
+            RoleState operatorRole = null;// server.NodeManager.ConfigurationNodeManager.GetRoleState(ObjectIds.WellKnownRole_Operator);
             if (operatorRole != null)
             {
                 operatorRole.Identities.Value = new IdentityMappingRuleType[]

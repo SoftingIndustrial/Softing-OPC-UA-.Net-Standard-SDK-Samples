@@ -107,6 +107,19 @@ namespace SampleServer.ReferenceServer
 
                 var namespaceMetadata = GetNamespaceMetadataState(Namespaces.ReferenceApplications);
                 namespaceMetadata.WriteMask = AttributeWriteMask.WriteMask;
+                namespaceMetadata.DefaultRolePermissions.Value = new RolePermissionType[]
+                {
+                    new RolePermissionType()
+                    {
+                        RoleId = ObjectIds.WellKnownRole_AuthenticatedUser,
+                        Permissions = (uint)PermissionType.Browse
+                    },
+                    new RolePermissionType()
+                    {
+                        RoleId = ObjectIds.WellKnownRole_Operator,
+                        Permissions = (uint)PermissionType.Read
+                    }
+                };
 
                 FolderState root = CreateFolder(null, "CTT");
                 AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
