@@ -107,19 +107,6 @@ namespace SampleServer.ReferenceServer
 
                 var namespaceMetadata = GetNamespaceMetadataState(Namespaces.ReferenceApplications);
                 namespaceMetadata.WriteMask = AttributeWriteMask.WriteMask;
-                namespaceMetadata.DefaultRolePermissions.Value = new RolePermissionType[]
-                {
-                    new RolePermissionType()
-                    {
-                        RoleId = ObjectIds.WellKnownRole_AuthenticatedUser,
-                        Permissions = (uint)PermissionType.Browse
-                    },
-                    new RolePermissionType()
-                    {
-                        RoleId = ObjectIds.WellKnownRole_Operator,
-                        Permissions = (uint)PermissionType.Read
-                    }
-                };
 
                 FolderState root = CreateFolder(null, "CTT");
                 AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
@@ -751,23 +738,48 @@ namespace SampleServer.ReferenceServer
                     // sub folder for "RolePermissions"
                     FolderState folderRolePermissions = CreateFolder(folderAccessRights, "RolePermissions");
 
-                    // create a Variable node that has RolePermissions
-                    BaseDataVariableState variableWithRolePermissions = CreateVariable(folderRolePermissions, "RolePermissions", BuiltInType.Int16);
-                    variableWithRolePermissions.WriteMask = AttributeWriteMask.WriteMask | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
-                    variableWithRolePermissions.RolePermissions = new RolePermissionTypeCollection()
+                    // create a Variable nodes that has RolePermissions
+                    BaseDataVariableState variableAnonymousAccess = CreateVariable(folderRolePermissions, "AnonymousAccess", BuiltInType.Int16);
+                    variableAnonymousAccess.WriteMask = AttributeWriteMask.WriteMask | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
+                    variableAnonymousAccess.Description = "This node can be accessed by users that have Anonymous Role";
+                    variableAnonymousAccess.RolePermissions = new RolePermissionTypeCollection()
                     {
+                        // allow access to users with anonymous role
+                        new RolePermissionType()
+                        {
+                            RoleId = ObjectIds.WellKnownRole_Anonymous,
+                            Permissions = (uint)(PermissionType.Read | PermissionType.Write)
+                        },
+                    };
+                    variables.Add(variableAnonymousAccess);
+
+                    BaseDataVariableState variableAuthenticatedAccess = CreateVariable(folderRolePermissions, "AuthenticatedAccess", BuiltInType.Int16);
+                    variableAuthenticatedAccess.WriteMask = AttributeWriteMask.WriteMask | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
+                    variableAuthenticatedAccess.Description = "This node can be accessed by users that have Authenticated Role";
+                    variableAuthenticatedAccess.RolePermissions = new RolePermissionTypeCollection()
+                    {
+                        // allow access to users with anonymous role
                         new RolePermissionType()
                         {
                             RoleId = ObjectIds.WellKnownRole_AuthenticatedUser,
                             Permissions = (uint)(PermissionType.Read | PermissionType.Write)
                         },
+                    };
+                    variables.Add(variableAuthenticatedAccess);
+
+                    BaseDataVariableState variableOperatorRoleAccess = CreateVariable(folderRolePermissions, "OperatorAccess", BuiltInType.Int16);
+                    variableOperatorRoleAccess.WriteMask = AttributeWriteMask.WriteMask | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
+                    variableOperatorRoleAccess.Description = "This node can be accessed by users that have Operator Role";
+                    variableOperatorRoleAccess.RolePermissions = new RolePermissionTypeCollection()
+                    {
+                        // allow access to users with operator role
                         new RolePermissionType()
                         {
-                            RoleId = ObjectIds.WellKnownRole_ConfigureAdmin,
-                            Permissions = (uint)(PermissionType.WriteRolePermissions | PermissionType.Read | PermissionType.Write)
-                        },
+                            RoleId = ObjectIds.WellKnownRole_Operator,
+                            Permissions = (uint)(PermissionType.Read | PermissionType.Write)
+                        },                        
                     };
-                    variables.Add(variableWithRolePermissions);
+                    variables.Add(variableOperatorRoleAccess);
 
                     // create a Variable node that has UserRolePermissions
                     BaseDataVariableState variableWithUserRolePermissions = CreateVariable(folderRolePermissions, "UserRolePermissions", BuiltInType.Int16);
