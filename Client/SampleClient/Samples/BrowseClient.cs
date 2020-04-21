@@ -119,20 +119,36 @@ namespace SampleClient.Samples
                         Console.WriteLine("  -" + rootReferenceDescription.DisplayName);
                         if (rootReferenceDescription.BrowseName.Name == "Objects")
                         {
-                            NodeId nodeId = new NodeId(rootReferenceDescription.NodeId.Identifier, rootReferenceDescription.NodeId.NamespaceIndex);
-                            var objectReferenceDescriptions = m_session.Browse(nodeId);
-                            foreach (var objectRefDescription in objectReferenceDescriptions)
+                            try
                             {
-                                Console.WriteLine("     -" + objectRefDescription.DisplayName);
-                                if (objectRefDescription.BrowseName.Name == "Server")
+                                // Browse Objects node
+                                NodeId nodeId = new NodeId(rootReferenceDescription.NodeId.Identifier, rootReferenceDescription.NodeId.NamespaceIndex);
+                                var objectReferenceDescriptions = m_session.Browse(nodeId);
+                                foreach (var objectRefDescription in objectReferenceDescriptions)
                                 {
-                                    nodeId = new NodeId(objectRefDescription.NodeId.Identifier, objectRefDescription.NodeId.NamespaceIndex);
-                                    var serverReferenceDescriptions = m_session.Browse(nodeId);
-                                    foreach (var serverReferenceDescription in serverReferenceDescriptions)
+                                    Console.WriteLine("     -" + objectRefDescription.DisplayName);
+                                    if (objectRefDescription.BrowseName.Name == "Server")
                                     {
-                                        Console.WriteLine("        -" + serverReferenceDescription.DisplayName);
+                                        try
+                                        {
+                                            // Browse Server node
+                                            nodeId = new NodeId(objectRefDescription.NodeId.Identifier, objectRefDescription.NodeId.NamespaceIndex);
+                                            var serverReferenceDescriptions = m_session.Browse(nodeId);
+                                            foreach (var serverReferenceDescription in serverReferenceDescriptions)
+                                            {
+                                                Console.WriteLine("        -" + serverReferenceDescription.DisplayName);
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Console.WriteLine("Browse 'Server' Error: " + ex.Message);
+                                        }
                                     }
                                 }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Browse 'Objects' Error: " + ex.Message);
                             }
                         }
                     }
@@ -170,25 +186,41 @@ namespace SampleClient.Samples
                         Console.WriteLine("  -{0} - [{1}]", rootReferenceDescription.DisplayName, rootReferenceDescription.ReferenceTypeName);
                         if (rootReferenceDescription.BrowseName.Name == "Objects")
                         {
-                            NodeId nodeId = new NodeId(rootReferenceDescription.NodeId.Identifier, rootReferenceDescription.NodeId.NamespaceIndex);
-                            IList<ReferenceDescriptionEx> objectReferenceDescriptions = m_session.Browse(nodeId, options);
-                            foreach (var objectReferenceDescription in objectReferenceDescriptions)
+                            try
                             {
-                                Console.WriteLine("    -{0} - [{1}]",
-                                    objectReferenceDescription.DisplayName,
-                                    objectReferenceDescription.ReferenceTypeName);
-
-                                if (objectReferenceDescription.BrowseName.Name == "Server")
+                                // Browse Objects node
+                                NodeId nodeId = new NodeId(rootReferenceDescription.NodeId.Identifier, rootReferenceDescription.NodeId.NamespaceIndex);
+                                IList<ReferenceDescriptionEx> objectReferenceDescriptions = m_session.Browse(nodeId, options);
+                                foreach (var objectReferenceDescription in objectReferenceDescriptions)
                                 {
-                                    nodeId = new NodeId(objectReferenceDescription.NodeId.Identifier, objectReferenceDescription.NodeId.NamespaceIndex);
-                                    IList<ReferenceDescriptionEx> serverReferenceDescriptions = m_session.Browse(nodeId, options);
-                                    foreach (var serverReferenceDescription in serverReferenceDescriptions)
+                                    Console.WriteLine("    -{0} - [{1}]",
+                                        objectReferenceDescription.DisplayName,
+                                        objectReferenceDescription.ReferenceTypeName);
+
+                                    if (objectReferenceDescription.BrowseName.Name == "Server")
                                     {
-                                        Console.WriteLine("      -{0} - [{1}]",
-                                            serverReferenceDescription.DisplayName,
-                                            serverReferenceDescription.ReferenceTypeName);
+                                        try
+                                        {
+                                            // Browse Server node
+                                            nodeId = new NodeId(objectReferenceDescription.NodeId.Identifier, objectReferenceDescription.NodeId.NamespaceIndex);
+                                            IList<ReferenceDescriptionEx> serverReferenceDescriptions = m_session.Browse(nodeId, options);
+                                            foreach (var serverReferenceDescription in serverReferenceDescriptions)
+                                            {
+                                                Console.WriteLine("      -{0} - [{1}]",
+                                                    serverReferenceDescription.DisplayName,
+                                                    serverReferenceDescription.ReferenceTypeName);
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Console.WriteLine("Browse 'Server' Error: " + ex.Message);
+                                        }
                                     }
                                 }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Browse 'Objects' Error: " + ex.Message);
                             }
                         }
                     }

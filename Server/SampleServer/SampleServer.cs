@@ -121,7 +121,7 @@ namespace SampleServer
                     "urn:localhost:Softing:UANETStandardToolkit:SampleClient"
                 };
             }
-
+            
             base.OnRoleSetInitialized(server);
         }
         #endregion

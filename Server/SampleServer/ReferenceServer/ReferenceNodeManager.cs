@@ -735,6 +735,25 @@ namespace SampleServer.ReferenceServer
                     arGroupRW.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
                     variables.Add(arGroupRW);
 
+                    // todo remove it
+                    //NodeState server = FindNodeInAddressSpace(ObjectIds.Server);
+                    //server.RolePermissions = new RolePermissionTypeCollection()
+                    //{
+                    //    // allow access to users with anonymous role
+                    //    new RolePermissionType()
+                    //    {
+                    //        RoleId = ObjectIds.WellKnownRole_Anonymous,
+                    //        Permissions = (uint)(PermissionType.Read | PermissionType.Write | PermissionType.ReadRolePermissions )
+                    //    },
+                    //    new RolePermissionType()
+                    //    {
+                    //        RoleId = ObjectIds.WellKnownRole_AuthenticatedUser,
+                    //        Permissions = (uint)(PermissionType.Read | PermissionType.Write | PermissionType.ReadRolePermissions | PermissionType.Browse)
+                    //    }
+                    //};
+                    //server.WriteMask = AttributeWriteMask.WriteMask | AttributeWriteMask.RolePermissions;
+
+
                     // sub folder for "RolePermissions"
                     FolderState folderRolePermissions = CreateFolder(folderAccessRights, "RolePermissions");
 
@@ -748,7 +767,7 @@ namespace SampleServer.ReferenceServer
                         new RolePermissionType()
                         {
                             RoleId = ObjectIds.WellKnownRole_Anonymous,
-                            Permissions = (uint)(PermissionType.Read | PermissionType.Write)
+                            Permissions = (uint)(PermissionType.Browse |PermissionType.Read|PermissionType.ReadRolePermissions | PermissionType.Write)
                         },
                     };
                     variables.Add(variableAnonymousAccess);
@@ -762,11 +781,11 @@ namespace SampleServer.ReferenceServer
                         new RolePermissionType()
                         {
                             RoleId = ObjectIds.WellKnownRole_AuthenticatedUser,
-                            Permissions = (uint)(PermissionType.Read | PermissionType.Write)
+                            Permissions = (uint)( PermissionType.Browse | PermissionType.Read | PermissionType.ReadRolePermissions | PermissionType.WriteRolePermissions)
                         },
                     };
                     variables.Add(variableAuthenticatedAccess);
-
+                    
                     BaseDataVariableState variableOperatorRoleAccess = CreateVariable(folderRolePermissions, "OperatorAccess", BuiltInType.Int16);
                     variableOperatorRoleAccess.WriteMask = AttributeWriteMask.WriteMask | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
                     variableOperatorRoleAccess.Description = "This node can be accessed by users that have Operator Role";
@@ -776,7 +795,7 @@ namespace SampleServer.ReferenceServer
                         new RolePermissionType()
                         {
                             RoleId = ObjectIds.WellKnownRole_Operator,
-                            Permissions = (uint)(PermissionType.Read | PermissionType.Write)
+                            Permissions = (uint)( PermissionType.Browse |PermissionType.Read|PermissionType.ReadRolePermissions | PermissionType.Write)
                         },                        
                     };
                     variables.Add(variableOperatorRoleAccess);
