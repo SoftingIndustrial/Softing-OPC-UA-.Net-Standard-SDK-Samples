@@ -98,8 +98,9 @@ namespace SampleServer
         /// Custom implementation of RoleSet 
         /// </summary>
         /// <param name="server"></param>
-        public override void OnRoleSetInitialized(IServerInternal server)
+        public override void OnRoleSetInitialized(IServerInternal server, RolesNodeManager rolesNodeManager)
         {
+            //rolesNodeManager.AddIdentiTyToRole(ObjectIds.WellKnownRole_Operator, )
             RoleState operatorRole = server.NodeManager.ConfigurationNodeManager.GetRoleState(ObjectIds.WellKnownRole_Operator);
             if (operatorRole != null)
             {
@@ -122,7 +123,7 @@ namespace SampleServer
                 };
             }
             
-            base.OnRoleSetInitialized(server);
+            base.OnRoleSetInitialized(server, rolesNodeManager);
         }
         #endregion
 
@@ -179,6 +180,12 @@ namespace SampleServer
             }
         }
 
+
+        protected override ServiceResult ValidateIdentityMappingRule(IdentityMappingRuleType identityMappingRule)
+        {
+            return base.ValidateIdentityMappingRule(identityMappingRule);
+        }
+        
         /// <summary>
         /// Validates the user and password identity for <see cref="SystemConfigurationIdentity"/>.
         /// </summary>
