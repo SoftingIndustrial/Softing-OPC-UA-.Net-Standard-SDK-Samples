@@ -501,8 +501,12 @@ namespace SampleClient.StateMachine
 
         private void ConnectSample_ExecuteCommand(object sender, EventArgs e)
         {
-            //ConnectClient sample creates its own UAApplication object with an ApplicationConfiguration object created 
-            //programmatically and not loaded from config file
+            //ConnectClient sample does not need to lpad data type dictionaries or to decode custom data types
+            bool rememberDecodeCustonDt = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
+            bool rememberDecodeDataTypeDict = m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries;
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
+
             ConnectClient connectClient = new ConnectClient(m_application);
 
             connectClient.CreateOpcTcpSessionWithNoSecurity();
@@ -516,6 +520,10 @@ namespace SampleClient.StateMachine
             //connectClient.CreateHttpsSessionWithAnomymousUserId();
             //connectClient.CreateHttpsSessionWithUserId();
             connectClient.CreateSessionUsingDiscovery();
+
+
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustonDt;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDict;
         }
 
         #endregion
@@ -804,7 +812,7 @@ namespace SampleClient.StateMachine
         private void StartReadWrite_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_readWriteClient == null)
-            {
+            {    
                 m_readWriteClient = new ReadWriteClient(m_application);
                 m_readWriteClient.InitializeSession();
             }

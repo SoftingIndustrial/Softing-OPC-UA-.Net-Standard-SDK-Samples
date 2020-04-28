@@ -40,6 +40,9 @@ namespace SampleClient.Samples
             // ApplicationConfiguration configuration = CreateAplicationConfiguration();
             // m_application = UaApplication.Create(configuration).Result;
             m_application = UaApplication.Create("SampleClient.Config.xml").Result;
+
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
         }
 
         /// <summary>
