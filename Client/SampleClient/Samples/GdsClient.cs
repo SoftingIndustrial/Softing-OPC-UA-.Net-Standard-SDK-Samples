@@ -793,7 +793,7 @@ namespace SampleClient.Samples
                     IList<object> outputArgumentsCloseTrustList = new List<object>();
                     clientSession.Call(trustListId,
                             Opc.Ua.MethodIds.FileType_Close,
-                            outputArgumentsCloseTrustList,
+                            inputArgumentsCloseTrustList,
                             out outputArgumentsCloseTrustList);
                 }
 
