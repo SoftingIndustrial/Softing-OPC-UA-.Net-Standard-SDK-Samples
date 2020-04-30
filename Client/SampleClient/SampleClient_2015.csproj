@@ -228,6 +228,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SampleClientConfiguration.cs" />
+    <Compile Include="Samples\AccessRightsClient.cs" />
     <Compile Include="Samples\AlarmsClient.cs" />
     <Compile Include="Samples\BrowseClient.cs" />
     <Compile Include="Samples\ConnectClient.cs" />

@@ -17,14 +17,16 @@ namespace SampleClient.StateMachine
     public enum State
     {
         Main,
-        DiscoveryConnect,
+        DiscoveryConnectGds,
         GDS,
         Browse,
-        MonitoredItemEvents,
+        MonitoredEventsAlarms,
         MonitoredItem,
         Events,
         History,       
         Alarms,
+        AccessRights,
+        RolePermissions,
         ReadWrite,
         FileTransfer,
         PubSub,
@@ -65,8 +67,8 @@ namespace SampleClient.StateMachine
         HistoryReadProcessed,
         EndHistory,
 
-        StartMonitoredItemEvents,
-        EndMonitoredItemEvents,
+        StartMonitoredEventsAlarms,
+        EndMonitoredEventsAlarms,
 
         StartMonitoredItem, 
         CreateMonitoredItem,
@@ -78,6 +80,12 @@ namespace SampleClient.StateMachine
         AcknowledgeAlarms,
         AddCommentAlarms,
         EndAlarms,
+
+        StartAccessRights,
+        AccessRestrictions,
+        RolePermissions,
+        UserRolePermissions,
+        EndAccessRights,
 
         StartReadWrite,
         Read,

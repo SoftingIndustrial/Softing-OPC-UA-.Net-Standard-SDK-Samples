@@ -34,6 +34,7 @@ namespace SampleClient.StateMachine
         private ReadWriteClient m_readWriteClient;
         private MonitoredItemClient m_monitoredItemClient;
         private AlarmsClient m_alarmsClient;
+        private AccessRightsClient m_accessRightsClient;
         private FileTransferClient m_fileTransferClient;
         private GdsClient m_gdsClient;
         private PubSubClient m_pubSubClient;
@@ -60,7 +61,7 @@ namespace SampleClient.StateMachine
             //add monitored item / events menu - 4
             InitializeMonitoredItemEventsTransitions();
             //add alarms menu - 5
-            InitializeAlarmsTransitions();
+            InitializeAccessRightsTransitions();
             //add call methods menu - 6
             StateTransition callMethods = new StateTransition(State.Main, Command.CallMethods, "6", "Call Methods on Server");
             callMethods.ExecuteCommand += CallMethods_ExecuteCommand;
@@ -79,13 +80,13 @@ namespace SampleClient.StateMachine
             exit = new StateTransition(State.Browse, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
             m_transitions.Add(exit, State.Exit);
-            exit = new StateTransition(State.DiscoveryConnect, Command.Exit, "x", "Exit Client Application");
+            exit = new StateTransition(State.DiscoveryConnectGds, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
             m_transitions.Add(exit, State.Exit);           
             exit = new StateTransition(State.History, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
             m_transitions.Add(exit, State.Exit);
-            exit = new StateTransition(State.MonitoredItemEvents, Command.Exit, "x", "Exit Client Application");
+            exit = new StateTransition(State.MonitoredEventsAlarms, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
             m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.Alarms, Command.Exit, "x", "Exit Client Application");
@@ -170,20 +171,20 @@ namespace SampleClient.StateMachine
         {
             //commAands for browse
             StateTransition startDCClient = new StateTransition(State.Main, Command.DiscoveryConnect, "1", "Enter Connect/Discovery/GDS Menu");            
-            m_transitions.Add(startDCClient, State.DiscoveryConnect);
+            m_transitions.Add(startDCClient, State.DiscoveryConnectGds);
 
             //add connect menu item
-            StateTransition connectSample = new StateTransition(State.DiscoveryConnect, Command.ConnectSample, "1", "Execute Connect Sample");
+            StateTransition connectSample = new StateTransition(State.DiscoveryConnectGds, Command.ConnectSample, "1", "Execute Connect Sample");
             connectSample.ExecuteCommand += ConnectSample_ExecuteCommand;
-            m_transitions.Add(connectSample, State.DiscoveryConnect);
+            m_transitions.Add(connectSample, State.DiscoveryConnectGds);
 
             //add discovery menu item
-            StateTransition discoverySample = new StateTransition(State.DiscoveryConnect, Command.DiscoverySample, "2", "Execute Discovery Sample");
+            StateTransition discoverySample = new StateTransition(State.DiscoveryConnectGds, Command.DiscoverySample, "2", "Execute Discovery Sample");
             discoverySample.ExecuteCommand += DiscoverySample_ExecuteCommand;
-            m_transitions.Add(discoverySample, State.DiscoveryConnect);
+            m_transitions.Add(discoverySample, State.DiscoveryConnectGds);
 
             //add GDS menu item
-            StateTransition gdsSample = new StateTransition(State.DiscoveryConnect, Command.StartGDSSample, "3", "Enter GDS Sample Menu");            
+            StateTransition gdsSample = new StateTransition(State.DiscoveryConnectGds, Command.StartGDSSample, "3", "Enter GDS Sample Menu");            
             m_transitions.Add(gdsSample, State.GDS);
             //commands for GDS Pull Register And Sign Certificate
             StateTransition startGDSPullRegSignSample = new StateTransition(State.GDS, Command.StartGDSPullRegSignSample, "1", "Execute GDS Pull Register And Sign Certificate Sample");
@@ -206,9 +207,9 @@ namespace SampleClient.StateMachine
 
             
             StateTransition endGDSSample = new StateTransition(State.GDS, Command.EndGDSSample, "0", "Back to Discovery/Connect Menu");           
-            m_transitions.Add(endGDSSample, State.DiscoveryConnect);
+            m_transitions.Add(endGDSSample, State.DiscoveryConnectGds);
 
-            StateTransition endDiscoveryConnect = new StateTransition(State.DiscoveryConnect, Command.EndDiscoveryConnect, "0", "Back to Main Menu");            
+            StateTransition endDiscoveryConnect = new StateTransition(State.DiscoveryConnectGds, Command.EndDiscoveryConnect, "0", "Back to Main Menu");            
             m_transitions.Add(endDiscoveryConnect, State.Main);
         }
 
@@ -261,11 +262,11 @@ namespace SampleClient.StateMachine
         private void InitializeMonitoredItemEventsTransitions()
         {
             //commands for monitored item
-            StateTransition start = new StateTransition(State.Main, Command.StartMonitoredItemEvents, "4", "Enter MonitoredItem/Events Menu");
-            m_transitions.Add(start, State.MonitoredItemEvents);
+            StateTransition start = new StateTransition(State.Main, Command.StartMonitoredEventsAlarms, "4", "Enter MonitoredItem/Events Menu/Alarms Menu");
+            m_transitions.Add(start, State.MonitoredEventsAlarms);
 
             //commands for monitored item
-            StateTransition startMonitoredItem = new StateTransition(State.MonitoredItemEvents, Command.StartMonitoredItem, "1", "Enter MonitoredItem Menu");
+            StateTransition startMonitoredItem = new StateTransition(State.MonitoredEventsAlarms, Command.StartMonitoredItem, "1", "Enter MonitoredItem Menu");
             startMonitoredItem.ExecuteCommand += StartMonitoredItem_ExecuteCommand;
             m_transitions.Add(startMonitoredItem, State.MonitoredItem);
             StateTransition createMonitoredItem = new StateTransition(State.MonitoredItem, Command.CreateMonitoredItem, "1", "Create data change Monitored Items");
@@ -274,38 +275,26 @@ namespace SampleClient.StateMachine
             StateTransition deleteMonitoredItem = new StateTransition(State.MonitoredItem, Command.DeleteMonitoredItem, "2", "Delete data change Monitored Items");
             deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItem_ExecuteCommand;
             m_transitions.Add(deleteMonitoredItem, State.MonitoredItem);
-            StateTransition endMonitoredItem = new StateTransition(State.MonitoredItem, Command.EndMonitoredItem, "0", "Back to MonitoredItem/Events Menu");
+            StateTransition endMonitoredItem = new StateTransition(State.MonitoredItem, Command.EndMonitoredItem, "0", "Back to MonitoredItem/Events Menu/Alarms Menu");
             endMonitoredItem.ExecuteCommand += EndMonitoredItem_ExecuteCommand;
-            m_transitions.Add(endMonitoredItem, State.MonitoredItemEvents);
+            m_transitions.Add(endMonitoredItem, State.MonitoredEventsAlarms);
 
             //commands for events
-            StateTransition startEventsClient = new StateTransition(State.MonitoredItemEvents, Command.StartEvents, "2", "Enter Events Menu");
+            StateTransition startEventsClient = new StateTransition(State.MonitoredEventsAlarms, Command.StartEvents, "2", "Enter Events Menu");
             startEventsClient.ExecuteCommand += StartEventsClient_ExecuteCommand;
             m_transitions.Add(startEventsClient, State.Events);
             StateTransition createEventMonitorItem = new StateTransition(State.Events, Command.CreateEventMonitorItem, "1", "Create event Monitored Item");
             createEventMonitorItem.ExecuteCommand += CreateEventMonitorItem_ExecuteCommand;
             m_transitions.Add(createEventMonitorItem, State.Events);
-            StateTransition deleteEventMonitorItem = new StateTransition(State.Events, Command.DeleteEventMonitorItem,
-                "2",
-                "Delete event Monitored Item");
+            StateTransition deleteEventMonitorItem = new StateTransition(State.Events, Command.DeleteEventMonitorItem, "2", "Delete event Monitored Item");
             deleteEventMonitorItem.ExecuteCommand += DeleteEventMonitorItem_ExecuteCommand;
             m_transitions.Add(deleteEventMonitorItem, State.Events);
-            StateTransition endEvents = new StateTransition(State.Events, Command.EndEvents, "0", "Back to MonitoredItem/Events Menu");
+            StateTransition endEvents = new StateTransition(State.Events, Command.EndEvents, "0", "Back to MonitoredItem/Events Menu/Alarms Menu");
             endEvents.ExecuteCommand += EndEvents_ExecuteCommand;
-            m_transitions.Add(endEvents, State.MonitoredItemEvents);
+            m_transitions.Add(endEvents, State.MonitoredEventsAlarms);
 
-            StateTransition end = new StateTransition(State.MonitoredItemEvents, Command.EndMonitoredItemEvents, "0", "Back to Main Menu");
-            m_transitions.Add(end, State.Main);
-        }
-        
-
-        /// <summary>
-        /// Initializes all sub menu transitions for Alarms (5)
-        /// </summary>
-        private void InitializeAlarmsTransitions()
-        {
             //commands for alarms
-            StateTransition startAlarms = new StateTransition(State.Main, Command.StartAlarms, "5", "Enter Alarms Menu");
+            StateTransition startAlarms = new StateTransition(State.MonitoredEventsAlarms, Command.StartAlarms, "3", "Enter Alarms Menu");
             startAlarms.ExecuteCommand += StartAlarms_ExecuteCommand;
             m_transitions.Add(startAlarms, State.Alarms);
             StateTransition refreshAlarms = new StateTransition(State.Alarms, Command.RefreshAlarms, "1", "Refresh active alarms");
@@ -317,9 +306,35 @@ namespace SampleClient.StateMachine
             StateTransition addCommentAllarms = new StateTransition(State.Alarms, Command.AddCommentAlarms, "3", "Add comment to alarm");
             addCommentAllarms.ExecuteCommand += AddCommentAlarms_ExecuteCommand;
             m_transitions.Add(addCommentAllarms, State.Alarms);
-            StateTransition endAlarms = new StateTransition(State.Alarms, Command.EndAlarms, "0", "Back to Main Menu");
+            StateTransition endAlarms = new StateTransition(State.Alarms, Command.EndAlarms, "0", "Back to MonitoredItem/Events Menu/Alarms Menu");
             endAlarms.ExecuteCommand += EndAlarms_ExecuteCommand;
-            m_transitions.Add(endAlarms, State.Main);
+            m_transitions.Add(endAlarms, State.MonitoredEventsAlarms);
+
+            StateTransition end = new StateTransition(State.MonitoredEventsAlarms, Command.EndMonitoredEventsAlarms, "0", "Back to Main Menu");
+            m_transitions.Add(end, State.Main);
+        }
+        
+
+        /// <summary>
+        /// Initializes all sub menu transitions for Alarms (5)
+        /// </summary>
+        private void InitializeAccessRightsTransitions()
+        {
+            //commands for access rights
+            StateTransition startAccessRights = new StateTransition(State.Main, Command.StartAccessRights, "5", "Enter Access Rights Menu");
+            startAccessRights.ExecuteCommand += StartAccessRights_ExecuteCommand;
+            m_transitions.Add(startAccessRights, State.AccessRights);
+            StateTransition accessRestrictions = new StateTransition(State.AccessRights, Command.AccessRestrictions, "1", "Sample AccessRestrictions");
+            accessRestrictions.ExecuteCommand += AccessRestrictions_ExecuteCommand;
+            m_transitions.Add(accessRestrictions, State.AccessRights);
+            StateTransition rolePermissions = new StateTransition(State.AccessRights, Command.RolePermissions, "2", "Sample RolePermissions");
+            rolePermissions.ExecuteCommand += RolePermissions_ExecuteCommand;
+            m_transitions.Add(rolePermissions, State.RolePermissions);
+            StateTransition usrRolePermissions = new StateTransition(State.AccessRights, Command.UserRolePermissions, "3", "Sample UserRolePermissions");
+            usrRolePermissions.ExecuteCommand += UserRolePermissions_ExecuteCommand;
+            m_transitions.Add(usrRolePermissions, State.AccessRights);
+            StateTransition endAccessRights = new StateTransition(State.AccessRights, Command.EndAccessRights, "0", "Back to Main Menu");
+            m_transitions.Add(endAccessRights, State.Main);
         }
 
         /// <summary>
@@ -387,7 +402,7 @@ namespace SampleClient.StateMachine
         private void InitializePubSubTransitions()
         {
             //commands for reading PubSubStateMachine
-            StateTransition startPubSubMenu = new StateTransition(State.Main, Command.PubSubConfigMenu, "9", "Enter PubSub menu");
+            StateTransition startPubSubMenu = new StateTransition(State.Main, Command.PubSubConfigMenu, "9", "Enter PubSub Menu");
             startPubSubMenu.ExecuteCommand += StartPubSubCfgMenu_ExecuteCommand;
             m_transitions.Add(startPubSubMenu, State.PubSub);//commands for PubSub
             StateTransition startPubSubReadCfg = new StateTransition(State.PubSub, Command.PubSubReadConfig, "1", "Read PubSubConfiguration");
@@ -444,6 +459,48 @@ namespace SampleClient.StateMachine
                 m_alarmsClient.Initialize();
             }
 
+        }
+
+        #endregion
+
+        #region ExecuteCommand Handler for Access Rights
+
+        private void EndAccessRights_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_accessRightsClient != null)
+            {
+                m_accessRightsClient = null;
+            }
+        }
+        private void StartAccessRights_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_accessRightsClient == null)
+            {
+                m_accessRightsClient = new AccessRightsClient();               
+            }
+        }
+
+        private void AccessRestrictions_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_accessRightsClient != null)
+            {
+                m_accessRightsClient.SampleAccessRestrictions();
+            }
+        }
+        private void RolePermissions_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_accessRightsClient != null)
+            {
+                m_accessRightsClient.SampleRolePermissions();
+            }
+        }
+
+        private void UserRolePermissions_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_accessRightsClient != null)
+            {
+                m_accessRightsClient.SampleUserRolePermissions();
+            }
         }
 
         #endregion
