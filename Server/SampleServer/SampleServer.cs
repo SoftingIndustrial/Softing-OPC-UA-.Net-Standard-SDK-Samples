@@ -38,6 +38,7 @@ namespace SampleServer
         #region Private Members
         private const string OperatorUser1 = "operator1";
         private const string OperatorUser2 = "operator2";
+        private const string EngineerUser = "engineer";
 
         private Dictionary<string, string> m_userNameIdentities;
         private Timer m_certificatesTimer;
@@ -53,6 +54,7 @@ namespace SampleServer
             m_userNameIdentities = new Dictionary<string, string>();
             m_userNameIdentities.Add(OperatorUser1, "pwd");
             m_userNameIdentities.Add(OperatorUser2, "pwd");
+            m_userNameIdentities.Add(EngineerUser, "pwd");
             m_userNameIdentities.Add("usr", "pwd");
             m_userNameIdentities.Add("admin", "admin");
             ManufacturerName = "Softing";
@@ -221,8 +223,21 @@ namespace SampleServer
         {
             // Hook the ValidateIdentityMappingRule called in rolesNodeManager.AddIdentityCallHandler
             rolesNodeManager.RoleStateHelper.ValidateIdentityMappingRule += ValidateIdentityMappingRuleHandler;
-
-            ServiceResult serviceResult = rolesNodeManager.RoleStateHelper.AddIdentityToRoleState(ObjectIds.WellKnownRole_Operator,
+            // add username identity mapping to enigineer role
+            ServiceResult serviceResult = rolesNodeManager.RoleStateHelper.AddIdentityToRoleState(ObjectIds.WellKnownRole_Engineer,
+               new IdentityMappingRuleType
+               {
+                   CriteriaType = IdentityCriteriaType.UserName,
+                   Criteria = EngineerUser
+               });
+            if (ServiceResult.IsBad(serviceResult))
+            {
+                Utils.Trace(Utils.TraceMasks.Information, "SampleServer.OnRoleSetInitializedserviceResult failed: ", serviceResult.LocalizedText);
+                Console.WriteLine(String.Format("SampleServer.OnRoleSetInitializedserviceResult failed: {0}",
+                    serviceResult.LocalizedText));
+            }
+            // add username identity mapping to operator role
+            serviceResult = rolesNodeManager.RoleStateHelper.AddIdentityToRoleState(ObjectIds.WellKnownRole_Operator,
                 new IdentityMappingRuleType
                 {
                     CriteriaType = IdentityCriteriaType.UserName,
@@ -234,7 +249,7 @@ namespace SampleServer
                 Console.WriteLine(String.Format("SampleServer.OnRoleSetInitializedserviceResult failed: {0}",
                     serviceResult.LocalizedText));
             }
-
+            // add username identity mapping to operator role
             serviceResult = rolesNodeManager.RoleStateHelper.AddIdentityToRoleState(ObjectIds.WellKnownRole_Operator,
                 new IdentityMappingRuleType
                 {
