@@ -61,7 +61,7 @@ namespace SampleServer
         }
 
         #endregion
-                
+
         #region OnServerStarted
         /// <summary>
         /// Called after the server has been started.
@@ -102,55 +102,13 @@ namespace SampleServer
         #region RoleSet Handling
 
         /// <summary>
-        /// Method called when adding a new rule for selecting a UserIdentityToken via the rolesNodeManager.AddIdentityCallHandler method.
-        /// It validates the input criteria depending on the type.
-        /// </summary>
-        /// <param name="identityMappingRule">The new rule to be added</param>
-        /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
-        private ServiceResult ValidateIdentityMappingRuleHandler(IdentityMappingRuleType identityMappingRule)
-        {
-            switch (identityMappingRule.CriteriaType)
-            {
-                case IdentityCriteriaType.UserName:
-                    return ValidateUserNameCriteria(identityMappingRule.Criteria);
-                case IdentityCriteriaType.Thumbprint:
-                    return ValidateThumbprintCriteria(identityMappingRule.Criteria);
-                case IdentityCriteriaType.Role:
-                    return ValidateRoleCriteria(identityMappingRule.Criteria);
-                case IdentityCriteriaType.GroupId:
-                    return ValidateGroupIdCriteria(identityMappingRule.Criteria);
-                case IdentityCriteriaType.Anonymous:
-                case IdentityCriteriaType.AuthenticatedUser:
-                    return ValidateAnonymousOrAuthenticatedUserCriteria(identityMappingRule.Criteria);
-                default:
-                    return StatusCodes.Bad;
-            }
-        }
-
-        /// <summary>
-        /// Validates AuthenticatedUser and Anonymous criteria type of a IdentityMappingRuleType.
-        /// In case of AuthenticatedUser it checks that the criteria is a null string which indicates any valid user credentials have been provided.
-        /// In case of Anonymous it checks that the criteria is a null string which indicates that no user credentials have been provided.
-        /// </summary>
-        /// <param name="nullString">A null string</param>
-        /// <returns></returns>
-        private static ServiceResult ValidateAnonymousOrAuthenticatedUserCriteria(string nullString)
-        {
-            if (!string.IsNullOrEmpty(nullString))
-            {
-                return ServiceResult.Create(StatusCodes.BadInvalidArgument,
-                   "ValidateAnonymousOrAuthenticatedUserCriteria received a value different than null or empty");
-            }
-            return ServiceResult.Good;
-        }
-
-        /// <summary>
         /// Validates GroupId criteria type of a IdentityMappingRuleType.
         /// It checks that the criteria is a generic text identifier for a user group specific to the Authorization Service.
         /// </summary>
         /// <param name="groupId">A generic text identifier for a user group specific to the Authorization Service</param>
-        /// <returns></returns>
-        private ServiceResult ValidateGroupIdCriteria(string groupId)
+        /// <param name="roleId">The RoleState node</param>
+        /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
+        protected override ServiceResult ValidateGroupIdCriteria(string groupId, NodeId roleId)
         {
             // let all groupIds pass
             return ServiceResult.Good;
@@ -161,10 +119,11 @@ namespace SampleServer
         /// It checks that the criteria is a name of a restriction found in the Access Token.
         /// </summary>
         /// <param name="restrictionName">The string representing a name of a restriction found in the Access Token</param>
-        /// <returns></returns>
-        private ServiceResult ValidateRoleCriteria(string restrictionName)
+        /// <param name="roleId">The RoleState node</param>
+        /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
+        protected override ServiceResult ValidateRoleCriteria(string restrictionName, NodeId roleId)
         {
-            // let all groupIds pass
+            // let all restriction names pass
             return StatusCodes.Good;
         }
 
@@ -173,8 +132,9 @@ namespace SampleServer
         /// It checks that the criteria is a thumbprint of a Certificate of a user or CA which is trusted by the Server.
         /// </summary>
         /// <param name="thumbprint">The string representing a user name</param>
-        /// <returns></returns>
-        private ServiceResult ValidateThumbprintCriteria(string thumbprint)
+        /// <param name="roleId">The RoleState node</param>
+        /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
+        protected override ServiceResult ValidateThumbprintCriteria(string thumbprint, NodeId roleId)
         {
             X509Certificate2Collection trustedCertificates = new X509Certificate2Collection();
             trustedCertificates.AddRange(Configuration.SecurityConfiguration.TrustedUserCertificates.GetCertificates().Result);
@@ -199,9 +159,9 @@ namespace SampleServer
         /// It checks that the Username is a name of a user known to the Server.
         /// </summary>
         /// <param name="username">The string representing a user name</param>
-        /// <returns></returns>
-        private ServiceResult ValidateUserNameCriteria(
-            string username)
+        /// <param name="roleId">The RoleState node</param>
+        /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
+        protected override ServiceResult ValidateUserNameCriteria(string username, NodeId roleId)
         {
             if (!string.IsNullOrEmpty(username) && m_userNameIdentities.ContainsKey(username))
             {
@@ -215,14 +175,46 @@ namespace SampleServer
         }
 
         /// <summary>
+        /// Validates Anonymous criteria type of a IdentityMappingRuleType.
+        /// In case of Anonymous it checks that the criteria is a null string which indicates that no user credentials have been provided.
+        /// </summary>
+        /// <param name="nullString">A null string</param>
+        /// <param name="roleId">The RoleState node</param>
+        /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
+        protected override ServiceResult ValidateAnonymousUserCriteria(string nullString, NodeId roleId)
+        {
+            // Anonymous users can't be added to administrator roles
+            if (roleId == ObjectIds.WellKnownRole_Supervisor ||
+                roleId == ObjectIds.WellKnownRole_SecurityAdmin ||
+                roleId == ObjectIds.WellKnownRole_ConfigureAdmin)
+            {
+                return ServiceResult.Create(StatusCodes.BadInvalidArgument,
+                    "ANONYMOUS_5 mapping rule cannot be added to Roles with administrator privileges");
+            }
+
+            return ServiceResult.Good;
+        }
+
+        /// <summary>
+        /// Validates AuthenticatedUser criteria type of a IdentityMappingRuleType.
+        /// In case of AuthenticatedUser it checks that the criteria is a null string which indicates any valid user credentials have been provided.
+        /// </summary>
+        /// <param name="nullString">A null string</param>
+        /// <param name="roleId">The RoleState node</param>
+        /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
+        protected override ServiceResult ValidateAuthenticatedUserCriteria(string nullString, NodeId roleId)
+        {
+            // let all authenticated user criteria pass
+            return ServiceResult.Good;
+        }
+
+        /// <summary>
         /// Custom implementation of RoleSet 
         /// </summary>
         /// <param name="server"></param>
         /// <param name="rolesNodeManager"></param>
         public override void OnRoleSetInitialized(IServerInternal server, RolesNodeManager rolesNodeManager)
         {
-            // Hook the ValidateIdentityMappingRule called in rolesNodeManager.AddIdentityCallHandler
-            rolesNodeManager.RoleStateHelper.ValidateIdentityMappingRule += ValidateIdentityMappingRuleHandler;
             // add username identity mapping to enigineer role
             ServiceResult serviceResult = rolesNodeManager.RoleStateHelper.AddIdentityToRoleState(ObjectIds.WellKnownRole_Engineer,
                new IdentityMappingRuleType
@@ -362,11 +354,6 @@ namespace SampleServer
             }
         }
 
-
-        protected override ServiceResult ValidateIdentityMappingRule(IdentityMappingRuleType identityMappingRule)
-        {
-            return base.ValidateIdentityMappingRule(identityMappingRule);
-        }
 
         /// <summary>
         /// Validates the user and password identity for <see cref="SystemConfigurationIdentity"/>.
