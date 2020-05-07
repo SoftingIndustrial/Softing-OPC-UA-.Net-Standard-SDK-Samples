@@ -69,8 +69,17 @@ namespace SampleServer
         /// <param name="server">The server.</param>
         protected override void OnServerStarted(IServerInternal server)
         {
-            base.OnServerStarted(server);            
-            
+            base.OnServerStarted(server);
+
+            // TODO: check if this can be done in a better place!
+            // create the NamespaceMetadata nodes for all Namespaces
+            ConfigurationNodeManager configurationNodeManager = server.DiagnosticsNodeManager as ConfigurationNodeManager;
+
+            foreach (string namespaceUri in server.NamespaceUris.ToArray())
+            {
+                var metadaata = configurationNodeManager?.CreateNamespaceMetadataState(namespaceUri);
+            }
+
             uint clearCertificatesInterval = 30000;
 
             //parse custom configuration extension 

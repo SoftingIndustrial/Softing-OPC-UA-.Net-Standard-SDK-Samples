@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -37,7 +37,8 @@ namespace SampleServer.ReferenceServer
         /// <summary>
         /// Initializes the node manager.
         /// </summary>
-        public ReferenceNodeManager(IServerInternal server, ApplicationConfiguration configuration) : base(server, configuration, Namespaces.ReferenceApplications)
+        public ReferenceNodeManager(IServerInternal server, ApplicationConfiguration configuration)
+            : base(server, configuration, Namespaces.ReferenceApplications)
         {
             m_usedIdentifiers = new Dictionary<string, int>();
             m_dynamicNodes = new List<BaseDataVariableState>();
@@ -104,9 +105,6 @@ namespace SampleServer.ReferenceServer
             {
                 // Execute base class CreateAddressSpace
                 base.CreateAddressSpace(externalReferences);
-
-                var namespaceMetadata = GetNamespaceMetadataState(Namespaces.ReferenceApplications);
-                namespaceMetadata.WriteMask = AttributeWriteMask.WriteMask;
 
                 FolderState root = CreateFolder(null, "CTT");
                 AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
@@ -828,7 +826,7 @@ namespace SampleServer.ReferenceServer
 
                     FolderState nodeIdsFolder = CreateFolder(root,  "NodeIds");
 
-                    BaseDataVariableState nodeIdsInstructions = CreateVariable(folderAccessRights, "Instructions", DataTypeIds.String);
+                    BaseDataVariableState nodeIdsInstructions = CreateVariable(nodeIdsFolder, "Instructions", DataTypeIds.String);
                     nodeIdsInstructions.Value = "All supported Node types are available except whichever is in use for the other nodes.";
                     variables.Add(nodeIdsInstructions);
 
