@@ -178,10 +178,9 @@ namespace SampleServer
         /// Validates Anonymous criteria type of a IdentityMappingRuleType.
         /// In case of Anonymous it checks that the criteria is a null string which indicates that no user credentials have been provided.
         /// </summary>
-        /// <param name="nullString">A null string</param>
         /// <param name="roleId">The RoleState node</param>
         /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
-        protected override ServiceResult ValidateAnonymousUserCriteria(string nullString, NodeId roleId)
+        protected override ServiceResult ValidateAnonymousUserCriteria(NodeId roleId)
         {
             // Anonymous users can't be added to administrator roles
             if (roleId == ObjectIds.WellKnownRole_Supervisor ||
@@ -199,10 +198,9 @@ namespace SampleServer
         /// Validates AuthenticatedUser criteria type of a IdentityMappingRuleType.
         /// In case of AuthenticatedUser it checks that the criteria is a null string which indicates any valid user credentials have been provided.
         /// </summary>
-        /// <param name="nullString">A null string</param>
         /// <param name="roleId">The RoleState node</param>
         /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
-        protected override ServiceResult ValidateAuthenticatedUserCriteria(string nullString, NodeId roleId)
+        protected override ServiceResult ValidateAuthenticatedUserCriteria(NodeId roleId)
         {
             // let all authenticated user criteria pass
             return ServiceResult.Good;
