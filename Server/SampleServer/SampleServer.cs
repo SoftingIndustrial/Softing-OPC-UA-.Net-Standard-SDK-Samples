@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -106,43 +106,131 @@ namespace SampleServer
             }
             catch { }
         }
+        #endregion        
+
+        #region Override CreateMasterNodeManager
+
+        /// <summary>
+        /// Creates the node managers for the server.
+        /// </summary>
+        /// <remarks>
+        /// This method allows the sub-class create any additional node managers which it uses. The SDK
+        /// always creates a CoreNodeManager which handles the built-in nodes defined by the specification.
+        /// Any additional NodeManagers are expected to handle application specific nodes.
+        /// </remarks>
+        protected override MasterNodeManager CreateMasterNodeManager(IServerInternal server, ApplicationConfiguration configuration)
+        {
+            Utils.Trace(Utils.TraceMasks.Information, "SampleServer.CreateMasterNodeManager", "Creating the Node Managers.");
+
+            List<INodeManager> nodeManagers = new List<INodeManager>();
+            // add RolesNodeManager to support Role based permission handling in this server
+            nodeManagers.Add(new RolesNodeManager(server, configuration));
+            nodeManagers.Add(new AlarmsNodeManager(server, configuration));
+            nodeManagers.Add(new DataAccessNodeManager(server, configuration));
+            nodeManagers.Add(new SampleHDANodeManager(server, configuration));
+            nodeManagers.Add(new MethodsNodeManager(server, configuration));
+            nodeManagers.Add(new NodeSetImportNodeManager(server, configuration));
+            nodeManagers.Add(new ReferenceNodeManager(server, configuration));
+            nodeManagers.Add(new UserAuthenticationNodeManager(server, configuration));
+            nodeManagers.Add(new FileTransferNodeManager(server, configuration));
+            nodeManagers.Add(new PubSubNodeManager(server, configuration, true));
+            nodeManagers.Add(new CustomTypesNodeManager(server, configuration));
+
+            // Create master node manager
+            return new MasterNodeManager(server, configuration, null, nodeManagers.ToArray());
+        }
         #endregion
 
-        #region RoleSet Handling
+        #region UserAuthentication Custom Implementation
 
         /// <summary>
-        /// Validates GroupId criteria type of a IdentityMappingRuleType.
-        /// It checks that the criteria is a generic text identifier for a user group specific to the Authorization Service.
+        /// Validates the user and password identity.
         /// </summary>
-        /// <param name="groupId">A generic text identifier for a user group specific to the Authorization Service</param>
-        /// <param name="roleId">The RoleState node</param>
-        /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
-        protected override ServiceResult ValidateGroupIdCriteria(string groupId, NodeId roleId)
+        /// <returns>true if the user identity is valid.</returns>
+        protected override bool ValidateUserPassword(string userName, string password)
         {
-            // let all groupIds pass
-            return ServiceResult.Good;
+            if (m_userNameIdentities.ContainsKey(userName) && m_userNameIdentities[userName].Equals(password))
+            {
+                // Accept the user identity.
+                return true;
+            }
+            else
+            {
+                // Reject the user identity.
+                return false;
+            }
+        }
+
+
+        /// <summary>
+        /// Validates the user and password identity for <see cref="SystemConfigurationIdentity"/>.
+        /// </summary>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>true if the user identity is valid.</returns>
+        protected override bool ValidateSystemConfigurationIdentity(string userName, string password)
+        {
+            //  Ensure that username "admin" will be instantiated as SystemConfigurationIdentity. The Password is validated by ValidateUserPassword method.
+            return (userName == "admin");
+        }
+
+        #endregion
+
+        #region RoleManagement Custom Implementation
+        /// <summary>
+        /// Custom implementation of RoleSet. Define custom role set 
+        /// </summary>
+        /// <param name="server">The server.</param>
+        /// <param name="roleStateHelper">The helper class that implements roleSet methods</param>
+        public override void OnRoleSetInitialized(IServerInternal server, IRoleStateHelper roleStateHelper)
+        {
+            // add username identity mapping to enigineer role
+            roleStateHelper.AddIdentityToRoleState(ObjectIds.WellKnownRole_Engineer,
+               new IdentityMappingRuleType {
+                   CriteriaType = IdentityCriteriaType.UserName,
+                   Criteria = EngineerUser
+               });
+
+            // add username identity mapping to operator role
+            roleStateHelper.AddIdentityToRoleState(ObjectIds.WellKnownRole_Operator,
+                 new IdentityMappingRuleType {
+                     CriteriaType = IdentityCriteriaType.UserName,
+                     Criteria = OperatorUser1
+                 });
+            // add username identity mapping to operator role
+            roleStateHelper.AddIdentityToRoleState(ObjectIds.WellKnownRole_Operator,
+                new IdentityMappingRuleType {
+                    CriteriaType = IdentityCriteriaType.UserName,
+                    Criteria = OperatorUser2
+                });
+
+            roleStateHelper.AddApplicationToRoleState(ObjectIds.WellKnownRole_Operator,
+                "urn:localhost:Softing:UANETStandardToolkit:SampleClient");
+
+            roleStateHelper.AddEndpointToRoleState(ObjectIds.WellKnownRole_Operator,
+                 new EndpointType() {
+                     EndpointUrl = "opc.tcp://localhost",
+                     SecurityMode = MessageSecurityMode.SignAndEncrypt,
+                     SecurityPolicyUri = "None",
+                     TransportProfileUri = "None"
+                 });
+
+            // Will accept only the endpoints added with AddEndpointToRoleState
+            roleStateHelper.ExcludeEndpoints(ObjectIds.WellKnownRole_Operator, false);
+
+            // Will accept only the SampleClient added with AddApplicationToRoleState
+            roleStateHelper.ExcludeApplications(ObjectIds.WellKnownRole_Operator, false);
+
+            base.OnRoleSetInitialized(server, roleStateHelper);
         }
 
         /// <summary>
-        /// Validates Role criteria type of a IdentityMappingRuleType.
-        /// It checks that the criteria is a name of a restriction found in the Access Token.
-        /// </summary>
-        /// <param name="restrictionName">The string representing a name of a restriction found in the Access Token</param>
-        /// <param name="roleId">The RoleState node</param>
-        /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
-        protected override ServiceResult ValidateRoleCriteria(string restrictionName, NodeId roleId)
-        {
-            // let all restriction names pass
-            return StatusCodes.Good;
-        }
-
-        /// <summary>
-        /// Validates Thumbprint criteria type of a IdentityMappingRuleType.
+        /// Validates if the Thumbprint criteria is appropriate for the provided RoleId.
         /// It checks that the criteria is a thumbprint of a Certificate of a user or CA which is trusted by the Server.
         /// </summary>
-        /// <param name="thumbprint">The string representing a user name</param>
-        /// <param name="roleId">The RoleState node</param>
-        /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
+        /// <param name="thumbprint">The string representing a certificate thumbprint.</param>
+        /// <param name="roleId">The RoleState node Id</param>
+        /// <returns>Good if input criteria passes the validation or a bad status code otherwise.</returns>
         protected override ServiceResult ValidateThumbprintCriteria(string thumbprint, NodeId roleId)
         {
             X509Certificate2Collection trustedCertificates = new X509Certificate2Collection();
@@ -185,7 +273,6 @@ namespace SampleServer
 
         /// <summary>
         /// Validates Anonymous criteria type of a IdentityMappingRuleType.
-        /// In case of Anonymous it checks that the criteria is a null string which indicates that no user credentials have been provided.
         /// </summary>
         /// <param name="roleId">The RoleState node</param>
         /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
@@ -202,178 +289,6 @@ namespace SampleServer
 
             return ServiceResult.Good;
         }
-
-        /// <summary>
-        /// Validates AuthenticatedUser criteria type of a IdentityMappingRuleType.
-        /// In case of AuthenticatedUser it checks that the criteria is a null string which indicates any valid user credentials have been provided.
-        /// </summary>
-        /// <param name="roleId">The RoleState node</param>
-        /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
-        protected override ServiceResult ValidateAuthenticatedUserCriteria(NodeId roleId)
-        {
-            // let all authenticated user criteria pass
-            return ServiceResult.Good;
-        }
-
-        /// <summary>
-        /// Custom implementation of RoleSet 
-        /// </summary>
-        /// <param name="server"></param>
-        /// <param name="rolesNodeManager"></param>
-        public override void OnRoleSetInitialized(IServerInternal server, RolesNodeManager rolesNodeManager)
-        {
-            // add username identity mapping to enigineer role
-            ServiceResult serviceResult = rolesNodeManager.RoleStateHelper.AddIdentityToRoleState(ObjectIds.WellKnownRole_Engineer,
-               new IdentityMappingRuleType
-               {
-                   CriteriaType = IdentityCriteriaType.UserName,
-                   Criteria = EngineerUser
-               });
-            if (ServiceResult.IsBad(serviceResult))
-            {
-                Utils.Trace(Utils.TraceMasks.Information, "SampleServer.OnRoleSetInitializedserviceResult failed: ", serviceResult.LocalizedText);
-                Console.WriteLine(String.Format("SampleServer.OnRoleSetInitializedserviceResult failed: {0}",
-                    serviceResult.LocalizedText));
-            }
-            // add username identity mapping to operator role
-            serviceResult = rolesNodeManager.RoleStateHelper.AddIdentityToRoleState(ObjectIds.WellKnownRole_Operator,
-                new IdentityMappingRuleType
-                {
-                    CriteriaType = IdentityCriteriaType.UserName,
-                    Criteria = OperatorUser1
-                });
-            if (ServiceResult.IsBad(serviceResult))
-            {
-                Utils.Trace(Utils.TraceMasks.Information, "SampleServer.OnRoleSetInitializedserviceResult failed: ", serviceResult.LocalizedText);
-                Console.WriteLine(String.Format("SampleServer.OnRoleSetInitializedserviceResult failed: {0}",
-                    serviceResult.LocalizedText));
-            }
-            // add username identity mapping to operator role
-            serviceResult = rolesNodeManager.RoleStateHelper.AddIdentityToRoleState(ObjectIds.WellKnownRole_Operator,
-                new IdentityMappingRuleType
-                {
-                    CriteriaType = IdentityCriteriaType.UserName,
-                    Criteria = OperatorUser2
-                });
-            if (ServiceResult.IsBad(serviceResult))
-            {
-                Utils.Trace(Utils.TraceMasks.Information, "SampleServer.OnRoleSetInitializedserviceResult failed: ", serviceResult.LocalizedText);
-                Console.WriteLine(String.Format("SampleServer.OnRoleSetInitializedserviceResult failed: {0}",
-                    serviceResult.LocalizedText));
-            }
-
-            serviceResult = rolesNodeManager.RoleStateHelper.AddApplicationToRoleState(ObjectIds.WellKnownRole_Operator,
-                "urn:localhost:Softing:UANETStandardToolkit:SampleClient");
-            if (ServiceResult.IsBad(serviceResult))
-            {
-                Utils.Trace(Utils.TraceMasks.Information, "SampleServer.OnRoleSetInitializedserviceResult failed: ", serviceResult.LocalizedText);
-                Console.WriteLine(String.Format("SampleServer.OnRoleSetInitializedserviceResult failed: {0}",
-                    serviceResult.LocalizedText));
-            }
-
-            serviceResult = rolesNodeManager.RoleStateHelper.AddEndpointToRoleState(ObjectIds.WellKnownRole_Operator,
-                new EndpointType()
-                {
-                    EndpointUrl = "opc.tcp://localhost",
-                    SecurityMode = MessageSecurityMode.SignAndEncrypt,
-                    SecurityPolicyUri = "None",
-                    TransportProfileUri = "None"
-                });
-            if (ServiceResult.IsBad(serviceResult))
-            {
-                Utils.Trace(Utils.TraceMasks.Information, "SampleServer.OnRoleSetInitializedserviceResult failed: ", serviceResult.LocalizedText);
-                Console.WriteLine(String.Format("SampleServer.OnRoleSetInitializedserviceResult failed: {0}",
-                    serviceResult.LocalizedText));
-            }
-
-            // Will accept only the endpoints added with AddEndpointToRoleState
-            serviceResult = rolesNodeManager.RoleStateHelper.ExcludeEndpoints(ObjectIds.WellKnownRole_Operator, false);
-            if (ServiceResult.IsBad(serviceResult))
-            {
-                Utils.Trace(Utils.TraceMasks.Information, "SampleServer.OnRoleSetInitializedserviceResult failed: ", serviceResult.LocalizedText);
-                Console.WriteLine(String.Format("SampleServer.OnRoleSetInitializedserviceResult failed: {0}",
-                    serviceResult.LocalizedText));
-            }
-
-            // Will accept only the SampleClient added with AddApplicationToRoleState
-            serviceResult = rolesNodeManager.RoleStateHelper.ExcludeApplications(ObjectIds.WellKnownRole_Operator, false);
-            if (ServiceResult.IsBad(serviceResult))
-            {
-                Utils.Trace(Utils.TraceMasks.Information, "SampleServer.OnRoleSetInitializedserviceResult failed: ", serviceResult.LocalizedText);
-                Console.WriteLine(String.Format("SampleServer.OnRoleSetInitializedserviceResult failed: {0}",
-                    serviceResult.LocalizedText));
-            }
-
-            base.OnRoleSetInitialized(server, rolesNodeManager);
-        }
-        #endregion
-
-        #region Override CreateMasterNodeManager
-
-        /// <summary>
-        /// Creates the node managers for the server.
-        /// </summary>
-        /// <remarks>
-        /// This method allows the sub-class create any additional node managers which it uses. The SDK
-        /// always creates a CoreNodeManager which handles the built-in nodes defined by the specification.
-        /// Any additional NodeManagers are expected to handle application specific nodes.
-        /// </remarks>
-        protected override MasterNodeManager CreateMasterNodeManager(IServerInternal server, ApplicationConfiguration configuration)
-        {
-            Utils.Trace(Utils.TraceMasks.Information, "SampleServer.CreateMasterNodeManager", "Creating the Node Managers.");
-
-            List<INodeManager> nodeManagers = new List<INodeManager>();
-            // add RolesNodeManager to support Role based permission handling in this server
-            nodeManagers.Add(new RolesNodeManager(server, configuration));
-            nodeManagers.Add(new AlarmsNodeManager(server, configuration));
-            nodeManagers.Add(new DataAccessNodeManager(server, configuration));
-            nodeManagers.Add(new SampleHDANodeManager(server, configuration));
-            nodeManagers.Add(new MethodsNodeManager(server, configuration));
-            nodeManagers.Add(new NodeSetImportNodeManager(server, configuration));
-            nodeManagers.Add(new ReferenceNodeManager(server, configuration));
-            nodeManagers.Add(new UserAuthenticationNodeManager(server, configuration));
-            nodeManagers.Add(new FileTransferNodeManager(server, configuration));
-            nodeManagers.Add(new PubSubNodeManager(server, configuration, true));
-            nodeManagers.Add(new CustomTypesNodeManager(server, configuration));
-
-            // Create master node manager
-            return new MasterNodeManager(server, configuration, null, nodeManagers.ToArray());
-        }
-        #endregion
-
-        #region UserAuthentication
-
-        /// <summary>
-        /// Validates the user and password identity.
-        /// </summary>
-        /// <returns>true if the user identity is valid.</returns>
-        protected override bool ValidateUserPassword(string userName, string password)
-        {
-            if (m_userNameIdentities.ContainsKey(userName) && m_userNameIdentities[userName].Equals(password))
-            {
-                // Accept the user identity.
-                return true;
-            }
-            else
-            {
-                // Reject the user identity.
-                return false;
-            }
-        }
-
-
-        /// <summary>
-        /// Validates the user and password identity for <see cref="SystemConfigurationIdentity"/>.
-        /// </summary>
-        /// <param name="userName">The user name.</param>
-        /// <param name="password">The password.</param>
-        /// <returns>true if the user identity is valid.</returns>
-        protected override bool ValidateSystemConfigurationIdentity(string userName, string password)
-        {
-            //  Ensure that username "admin" will be instantiated as SystemConfigurationIdentity. The Password is validated by ValidateUserPassword method.
-            return (userName == "admin");
-        }
-        
         #endregion
     }
 }
