@@ -72,13 +72,9 @@ namespace SampleServer
             base.OnServerStarted(server);
 
             // TODO: check if this can be done in a better place!
-            // create the NamespaceMetadata nodes for all Namespaces
+            // create the NamespaceMetadata ReferenceServer Namespace
             ConfigurationNodeManager configurationNodeManager = server.DiagnosticsNodeManager as ConfigurationNodeManager;
-
-            foreach (string namespaceUri in server.NamespaceUris.ToArray())
-            {
-                var metadaata = configurationNodeManager?.CreateNamespaceMetadataState(namespaceUri);
-            }
+            var metadaata = configurationNodeManager?.CreateNamespaceMetadataState(Namespaces.ReferenceApplications);
 
             uint clearCertificatesInterval = 30000;
 
@@ -90,7 +86,6 @@ namespace SampleServer
             }
 
             m_certificatesTimer = new Timer(ClearCachedCertificates, null, clearCertificatesInterval, clearCertificatesInterval);
-
         }
 
         /// <summary>
@@ -106,7 +101,7 @@ namespace SampleServer
             }
             catch { }
         }
-        #endregion        
+        #endregion
 
         #region Override CreateMasterNodeManager
 
@@ -160,7 +155,6 @@ namespace SampleServer
                 return false;
             }
         }
-
 
         /// <summary>
         /// Validates the user and password identity for <see cref="SystemConfigurationIdentity"/>.
