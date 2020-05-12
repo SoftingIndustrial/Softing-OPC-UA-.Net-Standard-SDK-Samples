@@ -2120,7 +2120,7 @@ namespace SampleServer.ReferenceServer
                 {
                     new RolePermissionType()
                     {
-                        RoleId = ObjectIds.WellKnownRole_Operator,
+                        RoleId = ObjectIds.WellKnownRole_Engineer,
                         Permissions = (uint)PermissionType.None 
                     }
                 };
