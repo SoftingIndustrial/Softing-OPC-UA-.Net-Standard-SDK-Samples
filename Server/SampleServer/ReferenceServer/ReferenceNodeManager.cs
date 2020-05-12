@@ -738,7 +738,6 @@ namespace SampleServer.ReferenceServer
                     
                     // create a Variable nodes that has RolePermissions
                     BaseDataVariableState variableAnonymousAccess = CreateVariable(folderRolePermissions, "AnonymousAccess", BuiltInType.Int16);
-                    variableAnonymousAccess.WriteMask = AttributeWriteMask.WriteMask | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
                     variableAnonymousAccess.Description = "This node can be accessed by users that have Anonymous Role";
                     variableAnonymousAccess.RolePermissions = new RolePermissionTypeCollection()
                     {
@@ -752,7 +751,6 @@ namespace SampleServer.ReferenceServer
                     variables.Add(variableAnonymousAccess);
 
                     BaseDataVariableState variableAuthenticatedAccess = CreateVariable(folderRolePermissions, "AuthenticatedAccess", BuiltInType.Int16);
-                    variableAuthenticatedAccess.WriteMask = AttributeWriteMask.WriteMask | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
                     variableAuthenticatedAccess.Description = "This node can be accessed by users that have Authenticated Role";
                     variableAuthenticatedAccess.RolePermissions = new RolePermissionTypeCollection()
                     {
@@ -766,7 +764,6 @@ namespace SampleServer.ReferenceServer
                     variables.Add(variableAuthenticatedAccess);
                     
                     BaseDataVariableState variableOperatorRoleAccess = CreateVariable(folderRolePermissions, "OperatorAccess", BuiltInType.Int16);
-                    variableOperatorRoleAccess.WriteMask = AttributeWriteMask.WriteMask | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
                     variableOperatorRoleAccess.Description = "This node can be accessed by users that have Operator Role";
                     variableOperatorRoleAccess.RolePermissions = new RolePermissionTypeCollection()
                     {
@@ -803,8 +800,6 @@ namespace SampleServer.ReferenceServer
                     BaseDataVariableState arSigningRequired = CreateVariable(folderAccessRestrictions, "SigningRequired", BuiltInType.Int16);
                     arSigningRequired.AccessLevel = AccessLevels.CurrentRead;
                     arSigningRequired.UserAccessLevel = AccessLevels.CurrentRead;
-                    arSigningRequired.WriteMask = AttributeWriteMask.AccessRestrictions | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
-                    arSigningRequired.UserWriteMask = AttributeWriteMask.AccessRestrictions | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
                     arSigningRequired.AccessRestrictions = AccessRestrictionType.SigningRequired;
                     variables.Add(arSigningRequired);
 

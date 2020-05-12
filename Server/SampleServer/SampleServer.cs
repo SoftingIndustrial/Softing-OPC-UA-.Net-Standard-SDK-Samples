@@ -198,17 +198,9 @@ namespace SampleServer
                     Criteria = OperatorUser2
                 });
 
-            roleStateHelper.AddApplicationToRoleState(ObjectIds.WellKnownRole_Operator,
-                "urn:localhost:Softing:UANETStandardToolkit:SampleClient");
-
-            roleStateHelper.AddEndpointToRoleState(ObjectIds.WellKnownRole_Operator,
-                 new EndpointType() {
-                     EndpointUrl = "opc.tcp://localhost",
-                     SecurityMode = MessageSecurityMode.SignAndEncrypt,
-                     SecurityPolicyUri = "None",
-                     TransportProfileUri = "None"
-                 });
-
+            // configure operator role to include all applicationUris 
+            roleStateHelper.AddApplicationToRoleState(ObjectIds.WellKnownRole_Operator, "");
+            roleStateHelper.SetExcludeApplications(ObjectIds.WellKnownRole_Operator, true);
 
             base.OnRoleSetInitialized(server, roleStateHelper);
         }
@@ -263,7 +255,7 @@ namespace SampleServer
         /// <summary>
         /// Validates if anonymous user is accepted by the role that has the specified roleId
         /// </summary>
-        /// <param name="roleId">The RoleState node</param>
+        /// <param name="roleId">The RoleState node Id</param>
         /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
         protected override ServiceResult ValidateRoleAnonymousCriteria(NodeId roleId)
         {
