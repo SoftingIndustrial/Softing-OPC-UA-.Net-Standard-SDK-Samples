@@ -95,19 +95,11 @@ namespace SampleServer
                 while (!exit)
                 {
                     ConsoleKeyInfo key = Console.ReadKey();
-                    if (key.KeyChar == 'c')
+                    if (key.KeyChar == 'c' && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
                         string endpoint = sampleServer.Configuration.ServerConfiguration.BaseAddresses[0];
-                        
-                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                        {
-                            Console.WriteLine(String.Format("\nCopied {0} to clipboard", endpoint));
-                            ConsoleUtils.WindowsConsoleUtils.WindowsClipboard.SetTextValue(endpoint);
-                        }
-                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                        {
-                            Console.WriteLine("Available only on Windows OS. Please select and copy the above endpoint manually");
-                        }
+                        Console.WriteLine(String.Format("\nCopied {0} to clipboard", endpoint));
+                        ConsoleUtils.WindowsConsoleUtils.WindowsClipboard.SetTextValue(endpoint);
                     }
                     if (key.KeyChar == 'q' || key.KeyChar == 'x')
                     {
@@ -149,15 +141,19 @@ namespace SampleServer
             {
                 sampleServer.Stop();
             }
-        }     
-        
+        }
+
         #region Print State
         /// <summary>
         /// Print command line parameters
         /// </summary>
         private static void PrintCommandParameters()
         {
-            Console.WriteLine("Press:\n\tc: copy endpoint to clipboard (Windows Only)");
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Console.WriteLine("Press:\n\tc: copy endpoint to clipboard");
+            }
+
             Console.WriteLine("\ts: session list");
             Console.WriteLine("\tx,q: shutdown the server\n\n");
         }
