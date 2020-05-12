@@ -209,23 +209,38 @@ namespace SampleServer
                      TransportProfileUri = "None"
                  });
 
-            // Will accept only the endpoints added with AddEndpointToRoleState
-            roleStateHelper.ExcludeEndpoints(ObjectIds.WellKnownRole_Operator, false);
-
-            // Will accept only the SampleClient added with AddApplicationToRoleState
-            roleStateHelper.ExcludeApplications(ObjectIds.WellKnownRole_Operator, false);
 
             base.OnRoleSetInitialized(server, roleStateHelper);
+        }
+
+        /// <summary>
+        /// Validates if the provided userName is appropriate for the provided roleId.
+        /// It checks that the Username is a name of a user known to the Server and can be associated with the specified Role.
+        /// </summary>
+        /// <param name="roleId">The RoleState node Id</param>
+        /// <param name="userName">The string representing a user name</param>
+        /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
+        protected override ServiceResult ValidateRoleUserNameCriteria(NodeId roleId, string userName)
+        {
+            if (!string.IsNullOrEmpty(userName) && m_userNameIdentities.ContainsKey(userName))
+            {
+                // Accept the username.
+                return ServiceResult.Good;
+            }
+
+            // Reject the username.
+            return ServiceResult.Create(StatusCodes.BadInvalidArgument,
+                "ValidateUserNameCriteria failed: username {0} is not known to Server", userName);
         }
 
         /// <summary>
         /// Validates if the Thumbprint criteria is appropriate for the provided RoleId.
         /// It checks that the criteria is a thumbprint of a Certificate of a user or CA which is trusted by the Server.
         /// </summary>
-        /// <param name="thumbprint">The string representing a certificate thumbprint.</param>
         /// <param name="roleId">The RoleState node Id</param>
+        /// <param name="thumbprint">The string representing a certificate thumbprint.</param>
         /// <returns>Good if input criteria passes the validation or a bad status code otherwise.</returns>
-        protected override ServiceResult ValidateThumbprintCriteria(string thumbprint, NodeId roleId)
+        protected override ServiceResult ValidateRoleThumbprintCriteria(NodeId roleId, string thumbprint)
         {
             X509Certificate2Collection trustedCertificates = new X509Certificate2Collection();
             trustedCertificates.AddRange(Configuration.SecurityConfiguration.TrustedUserCertificates.GetCertificates().Result);
@@ -243,34 +258,14 @@ namespace SampleServer
             }
             return ServiceResult.Create(StatusCodes.BadInvalidArgument,
                 "ValidateThumbprintCriteria failed: thumbprint {0} not found amongst trusted certificates", thumbprint);
-        }
+        }        
 
         /// <summary>
-        /// Validates UserName criteria type of a IdentityMappingRuleType.
-        /// It checks that the Username is a name of a user known to the Server.
-        /// </summary>
-        /// <param name="username">The string representing a user name</param>
-        /// <param name="roleId">The RoleState node</param>
-        /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
-        protected override ServiceResult ValidateUserNameCriteria(string username, NodeId roleId)
-        {
-            if (!string.IsNullOrEmpty(username) && m_userNameIdentities.ContainsKey(username))
-            {
-                // Accept the username.
-                return ServiceResult.Good;
-            }
-
-            // Reject the username.
-            return ServiceResult.Create(StatusCodes.BadInvalidArgument,
-                "ValidateUserNameCriteria failed: username {0} is not known to Server", username);
-        }
-
-        /// <summary>
-        /// Validates Anonymous criteria type of a IdentityMappingRuleType.
+        /// Validates if anonymous user is accepted by the role that has the specified roleId
         /// </summary>
         /// <param name="roleId">The RoleState node</param>
         /// <returns>Good if input criteria passes the validation or a bad status code otherwise</returns>
-        protected override ServiceResult ValidateAnonymousUserCriteria(NodeId roleId)
+        protected override ServiceResult ValidateRoleAnonymousCriteria(NodeId roleId)
         {
             // Anonymous users can't be added to administrator roles
             if (roleId == ObjectIds.WellKnownRole_Supervisor ||
