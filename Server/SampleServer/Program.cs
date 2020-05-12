@@ -8,12 +8,10 @@
  *  
  * ======================================================================*/
 
-using System;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Opc.Ua.Server;
+using System;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace SampleServer
 {
@@ -24,6 +22,11 @@ namespace SampleServer
     {
         static void Main(string[] args)
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                ConsoleUtils.WindowsConsoleUtils.WindowsConsole.DisableQuickEdit();
+            }
+
             StartServer();
         }
 
@@ -92,6 +95,20 @@ namespace SampleServer
                 while (!exit)
                 {
                     ConsoleKeyInfo key = Console.ReadKey();
+                    if (key.KeyChar == 'c')
+                    {
+                        string endpoint = sampleServer.Configuration.ServerConfiguration.BaseAddresses[0];
+                        
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            Console.WriteLine(String.Format("\nCopied {0} to clipboard", endpoint));
+                            ConsoleUtils.WindowsConsoleUtils.WindowsClipboard.SetTextValue(endpoint);
+                        }
+                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        {
+                            Console.WriteLine("Available only on Windows OS. Please select and copy the above endpoint manually");
+                        }
+                    }
                     if (key.KeyChar == 'q' || key.KeyChar == 'x')
                     {
                         Console.WriteLine("\nShutting down...");
@@ -140,7 +157,8 @@ namespace SampleServer
         /// </summary>
         private static void PrintCommandParameters()
         {
-            Console.WriteLine("Press:\n\ts: session list");
+            Console.WriteLine("Press:\n\tc: copy endpoint to clipboard (Windows Only)");
+            Console.WriteLine("\ts: session list");
             Console.WriteLine("\tx,q: shutdown the server\n\n");
         }
 
