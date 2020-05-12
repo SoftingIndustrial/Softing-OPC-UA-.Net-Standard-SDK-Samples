@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -329,7 +329,7 @@ namespace SampleClient.StateMachine
             m_transitions.Add(accessRestrictions, State.AccessRights);
             StateTransition rolePermissions = new StateTransition(State.AccessRights, Command.RolePermissions, "2", "Sample RolePermissions");
             rolePermissions.ExecuteCommand += RolePermissions_ExecuteCommand;
-            m_transitions.Add(rolePermissions, State.RolePermissions);
+            m_transitions.Add(rolePermissions, State.AccessRights);
             StateTransition usrRolePermissions = new StateTransition(State.AccessRights, Command.UserRolePermissions, "3", "Sample UserRolePermissions");
             usrRolePermissions.ExecuteCommand += UserRolePermissions_ExecuteCommand;
             m_transitions.Add(usrRolePermissions, State.AccessRights);
