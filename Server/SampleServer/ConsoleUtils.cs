@@ -14,6 +14,9 @@ using System.Threading;
 
 namespace SampleServer
 {
+    /// <summary>
+    /// Utilities for handling OS specific console behaviors
+    /// </summary>
     static class ConsoleUtils
     {
         #region Windows OS Specific
