@@ -778,14 +778,12 @@ namespace SampleServer.ReferenceServer
 
                     // create a Variable node that has UserRolePermissions and will receive all permissions for user Operator 
                     BaseDataVariableState variableUserRolePermissionsForOperator = CreateVariable(folderRolePermissions, "UserRolePermissionsForOperator", BuiltInType.Int16);
-                    variableUserRolePermissionsForOperator.WriteMask = AttributeWriteMask.WriteMask | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
-                    variableUserRolePermissionsForOperator.OnReadUserRolePermissions = OnReadUserRolePermissionsAllPermissionsForOperator;                    
+                    variableUserRolePermissionsForOperator.OnReadUserRolePermissions = OnReadUserRolePermissions;                    
                     variables.Add(variableUserRolePermissionsForOperator);
 
                     // create a Variable node that has UserRolePermissions and will receive no permissions for user Engineer 
                     BaseDataVariableState variableUserRolePermissionsForEngineeer = CreateVariable(folderRolePermissions, "UserRolePermissionsForEngineeer", BuiltInType.Int16);
-                    variableUserRolePermissionsForEngineeer.WriteMask = AttributeWriteMask.WriteMask | AttributeWriteMask.RolePermissions | AttributeWriteMask.Description;
-                    variableUserRolePermissionsForEngineeer.OnReadUserRolePermissions = OnReadUserRolePermissionsNoPermissionsForEngineer;
+                    variableUserRolePermissionsForEngineeer.OnReadUserRolePermissions = OnReadUserRolePermissions;
                     variables.Add(variableUserRolePermissionsForEngineeer);
 
                     // sub-folder for "AccessRestrictions"
@@ -2065,16 +2063,16 @@ namespace SampleServer.ReferenceServer
         }
 
         /// <summary>
-        /// Handler for Reading UserRolePermissions of AllPermissionsForOperator Variable
+        /// Handler for Reading UserRolePermissions for a Variable
         /// </summary>
         /// <param name="context"></param>
         /// <param name="node"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        private ServiceResult OnReadUserRolePermissionsAllPermissionsForOperator(ISystemContext context, NodeState node, ref RolePermissionTypeCollection value)
+        private ServiceResult OnReadUserRolePermissions(ISystemContext context, NodeState node, ref RolePermissionTypeCollection value)
         {
             UserIdentity userIdentity = context.UserIdentity as UserIdentity;
-            // this method will give all permissions to the Operator user 
+            // this branch will give all permissions to the Operator user 
             if (userIdentity != null && context.UserIdentity.GrantedRoleIds.Contains(ObjectIds.WellKnownRole_Operator))
             {
                 value = new RolePermissionTypeCollection()
@@ -2091,32 +2089,15 @@ namespace SampleServer.ReferenceServer
                     }
                 };
             }
-            else
-            {
-                value = null;
-            }
-            return ServiceResult.Good;
-        }
-
-        /// <summary>
-        /// Handler for Reading UserRolePermissions of NoPermissionsForEngineer Variable
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="node"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private ServiceResult OnReadUserRolePermissionsNoPermissionsForEngineer(ISystemContext context, NodeState node, ref RolePermissionTypeCollection value)
-        {
-            UserIdentity userIdentity = context.UserIdentity as UserIdentity;
-            // this method will give all permissions to the Operator user 
-            if (userIdentity != null && context.UserIdentity.GrantedRoleIds.Contains(ObjectIds.WellKnownRole_Engineer))
+            // this branch will give all permissions to the Engineer user 
+            else if (userIdentity != null && context.UserIdentity.GrantedRoleIds.Contains(ObjectIds.WellKnownRole_Engineer))
             {
                 value = new RolePermissionTypeCollection()
                 {
                     new RolePermissionType()
                     {
                         RoleId = ObjectIds.WellKnownRole_Engineer,
-                        Permissions = (uint)PermissionType.None 
+                        Permissions = (uint)PermissionType.None
                     }
                 };
             }
