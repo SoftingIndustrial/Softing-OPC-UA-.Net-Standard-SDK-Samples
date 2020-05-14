@@ -741,7 +741,7 @@ namespace SampleServer.ReferenceServer
                     variableAnonymousAccess.Description = "This node can be accessed by users that have Anonymous Role";
                     variableAnonymousAccess.RolePermissions = new RolePermissionTypeCollection()
                     {
-                        // allow access to users with anonymous role
+                        // allow access to users with Anonymous role
                         new RolePermissionType()
                         {
                             RoleId = ObjectIds.WellKnownRole_Anonymous,
@@ -751,10 +751,10 @@ namespace SampleServer.ReferenceServer
                     variables.Add(variableAnonymousAccess);
 
                     BaseDataVariableState variableAuthenticatedAccess = CreateVariable(folderRolePermissions, "AuthenticatedAccess", BuiltInType.Int16);
-                    variableAuthenticatedAccess.Description = "This node can be accessed by users that have Authenticated Role";
+                    variableAuthenticatedAccess.Description = "This node can be accessed by users that have AuthenticatedUser Role";
                     variableAuthenticatedAccess.RolePermissions = new RolePermissionTypeCollection()
                     {
-                        // allow access to users with anonymous role
+                        // allow access to users with AuthenticatedUser role
                         new RolePermissionType()
                         {
                             RoleId = ObjectIds.WellKnownRole_AuthenticatedUser,
