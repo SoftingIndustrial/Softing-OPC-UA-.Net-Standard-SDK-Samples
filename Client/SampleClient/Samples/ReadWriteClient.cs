@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -126,10 +126,10 @@ namespace SampleClient.Samples
                         Console.WriteLine("  Value sampling interval: {0}", variableNode.MinimumSamplingIntervalText);
                     }
                 }
-            }
-            catch (Exception e)
+            }            
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("ReadVariableNode", ex);
             }
         }
 
@@ -167,10 +167,10 @@ namespace SampleClient.Samples
                         Console.WriteLine("  EventNotifier :  {0}", variableNode.EventNotifierText);
                     }
                 }
-            }
-            catch (Exception e)
+            }            
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("ReadObjectNode", ex);
             }
         }
 
@@ -195,9 +195,9 @@ namespace SampleClient.Samples
                 DataValueEx dataValue = m_session.Read(readValueId);
                 DisplayInformationForDataValue(dataValue);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("ReadValueForNode", ex);
             }
         }
 
@@ -233,9 +233,9 @@ namespace SampleClient.Samples
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("ReadArrayValue", ex);
             }
         }
 
@@ -278,9 +278,9 @@ namespace SampleClient.Samples
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("ReadComplexValue", ex);
             }
         }
 
@@ -332,9 +332,9 @@ namespace SampleClient.Samples
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("ReadEnumValue", ex);
             }
         }
        
@@ -379,9 +379,9 @@ namespace SampleClient.Samples
                     DisplayInformationForDataValue(dataValues[i]);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("ReadMultipleNodesValues", ex);
             }
         }
 
@@ -482,9 +482,9 @@ namespace SampleClient.Samples
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("ReadValuesForCustomEnumerationDataType", ex);
             }
         }
 
@@ -569,9 +569,9 @@ namespace SampleClient.Samples
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("ReadValuesForCustomoptionSetEnumerationDataType", ex);
             }
         }
 
@@ -642,9 +642,9 @@ namespace SampleClient.Samples
                     Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomOptionSetArrayNodeId);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("ReadValuesForCustomOptionSetDataType", ex);
             }
         }
 
@@ -715,9 +715,9 @@ namespace SampleClient.Samples
                     Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomStructureWithOptionalFieldsNodeId);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("ReadValuesForCustomStructureWithOptionalFieldsDataType", ex);
             }
         }
 
@@ -791,9 +791,9 @@ namespace SampleClient.Samples
                     Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomUnionArrayNodeId);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("ReadValuesForCustomUnionDataType", ex);
             }
         }
 
@@ -859,9 +859,9 @@ namespace SampleClient.Samples
                     Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomStructuredValueArrayNodeId);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("ReadValuesForCustomStructuredValueDataType", ex);
             }
         }
         #endregion
@@ -894,9 +894,9 @@ namespace SampleClient.Samples
                 Console.WriteLine("\n The NodeId:{0} was written with the value {1} ", StaticUInt32NodeId, writeValue.Value.Value);
                 Console.WriteLine(" Status code is {0}", statusCode);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("WriteValueForNode", ex);
             }
         }
 
@@ -928,9 +928,9 @@ namespace SampleClient.Samples
                 Console.WriteLine("\n The NodeId:{0} was written with the array value {1} ", StaticInt64ArrayNodeId, writeValue.Value.ToString());
                 Console.WriteLine(" Status code is {0}", statusCode);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("WriteArrayValueForNode", ex);
             }
         }
 
@@ -985,9 +985,9 @@ namespace SampleClient.Samples
                     Console.WriteLine(" Status code is {0}", statusCode);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("WriteComplexValueForNode", ex);
             }
         }
 
@@ -1016,9 +1016,9 @@ namespace SampleClient.Samples
                 Console.WriteLine("\n The NodeId:{0} was written with the enum value {1} ", StaticEnumNodeId, writeValue.Value.ToString());
                 Console.WriteLine(" Status code is {0}", statusCode);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("WriteEnumValueForNode", ex);
             }
         }
 
@@ -1075,9 +1075,9 @@ namespace SampleClient.Samples
                     Console.WriteLine(" Status code is {0}", statusCodes[i]);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("WriteMultipleNodesValues", ex);
             }
         }
 
@@ -1179,9 +1179,9 @@ namespace SampleClient.Samples
                     Console.WriteLine(" Status code is {0}", statusCode);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("WriteValuesForCustomEnumerationDataType", ex);
             }
         }
 
@@ -1267,9 +1267,9 @@ namespace SampleClient.Samples
                     Console.WriteLine(" Status code is {0}", statusCode);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("WriteValuesForCustomoptionSetEnumerationDataType", ex);
             }
         }
 
@@ -1355,9 +1355,9 @@ namespace SampleClient.Samples
                     Console.WriteLine(" Status code is {0}", statusCode);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("WriteValuesForCustomOptionSetDataType", ex);
             }
         }
 
@@ -1445,9 +1445,9 @@ namespace SampleClient.Samples
                     Console.WriteLine(" Status code is {0}", statusCode);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("WriteValuesForCustomStructureWithOptionalFieldsDataType", ex);
             }
         }
 
@@ -1536,9 +1536,9 @@ namespace SampleClient.Samples
                     Console.WriteLine(" Status code is {0}", statusCode);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("WriteValuesForCustomUnionDataType", ex);
             }
         }
 
@@ -1669,9 +1669,9 @@ namespace SampleClient.Samples
                     Console.WriteLine(" Status code is {0}", statusCode);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Program.PrintException("WriteValuesForCustomStructuredValueDataType", ex);
             }
         }
         #endregion
@@ -1707,7 +1707,8 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("CreateSession Error: {0}", ex.Message);
+                Program.PrintException("CreateSession", ex);
+
                 if (m_session != null)
                 {
                     m_session.Dispose();
@@ -1735,7 +1736,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
+                Program.PrintException("DisconnectSession", ex);
             }
         }
         #endregion

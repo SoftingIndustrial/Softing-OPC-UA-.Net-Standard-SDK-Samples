@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -59,7 +59,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("CreateSession Error: {0}", ex.Message);
+                Program.PrintException("BrowseClient.InitializeSession", ex);            
 
                 if (m_session != null)
                 {
@@ -88,7 +88,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
+                Program.PrintException("BrowseClient.DisconnectSession", ex);
             }
         }
 
@@ -141,14 +141,14 @@ namespace SampleClient.Samples
                                         }
                                         catch (Exception ex)
                                         {
-                                            Console.WriteLine("Browse 'Server' Error: " + ex.Message);
-                                        }
+                                            Program.PrintException("Browse 'Server'", ex);
+                                        }                                        
                                     }
                                 }
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine("Browse 'Objects' Error: " + ex.Message);
+                                Program.PrintException("Browse 'Objects'", ex);
                             }
                         }
                     }
@@ -156,7 +156,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Browse Error: " + ex.Message);
+                Program.PrintException("Browse", ex);
             }
         }
 
@@ -213,14 +213,14 @@ namespace SampleClient.Samples
                                         }
                                         catch (Exception ex)
                                         {
-                                            Console.WriteLine("Browse 'Server' Error: " + ex.Message);
-                                        }
+                                            Program.PrintException("Browse 'Server'", ex);
+                                        }                                        
                                     }
                                 }
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine("Browse 'Objects' Error: " + ex.Message);
+                                Program.PrintException("Browse 'Objects'", ex);
                             }
                         }
                     }
@@ -228,7 +228,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Browse Error: " + ex.Message);
+                Program.PrintException("Browse", ex);
             }
         }
 
@@ -279,8 +279,8 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("TranslateBrowsePath error: " + ex.Message);
-            }
+                Program.PrintException("TranslateBrowsePath", ex);
+            }            
         }
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("TranslateBrowsePaths error: " + ex.Message);
+                Program.PrintException("TranslateBrowsePaths", ex);
             }
         }
 

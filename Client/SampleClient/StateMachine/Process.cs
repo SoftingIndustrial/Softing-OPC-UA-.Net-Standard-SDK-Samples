@@ -469,6 +469,7 @@ namespace SampleClient.StateMachine
         {
             if (m_accessRightsClient != null)
             {
+                m_accessRightsClient.Dispose();
                 m_accessRightsClient = null;
             }
         }

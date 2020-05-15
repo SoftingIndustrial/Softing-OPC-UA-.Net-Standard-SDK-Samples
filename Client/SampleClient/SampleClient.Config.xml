@@ -23,7 +23,7 @@
     <!-- The location of the application instance certificate in the Windows certificate store -->
     <ApplicationCertificate>
       <StoreType>Directory</StoreType>
-      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki3/own</StorePath>
 
       <!-- The subject for the certificate 
            Note that subject names are complex structures. Only text that appears here is treated as the CommonName component.
@@ -36,7 +36,7 @@
     </ApplicationCertificate>
     <TrustedIssuerCertificates>
       <StoreType>Directory</StoreType>
-      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/issuer</StorePath>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki3/issuer</StorePath>
     </TrustedIssuerCertificates>
     <!-- The list of trusted certificates.
          Some UA applications will use self-signed certificates (certificates without a CA)
@@ -51,7 +51,7 @@
          -->
     <TrustedPeerCertificates>
       <StoreType>Directory</StoreType>
-      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/trusted</StorePath>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki3/trusted</StorePath>
     </TrustedPeerCertificates>
 
     <!-- Applications exchange Nonces during the CreateSession. This value specifies the length. Must be >= 32 -->
@@ -60,7 +60,7 @@
     <!-- The directory used to store invalid certificates for later review by the administrator. -->
     <RejectedCertificateStore>
       <StoreType>Directory</StoreType>
-      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/rejected</StorePath>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki3/rejected</StorePath>
     </RejectedCertificateStore>
 
     <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 

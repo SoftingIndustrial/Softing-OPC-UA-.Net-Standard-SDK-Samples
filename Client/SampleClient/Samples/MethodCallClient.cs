@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -89,7 +89,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Method call exception: " + ex.Message);
+                Program.PrintException("CallMethod", ex);
             }
         }
 
@@ -129,7 +129,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Asynchronous method call exception: " + ex.Message);
+                Program.PrintException("CallMethodAsync", ex);
             }
         }
 
@@ -158,7 +158,7 @@ namespace SampleClient.Samples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("CreateSession Error: {0}", ex.Message);
+                    Program.PrintException("CreateSession", ex);
 
                     if (m_session != null)
                     {
@@ -194,7 +194,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
+                Program.PrintException("DisconnectSession", ex);
             }
         }
 

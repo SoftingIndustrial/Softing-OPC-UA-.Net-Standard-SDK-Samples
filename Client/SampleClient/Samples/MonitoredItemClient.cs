@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -78,8 +78,9 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("CreateSession Error: {0}", ex.Message);
-                if (m_session != null)
+                Program.PrintException("CreateSession", ex);
+            
+            if (m_session != null)
                 {
                     m_session.Dispose();
                     m_session = null;
@@ -113,8 +114,8 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
-            }
+                Program.PrintException("DisconnectSession", ex);
+            }            
         }
 
         #endregion
@@ -175,7 +176,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Program.PrintException("CreateMonitoredItem", ex);
             }
         }
 
@@ -215,7 +216,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Monitored item delete error: " + ex.Message);
+                Program.PrintException("DeleteMonitoredItem", ex);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -77,7 +77,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Program.PrintException("HistoryReadRaw", ex);
             }
 
             if (results == null || results.Count == 0)
@@ -128,8 +128,8 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-            }
+                Program.PrintException("HistoryReadAtTime", ex);
+            }            
 
             if (results == null || results.Count == 0)
             {
@@ -180,7 +180,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Program.PrintException("HistoryReadProcessed", ex);
             }
 
             if (results == null || results.Count == 0)
@@ -220,7 +220,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("CreateSession Error: {0}", ex.Message);
+                Program.PrintException("CreateSession", ex);
 
                 if (m_session != null)
                 {
@@ -250,7 +250,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
+                Program.PrintException("DisconnectSession", ex);
             }
         }
 

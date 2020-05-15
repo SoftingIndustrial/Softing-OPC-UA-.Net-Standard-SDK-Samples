@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -69,7 +69,8 @@ namespace SampleClient.Samples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("CreateSession Error: {0}", ex.Message);
+                    Program.PrintException("CreateSession", ex);
+
                     if (m_session != null)
                     {
                         m_session.Dispose();
@@ -103,9 +104,9 @@ namespace SampleClient.Samples
                     Console.WriteLine("Session already disconnected.");
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("DisconnectSession error: {0}", e.Message);
+                Program.PrintException("DisconnectSession", ex);
             }
         }
 
@@ -125,9 +126,9 @@ namespace SampleClient.Samples
             {
                 PubSubConfigurationDataType pubSubConfigurationData = PubSubStateConfigurationReader.PubSubConfigurationRead(m_session);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Download file error: {0}", e.Message);
+                Program.PrintException("DownloadFile", ex);
             }
         }
     }

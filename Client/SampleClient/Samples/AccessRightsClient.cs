@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -61,7 +61,7 @@ namespace SampleClient.Samples
         {
             // initialize the UaApplication with config file
             m_application = UaApplication.Create("SampleClient.Config.xml").Result;
-
+            m_application.Configuration.CertificateValidator.CertificateValidation += Program.CertificateValidator_CertificateValidation;
             // set the flags to avoid loading custom data types 
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
@@ -91,7 +91,7 @@ namespace SampleClient.Samples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("AccessRightsClient.SampleAccessRestrictions - " + ex.Message);
+                    Program.PrintException("AccessRightsClient.SampleAccessRestrictions", ex);
                 }
             }
 
@@ -110,7 +110,7 @@ namespace SampleClient.Samples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("AccessRightsClient.SampleAccessRestrictions - " + ex.Message);
+                    Program.PrintException("AccessRightsClient.SampleAccessRestrictions", ex);
                 }
             }
 
@@ -129,7 +129,7 @@ namespace SampleClient.Samples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("AccessRightsClient.SampleAccessRestrictions - " + ex.Message);
+                    Program.PrintException("AccessRightsClient.SampleAccessRestrictions", ex);
                 }
             }
         }
@@ -154,7 +154,7 @@ namespace SampleClient.Samples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("AccessRightsClient.SampleRolePermissions - " + ex.Message);
+                    Program.PrintException("AccessRightsClient.SampleRolePermissions", ex);
                 }
             }
 
@@ -172,7 +172,7 @@ namespace SampleClient.Samples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("AccessRightsClient.SampleRolePermissions - " + ex.Message);
+                    Program.PrintException("AccessRightsClient.SampleRolePermissions", ex);
                 }
             }
 
@@ -190,7 +190,7 @@ namespace SampleClient.Samples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("AccessRightsClient.SampleRolePermissions - " + ex.Message);
+                    Program.PrintException("AccessRightsClient.SampleRolePermissions", ex);
                 }
             }
         }
@@ -213,7 +213,7 @@ namespace SampleClient.Samples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("AccessRightsClient.SampleUserRolePermissions - " + ex.Message);
+                    Program.PrintException("AccessRightsClient.SampleUserRolePermissions", ex);
                 }
             }
 
@@ -230,11 +230,19 @@ namespace SampleClient.Samples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("AccessRightsClient.SampleUserRolePermissions - " + ex.Message);
+                    Program.PrintException("AccessRightsClient.SampleUserRolePermissions", ex);
                 }
             }
         }
 
+        /// <summary>
+        /// Cleanup resources used by this instance
+        /// </summary>
+        public void Dispose()
+        {
+            // detach static event hadler
+            m_application.Configuration.CertificateValidator.CertificateValidation -= Program.CertificateValidator_CertificateValidation;
+        }
         #endregion
 
 
@@ -255,9 +263,9 @@ namespace SampleClient.Samples
                 session.SessionName = sessionName;
                 return session;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("CreateSession Error: {0}", e.Message);
+                Program.PrintException("AccessRightsClient.CreateSession", ex);
                 return null;
             }
         }

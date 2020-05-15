@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -40,7 +40,7 @@ namespace SampleClient.Samples
             // ApplicationConfiguration configuration = CreateAplicationConfiguration();
             // m_application = UaApplication.Create(configuration).Result;
             m_application = UaApplication.Create("SampleClient.Config.xml").Result;
-
+           
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
         }
@@ -159,7 +159,7 @@ namespace SampleClient.Samples
                     // create the session object for selectedEndpoint
                     using (ClientSession session = CreateSession("UaDiscoverySession", selectedEndpoint.DiscoveryEndpointUrl,
                         selectedEndpoint.SecurityMode,
-                        (SecurityPolicy) Enum.Parse(typeof(SecurityPolicy), selectedEndpoint.SecurityPolicy),
+                        (SecurityPolicy)Enum.Parse(typeof(SecurityPolicy), selectedEndpoint.SecurityPolicy),
                         selectedEndpoint.Encoding[0],
                         new UserIdentity()))
                     {
@@ -167,13 +167,13 @@ namespace SampleClient.Samples
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error: {0}", e.Message);
+                Program.PrintException("ConnectClient.CreateSessionUsingDiscovery", ex);
             }
         }
 
-        #endregion
+        #endregion        
 
         #region Private Helper Methods
 
@@ -248,9 +248,9 @@ namespace SampleClient.Samples
                 session.SessionName = sessionName;
                 return session;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("CreateSession Error: {0}", e.Message);
+                Program.PrintException("ConnectClient.CreateSession", ex);
                 return null;
             }
         }
@@ -270,9 +270,9 @@ namespace SampleClient.Samples
                 // Disconnect the session.
                 session.Disconnect(true);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("ConnectTest Error: {0}", e.Message);
+                Program.PrintException("ConnectClient.ConnectTest", ex);
             }
         }
 

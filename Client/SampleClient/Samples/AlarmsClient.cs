@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -78,10 +78,10 @@ namespace SampleClient.Samples
 
                     Console.WriteLine("ConditionRefresh method invoked.");
                 }
-            }
-            catch (Exception exception)
+            }            
+            catch (Exception ex)
             {
-                Console.WriteLine("ConditionRefresh Error : {0}.", exception.Message);
+                Program.PrintException("AlarmsClient.ConditionRefresh", ex);
             }
         }
 
@@ -139,10 +139,10 @@ namespace SampleClient.Samples
                 IList<object> outputArgs;
                 m_session.Call(selectedAlarm.EventNode, MethodIds.ConditionType_AddComment, inputArgs, out outputArgs);
                 Console.WriteLine("AddComment request sent for alarm with SourceName = {0}", selectedAlarm.SourceName);
-            }
-            catch (Exception exception)
+            }            
+            catch (Exception ex)
             {
-                Console.WriteLine("AcknowledgeAlarms Error : {0}.", exception.Message);
+                Program.PrintException("AlarmsClient.AcknowledgeAlarms", ex);
             }
         }
 
@@ -200,10 +200,10 @@ namespace SampleClient.Samples
                 IList<object> outputArgs;
                 m_session.Call(selectedAlarm.EventNode, MethodIds.AcknowledgeableConditionType_Acknowledge, inputArgs, out outputArgs);
                 Console.WriteLine("Acknowledge request sent for alarm with SourceName = {0}", selectedAlarm.SourceName);
-            }
-            catch (Exception exception)
+            }            
+            catch (Exception ex)
             {
-                Console.WriteLine("AcknowledgeAlarms Error : {0}.", exception.Message);
+                Program.PrintException("AlarmsClient.AcknowledgeAlarms", ex);
             }
         }
 
@@ -241,7 +241,8 @@ namespace SampleClient.Samples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("CreateSession Error: {0}", ex.Message);
+                    Program.PrintException("AlarmsClient.Initialize", ex);
+                
                     if (m_session != null)
                     {
                         m_session.Dispose();
@@ -298,10 +299,9 @@ namespace SampleClient.Samples
 
                 Console.WriteLine("Alarms MonitoredItem created for NodeId ({0}).", m_alarmsMonitoredItem.NodeId);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                // Log Error
-                Console.WriteLine("Create Alarms MonitoredItem: {0}", exception.Message);
+                Program.PrintException("AlarmsClient.InitializeAlarmsMonitoredItem", ex);
             }
         }
 
@@ -330,7 +330,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("DisconnectSession Error: {0}", ex.Message);
+                Program.PrintException("AlarmsClient.Disconnect", ex);
             }
         }
 
@@ -423,9 +423,9 @@ namespace SampleClient.Samples
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                Console.WriteLine("MonitoredItem Notification Error : {0}.", exception.Message);
+                Program.PrintException("AlarmsClient.MonitoredItem_Notification", ex);
             }
         }
 

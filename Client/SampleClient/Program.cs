@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -75,11 +75,31 @@ namespace SampleClient
         /// </summary>
         /// <param name="validator"></param>
         /// <param name="e"></param>
-        private static void CertificateValidator_CertificateValidation(CertificateValidator validator, CertificateValidationEventArgs e)
+        public static void CertificateValidator_CertificateValidation(CertificateValidator validator, CertificateValidationEventArgs e)
         {
             Console.WriteLine("Accepted Certificate: {0}", e.Certificate.Subject);
             e.Accept = (e.Error.StatusCode == StatusCodes.BadCertificateUntrusted  
                 || e.Error.StatusCode == StatusCodes.BadCertificateChainIncomplete);
-        }        
+        }
+
+        /// <summary>
+        /// Print out all information from exception
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="ex"></param>
+        public static void PrintException(string message, Exception ex)
+        {
+            Console.Write("-----------------------------------\nException - {0}:\n", message);
+            while(ex != null)
+            {
+                if (ex is ServiceResultException)
+                {
+                    Console.Write("StatusCode = {0}, ", StatusCodes.GetBrowseName(((ServiceResultException)ex).StatusCode));
+                }
+                Console.WriteLine("{0}, ", ex.Message);
+                ex = ex.InnerException;
+            }
+            Console.WriteLine("-----------------------------------");
+        }
     }
 }

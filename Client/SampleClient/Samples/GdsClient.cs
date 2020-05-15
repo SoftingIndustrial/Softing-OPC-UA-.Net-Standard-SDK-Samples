@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -83,7 +83,7 @@ namespace SampleClient.Samples
             }
             catch(Exception ex)
             {
-                Console.WriteLine("Error: {0}", ex.Message);
+                Program.PrintException("ExecutePullRegisterAndSignSample", ex);
             }
         }
 
@@ -133,7 +133,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: {0}", ex.Message);
+                Program.PrintException("Pull Get Trust List", ex);
             }
         }
 
@@ -251,9 +251,9 @@ namespace SampleClient.Samples
                     Console.WriteLine("Push Certificate Sample FAILED. SigningRequest encountered a problem. CreateSigningRequest method returned NULL.");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error: {0}.", ex.Message);
+                Program.PrintException("ExecutePushCertificateSample", ex);
             }
             finally
             {
@@ -351,9 +351,9 @@ namespace SampleClient.Samples
                     Console.WriteLine("Push TrustList Sample FAILED. ApplicationID for '{0}' is NULL.", Program.ServerUrl);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error: {0}.", ex.Message);
+                Program.PrintException("ExecutePushTrustListSample", ex);
             }
             finally
             {

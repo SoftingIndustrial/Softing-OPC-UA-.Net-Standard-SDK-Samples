@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -85,13 +85,13 @@ namespace SampleClient.Samples
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", applicationDescription.ApplicationUri, ex.Message);
-                    }
+                        Program.PrintException(string.Format("Server: {0} GetEndpoints", applicationDescription.ApplicationUri), ex);
+                    }                    
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("DiscoverServers Error : {0}.", ex.Message);
+                Program.PrintException("DiscoverServers", ex);
             }
         }
 
@@ -145,14 +145,14 @@ namespace SampleClient.Samples
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Server: {0} GetEndpoints Error: {1}", serverOnNetwork.DiscoveryUrl, ex.Message);
-                    }
+                        Program.PrintException(string.Format("Server: {0} GetEndpoints", serverOnNetwork.DiscoveryUrl), ex);
+                    }                    
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("DiscoverServersOnNetwork Error : {0}.", ex.Message);
-            }
+                Program.PrintException("DiscoverServersOnNetwork", ex);
+            }           
         }
 
         #endregion

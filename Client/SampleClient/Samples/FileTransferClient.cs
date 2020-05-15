@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -81,7 +81,8 @@ namespace SampleClient.Samples
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("CreateSession Error: {0}", ex.Message);
+                    Program.PrintException("CreateSession", ex);
+
                     if (m_session != null)
                     {
                         m_session.Dispose();
@@ -122,9 +123,9 @@ namespace SampleClient.Samples
                     Console.WriteLine("Session already disconnected.");
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("DisconnectSession error: {0}", e.Message);
+                Program.PrintException("DisconnectSession", ex);
             }
         }
         
@@ -191,9 +192,9 @@ namespace SampleClient.Samples
 
                 Console.WriteLine("The file was downloaded successfully.");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Download file error: {0}", e.Message);
+                Program.PrintException("DownloadFile", ex);
             }
         }
 
@@ -294,9 +295,9 @@ namespace SampleClient.Samples
 
                 Console.WriteLine("The file was uploaded successfully.");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Upload file error: {0}", e.Message);
+                Program.PrintException("UploadFile", ex);
             }
         }
 
@@ -329,9 +330,9 @@ namespace SampleClient.Samples
 
                 Console.WriteLine("The ByteString was downloaded successfully.");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Download ByteString error: {0}", e.Message);
+                Program.PrintException("Download ByteString", ex);
             }
         }
 
@@ -413,9 +414,9 @@ namespace SampleClient.Samples
                     Console.WriteLine("The temporary file helper initialization failed.");
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Download temporary file error: {0}", e.Message);
+                Program.PrintException("Download temporary file", ex);
             }
         }
 
@@ -514,10 +515,11 @@ namespace SampleClient.Samples
                     Console.WriteLine("The temporary file helper initialization failed.");
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Upload temporary file error: {0}", e.Message);
+                Program.PrintException("Upload temporary file", ex);
             }
+            
         }
         #endregion
     }
