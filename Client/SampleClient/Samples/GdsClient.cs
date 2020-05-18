@@ -892,7 +892,7 @@ namespace SampleClient.Samples
                     throw new ServiceResultException(status.Code, "CloseAndUpdate returned status code:" + status);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // close the trust list 
                 List<object> inputArgumentsCloseTrustList = new List<object>()
