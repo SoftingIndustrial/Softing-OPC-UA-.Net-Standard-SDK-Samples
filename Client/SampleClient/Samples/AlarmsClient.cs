@@ -292,7 +292,6 @@ namespace SampleClient.Samples
 
                 // Create the MonitoredItem used to receive event notifications and pass the filter object
                 m_alarmsMonitoredItem = new ClientMonitoredItem(m_subscription, m_alarmsModuleNodeId, "Alarms monitor item", filter);
-                m_alarmsMonitoredItem.SamplingInterval = 100;
                 m_alarmsMonitoredItem.QueueSize = 1000;
 
                 m_alarmsMonitoredItem.EventsReceived += AlarmsMonitoredItem_EventsReceived;
