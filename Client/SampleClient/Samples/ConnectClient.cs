@@ -192,11 +192,10 @@ namespace SampleClient.Samples
             configuration.TransportConfigurations = new TransportConfigurationCollection();
             configuration.TransportQuotas = new TransportQuotas {OperationTimeout = 15000};
             configuration.ClientConfiguration = new ClientConfiguration {DefaultSessionTimeout = 60000};
-
-            ClientToolkitConfiguration clientTkConfigration = new ClientToolkitConfiguration();
-            clientTkConfigration.DefaultSessionTimeout = 60000;
-            clientTkConfigration.DiscoveryOperationTimeout = 10000;
-            configuration.UpdateExtension<ClientToolkitConfiguration>(new System.Xml.XmlQualifiedName("ClientToolkitConfiguration"), clientTkConfigration);
+            
+            ClientToolkitConfiguration clientTkConfiguration = new ClientToolkitConfiguration();            
+            clientTkConfiguration.DiscoveryOperationTimeout = 10000;
+            configuration.UpdateExtension<ClientToolkitConfiguration>(new System.Xml.XmlQualifiedName("ClientToolkitConfiguration"), clientTkConfiguration);
 
             configuration.TraceConfiguration = new TraceConfiguration()
             {

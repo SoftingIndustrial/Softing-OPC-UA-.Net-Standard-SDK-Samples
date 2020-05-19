@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -65,8 +65,7 @@ namespace XamarinSampleClient.Helpers
             configuration.TransportQuotas = new TransportQuotas { OperationTimeout = 15000, MaxByteStringLength = 4194304 , MaxMessageSize = 4194304 };
             configuration.ClientConfiguration = new ClientConfiguration { DefaultSessionTimeout = 15000 };
 
-            ClientToolkitConfiguration clientTkConfigration = new ClientToolkitConfiguration();
-            clientTkConfigration.DefaultSessionTimeout = 15000;
+            ClientToolkitConfiguration clientTkConfigration = new ClientToolkitConfiguration();            
             clientTkConfigration.DiscoveryOperationTimeout = 6500;
             //enable read/write complex types
             clientTkConfigration.DecodeCustomDataTypes = true;
