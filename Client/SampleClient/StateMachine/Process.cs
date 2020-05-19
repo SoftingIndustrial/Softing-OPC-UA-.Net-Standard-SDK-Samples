@@ -186,14 +186,16 @@ namespace SampleClient.StateMachine
             //add GDS menu item
             StateTransition gdsSample = new StateTransition(State.DiscoveryConnectGds, Command.StartGDSSample, "3", "Enter GDS Sample Menu");            
             m_transitions.Add(gdsSample, State.GDS);
-            //commands for GDS Pull Register And Sign Certificate
-            StateTransition startGDSPullRegSignSample = new StateTransition(State.GDS, Command.StartGDSPullRegSignSample, "1", "Execute GDS Pull Register And Sign Certificate Sample");
-            startGDSPullRegSignSample.ExecuteCommand += GdsPullRegisterAndSignCertificateSample_ExecuteCommand;
-            m_transitions.Add(startGDSPullRegSignSample, State.GDS);
+
             //commands for GDS Pull Get Trust List
-            StateTransition startGDSGetTrustListSample = new StateTransition(State.GDS, Command.StartGDSPullGetTrustListSample, "2", "Execute GDS Pull Get Trust List Sample");
+            StateTransition startGDSGetTrustListSample = new StateTransition(State.GDS, Command.StartGDSPullGetTrustListSample, "1", "Execute GDS Pull Get Trust List Sample");
             startGDSGetTrustListSample.ExecuteCommand += GdsPullTrustListSample_ExecuteCommand;
             m_transitions.Add(startGDSGetTrustListSample, State.GDS);
+
+            //commands for GDS Pull Register And Sign Certificate
+            StateTransition startGDSPullRegSignSample = new StateTransition(State.GDS, Command.StartGDSPullRegSignSample, "2", "Execute GDS Pull Register And Sign Certificate Sample");
+            startGDSPullRegSignSample.ExecuteCommand += GdsPullRegisterAndSignCertificateSample_ExecuteCommand;
+            m_transitions.Add(startGDSPullRegSignSample, State.GDS);
 
             //commands for GDS Push Application Certificate
             StateTransition startGDSPushCertificateSample = new StateTransition(State.GDS, Command.StartGDSPushCertificateSample, "3", "Execute GDS Push Application Certificate Sample");
