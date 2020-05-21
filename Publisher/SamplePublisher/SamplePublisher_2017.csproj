@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net461;netcoreapp2.0;</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0;net462</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>SamplePublisher</RootNamespace>
     <AssemblyName>SamplePublisher</AssemblyName>
@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.4.360.33" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.4.361.38" />
   </ItemGroup>
 
   <ItemGroup>
