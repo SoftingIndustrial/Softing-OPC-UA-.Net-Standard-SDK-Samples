@@ -42,7 +42,7 @@ namespace SampleClient.Samples
         private const string NodeIdRolePermissionsOperator = "ns=7;s=CTT_AccessRights_RolePermissions_OperatorAccess";
 
         private const string NodeIdUserRolePermissionsAllForOperator = "ns=7;s=CTT_AccessRights_RolePermissions_UserRolePermissionsForOperator";
-        private const string NodeIdUserRolePermissionsNoneForEngineer = "ns=7;s=CTT_AccessRights_RolePermissions_UserRolePermissionsForEngineeer";
+        private const string NodeIdUserRolePermissionsForEngineer = "ns=7;s=CTT_AccessRights_RolePermissions_UserRolePermissionsForEngineeer";
 
 
         private const string AuthenticatedUser = "usr";
@@ -199,7 +199,23 @@ namespace SampleClient.Samples
         /// Access nodes from  Objects\CTT\AccessRights\UserRolePermissions with sessions created with various users that have specific user roles in SampleServer
         /// </summary>
         public void SampleUserRolePermissions()
-        {          
+        {
+            // create a session for operator user
+            using (ClientSession anonymousSession = CreateSession(SessionNameAnonymous, Program.ServerUrl,
+                MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity()))
+            {
+                try
+                {
+                    anonymousSession.Connect(true, true);
+                    // read value attribute for some variables under Objects\CTT\AccessRights\RolePermissions folder that have user roles handled
+                    ReadVariableAttribute(anonymousSession, new NodeId(NodeIdUserRolePermissionsAllForOperator), (uint)Attributes.Value);
+                    ReadVariableAttribute(anonymousSession, new NodeId(NodeIdUserRolePermissionsForEngineer), (uint)Attributes.Value);
+                }
+                catch (Exception ex)
+                {
+                    Program.PrintException("AccessRightsClient.SampleUserRolePermissions", ex);
+                }
+            }
             // create a session for operator user
             using (ClientSession operatorSession = CreateSession(SessionNameOperator, Program.ServerUrl,
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity(OperatorUser, Password)))
@@ -209,7 +225,7 @@ namespace SampleClient.Samples
                     operatorSession.Connect(true, true);
                     // read value attribute for some variables under Objects\CTT\AccessRights\RolePermissions folder that have user roles handled
                     ReadVariableAttribute(operatorSession, new NodeId(NodeIdUserRolePermissionsAllForOperator), (uint)Attributes.Value);
-                    ReadVariableAttribute(operatorSession, new NodeId(NodeIdUserRolePermissionsNoneForEngineer), (uint)Attributes.Value);
+                    ReadVariableAttribute(operatorSession, new NodeId(NodeIdUserRolePermissionsForEngineer), (uint)Attributes.Value);
                 }
                 catch (Exception ex)
                 {
@@ -226,7 +242,7 @@ namespace SampleClient.Samples
                     engineerSession.Connect(true, true);
                     // read value attribute for some variables under Objects\CTT\AccessRights\RolePermissions folder that have user roles handled
                     ReadVariableAttribute(engineerSession, new NodeId(NodeIdUserRolePermissionsAllForOperator), (uint)Attributes.Value);
-                    ReadVariableAttribute(engineerSession, new NodeId(NodeIdUserRolePermissionsNoneForEngineer), (uint)Attributes.Value);
+                    ReadVariableAttribute(engineerSession, new NodeId(NodeIdUserRolePermissionsForEngineer), (uint)Attributes.Value);
                 }
                 catch (Exception ex)
                 {

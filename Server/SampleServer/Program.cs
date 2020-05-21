@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -100,6 +100,17 @@ namespace SampleServer
                         string endpoint = sampleServer.Configuration.ServerConfiguration.BaseAddresses[0];
                         Console.WriteLine(String.Format("\nCopied {0} to clipboard", endpoint));
                         ConsoleUtils.WindowsConsoleUtils.WindowsClipboard.SetTextValue(endpoint);
+                    }
+                    if (key.KeyChar == 'o' && sampleServer == null)
+                    {
+                        sampleServer = new SampleServer();
+                        await sampleServer.Start(configurationFile);
+                    }
+                    if (key.KeyChar == 'f' && sampleServer != null)
+                    {
+                        sampleServer.Stop();
+                        sampleServer.Dispose();
+                        sampleServer = null;
                     }
                     if (key.KeyChar == 'q' || key.KeyChar == 'x')
                     {
