@@ -776,12 +776,12 @@ namespace SampleServer.ReferenceServer
                     };
                     variables.Add(variableOperatorRoleAccess);
 
-                    // create a Variable node that has UserRolePermissions and will receive all permissions for user Operator 
+                    // create a Variable node that has UserRolePermissions and will asign all permissions for user Operator 
                     BaseDataVariableState variableUserRolePermissionsForOperator = CreateVariable(folderRolePermissions, "UserRolePermissionsForOperator", BuiltInType.Int16);
                     variableUserRolePermissionsForOperator.OnReadUserRolePermissions = OnReadUserRolePermissions;                    
                     variables.Add(variableUserRolePermissionsForOperator);
 
-                    // create a Variable node that has UserRolePermissions and will receive no permissions for user Engineer 
+                    // create a Variable node that has UserRolePermissions and will asign only Browse and Read permissions for user Engineer 
                     BaseDataVariableState variableUserRolePermissionsForEngineeer = CreateVariable(folderRolePermissions, "UserRolePermissionsForEngineeer", BuiltInType.Int16);
                     variableUserRolePermissionsForEngineeer.OnReadUserRolePermissions = OnReadUserRolePermissions;
                     variables.Add(variableUserRolePermissionsForEngineeer);
@@ -2072,9 +2072,11 @@ namespace SampleServer.ReferenceServer
         private ServiceResult OnReadUserRolePermissions(ISystemContext context, NodeState node, ref RolePermissionTypeCollection value)
         {
             UserIdentity userIdentity = context.UserIdentity as UserIdentity;
-            // this branch will give all permissions to the Operator user 
-            if (userIdentity != null && context.UserIdentity.GrantedRoleIds.Contains(ObjectIds.WellKnownRole_Operator))
+
+            if (userIdentity != null && node.BrowseName.Name == "UserRolePermissionsForOperator" &&
+                context.UserIdentity.GrantedRoleIds.Contains(ObjectIds.WellKnownRole_Operator))
             {
+                //asign all permissions for user Operator
                 value = new RolePermissionTypeCollection()
                 {
                     new RolePermissionType()
@@ -2089,22 +2091,32 @@ namespace SampleServer.ReferenceServer
                     }
                 };
             }
-            // this branch will give all permissions to the Engineer user 
-            else if (userIdentity != null && context.UserIdentity.GrantedRoleIds.Contains(ObjectIds.WellKnownRole_Engineer))
+            else if (userIdentity != null && node.BrowseName.Name == "UserRolePermissionsForEngineeer" &&
+                     context.UserIdentity.GrantedRoleIds.Contains(ObjectIds.WellKnownRole_Engineer))
             {
+                //asign only Browse and Read permissions for user Engineer
                 value = new RolePermissionTypeCollection()
                 {
                     new RolePermissionType()
                     {
                         RoleId = ObjectIds.WellKnownRole_Engineer,
-                        Permissions = (uint)PermissionType.None
+                        Permissions = (uint)(PermissionType.Browse | PermissionType.Read )
                     }
                 };
             }
             else
             {
-                value = null;
+                //restrict acccess for other users
+                value = new RolePermissionTypeCollection()
+                {
+                    new RolePermissionType()
+                    {
+                        RoleId = ObjectIds.WellKnownRole_Anonymous,
+                        Permissions = (uint)(PermissionType.None )
+                    }
+                };
             }
+
             return ServiceResult.Good;
         }
 
