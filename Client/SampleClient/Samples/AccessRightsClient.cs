@@ -115,7 +115,7 @@ namespace SampleClient.Samples
             }
 
             // create a session with encyption
-            using (ClientSession encryptionSession = CreateSession(SessionNameSign, Program.ServerUrl,
+            using (ClientSession encryptionSession = CreateSession(SessionNameEncrypted, Program.ServerUrl,
                 MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic256Sha256, MessageEncoding.Binary, new UserIdentity()))
             {
                 try
