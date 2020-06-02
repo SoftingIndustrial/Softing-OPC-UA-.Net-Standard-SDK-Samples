@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -64,6 +64,8 @@ namespace SampleServer.CustomTypes
                 AddReference(m_rootCustomTypesFolder, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
                 m_arraysFolder = CreateObjectFromType(m_rootCustomTypesFolder, "Arrays", ObjectTypeIds.FolderType, ReferenceTypeIds.Organizes) as FolderState;
+
+                var matrixFolder = CreateObjectFromType(m_rootCustomTypesFolder, "Matrix", ObjectTypeIds.FolderType, ReferenceTypeIds.Organizes) as FolderState;
 
                 #region  Create custom DataType nodes and Variable instances
                 // Create a custom  Enumeration type with EnumStrings
@@ -188,6 +190,35 @@ namespace SampleServer.CustomTypes
                 var ownerArrayVariable = CreateVariable(m_arraysFolder, "Owners", ownerType.NodeId, ValueRanks.OneDimension);
                 var fuelLevelArrayVariable = CreateVariable(m_arraysFolder, "FuelLevels", fuelLevelDetailsType.NodeId, ValueRanks.OneDimension);
                 var vehicleArrayVariable = CreateVariable(m_arraysFolder, "Vehicles", vehicleType.NodeId, ValueRanks.OneDimension);
+
+                // Create Matrix variable nodes for defined DataTypes
+                var engineStateMatrixVariable = CreateVariable(matrixFolder, "EngineStates", engineStateType.NodeId, ValueRanks.OneOrMoreDimensions);
+                engineStateMatrixVariable.ArrayDimensions = new uint[] { 1, 2, 3 };
+                Array elements = GetDefaultValueForDatatype(engineStateType.NodeId, ValueRanks.OneDimension, 6) as Array;
+                TypeInfo sanityCheck = TypeInfo.Construct(elements);
+                engineStateMatrixVariable.Value = new Matrix(elements, sanityCheck.BuiltInType, 1, 2, 3 );
+                var displayWarningMatrixVariable = CreateVariable(matrixFolder, "DisplayWarnings", displayWarningType.NodeId, ValueRanks.OneOrMoreDimensions);
+                displayWarningMatrixVariable.ArrayDimensions = new uint[] { 1, 2, 3 };
+                elements = GetDefaultValueForDatatype(displayWarningType.NodeId, ValueRanks.OneDimension, 6) as Array;
+                sanityCheck = TypeInfo.Construct(elements);
+                displayWarningMatrixVariable.Value = new Matrix(elements, sanityCheck.BuiltInType, 1, 2, 3);
+                var featuresOptionSetMatrixVariable = CreateVariable(matrixFolder, "FeaturesOptionSets", featuresOptionSetType.NodeId, ValueRanks.OneOrMoreDimensions);
+                featuresOptionSetMatrixVariable.ArrayDimensions = new uint[] { 1, 2, 3 };
+                elements = GetDefaultValueForDatatype(featuresOptionSetType.NodeId, ValueRanks.OneDimension, 6) as Array;
+                featuresOptionSetMatrixVariable.Value = new Matrix(elements, BuiltInType.Variant, 1, 2, 3);
+                var ownerMatrixVariable = CreateVariable(matrixFolder, "Owners", ownerType.NodeId, ValueRanks.OneOrMoreDimensions);
+                ownerMatrixVariable.ArrayDimensions = new uint[] { 1, 2, 3 };
+                elements = GetDefaultValueForDatatype(ownerType.NodeId, ValueRanks.OneDimension, 6) as Array;
+                ownerMatrixVariable.Value = new Matrix(elements, BuiltInType.Variant, 1, 2, 3);
+                var fuelLevelMatrixVariable = CreateVariable(matrixFolder, "FuelLevels", fuelLevelDetailsType.NodeId, ValueRanks.OneOrMoreDimensions);
+                fuelLevelMatrixVariable.ArrayDimensions = new uint[] { 1, 2, 3 };
+                elements = GetDefaultValueForDatatype(fuelLevelDetailsType.NodeId, ValueRanks.OneDimension, 6) as Array;
+                fuelLevelMatrixVariable.Value = new Matrix(elements, BuiltInType.Variant, 1, 2, 3);
+                var vehicleMatrixVariable = CreateVariable(matrixFolder, "Vehicles", vehicleType.NodeId, ValueRanks.OneOrMoreDimensions);
+                vehicleMatrixVariable.ArrayDimensions = new uint[] { 1, 2, 3 };
+                elements = GetDefaultValueForDatatype(vehicleType.NodeId, ValueRanks.OneDimension, 6) as Array;
+                vehicleMatrixVariable.Value = new Matrix(elements, BuiltInType.Variant, 1, 2, 3);
+
                 #endregion
 
                 #region Create custom VariableType nodes and Variable instances

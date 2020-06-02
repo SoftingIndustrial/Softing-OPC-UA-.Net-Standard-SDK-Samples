@@ -257,7 +257,7 @@ namespace SampleServer.ReferenceServer
 
                     #region Scalar_Static_ArrayDynamic
 
-                    FolderState arrayDymnamicFolder = CreateFolder(staticFolder, "ArrayDymamic");
+                    FolderState arrayDymnamicFolder = CreateFolder(staticFolder, "ArrayDynamic");
                     variables.Add(CreateVariable(arrayDymnamicFolder, "Boolean", DataTypeIds.Boolean, ValueRanks.OneOrMoreDimensions));
                     variables.Add(CreateVariable(arrayDymnamicFolder, "Byte", DataTypeIds.Byte, ValueRanks.OneOrMoreDimensions));
                     variables.Add(CreateVariable(arrayDymnamicFolder, "ByteString", DataTypeIds.ByteString, ValueRanks.OneOrMoreDimensions));
@@ -1373,15 +1373,17 @@ namespace SampleServer.ReferenceServer
                 else if (valueRank == ValueRanks.TwoDimensions)
                 {
                     variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> { 0, 0 });
-                }                
-
+                }
                 if (parent != null)
                 {
                     parent.AddChild(variable);
                 }
                 AddPredefinedNode(SystemContext, variable);
             }
-            
+            if (valueRank == ValueRanks.OneOrMoreDimensions)
+            {
+                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> { 0, 0, 0 });
+            }
             variable.WriteMask = AttributeWriteMask.DisplayName | AttributeWriteMask.Description;
             variable.UserWriteMask = AttributeWriteMask.DisplayName | AttributeWriteMask.Description;
             variable.Value = GetNewValue(variable);
