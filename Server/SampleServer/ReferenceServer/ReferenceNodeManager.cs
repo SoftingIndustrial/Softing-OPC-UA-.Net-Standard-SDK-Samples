@@ -2439,7 +2439,18 @@ namespace SampleServer.ReferenceServer
 
             while (value == null && retryCount < 10)
             {
-                value = m_generator.GetRandom(variable.DataType, variable.ValueRank, variable.ArrayDimensions, Server.TypeTree);
+                if (variable.ValueRank == ValueRanks.OneDimension)
+                {
+                    value = m_generator.GetRandom(variable.DataType, variable.ValueRank, new uint[] { 10 }, Server.TypeTree);
+                }
+                else if (variable.ValueRank == ValueRanks.TwoDimensions)
+                {
+                    value = m_generator.GetRandom(variable.DataType, variable.ValueRank, new uint[] { 10, 10 }, Server.TypeTree);
+                }
+                else
+                {
+                    value = m_generator.GetRandom(variable.DataType, variable.ValueRank, variable.ArrayDimensions, Server.TypeTree);
+                }
                 retryCount++;
             }
 
