@@ -1382,7 +1382,7 @@ namespace SampleServer.ReferenceServer
             }
             if (valueRank == ValueRanks.OneOrMoreDimensions)
             {
-                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> { 0, 0, 0 });
+                variable.ArrayDimensions = new ReadOnlyList<uint>(new List<uint> { 1, 2, 3 });
             }
             variable.WriteMask = AttributeWriteMask.DisplayName | AttributeWriteMask.Description;
             variable.UserWriteMask = AttributeWriteMask.DisplayName | AttributeWriteMask.Description;
