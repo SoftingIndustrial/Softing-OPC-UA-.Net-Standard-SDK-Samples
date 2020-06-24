@@ -41,10 +41,10 @@ internal static class AssemblyVersionInfo
 
     /// BEWARE THAT IN VS 2017 THE USAGE OF * PLACEHOLDER IS NOT ALLOWED
     /// <summary> The current build version. </summary>
-    public const string CurrentVersion = "2.50.0.2349";
+    public const string CurrentVersion = "2.50.0.2350";
 
     /// <summary> The current build file version. </summary>
-    public const string CurrentFileVersion = "2.50.0.2349";
+    public const string CurrentFileVersion = "2.50.0.2350";
 
     /// <summary>The assembly copyright owner.</summary>
     public const string AssemblyCompany = "Softing Industrial Automation GmbH";
@@ -53,5 +53,5 @@ internal static class AssemblyVersionInfo
     public const string AssemblyProduct = "dataFEED OPC UA .NET Standard SDK";
 
 	/// <summary>The product release date.</summary>
-    public const string ReleaseDate = "2020/06/23 18:12:13";
+    public const string ReleaseDate = "2020/06/24 08:30:07";
 }
