@@ -2435,10 +2435,12 @@ namespace SampleServer.ReferenceServer
             }
 
             object value = null;
+            int retryCount = 0;
 
-            while (value == null)
+            while (value == null && retryCount < 10)
             {
-                value = m_generator.GetRandom(variable.DataType, variable.ValueRank, new uint[] { 10 }, Server.TypeTree);
+                value = m_generator.GetRandom(variable.DataType, variable.ValueRank, variable.ArrayDimensions, Server.TypeTree);
+                retryCount++;
             }
 
             return value;
