@@ -89,8 +89,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Configuration\Opc.Ua.Configuration.csproj" />
-    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\SampleApplications\SDK\Opc.Ua.Server\Opc.Ua.Server.csproj" />
+    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\Libraries\Opc.Ua.Configuration\Opc.Ua.Configuration.csproj" />
+    <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\Libraries\Opc.Ua.Server\Opc.Ua.Server.csproj" />
     <ProjectReference Include="..\..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Core\Opc.Ua.Core.csproj" />
     <ProjectReference Include="..\..\..\Toolkit\PubSub\Softing.Opc.Ua.PubSub_2017_debug.csproj" />
     <ProjectReference Include="..\..\..\Toolkit\Server\Softing.Opc.Ua.Server_2017_debug.csproj" />
