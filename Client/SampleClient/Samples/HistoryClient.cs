@@ -62,8 +62,8 @@ namespace SampleClient.Samples
             ReadRawModifiedDetails argument = new ReadRawModifiedDetails()
             {
                 IsReadModified = false,
-                StartTime = new DateTime(2011, 1, 1, 12, 0, 0),
-                EndTime = new DateTime(2011, 1, 1, 12, 1, 40),
+                StartTime = new DateTime(2011, 1, 1, 14, 0, 0),
+                EndTime = new DateTime(2011, 1, 1, 14, 1, 0),
                 NumValuesPerNode = 3,
                 ReturnBounds = false
             };
