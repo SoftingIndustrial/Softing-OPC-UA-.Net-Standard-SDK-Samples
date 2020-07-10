@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -82,6 +82,17 @@ namespace SampleServer
 
                 // Start the server         
                 await sampleServer.Start(configurationFile);
+
+                var reverseConnections = sampleServer.GetReverseConnections();
+                if (reverseConnections?.Count > 0)
+                {
+                    // print reverse connect info
+                    Console.WriteLine("Reverse Connect Clients:");
+                    foreach (var connection in reverseConnections)
+                    {
+                        Console.WriteLine(connection.Key);
+                    }
+                }
 
                 for (int i = 0; i < sampleServer.Configuration.ServerConfiguration.BaseAddresses.Count; i++)
                 {

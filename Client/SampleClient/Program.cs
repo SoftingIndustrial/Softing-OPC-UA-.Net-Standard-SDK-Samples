@@ -13,6 +13,8 @@ using Opc.Ua;
 using Softing.Opc.Ua.Client;
 using SampleClient.StateMachine;
 using System.IO;
+using Opc.Ua.Client;
+using System.Threading;
 
 namespace SampleClient
 {
@@ -28,15 +30,70 @@ namespace SampleClient
             // Create the UaApplication object from config file
             UaApplication application = UaApplication.Create("SampleClient.Config.xml").Result;
 
+            
+
+
             // Get the Sample Client custom parameters
             SampleClientConfiguration sampleClientConfiguration = application.Configuration.ParseExtension<SampleClientConfiguration>();
             if (sampleClientConfiguration != null)
             {
                 ServerUrl = sampleClientConfiguration.ServerUrl;
             }
+            string reverseConnectUrl = "opc.tcp://localhost:65300";
+            string serverApplicationUri = "urn:lboaw10:Softing:UANETStandardToolkit:SampleServer";
+            for (int i = 0; i < 2; i++)
+            {
+                ClientSession clientSession = application.CreateReverseConnectSession(reverseConnectUrl, serverApplicationUri, 60000).Result;
+                if (clientSession != null)
+                {
+                    Console.WriteLine("session created with reverse connect " + clientSession.SessionName);
+                    clientSession.Connect(true, true);
+                   // clientSession.Disconnect(true);
+                   // clientSession.Dispose();
+                }
+                else
+                {
+                    Console.WriteLine("session NOT created with reverse connect ");
+                }
+            }
 
-            Console.Title = string.Format("SampleClient [ServerUrl: {0}]", ServerUrl);
 
+
+
+            //Uri ReverseConnectUri = new Uri("opc.tcp://localhost:65300");
+            //ReverseConnectManager reverseConnectManager = null;
+            //if (ReverseConnectUri != null)
+            //{
+            //    // start the reverse connection manager
+            //    reverseConnectManager = new ReverseConnectManager();
+            //    reverseConnectManager.AddEndpoint(ReverseConnectUri);
+            //    reverseConnectManager.StartService(application.Configuration);
+            //}
+            //Console.Title = string.Format("SampleClient [ServerUrl: {0}]", ServerUrl);
+
+
+            //Console.WriteLine("   Waiting for reverse connection.");
+            //while (true)
+            //{
+            //    try
+            //    {
+
+            //        ITransportWaitingConnection connection = reverseConnectManager.WaitForConnection(
+            //           ReverseConnectUri, "urn:wboaw10:Softing:UANETStandardToolkit:SampleServer", new CancellationTokenSource(60000).Token).Result;
+            //        if (connection != null)
+            //        {
+            //            ClientSession clientSession = application.CreateSession(ServerUrl, connection);
+            //            clientSession.Connect(true, true);
+            //            clientSession.Disconnect(true);
+            //            clientSession.Dispose();
+            //        }
+
+            //    }
+            //    catch (Exception ex)
+            //    {
+
+            //    }
+            //}
             // Subscribe to certificate validation error event
             application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);
 
