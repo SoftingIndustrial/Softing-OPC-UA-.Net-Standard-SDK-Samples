@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -41,6 +41,7 @@ namespace SampleClient.StateMachine
         DiscoveryConnect,
         DiscoverySample,
         ConnectSample,
+        ReverseConnectSample,
         StartGDSSample,
         EndGDSSample,
         EndDiscoveryConnect,

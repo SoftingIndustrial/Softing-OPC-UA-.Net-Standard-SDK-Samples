@@ -170,7 +170,7 @@ namespace SampleClient.StateMachine
         private void InitializeDiscoveryConnectTransitions()
         {
             //commAands for browse
-            StateTransition startDCClient = new StateTransition(State.Main, Command.DiscoveryConnect, "1", "Enter Connect/Discovery/GDS Menu");            
+            StateTransition startDCClient = new StateTransition(State.Main, Command.DiscoveryConnect, "1", "Enter Connect/Reverse Connect/Discovery/GDS Menu");            
             m_transitions.Add(startDCClient, State.DiscoveryConnectGds);
 
             //add connect menu item
@@ -178,13 +178,18 @@ namespace SampleClient.StateMachine
             connectSample.ExecuteCommand += ConnectSample_ExecuteCommand;
             m_transitions.Add(connectSample, State.DiscoveryConnectGds);
 
+            //add reverse connect menu item
+            StateTransition reverseConnectSample = new StateTransition(State.DiscoveryConnectGds, Command.ReverseConnectSample, "2", "Execute Reverse Connect Sample");
+            reverseConnectSample.ExecuteCommand += ReverseConnectSample_ExecuteCommand;
+            m_transitions.Add(reverseConnectSample, State.DiscoveryConnectGds);
+
             //add discovery menu item
-            StateTransition discoverySample = new StateTransition(State.DiscoveryConnectGds, Command.DiscoverySample, "2", "Execute Discovery Sample");
+            StateTransition discoverySample = new StateTransition(State.DiscoveryConnectGds, Command.DiscoverySample, "3", "Execute Discovery Sample");
             discoverySample.ExecuteCommand += DiscoverySample_ExecuteCommand;
             m_transitions.Add(discoverySample, State.DiscoveryConnectGds);
 
             //add GDS menu item
-            StateTransition gdsSample = new StateTransition(State.DiscoveryConnectGds, Command.StartGDSSample, "3", "Enter GDS Sample Menu");            
+            StateTransition gdsSample = new StateTransition(State.DiscoveryConnectGds, Command.StartGDSSample, "4", "Enter GDS Sample Menu");            
             m_transitions.Add(gdsSample, State.GDS);
 
             //commands for GDS Pull Get Trust List
@@ -561,8 +566,8 @@ namespace SampleClient.StateMachine
         private void ConnectSample_ExecuteCommand(object sender, EventArgs e)
         {
             //ConnectClient sample does not need to lpad data type dictionaries or to decode custom data types
-            bool rememberDecodeCustonDt = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
-            bool rememberDecodeDataTypeDict = m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries;
+            bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
+            bool rememberDecodeDataTypeDictionaries = m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries;
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
 
@@ -581,10 +586,25 @@ namespace SampleClient.StateMachine
             connectClient.CreateSessionUsingDiscovery();
 
 
-            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustonDt;
-            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDict;
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
         }
 
+        private void ReverseConnectSample_ExecuteCommand(object sender, EventArgs e)
+        {
+            //ConnectClient sample does not need to lpad data type dictionaries or to decode custom data types
+            bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
+            bool rememberDecodeDataTypeDictionaries = m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries;
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
+
+            ReverseConnectClient reverseConnectClient = new ReverseConnectClient(m_application);
+
+            reverseConnectClient.ExecuteReverseConnectSample();
+
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
+        }
         #endregion
 
         #region ExecuteCommand Handlers for Discovery

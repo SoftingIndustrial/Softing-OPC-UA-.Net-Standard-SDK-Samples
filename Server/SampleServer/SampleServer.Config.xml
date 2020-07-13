@@ -182,7 +182,7 @@
           <EndpointUrl>opc.tcp://localhost:65300</EndpointUrl>
           <Timeout>30000</Timeout>
         </ReverseConnectClient>
-        <!--<ReverseConnectClient>
+        <ReverseConnectClient>
           <EndpointUrl>opc.tcp://localhost:65301</EndpointUrl>
           <Timeout>30000</Timeout>
         </ReverseConnectClient>
@@ -193,7 +193,7 @@
         <ReverseConnectClient>
           <EndpointUrl>opc.tcp://localhost:65303</EndpointUrl>
           <Timeout>30000</Timeout>
-        </ReverseConnectClient>-->
+        </ReverseConnectClient>
       </Clients>
       <ConnectInterval>15000</ConnectInterval>
       <ConnectTimeout>60000</ConnectTimeout>

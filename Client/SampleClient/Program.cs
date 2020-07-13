@@ -39,23 +39,31 @@ namespace SampleClient
             {
                 ServerUrl = sampleClientConfiguration.ServerUrl;
             }
-            string reverseConnectUrl = "opc.tcp://localhost:65300";
-            string serverApplicationUri = "urn:lboaw10:Softing:UANETStandardToolkit:SampleServer";
-            for (int i = 0; i < 2; i++)
-            {
-                ClientSession clientSession = application.CreateReverseConnectSession(reverseConnectUrl, serverApplicationUri, 60000).Result;
-                if (clientSession != null)
-                {
-                    Console.WriteLine("session created with reverse connect " + clientSession.SessionName);
-                    clientSession.Connect(true, true);
-                   // clientSession.Disconnect(true);
-                   // clientSession.Dispose();
-                }
-                else
-                {
-                    Console.WriteLine("session NOT created with reverse connect ");
-                }
-            }
+            //string reverseConnectUrl = "opc.tcp://localhost:65300";
+            //string serverApplicationUri = "urn:wboaw10:Softing:UANETStandardToolkit:SampleServer";
+            //for (int i = 0; i < 1; i++)
+            //{
+            //    try
+            //    {
+            //        ClientReverseConnectSession clientSession = application.CreateReverseConnectSession(reverseConnectUrl, serverApplicationUri, MessageSecurityMode.Sign, SecurityPolicy.Basic256Sha256);
+            //        clientSession.MaximumWaitForReverseConnectRequest = 40000;
+            //        if (clientSession != null)
+            //        {
+            //            clientSession.Connect(true, true);
+            //            Console.WriteLine("session created with reverse connect " + clientSession.CoreSession.SessionId);
+            //            clientSession.Disconnect(true);
+            //            clientSession.Dispose();
+            //        }
+            //        else
+            //        {
+            //            Console.WriteLine("session NOT created with reverse connect ");
+            //        }
+            //    }
+            //    catch(Exception ex)
+            //    {
+            //        Console.WriteLine(i + "Create reverse connect session exception:" + ex);
+            //    }
+            //}
 
 
 
