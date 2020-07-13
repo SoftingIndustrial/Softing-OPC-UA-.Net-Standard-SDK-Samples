@@ -599,8 +599,9 @@ namespace SampleClient.StateMachine
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
 
             ReverseConnectClient reverseConnectClient = new ReverseConnectClient(m_application);
+            reverseConnectClient.CreateOpcTcpSessionWithNoSecurity();
 
-            reverseConnectClient.ExecuteReverseConnectSample();
+            reverseConnectClient.GetEndpointsAndReverseConnect();
 
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;

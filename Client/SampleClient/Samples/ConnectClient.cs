@@ -232,7 +232,7 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
-        /// Creates and connects an new session with the specified parameters.
+        /// Creates a new session with the specified parameters.
         /// </summary>        
         private ClientSession CreateSession(string sessionName, string serverUrl, MessageSecurityMode securityMode,
             SecurityPolicy securityPolicy, MessageEncoding messageEncoding, UserIdentity userId)
@@ -257,7 +257,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Performs a Connect/Disconnect test for the specified session.
         /// </summary>
-        private void ConnectTest(ClientSession session)
+        internal static void ConnectTest(ClientSession session)
         {
             try
             {
@@ -268,6 +268,7 @@ namespace SampleClient.Samples
 
                 // Disconnect the session.
                 session.Disconnect(true);
+                Console.WriteLine("Session is disconnected.");
             }
             catch (Exception ex)
             {
