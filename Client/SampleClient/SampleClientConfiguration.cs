@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -20,8 +20,10 @@ namespace SampleClient
     public class SampleClientConfiguration
     {
         #region Private Members
-        private string m_ServerUrl = "opc.tcp://localhost:61510/SampleServer";
-        private string m_ServerUrlHttps = "https://localhost:61511/SampleServer";
+        private string m_serverUrl = "opc.tcp://localhost:61510/SampleServer";
+        private string m_serverUrlHttps = "https://localhost:61511/SampleServer";
+        private string m_reverseConnectUrl = "opc.tcp://localhost:65300";
+        private string m_reverseConnectServerApplicationUri = "urn:localhost:Softing:UANETStandardToolkit:SampleServer";
         #endregion
 
         #region Constructors
@@ -57,8 +59,8 @@ namespace SampleClient
         [DataMember(IsRequired = false, Order = 1)]
         public string ServerUrl
         {
-            get { return m_ServerUrl; }
-            set { m_ServerUrl = value; }
+            get { return m_serverUrl; }
+            set { m_serverUrl = value; }
         }
         
         /// <summary>
@@ -67,8 +69,31 @@ namespace SampleClient
         [DataMember(IsRequired = false, Order = 2)]
         public string ServerUrlHttps
         {
-            get { return m_ServerUrlHttps; }
-            set { m_ServerUrlHttps = value; }
+            get { return m_serverUrlHttps; }
+            set { m_serverUrlHttps = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the reverse connect endpoint URL where the client will wait for reverse connect messages.
+        /// </summary>
+        [DataMember(IsRequired = false, Order = 3)]
+        public string ReverseConnectUrl
+        {
+            get { return m_reverseConnectUrl; }
+            set { m_reverseConnectUrl = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the server application URI that will be allowed to reverse connect to this client.
+        /// </summary>
+        [DataMember(IsRequired = false, Order = 4)]
+        public string ReverseConnectServerApplicationUri
+        {
+            get { return m_reverseConnectServerApplicationUri; }
+            set
+            {
+                m_reverseConnectServerApplicationUri = Utils.ReplaceLocalhost(value);
+            }
         }
         #endregion
     }
