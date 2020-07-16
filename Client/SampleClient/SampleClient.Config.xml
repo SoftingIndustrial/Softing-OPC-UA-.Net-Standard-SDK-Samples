@@ -137,7 +137,7 @@
         <!-- Configurable URL of the OPC UA Server where this OPC UA Client will connect -->
         <ServerUrl>opc.tcp://localhost:61510/SampleServer</ServerUrl>
         <ServerUrlHttps>https://localhost:61511/SampleServer</ServerUrlHttps>
-        <ReverseConnectUrl>opc.tcp://localhost:65300</ReverseConnectUrl>
+        <ReverseConnectUrl>opc.tcp://localhost:61512</ReverseConnectUrl>
         <ReverseConnectServerApplicationUri>urn:localhost:Softing:UANETStandardToolkit:SampleServer</ReverseConnectServerApplicationUri>
       </SampleClientConfiguration>
     </ua:XmlElement>
