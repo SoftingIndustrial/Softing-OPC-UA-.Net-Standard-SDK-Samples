@@ -67,7 +67,7 @@ namespace SampleClient.Samples
                                 endpoint.SecurityMode,
                                 endpoint.SecurityPolicy);
                         Console.WriteLine("\n\tCreate session to endpoint: {0}", endpointToString);
-                        using (ClientReverseConnectSession session = CreateReverseConnectSession("ReverseConnectSession",
+                        using (ClientSession session = CreateReverseConnectSession("ReverseConnectSession",
                             endpoint.SecurityMode, (SecurityPolicy)Enum.Parse(typeof(SecurityPolicy), endpoint.SecurityPolicy),
                             endpoint.Encoding[0], new UserIdentity()))
                         {                            
@@ -93,7 +93,7 @@ namespace SampleClient.Samples
         public void CreateOpcTcpSessionWithNoSecurity()
         {
             // create the session object.
-            using (ClientReverseConnectSession session = CreateReverseConnectSession("UaBinaryNoSecurityReverseConnectSession", 
+            using (ClientSession session = CreateReverseConnectSession("UaBinaryNoSecurityReverseConnectSession", 
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity()))
             {
                 ConnectClient.ConnectTest(session);
@@ -103,7 +103,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Creates a new reverse connect session with the specified parameters.
         /// </summary>        
-        private ClientReverseConnectSession CreateReverseConnectSession(string sessionName, MessageSecurityMode securityMode,
+        private ClientSession CreateReverseConnectSession(string sessionName, MessageSecurityMode securityMode,
             SecurityPolicy securityPolicy, MessageEncoding messageEncoding, UserIdentity userId)
         {
             try
@@ -111,7 +111,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("\r\nCreating the reverse connect session {0} (SecurityMode = {1}, SecurityPolicy = {2}, UserIdentity = {3})...",
                     sessionName, securityMode, securityPolicy, userId.GetIdentityToken());
                 // Create the Reverse Connect Session object.
-                ClientReverseConnectSession session = m_application.CreateReverseConnectSession(m_reverseConnectUrl, m_serverApplicationUri,
+                ClientSession session = m_application.CreateReverseConnectSession(m_reverseConnectUrl, m_serverApplicationUri,
                     securityMode, securityPolicy, messageEncoding, userId);
                 Console.WriteLine("The session was created.");
                 session.SessionName = sessionName;
