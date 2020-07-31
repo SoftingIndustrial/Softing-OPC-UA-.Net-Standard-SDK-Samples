@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
 
@@ -48,6 +49,7 @@ namespace SampleClient.Samples
             }
         }
         #endregion
+
         /// <summary>
         /// Get all server endpoints suing Reverse connect mechanism and then create a Reverse Connect session to each of them
         /// </summary>
@@ -88,6 +90,45 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
+        /// Get all server endpoints suing Reverse connect mechanism and then create a Reverse Connect session to each of them
+        /// </summary>
+        public async Task GetEndpointsAndReverseConnectAsync()
+        {
+            try
+            {
+                Console.WriteLine("Get Endpoints of '{0}' using reverse connection endpoint '{1}'", m_serverApplicationUri, m_reverseConnectUrl);
+                var endpoints = m_application.GetEndpoints(m_reverseConnectUrl, m_serverApplicationUri);
+                Console.WriteLine("The server returned {0} endpoints.", endpoints.Count);
+                foreach (var endpoint in endpoints)
+                {
+                    try
+                    {
+                        string endpointToString = string.Format("{0} - {1} - {2}",
+                                endpoint.EndpointUrl,
+                                endpoint.SecurityMode,
+                                endpoint.SecurityPolicy);
+                        Console.WriteLine("\n\tCreate session to endpoint: {0}", endpointToString);
+                        using (ClientSession session = CreateReverseConnectSession("ReverseConnectSession",
+                            endpoint.SecurityMode, (SecurityPolicy)Enum.Parse(typeof(SecurityPolicy), endpoint.SecurityPolicy),
+                            endpoint.Encoding[0], new UserIdentity()))
+                        {
+                            session.InitializeWithDiscoveryEndpointDescription(endpoint);
+                            await ConnectClient.ConnectTestAsync(session);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Program.PrintException("ExecuteReverseConnectSample.CreateConnection to endpoint:" + endpoint, ex);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("ExecuteReverseConnectSample", ex);
+            }
+        }
+
+        /// <summary>
         /// Creates and connects a reverse session on opc.tcp protocol with no security and anonymous user identity.
         /// </summary>
         public void CreateOpcTcpSessionWithNoSecurity()
@@ -97,6 +138,17 @@ namespace SampleClient.Samples
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity()))
             {
                 ConnectClient.ConnectTest(session);
+            }
+        }
+
+        public async Task CreateOpcTcpSessionWithNoSecurityAsync()
+        {
+            // create the session object.
+            using (ClientSession session = CreateReverseConnectSession("UaBinaryNoSecurityReverseConnectSession",
+                MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity()))
+            {
+                await ConnectClient.ConnectTestAsync(session);
+                Console.WriteLine();
             }
         }
 

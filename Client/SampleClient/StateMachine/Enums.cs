@@ -42,6 +42,7 @@ namespace SampleClient.StateMachine
         DiscoverySample,
         ConnectSample,
         ReverseConnectSample,
+        ReverseConnectSampleAsync,
         StartGDSSample,
         EndGDSSample,
         EndDiscoveryConnect,

@@ -183,8 +183,13 @@ namespace SampleClient.StateMachine
             reverseConnectSample.ExecuteCommand += ReverseConnectSample_ExecuteCommand;
             m_transitions.Add(reverseConnectSample, State.DiscoveryConnectGds);
 
+            //add async reverse connect menu item
+            StateTransition reverseConnectSampleAsync = new StateTransition(State.DiscoveryConnectGds, Command.ReverseConnectSampleAsync, "3", "Execute Reverse Connect Async Sample");
+            reverseConnectSampleAsync.ExecuteCommand += async (sender, e) => { await ReverseConnectSampleAsync_ExecuteCommand(sender,e); };
+            m_transitions.Add(reverseConnectSampleAsync, State.DiscoveryConnectGds);
+
             //add discovery menu item
-            StateTransition discoverySample = new StateTransition(State.DiscoveryConnectGds, Command.DiscoverySample, "3", "Execute Discovery Sample");
+            StateTransition discoverySample = new StateTransition(State.DiscoveryConnectGds, Command.DiscoverySample, "4", "Execute Discovery Sample");
             discoverySample.ExecuteCommand += DiscoverySample_ExecuteCommand;
             m_transitions.Add(discoverySample, State.DiscoveryConnectGds);
 
@@ -598,14 +603,33 @@ namespace SampleClient.StateMachine
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
 
+            
             ReverseConnectClient reverseConnectClient = new ReverseConnectClient(m_application);
             reverseConnectClient.CreateOpcTcpSessionWithNoSecurity();
-
+            
             reverseConnectClient.GetEndpointsAndReverseConnect();
 
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
         }
+
+        private async Task ReverseConnectSampleAsync_ExecuteCommand(object sender, EventArgs e)
+        {
+            //ConnectClient async sample does not need to lpad data type dictionaries or to decode custom data types
+            bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
+            bool rememberDecodeDataTypeDictionaries = m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries;
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
+
+            ReverseConnectClient reverseConnectClient = new ReverseConnectClient(m_application);
+            await reverseConnectClient.CreateOpcTcpSessionWithNoSecurityAsync();
+
+            await reverseConnectClient.GetEndpointsAndReverseConnectAsync();
+
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
+        }
+         
         #endregion
 
         #region ExecuteCommand Handlers for Discovery

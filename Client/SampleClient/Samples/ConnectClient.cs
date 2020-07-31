@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
 
@@ -190,10 +191,10 @@ namespace SampleClient.Samples
             configuration.ApplicationType = ApplicationType.Client;
             configuration.ApplicationUri = $"urn:{Utils.GetHostName()}:OPCFoundation:SampleClient";
             configuration.TransportConfigurations = new TransportConfigurationCollection();
-            configuration.TransportQuotas = new TransportQuotas {OperationTimeout = 15000};
-            configuration.ClientConfiguration = new ClientConfiguration {DefaultSessionTimeout = 60000};
+            configuration.TransportQuotas = new TransportQuotas { OperationTimeout = 15000 };
+            configuration.ClientConfiguration = new ClientConfiguration { DefaultSessionTimeout = 60000 };
             
-            ClientToolkitConfiguration clientTkConfiguration = new ClientToolkitConfiguration();            
+            ClientToolkitConfiguration clientTkConfiguration = new ClientToolkitConfiguration();
             clientTkConfiguration.DiscoveryOperationTimeout = 10000;
             configuration.UpdateExtension<ClientToolkitConfiguration>(new System.Xml.XmlQualifiedName("ClientToolkitConfiguration"), clientTkConfiguration);
 
@@ -274,6 +275,60 @@ namespace SampleClient.Samples
             {
                 Program.PrintException("ConnectClient.ConnectTest", ex);
             }
+        }
+
+        /// <summary>
+        /// Performs a Connect/Disconnect asyncronously test for the specified session.
+        /// </summary>
+        internal static async Task ConnectTestAsync(ClientSession session)
+        {
+            try
+            {
+                if (session == null)
+                {
+                    Console.WriteLine("Session instance is missing !");
+                    return;
+                }
+
+                // Attempt to connect to server.
+                Console.WriteLine("Connecting async session {0}...", session.SessionName);
+                session.StateChanged += AsyncSessionStateChanged;
+                await session.ConnectAsync(false, true);
+                Console.WriteLine("Session state = {0}. Success!", session.CurrentState);
+
+                // Disconnect the session.
+                await session.DisconnectAsync(true);
+                Console.WriteLine("Session async is disconnected.");
+                
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("ConnectClient.ConnectTestAsync", ex);
+            }
+            finally
+            {
+                if (session != null)
+                {
+                    session.StateChanged -= AsyncSessionStateChanged;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Session state changes notifications
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        static void AsyncSessionStateChanged(object sender, System.EventArgs e)
+        {
+            BaseStateManagement baseStateManagement = sender as BaseStateManagement;
+
+            if (baseStateManagement == null)
+            {
+                return;
+            }
+
+            Console.WriteLine("Changed session state = {0}", baseStateManagement.CurrentState);
         }
 
         #endregion
