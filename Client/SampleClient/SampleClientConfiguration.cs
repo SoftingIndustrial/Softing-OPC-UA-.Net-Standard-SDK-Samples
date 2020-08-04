@@ -24,6 +24,7 @@ namespace SampleClient
         private string m_serverUrlHttps = "https://localhost:61511/SampleServer";
         private string m_reverseConnectUrl = "opc.tcp://localhost:65300";
         private string m_reverseConnectServerApplicationUri = "urn:localhost:Softing:UANETStandardToolkit:SampleServer";
+        private CertificateIdentifier m_reverseConnectServerCertificateIdentifier;
         #endregion
 
         #region Constructors
@@ -95,6 +96,21 @@ namespace SampleClient
                 m_reverseConnectServerApplicationUri = Utils.ReplaceLocalhost(value);
             }
         }
+
+        /// <summary>
+        /// Gets or sets the <see cref="CertificateIdentifier"/> for the server that will be used to create reverse connect sessions.
+        /// </summary>
+        [DataMember(IsRequired = false, Order = 5)]
+        public CertificateIdentifier ReverseConnectServerCertificateIdentifier
+        {
+            get { return m_reverseConnectServerCertificateIdentifier; }
+            set
+            {
+                m_reverseConnectServerCertificateIdentifier = value;
+            }
+        }
+
+
         #endregion
     }
 }
