@@ -169,10 +169,12 @@
     <MaxPublishRequestCount>100</MaxPublishRequestCount>
     <MaxSubscriptionCount>200</MaxSubscriptionCount>
     <MaxEventQueueSize>10000</MaxEventQueueSize>
+    <!-- see https://opcfoundation-onlineapplications.org/profilereporting/ for list of available profiles -->
     <ServerProfileArray>
-      <ua:String>Standard UA Server Profile</ua:String>
-      <ua:String>Data Access Server Facet</ua:String>
-      <ua:String>Method Server Facet</ua:String>
+      <ua:String>http://opcfoundation.org/UA-Profile/Server/StandardUA2017</ua:String>
+      <ua:String>http://opcfoundation.org/UA-Profile/Server/DataAccess</ua:String>
+      <ua:String>http://opcfoundation.org/UA-Profile/Server/Methods</ua:String>
+      <ua:String>http://opcfoundation.org/UA-Profile/Server/ReverseConnect</ua:String>
     </ServerProfileArray>
     <MaxTrustListSize>0</MaxTrustListSize>
     <MultiCastDnsEnabled>false</MultiCastDnsEnabled>
@@ -181,11 +183,12 @@
         <ReverseConnectClient>
           <EndpointUrl>opc.tcp://localhost:61512</EndpointUrl>
           <Timeout>30000</Timeout>
+          <MaxSessionCount>0</MaxSessionCount>
         </ReverseConnectClient>
       </Clients>
-      <ConnectInterval>15000</ConnectInterval>
-      <ConnectTimeout>60000</ConnectTimeout>
-      <RejectTimeout>60000</RejectTimeout>
+      <ConnectInterval>10000</ConnectInterval>
+      <ConnectTimeout>30000</ConnectTimeout>
+      <RejectTimeout>20000</RejectTimeout>
     </ReverseConnect>
   </ServerConfiguration>
 
@@ -195,7 +198,7 @@
         <TimerInterval>1000</TimerInterval>
         <ClearCachedCertificatesInterval>30000</ClearCachedCertificatesInterval>
       </SampleServerConfiguration>
-    </ua:XmlElement>    
+    </ua:XmlElement>
   </Extensions>
   
   <TraceConfiguration>

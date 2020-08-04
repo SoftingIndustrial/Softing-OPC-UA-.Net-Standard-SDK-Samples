@@ -80,19 +80,21 @@ namespace SampleServer
                     return;
                 }
 
-                // Start the server         
+                // Start the server
                 await sampleServer.Start(configurationFile);
 
                 var reverseConnections = sampleServer.GetReverseConnections();
                 if (reverseConnections?.Count > 0)
                 {
-                    // print reverse connect info
-                    Console.WriteLine("Reverse Connect Clients:");
+                    // print configured reverse connections
+                    Console.WriteLine("Configured Reverse Connections:");
                     foreach (var connection in reverseConnections)
                     {
                         Console.WriteLine(connection.Key);
                     }
                 }
+
+                Console.WriteLine("\nServer Addresses:");
 
                 for (int i = 0; i < sampleServer.Configuration.ServerConfiguration.BaseAddresses.Count; i++)
                 {
