@@ -142,11 +142,22 @@ namespace SampleClient.Samples
                 // create the session object using the server certificate identifier from config file
                 if (m_reverseConnectServerCertificateIdentifier != null)
                 {
-                    X509Certificate2 reverseConnectServerCertificate = m_reverseConnectServerCertificateIdentifier.Find(true).Result;
+                    X509Certificate2 reverseConnectServerCertificate = m_reverseConnectServerCertificateIdentifier.Find(false).Result;
 
-                    // Use utility method to get the applicationUri from a certificate
-                    reverseConnectServerApplicationUri = Utils.GetApplicationUriFromCertificate(reverseConnectServerCertificate);
-                    Console.WriteLine("The configured ReverseConnectServerCertificateIdentifier has ApplicationUri='{0}'", reverseConnectServerApplicationUri);
+                    if (reverseConnectServerCertificate != null)
+                    {
+                        // Use utility method to get the applicationUri from a certificate
+                        reverseConnectServerApplicationUri = Utils.GetApplicationUriFromCertificate(reverseConnectServerCertificate);
+                        Console.WriteLine("The configured ReverseConnectServerCertificateIdentifier has ApplicationUri='{0}'", reverseConnectServerApplicationUri);
+                    }
+                    else
+                    {
+                        Console.WriteLine("The configured ReverseConnectServerCertificateIdentifier cannot be found.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("The ReverseConnectServerCertificateIdentifier is NULL.");
                 }
             }
             catch(Exception ex)
