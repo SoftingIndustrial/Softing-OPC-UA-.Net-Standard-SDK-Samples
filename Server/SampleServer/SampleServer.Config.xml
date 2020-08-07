@@ -184,6 +184,7 @@
           <EndpointUrl>opc.tcp://localhost:61512</EndpointUrl>
           <Timeout>30000</Timeout>
           <MaxSessionCount>0</MaxSessionCount>
+          <Enabled>true</Enabled>
         </ReverseConnectClient>
       </Clients>
       <ConnectInterval>10000</ConnectInterval>
