@@ -185,7 +185,7 @@ namespace SampleClient.StateMachine
 
             //add async reverse connect menu item
             StateTransition reverseConnectSampleAsync = new StateTransition(State.DiscoveryConnectGds, Command.ReverseConnectSampleAsync, "3", "Execute Reverse Connect Async Sample");
-            reverseConnectSampleAsync.ExecuteCommand += async (sender, e) => { await ReverseConnectSampleAsync_ExecuteCommand(sender,e); };
+            reverseConnectSampleAsync.ExecuteCommand += ReverseConnectSampleAsync_ExecuteCommand;
             m_transitions.Add(reverseConnectSampleAsync, State.DiscoveryConnectGds);
 
             //add discovery menu item
@@ -194,7 +194,7 @@ namespace SampleClient.StateMachine
             m_transitions.Add(discoverySample, State.DiscoveryConnectGds);
 
             //add GDS menu item
-            StateTransition gdsSample = new StateTransition(State.DiscoveryConnectGds, Command.StartGDSSample, "4", "Enter GDS Sample Menu");            
+            StateTransition gdsSample = new StateTransition(State.DiscoveryConnectGds, Command.StartGDSSample, "5", "Enter GDS Sample Menu");            
             m_transitions.Add(gdsSample, State.GDS);
 
             //commands for GDS Pull Get Trust List
@@ -573,8 +573,8 @@ namespace SampleClient.StateMachine
             //ConnectClient sample does not need to lpad data type dictionaries or to decode custom data types
             bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
             bool rememberDecodeDataTypeDictionaries = m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries;
-            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
-            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = true;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = true;
 
             ConnectClient connectClient = new ConnectClient(m_application);
 
@@ -606,28 +606,19 @@ namespace SampleClient.StateMachine
             
             ReverseConnectClient reverseConnectClient = new ReverseConnectClient(m_application);
             reverseConnectClient.CreateOpcTcpSessionWithNoSecurity();
-            
-            reverseConnectClient.GetEndpointsAndReverseConnect();
+
+            // get all endpoints and create sessions that will be connected synchronously
+            reverseConnectClient.GetEndpointsAndReverseConnect(false);
 
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
         }
 
-        private async Task ReverseConnectSampleAsync_ExecuteCommand(object sender, EventArgs e)
+        private void ReverseConnectSampleAsync_ExecuteCommand(object sender, EventArgs e)
         {
-            //ConnectClient async sample does not need to lpad data type dictionaries or to decode custom data types
-            bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
-            bool rememberDecodeDataTypeDictionaries = m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries;
-            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
-            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
-
             ReverseConnectClient reverseConnectClient = new ReverseConnectClient(m_application);
-            await reverseConnectClient.CreateOpcTcpSessionWithNoSecurityAsync();
-
-            await reverseConnectClient.GetEndpointsAndReverseConnectAsync();
-
-            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
-            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
+            
+            reverseConnectClient.GetEndpointsAndReverseConnect(true);
         }
          
         #endregion

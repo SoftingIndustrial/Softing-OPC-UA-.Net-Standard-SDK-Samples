@@ -258,7 +258,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Performs a Connect/Disconnect test for the specified session.
         /// </summary>
-        internal static void ConnectTest(ClientSession session)
+        private void ConnectTest(ClientSession session)
         {
             try
             {
@@ -276,62 +276,6 @@ namespace SampleClient.Samples
                 Program.PrintException("ConnectClient.ConnectTest", ex);
             }
         }
-
-        /// <summary>
-        /// Performs a Connect/Disconnect asyncronously test for the specified session.
-        /// </summary>
-        internal static async Task ConnectTestAsync(ClientSession session)
-        {
-            try
-            {
-                if (session == null)
-                {
-                    Console.WriteLine("Session instance is missing !");
-                    return;
-                }
-
-                // Attempt to connect to server.
-                Console.WriteLine("Connecting async session {0}...", session.SessionName);
-                session.StateChanged += AsyncSessionStateChanged;
-                await session.ConnectAsync(false, true);
-                Console.WriteLine("Session state = {0}. Success!", session.CurrentState);
-
-                // Disconnect the session.
-                await session.DisconnectAsync(true);
-                Console.WriteLine("Session async is disconnected.");
-                
-            }
-            catch (Exception ex)
-            {
-                Program.PrintException("ConnectClient.ConnectTestAsync", ex);
-            }
-            finally
-            {
-                if (session != null)
-                {
-                    session.StateChanged -= AsyncSessionStateChanged;
-                }
-                session.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// Session state changes notifications
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        static void AsyncSessionStateChanged(object sender, System.EventArgs e)
-        {
-            ClientSession clientSession = sender as ClientSession;
-
-            if (clientSession == null)
-            {
-                return;
-            }
-
-            Console.WriteLine("Changed session '{0}' state = {1}", clientSession.SessionName, clientSession.CurrentState);
-        }
-
         #endregion
     }
 }
