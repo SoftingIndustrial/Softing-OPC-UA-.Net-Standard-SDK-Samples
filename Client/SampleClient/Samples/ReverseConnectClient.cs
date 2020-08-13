@@ -61,7 +61,7 @@ namespace SampleClient.Samples
             try
             {
                 Console.WriteLine("\nGet Endpoints of '{0}' using reverse connection endpoint '{1}'", m_serverApplicationUri, m_reverseConnectUrl);
-                var endpoints = m_application.GetEndpoints(m_reverseConnectUrl, m_serverApplicationUri);
+                var endpoints = m_application.GetEndpointsAsync(m_reverseConnectUrl, m_serverApplicationUri).GetAwaiter().GetResult();
                 Console.WriteLine("The server returned {0} endpoints.", endpoints.Count);
 
                 int index = 0;
