@@ -311,6 +311,7 @@ namespace SampleClient.Samples
                 {
                     session.StateChanged -= AsyncSessionStateChanged;
                 }
+                session.Dispose();
             }
         }
 
@@ -321,14 +322,14 @@ namespace SampleClient.Samples
         /// <param name="e"></param>
         static void AsyncSessionStateChanged(object sender, System.EventArgs e)
         {
-            BaseStateManagement baseStateManagement = sender as BaseStateManagement;
+            ClientSession clientSession = sender as ClientSession;
 
-            if (baseStateManagement == null)
+            if (clientSession == null)
             {
                 return;
             }
 
-            Console.WriteLine("Changed session state = {0}", baseStateManagement.CurrentState);
+            Console.WriteLine("Changed session '{0}' state = {1}", clientSession.SessionName, clientSession.CurrentState);
         }
 
         #endregion

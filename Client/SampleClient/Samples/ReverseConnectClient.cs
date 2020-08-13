@@ -62,6 +62,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("\nGet Endpoints of '{0}' using reverse connection endpoint '{1}'", m_serverApplicationUri, m_reverseConnectUrl);
                 var endpoints = m_application.GetEndpoints(m_reverseConnectUrl, m_serverApplicationUri);
                 Console.WriteLine("The server returned {0} endpoints.", endpoints.Count);
+                int index = 0;
                 foreach (var endpoint in endpoints)
                 {
                     try
@@ -71,7 +72,7 @@ namespace SampleClient.Samples
                                 endpoint.SecurityMode,
                                 endpoint.SecurityPolicy);
                         Console.WriteLine("\n\tCreate session to endpoint: {0}", endpointToString);
-                        using (ClientSession session = CreateReverseConnectSession("ReverseConnectSession", m_serverApplicationUri,
+                        using (ClientSession session = CreateReverseConnectSession("ReverseConnectSession" + index++, m_serverApplicationUri,
                             endpoint.SecurityMode, (SecurityPolicy)Enum.Parse(typeof(SecurityPolicy), endpoint.SecurityPolicy),
                             endpoint.Encoding[0], new UserIdentity()))
                         {                            
@@ -101,6 +102,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("Get Endpoints of '{0}' using reverse connection endpoint '{1}'", m_serverApplicationUri, m_reverseConnectUrl);
                 var endpoints = m_application.GetEndpoints(m_reverseConnectUrl, m_serverApplicationUri);
                 Console.WriteLine("The server returned {0} endpoints.", endpoints.Count);
+                int index = 0;
                 foreach (var endpoint in endpoints)
                 {
                     try
@@ -110,13 +112,13 @@ namespace SampleClient.Samples
                                 endpoint.SecurityMode,
                                 endpoint.SecurityPolicy);
                         Console.WriteLine("\n\tCreate session to endpoint: {0}", endpointToString);
-                        using (ClientSession session = CreateReverseConnectSession("ReverseConnectSession", m_serverApplicationUri,
+                        ClientSession session = CreateReverseConnectSession("ReverseConnectSession" + index++, m_serverApplicationUri,
                             endpoint.SecurityMode, (SecurityPolicy)Enum.Parse(typeof(SecurityPolicy), endpoint.SecurityPolicy),
-                            endpoint.Encoding[0], new UserIdentity()))
-                        {
-                            session.InitializeWithDiscoveryEndpointDescription(endpoint);
-                            await ConnectClient.ConnectTestAsync(session);
-                        }
+                            endpoint.Encoding[0], new UserIdentity());
+
+                        session.InitializeWithDiscoveryEndpointDescription(endpoint);
+                        ConnectClient.ConnectTestAsync(session);
+                        
                     }
                     catch (Exception ex)
                     {
@@ -171,15 +173,19 @@ namespace SampleClient.Samples
             }
         }
 
+        /// <summary>
+        /// Creates and connects a reverse session on opc.tcp protocol with no security and anonymous user identity.
+        /// The session will be connected using the ConnectAsync method.
+        /// </summary>
+        /// <returns></returns>
         public async Task CreateOpcTcpSessionWithNoSecurityAsync()
         {
             // create the session object.
-            using (ClientSession session = CreateReverseConnectSession("UaBinaryNoSecurityReverseConnectSession", m_serverApplicationUri,
-                MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity()))
-            {
-                await ConnectClient.ConnectTestAsync(session);
-                Console.WriteLine();
-            }
+            ClientSession session = CreateReverseConnectSession("UaBinaryNoSecurityReverseConnectSession", m_serverApplicationUri,
+                MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity());
+
+            await ConnectClient.ConnectTestAsync(session);
+            Console.WriteLine();
         }
 
         /// <summary>
@@ -196,6 +202,8 @@ namespace SampleClient.Samples
                 ClientSession session = m_application.CreateReverseConnectSession(m_reverseConnectUrl, serverApplicationUri,
                     securityMode, securityPolicy, messageEncoding, userId);
                 Console.WriteLine("The session was created.");
+                session.Timeout = 100000;
+                session.MaximumWaitForReverseConnectRequest = 100000;
                 session.SessionName = sessionName;
                 return session;
             }

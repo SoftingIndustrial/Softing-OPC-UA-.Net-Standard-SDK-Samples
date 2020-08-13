@@ -100,7 +100,7 @@ namespace SampleServer
                 {
                     Console.WriteLine(sampleServer.Configuration.ServerConfiguration.BaseAddresses[i]);
                 }
-                Console.WriteLine("Server started");
+                Console.WriteLine("Server started at:{0}", DateTime.Now.ToLongTimeString());
 
                 PrintCommandParameters();
                 
