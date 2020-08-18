@@ -27,13 +27,10 @@ namespace SampleClient.Samples
         private string m_serverApplicationUri;
         private CertificateIdentifier m_reverseConnectServerCertificateIdentifier;
         #region Private Fields
-
         private readonly UaApplication m_application;
-
         #endregion
 
         #region Constructor
-
         /// <summary>
         /// Create new instance of <see cref="ReverseConnectClient"/>
         /// </summary>
@@ -104,7 +101,7 @@ namespace SampleClient.Samples
                 Program.PrintException("ExecuteReverseConnectSample", ex);
             }
         }
-        
+
         /// <summary>
         /// Creates and connects a reverse session on opc.tcp protocol with no security and anonymous user identity.
         /// This sample will get the server application URI from the server certificate specified in sample client config file
@@ -198,7 +195,6 @@ namespace SampleClient.Samples
                 Program.PrintException("ConnectClient.ConnectTest", ex);
             }
         }
-
 
         /// <summary>
         /// Performs a Connect/Disconnect asyncronously test for the specified session.

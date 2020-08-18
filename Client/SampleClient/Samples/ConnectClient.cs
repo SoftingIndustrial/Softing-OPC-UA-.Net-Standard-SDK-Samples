@@ -129,9 +129,6 @@ namespace SampleClient.Samples
             }
         }
 
-
-
-
         /// <summary>
         /// Creates and connects a session on opc.tcp protocol with security and anonymous user identity.
         /// </summary>
@@ -220,8 +217,7 @@ namespace SampleClient.Samples
                 Program.PrintException("ConnectClient.CreateSessionUsingDiscovery", ex);
             }
         }
-
-        #endregion        
+        #endregion
 
         #region Private Helper Methods
 
