@@ -579,13 +579,14 @@ namespace SampleClient.StateMachine
             ConnectClient connectClient = new ConnectClient(m_application);
 
             connectClient.CreateOpcTcpSessionWithNoSecurity();
-            connectClient.CreateOpcTcpSessionWithSecurity( Opc.Ua.MessageSecurityMode.Sign, SecurityPolicy.Basic256Sha256);
+            connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.Sign, SecurityPolicy.Basic256Sha256);
             connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic256Sha256);
             connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.Sign, SecurityPolicy.Aes128_Sha256_RsaOaep);
             connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Aes128_Sha256_RsaOaep);
             connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.Sign, SecurityPolicy.Aes256_Sha256_RsaPss);
             connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Aes256_Sha256_RsaPss);
             connectClient.CreateOpcTcpSessionWithUserId();
+            connectClient.CreateOpcTcpSessionWithCertificate();
             //connectClient.CreateHttpsSessionWithAnomymousUserId();
             //connectClient.CreateHttpsSessionWithUserId();
             connectClient.CreateSessionUsingDiscovery();

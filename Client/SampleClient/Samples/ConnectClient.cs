@@ -10,6 +10,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
@@ -26,7 +28,6 @@ namespace SampleClient.Samples
         #region Private Fields
 
         private readonly UaApplication m_application;
-
         #endregion
 
         #region Constructor
@@ -84,6 +85,52 @@ namespace SampleClient.Samples
                 ConnectTest(session);
             }
         }
+
+        /// <summary>
+        /// Creates and connects a session on opc.tcp protocol with no security and a certificate user identity.
+        /// </summary>
+        public void CreateOpcTcpSessionWithCertificate()
+        {
+            try
+            {
+                // use the opcuser.pfx certificate file located in Files folder
+                string certificateFilePath = Path.Combine("Files", "opcuser.pfx");
+                if (!File.Exists(certificateFilePath))
+                {
+                    Console.WriteLine("The user certificate file is missing ('{0}').", certificateFilePath);
+                    return;
+                }
+                // load the certificate from file
+                X509Certificate2 certificate = new X509Certificate2(certificateFilePath,
+                               null as string,
+                               X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.Exportable);
+
+                if (certificate != null)
+                {
+                    // create UserIdentity from certificate
+                    UserIdentity certificateUserIdentity = new UserIdentity(certificate);
+
+                    Console.WriteLine("Create session using certificate located at '{0}'", certificateFilePath);
+                    // create the session object.
+                    using (ClientSession session = CreateSession("UaBinaryUserIdSession", Program.ServerUrl,
+                        MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, certificateUserIdentity))
+                    {
+                        ConnectTest(session);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Cannot load certificate from '{0}'", certificateFilePath);
+                }
+            }
+            catch(Exception ex)
+            {
+                Program.PrintException("CreateOpcTcpSessionWithCertificate", ex);
+            }
+        }
+
+
+
 
         /// <summary>
         /// Creates and connects a session on opc.tcp protocol with security and anonymous user identity.
