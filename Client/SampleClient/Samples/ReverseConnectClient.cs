@@ -54,7 +54,7 @@ namespace SampleClient.Samples
         #region Reverse Connect Methods
 
         /// <summary>
-        /// /Get all server endpoints suing Reverse connect mechanism and then create a Reverse Connect session to each of them
+        /// Get all server endpoints using Reverse connect mechanism and then create a Reverse Connect session to each of them
         /// </summary>
         /// <param name="connectAsync">flag that indicates whether the connect will be performed asynchronously</param>
         public void GetEndpointsAndReverseConnect(bool connectAsync)
@@ -71,16 +71,16 @@ namespace SampleClient.Samples
                     try
                     {
                         string endpointToString = string.Format("{0} - {1} - {2}",
-                                endpoint.EndpointUrl,
-                                endpoint.SecurityMode,
-                                endpoint.SecurityPolicy);
+                               endpoint.EndpointUrl,
+                               endpoint.SecurityMode,
+                               endpoint.SecurityPolicy);
 
                         Console.WriteLine("\n\tCreate session for endpoint: {0}", endpointToString);
                         ClientSession session = CreateReverseConnectSession("ReverseConnectSession" + index++, m_serverApplicationUri,
                             endpoint.SecurityMode, (SecurityPolicy)Enum.Parse(typeof(SecurityPolicy), endpoint.SecurityPolicy),
                             endpoint.Encoding[0], new UserIdentity());
 
-                        // set discovery endoiunt on session
+                        // set discovery endpoint on session
                         session.InitializeWithDiscoveryEndpointDescription(endpoint);
                         if (connectAsync)
                         {
@@ -153,7 +153,14 @@ namespace SampleClient.Samples
 
         /// <summary>
         /// Creates a new reverse connect session with the specified parameters.
-        /// </summary>        
+        /// </summary>
+        /// <param name="sessionName"></param>
+        /// <param name="serverApplicationUri"></param>
+        /// <param name="securityMode"></param>
+        /// <param name="securityPolicy"></param>
+        /// <param name="messageEncoding"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>        
         private ClientSession CreateReverseConnectSession(string sessionName, string serverApplicationUri, MessageSecurityMode securityMode,
             SecurityPolicy securityPolicy, MessageEncoding messageEncoding, UserIdentity userId)
         {
@@ -174,7 +181,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Program.PrintException("ConnectClient.CreateSession", ex);
+                Program.PrintException("ReverseConnectClient.CreateReverseConnectSession", ex);
                 return null;
             }
         }
@@ -182,6 +189,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Performs a Connect/Disconnect test for the specified session.
         /// </summary>
+        /// <param name="session"></param>
         private void ConnectTest(ClientSession session)
         {
             try
@@ -207,6 +215,8 @@ namespace SampleClient.Samples
         /// <summary>
         /// Performs a Connect/Disconnect asyncronously test for the specified session.
         /// </summary>
+        /// <param name="session"></param>
+        /// <returns></returns>
         private async Task ConnectTestAsync(ClientSession session)
         {
             try
@@ -249,7 +259,7 @@ namespace SampleClient.Samples
                 {
                     // trigger session disconnect
                     Console.WriteLine("\nTrigger session.DisconnectAsync for session {0}...", clientSession.SessionName);
-                    Task.Run(async () => { await clientSession.DisconnectAsync(true); });
+                    clientSession.DisconnectAsync(true);
                 }
                 else if (clientSession.CurrentState == State.Disconnected)
                 {
