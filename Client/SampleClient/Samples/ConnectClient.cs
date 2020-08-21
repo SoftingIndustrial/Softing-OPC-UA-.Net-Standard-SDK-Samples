@@ -28,6 +28,7 @@ namespace SampleClient.Samples
         #region Private Fields
 
         private readonly UaApplication m_application;
+
         #endregion
 
         #region Constructor

@@ -21,13 +21,15 @@ namespace SampleClient.Samples
     /// <summary>
     /// Class providing sample code for reverse connect operations with different configuration parameters.
     /// </summary>
-    class ReverseConnectClient
+    public class ReverseConnectClient
     {
+        #region Private Fields
+
+        private readonly UaApplication m_application;
         private string m_reverseConnectUrl;
         private string m_serverApplicationUri;
         private CertificateIdentifier m_reverseConnectServerCertificateIdentifier;
-        #region Private Fields
-        private readonly UaApplication m_application;
+
         #endregion
 
         #region Constructor
@@ -48,6 +50,8 @@ namespace SampleClient.Samples
             }
         }
         #endregion
+
+        #region Reverse Connect Methods
 
         /// <summary>
         /// /Get all server endpoints suing Reverse connect mechanism and then create a Reverse Connect session to each of them
@@ -142,6 +146,10 @@ namespace SampleClient.Samples
                 ConnectTest(session);
             }
         }
+
+        #endregion
+
+        #region Private Helper Methods
 
         /// <summary>
         /// Creates a new reverse connect session with the specified parameters.
@@ -241,7 +249,7 @@ namespace SampleClient.Samples
                 {
                     // trigger session disconnect
                     Console.WriteLine("\nTrigger session.DisconnectAsync for session {0}...", clientSession.SessionName);
-                    clientSession.DisconnectAsync(true);
+                    Task.Run(async () => { await clientSession.DisconnectAsync(true); });
                 }
                 else if (clientSession.CurrentState == State.Disconnected)
                 {
@@ -258,5 +266,7 @@ namespace SampleClient.Samples
                 Program.PrintException("ExecuteReverseConnectSample", ex);
             }
         }
+
+        #endregion
     }
 }
