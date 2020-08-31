@@ -141,7 +141,14 @@ namespace SampleSubscriber
         {
             lock (m_lock)
             {
-                Console.WriteLine("Data Arrived from Source={0}, SequenceNumber={1}, DataSet count={2}", e.SourceEndPoint, e.NetworkMessageSequenceNumber, e.DataSets.Count);
+                if(string.IsNullOrEmpty(e.BrokerHostName) )
+                {
+                    Console.WriteLine("Data Arrived from UDP Source={0}, SequenceNumber={1}, DataSet count={2}", e.SourceEndPoint, e.NetworkMessageSequenceNumber, e.DataSets.Count);
+                }
+                else
+                {
+                    Console.WriteLine("Data Arrived from Broker Source={0}, SequenceNumber={1}, DataSet count={2}", e.BrokerHostName, e.NetworkMessageSequenceNumber, e.DataSets.Count);
+                }
                 foreach (DataSet dataSet in e.DataSets)
                 {
                     Console.WriteLine("\tDataSet.Name={0}, DataSetWriterId={1}", dataSet.Name, dataSet.DataSetWriterId);
@@ -171,9 +178,9 @@ namespace SampleSubscriber
             // Define a PubSub connection with PublisherId 10
             PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
             pubSubConnection1.Name = "UADPConection1";
-            pubSubConnection1.Enabled = true;
+            pubSubConnection1.Enabled = false;
             pubSubConnection1.PublisherId = (UInt16)10;
-            pubSubConnection1.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
+            pubSubConnection1.TransportProfileUri = UaPubSubApplication.UdpUadpTransportProfileUri;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.1:4840";
@@ -336,13 +343,13 @@ namespace SampleSubscriber
             };
             #endregion
 
-            #region Define ReaderGroup1
-            ReaderGroupDataType readerGroup1 = new ReaderGroupDataType();
-            readerGroup1.Name = "ReaderGroup 1";
-            readerGroup1.Enabled = true;
-            readerGroup1.MaxNetworkMessageSize = 1500;       
-            readerGroup1.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
-            readerGroup1.TransportSettings = new ExtensionObject(new ReaderGroupTransportDataType());
+            #region Define ReaderGroup11
+            ReaderGroupDataType readerGroup11 = new ReaderGroupDataType();
+            readerGroup11.Name = "ReaderGroup 11";
+            readerGroup11.Enabled = true;
+            readerGroup11.MaxNetworkMessageSize = 1500;       
+            readerGroup11.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
+            readerGroup11.TransportSettings = new ExtensionObject(new ReaderGroupTransportDataType());
 
             #region Define DataSetReader 'Simple' for PublisherId = (UInt16)10, DataSetWriterId = 1
             DataSetReaderDataType dataSetReaderSimple = new DataSetReaderDataType();
@@ -382,7 +389,7 @@ namespace SampleSubscriber
 
             dataSetReaderSimple.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
-            readerGroup1.DataSetReaders.Add(dataSetReaderSimple);
+            readerGroup11.DataSetReaders.Add(dataSetReaderSimple);
 
             #region Define DataSetReader 'AllTypes' for PublisherId = (UInt16)10, DataSetWriterId = 2
             DataSetReaderDataType dataSetReaderAllTypes = new DataSetReaderDataType();
@@ -422,7 +429,7 @@ namespace SampleSubscriber
 
             dataSetReaderAllTypes.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
-            readerGroup1.DataSetReaders.Add(dataSetReaderAllTypes);
+            readerGroup11.DataSetReaders.Add(dataSetReaderAllTypes);
 
             #region Define DataSetReader 'MassTest' for PublisherId = (UInt16)10, DataSetWriterId = 3
             DataSetReaderDataType dataSetReaderMassTest = new DataSetReaderDataType();
@@ -462,17 +469,17 @@ namespace SampleSubscriber
 
             dataSetReaderMassTest.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
-            readerGroup1.DataSetReaders.Add(dataSetReaderMassTest);
+            readerGroup11.DataSetReaders.Add(dataSetReaderMassTest);
             #endregion
-            pubSubConnection1.ReaderGroups.Add(readerGroup1);
+            pubSubConnection1.ReaderGroups.Add(readerGroup11);
 
-            #region Define ReaderGroup2
-            ReaderGroupDataType readerGroup2 = new ReaderGroupDataType();
-            readerGroup2.Name = "ReaderGroup 2";
-            readerGroup2.Enabled = true;
-            readerGroup2.MaxNetworkMessageSize = 1500;
-            readerGroup2.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
-            readerGroup2.TransportSettings = new ExtensionObject(new ReaderGroupTransportDataType());
+            #region Define ReaderGroup12
+            ReaderGroupDataType readerGroup12 = new ReaderGroupDataType();
+            readerGroup12.Name = "ReaderGroup 12";
+            readerGroup12.Enabled = true;
+            readerGroup12.MaxNetworkMessageSize = 1500;
+            readerGroup12.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
+            readerGroup12.TransportSettings = new ExtensionObject(new ReaderGroupTransportDataType());
 
             #region Define DataSetReader 'Simple' for PublisherId = (UInt64)20, DataSetWriterId = 11
             DataSetReaderDataType dataSetReaderSimple2 = new DataSetReaderDataType();
@@ -511,7 +518,7 @@ namespace SampleSubscriber
 
             dataSetReaderSimple2.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
-            readerGroup2.DataSetReaders.Add(dataSetReaderSimple2);
+            readerGroup12.DataSetReaders.Add(dataSetReaderSimple2);
 
             #region Define DataSetReader 'AllTypes' for PublisherId = (UInt64)20, DataSetWriterId = 12
             DataSetReaderDataType dataSetReaderAllTypes2 = new DataSetReaderDataType();
@@ -550,7 +557,7 @@ namespace SampleSubscriber
 
             dataSetReaderAllTypes2.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
-            readerGroup2.DataSetReaders.Add(dataSetReaderAllTypes2);
+            readerGroup12.DataSetReaders.Add(dataSetReaderAllTypes2);
 
             #region Define DataSetReader 'MassTest' for PublisherId = (UInt64)20,  DataSetWriterId = 13
             DataSetReaderDataType dataSetReaderMassTest2 = new DataSetReaderDataType();
@@ -589,14 +596,283 @@ namespace SampleSubscriber
 
             dataSetReaderMassTest2.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
-            readerGroup2.DataSetReaders.Add(dataSetReaderMassTest2);
+            readerGroup12.DataSetReaders.Add(dataSetReaderMassTest2);
             #endregion
-            pubSubConnection1.ReaderGroups.Add(readerGroup2);
+            pubSubConnection1.ReaderGroups.Add(readerGroup12);
+
+            // Define an MQTT PubSub connection with PublisherId 30
+            PubSubConnectionDataType pubSubConnection2 = new PubSubConnectionDataType();
+            pubSubConnection2.Name = "UADPConection2";
+            pubSubConnection2.Enabled = true;
+            pubSubConnection2.PublisherId = (UInt16)30;
+            pubSubConnection2.TransportProfileUri = UaPubSubApplication.UdpUadpTransportProfileUri;
+            NetworkAddressUrlDataType mqttAddress = new NetworkAddressUrlDataType();
+            mqttAddress.NetworkInterface = "Ethernet";
+            mqttAddress.Url = "mqtts://192.168.100.12:8883";
+            pubSubConnection2.Address = new ExtensionObject(mqttAddress);
+
+            #region Define ReaderGroup21
+            ReaderGroupDataType readerGroup21 = new ReaderGroupDataType();
+            readerGroup21.Name = "ReaderGroup 21";
+            readerGroup21.Enabled = true;
+            readerGroup21.MaxNetworkMessageSize = 1500;
+            readerGroup21.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
+            readerGroup21.TransportSettings = new ExtensionObject(new ReaderGroupTransportDataType());
+
+            #region Define DataSetReader 'Simple' for PublisherId = (UInt16)30, DataSetWriterId = 1
+            dataSetReaderSimple = new DataSetReaderDataType();
+            dataSetReaderSimple.Name = "Reader 211";
+            dataSetReaderSimple.PublisherId = (UInt16)30;
+            dataSetReaderSimple.WriterGroupId = 0;
+            dataSetReaderSimple.DataSetWriterId = 0;
+            dataSetReaderSimple.Enabled = true;
+            dataSetReaderSimple.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetReaderSimple.KeyFrameCount = 1;
+            dataSetReaderSimple.DataSetMetaData = simpleMetaData;
+
+            uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
+            {
+                GroupVersion = 0,
+                DataSetOffset = 15,
+                NetworkMessageNumber = 0,
+                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
+                        | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
+                        | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber),
+                DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
+            };
+            dataSetReaderSimple.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
+            subscribedDataSet = new TargetVariablesDataType();
+            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
+            foreach (var fieldMetaData in simpleMetaData.Fields)
+            {
+                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
+                {
+                    DataSetFieldId = fieldMetaData.DataSetFieldId,
+                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexSimple),
+                    AttributeId = Attributes.Value,
+                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
+                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
+                });
+            }
+
+            dataSetReaderSimple.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            #endregion
+            readerGroup21.DataSetReaders.Add(dataSetReaderSimple);
+
+            #region Define DataSetReader 'AllTypes' for PublisherId = (UInt16)10, DataSetWriterId = 2
+            dataSetReaderAllTypes = new DataSetReaderDataType();
+            dataSetReaderAllTypes.Name = "Reader 212";
+            dataSetReaderAllTypes.PublisherId = (UInt16)30;
+            dataSetReaderAllTypes.WriterGroupId = 0;
+            dataSetReaderAllTypes.DataSetWriterId = 0;
+            dataSetReaderAllTypes.Enabled = true;
+            dataSetReaderAllTypes.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetReaderAllTypes.KeyFrameCount = 1;
+            dataSetReaderAllTypes.DataSetMetaData = allTypesMetaData;
+
+            uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
+            {
+                GroupVersion = 0,
+                DataSetOffset = 47,
+                NetworkMessageNumber = 0,
+                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
+                        | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
+                        | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber),
+                DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
+            };
+            dataSetReaderAllTypes.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
+            subscribedDataSet = new TargetVariablesDataType();
+            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
+            foreach (var fieldMetaData in allTypesMetaData.Fields)
+            {
+                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
+                {
+                    DataSetFieldId = fieldMetaData.DataSetFieldId,
+                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexAllTypes),
+                    AttributeId = Attributes.Value,
+                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
+                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
+                });
+            }
+
+            dataSetReaderAllTypes.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            #endregion
+            readerGroup21.DataSetReaders.Add(dataSetReaderAllTypes);
+
+            #region Define DataSetReader 'MassTest' for PublisherId = (UInt16)10, DataSetWriterId = 3
+            dataSetReaderMassTest = new DataSetReaderDataType();
+            dataSetReaderMassTest.Name = "Reader 213";
+            dataSetReaderMassTest.PublisherId = (UInt16)30;
+            dataSetReaderMassTest.WriterGroupId = 0;
+            dataSetReaderMassTest.DataSetWriterId = 0;
+            dataSetReaderMassTest.Enabled = true;
+            dataSetReaderMassTest.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetReaderMassTest.KeyFrameCount = 1;
+            dataSetReaderMassTest.DataSetMetaData = massTestMetaData;
+
+            uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
+            {
+                GroupVersion = 0,
+                DataSetOffset = 79,
+                NetworkMessageNumber = 0,
+                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
+                        | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
+                        | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber),
+                DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
+            };
+            dataSetReaderMassTest.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
+            subscribedDataSet = new TargetVariablesDataType();
+            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
+            foreach (var fieldMetaData in massTestMetaData.Fields)
+            {
+                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
+                {
+                    DataSetFieldId = fieldMetaData.DataSetFieldId,
+                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexMassTest),
+                    AttributeId = Attributes.Value,
+                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
+                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
+                });
+            }
+
+            dataSetReaderMassTest.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            #endregion
+            readerGroup21.DataSetReaders.Add(dataSetReaderMassTest);
+            #endregion
+            pubSubConnection2.ReaderGroups.Add(readerGroup21);
+
+            #region Define ReaderGroup22
+            ReaderGroupDataType readerGroup22 = new ReaderGroupDataType();
+            readerGroup22.Name = "ReaderGroup 22";
+            readerGroup22.Enabled = true;
+            readerGroup22.MaxNetworkMessageSize = 1500;
+            readerGroup22.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
+            readerGroup22.TransportSettings = new ExtensionObject(new ReaderGroupTransportDataType());
+
+            #region Define DataSetReader 'Simple' for PublisherId = (UInt64)20, DataSetWriterId = 11
+            DataSetReaderDataType dataSetReaderSimple221 = new DataSetReaderDataType();
+            dataSetReaderSimple221.Name = "Reader 221";
+            dataSetReaderSimple221.PublisherId = (UInt64)20;
+            dataSetReaderSimple221.WriterGroupId = 0;
+            dataSetReaderSimple221.DataSetWriterId = 11;
+            dataSetReaderSimple221.Enabled = true;
+            dataSetReaderSimple221.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetReaderSimple221.KeyFrameCount = 1;
+            dataSetReaderSimple221.DataSetMetaData = simpleMetaData;
+
+            uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
+            {
+                GroupVersion = 0,
+                DataSetOffset = 0,
+                NetworkMessageNumber = 0,
+                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.PayloadHeader),
+                DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Timestamp | UadpDataSetMessageContentMask.Status
+                        | UadpDataSetMessageContentMask.MinorVersion | UadpDataSetMessageContentMask.SequenceNumber),
+            };
+            dataSetReaderSimple221.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
+            subscribedDataSet = new TargetVariablesDataType();
+            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
+            foreach (var fieldMetaData in simpleMetaData.Fields)
+            {
+                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
+                {
+                    DataSetFieldId = fieldMetaData.DataSetFieldId,
+                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexSimple),
+                    AttributeId = Attributes.Value,
+                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
+                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
+                });
+            }
+
+            dataSetReaderSimple221.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            #endregion
+            readerGroup22.DataSetReaders.Add(dataSetReaderSimple221);
+
+            #region Define DataSetReader 'AllTypes' for PublisherId = (UInt64)20, DataSetWriterId = 12
+            DataSetReaderDataType dataSetReaderAllTypes222 = new DataSetReaderDataType();
+            dataSetReaderAllTypes222.Name = "Reader 222";
+            dataSetReaderAllTypes222.PublisherId = (UInt64)20;
+            dataSetReaderAllTypes222.WriterGroupId = 0;
+            dataSetReaderAllTypes222.DataSetWriterId = 12;
+            dataSetReaderAllTypes222.Enabled = true;
+            dataSetReaderAllTypes222.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetReaderAllTypes222.KeyFrameCount = 1;
+            dataSetReaderAllTypes222.DataSetMetaData = allTypesMetaData;
+
+            uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
+            {
+                GroupVersion = 0,
+                DataSetOffset = 0,
+                NetworkMessageNumber = 0,
+                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.PayloadHeader),
+                DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Timestamp | UadpDataSetMessageContentMask.Status
+                        | UadpDataSetMessageContentMask.MinorVersion | UadpDataSetMessageContentMask.SequenceNumber),
+            };
+            dataSetReaderAllTypes222.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
+            subscribedDataSet = new TargetVariablesDataType();
+            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
+            foreach (var fieldMetaData in allTypesMetaData.Fields)
+            {
+                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
+                {
+                    DataSetFieldId = fieldMetaData.DataSetFieldId,
+                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexAllTypes),
+                    AttributeId = Attributes.Value,
+                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
+                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
+                });
+            }
+
+            dataSetReaderAllTypes222.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            #endregion
+            readerGroup22.DataSetReaders.Add(dataSetReaderAllTypes222);
+
+            #region Define DataSetReader 'MassTest' for PublisherId = (UInt64)30,  DataSetWriterId = 13
+            DataSetReaderDataType dataSetReaderMassTest223 = new DataSetReaderDataType();
+            dataSetReaderMassTest223.Name = "Reader 223";
+            dataSetReaderMassTest223.PublisherId = (UInt64)20;
+            dataSetReaderMassTest223.WriterGroupId = 0;
+            dataSetReaderMassTest223.DataSetWriterId = 13;
+            dataSetReaderMassTest223.Enabled = true;
+            dataSetReaderMassTest223.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetReaderMassTest223.KeyFrameCount = 1;
+            dataSetReaderMassTest223.DataSetMetaData = massTestMetaData;
+
+            uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
+            {
+                GroupVersion = 0,
+                DataSetOffset = 0,
+                NetworkMessageNumber = 0,
+                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.PayloadHeader),
+                DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Timestamp | UadpDataSetMessageContentMask.Status
+                        | UadpDataSetMessageContentMask.MinorVersion | UadpDataSetMessageContentMask.SequenceNumber),
+            };
+            dataSetReaderMassTest223.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
+            subscribedDataSet = new TargetVariablesDataType();
+            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
+            foreach (var fieldMetaData in massTestMetaData.Fields)
+            {
+                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
+                {
+                    DataSetFieldId = fieldMetaData.DataSetFieldId,
+                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexMassTest),
+                    AttributeId = Attributes.Value,
+                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
+                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
+                });
+            }
+
+            dataSetReaderMassTest223.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            #endregion
+            readerGroup22.DataSetReaders.Add(dataSetReaderMassTest223);
+            #endregion
+            pubSubConnection2.ReaderGroups.Add(readerGroup22);
+
             //create  pub sub configuration root object
             PubSubConfigurationDataType pubSubConfiguration = new PubSubConfigurationDataType();
             pubSubConfiguration.Connections = new PubSubConnectionDataTypeCollection()
                 {
-                    pubSubConnection1
+                    pubSubConnection1, pubSubConnection2
                 };           
 
             return pubSubConfiguration;
@@ -613,7 +889,7 @@ namespace SampleSubscriber
             pubSubConnection1.Name = "UADPConection1";
             pubSubConnection1.Enabled = true;
             pubSubConnection1.PublisherId = (UInt16)11;
-            pubSubConnection1.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
+            pubSubConnection1.TransportProfileUri = UaPubSubApplication.UdpUadpTransportProfileUri;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.13:4840";
