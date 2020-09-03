@@ -178,7 +178,7 @@ namespace SampleSubscriber
             // Define a PubSub connection with PublisherId 10
             PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
             pubSubConnection1.Name = "UADPConection1";
-            pubSubConnection1.Enabled = false;
+            pubSubConnection1.Enabled = true;
             pubSubConnection1.PublisherId = (UInt16)10;
             pubSubConnection1.TransportProfileUri = UaPubSubApplication.UdpUadpTransportProfileUri;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
@@ -608,7 +608,7 @@ namespace SampleSubscriber
             pubSubConnection2.TransportProfileUri = UaPubSubApplication.UdpUadpTransportProfileUri;
             NetworkAddressUrlDataType mqttAddress = new NetworkAddressUrlDataType();
             mqttAddress.NetworkInterface = "Ethernet";
-            mqttAddress.Url = "mqtts://192.168.100.12:8883";
+            mqttAddress.Url = "mqtts://239.0.0.1:8883";
             pubSubConnection2.Address = new ExtensionObject(mqttAddress);
 
             #region Define ReaderGroup21

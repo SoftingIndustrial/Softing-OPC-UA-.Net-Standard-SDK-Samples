@@ -4,7 +4,7 @@
   <Connections>
     <PubSubConnectionDataType>
       <Name>UADPConnection1</Name>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>

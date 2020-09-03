@@ -3779,7 +3779,7 @@
   <Connections>
     <PubSubConnectionDataType>
       <Name>UADPConnection1</Name>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
@@ -3916,7 +3916,7 @@
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
       <Name>UADPConnection2</Name>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <PublisherId>
         <Value>
           <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
@@ -4182,6 +4182,145 @@
                     <ConfiguredSize>405</ConfiguredSize>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
                     <DataSetOffset>79</DataSetOffset>
+                  </UadpDataSetWriterMessageDataType>
+                </Body>
+              </MessageSettings>
+            </DataSetWriterDataType>
+          </DataSetWriters>
+        </WriterGroupDataType>
+      </WriterGroups>
+      <ReaderGroups />
+    </PubSubConnectionDataType>
+    <PubSubConnectionDataType>
+      <Name>UADPConnection4</Name>
+      <Enabled>true</Enabled>
+      <PublisherId>
+        <Value>
+          <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">40</UInt64>
+        </Value>
+      </PublisherId>
+      <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-mqtt-uadp</TransportProfileUri>
+      <Address>
+        <TypeId>
+          <Identifier>i=21176</Identifier>
+        </TypeId>
+        <Body>
+          <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+            <NetworkInterface>Ethernet</NetworkInterface>
+            <Url>mqtts://192.168.100.12:8883</Url>
+          </NetworkAddressUrlDataType>
+        </Body>
+      </Address>
+      <ConnectionProperties />
+      <TransportSettings i:nil="true" />
+      <WriterGroups>
+        <WriterGroupDataType>
+          <Name>WriterGroup 4</Name>
+          <Enabled>true</Enabled>
+          <SecurityMode>Invalid_0</SecurityMode>
+          <SecurityGroupId i:nil="true" />
+          <SecurityKeyServices />
+          <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
+          <GroupProperties />
+          <WriterGroupId>2</WriterGroupId>
+          <PublishingInterval>5000</PublishingInterval>
+          <KeepAliveTime>5000</KeepAliveTime>
+          <Priority>0</Priority>
+          <LocaleIds />
+          <HeaderLayoutUri>UADP-Dynamic</HeaderLayoutUri>
+          <TransportSettings>
+            <TypeId>
+              <Identifier>i=21179</Identifier>
+            </TypeId>
+            <Body>
+              <BrokerWriterGroupTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                <QueueName>'test/topic'</QueueName>
+                <ResourceUri></ResourceUri>
+                <AuthenticationProfileUri></AuthenticationProfileUri>
+                <RequestedDeliveryGuarantee>AtLeastOnce</RequestedDeliveryGuarantee>
+              </BrokerWriterGroupTransportDataType>
+            </Body>
+          </TransportSettings>
+          <MessageSettings>
+            <TypeId>
+              <Identifier>i=16014</Identifier>
+            </TypeId>
+            <Body>
+              <UadpWriterGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                <GroupVersion>0</GroupVersion>
+                <DataSetOrdering>Undefined_0</DataSetOrdering>
+                <NetworkMessageContentMask>65</NetworkMessageContentMask>
+                <SamplingOffset>0</SamplingOffset>
+                <PublishingOffset />
+              </UadpWriterGroupMessageDataType>
+            </Body>
+          </MessageSettings>
+          <DataSetWriters>
+            <DataSetWriterDataType>
+              <Name>Writer 41</Name>
+              <Enabled>true</Enabled>
+              <DataSetWriterId>11</DataSetWriterId>
+              <DataSetFieldContentMask>0</DataSetFieldContentMask>
+              <KeyFrameCount>1</KeyFrameCount>
+              <DataSetName>Simple</DataSetName>
+              <DataSetWriterProperties />
+              <TransportSettings i:nil="true" />
+              <MessageSettings>
+                <TypeId>
+                  <Identifier>i=16015</Identifier>
+                </TypeId>
+                <Body>
+                  <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <DataSetMessageContentMask>53</DataSetMessageContentMask>
+                    <ConfiguredSize>0</ConfiguredSize>
+                    <NetworkMessageNumber>0</NetworkMessageNumber>
+                    <DataSetOffset>0</DataSetOffset>
+                  </UadpDataSetWriterMessageDataType>
+                </Body>
+              </MessageSettings>
+            </DataSetWriterDataType>
+            <DataSetWriterDataType>
+              <Name>Writer 42</Name>
+              <Enabled>true</Enabled>
+              <DataSetWriterId>12</DataSetWriterId>
+              <DataSetFieldContentMask>0</DataSetFieldContentMask>
+              <KeyFrameCount>1</KeyFrameCount>
+              <DataSetName>AllTypes</DataSetName>
+              <DataSetWriterProperties />
+              <TransportSettings i:nil="true" />
+              <MessageSettings>
+                <TypeId>
+                  <Identifier>i=16015</Identifier>
+                </TypeId>
+                <Body>
+                  <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <DataSetMessageContentMask>53</DataSetMessageContentMask>
+                    <ConfiguredSize>0</ConfiguredSize>
+                    <NetworkMessageNumber>0</NetworkMessageNumber>
+                    <DataSetOffset>0</DataSetOffset>
+                  </UadpDataSetWriterMessageDataType>
+                </Body>
+              </MessageSettings>
+            </DataSetWriterDataType>
+            <DataSetWriterDataType>
+              <Name>Writer 43</Name>
+              <Enabled>true</Enabled>
+              <DataSetWriterId>13</DataSetWriterId>
+              <DataSetFieldContentMask>0</DataSetFieldContentMask>
+              <KeyFrameCount>1</KeyFrameCount>
+              <DataSetName>MassTest</DataSetName>
+              <DataSetWriterProperties />
+              <TransportSettings i:nil="true" />
+              <MessageSettings>
+                <TypeId>
+                  <Identifier>i=16015</Identifier>
+                </TypeId>
+                <Body>
+                  <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <DataSetMessageContentMask>53</DataSetMessageContentMask>
+                    <ConfiguredSize>0</ConfiguredSize>
+                    <NetworkMessageNumber>0</NetworkMessageNumber>
+                    <DataSetOffset>0</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
                 </Body>
               </MessageSettings>
