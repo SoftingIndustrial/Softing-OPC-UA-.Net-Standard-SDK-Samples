@@ -96,7 +96,7 @@ namespace SampleClient
                 {
                     Console.Write("StatusCode = {0}, ", StatusCodes.GetBrowseName(((ServiceResultException)ex).StatusCode));
                 }
-                Console.WriteLine("{0}, ", ex.Message);
+                Console.WriteLine(ex.Message);
                 ex = ex.InnerException;
             }
             Console.WriteLine("-----------------------------------");

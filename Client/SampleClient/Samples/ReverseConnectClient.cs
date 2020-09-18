@@ -118,6 +118,7 @@ namespace SampleClient.Samples
                 // create the session object using the server certificate identifier from config file
                 if (m_reverseConnectServerCertificateIdentifier != null)
                 {
+                    // This method will find the first certificate with the specified CertificateIdentifier.SubjectName from the specified CertificateIdentifier.StorePath
                     X509Certificate2 reverseConnectServerCertificate = m_reverseConnectServerCertificateIdentifier.Find(false).Result;
 
                     if (reverseConnectServerCertificate != null)
