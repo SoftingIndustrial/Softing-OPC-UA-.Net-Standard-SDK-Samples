@@ -18,6 +18,7 @@ namespace SampleClient.StateMachine
     {
         Main,
         DiscoveryConnectGds,
+        Discovery,
         GDS,
         Browse,
         MonitoredEventsAlarms,
@@ -39,10 +40,16 @@ namespace SampleClient.StateMachine
     public enum Command
     {
         DiscoveryConnect,
-        DiscoverySample,
+        DiscoveryAsyncSample,
+        DiscoverServersSample,
+        DiscoverServersOnNetworkSample,
+        DiscoverServersSampleAsync,
+        DiscoverServersOnNetworkSampleAsync,
         ConnectSample,
         ReverseConnectSample,
         ReverseConnectSampleAsync,
+        StartDiscoverySample,
+        EndDiscoverySample,
         StartGDSSample,
         EndGDSSample,
         EndDiscoveryConnect,

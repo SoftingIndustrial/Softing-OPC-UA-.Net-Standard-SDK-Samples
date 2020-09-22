@@ -189,9 +189,30 @@ namespace SampleClient.StateMachine
             m_transitions.Add(reverseConnectSampleAsync, State.DiscoveryConnectGds);
 
             //add discovery menu item
-            StateTransition discoverySample = new StateTransition(State.DiscoveryConnectGds, Command.DiscoverySample, "4", "Execute Discovery Sample");
-            discoverySample.ExecuteCommand += DiscoverySample_ExecuteCommand;
-            m_transitions.Add(discoverySample, State.DiscoveryConnectGds);
+            StateTransition discoveryMenu = new StateTransition(State.DiscoveryConnectGds, Command.StartDiscoverySample, "4", "Enter Discovery Menu");           
+            m_transitions.Add(discoveryMenu, State.Discovery);
+
+            //add discovery menu item
+            StateTransition discoverServersSample = new StateTransition(State.Discovery, Command.DiscoverServersSample, "1", "Execute DiscoverServers Sample");
+            discoverServersSample.ExecuteCommand += DiscoverServersSample_ExecuteCommand;
+            m_transitions.Add(discoverServersSample, State.Discovery);
+
+            StateTransition discoverServersOnNetworkSample = new StateTransition(State.Discovery, Command.DiscoverServersOnNetworkSample, "2", "Execute DiscoverServersOnNetwork Sample");
+            discoverServersOnNetworkSample.ExecuteCommand += DiscoverServersOnNetworkSample_ExecuteCommand;
+            m_transitions.Add(discoverServersOnNetworkSample, State.Discovery);          
+
+            //add discovery menu item
+            StateTransition discoverServersSampleAsync = new StateTransition(State.Discovery, Command.DiscoverServersSampleAsync, "3", "Execute DiscoverServers Async Sample");
+            discoverServersSampleAsync.ExecuteCommand += DiscoverServersSampleAsync_ExecuteCommand;
+            m_transitions.Add(discoverServersSampleAsync, State.Discovery);
+
+            //add discovery menu item
+            StateTransition discoverServersOnNetworkSampleAsync = new StateTransition(State.Discovery, Command.DiscoverServersOnNetworkSampleAsync, "4", "Execute DiscoverServersOnNetwork Async Sample");
+            discoverServersOnNetworkSampleAsync.ExecuteCommand += DiscoverServersOnNetworkSampleAsync_ExecuteCommand;
+            m_transitions.Add(discoverServersOnNetworkSampleAsync, State.Discovery);
+
+            StateTransition endDiscoveryMenu = new StateTransition(State.Discovery, Command.EndDiscoverySample, "0", "Back to Discovery/Connect Menu");
+            m_transitions.Add(endDiscoveryMenu, State.DiscoveryConnectGds);
 
             //add GDS menu item
             StateTransition gdsSample = new StateTransition(State.DiscoveryConnectGds, Command.StartGDSSample, "5", "Enter GDS Sample Menu");            
@@ -621,24 +642,63 @@ namespace SampleClient.StateMachine
             
             reverseConnectClient.GetEndpointsAndReverseConnect(true);
         }
-         
+
         #endregion
 
         #region ExecuteCommand Handlers for Discovery
 
         /// <summary>
-        /// ExeuteCommand handler for Discovery - FindServers command
+        /// ExeuteCommand handler for DiscoverServers command
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DiscoverySample_ExecuteCommand(object sender, EventArgs e)
+        private void DiscoverServersSample_ExecuteCommand(object sender, EventArgs e)
         {
             //initialize discovery sample
             DiscoveryClient discoveryClientSample = new DiscoveryClient(m_application);
             //call sample discovery methods
             discoveryClientSample.DiscoverServers();
+        }
+
+        /// <summary>
+        /// ExeuteCommand handler for DiscoverServersOnNetwork command
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DiscoverServersOnNetworkSample_ExecuteCommand(object sender, EventArgs e)
+        {
+            //initialize discovery sample
+            DiscoveryClient discoveryClientSample = new DiscoveryClient(m_application);
+            //call sample discovery methods
             discoveryClientSample.DiscoverServersOnNetwork();
         }
+
+        /// <summary>
+        /// ExeuteCommand handler for DiscoverServersasync command
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DiscoverServersSampleAsync_ExecuteCommand(object sender, EventArgs e)
+        {
+            //initialize discovery sample
+            DiscoveryClient discoveryClientSample = new DiscoveryClient(m_application);
+            //call sample discovery methods
+            discoveryClientSample.DiscoverServersAsync();
+        }
+
+        /// <summary>
+        /// ExeuteCommand handler for DiscoverServersOnNetworkAsync command
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DiscoverServersOnNetworkSampleAsync_ExecuteCommand(object sender, EventArgs e)
+        {
+            //initialize discovery sample
+            DiscoveryClient discoveryClientSample = new DiscoveryClient(m_application);
+            //call sample discovery methods
+            discoveryClientSample.DiscoverServersOnNetworkAsync();
+        }
+
 
         /// <summary>
         /// ExeuteCommand handler for GDS Pull Register and Sign Certificate command
