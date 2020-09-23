@@ -129,18 +129,21 @@ namespace SampleClient.Samples
                     }
                     else
                     {
-                        Console.WriteLine("The configured ReverseConnectServerCertificateIdentifier cannot be found.");
+                        Console.WriteLine("The configured ReverseConnectServerCertificateIdentifier cannot be found. \nThe ReverseConnectServerApplicationUri='{0}' will be used. ",
+                            m_serverApplicationUri);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("The ReverseConnectServerCertificateIdentifier is NULL.");
+                    Console.WriteLine("The ReverseConnectServerCertificateIdentifier is NULL. \nThe ReverseConnectServerApplicationUri='{0}' will be used. ",
+                        m_serverApplicationUri);
                 }
             }
             catch(Exception ex)
             {
                 Program.PrintException("CreateOpcTcpSessionWithNoSecurity using configured ReverseConnectServerCertificateIdentifier", ex);
             }
+
             using (ClientSession session = CreateReverseConnectSession("UaBinaryNoSecurityReverseConnectSession", reverseConnectServerApplicationUri,
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity()))
             {
@@ -167,8 +170,8 @@ namespace SampleClient.Samples
         {
             try
             {
-                Console.WriteLine("\r\nCreating the reverse connect session {0} (SecurityMode = {1}, SecurityPolicy = {2}, UserIdentity = {3})...",
-                    sessionName, securityMode, securityPolicy, userId.GetIdentityToken());
+                Console.WriteLine("\r\nCreating the reverse connect session {0} to ServerApplicationUri: '{1}' \n(SecurityMode = {2}, SecurityPolicy = {3}, UserIdentity = {4})...",
+                    sessionName, serverApplicationUri, securityMode, securityPolicy, userId.GetIdentityToken());
                 // Create the Reverse Connect Session object.    
                 ClientSession session = m_application.CreateReverseConnectSession(m_reverseConnectUrl, serverApplicationUri,
                     securityMode, securityPolicy, messageEncoding, userId);
