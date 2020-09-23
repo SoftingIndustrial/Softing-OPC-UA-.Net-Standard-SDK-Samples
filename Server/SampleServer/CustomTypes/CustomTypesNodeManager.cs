@@ -30,6 +30,8 @@ namespace SampleServer.CustomTypes
         private FolderState m_arraysFolder;
 
         private NodeId m_vehicleDataTypeNodeId;
+        private NodeId m_customEventTypeNodeId;
+        private int m_customEventCounter = 0;
         #endregion
 
         #region Constructors
@@ -279,6 +281,20 @@ namespace SampleServer.CustomTypes
                 BaseObjectTypeState parkingObjectType = CreateObjectType(customObjectType.NodeId, "ParkingObjectType", false);
                 vehicleVariableType.Description = "Custom Object type with DataType=VehicleType";
 
+                // create custom event type
+                BaseObjectTypeState customEventType = CreateObjectType(ObjectTypeIds.BaseEventType, "CustomEventType", false);
+                //remember CustomEventType id
+                m_customEventTypeNodeId = customEventType.NodeId;
+                customEventType.Description = "Custom EventType with some custom properties";
+
+                propertyState = CreateProperty(customEventType, "CountProperty", DataTypeIds.Int32);
+                // for properties that need to be created on instances of type the modelling rule has to be specified
+                propertyState.ModellingRuleId = Objects.ModellingRule_Mandatory;
+
+                propertyState = CreateProperty(customEventType, "RandomValueProperty", DataTypeIds.Int32);
+                // for properties that need to be created on instances of type the modelling rule has to be specified
+                propertyState.ModellingRuleId = Objects.ModellingRule_Mandatory;
+
                 // Define the structure of the ObjectType definition
                 var folderVariable = CreateFolder(parkingObjectType, "Vehicles");
                 // for properties that need to be created on instances of type the modelling rule has to be specified
@@ -314,6 +330,11 @@ namespace SampleServer.CustomTypes
                     // Add event handler for object instance method call
                     addVehicleMethodInstance.OnCallMethod = ParkingLotAddVehicleOnCallHandler;
                 }
+
+                // create method for raising custom event of d\custom defined type
+                MethodState raiseCustomEventMethodInstance = CreateMethod(m_rootCustomTypesFolder, "RaiseCustomEvent", null, null, RaiseCustomEventOnCallHandler);               
+
+
                 #endregion
             }
         }
@@ -360,6 +381,35 @@ namespace SampleServer.CustomTypes
             }
 
             return new ServiceResult(StatusCodes.BadInvalidArgument);
+        }
+
+        /// <summary>
+        /// Hander for RaiseCustomEvent method
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="inputArguments"></param>
+        /// <param name="outputArguments"></param>
+        /// <returns></returns>
+        private ServiceResult RaiseCustomEventOnCallHandler(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            var customEventInstance = CreateObjectFromType(FindNodeInAddressSpace(ObjectIds.Server), "eventInstance", m_customEventTypeNodeId);
+            if (customEventInstance != null)
+            {
+                var countProperty = customEventInstance.FindChildBySymbolicName(SystemContext, "CountProperty") as BaseVariableState;
+                if (countProperty != null)
+                {
+                    countProperty.Value = ++m_customEventCounter;
+                }
+                var randomProperty = customEventInstance.FindChildBySymbolicName(SystemContext, "RandomValueProperty") as BaseVariableState;
+                if (randomProperty != null)
+                {
+                    randomProperty.Value = new Random(100).Next();
+                }
+                ReportEvent(customEventInstance, new LocalizedText("CustomEvent" + m_customEventCounter), EventSeverity.MediumHigh, m_customEventTypeNodeId);
+                return new ServiceResult(StatusCodes.Good);
+            }
+            return new ServiceResult(StatusCodes.BadNodeIdInvalid);
         }
         #endregion
     }

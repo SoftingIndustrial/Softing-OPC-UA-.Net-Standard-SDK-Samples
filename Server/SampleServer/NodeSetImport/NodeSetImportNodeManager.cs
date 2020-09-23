@@ -268,8 +268,8 @@ namespace SampleServer.NodeSetImport
             }
             try
             {
-                //create object of specified type
-                var newNode = CreateInstanceFromType(parentNode, name, NamespaceIndex, inputArguments[1] as NodeId, ReferenceTypeIds.Organizes);
+                //create object of specified type and generate also properties that have modelling rule set on optional
+                var newNode = CreateInstanceFromType(parentNode, name, NamespaceIndex, inputArguments[1] as NodeId, ReferenceTypeIds.Organizes, true);
                 if (newNode != null)
                 {
                     parentNode.AddChild(newNode);
