@@ -81,11 +81,13 @@ namespace SampleServer.NodeSetImport
                         inputArguments = new Argument[]
                         {
                             new Argument() { Name = "Parent NodeId", Description = "NodeId for parent node.",  DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar },
-                        new Argument() { Name = "Type NodeId", Description = "NodeId for the type of the new instance node.",  DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar },
-                        new Argument() { Name = "Name", Description = "Name of the new instance node.",  DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar },
+                            new Argument() { Name = "Type NodeId", Description = "NodeId for the type of the new instance node.",  DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar },
+                            new Argument() { Name = "CreateOptionalProperties", Description = "Flag that imndicates if optional proeprties defined in type shall be instantiated.",  DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar, Value = true },
+                            new Argument() { Name = "Name", Description = "Name of the new instance node.",  DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar },
                         };
                         MethodState createinstanceMethod = CreateMethod(nodeSetImportNode, "CreateInstance", inputArguments, null, OnCreateInstance);
 
+                        
 
                         //create instance of variable node with data type from imported nodeset dictionary
                         FolderState referenceServerVariables = CreateFolder(nodeSetImportNode, "Imported Types Variables");
@@ -261,7 +263,10 @@ namespace SampleServer.NodeSetImport
             {
                 throw new ServiceResultException(StatusCodes.BadNodeIdUnknown, string.Format("Specified type NodeId ({0}) is unknown", inputArguments[1]));
             }
-            string name = inputArguments[2] as string;
+           
+            bool createOptionalFields = (bool)inputArguments[2];
+
+            string name = inputArguments[3] as string;
             if (string.IsNullOrEmpty(name))
             {
                 name = typeNode.BrowseName.Name + "_instance";
@@ -269,12 +274,11 @@ namespace SampleServer.NodeSetImport
             try
             {
                 //create object of specified type and generate also properties that have modelling rule set on optional
-                var newNode = CreateInstanceFromType(parentNode, name, NamespaceIndex, inputArguments[1] as NodeId, ReferenceTypeIds.Organizes, true);
+                var newNode = CreateInstanceFromType(parentNode, name, NamespaceIndex, inputArguments[1] as NodeId, ReferenceTypeIds.Organizes, createOptionalFields);
                 if (newNode != null)
                 {
                     parentNode.AddChild(newNode);
                     AddPredefinedNode(SystemContext, newNode);
-                    return ServiceResult.Good;
                 }
             }
             catch (Exception ex)
@@ -283,7 +287,9 @@ namespace SampleServer.NodeSetImport
             }
             throw new ServiceResultException(StatusCodes.BadInvalidArgument, "Cannot create instance of type id:" + inputArguments[1]);
         }
+
+       
         #endregion
-        
+
     }
 }
