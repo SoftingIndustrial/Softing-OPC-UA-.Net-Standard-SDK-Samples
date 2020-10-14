@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -91,7 +91,8 @@ namespace SampleSubscriber
 
                     //start application
                     uaPubSubApplication.Start();
-                    Console.WriteLine("Subscriber started");
+
+                    Console.WriteLine("SampleSubscriber started at:{0}", DateTime.Now.ToLongTimeString());
                     do
                     {
                         ConsoleKeyInfo key = Console.ReadKey();

@@ -279,6 +279,7 @@ namespace SampleServer.NodeSetImport
                 {
                     parentNode.AddChild(newNode);
                     AddPredefinedNode(SystemContext, newNode);
+                    return ServiceResult.Good;
                 }
             }
             catch (Exception ex)

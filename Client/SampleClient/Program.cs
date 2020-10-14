@@ -58,6 +58,7 @@ namespace SampleClient
                 Console.ReadKey();
                 return;
             }
+            Console.WriteLine("SampleClient started at:{0}", DateTime.Now.ToLongTimeString());
 
             // Create the process object that will execute user commands
             Process process = new Process(application);

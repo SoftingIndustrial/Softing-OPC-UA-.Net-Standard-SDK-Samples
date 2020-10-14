@@ -1,4 +1,4 @@
-﻿/* ========================================================================
+/* ========================================================================
  * Copyright © 2011-2020 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
@@ -79,7 +79,7 @@ namespace SamplePublisher
                     dataStoreValuesGenerator = new DataStoreValuesGenerator(uaPubSubApplication);
                     dataStoreValuesGenerator.Start();
 
-                    Console.WriteLine("Publisher started");
+                    Console.WriteLine("SamplePublisher started at:{0}", DateTime.Now.ToLongTimeString());
                     PrintCommandParameters();
 
                     // start application
