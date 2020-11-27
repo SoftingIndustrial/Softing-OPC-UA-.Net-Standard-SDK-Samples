@@ -84,7 +84,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.4.363.49" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.4.364.34-preview" />
     <PackageReference Include="System.Security.Principal.Windows" Version="4.5.1" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.5.3" />
   </ItemGroup>
