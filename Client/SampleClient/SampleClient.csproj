@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+<PropertyGroup>
+<OutputType>Exe</OutputType>
+<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
+<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+<RootNamespace>SampleClient</RootNamespace>
+<AssemblyName>SampleClient</AssemblyName>
+<RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
+</PropertyGroup>
+
+<ItemGroup>
+<Compile Include="..\..\..\Include\AssemblyVersionInfo.cs" Link="Properties\AssemblyVersionInfo.cs" />
+</ItemGroup>
+
+<ItemGroup>
+<Content Include="Files\UploadClientFile.xml">
+<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</Content>
+<Content Include="Files\UploadTemporaryFile.xml">
+<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</Content>
+</ItemGroup>
+
+<ItemGroup>
+<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.4.364.34-preview" />
+</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<PackageReference Include="System.ServiceModel.Primitives" Version="4.5.3" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+		<PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+		<Reference Include="Softing.Opc.Ua.Client">
+			<HintPath>..\..\..\..\bin\$(Configuration)\net462\Softing.Opc.Ua.Client.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<Reference Include="Softing.Opc.Ua.Client">
+			<HintPath>..\..\..\..\bin\$(Configuration)\netstandard2.0\Softing.Opc.Ua.Client.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+		<Reference Include="Softing.Opc.Ua.Client">
+			<HintPath>..\..\..\..\bin\$(Configuration)\netstandard2.1\Softing.Opc.Ua.Client.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+<ItemGroup>
+<None Update="Files\opcuser.pfx">
+<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
+<None Update="SampleClient.Config.xml">
+<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
+</ItemGroup>
+
+</Project>

@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
     <AssemblyName>XamarinSampleServer</AssemblyName>
     <RootNamespace>XamarinSampleServer</RootNamespace>
   </PropertyGroup>
@@ -11,12 +11,25 @@
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Softing.Opc.Ua.Server">
-      <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.Server.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+		<Reference Include="Softing.Opc.Ua.Server">
+			<HintPath>..\..\..\..\bin\$(Configuration)\net462\Softing.Opc.Ua.Server.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+	
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<Reference Include="Softing.Opc.Ua.Server">
+			<HintPath>..\..\..\..\bin\$(Configuration)\netstandard2.0\Softing.Opc.Ua.Server.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+		<Reference Include="Softing.Opc.Ua.Server">
+			<HintPath>..\..\..\..\bin\$(Configuration)\netstandard2.1\Softing.Opc.Ua.Server.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+	
   <ItemGroup>
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="App.xaml.cs">
       <DependentUpon>*.xaml</DependentUpon>

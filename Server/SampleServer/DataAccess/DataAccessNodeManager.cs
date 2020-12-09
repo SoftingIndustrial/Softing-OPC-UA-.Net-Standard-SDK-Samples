@@ -15,6 +15,8 @@ using Opc.Ua;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.Server;
 
+using Range = Opc.Ua.Range;
+
 namespace SampleServer.DataAccess
 {
     /// <summary>

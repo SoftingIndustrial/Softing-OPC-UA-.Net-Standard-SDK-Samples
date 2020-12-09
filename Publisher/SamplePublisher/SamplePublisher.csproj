@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+<PropertyGroup>
+<OutputType>Exe</OutputType>
+<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
+<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+<RootNamespace>SamplePublisher</RootNamespace>
+<AssemblyName>SamplePublisher</AssemblyName>
+<RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
+</PropertyGroup>
+
+<ItemGroup>
+<Compile Include="..\..\..\Include\AssemblyVersionInfo.cs" Link="Properties\AssemblyVersionInfo.cs" />
+</ItemGroup>
+
+<ItemGroup>
+<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.4.364.34-preview" />
+</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+		<Reference Include="Softing.Opc.Ua.PubSub">
+			<HintPath>..\..\..\..\bin\$(Configuration)\net462\Softing.Opc.Ua.PubSub.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<Reference Include="Softing.Opc.Ua.PubSub">
+			<HintPath>..\..\..\..\bin\$(Configuration)\netstandard2.0\Softing.Opc.Ua.PubSub.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+		<Reference Include="Softing.Opc.Ua.PubSub">
+			<HintPath>..\..\..\..\bin\$(Configuration)\netstandard2.1\Softing.Opc.Ua.PubSub.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+<ItemGroup>
+<None Update="SamplePublisher.AllTypes.Config.xml">
+<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
+<None Update="SamplePublisher.Config.xml">
+<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
+</ItemGroup>
+
+</Project>
