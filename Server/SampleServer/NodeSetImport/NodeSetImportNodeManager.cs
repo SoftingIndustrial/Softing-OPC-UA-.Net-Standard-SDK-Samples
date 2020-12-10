@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using Opc.Ua;
 using Opc.Ua.Server;
@@ -26,6 +27,7 @@ namespace SampleServer.NodeSetImport
     public class NodeSetImportNodeManager : NodeManager
     {
         private uint m_nodeIdIndex = 80000;
+        private bool m_isExecutingImport;
 
         #region Constructors
         /// <summary>
@@ -121,6 +123,23 @@ namespace SampleServer.NodeSetImport
         {
             // This override will receive a callback every time a new node is added
             // e.g. The extension data can be received in predefinedNode.Extensions
+
+            if (m_isExecutingImport)
+            {
+                StringBuilder browsePath = new StringBuilder();
+                NodeState currentNode = predefinedNode;
+                while (currentNode != null)
+                {
+                    browsePath.Insert(0, currentNode.BrowseName);
+                    browsePath.Insert(0, "\\");
+                    currentNode = (currentNode as BaseInstanceState)?.Parent;
+                }
+                if (browsePath.Length > 0)
+                {
+                    Utils.TraceDebug($"Node imported: NodeId{predefinedNode.NodeId}, Path: {browsePath}");
+                }
+            }
+
             return predefinedNode;
         }
         /// <summary>
@@ -189,6 +208,8 @@ namespace SampleServer.NodeSetImport
         {
             try
             {
+                m_isExecutingImport = true;
+
                 // Import the specified model with specified duplicate node handling
                 ImportNodeSet(context, inputArguments[0] as string, (DuplicateNodeHandling)(short)inputArguments[1]);
                 return ServiceResult.Good;
@@ -202,6 +223,10 @@ namespace SampleServer.NodeSetImport
             {
                 Console.WriteLine("Error loading node set: {0}", e.Message);
                 throw new ServiceResultException(StatusCodes.Bad, "ImportNodeSet error:" + e.Message);
+            }
+            finally
+            {
+                m_isExecutingImport = false;
             }
         }
 
@@ -217,6 +242,7 @@ namespace SampleServer.NodeSetImport
         {
             try
             {
+                
                 NodeStateCollection nodesToExport = new NodeStateCollection();
 
                 // Add all nodes of the NodeManager to the list
@@ -238,7 +264,7 @@ namespace SampleServer.NodeSetImport
             {
                 Console.WriteLine("Error exporting node set: {0}", ex.Message);
                 throw new ServiceResultException(StatusCodes.Bad, "ExportNodeSet error:" + ex.Message);
-            }
+            }            
         }
         
         /// <summary>
