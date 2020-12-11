@@ -121,8 +121,7 @@ namespace SampleServer.NodeSetImport
         /// <returns></returns>
         protected override NodeState AddBehaviourToPredefinedNode(ISystemContext context, NodeState predefinedNode)
         {
-            // This override will receive a callback every time a new node is added
-            // e.g. The extension data can be received in predefinedNode.Extensions
+            // This override will receive a callback every time a new node is added          
 
             if (m_isExecutingImport)
             {
@@ -140,8 +139,10 @@ namespace SampleServer.NodeSetImport
                 }
             }
 
+            // The extension data can be received in predefinedNode.Extensions
             return predefinedNode;
         }
+
         /// <summary>
         /// Creates the NodeId for the specified node.
         /// </summary>
@@ -211,7 +212,7 @@ namespace SampleServer.NodeSetImport
                 m_isExecutingImport = true;
 
                 // Import the specified model with specified duplicate node handling
-                ImportNodeSet(context, inputArguments[0] as string, (DuplicateNodeHandling)(short)inputArguments[1]);
+                var extensions = ImportNodeSet(context, inputArguments[0] as string, (DuplicateNodeHandling)(short)inputArguments[1]);
                 return ServiceResult.Good;
             }
             catch (ServiceResultException ex)
@@ -314,7 +315,6 @@ namespace SampleServer.NodeSetImport
             }
             throw new ServiceResultException(StatusCodes.BadInvalidArgument, "Cannot create instance of type id:" + inputArguments[1]);
         }
-
        
         #endregion
 
