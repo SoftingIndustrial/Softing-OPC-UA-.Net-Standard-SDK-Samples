@@ -2,7 +2,7 @@
 
 <PropertyGroup>
 <OutputType>Exe</OutputType>
-<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
+<TargetFrameworks>$(AppTargetFrameworks)</TargetFrameworks>
 <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 <RootNamespace>SampleSubscriber</RootNamespace>
 <AssemblyName>SampleSubscriber</AssemblyName>
@@ -19,19 +19,19 @@
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net462'">
 		<Reference Include="Softing.Opc.Ua.PubSub">
-			<HintPath>..\..\..\..\bin\$(Configuration)\net462\Softing.Opc.Ua.PubSub.dll</HintPath>
+			<HintPath>..\..\..\..\bin\net462\Softing.Opc.Ua.PubSub.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
 		<Reference Include="Softing.Opc.Ua.PubSub">
-			<HintPath>..\..\..\..\bin\$(Configuration)\netstandard2.0\Softing.Opc.Ua.PubSub.dll</HintPath>
+			<HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.PubSub.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
 		<Reference Include="Softing.Opc.Ua.PubSub">
-			<HintPath>..\..\..\..\bin\$(Configuration)\netstandard2.1\Softing.Opc.Ua.PubSub.dll</HintPath>
+			<HintPath>..\..\..\..\bin\netstandard2.1\Softing.Opc.Ua.PubSub.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 	

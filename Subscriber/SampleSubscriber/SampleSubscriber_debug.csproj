@@ -2,7 +2,7 @@
 
 <PropertyGroup>
 <OutputType>Exe</OutputType>
-<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
+<TargetFrameworks>$(AppTargetFrameworks)</TargetFrameworks>
 <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 <RootNamespace>SampleSubscriber</RootNamespace>
 <AssemblyName>SampleSubscriber</AssemblyName>

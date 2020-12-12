@@ -2,7 +2,7 @@
 
 <PropertyGroup>
 <OutputType>Exe</OutputType>
-<TargetFrameworks>$(LibTargetFrameworks)</TargetFrameworks>
+<TargetFrameworks>$(AppTargetFrameworks)</TargetFrameworks>
 <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 <RootNamespace>SampleClient</RootNamespace>
 <AssemblyName>SampleClient</AssemblyName>
@@ -21,14 +21,6 @@
 <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 </Content>
 </ItemGroup>
-	
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<PackageReference Include="System.ServiceModel.Primitives" Version="4.5.3" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-		<PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
-	</ItemGroup>
 
 <ItemGroup>
 <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Libraries\Opc.Ua.Client\Opc.Ua.Client.csproj" />
