@@ -24,6 +24,9 @@ namespace XamarinSampleClient.ViewModels
     [Xamarin.Forms.Internals.Preserve(AllMembers = true)]
     class StartPageViewModel : BaseViewModel
     {
+        private IList<SampleItem> m_samples;
+        private String m_welcomeMessage;
+
         #region Constructor
         /// <summary>
         /// Create new instance of StartPageViewMode
@@ -36,28 +39,29 @@ namespace XamarinSampleClient.ViewModels
            
             WelcomeMessage = "Please select a sample from the list below:";
 
-            Samples = new List<SampleItem>();
-            Samples.Add(new SampleItem() { SampleName = "Discover",
+            List<SampleItem> samples = new List<SampleItem>();
+            samples.Add(new SampleItem() { SampleName = "Discover",
                 Description = "Sample code for discovering endpoints of a server or discovering the servers on network.",
                 Command = SampleCommand.DiscoverySample});
-            Samples.Add(new SampleItem() { SampleName = "Connect",
+            samples.Add(new SampleItem() { SampleName = "Connect",
                 Description = "Sample code for connecting to a server using various security modes, security policies, encodings or user identities.",
                 Command = SampleCommand.ConnectSample});
-            Samples.Add(new SampleItem() { SampleName = "Browse",
+            samples.Add(new SampleItem() { SampleName = "Browse",
                 Description = "Sample code for browse methods on an OPC UA server.",
                 Command = SampleCommand.BrowseSample });
-            Samples.Add(new SampleItem() { SampleName = "Read/Write",
+            samples.Add(new SampleItem() { SampleName = "Read/Write",
                 Description = "Sample code for read and write nodes, node attributes, various node values (array, complex or enum values).",
                 Command = SampleCommand.ReadWriteSample });
-            Samples.Add(new SampleItem() { SampleName = "Monitored item",
+            samples.Add(new SampleItem() { SampleName = "Monitored item",
                 Description = "Sample code for creating and consuming a monitored item on an OPC UA server.",
                 Command = SampleCommand.MonitoredItemSample });
-            Samples.Add(new SampleItem() { SampleName = "Events",
+            samples.Add(new SampleItem() { SampleName = "Events",
                 Description = "Sample code for creating and consuming an event monitored item on an OPC UA server.",
                 Command = SampleCommand.EventsSample });
-            Samples.Add(new SampleItem() { SampleName = "Call methods",
+            samples.Add(new SampleItem() { SampleName = "Call methods",
                 Description = "Sample code for calling methods synchronously and asynchronously on an OPC UA server.",
                 Command = SampleCommand.CallMethodsSample });
+            Samples = samples;
         }
         #endregion
 
@@ -65,13 +69,20 @@ namespace XamarinSampleClient.ViewModels
         /// <summary>
         /// Get/set welcome message
         /// </summary>
-        public string WelcomeMessage { get;set;}
+        public string WelcomeMessage
+        {
+            get { return m_welcomeMessage; }
+            set { SetProperty(ref m_welcomeMessage, value); }
+        }
 
         /// <summary>
         /// List of available samples
         /// </summary>
-        public IList<SampleItem> Samples { get; set; }
-
+        public IList<SampleItem> Samples
+        {
+            get { return m_samples; }
+            set { SetProperty(ref m_samples, value); }
+        }
         /// <summary>
         /// Get/set rference to CurrentSampleViewModel
         /// </summary>

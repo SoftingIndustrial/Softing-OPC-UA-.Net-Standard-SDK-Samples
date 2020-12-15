@@ -20,13 +20,16 @@ namespace XamarinSampleClient.Views
 
         public StartPage()
         {
+            BindingContext = m_viewModel = new StartPageViewModel();
+
             InitializeComponent();
 
-            BindingContext = m_viewModel = new StartPageViewModel();
+            
             
         }
         protected override void OnAppearing()
         {
+          //  Samples.ItemsSource
             if (m_viewModel.CurrentSampleViewModel != null)
             {
                 //close current child view model if possible
