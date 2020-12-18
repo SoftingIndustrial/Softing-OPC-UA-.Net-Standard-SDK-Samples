@@ -1702,7 +1702,7 @@ namespace SampleClient.Samples
 
             // read the value from RegisterNodeId0 using the returned registered node id
             var value = m_session.Read(new ReadValueId() { NodeId = registeredNodeId, AttributeId = Attributes.Value });
-            Console.WriteLine("\tRead(\"{0}\") returned: {1}.", registeredNodeId, value.Value);
+            Console.WriteLine("\tRead(\"{0}\"), Value= {1}, StatusCode:{2}.", registeredNodeId, value.Value, value.StatusCode);
 
             // unregister the RegisterNodeId0 using the registered node id
             result = m_session.UnregisterNode(registeredNodeId);
@@ -1714,6 +1714,7 @@ namespace SampleClient.Samples
             result = m_session.RegisterNodes(nodesToRegister, out registeredNodeIds);
 
             Console.WriteLine("\n\nRegisterNodes returned StatusCode:{0}.", result);
+
             for(int i = 0; i < nodesToRegister.Count; i++)
             {
                 if (registeredNodeIds.Count > i)
@@ -1722,7 +1723,7 @@ namespace SampleClient.Samples
 
                     // read the value from  registeredNodeIds[i] using the returned registered node id
                     value = m_session.Read(new ReadValueId() { NodeId = registeredNodeIds[i], AttributeId = Attributes.Value });
-                    Console.WriteLine("\tRead(\"{0}\") returned: {1}.", registeredNodeIds[i], value.Value);
+                    Console.WriteLine("\tRead(\"{0}\"), Value= {1}, StatusCode:{2}.", registeredNodeIds[i], value.Value, value.StatusCode);
                 }
             }      
 

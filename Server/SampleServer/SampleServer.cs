@@ -42,6 +42,9 @@ namespace SampleServer
 
         private Dictionary<string, string> m_userNameIdentities;
         private Timer m_certificatesTimer;
+
+        NodeIdDictionary<NodeId> m_registeredIds = new NodeIdDictionary<NodeId>();
+        NodeIdDictionary<NodeState> m_registeredNodes = new NodeIdDictionary<NodeState>();
         #endregion
 
         #region Constructor
@@ -269,6 +272,247 @@ namespace SampleServer
             }
 
             return ServiceResult.Good;
+        }
+        #endregion
+
+        #region Register/UnregisterNodes Implementation
+        /// <summary>
+        /// Invokes the RegisterNodes service.
+        /// </summary>
+        /// <param name="requestHeader">The request header.</param>
+        /// <param name="nodesToRegister">The list of NodeIds to register.</param>
+        /// <param name="registeredNodeIds">The list of NodeIds identifying the registered nodes. </param>
+        /// <returns>
+        /// Returns a <see cref="ResponseHeader"/> object
+        /// </returns>
+        public override ResponseHeader RegisterNodes(RequestHeader requestHeader, NodeIdCollection nodesToRegister, out NodeIdCollection registeredNodeIds)
+        {
+
+            OperationContext context = ValidateRequest(requestHeader, RequestType.RegisterNodes);
+
+            try
+            {
+                if (nodesToRegister == null || nodesToRegister.Count == 0)
+                {
+                    throw new ServiceResultException(StatusCodes.BadNothingToDo);
+                }
+                // return the node id provided.
+                registeredNodeIds = new NodeIdCollection();
+                
+                foreach (NodeId nodeId in nodesToRegister)
+                {
+                    var nodeState = ServerInternal.DiagnosticsNodeManager.FindNodeInAddressSpace(nodeId);
+                    if (nodeState == null)
+                    {
+                        throw new ServiceResultException(StatusCodes.BadNodeIdUnknown);
+                    }
+
+                    // generate a new id
+                    NodeId newId = new NodeId(Guid.NewGuid(), nodeId.NamespaceIndex);
+
+                    lock (Lock)
+                    {
+                        //remember new id
+                        m_registeredIds[newId] = nodeId;
+                        m_registeredNodes[newId] = nodeState;
+                    }
+
+                    // add node id to return list
+                    registeredNodeIds.Add(newId);
+                }
+
+                Utils.Trace((int)Utils.TraceMasks.ServiceDetail,
+                    "SampleServer.RegisterNodes - Count={0}",
+                    nodesToRegister.Count);
+
+                return CreateResponse(requestHeader, context.StringTable);
+            }
+            catch (ServiceResultException e)
+            {
+                lock (ServerInternal.DiagnosticsWriteLock)
+                {
+                    ServerInternal.ServerDiagnostics.RejectedRequestsCount++;
+
+                    if (IsSecurityError(e.StatusCode))
+                    {
+                        ServerInternal.ServerDiagnostics.SecurityRejectedRequestsCount++;
+                    }
+                }
+
+                throw TranslateException(context, e);
+            }
+            finally
+            {
+                OnRequestComplete(context);
+            }
+        }
+
+        /// <summary>
+        /// Invokes the UnregisterNodes service.
+        /// </summary>
+        /// <param name="requestHeader">The request header.</param>
+        /// <param name="nodesToUnregister">The list of NodeIds to unregister</param>
+        /// <returns>
+        /// Returns a <see cref="ResponseHeader"/> object
+        /// </returns>
+        public override ResponseHeader UnregisterNodes(RequestHeader requestHeader, NodeIdCollection nodesToUnregister)
+        {
+            OperationContext context = ValidateRequest(requestHeader, RequestType.UnregisterNodes);
+
+            try
+            {
+                if (nodesToUnregister == null || nodesToUnregister.Count == 0)
+                {
+                    throw new ServiceResultException(StatusCodes.BadNothingToDo);
+                }
+
+                foreach (NodeId nodeId in nodesToUnregister)
+                {
+                    lock (Lock)
+                    {
+                        if (!m_registeredNodes.ContainsKey(nodeId))
+                        {
+                            throw new ServiceResultException(StatusCodes.BadNodeIdUnknown);
+                        }
+
+                        //remove node id
+                        m_registeredIds.Remove(nodeId);
+                        m_registeredNodes.Remove(nodeId);
+                    }
+                }
+
+                return CreateResponse(requestHeader, context.StringTable);
+            }
+            catch (ServiceResultException e)
+            {
+                lock (ServerInternal.DiagnosticsWriteLock)
+                {
+                    ServerInternal.ServerDiagnostics.RejectedRequestsCount++;
+
+                    if (IsSecurityError(e.StatusCode))
+                    {
+                        ServerInternal.ServerDiagnostics.SecurityRejectedRequestsCount++;
+                    }
+                }
+
+                throw TranslateException(context, e);
+            }
+            finally
+            {
+                OnRequestComplete(context);
+            }
+        }
+
+        /// <summary>
+        /// Invokes the Read service taking into account the regiastered nodes
+        /// </summary>
+        /// <param name="requestHeader">The request header.</param>
+        /// <param name="maxAge">The Maximum age of the value to be read in milliseconds.</param>
+        /// <param name="timestampsToReturn">The type of timestamps to be returned for the requested Variables.</param>
+        /// <param name="nodesToRead">The list of Nodes and their Attributes to read.</param>
+        /// <param name="results">The list of returned Attribute values</param>
+        /// <param name="diagnosticInfos">The diagnostic information for the results.</param>
+        /// <returns>
+        /// Returns a <see cref="ResponseHeader"/> object
+        /// </returns>
+        public override ResponseHeader Read(RequestHeader requestHeader, double maxAge, TimestampsToReturn timestampsToReturn, ReadValueIdCollection nodesToRead, out DataValueCollection results, out DiagnosticInfoCollection diagnosticInfos)
+        {
+            if (nodesToRead == null || nodesToRead.Count == 0)
+            {
+                throw new ServiceResultException(StatusCodes.BadNothingToDo);
+            }
+
+            // check if there is any registered node id to be read
+            int registeredIdsCount = 0;
+            for (int i = 0; i < nodesToRead.Count; i++)
+            {
+                NodeId nodeId = nodesToRead[i].NodeId;
+                if (m_registeredNodes.ContainsKey(nodeId))
+                {
+                    registeredIdsCount++;
+                }
+            }
+
+            if (registeredIdsCount == 0)
+            {
+                // there is no registered node id, execute base class routine
+                return base.Read(requestHeader, maxAge, timestampsToReturn, nodesToRead, out results, out diagnosticInfos);
+            }
+
+            // initialize output arguments
+            diagnosticInfos = new DiagnosticInfoCollection(nodesToRead.Count);
+            results = new DataValueCollection(nodesToRead.Count);
+            OperationContext context = ValidateRequest(requestHeader, RequestType.Read);
+
+            // values collection will keep locally the values read from registered nodes
+            DataValueCollection values = new DataValueCollection(nodesToRead.Count);            
+
+            try
+            {            
+                // read values for registered nodes
+                for (int i = 0; i < nodesToRead.Count; i++)
+                {
+                    NodeId nodeId = nodesToRead[i].NodeId;
+                    values.Add(null);
+                    diagnosticInfos.Add(null);
+
+                    if (m_registeredNodes.ContainsKey(nodeId))
+                    {
+                        // create an initial value.
+                        DataValue value = values[i] = new DataValue();
+                        
+                        // read the requested attribute directly from NodeState
+                        m_registeredNodes[nodeId].ReadAttribute(
+                                                ServerInternal.DefaultSystemContext,
+                                                nodesToRead[i].AttributeId,
+                                                nodesToRead[i].ParsedIndexRange,
+                                                nodesToRead[i].DataEncoding,
+                                                value);
+                        value.ServerTimestamp = DateTime.UtcNow;
+                        value.SourceTimestamp = DateTime.MinValue;
+                        value.StatusCode = StatusCodes.Good;
+
+                        // mark node as processed
+                        nodesToRead[i].Processed = true;
+                    }
+                }
+
+                if (registeredIdsCount < nodesToRead.Count)
+                {
+                    // there not on;y regostered nodes, it is needed to read other nodes
+                    ResponseHeader responseHeader = base.Read(requestHeader, maxAge, timestampsToReturn, nodesToRead, out results, out diagnosticInfos);
+                    for (int i = 0; i < nodesToRead.Count; i++)
+                    {
+                        if (values[i] != null)
+                        {
+                            results[i] = values[i];
+                        }
+                    }
+                    return responseHeader;
+                }
+                results = values;
+
+                // return response                
+                return CreateResponse(requestHeader, context.StringTable);
+            }
+            catch (ServiceResultException e)
+            {
+                lock (ServerInternal.DiagnosticsWriteLock)
+                {
+                    ServerInternal.ServerDiagnostics.RejectedRequestsCount++;
+
+                    if (IsSecurityError(e.StatusCode))
+                    {
+                        ServerInternal.ServerDiagnostics.SecurityRejectedRequestsCount++;
+                    }
+                }
+
+                throw TranslateException(context, e);
+            }
+            finally
+            {
+                OnRequestComplete(context);
+            }
         }
         #endregion
     }
