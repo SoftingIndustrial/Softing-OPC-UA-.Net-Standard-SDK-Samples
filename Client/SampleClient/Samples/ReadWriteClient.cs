@@ -74,6 +74,13 @@ namespace SampleClient.Samples
         const string StaticCustomStructuredValueNodeId = "ns=11;i=26";
         //Browse path: Root\Objects\CustomTypes\Arrays\Vehicles
         const string StaticCustomStructuredValueArrayNodeId = "ns=11;i=34";
+
+        //Browse path: Root\Objects\DataAccess\NodesForRegister\Node0
+        const string RegisterNodeId0 = "ns=3;i=32";
+        //Browse path: Root\Objects\DataAccess\NodesForRegister\Node1
+        const string RegisterNodeId1 = "ns=3;i=33";
+        //Browse path: Root\Objects\DataAccess\NodesForRegister\Node2
+        const string RegisterNodeId2 = "ns=3;i=34";
         #endregion
 
         #region Constructor
@@ -1673,6 +1680,55 @@ namespace SampleClient.Samples
             {
                 Program.PrintException("WriteValuesForCustomStructuredValueDataType", ex);
             }
+        }
+        #endregion
+
+        #region Public Methods - Register/UnregisterNodes
+        /// <summary>
+        /// Sample for Register/Unregister nodes 
+        /// </summary>
+        public void RegisterNodesSample()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("RegisterNodesSample: The session is not initialized!");
+                return;
+            }
+
+            // Register node RegisterNodeId0
+            NodeId registeredNodeId = NodeId.Null;
+            var result = m_session.RegisterNode(RegisterNodeId0, out registeredNodeId);                        
+            Console.WriteLine("RegisterNode(\"{0}\") returned StatusCode:{1}. The assigned NodeId={2}.", RegisterNodeId0, result, registeredNodeId);
+
+            // read the value from RegisterNodeId0 using the returned registered node id
+            var value = m_session.Read(new ReadValueId() { NodeId = registeredNodeId, AttributeId = Attributes.Value });
+            Console.WriteLine("\tRead(\"{0}\") returned: {1}.", registeredNodeId, value.Value);
+
+            // unregister the RegisterNodeId0 using the registered node id
+            result = m_session.UnregisterNode(registeredNodeId);
+            Console.WriteLine("\tUnregisterNode(\"{0}\") returned StatusCode:{1}", registeredNodeId, result);
+
+            // Register nodes RegisterNodeId0, RegisterNodeId1, RegisterNodeId2
+            NodeIdCollection nodesToRegister = new NodeIdCollection() { RegisterNodeId0, RegisterNodeId1, RegisterNodeId2 };
+            NodeIdCollection registeredNodeIds = new NodeIdCollection();
+            result = m_session.RegisterNodes(nodesToRegister, out registeredNodeIds);
+
+            Console.WriteLine("\n\nRegisterNodes returned StatusCode:{0}.", result);
+            for(int i = 0; i < nodesToRegister.Count; i++)
+            {
+                if (registeredNodeIds.Count > i)
+                {
+                    Console.WriteLine("\tNodeId:{0} was assigned NodeId={1}.", nodesToRegister[i], registeredNodeIds[i]);
+
+                    // read the value from  registeredNodeIds[i] using the returned registered node id
+                    value = m_session.Read(new ReadValueId() { NodeId = registeredNodeIds[i], AttributeId = Attributes.Value });
+                    Console.WriteLine("\tRead(\"{0}\") returned: {1}.", registeredNodeIds[i], value.Value);
+                }
+            }      
+
+            // unregister the nodes using the registered node id
+            result = m_session.UnregisterNodes(registeredNodeIds);
+            Console.WriteLine("\tUnregisterNodes returned StatusCode:{0}", result);
         }
         #endregion
 

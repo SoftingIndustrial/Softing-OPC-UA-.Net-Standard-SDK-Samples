@@ -28,7 +28,7 @@ namespace SampleClient.StateMachine
         Alarms,
         AccessRights,
         RolePermissions,
-        ReadWrite,
+        ReadWriteRegisterNodes,
         FileTransfer,
         PubSub,
         Exit
@@ -96,10 +96,11 @@ namespace SampleClient.StateMachine
         UserRolePermissions,
         EndAccessRights,
 
-        StartReadWrite,
+        StartReadWriteRegister,
         Read,
         Write,
-        EndReadWrite,
+        RegisterNodes,
+        EndReadWriteRegister,
 
         CallMethods,
 

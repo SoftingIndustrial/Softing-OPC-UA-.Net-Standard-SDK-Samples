@@ -77,6 +77,18 @@ namespace SampleServer.DataAccess
                 m_dataAccessRoot = root;
 
                 AddRootNotifier(root);
+
+                FolderState registeredNodes = CreateFolder(root, "NodesForRegister");
+
+                var node0 = CreateVariable(registeredNodes, "Node0", DataTypeIds.Int32);
+                node0.Value = 100;
+
+                var node1 = CreateVariable(registeredNodes, "Node1", DataTypeIds.Int32);
+                node1.Value = 200;
+
+                var node2 = CreateVariable(registeredNodes, "Node2", DataTypeIds.Int32);
+                node2.Value = 300;
+
             }
         }
         #endregion

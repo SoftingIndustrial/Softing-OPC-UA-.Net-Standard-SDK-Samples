@@ -92,7 +92,7 @@ namespace SampleClient.StateMachine
             exit = new StateTransition(State.Alarms, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
             m_transitions.Add(exit, State.Exit);
-            exit = new StateTransition(State.ReadWrite, Command.Exit, "x", "Exit Client Application");
+            exit = new StateTransition(State.ReadWriteRegisterNodes, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
             m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.FileTransfer, Command.Exit, "x", "Exit Client Application");
@@ -274,16 +274,20 @@ namespace SampleClient.StateMachine
         private void InitializeReadWriteTransitions()
         {
             //commAands for readWrite
-            StateTransition startReadWrite = new StateTransition(State.Main, Command.StartReadWrite, "3", "Enter Read/Write Menu");
+            StateTransition startReadWrite = new StateTransition(State.Main, Command.StartReadWriteRegister, "3", "Enter Read/Write/RegisterNodes Menu");
             startReadWrite.ExecuteCommand += StartReadWrite_ExecuteCommand;
-            m_transitions.Add(startReadWrite, State.ReadWrite);
-            StateTransition read = new StateTransition(State.ReadWrite, Command.Read, "1", "Read Nodes");
+            m_transitions.Add(startReadWrite, State.ReadWriteRegisterNodes);
+            StateTransition read = new StateTransition(State.ReadWriteRegisterNodes, Command.Read, "1", "Read Nodes");
             read.ExecuteCommand += Read_ExecuteCommand;
-            m_transitions.Add(read, State.ReadWrite);
-            StateTransition write = new StateTransition(State.ReadWrite, Command.Write, "2", "Write Nodes");
+            m_transitions.Add(read, State.ReadWriteRegisterNodes);
+            StateTransition write = new StateTransition(State.ReadWriteRegisterNodes, Command.Write, "2", "Write Nodes");
             write.ExecuteCommand += Write_ExecuteCommand;
-            m_transitions.Add(write, State.ReadWrite);
-            StateTransition endReadWrite = new StateTransition(State.ReadWrite, Command.EndReadWrite, "0", "Back to Main Menu");
+            m_transitions.Add(write, State.ReadWriteRegisterNodes);
+            StateTransition registerNodes = new StateTransition(State.ReadWriteRegisterNodes, Command.RegisterNodes, "3", "Register Nodes");
+            registerNodes.ExecuteCommand += RegisterNodes_ExecuteCommand;
+            m_transitions.Add(registerNodes, State.ReadWriteRegisterNodes);
+
+            StateTransition endReadWrite = new StateTransition(State.ReadWriteRegisterNodes, Command.EndReadWriteRegister, "0", "Back to Main Menu");
             endReadWrite.ExecuteCommand += EndReadWrite_ExecuteCommand;
             m_transitions.Add(endReadWrite, State.Main);
         }
@@ -962,6 +966,14 @@ namespace SampleClient.StateMachine
                 m_readWriteClient.ReadEnumValue();
                 m_readWriteClient.ReadMultipleNodesValues();
                 m_readWriteClient.ReadValuesForCustomDataTypes();
+            }
+        }
+
+        private void RegisterNodes_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_readWriteClient != null)
+            {
+                m_readWriteClient.RegisterNodesSample();
             }
         }
 
