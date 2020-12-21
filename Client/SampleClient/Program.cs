@@ -44,7 +44,7 @@ namespace SampleClient
 
             // TODO - design time license activation
             // Fill in your design time license activation keys here
-            //clientLicensingStatus = application.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+            // clientLicensingStatus = application.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
 
             if (clientLicensingStatus == LicensingStatus.Expired)
             {

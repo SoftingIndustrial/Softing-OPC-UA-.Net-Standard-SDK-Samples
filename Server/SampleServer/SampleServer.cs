@@ -43,7 +43,6 @@ namespace SampleServer
         private Dictionary<string, string> m_userNameIdentities;
         private Timer m_certificatesTimer;
 
-        NodeIdDictionary<NodeId> m_registeredIds = new NodeIdDictionary<NodeId>();
         NodeIdDictionary<NodeState> m_registeredNodes = new NodeIdDictionary<NodeState>();
         #endregion
 
@@ -298,24 +297,25 @@ namespace SampleServer
                 }
                 // return the node id provided.
                 registeredNodeIds = new NodeIdCollection();
-                
+
                 foreach (NodeId nodeId in nodesToRegister)
                 {
+                    // initialize the newId with the old id - RegisterNodes does not validate the NodeIds from the request. 
+                    // Servers will simply copy unknown NodeIds in the response. 
+                    NodeId newId = nodeId;
                     var nodeState = ServerInternal.DiagnosticsNodeManager.FindNodeInAddressSpace(nodeId);
-                    if (nodeState == null)
-                    {
-                        throw new ServiceResultException(StatusCodes.BadNodeIdUnknown);
-                    }
 
-                    // generate a new id
-                    NodeId newId = new NodeId(Guid.NewGuid(), nodeId.NamespaceIndex);
-
-                    lock (Lock)
+                    if (nodeState != null)
                     {
-                        //remember new id
-                        m_registeredIds[newId] = nodeId;
-                        m_registeredNodes[newId] = nodeState;
-                    }
+                        // generate a new id
+                        newId = new NodeId(Guid.NewGuid(), nodeId.NamespaceIndex);
+
+                        lock (Lock)
+                        {
+                            //remember new id
+                            m_registeredNodes[newId] = nodeState;
+                        }                        
+                    }     
 
                     // add node id to return list
                     registeredNodeIds.Add(newId);
@@ -372,12 +372,9 @@ namespace SampleServer
                     {
                         if (!m_registeredNodes.ContainsKey(nodeId))
                         {
-                            throw new ServiceResultException(StatusCodes.BadNodeIdUnknown);
+                            //remove node id
+                            m_registeredNodes.Remove(nodeId);
                         }
-
-                        //remove node id
-                        m_registeredIds.Remove(nodeId);
-                        m_registeredNodes.Remove(nodeId);
                     }
                 }
 
@@ -404,7 +401,7 @@ namespace SampleServer
         }
 
         /// <summary>
-        /// Invokes the Read service taking into account the regiastered nodes
+        /// Invokes the Read service taking into account the registered nodes
         /// </summary>
         /// <param name="requestHeader">The request header.</param>
         /// <param name="maxAge">The Maximum age of the value to be read in milliseconds.</param>
@@ -427,7 +424,7 @@ namespace SampleServer
             for (int i = 0; i < nodesToRead.Count; i++)
             {
                 NodeId nodeId = nodesToRead[i].NodeId;
-                if (m_registeredNodes.ContainsKey(nodeId))
+                if (m_registeredNodes.ContainsKey(nodeId) && m_registeredNodes[nodeId] != null)
                 {
                     registeredIdsCount++;
                 }
@@ -456,7 +453,7 @@ namespace SampleServer
                     values.Add(null);
                     diagnosticInfos.Add(null);
 
-                    if (m_registeredNodes.ContainsKey(nodeId))
+                    if (m_registeredNodes.ContainsKey(nodeId) && m_registeredNodes[nodeId] != null)
                     {
                         // create an initial value.
                         DataValue value = values[i] = new DataValue();
