@@ -43,7 +43,7 @@ namespace SampleServer
         private Dictionary<string, string> m_userNameIdentities;
         private Timer m_certificatesTimer;
 
-        NodeIdDictionary<NodeState> m_registeredNodes = new NodeIdDictionary<NodeState>();
+        private NodeIdDictionary<NodeState> m_registeredNodes = new NodeIdDictionary<NodeState>();
         #endregion
 
         #region Constructor
