@@ -22,6 +22,7 @@ using Softing.Opc.Ua.Client.Nodes;
 using Softing.Opc.Ua.Client.Types;
 using Xamarin.Forms;
 using Exception = System.Exception;
+using System.Diagnostics;
 
 namespace XamarinSampleClient.ViewModels
 {
@@ -1068,11 +1069,8 @@ namespace XamarinSampleClient.ViewModels
             
 
             DataValue valueToWrite2 = new DataValue();            
-            DateTime dateTime = DateTime.Now;
-            DateTime.TryParse(DateTimeNodeValue.Value.ToString(), out dateTime);
-            valueToWrite2.Value = dateTime;           
+            valueToWrite2.Value =  new DateTime(((DateTime) DateTimeNodeValue.Value).Ticks, DateTimeKind.Utc);           
             listOfNodes[2].Value = valueToWrite2;
-            
             try
             {
                 IList<StatusCode> statusCodes = m_session.Write(listOfNodes);
