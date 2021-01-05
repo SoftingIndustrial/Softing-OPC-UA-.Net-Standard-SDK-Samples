@@ -206,11 +206,21 @@ namespace XamarinSampleServer.ViewModels
                     }
 
                     ResultsText += "\nStarting server...";
+
                     // Start the server
                     m_sampleServer = new SampleServer.SampleServer();
                     await m_sampleServer.Start(config);
-              
-                    ResultsText = "Server is running.";
+
+                    // Check if the server addresses are available
+                    List<string> activeListenersUris = m_sampleServer.GetActiveListenersUris();
+                    if (activeListenersUris.Count > 0)
+                    {
+                        ResultsText = "Server is running.";
+                    }
+                    else
+                    {
+                        ResultsText = "Server address is not available.";
+                    }
                 }
                 catch (Exception e)
                 {

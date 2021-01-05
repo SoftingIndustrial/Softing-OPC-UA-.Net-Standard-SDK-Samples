@@ -10,6 +10,7 @@
 
 using Opc.Ua.Server;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -94,53 +95,75 @@ namespace SampleServer
                     }
                 }
 
-                Console.WriteLine("\nServer Addresses:");
-
-                for (int i = 0; i < sampleServer.Configuration.ServerConfiguration.BaseAddresses.Count; i++)
+                // Check if the server addresses are available
+                List<string> activeListenersUris = sampleServer.GetActiveListenersUris();
+                bool hasActiveAddresses = activeListenersUris.Count > 0;
+                if (hasActiveAddresses == true)
                 {
-                    Console.WriteLine(sampleServer.Configuration.ServerConfiguration.BaseAddresses[i]);
-                }
-                Console.WriteLine("SampleServer started at:{0}", DateTime.Now.ToLongTimeString());
+                    Console.WriteLine("\nServer Addresses:");
 
-                PrintCommandParameters();
+                    for (int i = 0; i < sampleServer.Configuration.ServerConfiguration.BaseAddresses.Count; i++)
+                    {
+                        if (activeListenersUris.Contains(sampleServer.Configuration.ServerConfiguration.BaseAddresses[i]))
+                        {
+                            Console.WriteLine(sampleServer.Configuration.ServerConfiguration.BaseAddresses[i]);
+                        }
+                        else
+                        {
+                            Console.WriteLine(string.Format("{0} address not available.", sampleServer.Configuration.ServerConfiguration.BaseAddresses[i]));
+                        }
+                    }
+                    Console.WriteLine("SampleServer started at: {0}", DateTime.Now.ToLongTimeString());
+                }
+                else
+                {
+                    Console.WriteLine("\nNo Server addresses available.");
+                }
+
+                
+                PrintCommandParameters(hasActiveAddresses);
                 
                 bool exit = false;
                 while (!exit)
                 {
                     ConsoleKeyInfo key = Console.ReadKey();
-                    if (key.KeyChar == 'c' && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        string endpoint = sampleServer.Configuration.ServerConfiguration.BaseAddresses[0];
-                        Console.WriteLine(String.Format("\nCopied {0} to clipboard", endpoint));
-                        ConsoleUtils.WindowsConsoleUtils.WindowsClipboard.SetTextValue(endpoint);
-                    }
+                    
                     if (key.KeyChar == 'q' || key.KeyChar == 'x')
                     {
                         Console.WriteLine("\nShutting down...");
                         exit = true;
                     }
-                    else if (key.KeyChar == 's')
+                    if (hasActiveAddresses == true)
                     {
-                        // list active sessions
-                        var sessions = sampleServer.CurrentInstance.SessionManager.GetSessions();
-                        var subscriptions = sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
-
-                        if (sessions.Count > 0)
+                        if (key.KeyChar == 'c' && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            Console.WriteLine("\nSessions list:");
-                            foreach (var session in sessions)
+                            string endpoint = sampleServer.Configuration.ServerConfiguration.BaseAddresses[0];
+                            Console.WriteLine(String.Format("\nCopied {0} to clipboard", endpoint));
+                            ConsoleUtils.WindowsConsoleUtils.WindowsClipboard.SetTextValue(endpoint);
+                        }
+                        else if (key.KeyChar == 's')
+                        {
+                            // list active sessions
+                            var sessions = sampleServer.CurrentInstance.SessionManager.GetSessions();
+                            var subscriptions = sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
+
+                            if (sessions.Count > 0)
                             {
-                                PrintSessionStatus(session);
+                                Console.WriteLine("\nSessions list:");
+                                foreach (var session in sessions)
+                                {
+                                    PrintSessionStatus(session);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nSessions list: empty");
                             }
                         }
                         else
                         {
-                            Console.WriteLine("\nSessions list: empty");
+                            PrintCommandParameters(hasActiveAddresses);
                         }
-                    }
-                    else
-                    {
-                        PrintCommandParameters();
                     }
                 }
             }
@@ -160,14 +183,18 @@ namespace SampleServer
         /// <summary>
         /// Print command line parameters
         /// </summary>
-        private static void PrintCommandParameters()
+        private static void PrintCommandParameters(bool hasActiveAddresses)
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            Console.WriteLine("Press:");
+            if (hasActiveAddresses == true)
             {
-                Console.WriteLine("Press:\n\tc: copy endpoint to clipboard");
-            }
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    Console.WriteLine("\tc: copy endpoint to clipboard");
+                }
 
-            Console.WriteLine("\ts: session list");
+                Console.WriteLine("\ts: session list");
+            }
             Console.WriteLine("\tx,q: shutdown the server\n\n");
         }
 
@@ -192,6 +219,7 @@ namespace SampleServer
             line.AppendFormat(";Subscriptions:{0}", session.SessionDiagnostics.CurrentSubscriptionsCount);
             Console.WriteLine(line);
         }
+
         #endregion
     }
 }
