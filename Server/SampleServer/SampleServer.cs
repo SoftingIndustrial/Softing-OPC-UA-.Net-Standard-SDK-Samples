@@ -71,8 +71,7 @@ namespace SampleServer
         {
             base.OnServerStarted(server);
 
-            // TODO: check if this can be done in a better place!
-            // create the NamespaceMetadata ReferenceServer Namespace
+            // create the NamespaceMetadata for ReferenceServer Namespace
             ConfigurationNodeManager configurationNodeManager = server.DiagnosticsNodeManager as ConfigurationNodeManager;
             var metadaata = configurationNodeManager?.CreateNamespaceMetadataState(Namespaces.ReferenceApplications);
 

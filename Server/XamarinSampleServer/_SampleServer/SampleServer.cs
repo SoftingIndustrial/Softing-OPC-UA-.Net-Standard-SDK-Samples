@@ -20,7 +20,6 @@ using SampleServer.Alarms;
 using SampleServer.DataAccess;
 using SampleServer.HistoricalDataAccess;
 using SampleServer.Methods;
-using SampleServer.NodeManagement;
 using SampleServer.NodeSetImport;
 using SampleServer.ReferenceServer;
 using SampleServer.UserAuthentication;
@@ -69,9 +68,6 @@ namespace XamarinSampleServer.SampleServer
             nodeManagers.Add(new DataAccessNodeManager(server, configuration));
             nodeManagers.Add(new SampleHDANodeManager(server, configuration));
             nodeManagers.Add(new MethodsNodeManager(server, configuration));
-            // Uncomment this when there is implementation in the client
-            // NodeManagement support missing from ClientAPI
-            // nodeManagers.Add(m_nodeManagementManager = new DynamicASNodeManager(server, configuration)); 
             nodeManagers.Add(new NodeSetImportNodeManager(server, configuration));
             nodeManagers.Add(new ReferenceNodeManager(server, configuration));
             nodeManagers.Add(new UserAuthenticationNodeManager(server, configuration));
