@@ -1695,41 +1695,47 @@ namespace SampleClient.Samples
                 return;
             }
 
-            // Register node RegisterNodeId0
-            NodeId registeredNodeId = NodeId.Null;
-            var result = m_session.RegisterNode(RegisterNodeId0, out registeredNodeId);                        
-            Console.WriteLine("RegisterNode(\"{0}\") returned StatusCode:{1}. The assigned NodeId={2}.", RegisterNodeId0, result, registeredNodeId);
-
-            // read the value from RegisterNodeId0 using the returned registered node id
-            var value = m_session.Read(new ReadValueId() { NodeId = registeredNodeId, AttributeId = Attributes.Value });
-            Console.WriteLine("\tRead(\"{0}\"), Value= {1}, StatusCode:{2}.", registeredNodeId, value.Value, value.StatusCode);
-
-            // unregister the RegisterNodeId0 using the registered node id
-            result = m_session.UnregisterNode(registeredNodeId);
-            Console.WriteLine("\tUnregisterNode(\"{0}\") returned StatusCode:{1}", registeredNodeId, result);
-
-            // Register nodes RegisterNodeId0, RegisterNodeId1, RegisterNodeId2
-            NodeIdCollection nodesToRegister = new NodeIdCollection() { RegisterNodeId0, RegisterNodeId1, RegisterNodeId2 };
-            NodeIdCollection registeredNodeIds = new NodeIdCollection();
-            result = m_session.RegisterNodes(nodesToRegister, out registeredNodeIds);
-
-            Console.WriteLine("\n\nRegisterNodes returned StatusCode:{0}.", result);
-
-            for(int i = 0; i < nodesToRegister.Count; i++)
+            try
             {
-                if (registeredNodeIds.Count > i)
+                // Register node RegisterNodeId0
+                NodeId registeredNodeId = m_session.RegisterNode(RegisterNodeId0);
+                Console.WriteLine("RegisterNode(\"{0}\") returned the assigned NodeId=\"{1}\".", RegisterNodeId0, registeredNodeId);
+
+                // read the value from RegisterNodeId0 using the returned registered node id
+                var value = m_session.Read(new ReadValueId() { NodeId = registeredNodeId, AttributeId = Attributes.Value });
+                Console.WriteLine("\tRead(\"{0}\"), Value= {1}, StatusCode:{2}.", registeredNodeId, value.Value, value.StatusCode);
+
+                // unregister the RegisterNodeId0 using the registered node id
+                m_session.UnregisterNode(registeredNodeId);
+                Console.WriteLine("\tUnregisterNode(\"{0}\") returned.", registeredNodeId);
+
+                // Register nodes RegisterNodeId0, RegisterNodeId1, RegisterNodeId2
+                NodeIdCollection nodesToRegister = new NodeIdCollection() { RegisterNodeId0, RegisterNodeId1, RegisterNodeId2 };
+                var registeredNodeIds = m_session.RegisterNodes(nodesToRegister);
+
+                Console.WriteLine("\n\nRegisterNodes returned:");
+
+                for (int i = 0; i < nodesToRegister.Count; i++)
                 {
-                    Console.WriteLine("\tNodeId:{0} was assigned NodeId={1}.", nodesToRegister[i], registeredNodeIds[i]);
+                    if (registeredNodeIds.Count > i)
+                    {
+                        Console.WriteLine("\tNodeId:\"{0}\" was assigned NodeId=\"{1}\".", nodesToRegister[i], registeredNodeIds[i]);
 
-                    // read the value from  registeredNodeIds[i] using the returned registered node id
-                    value = m_session.Read(new ReadValueId() { NodeId = registeredNodeIds[i], AttributeId = Attributes.Value });
-                    Console.WriteLine("\tRead(\"{0}\"), Value= {1}, StatusCode:{2}.", registeredNodeIds[i], value.Value, value.StatusCode);
+                        // read the value from  registeredNodeIds[i] using the returned registered node id
+                        value = m_session.Read(new ReadValueId() { NodeId = registeredNodeIds[i], AttributeId = Attributes.Value });
+                        Console.WriteLine("\tRead(\"{0}\"), Value= {1}, StatusCode:{2}.", registeredNodeIds[i], value.Value, value.StatusCode);
+                    }
                 }
-            }      
 
-            // unregister the nodes using the registered node id
-            result = m_session.UnregisterNodes(registeredNodeIds);
-            Console.WriteLine("\tUnregisterNodes returned StatusCode:{0}", result);
+                // unregister the nodes using the registered node id
+                m_session.UnregisterNodes(registeredNodeIds);
+                Console.WriteLine("\tUnregisterNodes returned.");
+
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("RegisterNodesSample", ex);
+            }
         }
         #endregion
 

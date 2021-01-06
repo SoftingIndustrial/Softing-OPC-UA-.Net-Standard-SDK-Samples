@@ -154,6 +154,11 @@ namespace SampleServer.ReferenceServer
                     variables.Add(CreateVariable(staticFolder, "Variant", BuiltInType.Variant));
                     variables.Add(CreateVariable(staticFolder, "XmlElement", DataTypeIds.XmlElement));
 
+                    variables.Add(CreateVariable(staticFolder, "IdType", DataTypeIds.IdType));
+                    variables.Add(CreateVariable(staticFolder, "NodeClass", DataTypeIds.NodeClass));
+                    variables.Add(CreateVariable(staticFolder, "ServerState", DataTypeIds.ServerState));
+                    variables.Add(CreateVariable(staticFolder, "UserTokenType", DataTypeIds.UserTokenType));
+
                     #endregion
 
                     #region Scalar_Static_Arrays
@@ -1388,7 +1393,10 @@ namespace SampleServer.ReferenceServer
             }
             variable.WriteMask = AttributeWriteMask.DisplayName | AttributeWriteMask.Description;
             variable.UserWriteMask = AttributeWriteMask.DisplayName | AttributeWriteMask.Description;
-            variable.Value = GetNewValue(variable);
+            if (!(variable.Value is Enum))
+            {
+                variable.Value = GetNewValue(variable);
+            }
 
             return variable;
         }
