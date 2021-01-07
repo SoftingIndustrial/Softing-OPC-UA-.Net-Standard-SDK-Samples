@@ -12,9 +12,6 @@ using System;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
 using SampleClient.StateMachine;
-using System.IO;
-using Opc.Ua.Client;
-using System.Threading;
 
 namespace SampleClient
 {
@@ -34,6 +31,7 @@ namespace SampleClient
             SampleClientConfiguration sampleClientConfiguration = application.Configuration.ParseExtension<SampleClientConfiguration>();
             if (sampleClientConfiguration != null)
             {
+                // use ServerUrl from client configuration Extension
                 ServerUrl = sampleClientConfiguration.ServerUrl;
             }
             
@@ -42,22 +40,16 @@ namespace SampleClient
 
             LicensingStatus clientLicensingStatus = LicensingStatus.Ok;
 
-            // TODO - design time license activation
-            // Fill in your design time license activation keys here
+            // TODO - Client binary license activation
+            // Fill in your Client binary license activation keys here
             // clientLicensingStatus = application.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+            if (clientLicensingStatus != LicensingStatus.Ok)
+            {
+                Console.WriteLine("Client license status is: {0}!", clientLicensingStatus);
+                Console.ReadKey();
+                return;
+            }
 
-            if (clientLicensingStatus == LicensingStatus.Expired)
-            {
-                Console.WriteLine("Client license period expired!");
-                Console.ReadKey();
-                return;
-            }
-            if (clientLicensingStatus == LicensingStatus.Invalid)
-            {
-                Console.WriteLine("Invalid Client license key!");
-                Console.ReadKey();
-                return;
-            }
             Console.WriteLine("SampleClient started at:{0}", DateTime.Now.ToLongTimeString());
 
             // Create the process object that will execute user commands

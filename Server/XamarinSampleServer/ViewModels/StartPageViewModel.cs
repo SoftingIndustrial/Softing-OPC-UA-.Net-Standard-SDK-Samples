@@ -61,19 +61,14 @@ namespace XamarinSampleServer.ViewModels
             LoadSessionsCommand = new Command(async () => await ExecuteLoadSessionsCommand());
             m_connectedSessions = new ObservableCollection<ConnectedSession>();
 
-            // TODO - design time license activation
-            // Fill in your design time license activation keys here
-            // m_isValidLicenseKey = License.ActivateLicense(LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-            
-            if (m_isValidLicenseKey == LicensingStatus.Expired)
+            // TODO - Server binary license activation
+            // Fill in your Server binary license activation keys here
+            // m_isValidLicenseKey = Softing.Opc.Ua.Server.License.ActivateLicense(Softing.Opc.Ua.Server.LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+
+            if (m_isValidLicenseKey != Softing.Opc.Ua.Server.LicensingStatus.Ok)
             {
-                ResultsText = string.Format("\n\nError starting server: License period expired!");
-                CanStartServer = false;
-                return;
-            }
-            if (m_isValidLicenseKey == LicensingStatus.Invalid)
-            {
-                ResultsText = string.Format("\n\nError starting server: Invalid License key!");
+                ResultsText = string.Format("\n\nError starting server: Server license status is: {0}!", m_isValidLicenseKey);
+                Console.WriteLine();
                 CanStartServer = false;
                 return;
             }

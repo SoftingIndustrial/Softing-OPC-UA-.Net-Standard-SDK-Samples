@@ -106,31 +106,21 @@ namespace XamarinSampleClient.ViewModels
 
                 LicensingStatus result = LicensingStatus.Ok;
 
-                // TODO - design time license activation
-                // Fill in your design time license activation keys here
+                // TODO - binary license activation
+                // Fill in your Client binary license activation keys here
                 // result = SampleApplication.UaApplication.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-                
-                if (result == LicensingStatus.Expired)
+
+                if (result != LicensingStatus.Ok)
                 {
                     Device.BeginInvokeOnMainThread(() =>
                     {
-                        WelcomeMessage = "License period expired!";
+                        WelcomeMessage = string.Format("License key status is: {0}!", result);
                         Samples = new List<SampleItem>();
                         OnPropertyChanged("WelcomeMessage");
                         OnPropertyChanged("Samples");
                     });
 
-                }
-                if (result == LicensingStatus.Invalid)
-                {
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        WelcomeMessage = "Invalid License key!";
-                        Samples = new List<SampleItem>();
-                        OnPropertyChanged("WelcomeMessage");
-                        OnPropertyChanged("Samples");
-                    });
-                }
+                }                
             }
             catch(Exception ex)
             {
