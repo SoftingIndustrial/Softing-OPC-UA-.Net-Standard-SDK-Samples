@@ -24,16 +24,16 @@ namespace SampleClient.Samples
         #region Private Fields
 
         // the nodeId of the DownloadFile which is specified on the File Transfer Node Manager
-        private const string DownloadNodeID = "ns=9;i=2";
+        private const string DownloadNodeID = "ns=9;i=22";
         
         // the nodeId of the UploadFile from the server
-        private const string UploadNodeID = "ns=9;i=23";
+        private const string UploadNodeID = "ns=9;i=63";
         
         // the nodeId of the ByteString element from the server
-        private const string ByteStringNodeID = "ns=9;i=44";
+        private const string ByteStringNodeID = "ns=9;i=84";
 
         // the nodeId of the TemporaryFile element from the server
-        private const string TemporaryFileNodeID = "ns=9;i=45";
+        private const string TemporaryFileNodeID = "ns=9;i=95";
 
         private string DownloadFilePath = Path.Combine("Files", "DownloadFile.xml");
         private string UploadFilePath = Path.Combine("Files", "UploadClientFile.xml");
