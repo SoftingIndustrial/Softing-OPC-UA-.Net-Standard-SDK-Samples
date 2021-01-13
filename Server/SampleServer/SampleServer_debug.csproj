@@ -14,6 +14,12 @@
 </PropertyGroup>
 
 <ItemGroup>
+  <Compile Remove="NodeManagement\**" />
+  <EmbeddedResource Remove="NodeManagement\**" />
+  <None Remove="NodeManagement\**" />
+</ItemGroup>
+
+<ItemGroup>
 <Compile Remove="FileTransfer\FileStateEventArgs.cs" />
 <Compile Remove="FileTransfer\TempFileStateData.cs" />
 </ItemGroup>
@@ -72,7 +78,6 @@
 <Folder Include="DataAccess\" />
 <Folder Include="Methods\" />
 <Folder Include="UserAuthentication\" />
-<Folder Include="NodeManagement\" />
 </ItemGroup>
 
 <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
