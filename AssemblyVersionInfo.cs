@@ -37,14 +37,14 @@ using System.Reflection;
 internal static class AssemblyVersionInfo
 {
     /// <summary> The current copy right notice. </summary>
-    public const string Copyright = "© 2020 Softing Industrial Automation GmbH";
+    public const string Copyright = "© 2021 Softing Industrial Automation GmbH";
 
     /// BEWARE THAT IN VS 2017 THE USAGE OF * PLACEHOLDER IS NOT ALLOWED
     /// <summary> The current build version. </summary>
-    public const string CurrentVersion = "2.70.0.2550";
+    public const string CurrentVersion = "2.70.0.2643";
 
     /// <summary> The current build file version. </summary>
-    public const string CurrentFileVersion = "2.70.0.2550";
+    public const string CurrentFileVersion = "2.70.0.2643";
 
     /// <summary>The assembly copyright owner.</summary>
     public const string AssemblyCompany = "Softing Industrial Automation GmbH";
@@ -53,5 +53,5 @@ internal static class AssemblyVersionInfo
     public const string AssemblyProduct = "dataFEED OPC UA .NET Standard SDK";
 
 	/// <summary>The product release date.</summary>
-    public const string ReleaseDate = "2020/12/15 15:41:03";
+    public const string ReleaseDate = "2021/01/25 10:15:03";
 }
