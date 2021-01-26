@@ -10,8 +10,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
+using Softing.Opc.Ua.Client.Types;
 
 namespace SampleClient.Samples
 {
@@ -94,6 +96,54 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
+        /// Call method with complex parameters
+        /// </summary>
+        internal void CallCountRefrigeratorStatesMethod()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("CallMethod: The session is not initialized!");
+                return;
+            }
+
+            /*Select the method from the address space*/
+            //Browse Path: Root\Objects\Methods
+            NodeId parentObjectId = new NodeId("ns=5;i=1");
+
+            //Browse Path: Root\Objects\Methods\CountRefrigeratorStates
+            string methodPath = "Root\\Objects\\Methods\\CountRefrigeratorStates";
+            NodeId methodId = new NodeId("ns=5;i=11");
+
+            /*initialize input arguments*/       
+            // initialize array of RefrigeratorStateenum
+            EnumValue[] refrigeratorStateArray = m_session.GetDefaultValueForDatatype(new NodeId("ns=13;i=15002"), ValueRanks.OneDimension, 3) as EnumValue[];           
+
+            Console.WriteLine("\nMethod '{0}' is called with the following arguments:", methodPath);
+            for (int i = 0; i < refrigeratorStateArray.Length; i++)
+            {
+                Console.WriteLine("RefrigeratorStateArray[{0}]= {1}", i, refrigeratorStateArray[i]);
+            }
+
+            StatusCode statusCode = new StatusCode();
+            try
+            {
+                IList<object> outputArgs;
+                statusCode = m_session.Call(parentObjectId, methodId, new List<object> { refrigeratorStateArray }, out outputArgs);
+
+                Console.WriteLine("Output arguments are:");
+                for (int i = 0; i < outputArgs.Count; i++)
+                {
+                    Console.WriteLine("output[{0}]= {1}", i, outputArgs[i]);
+                }
+                Console.WriteLine("Status Code is: {0}", statusCode);
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("CallMethod", ex);
+            }
+        }
+
+        /// <summary>
         /// Call a methods on server asynchronously
         /// </summary>
         internal void AsyncCallMethod()
@@ -146,11 +196,26 @@ namespace SampleClient.Samples
             {
                 try
                 {
+                    m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = true;
+                    m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = true;
+
                     // create the session object with no security and anonymous login    
                     m_session = m_application.CreateSession(Program.ServerUrl);
                     m_session.SessionName = SessionName;
 
                     m_session.Connect(false, true);
+                    
+                    //wait until custom data types are loaded
+                    if (m_application.ClientToolkitConfiguration.DecodeCustomDataTypes || m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries)
+                    {
+                        //wait until all data types are loaded (data type definitions and dictionaries)
+                        while (!m_session.TypeDictionariesLoaded && !m_session.DataTypeDefinitionsLoaded)
+                        {
+                            Task.Delay(500).Wait();
+                        }
+                    }
+
+
 
                     //add handler for CallCompleted event
                     m_session.CallCompleted += Session_CallCompleted;

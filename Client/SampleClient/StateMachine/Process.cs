@@ -920,6 +920,8 @@ namespace SampleClient.StateMachine
             methodCallClient.InitializeSession();
             //call method 
             methodCallClient.CallMethod();
+
+            methodCallClient.CallCountRefrigeratorStatesMethod();
             //call async method 
             methodCallClient.AsyncCallMethod();
 
