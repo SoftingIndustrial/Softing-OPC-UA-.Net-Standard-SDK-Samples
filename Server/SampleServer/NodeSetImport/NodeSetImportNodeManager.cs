@@ -301,7 +301,7 @@ namespace SampleServer.NodeSetImport
             try
             {
                 //create object of specified type and generate also properties that have modelling rule set on optional
-                var newNode = CreateInstanceFromType(parentNode, name, NamespaceIndex, inputArguments[1] as NodeId, ReferenceTypeIds.Organizes, createOptionalFields);
+                var newNode = CreateInstanceFromType(parentNode, name, inputArguments[1] as NodeId, ReferenceTypeIds.Organizes, createOptionalFields);
                 if (newNode != null)
                 {
                     parentNode.AddChild(newNode);
