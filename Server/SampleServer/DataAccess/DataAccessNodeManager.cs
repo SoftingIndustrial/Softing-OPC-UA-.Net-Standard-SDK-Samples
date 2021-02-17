@@ -32,6 +32,7 @@ namespace SampleServer.DataAccess
         private Timer m_simulationTimer;
         private FolderState m_dataAccessRoot;
         private uint m_timerInterval = 1000;
+        private BaseEventState m_motorTemperatureEvent;
         #endregion
 
         #region Constructors
@@ -69,6 +70,10 @@ namespace SampleServer.DataAccess
                 FolderState root = CreateObjectFromType(null, "DataAccess", ObjectTypeIds.FolderType, ReferenceTypeIds.Organizes) as FolderState;
                 AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
+                root.EventNotifier |= EventNotifiers.SubscribeToEvents;
+
+                AddRootNotifier(root);
+
                 CreateRefrigerator(SystemContext, root);                
 
                 // Initialize timer for data changes simulation
@@ -76,7 +81,6 @@ namespace SampleServer.DataAccess
                 //remember data access root 
                 m_dataAccessRoot = root;
 
-                AddRootNotifier(root);
 
                 FolderState registeredNodes = CreateFolder(root, "NodesForRegister");
 
@@ -102,6 +106,7 @@ namespace SampleServer.DataAccess
         private void CreateRefrigerator(ServerSystemContext context, FolderState parent)
         {
             BaseObjectState refrigerator = CreateObject(parent, "Refrigerator");
+            refrigerator.EventNotifier |= EventNotifiers.SubscribeToEvents;
 
             // Create CoolingMotorRunning variable
             DataItemState coolingMotorRunning = CreateVariableFromType(refrigerator, "CoolingMotorRunning", VariableTypeIds.DataItemType, ReferenceTypeIds.Organizes) as DataItemState;
@@ -134,6 +139,7 @@ namespace SampleServer.DataAccess
             m_motorTemperature.InstrumentRange.Value = new Range(100, 0);
             m_motorTemperature.Value = 47.6;
 
+
             // Create SetpointOfTheTemperature variable
             AnalogItemState setpointOfTheTemperature = CreateAnalogVariable(refrigerator, "SetpointOfTheTemperature", DataTypeIds.Double, ValueRanks.Scalar, new Range(90, 10), null);
             setpointOfTheTemperature.Value = 3.2;
@@ -146,6 +152,10 @@ namespace SampleServer.DataAccess
                 };
             MethodState openCloseDoorMethod = CreateMethod(refrigerator, "OpenCloseDoor", inputArguments: inputArgs);
             openCloseDoorMethod.OnCallMethod = DoOpenCloseDoorCall;
+
+
+            // create an instance of a event type to be used when reporting events
+            m_motorTemperatureEvent = CreateObjectFromType(m_motorTemperature, "MotorTemperatureEvent", ObjectTypeIds.BaseEventType) as BaseEventState;
         }
 
         /// <summary>
@@ -210,7 +220,7 @@ namespace SampleServer.DataAccess
 
                 // Report an event at on DataAccess node
                 string eventMessage = String.Format("Motor temperature changed to {0}", m_motorTemperature.Value);  
-                ReportEvent(m_motorTemperature, new LocalizedText(eventMessage));
+                ReportEvent(m_motorTemperature, m_motorTemperatureEvent, new LocalizedText(eventMessage), EventSeverity.Medium);
             }
             catch (Exception e)
             {
