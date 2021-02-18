@@ -124,7 +124,7 @@ namespace SampleClient.Samples
                     if (reverseConnectServerCertificate != null)
                     {
                         // Use utility method to get the applicationUri from a certificate
-                        reverseConnectServerApplicationUri = Utils.GetApplicationUriFromCertificate(reverseConnectServerCertificate);
+                        reverseConnectServerApplicationUri = X509Utils.GetApplicationUriFromCertificate(reverseConnectServerCertificate);
                         Console.WriteLine("The configured ReverseConnectServerCertificateIdentifier has ApplicationUri='{0}'", reverseConnectServerApplicationUri);
                     }
                     else

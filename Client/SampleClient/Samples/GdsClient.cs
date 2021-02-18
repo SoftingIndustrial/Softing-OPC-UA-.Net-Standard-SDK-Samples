@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using Opc.Ua.Security.Certificates;
 using static Opc.Ua.Utils;
 
 namespace SampleClient.Samples

@@ -85,11 +85,11 @@
 </ItemGroup>
 
 <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
-<PackageReference Include="System.Security.Principal.Windows" Version="4.5.1" />
+<PackageReference Include="System.Security.Principal.Windows" Version="4.7.0" />
 </ItemGroup>
 
 <ItemGroup>
-<PackageReference Include="System.Security.Principal.Windows" Version="4.5.1" />
+<PackageReference Include="System.Security.Principal.Windows" Version="4.7.0" />
 </ItemGroup>
 	
 
