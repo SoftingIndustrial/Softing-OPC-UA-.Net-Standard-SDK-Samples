@@ -154,7 +154,7 @@ namespace SampleServer.DataAccess
             openCloseDoorMethod.OnCallMethod = DoOpenCloseDoorCall;
 
 
-            // create an instance of a event type to be used when reporting events
+            // create an instance of BaseEventType to be used when reporting MotorTemperature events
             m_motorTemperatureEvent = CreateObjectFromType(m_motorTemperature, "MotorTemperatureEvent", ObjectTypeIds.BaseEventType) as BaseEventState;
         }
 

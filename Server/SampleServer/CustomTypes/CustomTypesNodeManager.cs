@@ -340,7 +340,7 @@ namespace SampleServer.CustomTypes
                 MethodState raiseCustomEventMethodInstance = CreateMethod(m_rootCustomTypesFolder, "RaiseCustomEvent", null, null, RaiseCustomEventOnCallHandler);
 
                 // create an instance of a custom event type
-                m_customEventInstance = CreateObjectFromType(m_rootCustomTypesFolder, "CustomEventInstance", m_customEventTypeNodeId) as BaseEventState;                
+                m_customEventInstance = CreateObjectFromType(m_rootCustomTypesFolder, "CustomEventInstance", m_customEventTypeNodeId) as BaseEventState;
 
                 #endregion
             }
@@ -407,7 +407,6 @@ namespace SampleServer.CustomTypes
                 if (countProperty != null)
                 {
                     countProperty.Value = ++m_customEventCounter;
-                    Console.WriteLine(" m_customEventCounter incremented to " + m_customEventCounter);
                 }
                 var randomProperty = m_customEventInstance.FindChildBySymbolicName(SystemContext, "RandomValueProperty") as BaseVariableState;
                 if (randomProperty != null)
@@ -418,34 +417,12 @@ namespace SampleServer.CustomTypes
                 LocalizedText eventMessage = new LocalizedText("CustomEvent" + m_customEventCounter);
                 ReportEvent(m_rootCustomTypesFolder, m_customEventInstance, eventMessage, EventSeverity.Medium);
 
-                Console.WriteLine(" EventRepoirted for " + m_customEventCounter);
-
-
-
-
-                //// Set common properties
-                //m_customEventInstance.SourceNode.Value = method.NodeId;
-                //m_customEventInstance.SourceName.Value = method.BrowseName.Name;
-                //m_customEventInstance.Message.Value = new LocalizedText("CustomEvent" + m_customEventCounter);
-                //m_customEventInstance.Severity.Value = (ushort)EventSeverity.MediumHigh;
-
-                //// Set event data
-                //m_customEventInstance.EventId.Value = Guid.NewGuid().ToByteArray();
-                //m_customEventInstance.Time.Value = DateTime.UtcNow;
-                //m_customEventInstance.ReceiveTime.Value = m_customEventInstance.Time.Value;
-
-                //// Create a snapshot of event instance
-                //InstanceStateSnapshot e = new InstanceStateSnapshot();
-                //e.Initialize(context, m_customEventInstance);
-
-                //// Report the event
-                //Server.ReportEvent(context, e);
-
                 return new ServiceResult(StatusCodes.Good);
             }
 
             return new ServiceResult(StatusCodes.BadNodeIdInvalid);
         }
+
         #endregion
     }
 }
