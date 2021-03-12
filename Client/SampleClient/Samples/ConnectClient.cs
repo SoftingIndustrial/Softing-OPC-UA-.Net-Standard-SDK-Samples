@@ -152,8 +152,8 @@ namespace SampleClient.Samples
         public void CreateHttpsSessionWithAnomymousUserId()
         {
             // create the session object.
-            using (ClientSession session = CreateSession("HttpsAnonymousUserIdSession", Program.ServerUrl,
-                MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Xml, new UserIdentity()))
+            using (ClientSession session = CreateSession("HttpsAnonymousUserIdSession", Program.ServerUrlHttps,
+                MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic256Sha256, MessageEncoding.Binary, new UserIdentity()))
             {
                 ConnectTest(session);
             }
@@ -165,8 +165,8 @@ namespace SampleClient.Samples
         public void CreateHttpsSessionWithUserId()
         {
             // create the session object.
-            using (ClientSession session = CreateSession("HttpsUserIdSession", Program.ServerUrl,
-                MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity("usr", "pwd")))
+            using (ClientSession session = CreateSession("HttpsUserIdSession", Program.ServerUrlHttps,
+                MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic256Sha256, MessageEncoding.Binary, new UserIdentity("usr", "pwd")))
             {
                 ConnectTest(session);
             }

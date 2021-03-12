@@ -612,8 +612,10 @@ namespace SampleClient.StateMachine
             connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Aes256_Sha256_RsaPss);
             connectClient.CreateOpcTcpSessionWithUserId();
             connectClient.CreateOpcTcpSessionWithCertificate();
+
             //connectClient.CreateHttpsSessionWithAnomymousUserId();
             //connectClient.CreateHttpsSessionWithUserId();
+
             connectClient.CreateSessionUsingDiscovery();
 
 
