@@ -6,13 +6,17 @@
     <RootNamespace>XamarinSampleServer</RootNamespace>
   </PropertyGroup>
 
-<ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.4.365.48" />
+  <ItemGroup>
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Bindings.Https" Version="1.4.365.48" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Server" Version="1.4.365.48" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Configuration" Version="1.4.365.48" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Core" Version="1.4.365.48" />
+
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1451" />
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
   </ItemGroup>
 
-	
+
   <ItemGroup>
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="App.xaml.cs">
       <DependentUpon>*.xaml</DependentUpon>
@@ -21,28 +25,28 @@
       <DependentUpon>*.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
-  
-  
+
+
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\ExclusiveLimitMonitor.cs" Link="_SampleServer\Alarms\ExclusiveLimitMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\AlarmsNodeManager.cs" Link="_SampleServer\Alarms\AlarmsNodeManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\DataAccess\DataAccessNodeManager.cs" Link="_SampleServer\DataAccess\DataAccessNodeManager.cs" />   
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\DataAccess\DataAccessNodeManager.cs" Link="_SampleServer\DataAccess\DataAccessNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Methods\MethodsNodeManager.cs" Link="_SampleServer\Methods\MethodsNodeManager.cs" />
-	<Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\NodeSetImportNodeManager.cs" Link="_SampleServer\NodeSetImport\NodeSetImportNodeManager.cs" />
-	<Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\ReferenceServer\ReferenceNodeManager.cs" Link="_SampleServer\ReferenceServer\ReferenceNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\NodeSetImportNodeManager.cs" Link="_SampleServer\NodeSetImport\NodeSetImportNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\ReferenceServer\ReferenceNodeManager.cs" Link="_SampleServer\ReferenceServer\ReferenceNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\UserAuthentication\UserAuthenticationNodeManager.cs" Link="_SampleServer\UserAuthentication\UserAuthenticationNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Namespaces.cs" Link="_SampleServer\Namespaces.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\SampleServerConfiguration.cs" Link="_SampleServer\SampleServerConfiguration.cs" />
-    
+
   </ItemGroup>
-  
+
   <ItemGroup>
-    
+
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" Link="_SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" />
-	  <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" />
-	  <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\RefrigeratorsInstances.NodeSet2.xml" Link="_SampleServer\NodeSetImport\RefrigeratorsInstances.NodeSet2.xml" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\RefrigeratorsInstances.NodeSet2.xml" Link="_SampleServer\NodeSetImport\RefrigeratorsInstances.NodeSet2.xml" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <Reference Include="Softing.Opc.Ua.Server">
       <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.Server.dll</HintPath>
