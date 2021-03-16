@@ -280,7 +280,8 @@ namespace XamarinSampleServer.ViewModels
         #region Event Handlers
         private static void CertificateValidator_CertificateValidation(CertificateValidator sender, CertificateValidationEventArgs e)
         {
-            e.Accept = true;
+            // accept all certificates no matter of error codes received
+            e.AcceptAll = true;
         }
         #endregion
     }

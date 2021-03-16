@@ -598,8 +598,9 @@ namespace SampleClient.StateMachine
             //ConnectClient sample does not need to lpad data type dictionaries or to decode custom data types
             bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
             bool rememberDecodeDataTypeDictionaries = m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries;
-            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = true;
-            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = true;
+
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
 
             ConnectClient connectClient = new ConnectClient(m_application);
 

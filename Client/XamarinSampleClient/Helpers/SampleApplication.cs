@@ -115,7 +115,23 @@ namespace XamarinSampleClient.Helpers
         /// <param name="e"></param>
         private static void CertificateValidator_CertificateValidation(CertificateValidator validator, CertificateValidationEventArgs e)
         {
-            e.Accept = (e.Error.StatusCode == StatusCodes.BadCertificateUntrusted);
+            bool isAcceptAll = false;
+
+            ServiceResult error = e.Error;
+            while (error != null)
+            {
+                // decide if error is acceptable and certificate can be trusted
+                isAcceptAll = (error.StatusCode == StatusCodes.BadCertificateUntrusted);
+
+                if (!isAcceptAll)
+                {
+                    break;
+                }
+                // move to InnerResult
+                error = error.InnerResult;
+            }
+            // set the AcceptAll flag
+            e.AcceptAll = isAcceptAll;
         }
     }
 }
