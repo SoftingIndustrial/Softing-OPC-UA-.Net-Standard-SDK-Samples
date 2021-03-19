@@ -118,7 +118,7 @@ namespace SampleServer.Alarms
             m_alarm.EnabledState = new TwoStateVariableState(m_alarm);
 
             // Specify reference type between the source and the alarm.
-            m_alarm.ReferenceTypeId = ReferenceTypeIds.HasComponent;
+            m_alarm.ReferenceTypeId = ReferenceTypeIds.Organizes;
 
             // This call initializes the condition from the type model (i.e. creates all of the objects
             // and variables required to store its state). The information about the type model was 
