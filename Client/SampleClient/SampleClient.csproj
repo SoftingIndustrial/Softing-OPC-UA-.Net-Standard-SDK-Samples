@@ -10,12 +10,10 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net462|AnyCPU'">
-    <!--<DefineConstants>TRACE;HTTPS_ENABLED</DefineConstants>-->
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net462|AnyCPU'">
-    <!--<DefineConstants>TRACE;HTTPS_ENABLED</DefineConstants>-->
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
@@ -52,13 +50,11 @@
 
   <ItemGroup>
     <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.4.365.48" />
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Configuration" Version="1.4.365.48" />
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Core" Version="1.4.365.48" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(DefineConstants.Contains('HTTPS_ENABLED'))">
+  <!--<ItemGroup>
     <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Bindings.Https" Version="1.4.365.48" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
     <None Update="Files\opcuser.pfx">

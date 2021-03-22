@@ -19,12 +19,10 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net462|AnyCPU'">
     <DefineConstants>TRACE</DefineConstants>
-    <!--<DefineConstants>TRACE;HTTPS_ENABLED</DefineConstants>-->
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net462|AnyCPU'">
     <DefineConstants>TRACE</DefineConstants>
-    <!--<DefineConstants>TRACE;HTTPS_ENABLED</DefineConstants>-->
   </PropertyGroup>
 
   <ItemGroup>
@@ -73,15 +71,13 @@
 
   <ItemGroup>
     <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Server" Version="1.4.365.48" />
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Configuration" Version="1.4.365.48" />
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Core" Version="1.4.365.48" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
     <PackageReference Include="System.Security.Principal.Windows" Version="4.7.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(DefineConstants.Contains('HTTPS_ENABLED'))">
+  <!--<ItemGroup >
     <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Bindings.Https" Version="1.4.365.48" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <Reference Include="Softing.Opc.Ua.Server">
