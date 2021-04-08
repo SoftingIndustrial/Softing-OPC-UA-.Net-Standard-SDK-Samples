@@ -497,23 +497,6 @@ namespace SamplePublisher
                     
                     isIncremented = true;
                     break;
-                case (BuiltInType) DataTypes.Time:
-                    if (variable.ValueRank == ValueRanks.Scalar)
-                    {
-                        dataValue.Value = DateTime.UtcNow.ToString("HH:mm");
-                    }
-                    else if (variable.ValueRank == ValueRanks.OneDimension)
-                    {
-                        string[] valueArray = (string[])dataValue.Value;
-                        for (int i = 0; i < valueArray.Length; i++)
-                        {
-                            valueArray[i] = DateTime.UtcNow.ToString("HH:mm");
-                        }
-                        dataValue.Value = valueArray;
-                    }
-                    
-                    isIncremented = true;
-                    break;
                 case (BuiltInType) DataTypes.NodeClass:
                     if (variable.ValueRank == ValueRanks.Scalar)
                     {

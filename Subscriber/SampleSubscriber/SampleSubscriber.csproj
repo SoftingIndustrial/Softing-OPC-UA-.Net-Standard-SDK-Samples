@@ -32,8 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Configuration" Version="1.4.365.48" />
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Core" Version="1.4.365.48" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.PubSub" Version="1.4.366-preview.g1a36c254df" />
   </ItemGroup>
 
   <ItemGroup>

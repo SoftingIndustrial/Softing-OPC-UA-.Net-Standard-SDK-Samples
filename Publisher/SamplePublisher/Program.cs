@@ -787,14 +787,6 @@ namespace SamplePublisher
                     //DataTypes derived from built-in types have
                     new FieldMetaData()
                     {
-                        Name = "Time",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte)DataTypes.String,
-                        DataType = DataTypeIds.Time,
-                        ValueRank = ValueRanks.Scalar
-                    },
-                    new FieldMetaData()
-                    {
                         Name = "String",
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         BuiltInType = (byte)DataTypes.String,
@@ -889,14 +881,6 @@ namespace SamplePublisher
                         DataSetFieldId = new Uuid(Guid.NewGuid()),
                         BuiltInType = (byte)DataTypes.Enumeration,
                         DataType = DataTypeIds.NodeClass,
-                        ValueRank = ValueRanks.OneDimension
-                    },
-                    new FieldMetaData()
-                    {
-                        Name = "TimeArray",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte)DataTypes.String,
-                        DataType = DataTypeIds.Time,
                         ValueRank = ValueRanks.OneDimension
                     },
                     new FieldMetaData()

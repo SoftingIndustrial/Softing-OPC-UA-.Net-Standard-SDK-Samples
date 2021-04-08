@@ -12,10 +12,6 @@
   <ItemGroup>
     <Compile Include="..\..\..\Include\AssemblyVersionInfo.cs" Link="Properties\AssemblyVersionInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Configuration" Version="1.4.365.48" />
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Core" Version="1.4.365.48" />
-  </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <Reference Include="Softing.Opc.Ua.PubSub">
@@ -33,6 +29,10 @@
     <Reference Include="Softing.Opc.Ua.PubSub">
       <HintPath>..\..\..\..\bin\netstandard2.1\Softing.Opc.Ua.PubSub.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.PubSub" Version="1.4.366-preview.g1a36c254df" />
   </ItemGroup>
 
   <ItemGroup>

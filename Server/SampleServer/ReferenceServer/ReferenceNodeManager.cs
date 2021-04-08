@@ -145,7 +145,6 @@ namespace SampleServer.ReferenceServer
                     variables.Add(CreateVariable(staticFolder, "QualifiedName", DataTypeIds.QualifiedName));
                     variables.Add(CreateVariable(staticFolder, "SByte", DataTypeIds.SByte));
                     variables.Add(CreateVariable(staticFolder, "String", DataTypeIds.String));
-                    variables.Add(CreateVariable(staticFolder, "Time", DataTypeIds.Time));
                     variables.Add(CreateVariable(staticFolder, "UInt16", DataTypeIds.UInt16));
                     variables.Add(CreateVariable(staticFolder, "UInt32", DataTypeIds.UInt32));
                     variables.Add(CreateVariable(staticFolder, "UInt64", DataTypeIds.UInt64));
@@ -218,7 +217,6 @@ namespace SampleServer.ReferenceServer
                     };
                     variables.Add(stringArrayVar);
 
-                    variables.Add(CreateVariable(arraysFolder, "Time", DataTypeIds.Time, ValueRanks.OneDimension));
                     variables.Add(CreateVariable(arraysFolder, "UInt16", DataTypeIds.UInt16, ValueRanks.OneDimension));
                     variables.Add(CreateVariable(arraysFolder, "UInt32", DataTypeIds.UInt32, ValueRanks.OneDimension));
                     variables.Add(CreateVariable(arraysFolder, "UInt64", DataTypeIds.UInt64, ValueRanks.OneDimension));
@@ -251,7 +249,6 @@ namespace SampleServer.ReferenceServer
                     variables.Add(CreateVariable(arrays2DFolder, "QualifiedName", DataTypeIds.QualifiedName, ValueRanks.TwoDimensions));
                     variables.Add(CreateVariable(arrays2DFolder, "SByte", DataTypeIds.SByte, ValueRanks.TwoDimensions));
                     variables.Add(CreateVariable(arrays2DFolder, "String", DataTypeIds.String, ValueRanks.TwoDimensions));
-                    variables.Add(CreateVariable(arrays2DFolder, "Time", DataTypeIds.Time, ValueRanks.TwoDimensions));
                     variables.Add(CreateVariable(arrays2DFolder, "UInt16", DataTypeIds.UInt16, ValueRanks.TwoDimensions));
                     variables.Add(CreateVariable(arrays2DFolder, "UInt32", DataTypeIds.UInt32, ValueRanks.TwoDimensions));
                     variables.Add(CreateVariable(arrays2DFolder, "UInt64", DataTypeIds.UInt64, ValueRanks.TwoDimensions));
@@ -284,7 +281,6 @@ namespace SampleServer.ReferenceServer
                     variables.Add(CreateVariable(arrayDymnamicFolder, "QualifiedName", DataTypeIds.QualifiedName, ValueRanks.OneOrMoreDimensions));
                     variables.Add(CreateVariable(arrayDymnamicFolder, "SByte", DataTypeIds.SByte, ValueRanks.OneOrMoreDimensions));
                     variables.Add(CreateVariable(arrayDymnamicFolder, "String", DataTypeIds.String, ValueRanks.OneOrMoreDimensions));
-                    variables.Add(CreateVariable(arrayDymnamicFolder, "Time", DataTypeIds.Time, ValueRanks.OneOrMoreDimensions));
                     variables.Add(CreateVariable(arrayDymnamicFolder, "UInt16", DataTypeIds.UInt16, ValueRanks.OneOrMoreDimensions));
                     variables.Add(CreateVariable(arrayDymnamicFolder, "UInt32", DataTypeIds.UInt32, ValueRanks.OneOrMoreDimensions));
                     variables.Add(CreateVariable(arrayDymnamicFolder, "UInt64", DataTypeIds.UInt64, ValueRanks.OneOrMoreDimensions));
@@ -316,7 +312,6 @@ namespace SampleServer.ReferenceServer
                     variables.AddRange(CreateVariables(massFolder, "Number", DataTypeIds.Number, ValueRanks.Scalar, 100));
                     variables.AddRange(CreateVariables(massFolder, "SByte", DataTypeIds.SByte, ValueRanks.Scalar, 100));
                     variables.AddRange(CreateVariables(massFolder, "String", DataTypeIds.String, ValueRanks.Scalar, 100));
-                    variables.AddRange(CreateVariables(massFolder, "Time", DataTypeIds.Time, ValueRanks.Scalar, 100));
                     variables.AddRange(CreateVariables(massFolder, "UInt16", DataTypeIds.UInt16, ValueRanks.Scalar, 100));
                     variables.AddRange(CreateVariables(massFolder, "UInt32", DataTypeIds.UInt32, ValueRanks.Scalar, 100));
                     variables.AddRange(CreateVariables(massFolder, "UInt64", DataTypeIds.UInt64, ValueRanks.Scalar, 100));
@@ -349,7 +344,6 @@ namespace SampleServer.ReferenceServer
                     CreateDynamicVariable(simulationFolder, "QualifiedName", DataTypeIds.QualifiedName);
                     CreateDynamicVariable(simulationFolder, "SByte", DataTypeIds.SByte);
                     CreateDynamicVariable(simulationFolder, "String", DataTypeIds.String);
-                    CreateDynamicVariable(simulationFolder, "Time", DataTypeIds.Time);
                     CreateDynamicVariable(simulationFolder, "UInt16", DataTypeIds.UInt16);
                     CreateDynamicVariable(simulationFolder, "UInt32", DataTypeIds.UInt32);
                     CreateDynamicVariable(simulationFolder, "UInt64", DataTypeIds.UInt64);
@@ -390,7 +384,6 @@ namespace SampleServer.ReferenceServer
                     CreateDynamicVariable(arraysSimulationFolder, "QualifiedName", DataTypeIds.QualifiedName, ValueRanks.OneDimension);
                     CreateDynamicVariable(arraysSimulationFolder, "SByte", DataTypeIds.SByte, ValueRanks.OneDimension);
                     CreateDynamicVariable(arraysSimulationFolder, "String", DataTypeIds.String, ValueRanks.OneDimension);
-                    CreateDynamicVariable(arraysSimulationFolder, "Time", DataTypeIds.Time, ValueRanks.OneDimension);
                     CreateDynamicVariable(arraysSimulationFolder, "UInt16", DataTypeIds.UInt16, ValueRanks.OneDimension);
                     CreateDynamicVariable(arraysSimulationFolder, "UInt32", DataTypeIds.UInt32, ValueRanks.OneDimension);
                     CreateDynamicVariable(arraysSimulationFolder, "UInt64", DataTypeIds.UInt64, ValueRanks.OneDimension);
@@ -423,7 +416,6 @@ namespace SampleServer.ReferenceServer
                     CreateDynamicVariables(massSimulationFolder, "QualifiedName", DataTypeIds.QualifiedName, ValueRanks.Scalar, 100);
                     CreateDynamicVariables(massSimulationFolder, "SByte", DataTypeIds.SByte, ValueRanks.Scalar, 100);
                     CreateDynamicVariables(massSimulationFolder, "String", DataTypeIds.String, ValueRanks.Scalar, 100);
-                    CreateDynamicVariables(massSimulationFolder, "Time", DataTypeIds.Time, ValueRanks.Scalar, 100);
                     CreateDynamicVariables(massSimulationFolder, "UInt16", DataTypeIds.UInt16, ValueRanks.Scalar, 100);
                     CreateDynamicVariables(massSimulationFolder, "UInt32", DataTypeIds.UInt32, ValueRanks.Scalar, 100);
                     CreateDynamicVariables(massSimulationFolder, "UInt64", DataTypeIds.UInt64, ValueRanks.Scalar, 100);
@@ -538,12 +530,6 @@ namespace SampleServer.ReferenceServer
                          initialValues: new SByte[] { 10, 20, 30, 40, 50, 60, 70, 80, 90 });
                     CreateAnalogVariable(analogArrayFolder, "String", BuiltInType.String, ValueRanks.OneDimension,
                          initialValues: new String[] { "a00", "b10", "c20", "d30", "e40", "f50", "g60", "h70", "i80", "j90" });
-                    CreateAnalogVariable(analogArrayFolder, "Time", DataTypeIds.Time, ValueRanks.OneDimension,
-                         initialValues: new String[]
-                        {
-                            DateTime.MinValue.ToString(), DateTime.MaxValue.ToString(), DateTime.MinValue.ToString(), DateTime.MaxValue.ToString(), DateTime.MinValue.ToString(), DateTime.MaxValue.ToString(), DateTime.MinValue.ToString(),
-                            DateTime.MaxValue.ToString(), DateTime.MinValue.ToString(), DateTime.MaxValue.ToString()
-                        });
                     CreateAnalogVariable(analogArrayFolder, "UInt16", BuiltInType.UInt16, ValueRanks.OneDimension,
                          initialValues: new UInt16[] { 20, 21, 22, 23, 24, 25, 26, 27, 28, 29 });
                     CreateAnalogVariable(analogArrayFolder, "UInt32", BuiltInType.UInt32, ValueRanks.OneDimension,
