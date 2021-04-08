@@ -18,7 +18,6 @@
 <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Libraries\Opc.Ua.Server\Opc.Ua.Server.csproj" />
 <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Bindings.Https\Opc.Ua.Bindings.Https.csproj" />
 <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Core\Opc.Ua.Core.csproj" />
-<ProjectReference Include="..\..\..\Toolkit\PubSub\Softing.Opc.Ua.PubSub_debug.csproj" />
 </ItemGroup>
 
 <ItemGroup>
