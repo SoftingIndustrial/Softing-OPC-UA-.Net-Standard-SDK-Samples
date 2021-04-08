@@ -55,20 +55,6 @@ namespace SampleServer
                     return;
                 }
 
-                Softing.Opc.Ua.PubSub.LicensingStatus pubSubLicensingStatus = Softing.Opc.Ua.PubSub.LicensingStatus.Ok;
-
-                // TODO - PubSub binary license activation
-                // Fill in your Server or Client binary license activation keys here
-                // pubSubLicensingStatus = Softing.Opc.Ua.PubSub.License.ActivateLicense(Softing.Opc.Ua.PubSub.LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-                // pubSubLicensingStatus = Softing.Opc.Ua.PubSub.License.ActivateLicense(Softing.Opc.Ua.PubSub.LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-
-                if (pubSubLicensingStatus != Softing.Opc.Ua.PubSub.LicensingStatus.Ok)
-                {
-                    Console.WriteLine("PubSub license status is: {0}!", pubSubLicensingStatus);
-                    Console.ReadKey();
-                    return;
-                }
-
                 // Start the server
                 await sampleServer.Start(configurationFile);
 

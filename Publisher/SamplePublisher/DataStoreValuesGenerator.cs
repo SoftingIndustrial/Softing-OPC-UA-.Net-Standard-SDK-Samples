@@ -9,7 +9,7 @@
  * ======================================================================*/
 
 using Opc.Ua;
-using Softing.Opc.Ua.PubSub;
+using Opc.Ua.PubSub;
 using System;
 using System.Threading;
 

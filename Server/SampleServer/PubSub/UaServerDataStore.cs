@@ -10,7 +10,7 @@
 
 using Opc.Ua;
 using Opc.Ua.Server;
-using Softing.Opc.Ua.PubSub;
+using Opc.Ua.PubSub;
 using Softing.Opc.Ua.Server;
 
 namespace SampleServer.PubSub
@@ -33,7 +33,6 @@ namespace SampleServer.PubSub
         {
             m_associatedNodeManager = associatedNodeManager;
         }
-
 
         #region IUaPubSubDataStore Implementation
         /// <summary>

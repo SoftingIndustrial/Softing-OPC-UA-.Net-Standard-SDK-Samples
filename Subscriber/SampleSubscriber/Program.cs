@@ -9,9 +9,9 @@
  * ======================================================================*/
 
 using Opc.Ua;
-using Softing.Opc.Ua.PubSub;
-using Softing.Opc.Ua.PubSub.Configuration;
-using Softing.Opc.Ua.PubSub.PublishedData;
+using Opc.Ua.PubSub;
+using Opc.Ua.PubSub.Configuration;
+using Opc.Ua.PubSub.PublishedData;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,7 +23,7 @@ namespace SampleSubscriber
     {
         #region Fields
         private const string SampleSubscriberLogFile = "Softing/OpcUaNetStandardToolkit/logs/SampleSubscriber.log";
-       
+
         // It should match the namespace index from configuration file
         public const ushort NamespaceIndexSimple = 2;
         public const ushort NamespaceIndexAllTypes = 3;
@@ -36,7 +36,7 @@ namespace SampleSubscriber
         /// Entry point for application
         /// </summary>
         static void Main()
-        {            
+        {
             try
             {
                 LoadTraceLogger();
@@ -59,19 +59,19 @@ namespace SampleSubscriber
                 using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
                     #region Licensing
-                    LicensingStatus pubSubLicensingStatus = LicensingStatus.Ok;
+                    //LicensingStatus pubSubLicensingStatus = LicensingStatus.Ok;
 
                     // TODO - PubSub binary license activation
                     // Fill in your Server or Client binary license activation keys here
                     // pubSubLicensingStatus = Softing.Opc.Ua.PubSub.License.ActivateLicense(Softing.Opc.Ua.PubSub.LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
                     // pubSubLicensingStatus = Softing.Opc.Ua.PubSub.License.ActivateLicense(Softing.Opc.Ua.PubSub.LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
 
-                    if (pubSubLicensingStatus != Softing.Opc.Ua.PubSub.LicensingStatus.Ok)
-                    {
-                        Console.WriteLine("PubSub license status is: {0}!", pubSubLicensingStatus);
-                        Console.ReadKey();
-                        return;
-                    }
+                    //if (pubSubLicensingStatus != Softing.Opc.Ua.PubSub.LicensingStatus.Ok)
+                    //{
+                    //    Console.WriteLine("PubSub license status is: {0}!", pubSubLicensingStatus);
+                    //    Console.ReadKey();
+                    //    return;
+                    //}
                     #endregion
 
                     // the PubSub application can be also created from an instance of PubSubConfigurationDataType
@@ -80,7 +80,7 @@ namespace SampleSubscriber
 
                     // subscribe to data events 
                     uaPubSubApplication.DataReceived += PubSubApplication_DataReceived;
-                    
+
                     PrintCommandParameters();
 
                     //start application
@@ -136,7 +136,7 @@ namespace SampleSubscriber
         {
             lock (m_lock)
             {
-                Console.WriteLine("Data Arrived from Source={0}, SequenceNumber={1}, DataSet count={2}", e.SourceEndPoint, e.NetworkMessageSequenceNumber, e.DataSets.Count);
+                Console.WriteLine("Data Arrived from Source={0}, SequenceNumber={1}, DataSet count={2}", e.Source, e.NetworkMessageSequenceNumber, e.DataSets.Count);
                 foreach (DataSet dataSet in e.DataSets)
                 {
                     Console.WriteLine("\tDataSet.Name={0}, DataSetWriterId={1}", dataSet.Name, dataSet.DataSetWriterId);
@@ -168,12 +168,12 @@ namespace SampleSubscriber
             pubSubConnection1.Name = "UADPConection1";
             pubSubConnection1.Enabled = true;
             pubSubConnection1.PublisherId = (UInt16)10;
-            pubSubConnection1.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
+            pubSubConnection1.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.1:4840";
             pubSubConnection1.Address = new ExtensionObject(address);
-            
+
             #region  Define  'Simple' MetaData
             DataSetMetaDataType simpleMetaData = new DataSetMetaDataType();
             simpleMetaData.DataSetClassId = new Uuid(Guid.Empty);
@@ -211,7 +211,7 @@ namespace SampleSubscriber
                         BuiltInType = (byte) DataTypes.DateTime,
                         DataType = DataTypeIds.DateTime,
                         ValueRank = ValueRanks.Scalar
-                    }, 
+                    },
                 };
             simpleMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
             {
@@ -322,7 +322,7 @@ namespace SampleSubscriber
                     BuiltInType = (byte)DataTypes.UInt32,
                     DataType = DataTypeIds.UInt32,
                     ValueRank = ValueRanks.Scalar
-                });              
+                });
             }
             massTestMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
             {
@@ -335,7 +335,7 @@ namespace SampleSubscriber
             ReaderGroupDataType readerGroup1 = new ReaderGroupDataType();
             readerGroup1.Name = "ReaderGroup 1";
             readerGroup1.Enabled = true;
-            readerGroup1.MaxNetworkMessageSize = 1500;       
+            readerGroup1.MaxNetworkMessageSize = 1500;
             readerGroup1.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
             readerGroup1.TransportSettings = new ExtensionObject(new ReaderGroupTransportDataType());
 
@@ -373,7 +373,7 @@ namespace SampleSubscriber
                     OverrideValueHandling = OverrideValueHandling.OverrideValue,
                     OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
                 });
-            }           
+            }
 
             dataSetReaderSimple.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
@@ -403,7 +403,7 @@ namespace SampleSubscriber
             dataSetReaderAllTypes.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
             subscribedDataSet = new TargetVariablesDataType();
             subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach(var fieldMetaData in allTypesMetaData.Fields)
+            foreach (var fieldMetaData in allTypesMetaData.Fields)
             {
                 subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
                 {
@@ -592,7 +592,7 @@ namespace SampleSubscriber
             pubSubConfiguration.Connections = new PubSubConnectionDataTypeCollection()
                 {
                     pubSubConnection1
-                };           
+                };
 
             return pubSubConfiguration;
         }
@@ -608,12 +608,12 @@ namespace SampleSubscriber
             pubSubConnection1.Name = "UADPConection1";
             pubSubConnection1.Enabled = true;
             pubSubConnection1.PublisherId = (UInt16)11;
-            pubSubConnection1.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
+            pubSubConnection1.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.13:4840";
             pubSubConnection1.Address = new ExtensionObject(address);
-            
+
             #region Define 'AllTypes' Metadata
             DataSetMetaDataType allTypesMetaData = new DataSetMetaDataType();
             allTypesMetaData.DataSetClassId = new Uuid(Guid.Empty);
@@ -890,7 +890,7 @@ namespace SampleSubscriber
             dataSetReaderSimple.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
             readerGroup1.DataSetReaders.Add(dataSetReaderSimple);
-           
+
             #endregion
             pubSubConnection1.ReaderGroups.Add(readerGroup1);
 
@@ -939,7 +939,7 @@ namespace SampleSubscriber
 
             dataSetReaderSimple2.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
-            readerGroup2.DataSetReaders.Add(dataSetReaderSimple2);           
+            readerGroup2.DataSetReaders.Add(dataSetReaderSimple2);
             #endregion
             pubSubConnection1.ReaderGroups.Add(readerGroup2);
             //create  pub sub configuration root object
@@ -950,7 +950,7 @@ namespace SampleSubscriber
                 };
 
             return pubSubConfiguration;
-        }        
+        }
         #endregion
 
         #region Private Methods

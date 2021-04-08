@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -11,24 +11,6 @@
 
   <ItemGroup>
     <Compile Include="..\..\..\Include\AssemblyVersionInfo.cs" Link="Properties\AssemblyVersionInfo.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <Reference Include="Softing.Opc.Ua.PubSub">
-      <HintPath>..\..\..\..\bin\net462\Softing.Opc.Ua.PubSub.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
-    <Reference Include="Softing.Opc.Ua.PubSub">
-      <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.PubSub.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <Reference Include="Softing.Opc.Ua.PubSub">
-      <HintPath>..\..\..\..\bin\netstandard2.1\Softing.Opc.Ua.PubSub.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

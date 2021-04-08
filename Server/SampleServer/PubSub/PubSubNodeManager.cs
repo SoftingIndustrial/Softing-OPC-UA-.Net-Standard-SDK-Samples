@@ -10,9 +10,9 @@
 
 using Opc.Ua;
 using Opc.Ua.Server;
-using Softing.Opc.Ua.PubSub;
-using Softing.Opc.Ua.PubSub.Configuration;
-using Softing.Opc.Ua.PubSub.PublishedData;
+using Opc.Ua.PubSub;
+using Opc.Ua.PubSub.Configuration;
+using Opc.Ua.PubSub.PublishedData;
 using Softing.Opc.Ua.Server;
 using System;
 using System.Collections.Generic;
@@ -1002,7 +1002,7 @@ namespace SampleServer.PubSub
             if (configuration != null)
             {
                 //force uadp connection - temporary fix for usage from datafeed client
-                configuration.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
+                configuration.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
                 StatusCode resultStatusCode = m_uaPubSubConfigurator.AddConnection(configuration);
                 if (StatusCode.IsBad(resultStatusCode))
                 {

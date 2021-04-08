@@ -11,8 +11,8 @@
 using System;
 using System.IO;
 using Opc.Ua;
-using Softing.Opc.Ua.PubSub;
-using Softing.Opc.Ua.PubSub.Configuration;
+using Opc.Ua.PubSub;
+using Opc.Ua.PubSub.Configuration;
 
 namespace SamplePublisher
 {
@@ -21,19 +21,19 @@ namespace SamplePublisher
         #region Fields
         private const string SamplePublisherLogFile = "Softing/OpcUaNetStandardToolkit/logs/SamplePublisher.log";
         #endregion
-        
+
         /// <summary>
         /// Entry point for application
         /// </summary>
         static void Main()
         {
-            DataStoreValuesGenerator dataStoreValuesGenerator = null;           
+            DataStoreValuesGenerator dataStoreValuesGenerator = null;
             try
             {
                 LoadTraceLogger();
-                                
+
                 string configurationFileName = "SamplePublisher.Config.xml";
-                
+
                 string[] commandLineArguments = Environment.GetCommandLineArgs();
                 if (commandLineArguments.Length > 1)
                 {
@@ -50,19 +50,19 @@ namespace SamplePublisher
                 using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
                     #region Licensing
-                    LicensingStatus pubSubLicensingStatus = LicensingStatus.Ok;
+                    //LicensingStatus pubSubLicensingStatus = LicensingStatus.Ok;
 
                     // TODO - PubSub binary license activation
                     // Fill in your Server or Client binary license activation keys here
                     // pubSubLicensingStatus = Softing.Opc.Ua.PubSub.License.ActivateLicense(Softing.Opc.Ua.PubSub.LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
                     // pubSubLicensingStatus = Softing.Opc.Ua.PubSub.License.ActivateLicense(Softing.Opc.Ua.PubSub.LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
 
-                    if (pubSubLicensingStatus != Softing.Opc.Ua.PubSub.LicensingStatus.Ok)
-                    {
-                        Console.WriteLine("PubSub license status is: {0}!", pubSubLicensingStatus);
-                        Console.ReadKey();
-                        return;
-                    }
+                    //if (pubSubLicensingStatus != Softing.Opc.Ua.PubSub.LicensingStatus.Ok)
+                    //{
+                    //    Console.WriteLine("PubSub license status is: {0}!", pubSubLicensingStatus);
+                    //    Console.ReadKey();
+                    //    return;
+                    //}
                     #endregion
 
                     // the PubSub application can be also created from an instance of PubSubConfigurationDataType returned by CreateConfiguration() method
@@ -100,7 +100,7 @@ namespace SamplePublisher
                         {
                             // list connection status
                             DisableConfigurationObjectById(uaPubSubApplication.UaPubSubConfigurator);
-                        }                        
+                        }
                         else
                         {
                             PrintCommandParameters();
@@ -120,7 +120,7 @@ namespace SamplePublisher
                 if (dataStoreValuesGenerator != null)
                 {
                     dataStoreValuesGenerator.Dispose();
-                } 
+                }
             }
         }
 
@@ -160,7 +160,7 @@ namespace SamplePublisher
             pubSubConnection1.Name = "UADPConection1";
             pubSubConnection1.Enabled = true;
             pubSubConnection1.PublisherId = (UInt16)10;
-            pubSubConnection1.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
+            pubSubConnection1.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.1:4840";
@@ -179,7 +179,7 @@ namespace SamplePublisher
             {
                 DataSetOrdering = DataSetOrderingType.AscendingWriterId,
                 GroupVersion = 0,
-                NetworkMessageContentMask = (uint) (UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
+                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
                         | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
                         | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber)
             };
@@ -198,7 +198,7 @@ namespace SamplePublisher
             UadpDataSetWriterMessageDataType uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
                 ConfiguredSize = 32,
-                DataSetOffset = 15, 
+                DataSetOffset = 15,
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
@@ -249,7 +249,7 @@ namespace SamplePublisher
             pubSubConnection2.Name = "UADPConection2";
             pubSubConnection2.Enabled = true;
             pubSubConnection2.PublisherId = (UInt64)20;
-            pubSubConnection2.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
+            pubSubConnection2.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
             address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.1:4840";
@@ -367,8 +367,8 @@ namespace SamplePublisher
                         BuiltInType = (byte)DataTypes.DateTime,
                         DataType = DataTypeIds.DateTime,
                         ValueRank = ValueRanks.Scalar
-                    },                    
-                };            
+                    },
+                };
             publishedDataSetSimple.DataSetMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
             {
                 MinorVersion = 1,
@@ -502,7 +502,7 @@ namespace SamplePublisher
                         BuiltInType = (byte)DataTypes.Double,
                         DataType = DataTypeIds.Double,
                         ValueRank = ValueRanks.Scalar
-                    },                    
+                    },
                 };
             publishedDataSetAllTypes.DataSetMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
             {
@@ -587,7 +587,7 @@ namespace SamplePublisher
             pubSubConnection1.Name = "UADPConection1";
             pubSubConnection1.Enabled = true;
             pubSubConnection1.PublisherId = (UInt16)11;
-            pubSubConnection1.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
+            pubSubConnection1.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.13:4840";
@@ -640,7 +640,7 @@ namespace SamplePublisher
             pubSubConnection2.Name = "UADPConection2";
             pubSubConnection2.Enabled = true;
             pubSubConnection2.PublisherId = (UInt64)21;
-            pubSubConnection2.TransportProfileUri = UaPubSubApplication.UadpTransportProfileUri;
+            pubSubConnection2.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
             address = new NetworkAddressUrlDataType();
             address.NetworkInterface = "Ethernet";
             address.Url = "opc.udp://239.0.0.13:4840";
@@ -681,7 +681,7 @@ namespace SamplePublisher
             };
             dataSetWriter11.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
             writerGroup2.DataSetWriters.Add(dataSetWriter11);
-            
+
             pubSubConnection2.WriterGroups.Add(writerGroup2);
             #endregion                        
 
@@ -978,7 +978,7 @@ namespace SamplePublisher
                     Console.WriteLine("\nThe Enable method returned code: {0}\n", result);
                     DisplayConfigurationState(uaPubSubConfigurator);
                     return;
-                }               
+                }
             }
             Console.WriteLine("\nCould not find the object with the specified id: {0}", idStr);
         }

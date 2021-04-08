@@ -70,6 +70,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.PubSub" Version="1.4.366-preview.g1a36c254df" />
     <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Server" Version="1.4.366-preview.g1a36c254df" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
     <PackageReference Include="System.Security.Principal.Windows" Version="4.7.0" />
@@ -83,26 +84,17 @@
     <Reference Include="Softing.Opc.Ua.Server">
       <HintPath>..\..\..\..\bin\net462\Softing.Opc.Ua.Server.dll</HintPath>
     </Reference>
-    <Reference Include="Softing.Opc.Ua.PubSub">
-      <HintPath>..\..\..\..\bin\net462\Softing.Opc.Ua.PubSub.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
     <Reference Include="Softing.Opc.Ua.Server">
       <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.Server.dll</HintPath>
     </Reference>
-    <Reference Include="Softing.Opc.Ua.PubSub">
-      <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.PubSub.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
     <Reference Include="Softing.Opc.Ua.Server">
       <HintPath>..\..\..\..\bin\netstandard2.1\Softing.Opc.Ua.Server.dll</HintPath>
-    </Reference>
-    <Reference Include="Softing.Opc.Ua.PubSub">
-      <HintPath>..\..\..\..\bin\netstandard2.1\Softing.Opc.Ua.PubSub.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -123,5 +115,4 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
 </Project>
