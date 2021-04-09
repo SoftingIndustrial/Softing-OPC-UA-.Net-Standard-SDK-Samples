@@ -49,22 +49,6 @@ namespace SamplePublisher
                 // Create the PubSub application
                 using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
-                    #region Licensing
-                    //LicensingStatus pubSubLicensingStatus = LicensingStatus.Ok;
-
-                    // TODO - PubSub binary license activation
-                    // Fill in your Server or Client binary license activation keys here
-                    // pubSubLicensingStatus = Softing.Opc.Ua.PubSub.License.ActivateLicense(Softing.Opc.Ua.PubSub.LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-                    // pubSubLicensingStatus = Softing.Opc.Ua.PubSub.License.ActivateLicense(Softing.Opc.Ua.PubSub.LicenseFeature.Server, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
-
-                    //if (pubSubLicensingStatus != Softing.Opc.Ua.PubSub.LicensingStatus.Ok)
-                    //{
-                    //    Console.WriteLine("PubSub license status is: {0}!", pubSubLicensingStatus);
-                    //    Console.ReadKey();
-                    //    return;
-                    //}
-                    #endregion
-
                     // the PubSub application can be also created from an instance of PubSubConfigurationDataType returned by CreateConfiguration() method
                     //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration();
                     //using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(pubSubConfiguration)) {
@@ -146,8 +130,6 @@ namespace SamplePublisher
 
             return dataSetWriterSimple;
         }
-
-
 
         /// <summary>
         /// Create a PubSubConfigurationDataType object programmatically
@@ -943,7 +925,6 @@ namespace SamplePublisher
 
             return pubSubConfiguration;
         }
-
 
         #endregion
 

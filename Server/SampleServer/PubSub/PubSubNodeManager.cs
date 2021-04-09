@@ -9,10 +9,10 @@
  * ======================================================================*/
 
 using Opc.Ua;
-using Opc.Ua.Server;
 using Opc.Ua.PubSub;
 using Opc.Ua.PubSub.Configuration;
 using Opc.Ua.PubSub.PublishedData;
+using Opc.Ua.Server;
 using Softing.Opc.Ua.Server;
 using System;
 using System.Collections.Generic;

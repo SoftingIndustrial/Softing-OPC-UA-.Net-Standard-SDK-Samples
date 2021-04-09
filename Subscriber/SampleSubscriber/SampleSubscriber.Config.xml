@@ -17,7 +17,7 @@
         </TypeId>
         <Body>
           <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-            <NetworkInterface>Ethernet</NetworkInterface>
+            <NetworkInterface></NetworkInterface>
             <Url>opc.udp://239.0.0.1:4840</Url>
           </NetworkAddressUrlDataType>
         </Body>
