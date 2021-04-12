@@ -11,6 +11,7 @@
 using Opc.Ua;
 using Opc.Ua.PubSub;
 using Opc.Ua.PubSub.Configuration;
+using Opc.Ua.PubSub.Encoding;
 using Opc.Ua.PubSub.PublishedData;
 using System;
 using System.Collections.Generic;
@@ -120,9 +121,21 @@ namespace SampleSubscriber
         {
             lock (m_lock)
             {
-                Console.WriteLine("Data Arrived from Source={0}, SequenceNumber={1}, DataSet count={2}", e.Source, e.NetworkMessageSequenceNumber, e.DataSets.Count);
-                foreach (DataSet dataSet in e.DataSets)
+
+                if (e.NetworkMessage is UadpNetworkMessage)
                 {
+                    Console.WriteLine("UADP Network message was received from Source={0}, SequenceNumber={1}, DataSet count={2}",
+                            e.Source, ((UadpNetworkMessage)e.NetworkMessage).SequenceNumber, e.NetworkMessage.DataSetMessages.Count);
+                }
+                else if (e.NetworkMessage is JsonNetworkMessage)
+                {
+                    Console.WriteLine("JSON Network message was received from Source={0}, MessageId={1}, DataSet count={2}",
+                            e.Source, ((JsonNetworkMessage)e.NetworkMessage).MessageId, e.NetworkMessage.DataSetMessages.Count);
+                }
+
+                foreach (UaDataSetMessage dataSetMessage in e.NetworkMessage.DataSetMessages)
+                {
+                    DataSet dataSet = dataSetMessage.DataSet;
                     Console.WriteLine("\tDataSet.Name={0}, DataSetWriterId={1}", dataSet.Name, dataSet.DataSetWriterId);
                     for (int i = 0; i < dataSet.Fields.Length; i++)
                     {

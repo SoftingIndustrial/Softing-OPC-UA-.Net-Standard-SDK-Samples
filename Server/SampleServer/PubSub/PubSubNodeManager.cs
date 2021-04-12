@@ -696,9 +696,9 @@ namespace SampleServer.PubSub
         /// <param name="e"></param>
         private void PubSubApplication_DataReceived(object sender, SubscribedDataEventArgs e)
         {
-            foreach(DataSet dataSet in e.DataSets)
+            foreach(UaDataSetMessage dataSetMessage in e.NetworkMessage.DataSetMessages)
             {
-                foreach(Field field in dataSet.Fields)
+                foreach(Field field in dataSetMessage.DataSet.Fields)
                 {
                     ((UaPubSubApplication)sender).DataStore.WritePublishedDataItem(field.TargetNodeId, field.TargetAttribute, field.Value);                    
                 }
