@@ -117,8 +117,6 @@ namespace SampleSubscriber
         /// <summary>
         /// Handle <see cref="UaPubSubApplication.DataReceived"/> event
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private static void PubSubApplication_DataReceived(object sender, SubscribedDataEventArgs e)
         {
             lock (m_lock)

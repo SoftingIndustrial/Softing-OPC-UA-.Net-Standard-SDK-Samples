@@ -45,7 +45,7 @@ namespace SamplePublisher
                     }
                 }
 
-                //var config = CreateConfiguration_MqttJson();
+                //var config = CreateConfiguration_UdpUadp();
                 //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
 
                 // Create the PubSub application
