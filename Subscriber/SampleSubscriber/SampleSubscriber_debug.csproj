@@ -28,6 +28,15 @@
 <None Update="SampleSubscriber.Config.xml">
 <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 </None>
+<None Update="SampleSubscriber_MQTT_JSON.Config.xml">
+  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
+<None Update="SampleSubscriber_UDP_UADP.AllTypes.Config.xml">
+  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
+<None Update="SampleSubscriber_UDP_UADP.Config.xml">
+  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
 </ItemGroup>
 
 </Project>
