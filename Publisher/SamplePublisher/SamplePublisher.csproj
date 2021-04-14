@@ -18,10 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="SamplePublisher.AllTypes.Config.xml">
+    <None Update="SamplePublisher_MQTT_JSON.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SamplePublisher.Config.xml">
+    <None Update="SamplePublisher_UDP_UADP.AllTypes.Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SamplePublisher_UDP_UADP.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
