@@ -55,7 +55,7 @@ namespace SamplePublisher
                     //PubSubConfigurationDataType pubSubConfiguration = CreateConfigurationAllDataTypes_UdpUadp();
                     //using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(pubSubConfiguration)){
 
-                    // Start publishing data 
+                    // Start values simulator
                     dataStoreValuesGenerator = new DataStoreValuesGenerator(uaPubSubApplication);
                     dataStoreValuesGenerator.Start();
 
