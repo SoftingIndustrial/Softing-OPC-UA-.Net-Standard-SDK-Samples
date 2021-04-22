@@ -102,7 +102,7 @@ namespace SampleServer.HistoricalDataAccess
             }
             catch (Exception ex)
             {
-                Utils.Trace(Utils.TraceMasks.Error, "HistoricalAccess.HistoricalDataAccess.SampleHDANodeManager.CreateAddressSpace", ex);
+                Utils.Trace(ex, "HistoricalAccess.HistoricalDataAccess.SampleHDANodeManager.CreateAddressSpace");
                 throw;
             }
         }

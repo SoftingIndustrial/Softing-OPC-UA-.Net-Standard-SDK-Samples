@@ -108,7 +108,7 @@ namespace SampleServer.NodeSetImport
                 }
                 catch (Exception ex)
                 {
-                    Utils.Trace(Utils.TraceMasks.Error, "NodeSetImportNodeManager.CreateAddressSpace", "Error adding methods:", ex.Message);
+                    Utils.Trace(ex, "NodeSetImportNodeManager.CreateAddressSpace: Error adding methods:");
                 }
             }
         }
@@ -177,7 +177,7 @@ namespace SampleServer.NodeSetImport
             }
             catch (Exception ex)
             {
-                Utils.Trace(Utils.TraceMasks.Error, "NodeSetImportNodeManager.Import", "Error loading node set: {0}", ex.Message);
+                Utils.Trace(ex, "NodeSetImportNodeManager.Import: Error loading node set");
                 throw new ServiceResultException(ex, StatusCodes.Bad);
             }
 

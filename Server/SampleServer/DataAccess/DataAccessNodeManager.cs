@@ -224,7 +224,7 @@ namespace SampleServer.DataAccess
             }
             catch (Exception e)
             {
-                Utils.Trace(Utils.TraceMasks.Error, "DataAccess.DataAccessNodeManager.DoSimulation", "Unexpected error doing simulation.", e);
+                Utils.Trace(e, "DataAccess.DataAccessNodeManager.DoSimulation: Unexpected error doing simulation.");
             }
         }
 

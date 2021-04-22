@@ -114,7 +114,7 @@ namespace SampleServer
         /// </remarks>
         protected override MasterNodeManager CreateMasterNodeManager(IServerInternal server, ApplicationConfiguration configuration)
         {
-            Utils.Trace(Utils.TraceMasks.Information, "SampleServer.CreateMasterNodeManager", "Creating the Node Managers.");
+            Utils.Trace(Utils.TraceMasks.Information, "SampleServer.CreateMasterNodeManager: Creating the Node Managers.");
 
             List<INodeManager> nodeManagers = new List<INodeManager>();
             // add RolesNodeManager to support Role based permission handling in this server

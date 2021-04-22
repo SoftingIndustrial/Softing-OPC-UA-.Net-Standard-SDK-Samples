@@ -70,7 +70,7 @@ namespace SampleServer.HistoricalDataAccess
             }
             catch(Exception ex)
             {
-                Utils.Trace(Utils.TraceMasks.Error, "HistoricalAccess.HistoricalDataAccess.SampleHDANodeManager.CreateAddressSpace", ex);
+                Utils.Trace(ex, "HistoricalAccess.HistoricalDataAccess.SampleHDANodeManager.CreateAddressSpace");
                 throw;
             }
         }
@@ -184,7 +184,8 @@ namespace SampleServer.HistoricalDataAccess
             }
             catch(Exception ex)
             {
-                Utils.Trace(Utils.TraceMasks.Error, "HistoricalAccess.HistoricalDataAccess.SampleHDANodeManager.DoSimulation", "Unexpected error during simulation", ex);
+                Utils.Trace(ex, 
+                    "HistoricalAccess.HistoricalDataAccess.SampleHDANodeManager.DoSimulation: Unexpected error during simulation");
             }
         }
         #endregion

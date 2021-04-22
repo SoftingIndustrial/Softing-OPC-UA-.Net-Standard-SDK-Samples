@@ -1784,7 +1784,7 @@ namespace SampleServer.ReferenceServer
             }
             catch (Exception ex)
             {
-                Utils.Trace(Utils.TraceMasks.Error, "ReferenceNodeManager.Import", "Error loading node set: {0}", ex.Message);
+                Utils.Trace(ex, "ReferenceNodeManager.Import: Error loading node set");
                 throw new ServiceResultException(ex, StatusCodes.Bad);
             }
 

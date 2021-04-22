@@ -532,7 +532,9 @@ namespace SampleServer.HistoricalDataAccess
             }
             catch (Exception e)
             {
-                Utils.Trace(Utils.TraceMasks.Error, "HistoricalAccess.HistoricalDataAccess.DataFileReader.ExtractField", string.Format("PARSE ERROR [Line:{0}] - '{1}': {2}", lineCount, field, e.Message));
+                Utils.Trace(Utils.TraceMasks.Error, 
+                    "HistoricalAccess.HistoricalDataAccess.DataFileReader.ExtractField: PARSE ERROR [Line:{0}] - '{1}': {2}", 
+                    lineCount, field, e.Message);
                 return false;
             }
 
@@ -606,7 +608,9 @@ namespace SampleServer.HistoricalDataAccess
             }
             catch (Exception e)
             {
-                Utils.Trace(Utils.TraceMasks.Error, "HistoricalAccess.HistoricalDataAccess.DataFileReader.ExtractField", string.Format("PARSE ERROR [Line:{0}] - '{1}': {2}", lineCount, field, e.Message));
+                Utils.Trace(Utils.TraceMasks.Error,
+                    "HistoricalAccess.HistoricalDataAccess.DataFileReader.ExtractField: PARSE ERROR [Line:{0}] - '{1}': {2}", 
+                    lineCount, field, e.Message);
                 return false;
             }
 
@@ -648,7 +652,9 @@ namespace SampleServer.HistoricalDataAccess
             }
             catch (Exception e)
             {
-                Utils.Trace(Utils.TraceMasks.Error, "HistoricalAccess.HistoricalDataAccess.DataFileReader.ExtractField", string.Format("PARSE ERROR [Line:{0}] - '{1}': {2}", lineCount, field, e.Message));
+                Utils.Trace(Utils.TraceMasks.Error, 
+                    "HistoricalAccess.HistoricalDataAccess.DataFileReader.ExtractField: PARSE ERROR [Line:{0}] - '{1}': {2}", 
+                    lineCount, field, e.Message);
                 return false;
             }
 

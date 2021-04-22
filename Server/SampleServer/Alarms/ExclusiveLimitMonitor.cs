@@ -273,7 +273,7 @@ namespace SampleServer.Alarms
             }
             catch (Exception exception)
             {
-                Utils.Trace(Utils.TraceMasks.Error, "Alarms.ExclusiveLimitMonitor.ProcessVariableChanged", "Unexpected error processing value changed notification.", exception);
+                Utils.Trace(exception, "Alarms.ExclusiveLimitMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
         }
 

@@ -100,7 +100,7 @@ namespace SamplePublisher
             }
             catch (Exception e)
             {
-                Utils.Trace(Utils.TraceMasks.Error, "SamplePublisher.DataStoreValuesGenerator.LoadInitialData wrong field: {0}", e.StackTrace);
+                Utils.Trace(e, "SamplePublisher.DataStoreValuesGenerator.LoadInitialData");
             }
 
             m_updateValuesTimer = new Timer(UpdateValues, null, 1000, 1000);

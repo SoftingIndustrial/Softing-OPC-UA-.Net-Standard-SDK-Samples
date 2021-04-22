@@ -514,12 +514,14 @@ namespace SampleClient.Samples
                 if (applications.Length > 0)
                 {
                     NodeId applicationId = ((ApplicationRecordDataType)applications.GetValue(0)).ApplicationId;
-                    Utils.Trace(TraceMasks.Information, String.Format("ApplicationUri: {0} was registered with id: {1}.", applicationDescription.ApplicationUri, applicationId));
+                    Utils.Trace(TraceMasks.Information, 
+                        "ApplicationUri: {0} was registered with id: {1}.", 
+                        applicationDescription.ApplicationUri, applicationId);
                     return applicationId;
                 }
             }
 
-            Utils.Trace(TraceMasks.Information, String.Format("Register ApplicationUri: {0}.", applicationDescription.ApplicationUri));
+            Utils.Trace(TraceMasks.Information, "Register ApplicationUri: {0}.", applicationDescription.ApplicationUri);
             // register application because it was not registered yet
             List<object> inputArgumentsRegisterApplication = new List<object>() {
                 new ApplicationRecordDataType
@@ -541,7 +543,9 @@ namespace SampleClient.Samples
             if (outputArgumentsRegisterApplication != null && outputArgumentsRegisterApplication.Count > 0)
             {
                 NodeId applicationId = outputArgumentsRegisterApplication[0] as NodeId;
-                Utils.Trace(TraceMasks.Information, String.Format("ApplicationUri: {0} was registered with id: {1}.", applicationDescription.ApplicationUri, applicationId));
+                Utils.Trace(TraceMasks.Information, 
+                    "ApplicationUri: {0} was registered with id: {1}.", 
+                    applicationDescription.ApplicationUri, applicationId);
                 return applicationId;
             }
 
