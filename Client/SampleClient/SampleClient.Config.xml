@@ -196,7 +196,7 @@
     <!-- Show Only Security, Service Calls, Errors and Trace -->
     <!-- <TraceMasks>523</TraceMasks> -->
     <!-- Show Only Security, ServiceResultExceptions, Errors and Trace -->
-   <TraceMasks>519</TraceMasks>
+   <TraceMasks>1</TraceMasks>
   </TraceConfiguration>
   <!-- Enables the hi-res clock for the process to allows for shorter (<100ms) publishing and sampling intervals. -->
   <!-- QueryPerformanceCounter does not work on all multi-core machines so enabling the hi-res clock by default is not recommended. -->

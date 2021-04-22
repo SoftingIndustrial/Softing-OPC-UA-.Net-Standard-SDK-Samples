@@ -115,7 +115,7 @@ namespace SampleClient.Samples
             NodeId methodId = new NodeId("ns=5;i=11");
 
             /*initialize input arguments*/       
-            // initialize array of RefrigeratorStateenum
+            // initialize array of RefrigeratorState enum
             EnumValue[] refrigeratorStateArray = m_session.GetDefaultValueForDatatype(new NodeId("ns=13;i=15002"), ValueRanks.OneDimension, 3) as EnumValue[];           
 
             Console.WriteLine("\nMethod '{0}' is called with the following arguments:", methodPath);
