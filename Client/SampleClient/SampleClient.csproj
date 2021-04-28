@@ -49,7 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.4.366-preview.gd8f78d0a59" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.4.366.23-preview" />
   </ItemGroup>
 
   <!--<ItemGroup>
