@@ -39,7 +39,7 @@ namespace XamarinSampleClient.Helpers
                 {
                         //Create the UaApplication object from config file
                         UaApplication = UaApplication.Create(CreateAplicationConfiguration()).Result;
-                });
+                }).ConfigureAwait(false);
 
                 //Subscribe to certificate validation error event
                 UaApplication.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);

@@ -112,7 +112,7 @@ namespace SampleClient.Samples
                 // the method will return all the registered server applications from the specified machine.
                 // if the "discoveryUrl" parameter is null or empty, DiscoverServersAsync() will return the servers from the local machine.
                 // use the default discovery url of the local machine
-                IList<ApplicationDescription> appDescriptions = await m_application.DiscoverServersAsync(discoveryUrl);
+                IList<ApplicationDescription> appDescriptions = await m_application.DiscoverServersAsync(discoveryUrl).ConfigureAwait(false);
                 Console.WriteLine("DiscoverServersAsync returned {0} results:", appDescriptions.Count);
 
                 foreach (var applicationDescription in appDescriptions)
@@ -128,7 +128,7 @@ namespace SampleClient.Samples
                         // retrieve available endpoints for each registered server and display their information.
                         Console.WriteLine("\r\nGet available endpoints for server: {0} ...", applicationDescription.ApplicationUri);
                         string serverDiscoveryUrl = applicationDescription.DiscoveryUrls[0];
-                        IList<EndpointDescriptionEx> endpoins = await m_application.GetEndpointsAsync(serverDiscoveryUrl);
+                        IList<EndpointDescriptionEx> endpoins = await m_application.GetEndpointsAsync(serverDiscoveryUrl).ConfigureAwait(false);
 
                         Console.WriteLine("Server: {0} returned {1} available endpoints:", serverDiscoveryUrl, endpoins.Count);
 
@@ -226,7 +226,7 @@ namespace SampleClient.Samples
                 // The method will return all the registered server applications from the local network.
                 // DiscoverServersOnNetworkAsync service is supported only by LDS-ME installations.
                 // If the "discoveryUrl" parameter is null or empty, DiscoverServersOnNetworkAsync() will be invoked on the local machine.
-                var serversOnNetwork = await m_application.DiscoverServersOnNetworkAsync(null);
+                var serversOnNetwork = await m_application.DiscoverServersOnNetworkAsync(null).ConfigureAwait(false);
 
                 Console.WriteLine("DiscoverServersOnNetwork returned {0} results:", serversOnNetwork.Count);
 
@@ -249,7 +249,7 @@ namespace SampleClient.Samples
                         // retrieve available endpoints for each registered server and display their information.
                         string serverDiscoveryUrl = serverOnNetwork.DiscoveryUrl;
                         Console.WriteLine("\r\nGet available endpoints for : {0} ...", serverDiscoveryUrl);
-                        var endpoins = await m_application.GetEndpointsAsync(serverDiscoveryUrl);
+                        var endpoins = await m_application.GetEndpointsAsync(serverDiscoveryUrl).ConfigureAwait(false);
 
                         Console.WriteLine("Server: {0} returned {1} available endpoints:", serverOnNetwork.ServerName,
                             endpoins.Count);

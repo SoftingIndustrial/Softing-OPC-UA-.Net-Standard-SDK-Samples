@@ -102,7 +102,7 @@ namespace XamarinSampleClient.ViewModels
 
             try
             {              
-                await SampleApplication.InitializeUaApplication();
+                await SampleApplication.InitializeUaApplication().ConfigureAwait(false);
 
                 LicensingStatus result = LicensingStatus.Ok;
 

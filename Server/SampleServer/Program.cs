@@ -56,7 +56,7 @@ namespace SampleServer
                 }
 
                 // Start the server
-                await sampleServer.Start(configurationFile);
+                await sampleServer.Start(configurationFile).ConfigureAwait(false);
 
                 PrintServerInformation(sampleServer);
 

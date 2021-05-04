@@ -234,7 +234,7 @@ namespace SampleClient.Samples
                 session.StateChanged += AsyncSessionStateChanged;
 
                 Console.WriteLine("\nTrigger session.ConnectAsync for session {0}...", session.SessionName);
-                await session.ConnectAsync(false, true);                
+                await session.ConnectAsync(false, true).ConfigureAwait(false);                
             }
             catch (Exception ex)
             {
