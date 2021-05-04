@@ -606,22 +606,14 @@ namespace SampleClient.Samples
 
                 //display information for read value
                 Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
-                ExtensionObject extensionObjectValue = dataValue.Value as ExtensionObject;
-                if (extensionObjectValue != null)
+                OptionSetValue optionSetValue = dataValue.ProcessedValue as OptionSetValue;
+                if (optionSetValue != null)
                 {
-                    OptionSetValue optionSetValue = extensionObjectValue.Body as OptionSetValue;
-                    if (optionSetValue != null)
-                    {
-                        Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomOptionSetNodeId, optionSetValue.TypeName.Name, optionSetValue);
-                    }
-                    else
-                    {
-                        Console.WriteLine("  The Value of NodeId {0} cannot be decoded as an OptionSetValue instance ", StaticCustomOptionSetNodeId);
-                    }
+                    Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomOptionSetNodeId, optionSetValue.TypeName.Name, optionSetValue);
                 }
                 else
                 {
-                    Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomOptionSetNodeId);
+                    Console.WriteLine("  The Value of NodeId {0} cannot be decoded as an OptionSetValue instance ", StaticCustomOptionSetNodeId);
                 }
 
                 // read value for array node
@@ -639,7 +631,7 @@ namespace SampleClient.Samples
                     Console.Write("  The Value of NodeId {0} is an OptionSetValue[{1}]:", StaticCustomOptionSetArrayNodeId, extensionObjectValueArray.Length);
                     foreach (var extensionObject in extensionObjectValueArray)
                     {
-                        OptionSetValue optionSetValue = extensionObject.Body as OptionSetValue;
+                        optionSetValue = extensionObject.Body as OptionSetValue;
                         Console.Write("{0}, ", optionSetValue);
                     }
                     Console.WriteLine();
@@ -679,23 +671,15 @@ namespace SampleClient.Samples
 
                 //display information for read value
                 Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
-                ExtensionObject extensionObjectValue = dataValue.Value as ExtensionObject;
-                if (extensionObjectValue != null)
+                OptionalFieldsStructuredValue optionalFieldsStructuredValue = dataValue.ProcessedValue as OptionalFieldsStructuredValue;
+                if (optionalFieldsStructuredValue != null)
                 {
-                    OptionalFieldsStructuredValue optionalFieldsStructuredValue = extensionObjectValue.Body as OptionalFieldsStructuredValue;
-                    if (optionalFieldsStructuredValue != null)
-                    {
-                        Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomStructureWithOptionalFieldsNodeId, optionalFieldsStructuredValue.TypeName.Name, optionalFieldsStructuredValue);
-                    }
-                    else
-                    {
-                        Console.WriteLine("  The Value of NodeId {0} cannot be decoded as an OptionalFieldsStructuredValue instance ", StaticCustomStructureWithOptionalFieldsNodeId);
-                    }
+                    Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomStructureWithOptionalFieldsNodeId, optionalFieldsStructuredValue.TypeName.Name, optionalFieldsStructuredValue);
                 }
                 else
                 {
-                    Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomStructureWithOptionalFieldsNodeId);
-                }
+                    Console.WriteLine("  The Value of NodeId {0} cannot be decoded as an OptionalFieldsStructuredValue instance ", StaticCustomStructureWithOptionalFieldsNodeId);
+                }                
 
                 // read value for array node
                 readValueId.NodeId = StaticCustomStructureWithOptionalFieldsArrayNodeId;
@@ -712,7 +696,7 @@ namespace SampleClient.Samples
                     Console.Write("  The Value of NodeId {0} is an OptionalFieldsStructuredValue[{1}]:", StaticCustomStructureWithOptionalFieldsNodeId, extensionObjectValueArray.Length);
                     foreach (var extensionObject in extensionObjectValueArray)
                     {
-                        OptionalFieldsStructuredValue optionalFieldsStructuredValue = extensionObject.Body as OptionalFieldsStructuredValue;
+                        optionalFieldsStructuredValue = extensionObject.Body as OptionalFieldsStructuredValue;
                         Console.Write("{0}, ", optionalFieldsStructuredValue);
                     }
                     Console.WriteLine();
@@ -752,22 +736,14 @@ namespace SampleClient.Samples
 
                 //display information for read value
                 Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
-                ExtensionObject extensionObjectValue = dataValue.Value as ExtensionObject;
-                if (extensionObjectValue != null)
+                UnionStructuredValue unionStructuredValue = dataValue.ProcessedValue as UnionStructuredValue;
+                if (unionStructuredValue != null)
                 {
-                    UnionStructuredValue unionStructuredValue = extensionObjectValue.Body as UnionStructuredValue;
-                    if (unionStructuredValue != null)
-                    {
-                        Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomUnionNodeId, unionStructuredValue.TypeName.Name, unionStructuredValue);
-                    }
-                    else
-                    {
-                        Console.WriteLine("  The Value of NodeId {0} cannot be decoded as a UnionStructuredValue instance ", StaticCustomUnionNodeId);
-                    }
+                    Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomUnionNodeId, unionStructuredValue.TypeName.Name, unionStructuredValue);
                 }
                 else
                 {
-                    Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomUnionNodeId);
+                    Console.WriteLine("  The Value of NodeId {0} cannot be decoded as a UnionStructuredValue instance ", StaticCustomUnionNodeId);
                 }
 
                 // read value for array node
@@ -785,7 +761,7 @@ namespace SampleClient.Samples
                     Console.Write("  The Value of NodeId {0} is a UnionStructuredValue[{1}]:", StaticCustomUnionArrayNodeId, extensionObjectValueArray.Length);
                     foreach (var extensionObject in extensionObjectValueArray)
                     {
-                        UnionStructuredValue unionStructuredValue = extensionObject.Body as UnionStructuredValue;
+                        unionStructuredValue = extensionObject.Body as UnionStructuredValue;
                         if (unionStructuredValue != null)
                         {
                             Console.Write("{0}, ", unionStructuredValue);
@@ -828,18 +804,14 @@ namespace SampleClient.Samples
 
                 //display information for read value
                 Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
-                ExtensionObject extensionObjectValue = dataValue.Value as ExtensionObject;
-                if (extensionObjectValue != null)
+                StructuredValue structuredValue = dataValue.ProcessedValue as StructuredValue;
+                if (structuredValue != null)
                 {
-                    StructuredValue structuredValue = extensionObjectValue.Body as StructuredValue;
-                    if (structuredValue != null)
-                    {
-                        Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomStructuredValueNodeId, structuredValue.TypeName.Name, structuredValue);
-                    }
+                    Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}", StaticCustomStructuredValueNodeId, structuredValue.TypeName.Name, structuredValue);
                 }
                 else
                 {
-                    Console.WriteLine("  The Value of NodeId {0} is null", StaticCustomStructuredValueNodeId);
+                    Console.WriteLine("  The Value of NodeId {0} is not an instance of StructuredValue.", StaticCustomStructuredValueNodeId);
                 }
 
                 // read value for array node
@@ -857,7 +829,7 @@ namespace SampleClient.Samples
                     Console.WriteLine("  The Value of NodeId {0} is a StructuredValue[{1}]:", StaticCustomStructuredValueArrayNodeId, extensionObjectValueArray.Length);
                     foreach (var extensionObject in extensionObjectValueArray)
                     {
-                        StructuredValue structuredValue = extensionObject.Body as StructuredValue;
+                        structuredValue = extensionObject.Body as StructuredValue;
                         Console.WriteLine("      {0}, ", structuredValue);
                     }
                 }
