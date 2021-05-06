@@ -1730,15 +1730,23 @@ namespace SampleClient.Samples
                 Console.WriteLine("Session is connected.");
 
                 //wait until custom data types are loaded
-                if (m_application.ClientToolkitConfiguration.DecodeCustomDataTypes || m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries)
+                if (m_application.ClientToolkitConfiguration.DecodeCustomDataTypes)
                 {
-                    //wait until all data types are loaded (data type definitions and dictionaries)
-                    while (!m_session.TypeDictionariesLoaded && !m_session.DataTypeDefinitionsLoaded)
+                    //wait until all data type definitions are loaded
+                    while (!m_session.DataTypeDefinitionsLoaded)
                     {
                         Task.Delay(500).Wait();
                     }
                 }
-                Console.WriteLine("Session - TypeDictionariesLoaded.");
+                if (m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries)
+                {
+                    //wait until all data types dictionaries are loaded 
+                    while (!m_session.TypeDictionariesLoaded)
+                    {
+                        Task.Delay(500).Wait();
+                    }
+                }
+                Console.WriteLine("Session - Custom Data Types information is loaded.");
             }
             catch (Exception ex)
             {
