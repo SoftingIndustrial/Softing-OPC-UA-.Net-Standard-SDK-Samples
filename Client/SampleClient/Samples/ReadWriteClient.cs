@@ -781,7 +781,7 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
-        /// Read value of variable nodes created with custom StructuredValyue data types  
+        /// Read value of variable nodes created with custom StructuredValue data types  
         /// </summary>
         public void ReadValuesForCustomStructuredValueDataType()
         {
