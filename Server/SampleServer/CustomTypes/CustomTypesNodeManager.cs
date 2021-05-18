@@ -229,6 +229,87 @@ namespace SampleServer.CustomTypes
                 // create matrix value
                 vehicleMatrixVariable.Value = GetDefaultValueForDatatype(vehicleType.NodeId, ValueRanks.OneOrMoreDimensions, 0, new int[] { 1, 2, 3 });
 
+                #region create custom data type that has fileds with various ValueRanks 
+                // define the StructureDefinition
+                StructureDefinition simpleStructure = new StructureDefinition();
+                simpleStructure.Fields = new StructureFieldCollection() {
+                    new StructureField() { Name = "EngineStateScalar", DataType = engineStateType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
+                    new StructureField() { Name = "EngineStateOneDimension", DataType = engineStateType.NodeId, IsOptional = false, ValueRank = ValueRanks.OneDimension,
+                            ArrayDimensions = new UInt32Collection(){5 } },
+                    new StructureField() { Name = "EngineState2D", DataType = engineStateType.NodeId, IsOptional = false, ValueRank = ValueRanks.TwoDimensions,
+                            ArrayDimensions = new UInt32Collection(){5, 5 } },
+                    new StructureField() { Name = "FeaturesOptionSetScalar", DataType = featuresOptionSetType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
+                    new StructureField() { Name = "FeaturesOptionSetOneDimension", DataType = featuresOptionSetType.NodeId, IsOptional = false, ValueRank = ValueRanks.OneDimension,
+                            ArrayDimensions = new UInt32Collection(){5 } },
+                    new StructureField() { Name = "FeaturesOptionSet2D", DataType = featuresOptionSetType.NodeId, IsOptional = false, ValueRank = ValueRanks.TwoDimensions,
+                            ArrayDimensions = new UInt32Collection(){5, 5 } },
+                    new StructureField() { Name = "VehicleScalar", DataType = vehicleType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
+                    new StructureField() { Name = "VehicleOneDimension", DataType = vehicleType.NodeId, IsOptional = false, ValueRank = ValueRanks.OneDimension,
+                            ArrayDimensions = new UInt32Collection(){5 } },
+                    new StructureField() { Name = "Vehicle2D", DataType = vehicleType.NodeId, IsOptional = false, ValueRank = ValueRanks.TwoDimensions,
+                            ArrayDimensions = new UInt32Collection(){5, 5 } },                   
+                    new StructureField() { Name = "OwnerDetailsScalar", DataType = ownerType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
+                    new StructureField() { Name = "OwnerDetailsOneDimension", DataType = ownerType.NodeId, IsOptional = false, ValueRank = ValueRanks.OneDimension,
+                            ArrayDimensions = new UInt32Collection(){5 } },
+                    new StructureField() { Name = "OwnerDetails2D", DataType = ownerType.NodeId, IsOptional = false, ValueRank = ValueRanks.TwoDimensions,
+                            ArrayDimensions = new UInt32Collection(){5, 5 } },
+                    new StructureField() { Name = "FuelLevelScalar", DataType = fuelLevelDetailsType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
+                    new StructureField() { Name = "FuelLevelOneDimension", DataType = fuelLevelDetailsType.NodeId, IsOptional = false, ValueRank = ValueRanks.OneDimension,
+                            ArrayDimensions = new UInt32Collection(){5 } },
+                    new StructureField() { Name = "FuelLevel2D", DataType = fuelLevelDetailsType.NodeId, IsOptional = false, ValueRank = ValueRanks.TwoDimensions,
+                            ArrayDimensions = new UInt32Collection(){5, 5 } },
+
+                };
+                
+                // create the data type
+                var structureWithValueRanksType = CreateDataType(DataTypeIds.Structure, "StructureWithValueRanksType", simpleStructure);
+                
+                // create an instance of new data type
+                StructuredValue simpleStructureValue = GetDefaultValueForDatatype(structureWithValueRanksType.NodeId) as StructuredValue;
+                if (simpleStructureValue != null)
+                {               
+                    EnumValue[] enumValues = (EnumValue[])simpleStructureValue["EngineStateOneDimension"];
+                    for (int i = 0; i < enumValues.Length; i++)
+                    {
+                        int intvalue = i % enumValues[i].ValueStrings.Count;
+                        enumValues[i].ValueString = enumValues[i].ValueStrings[intvalue];
+                    }
+
+                    enumValues = ((Matrix)simpleStructureValue["EngineState2D"]).Elements as EnumValue[];
+                    for (int i = 0; i < enumValues.Length; i++)
+                    {
+                        int intvalue = i % enumValues[i].ValueStrings.Count;
+                        enumValues[i].ValueString = enumValues[i].ValueStrings[intvalue];
+                    }
+
+                    // set field values for the StructuredValue object
+                    ((UnionStructuredValue)simpleStructureValue["FuelLevelScalar"]).SwitchFieldPosition = 1;
+                    ((UnionStructuredValue)simpleStructureValue["FuelLevelScalar"]).Fields[0].Value = false;
+
+                    UnionStructuredValue[] unionStructuredValues = (UnionStructuredValue[])simpleStructureValue["FuelLevelOneDimension"];
+                    for (int i = 0; i < unionStructuredValues.Length; i++)
+                    {
+                        uint position = (uint)(i % unionStructuredValues[i].Fields.Count);
+                        unionStructuredValues[i].SwitchFieldPosition = position + 1;
+                        unionStructuredValues[i].Fields[(int)position].Value = Convert.ChangeType(i, unionStructuredValues[i].Fields[(int)position].Value.GetType());
+                    }
+
+                    unionStructuredValues = ((Matrix)simpleStructureValue["FuelLevel2D"]).Elements as UnionStructuredValue[];
+                    for (int i = 0; i < unionStructuredValues.Length; i++)
+                    {
+                        uint position = (uint)(i % unionStructuredValues[i].Fields.Count);
+                        unionStructuredValues[i].SwitchFieldPosition = position + 1;
+                        unionStructuredValues[i].Fields[(int)position].Value = Convert.ChangeType(i, unionStructuredValues[i].Fields[(int)position].Value.GetType());
+                    }
+
+                }
+
+                // create a variable with the new data type
+                BaseDataVariableState simpleStructureVariable = CreateVariable(m_rootCustomTypesFolder, "StructureWithValueRanks", structureWithValueRanksType.NodeId);
+
+                // set the Value of the variable ty4o the StructureValue that was created and modified
+                simpleStructureVariable.Value = simpleStructureValue;
+                #endregion
                 #endregion
 
                 #region Create custom VariableType nodes and Variable instances
