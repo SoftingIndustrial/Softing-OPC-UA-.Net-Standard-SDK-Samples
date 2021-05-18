@@ -12,7 +12,6 @@ using System;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
 using SampleClient.StateMachine;
-using System.Text;
 
 namespace SampleClient
 {
@@ -37,7 +36,7 @@ namespace SampleClient
                 ServerUrl = sampleClientConfiguration.ServerUrl;
                 ServerUrlHttps = sampleClientConfiguration.ServerUrlHttps;
             }
-            
+
             // Subscribe to certificate validation error event
             application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);
 
@@ -72,7 +71,7 @@ namespace SampleClient
         /// <param name="validator"></param>
         /// <param name="e"></param>
         public static void CertificateValidator_CertificateValidation(CertificateValidator validator, CertificateValidationEventArgs e)
-        {           
+        {
             // display certificate info
             Console.WriteLine("Certificate could not be validated!");
             Console.WriteLine("Subject: {0}", e.Certificate.Subject);
@@ -83,11 +82,11 @@ namespace SampleClient
             Console.WriteLine("Validation error(s): ");
 
             // intialize the value for e.AcceptAll with true. This means that all status codes are accepted.
-            bool isCertificateAccepted = true;      
+            bool isCertificateAccepted = true;
 
             // Implement the logic that decides if the certificate can be accepted or not and set isCertificateAccepted flag accordingly.
             // The certificate can be retrieved from the e.Certificate field. 
-            ServiceResult error = e.Error;            
+            ServiceResult error = e.Error;
             while (error != null)
             {
                 Console.WriteLine(error);
@@ -96,7 +95,7 @@ namespace SampleClient
 
                 // move to InnerResult
                 error = error.InnerResult;
-            } 
+            }
 
             if (isCertificateAccepted)
             {
