@@ -15,11 +15,16 @@ using System.Data;
 
 namespace SampleServer.HistoricalDataAccess
 {
+    
     /// <summary>
     /// Stores the metadata for a node representing an item in the archive.
     /// </summary>
     public class ArchiveItemState : DataItemState
     {
+        #region Constants
+        private const int kMaxNrOfHostoricalRows = 1000;
+        #endregion
+
         #region Private Members
 
         private readonly ArchiveItem m_archiveItem;
@@ -824,6 +829,13 @@ namespace SampleServer.HistoricalDataAccess
                 m_archiveItem.DataSet.Tables[0].Rows.Add(row);
                 m_patternIndex = (m_patternIndex + 1) % m_pattern.Count;
             }
+            
+            int nrOfRows = m_archiveItem.DataSet.Tables[0].Rows.Count;
+            while (nrOfRows > kMaxNrOfHostoricalRows)
+            {
+                m_archiveItem.DataSet.Tables[0].Rows.RemoveAt(0);
+                nrOfRows = m_archiveItem.DataSet.Tables[0].Rows.Count;
+            }   
 
             m_archiveItem.DataSet.AcceptChanges();
             return newSamples;
