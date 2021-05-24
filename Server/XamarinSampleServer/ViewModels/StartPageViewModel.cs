@@ -260,16 +260,23 @@ namespace XamarinSampleServer.ViewModels
 
             m_connectedSessions.Clear();
             if (m_sampleServer != null)
-            {               
-                IList<Opc.Ua.Server.Session> sessions = m_sampleServer.CurrentInstance.SessionManager.GetSessions();
-                IList<Opc.Ua.Server.Subscription> subscriptions = m_sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
-                foreach (var session in sessions)
+            {
+                try
                 {
-                    m_connectedSessions.Add(new ConnectedSession()
+                    IList<Opc.Ua.Server.Session> sessions = m_sampleServer.CurrentInstance.SessionManager.GetSessions();
+                    IList<Opc.Ua.Server.Subscription> subscriptions = m_sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
+                    foreach (var session in sessions)
                     {
-                        SessionName = session.SessionDiagnostics.SessionName,
-                        SubscriptionsCount = session.SessionDiagnostics.CurrentSubscriptionsCount,
-                    });
+                        m_connectedSessions.Add(new ConnectedSession()
+                        {
+                            SessionName = session.SessionDiagnostics.SessionName,
+                            SubscriptionsCount = session.SessionDiagnostics.CurrentSubscriptionsCount,
+                        });
+                    }
+                }
+                catch(Exception ex)
+                {
+                    // ignore esception that may arrive because the server is stopped
                 }
 
             }
