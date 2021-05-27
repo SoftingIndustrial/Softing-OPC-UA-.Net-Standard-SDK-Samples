@@ -1308,9 +1308,20 @@ namespace SampleServer.PubSub
                 statusNode.Enable = CreateMethod(statusNode, BrowseNames.Enable, null, null, OnCallEnableHandler);
                 statusNode.Enable.Handle = configId;
             }
+            else
+            {
+                statusNode.Enable.OnCallMethod = OnCallEnableHandler;
+                statusNode.Enable.Handle = configId;
+            }
+
             if (statusNode.Disable == null)
             {
                 statusNode.Disable = CreateMethod(statusNode, BrowseNames.Disable, null, null, OnCallDisableHandler);
+                statusNode.Disable.Handle = configId;
+            }
+            else
+            {
+                statusNode.Disable.OnCallMethod = OnCallDisableHandler;
                 statusNode.Disable.Handle = configId;
             }
 
