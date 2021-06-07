@@ -73,7 +73,11 @@ namespace SampleServer.NodeSetImport
                              new Argument() { Name = "FilePathNodeSet2.Xml", Description = "File path for NodeSet.xml file that will be imported.",  DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar },
                             new Argument() { Name = "DuplicateNodeHandling", Description = "0 - ReportError and stop import, 1 - UseExistingNode, 2 - OverwriteNode.",  DataType = DataTypeIds.Int16, ValueRank = ValueRanks.Scalar },
                         };
-                        MethodState importMethod = CreateMethod(nodeSetImportNode, "ImportNodeSet", inputArguments, null, OnImportNodeSet);
+                        Argument[] outputArguments = new Argument[]
+                        {
+                             new Argument() { Name = "NewNamespaceUris", Description = "The list of namespace URIs added from the imported file.",  DataType = DataTypeIds.String, ValueRank = ValueRanks.OneDimension },
+                        };
+                        MethodState importMethod = CreateMethod(nodeSetImportNode, "ImportNodeSet", inputArguments, ou, OnImportNodeSet);
                         inputArguments = new Argument[]
                         {
                             new Argument() { Name = "FilePathNodeSet2.Xml", Description = "File path for exported NodeSet.xml file.",  DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar },
@@ -210,9 +214,13 @@ namespace SampleServer.NodeSetImport
             try
             {
                 m_isExecutingImport = true;
-
+                List<string> newNamespaceUris;
                 // Import the specified model with specified duplicate node handling
-                var extensions = ImportNodeSet(context, inputArguments[0] as string, (DuplicateNodeHandling)(short)inputArguments[1]);
+                var extensions = ImportNodeSet(context, inputArguments[0] as string, (DuplicateNodeHandling)(short)inputArguments[1], out newNamespaceUris);
+
+                // save newNamespaceUris to out parameter
+                outputArguments[0] = newNamespaceUris;
+
                 return ServiceResult.Good;
             }
             catch (ServiceResultException ex)
