@@ -77,7 +77,7 @@ namespace SampleServer.NodeSetImport
                         {
                              new Argument() { Name = "NewNamespaceUris", Description = "The list of namespace URIs added from the imported file.",  DataType = DataTypeIds.String, ValueRank = ValueRanks.OneDimension },
                         };
-                        MethodState importMethod = CreateMethod(nodeSetImportNode, "ImportNodeSet", inputArguments, ou, OnImportNodeSet);
+                        MethodState importMethod = CreateMethod(nodeSetImportNode, "ImportNodeSet", inputArguments, outputArguments, OnImportNodeSet);
                         inputArguments = new Argument[]
                         {
                             new Argument() { Name = "FilePathNodeSet2.Xml", Description = "File path for exported NodeSet.xml file.",  DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar },
