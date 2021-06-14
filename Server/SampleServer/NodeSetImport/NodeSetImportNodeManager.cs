@@ -88,13 +88,11 @@ namespace SampleServer.NodeSetImport
                         {
                             new Argument() { Name = "Parent NodeId", Description = "NodeId for parent node.",  DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar },
                             new Argument() { Name = "Type NodeId", Description = "NodeId for the type of the new instance node.",  DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar },
-                            new Argument() { Name = "CreateOptionalProperties", Description = "Flag that imndicates if optional proeprties defined in type shall be instantiated.",  DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar, Value = true },
+                            new Argument() { Name = "CreateOptionalProperties", Description = "Flag that indicates if optional properties defined in type shall be instantiated.",  DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar, Value = true },
                             new Argument() { Name = "Name", Description = "Name of the new instance node.",  DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar },
                         };
                         MethodState createinstanceMethod = CreateMethod(nodeSetImportNode, "CreateInstance", inputArguments, null, OnCreateInstance);
-
-                        
-
+  
                         //create instance of variable node with data type from imported nodeset dictionary
                         FolderState referenceServerVariables = CreateFolder(nodeSetImportNode, "Imported Types Variables");
 
