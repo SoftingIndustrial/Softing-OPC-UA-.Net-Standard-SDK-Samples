@@ -157,9 +157,19 @@ namespace SampleServer
                 .AddExtension<SampleServerConfiguration>(new XmlQualifiedName("SampleServerConfiguration"),
                     new SampleServerConfiguration() { TimerInterval = 1000, ClearCachedCertificatesInterval = 30000 });
 
+            applicationConfigurationBuilder.ApplicationConfiguration.SecurityConfiguration.UserRoleDirectory = "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles";
+
             applicationConfigurationBuilder
-                .AsServer(new string[] { "opc.tcp://localhost:61520/SampleServer" })
-                    .AddSignPolicies()
+                .AsServer(new string[] { "opc.tcp://localhost:61510/SampleServer" })
+                    .AddUnsecurePolicyNone()
+                    //.AddPolicy(Opc.Ua.MessageSecurityMode.None, "http://opcfoundation.org/UA/SecurityPolicy#None")
+                    //.AddSignAndEncryptPolicies()
+                    .AddPolicy(Opc.Ua.MessageSecurityMode.Sign, "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256")
+                    .AddPolicy(Opc.Ua.MessageSecurityMode.SignAndEncrypt, "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256")
+                    .AddPolicy(Opc.Ua.MessageSecurityMode.Sign, "http://opcfoundation.org/UA/SecurityPolicy#Aes128_Sha256_RsaOaep")
+                    .AddPolicy(Opc.Ua.MessageSecurityMode.SignAndEncrypt, "http://opcfoundation.org/UA/SecurityPolicy#Aes128_Sha256_RsaOaep")
+                    .AddPolicy(Opc.Ua.MessageSecurityMode.Sign, "http://opcfoundation.org/UA/SecurityPolicy#Aes256_Sha256_RsaPss")
+                    .AddPolicy(Opc.Ua.MessageSecurityMode.SignAndEncrypt, "http://opcfoundation.org/UA/SecurityPolicy#Aes256_Sha256_RsaPss")
                     .AddUserTokenPolicy(new Opc.Ua.UserTokenPolicy() { TokenType = Opc.Ua.UserTokenType.Anonymous, SecurityPolicyUri= "http://opcfoundation.org/UA/SecurityPolicy#None" })
                     .AddUserTokenPolicy(new Opc.Ua.UserTokenPolicy() { TokenType = Opc.Ua.UserTokenType.UserName, SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256" })
                     .AddUserTokenPolicy(new Opc.Ua.UserTokenPolicy() { TokenType = Opc.Ua.UserTokenType.Certificate, SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256" })
@@ -209,12 +219,19 @@ namespace SampleServer
                         RejectTimeout = 20000
                     });
 
-
             await applicationInstance.CheckApplicationInstanceCertificate(true, 2048);
             
             await applicationConfigurationBuilder.Create().ConfigureAwait(false);
 
-            applicationConfigurationBuilder.ApplicationConfiguration.SecurityConfiguration.UserRoleDirectory = "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles";
+            Opc.Ua.TraceConfiguration traceConfiguration = applicationConfigurationBuilder.ApplicationConfiguration.TraceConfiguration;
+            if(traceConfiguration != null)
+            {
+                traceConfiguration.OutputFilePath = "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleServer.log";
+                traceConfiguration.DeleteOnLoad = true;
+                traceConfiguration.TraceMasks = 1;
+                traceConfiguration.ApplySettings();
+            }
+
             return applicationConfigurationBuilder.ApplicationConfiguration;
         }
 
