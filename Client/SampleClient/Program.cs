@@ -9,7 +9,10 @@
  * ======================================================================*/
 
 using System;
+using System.Xml;
+
 using Opc.Ua;
+using Opc.Ua.Configuration;
 using Softing.Opc.Ua.Client;
 using SampleClient.StateMachine;
 
@@ -25,6 +28,13 @@ namespace SampleClient
         /// </summary>
         static void Main()
         {
+            // todo: to define a way to use it
+
+            // Load client default (customized) configuration
+            //ApplicationConfiguration defaultConfiguration = LoadDefaultConfiguration();
+            // Create the UaApplication object from application configuration
+            //UaApplication application = UaApplication.Create(defaultConfiguration).Result;
+
             // Create the UaApplication object from config file
             UaApplication application = UaApplication.Create("SampleClient.Config.xml").Result;
 
@@ -130,5 +140,109 @@ namespace SampleClient
             }
             Console.WriteLine("-----------------------------------");
         }
+
+        #region Customized configuration
+        /// <summary>
+        /// Load default configuration
+        /// </summary>
+        /// <returns></returns>
+        private static ApplicationConfiguration LoadDefaultConfiguration()
+        {
+            ApplicationInstance applicationInstance = new ApplicationInstance();
+            applicationInstance.ApplicationName = "Softing .NET Standard Sample Client";
+            applicationInstance.ApplicationType = ApplicationType.Client;
+            applicationInstance
+                .Build("urn:localhost:Softing:UANETStandardToolkit:SampleClient",
+                       "http://industrial.softing.com/OpcUaNetStandardToolkit/SampleClient")
+                       .AsClient();
+
+            ApplicationConfigurationBuilder applicationConfigurationBuilder =
+                 new ApplicationConfigurationBuilder(applicationInstance);
+
+            applicationConfigurationBuilder
+                .SetTransportQuotas(new Opc.Ua.TransportQuotas()
+                {
+                    OperationTimeout = 120000,
+                    MaxStringLength = 1048576,
+                    MaxByteStringLength = 4194304,
+                    MaxArrayLength = 65535,
+                    MaxMessageSize = 4194304,
+                    MaxBufferSize = 65535,
+                    ChannelLifetime = 300000,
+                    SecurityTokenLifetime = 3600000
+                });
+
+            applicationConfigurationBuilder
+                .AddSecurityConfiguration(
+                    "SoftingOpcUaSampleClient",
+                    "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
+                    "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
+                    "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki")
+                    .SetAddAppCertToTrustedStore(true)
+                    .SetAutoAcceptUntrustedCertificates(false)
+                    .SetRejectSHA1SignedCertificates(false)
+                    .SetRejectUnknownRevocationStatus(false)
+                    .SetMinimumCertificateKeySize(1024)
+                .AddExtension<SampleClientConfiguration>(new XmlQualifiedName("SampleClientConfiguration"),
+                    new SampleClientConfiguration()
+                    {
+                        ServerUrl = "opc.tcp://localhost:61510/SampleServer",
+                        ServerUrlHttps = "https://localhost:61511/SampleServer",
+                        ReverseConnectUrl = "opc.tcp://localhost:61512",
+                        ReverseConnectServerApplicationUri = "urn:localhost:Softing:UANETStandardToolkit:SampleServer",
+                        ReverseConnectServerCertificateIdentifier = new CertificateIdentifier()
+                        {
+                            StoreType = "Directory",
+                            StorePath = "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own",
+                            SubjectName = "SoftingOpcUaSampleServer"
+                        }
+                    })
+                 .AddExtension<ClientToolkitConfiguration>(new XmlQualifiedName("ClientToolkitConfiguration"),
+                    new ClientToolkitConfiguration()
+                    {
+                        DiscoveryOperationTimeout = 10000,
+                        DefaultKeepAliveInterval = 5000,
+                        SessionReconnectDelay = 5000,
+                        DefaultSubscriptionPublishingInterval = 1000,
+                        DefaultSubscriptionKeepAliveCount = 10,
+                        DefaultSubscriptionLifeTimeCount = 1000,
+                        DefaultSubscriptionMaxNotificationsPerPublish = 0,
+                        DefaultSubscriptionPriority = 255,
+                        DefaultMiSamplingInterval = 1000,
+                        DefaultMiQueueSize = 1,
+                        DefaultEventMiQueueSize = 0,
+                        DecodeCustomDataTypes = true,
+                        DecodeDataTypeDictionaries = true
+                    });
+
+            applicationConfigurationBuilder.ApplicationConfiguration.SecurityConfiguration.UserRoleDirectory = "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles";
+
+            applicationConfigurationBuilder
+                .AsClient()
+                    .SetDefaultSessionTimeout(600000)
+                    .SetMinSubscriptionLifetime(10000)
+                    .AddWellKnownDiscoveryUrls("opc.tcp://{0}:4840/UADiscovery")
+                    .AddWellKnownDiscoveryUrls("http://{0}:52601/UADiscovery")
+                    .AddWellKnownDiscoveryUrls("http://{0}/UADiscovery/Default.svc");
+
+            applicationInstance.CheckApplicationInstanceCertificate(true, 2048);
+
+            applicationConfigurationBuilder.Create().ConfigureAwait(false);
+
+            Opc.Ua.TraceConfiguration traceConfiguration = applicationConfigurationBuilder.ApplicationConfiguration.TraceConfiguration;
+            if (traceConfiguration != null)
+            {
+                traceConfiguration.OutputFilePath = "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleClient.log";
+                traceConfiguration.DeleteOnLoad = true;
+                traceConfiguration.TraceMasks = 1;
+                traceConfiguration.ApplySettings();
+            }
+
+            applicationConfigurationBuilder.ApplicationConfiguration.DisableHiResClock = true;
+
+            return applicationConfigurationBuilder.ApplicationConfiguration;
+        }
+
+        #endregion
     }
 }

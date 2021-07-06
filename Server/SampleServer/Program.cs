@@ -8,14 +8,15 @@
  *  
  * ======================================================================*/
 
-using Opc.Ua.Configuration;
-using Opc.Ua.Server;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+
+using Opc.Ua;
+using Opc.Ua.Configuration;
 
 namespace SampleServer
 {
@@ -59,11 +60,12 @@ namespace SampleServer
                 }
 
                 // todo: to define a way to use it
-                // Start the server using default (customized) configuration
-                //Opc.Ua.ApplicationConfiguration applicationConfiguration = LoadDefaultConfiguration().Result;
+
+                // Load server default (customized) configuration
+                //ApplicationConfiguration defaultConfiguration = LoadDefaultConfiguration().Result;
 
                 // Start the server
-                //await sampleServer.Start(applicationConfiguration).ConfigureAwait(false);
+                //await sampleServer.Start(defaultConfiguration).ConfigureAwait(false);
 
                 // Start the server
                 await sampleServer.Start(configurationFile).ConfigureAwait(false);
@@ -112,21 +114,21 @@ namespace SampleServer
             }
         }
 
-        #region Customized configuration
+        #region Load customized configuration
         /// <summary>
         /// Load default configuration
         /// </summary>
         /// <returns></returns>
-        private static async Task<Opc.Ua.ApplicationConfiguration> LoadDefaultConfiguration()
+        private static async Task<ApplicationConfiguration> LoadDefaultConfiguration()
         {
             ApplicationInstance applicationInstance = new ApplicationInstance();
             applicationInstance.ApplicationName = "Softing NET Standard Sample Server";
-            applicationInstance.ApplicationType = Opc.Ua.ApplicationType.Server;
+            applicationInstance.ApplicationType = ApplicationType.Server;
             applicationInstance
                 .Build("urn:localhost:Softing:UANETStandardToolkit:SampleServer", 
                        "http://industrial.softing.com/OpcUaNetStandardToolkit/SampleServer")
                        .AsServer(new string[] { "opc.tcp://localhost:61510/SampleServer" });
-            
+           
            ApplicationConfigurationBuilder applicationConfigurationBuilder = 
                 new ApplicationConfigurationBuilder(applicationInstance);
 
@@ -231,6 +233,8 @@ namespace SampleServer
                 traceConfiguration.TraceMasks = 1;
                 traceConfiguration.ApplySettings();
             }
+
+            applicationConfigurationBuilder.ApplicationConfiguration.DisableHiResClock = true;
 
             return applicationConfigurationBuilder.ApplicationConfiguration;
         }
