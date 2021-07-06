@@ -8,11 +8,14 @@
  *  
  * ======================================================================*/
 
+using Opc.Ua.Configuration;
 using Opc.Ua.Server;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
 
 namespace SampleServer
 {
@@ -54,6 +57,13 @@ namespace SampleServer
                     Console.ReadKey();
                     return;
                 }
+
+                // todo: to define a way to use it
+                // Start the server using default (customized) configuration
+                //Opc.Ua.ApplicationConfiguration applicationConfiguration = LoadDefaultConfiguration().Result;
+
+                // Start the server
+                //await sampleServer.Start(applicationConfiguration).ConfigureAwait(false);
 
                 // Start the server
                 await sampleServer.Start(configurationFile).ConfigureAwait(false);
@@ -101,6 +111,114 @@ namespace SampleServer
                 sampleServer.Stop();
             }
         }
+
+        #region Customized configuration
+        /// <summary>
+        /// Load default configuration
+        /// </summary>
+        /// <returns></returns>
+        private static async Task<Opc.Ua.ApplicationConfiguration> LoadDefaultConfiguration()
+        {
+            ApplicationInstance applicationInstance = new ApplicationInstance();
+            applicationInstance.ApplicationName = "Softing NET Standard Sample Server";
+            applicationInstance.ApplicationType = Opc.Ua.ApplicationType.Server;
+            applicationInstance
+                .Build("urn:localhost:Softing:UANETStandardToolkit:SampleServer", 
+                       "http://industrial.softing.com/OpcUaNetStandardToolkit/SampleServer")
+                       .AsServer(new string[] { "opc.tcp://localhost:61510/SampleServer" });
+            
+           ApplicationConfigurationBuilder applicationConfigurationBuilder = 
+                new ApplicationConfigurationBuilder(applicationInstance);
+
+            applicationConfigurationBuilder
+                .SetTransportQuotas(new Opc.Ua.TransportQuotas()
+                    {
+                        OperationTimeout = 600000,
+                        MaxStringLength = 1048576,
+                        MaxByteStringLength = 1048576,
+                        MaxArrayLength = 65535,
+                        MaxMessageSize = 4194304,
+                        MaxBufferSize = 65535,
+                        ChannelLifetime = 300000,
+                        SecurityTokenLifetime = 3600000
+                    });
+
+            applicationConfigurationBuilder
+                .AddSecurityConfiguration(
+                    "SoftingOpcUaSampleServer",
+                    "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
+                    "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
+                    "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki")
+                    .SetAddAppCertToTrustedStore(true)
+                    .SetAutoAcceptUntrustedCertificates(false)
+                    .SetRejectSHA1SignedCertificates(false)
+                    .SetRejectUnknownRevocationStatus(false)
+                    .SetMinimumCertificateKeySize(1024)
+                .AddExtension<SampleServerConfiguration>(new XmlQualifiedName("SampleServerConfiguration"),
+                    new SampleServerConfiguration() { TimerInterval = 1000, ClearCachedCertificatesInterval = 30000 });
+
+            applicationConfigurationBuilder
+                .AsServer(new string[] { "opc.tcp://localhost:61520/SampleServer" })
+                    .AddSignPolicies()
+                    .AddUserTokenPolicy(new Opc.Ua.UserTokenPolicy() { TokenType = Opc.Ua.UserTokenType.Anonymous, SecurityPolicyUri= "http://opcfoundation.org/UA/SecurityPolicy#None" })
+                    .AddUserTokenPolicy(new Opc.Ua.UserTokenPolicy() { TokenType = Opc.Ua.UserTokenType.UserName, SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256" })
+                    .AddUserTokenPolicy(new Opc.Ua.UserTokenPolicy() { TokenType = Opc.Ua.UserTokenType.Certificate, SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256" })
+                    .SetDiagnosticsEnabled(true)
+                    .SetMaxSessionCount(100)
+                    .SetMinSessionTimeout(10000)
+                    .SetMaxSessionTimeout(3600000)
+                    .SetMaxBrowseContinuationPoints(10)
+                    .SetMaxQueryContinuationPoints(10)
+                    .SetMaxHistoryContinuationPoints(100)
+                    .SetMaxRequestAge(600000)
+                    .SetMinPublishingInterval(100)
+                    .SetMaxPublishingInterval(3600000)
+                    .SetPublishingResolution(50)
+                    .SetMaxSubscriptionLifetime(3600000)
+                    .SetMaxMessageQueueSize(100)
+                    .SetMaxNotificationQueueSize(100)
+                    .SetMaxNotificationsPerPublish(1000)
+                    .SetMinMetadataSamplingInterval(1000)
+                    .SetAvailableSamplingRates(new Opc.Ua.SamplingRateGroupCollection() {
+                        new Opc.Ua.SamplingRateGroup(){Start=5, Increment=5, Count=20},
+                        new Opc.Ua.SamplingRateGroup(){Start=100, Increment=100, Count=4},
+                        new Opc.Ua.SamplingRateGroup(){Start=500, Increment=250, Count=2},
+                        new Opc.Ua.SamplingRateGroup(){Start=100, Increment=500, Count=20},
+                    })
+                    .SetMaxRegistrationInterval(30000)
+                    .SetNodeManagerSaveFile("SampleServer.nodes.xml")
+                    .SetMinSubscriptionLifetime(10000)
+                    .SetMaxPublishRequestCount(100)
+                    .SetMaxSubscriptionCount(200)
+                    .SetMaxEventQueueSize(10000)
+                    .AddServerProfile("http://opcfoundation.org/UA-Profile/Server/StandardUA2017")
+                    .AddServerProfile("http://opcfoundation.org/UA-Profile/Server/DataAccess")
+                    .AddServerProfile("http://opcfoundation.org/UA-Profile/Server/Methods")
+                    .AddServerProfile("http://opcfoundation.org/UA-Profile/Server/ReverseConnect")
+                    .SetMaxTrustListSize(0)
+                    .SetMultiCastDnsEnabled(false)
+                    .SetReverseConnect(new Opc.Ua.ReverseConnectServerConfiguration()
+                    {
+                        Clients = new Opc.Ua.ReverseConnectClientCollection()
+                        {
+                            new Opc.Ua.ReverseConnectClient()
+                            { EndpointUrl="opc.tcp://localhost:61512", Timeout=30000, MaxSessionCount=0, Enabled=true}
+                        },
+                        ConnectInterval = 10000,
+                        ConnectTimeout = 30000,
+                        RejectTimeout = 20000
+                    });
+
+
+            await applicationInstance.CheckApplicationInstanceCertificate(true, 2048);
+            
+            await applicationConfigurationBuilder.Create().ConfigureAwait(false);
+
+            applicationConfigurationBuilder.ApplicationConfiguration.SecurityConfiguration.UserRoleDirectory = "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles";
+            return applicationConfigurationBuilder.ApplicationConfiguration;
+        }
+
+        #endregion
 
         #region Print State Methods
 
