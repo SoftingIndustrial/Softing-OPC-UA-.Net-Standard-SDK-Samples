@@ -192,6 +192,7 @@ namespace XamarinSampleServer.ViewModels
                     ApplicationConfiguration config;
                     config = await new ApplicationInstance().LoadApplicationConfiguration(currentFolder + filename, false);
                     config.ServerConfiguration.BaseAddresses.Clear();
+                    config.ApplicationType = ApplicationType.Server;
                     foreach (var serverIp in ServerIps)
                     {
                         string url = $"opc.tcp://{serverIp}:61510/SampleServer";

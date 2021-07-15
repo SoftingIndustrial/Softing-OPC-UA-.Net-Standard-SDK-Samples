@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using System.Xml;
 
 using Opc.Ua;
-using Opc.Ua.Configuration;
+using Softing.Opc.Ua.Configuration;
 
 namespace SampleServer
 {
@@ -58,16 +58,14 @@ namespace SampleServer
                     Console.ReadKey();
                     return;
                 }
-
-                // todo: to define a way to use it
-
-                // Load server default (customized) configuration
+                
+                // Load server default (customized) configuration build with a fluent API
                 //ApplicationConfiguration defaultConfiguration = LoadDefaultConfiguration().Result;
 
-                // Start the server
+                // Start the server using an ApplicationConfiguration build with a fluent API
                 //await sampleServer.Start(defaultConfiguration).ConfigureAwait(false);
 
-                // Start the server
+                // Start the server using a configuration file
                 await sampleServer.Start(configurationFile).ConfigureAwait(false);
 
                 PrintServerInformation(sampleServer);
@@ -121,47 +119,25 @@ namespace SampleServer
         /// <returns></returns>
         private static async Task<ApplicationConfiguration> LoadDefaultConfiguration()
         {
-            ApplicationInstance applicationInstance = new ApplicationInstance();
-            applicationInstance.ApplicationName = "Softing NET Standard Sample Server";
-            applicationInstance.ApplicationType = ApplicationType.Server;
-            applicationInstance
-                .Build("urn:localhost:Softing:UANETStandardToolkit:SampleServer", 
-                       "http://industrial.softing.com/OpcUaNetStandardToolkit/SampleServer")
-                       .AsServer(new string[] { "opc.tcp://localhost:61510/SampleServer" });
-           
-           ApplicationConfigurationBuilder applicationConfigurationBuilder = 
-                new ApplicationConfigurationBuilder(applicationInstance);
+            ApplicationConfigurationBuilderEx applicationConfigurationBuilder = new ApplicationConfigurationBuilderEx();
+          
 
-            applicationConfigurationBuilder
+            await applicationConfigurationBuilder
+                .Build("urn: localhost:Softing: UANETStandardToolkit:SampleServer",
+                        "http://industrial.softing.com/OpcUaNetStandardToolkit/SampleServer")
+                .SetApplicationName("Softing NET Standard Sample Server")
+                .DisableHiResClock(true)
                 .SetTransportQuotas(new Opc.Ua.TransportQuotas()
-                    {
-                        OperationTimeout = 600000,
-                        MaxStringLength = 1048576,
-                        MaxByteStringLength = 1048576,
-                        MaxArrayLength = 65535,
-                        MaxMessageSize = 4194304,
-                        MaxBufferSize = 65535,
-                        ChannelLifetime = 300000,
-                        SecurityTokenLifetime = 3600000
-                    });
-
-            applicationConfigurationBuilder
-                .AddSecurityConfiguration(
-                    "SoftingOpcUaSampleServer",
-                    "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
-                    "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
-                    "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki")
-                    .SetAddAppCertToTrustedStore(true)
-                    .SetAutoAcceptUntrustedCertificates(false)
-                    .SetRejectSHA1SignedCertificates(false)
-                    .SetRejectUnknownRevocationStatus(false)
-                    .SetMinimumCertificateKeySize(1024)
-                .AddExtension<SampleServerConfiguration>(new XmlQualifiedName("SampleServerConfiguration"),
-                    new SampleServerConfiguration() { TimerInterval = 1000, ClearCachedCertificatesInterval = 30000 });
-
-            applicationConfigurationBuilder.ApplicationConfiguration.SecurityConfiguration.UserRoleDirectory = "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles";
-
-            applicationConfigurationBuilder
+                {
+                    OperationTimeout = 600000,
+                    MaxStringLength = 1048576,
+                    MaxByteStringLength = 1048576,
+                    MaxArrayLength = 65535,
+                    MaxMessageSize = 4194304,
+                    MaxBufferSize = 65535,
+                    ChannelLifetime = 300000,
+                    SecurityTokenLifetime = 3600000
+                })
                 .AsServer(new string[] { "opc.tcp://localhost:61510/SampleServer" })
                     .AddUnsecurePolicyNone()
                     //.AddPolicy(Opc.Ua.MessageSecurityMode.None, "http://opcfoundation.org/UA/SecurityPolicy#None")
@@ -172,7 +148,7 @@ namespace SampleServer
                     .AddPolicy(Opc.Ua.MessageSecurityMode.SignAndEncrypt, "http://opcfoundation.org/UA/SecurityPolicy#Aes128_Sha256_RsaOaep")
                     .AddPolicy(Opc.Ua.MessageSecurityMode.Sign, "http://opcfoundation.org/UA/SecurityPolicy#Aes256_Sha256_RsaPss")
                     .AddPolicy(Opc.Ua.MessageSecurityMode.SignAndEncrypt, "http://opcfoundation.org/UA/SecurityPolicy#Aes256_Sha256_RsaPss")
-                    .AddUserTokenPolicy(new Opc.Ua.UserTokenPolicy() { TokenType = Opc.Ua.UserTokenType.Anonymous, SecurityPolicyUri= "http://opcfoundation.org/UA/SecurityPolicy#None" })
+                    .AddUserTokenPolicy(new Opc.Ua.UserTokenPolicy() { TokenType = Opc.Ua.UserTokenType.Anonymous, SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#None" })
                     .AddUserTokenPolicy(new Opc.Ua.UserTokenPolicy() { TokenType = Opc.Ua.UserTokenType.UserName, SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256" })
                     .AddUserTokenPolicy(new Opc.Ua.UserTokenPolicy() { TokenType = Opc.Ua.UserTokenType.Certificate, SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256" })
                     .SetDiagnosticsEnabled(true)
@@ -219,22 +195,26 @@ namespace SampleServer
                         ConnectInterval = 10000,
                         ConnectTimeout = 30000,
                         RejectTimeout = 20000
-                    });
+                    })
+                .AddSecurityConfiguration(
+                    "SoftingOpcUaSampleServer",
+                    "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
+                    "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
+                    "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki")
+                    .SetAddAppCertToTrustedStore(true)
+                    .SetAutoAcceptUntrustedCertificates(false)
+                    .SetRejectSHA1SignedCertificates(false)
+                    .SetRejectUnknownRevocationStatus(false)
+                    .SetMinimumCertificateKeySize(1024)
+                    //.SetUserRoleDirectory("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles")
+                .AddExtension<SampleServerConfiguration>(new XmlQualifiedName("SampleServerConfiguration"),
+                    new SampleServerConfiguration() { TimerInterval = 1000, ClearCachedCertificatesInterval = 30000 })
+                .SetTraceMasks(1)
+                .SetOutputFilePath("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleServer.log")
+                .SetDeleteOnLoad(true)
+                .Create();
 
-            await applicationInstance.CheckApplicationInstanceCertificate(true, 2048);
-            
-            await applicationConfigurationBuilder.Create().ConfigureAwait(false);
-
-            Opc.Ua.TraceConfiguration traceConfiguration = applicationConfigurationBuilder.ApplicationConfiguration.TraceConfiguration;
-            if(traceConfiguration != null)
-            {
-                traceConfiguration.OutputFilePath = "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleServer.log";
-                traceConfiguration.DeleteOnLoad = true;
-                traceConfiguration.TraceMasks = 1;
-                traceConfiguration.ApplySettings();
-            }
-
-            applicationConfigurationBuilder.ApplicationConfiguration.DisableHiResClock = true;
+            await applicationConfigurationBuilder.CheckApplicationInstanceCertificate(true, 2048);
 
             return applicationConfigurationBuilder.ApplicationConfiguration;
         }
