@@ -34,14 +34,14 @@ namespace SampleClient
             // todo: to define a way to use it
 
             // Load client default (customized) configuration build with a fluent API
-            //ApplicationConfiguration defaultConfiguration = LoadDefaultConfiguration().Result;
-            
+            //ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration().Result;
+
             // Create the UaApplication object from application configuration build with a fluent API
             //UaApplication application = UaApplication.Create(defaultConfiguration).Result;
 
             // Create the UaApplication object from config file
             UaApplication application = UaApplication.Create("SampleClient.Config.xml").Result;
-            
+
             // Get the Sample Client custom parameters
             SampleClientConfiguration sampleClientConfiguration = application.Configuration.ParseExtension<SampleClientConfiguration>();
             if (sampleClientConfiguration != null)
@@ -146,17 +146,18 @@ namespace SampleClient
         }
 
         #region Customized configuration
+
         /// <summary>
         /// Load default configuration
         /// </summary>
         /// <returns></returns>
-        private static async Task<ApplicationConfiguration> LoadDefaultConfiguration()
+        private static async Task<ApplicationConfigurationBuilderEx> LoadDefaultConfiguration()
         {
-           
+
             ApplicationConfigurationBuilderEx applicationConfigurationBuilder =
                    new ApplicationConfigurationBuilderEx();
 
-            await applicationConfigurationBuilder             
+            await applicationConfigurationBuilder
                 .Build("urn: localhost:Softing: UANETStandardToolkit:SampleClient",
                         "http://industrial.softing.com/OpcUaNetStandardToolkit/SampleClient")
                 .SetApplicationName("Softing .NET Standard Sample Client")
@@ -227,8 +228,8 @@ namespace SampleClient
 
             await applicationConfigurationBuilder.CheckApplicationInstanceCertificate(true, 2048);
 
-            return applicationConfigurationBuilder.ApplicationConfiguration;
-            
+            return applicationConfigurationBuilder;
+
         }
 
         #endregion

@@ -58,9 +58,9 @@ namespace SampleServer
                     Console.ReadKey();
                     return;
                 }
-                
+
                 // Load server default (customized) configuration build with a fluent API
-                //ApplicationConfiguration defaultConfiguration = LoadDefaultConfiguration().Result;
+                //ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration().Result;
 
                 // Start the server using an ApplicationConfiguration build with a fluent API
                 //await sampleServer.Start(defaultConfiguration).ConfigureAwait(false);
@@ -113,14 +113,15 @@ namespace SampleServer
         }
 
         #region Load customized configuration
+
         /// <summary>
         /// Load default configuration
         /// </summary>
         /// <returns></returns>
-        private static async Task<ApplicationConfiguration> LoadDefaultConfiguration()
+        private static async Task<ApplicationConfigurationBuilderEx> LoadDefaultConfiguration()
         {
             ApplicationConfigurationBuilderEx applicationConfigurationBuilder = new ApplicationConfigurationBuilderEx();
-          
+
 
             await applicationConfigurationBuilder
                 .Build("urn: localhost:Softing: UANETStandardToolkit:SampleServer",
@@ -206,7 +207,7 @@ namespace SampleServer
                     .SetRejectSHA1SignedCertificates(false)
                     .SetRejectUnknownRevocationStatus(false)
                     .SetMinimumCertificateKeySize(1024)
-                    //.SetUserRoleDirectory("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles")
+                //.SetUserRoleDirectory("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles")
                 .AddExtension<SampleServerConfiguration>(new XmlQualifiedName("SampleServerConfiguration"),
                     new SampleServerConfiguration() { TimerInterval = 1000, ClearCachedCertificatesInterval = 30000 })
                 .SetTraceMasks(1)
@@ -216,7 +217,7 @@ namespace SampleServer
 
             await applicationConfigurationBuilder.CheckApplicationInstanceCertificate(true, 2048);
 
-            return applicationConfigurationBuilder.ApplicationConfiguration;
+            return applicationConfigurationBuilder;
         }
 
         #endregion
