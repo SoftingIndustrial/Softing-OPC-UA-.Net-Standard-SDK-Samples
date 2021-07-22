@@ -34,10 +34,10 @@ namespace SampleClient
             // todo: to define a way to use it
 
             // Load client default (customized) configuration build with a fluent API
-            //ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration().Result;
+            // ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration().Result;
 
             // Create the UaApplication object from application configuration build with a fluent API
-            //UaApplication application = UaApplication.Create(defaultConfiguration).Result;
+            // UaApplication application = UaApplication.Create(defaultConfiguration).Result;
 
             // Create the UaApplication object from config file
             UaApplication application = UaApplication.Create("SampleClient.Config.xml").Result;
@@ -158,7 +158,7 @@ namespace SampleClient
                    new ApplicationConfigurationBuilderEx();
 
             await applicationConfigurationBuilder
-                .Build("urn: localhost:Softing: UANETStandardToolkit:SampleClient",
+                .Initialize("urn: localhost:Softing: UANETStandardToolkit:SampleClient",
                         "http://industrial.softing.com/OpcUaNetStandardToolkit/SampleClient")
                 .SetApplicationName("Softing .NET Standard Sample Client")
                 .DisableHiResClock(true)
@@ -173,13 +173,13 @@ namespace SampleClient
                     ChannelLifetime = 300000,
                     SecurityTokenLifetime = 3600000
                 })
-                .AsClient()
+                .AsClientExt()
                     .SetDefaultSessionTimeout(610000)
                     .SetMinSubscriptionLifetime(11000)
                     .AddWellKnownDiscoveryUrls("opc.tcp://{0}:4840/UADiscovery")
                     .AddWellKnownDiscoveryUrls("http://{0}:52601/UADiscovery")
                     .AddWellKnownDiscoveryUrls("http://{0}/UADiscovery/Default.svc")
-                .AddSecurityConfiguration(
+                .AddSecurityConfigurationExt(
                     "SoftingOpcUaSampleClient",
                     "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
                     "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",

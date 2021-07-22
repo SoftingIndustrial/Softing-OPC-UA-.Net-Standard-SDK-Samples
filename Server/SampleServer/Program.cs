@@ -60,10 +60,10 @@ namespace SampleServer
                 }
 
                 // Load server default (customized) configuration build with a fluent API
-                //ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration().Result;
+                // ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration().Result;
 
                 // Start the server using an ApplicationConfiguration build with a fluent API
-                //await sampleServer.Start(defaultConfiguration).ConfigureAwait(false);
+                // await sampleServer.Start(defaultConfiguration).ConfigureAwait(false);
 
                 // Start the server using a configuration file
                 await sampleServer.Start(configurationFile).ConfigureAwait(false);
@@ -124,7 +124,7 @@ namespace SampleServer
 
 
             await applicationConfigurationBuilder
-                .Build("urn: localhost:Softing: UANETStandardToolkit:SampleServer",
+                .Initialize("urn: localhost:Softing: UANETStandardToolkit:SampleServer",
                         "http://industrial.softing.com/OpcUaNetStandardToolkit/SampleServer")
                 .SetApplicationName("Softing NET Standard Sample Server")
                 .DisableHiResClock(true)
@@ -197,7 +197,7 @@ namespace SampleServer
                         ConnectTimeout = 30000,
                         RejectTimeout = 20000
                     })
-                .AddSecurityConfiguration(
+                .AddSecurityConfigurationExt(
                     "SoftingOpcUaSampleServer",
                     "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
                     "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
