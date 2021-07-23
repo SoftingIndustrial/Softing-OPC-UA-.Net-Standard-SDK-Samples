@@ -34,7 +34,7 @@ namespace SampleClient
             // todo: to define a way to use it
 
             // Load client default (customized) configuration build with a fluent API
-            // ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration().Result;
+             ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration().Result;
 
             // Create the UaApplication object from application configuration build with a fluent API
             // UaApplication application = UaApplication.Create(defaultConfiguration).Result;
@@ -155,10 +155,10 @@ namespace SampleClient
         {
 
             ApplicationConfigurationBuilderEx applicationConfigurationBuilder =
-                   new ApplicationConfigurationBuilderEx();
+                   new ApplicationConfigurationBuilderEx(ApplicationType.Client);
 
             await applicationConfigurationBuilder
-                .Initialize("urn: localhost:Softing: UANETStandardToolkit:SampleClient",
+                .Initialize("urn:localhost:Softing:UANETStandardToolkit:SampleClient",
                         "http://industrial.softing.com/OpcUaNetStandardToolkit/SampleClient")
                 .SetApplicationName("Softing .NET Standard Sample Client")
                 .DisableHiResClock(true)
@@ -173,7 +173,7 @@ namespace SampleClient
                     ChannelLifetime = 300000,
                     SecurityTokenLifetime = 3600000
                 })
-                .AsClientExt()
+                .AsClient()
                     .SetDefaultSessionTimeout(610000)
                     .SetMinSubscriptionLifetime(11000)
                     .AddWellKnownDiscoveryUrls("opc.tcp://{0}:4840/UADiscovery")
@@ -224,9 +224,7 @@ namespace SampleClient
                 .SetTraceMasks(1)
                 .SetOutputFilePath("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleClient.log")
                 .SetDeleteOnLoad(true)
-                .Create();
-
-            await applicationConfigurationBuilder.CheckApplicationInstanceCertificate(true, 2048);
+                .Create().ConfigureAwait(false);
 
             return applicationConfigurationBuilder;
 

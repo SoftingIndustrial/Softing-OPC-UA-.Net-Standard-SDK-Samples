@@ -120,11 +120,11 @@ namespace SampleServer
         /// <returns></returns>
         private static async Task<ApplicationConfigurationBuilderEx> LoadDefaultConfiguration()
         {
-            ApplicationConfigurationBuilderEx applicationConfigurationBuilder = new ApplicationConfigurationBuilderEx();
-
+            ApplicationConfigurationBuilderEx applicationConfigurationBuilder = 
+                new ApplicationConfigurationBuilderEx(ApplicationType.Server);
 
             await applicationConfigurationBuilder
-                .Initialize("urn: localhost:Softing: UANETStandardToolkit:SampleServer",
+                .Initialize("urn:localhost:Softing:UANETStandardToolkit:SampleServer",
                         "http://industrial.softing.com/OpcUaNetStandardToolkit/SampleServer")
                 .SetApplicationName("Softing NET Standard Sample Server")
                 .DisableHiResClock(true)
@@ -141,8 +141,8 @@ namespace SampleServer
                 })
                 .AsServer(new string[] { "opc.tcp://localhost:61510/SampleServer" })
                     .AddUnsecurePolicyNone()
-                    //.AddPolicy(Opc.Ua.MessageSecurityMode.None, "http://opcfoundation.org/UA/SecurityPolicy#None")
-                    //.AddSignAndEncryptPolicies()
+                    .AddPolicy(Opc.Ua.MessageSecurityMode.None, "http://opcfoundation.org/UA/SecurityPolicy#None")
+                    .AddSignAndEncryptPolicies()
                     .AddPolicy(Opc.Ua.MessageSecurityMode.Sign, "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256")
                     .AddPolicy(Opc.Ua.MessageSecurityMode.SignAndEncrypt, "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256")
                     .AddPolicy(Opc.Ua.MessageSecurityMode.Sign, "http://opcfoundation.org/UA/SecurityPolicy#Aes128_Sha256_RsaOaep")
@@ -207,15 +207,13 @@ namespace SampleServer
                     .SetRejectSHA1SignedCertificates(false)
                     .SetRejectUnknownRevocationStatus(false)
                     .SetMinimumCertificateKeySize(1024)
-                //.SetUserRoleDirectory("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles")
+                    .SetUserRoleDirectory("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles")
                 .AddExtension<SampleServerConfiguration>(new XmlQualifiedName("SampleServerConfiguration"),
                     new SampleServerConfiguration() { TimerInterval = 1000, ClearCachedCertificatesInterval = 30000 })
                 .SetTraceMasks(1)
                 .SetOutputFilePath("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleServer.log")
                 .SetDeleteOnLoad(true)
                 .Create();
-
-            await applicationConfigurationBuilder.CheckApplicationInstanceCertificate(true, 2048);
 
             return applicationConfigurationBuilder;
         }
