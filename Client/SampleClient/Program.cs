@@ -34,7 +34,7 @@ namespace SampleClient
             // todo: to define a way to use it
 
             // Load client default (customized) configuration build with a fluent API
-             ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration().Result;
+            // ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration().Result;
 
             // Create the UaApplication object from application configuration build with a fluent API
             // UaApplication application = UaApplication.Create(defaultConfiguration).Result;
@@ -177,18 +177,12 @@ namespace SampleClient
                     .SetDefaultSessionTimeout(610000)
                     .SetMinSubscriptionLifetime(11000)
                     .AddWellKnownDiscoveryUrls("opc.tcp://{0}:4840/UADiscovery")
-                    .AddWellKnownDiscoveryUrls("http://{0}:52601/UADiscovery")
-                    .AddWellKnownDiscoveryUrls("http://{0}/UADiscovery/Default.svc")
                 .AddSecurityConfigurationExt(
                     "SoftingOpcUaSampleClient",
                     "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
                     "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
                     "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki")
-                    .SetAddAppCertToTrustedStore(true)
-                    .SetAutoAcceptUntrustedCertificates(false)
                     .SetRejectSHA1SignedCertificates(false)
-                    .SetRejectUnknownRevocationStatus(false)
-                    .SetMinimumCertificateKeySize(1024)
                     .SetUserRoleDirectory("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles")
                 .AddExtension<SampleClientConfiguration>(new XmlQualifiedName("SampleClientConfiguration"),
                     new SampleClientConfiguration()
@@ -208,16 +202,6 @@ namespace SampleClient
                     new ClientToolkitConfiguration()
                     {
                         DiscoveryOperationTimeout = 10000,
-                        DefaultKeepAliveInterval = 5000,
-                        SessionReconnectDelay = 5000,
-                        DefaultSubscriptionPublishingInterval = 1000,
-                        DefaultSubscriptionKeepAliveCount = 10,
-                        DefaultSubscriptionLifeTimeCount = 1000,
-                        DefaultSubscriptionMaxNotificationsPerPublish = 0,
-                        DefaultSubscriptionPriority = 255,
-                        DefaultMiSamplingInterval = 1000,
-                        DefaultMiQueueSize = 1,
-                        DefaultEventMiQueueSize = 0,
                         DecodeCustomDataTypes = true,
                         DecodeDataTypeDictionaries = true
                     })
