@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
 
@@ -100,7 +101,7 @@ namespace SampleClient.Samples
         /// Asynchronously Gets and Displays all registered server applications and their available endpoints.
         /// The method calls <see cref="UaApplication.DiscoverServersAsync(string)"/> method.
         /// </summary>
-        public async void DiscoverServersAsync()
+        public async Task DiscoverServersAsync()
         {
             try
             {
@@ -217,7 +218,7 @@ namespace SampleClient.Samples
         /// Asynchronously Gets and Displays all registered server applications on the network.
         /// The method calls <see cref="UaApplication.DiscoverServersOnNetworkAsync(string)"/> method.
         /// </summary>
-        public async void DiscoverServersOnNetworkAsync()
+        public async Task DiscoverServersOnNetworkAsync()
         {
             try
             {

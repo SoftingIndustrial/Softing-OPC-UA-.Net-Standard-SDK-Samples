@@ -690,7 +690,7 @@ namespace SampleClient.StateMachine
             //initialize discovery sample
             DiscoveryClient discoveryClientSample = new DiscoveryClient(m_application);
             //call sample discovery methods
-            discoveryClientSample.DiscoverServersAsync();
+            Task.Run(async () => await discoveryClientSample.DiscoverServersAsync());
         }
 
         /// <summary>
@@ -702,8 +702,9 @@ namespace SampleClient.StateMachine
         {
             //initialize discovery sample
             DiscoveryClient discoveryClientSample = new DiscoveryClient(m_application);
+
             //call sample discovery methods
-            discoveryClientSample.DiscoverServersOnNetworkAsync();
+            Task.Run(async () => await discoveryClientSample.DiscoverServersOnNetworkAsync());
         }
 
 
