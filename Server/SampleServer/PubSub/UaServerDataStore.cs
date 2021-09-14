@@ -41,7 +41,7 @@ namespace SampleServer.PubSub
         /// <param name="nodeId">NodeId identifier of node</param>
         /// <param name="attributeId">Default value is <see cref="Attributes.Value"/></param>
         /// <returns></returns>
-        public DataValue ReadPublishedDataItem(NodeId nodeId, uint attributeId = 13)
+        public DataValue ReadPublishedDataItem(NodeId nodeId, uint attributeId = 13, bool deltaFrame = false)
         {
             if (nodeId == null)
             {
@@ -62,6 +62,11 @@ namespace SampleServer.PubSub
                 }
             }
             return null;
+        }
+
+        public void UpdateMetaData(PublishedDataSetDataType publishedDataSet)
+        {
+           
         }
 
         /// <summary>
