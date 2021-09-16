@@ -3669,7 +3669,7 @@
       <Enabled>true</Enabled>
       <PublisherId>
         <Value>
-          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">50</UInt16>
+          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
         </Value>
       </PublisherId>
       <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-mqtt-json</TransportProfileUri>
@@ -3684,7 +3684,63 @@
           </NetworkAddressUrlDataType>
         </Body>
       </Address>
-      <ConnectionProperties />  
+      <ConnectionProperties>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>UserName</Name>
+          </Key>
+          <Value>
+            <Value>
+              <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>Password</Name>
+          </Key>
+          <Value>
+            <Value>
+              <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>AzureClientId</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Null xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>CleanSession</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Boolean xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">true</Boolean>
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>ProtocolVersion</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Int32 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">5</Int32>
+            </Value>
+          </Value>
+        </KeyValuePair>
+      </ConnectionProperties>
       <TransportSettings i:nil="true" />
       <WriterGroups>
         <WriterGroupDataType>

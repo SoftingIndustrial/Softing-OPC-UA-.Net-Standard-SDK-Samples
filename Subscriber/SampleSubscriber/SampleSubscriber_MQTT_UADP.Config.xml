@@ -3,14 +3,14 @@
   <PublishedDataSets />
   <Connections>
     <PubSubConnectionDataType>
-      <Name>MqttJsonConection</Name>
+      <Name>MqttUadpConection</Name>
       <Enabled>true</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
         </Value>
       </PublisherId>
-      <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-mqtt-json</TransportProfileUri>
+      <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-mqtt-uadp</TransportProfileUri>
       <Address>
         <TypeId>
           <Identifier>i=21176</Identifier>
@@ -212,8 +212,9 @@
                 </TypeId>
                 <Body>
                   <BrokerDataSetReaderTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <QueueName>Json_WriterGroup_1</QueueName>
-                    <RequestedDeliveryGuarantee>NotSpecified_0</RequestedDeliveryGuarantee>
+                    <QueueName>Uadp_WriterGroup_1</QueueName>
+                    <RequestedDeliveryGuarantee>BestEffort_1</RequestedDeliveryGuarantee>
+                    <MetaDataQueueName>Uadp_WriterGroup_1/$Metadata</MetaDataQueueName>
                   </BrokerDataSetReaderTransportDataType>
                 </Body>
               </TransportSettings>
@@ -222,10 +223,19 @@
                   <Identifier>i=16019</Identifier>
                 </TypeId>
                 <Body>
-                  <JsonDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <NetworkMessageContentMask>59</NetworkMessageContentMask>
-                    <DataSetMessageContentMask>31</DataSetMessageContentMask>
-                  </JsonDataSetReaderMessageDataType>
+                  <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <GroupVersion>0</GroupVersion>
+                    <NetworkMessageNumber>0</NetworkMessageNumber>
+                    <DataSetOffset>15</DataSetOffset>
+                    <DataSetClassId>
+                      <String>00000000-0000-0000-0000-000000000000</String>
+                    </DataSetClassId>
+                    <NetworkMessageContentMask>63</NetworkMessageContentMask>
+                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
+                    <PublishingInterval>0</PublishingInterval>
+                    <ReceiveOffset>0</ReceiveOffset>
+                    <ProcessingOffset>0</ProcessingOffset>
+                  </UadpDataSetReaderMessageDataType>
                 </Body>
               </MessageSettings>
               <SubscribedDataSet>
@@ -485,8 +495,9 @@
                 </TypeId>
                 <Body>
                   <BrokerDataSetReaderTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <QueueName>Json_WriterGroup_1</QueueName>
-                    <RequestedDeliveryGuarantee>NotSpecified_0</RequestedDeliveryGuarantee>
+                    <QueueName>Uadp_WriterGroup_1</QueueName>
+                    <RequestedDeliveryGuarantee>BestEffort_1</RequestedDeliveryGuarantee>
+                    <MetaDataQueueName>Uadp_WriterGroup_1/$Metadata</MetaDataQueueName>
                   </BrokerDataSetReaderTransportDataType>
                 </Body>
               </TransportSettings>
@@ -495,10 +506,19 @@
                   <Identifier>i=16019</Identifier>
                 </TypeId>
                 <Body>
-                  <JsonDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <NetworkMessageContentMask>59</NetworkMessageContentMask>
-                    <DataSetMessageContentMask>31</DataSetMessageContentMask>
-                  </JsonDataSetReaderMessageDataType>
+                  <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <GroupVersion>0</GroupVersion>
+                    <NetworkMessageNumber>0</NetworkMessageNumber>
+                    <DataSetOffset>47</DataSetOffset>
+                    <DataSetClassId>
+                      <String>00000000-0000-0000-0000-000000000000</String>
+                    </DataSetClassId>
+                    <NetworkMessageContentMask>63</NetworkMessageContentMask>
+                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
+                    <PublishingInterval>0</PublishingInterval>
+                    <ReceiveOffset>0</ReceiveOffset>
+                    <ProcessingOffset>0</ProcessingOffset>
+                  </UadpDataSetReaderMessageDataType>
                 </Body>
               </MessageSettings>
               <SubscribedDataSet>
@@ -652,11 +672,8 @@
               <Name>Reader 3</Name>
               <Enabled>true</Enabled>
               <PublisherId>
-                <!--<Value>
-                  <Null xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
-                </Value>-->
                 <Value>
-                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+                  <Null xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
                 </Value>
               </PublisherId>
               <WriterGroupId>0</WriterGroupId>
@@ -2292,8 +2309,9 @@
                 </TypeId>
                 <Body>
                   <BrokerDataSetReaderTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <QueueName>Json_WriterGroup_1</QueueName>
-                    <RequestedDeliveryGuarantee>NotSpecified_0</RequestedDeliveryGuarantee>
+                    <QueueName>Uadp_WriterGroup_1</QueueName>
+                    <RequestedDeliveryGuarantee>BestEffort_1</RequestedDeliveryGuarantee>
+                    <MetaDataQueueName>Uadp_WriterGroup_1/$Metadata</MetaDataQueueName>
                   </BrokerDataSetReaderTransportDataType>
                 </Body>
               </TransportSettings>
@@ -2302,10 +2320,19 @@
                   <Identifier>i=16019</Identifier>
                 </TypeId>
                 <Body>
-                  <JsonDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <NetworkMessageContentMask>59</NetworkMessageContentMask>
-                    <DataSetMessageContentMask>31</DataSetMessageContentMask>
-                  </JsonDataSetReaderMessageDataType>
+                  <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <GroupVersion>0</GroupVersion>
+                    <NetworkMessageNumber>0</NetworkMessageNumber>
+                    <DataSetOffset>79</DataSetOffset>
+                    <DataSetClassId>
+                      <String>00000000-0000-0000-0000-000000000000</String>
+                    </DataSetClassId>
+                    <NetworkMessageContentMask>63</NetworkMessageContentMask>
+                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
+                    <PublishingInterval>0</PublishingInterval>
+                    <ReceiveOffset>0</ReceiveOffset>
+                    <ProcessingOffset>0</ProcessingOffset>
+                  </UadpDataSetReaderMessageDataType>
                 </Body>
               </MessageSettings>
               <SubscribedDataSet>

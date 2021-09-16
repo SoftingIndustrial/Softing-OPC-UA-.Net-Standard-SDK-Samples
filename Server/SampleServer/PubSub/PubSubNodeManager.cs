@@ -10,6 +10,7 @@
 
 using Opc.Ua;
 using Opc.Ua.PubSub;
+using Opc.Ua.PubSub.Transport;
 using Opc.Ua.PubSub.Configuration;
 using Opc.Ua.PubSub.PublishedData;
 using Opc.Ua.Server;
@@ -373,6 +374,11 @@ namespace SampleServer.PubSub
                 pubSubConnectionState.Address = address;
             }
 
+            if(e.PubSubConnectionDataType.ConnectionProperties != null)
+            {
+                pubSubConnectionState.ConnectionProperties.Value = e.PubSubConnectionDataType.ConnectionProperties.ToArray();
+            }
+            
             MapConfigIdToPubSubNodeState(e.ConnectionId, pubSubConnectionState);
             InitializePubSubStatusStateMethods(pubSubConnectionState.Status, e.PubSubConnectionDataType);
 
@@ -414,30 +420,77 @@ namespace SampleServer.PubSub
                 writerGroupState.KeepAliveTime.Value = e.WriterGroupDataType.KeepAliveTime;
                 writerGroupState.HeaderLayoutUri.Value = e.WriterGroupDataType.HeaderLayoutUri;
                 writerGroupState.MaxNetworkMessageSize.Value = e.WriterGroupDataType.MaxNetworkMessageSize;
+
                 //writerGroupState.MessageSettings
-                UadpWriterGroupMessageDataType messageSettings = ExtensionObject.ToEncodeable(e.WriterGroupDataType.MessageSettings)
-                      as UadpWriterGroupMessageDataType;
+                var messageSettings = ExtensionObject.ToEncodeable(e.WriterGroupDataType.MessageSettings);
                 if (messageSettings != null)
                 {
-                    UadpWriterGroupMessageState messageSettingsState = CreateObjectFromType(writerGroupState, BrowseNames.MessageSettings, ObjectTypeIds.UadpWriterGroupMessageType)
-                        as UadpWriterGroupMessageState;
-                    messageSettingsState.GroupVersion.Value = messageSettings.GroupVersion;
-                    messageSettingsState.DataSetOrdering.Value = messageSettings.DataSetOrdering;
-                    messageSettingsState.NetworkMessageContentMask.Value = messageSettings.NetworkMessageContentMask;
-                    //messageSettingsState.PublishingOffset.Value = messageSettings.PublishingOffset;
+                    WriterGroupMessageState messageSettingsState = null;
+                    if (messageSettings is UadpWriterGroupMessageDataType)
+                    {
+                        UadpWriterGroupMessageDataType messageSettingsDataType = messageSettings as UadpWriterGroupMessageDataType;
+                        if(messageSettingsDataType != null)
+                        {
+                            UadpWriterGroupMessageState uadpMessageSettingsState = CreateObjectFromType(writerGroupState, BrowseNames.MessageSettings, ObjectTypeIds.UadpWriterGroupMessageType)
+                                as UadpWriterGroupMessageState;
+                            uadpMessageSettingsState.GroupVersion.Value = messageSettingsDataType.GroupVersion;
+                            uadpMessageSettingsState.DataSetOrdering.Value = messageSettingsDataType.DataSetOrdering;
+                            uadpMessageSettingsState.NetworkMessageContentMask.Value = messageSettingsDataType.NetworkMessageContentMask;
+                            uadpMessageSettingsState.PublishingOffset.Value = messageSettingsDataType.PublishingOffset.ToArray();
 
+                            messageSettingsState = uadpMessageSettingsState;
+                        }
+                    }
+                    if (messageSettings is JsonWriterGroupMessageDataType)
+                    {
+                        JsonWriterGroupMessageDataType messageSettingsDataType = messageSettings as JsonWriterGroupMessageDataType;
+                        if (messageSettingsDataType != null)
+                        {
+                            JsonWriterGroupMessageState jsonMessageSettingsState = CreateObjectFromType(writerGroupState, BrowseNames.MessageSettings, ObjectTypeIds.JsonWriterGroupMessageType)
+                                as JsonWriterGroupMessageState;
+                            jsonMessageSettingsState.NetworkMessageContentMask.Value = messageSettingsDataType.NetworkMessageContentMask;
+
+                            messageSettingsState = jsonMessageSettingsState;
+                        }
+                    }
                     writerGroupState.MessageSettings = messageSettingsState;
                 }
 
                 //writerGroupState.TransportSettings
-                DatagramWriterGroupTransportDataType transportSettings = ExtensionObject.ToEncodeable(e.WriterGroupDataType.TransportSettings)
-                      as DatagramWriterGroupTransportDataType;
+                var transportSettings = ExtensionObject.ToEncodeable(e.WriterGroupDataType.TransportSettings);
                 if (transportSettings != null)
                 {
-                    DatagramWriterGroupTransportState datagramWriterGroupTransportState = CreateObjectFromType(writerGroupState, BrowseNames.TransportSettings, ObjectTypeIds.DatagramWriterGroupTransportType)
-                        as DatagramWriterGroupTransportState;
+                    WriterGroupTransportState transportSettingsState = null;
+                    if (transportSettings is DatagramWriterGroupTransportDataType)
+                    {
+                        DatagramWriterGroupTransportDataType transportSettingsDataType = transportSettings as DatagramWriterGroupTransportDataType;
+                        if (transportSettingsDataType != null)
+                        {
+                            DatagramWriterGroupTransportState datagramWriterGroupTransportState = CreateObjectFromType(writerGroupState, BrowseNames.TransportSettings, ObjectTypeIds.DatagramWriterGroupTransportType)
+                                as DatagramWriterGroupTransportState;
 
-                    writerGroupState.TransportSettings = datagramWriterGroupTransportState;
+                            datagramWriterGroupTransportState.MessageRepeatCount.Value = transportSettingsDataType.MessageRepeatCount;
+                            datagramWriterGroupTransportState.MessageRepeatDelay.Value = transportSettingsDataType.MessageRepeatDelay;
+
+                            transportSettingsState = datagramWriterGroupTransportState;
+                        }
+                    }
+                    if (transportSettings is BrokerWriterGroupTransportDataType)
+                    {
+                        BrokerWriterGroupTransportDataType transportSettingsDataType = transportSettings as BrokerWriterGroupTransportDataType;
+                        if (transportSettingsDataType != null)
+                        {
+                            BrokerWriterGroupTransportState brokerWriterGroupTransportState = CreateObjectFromType(writerGroupState, BrowseNames.TransportSettings, ObjectTypeIds.BrokerWriterGroupTransportType)
+                                as BrokerWriterGroupTransportState;
+
+                            brokerWriterGroupTransportState.QueueName.Value = transportSettingsDataType.QueueName;
+                            brokerWriterGroupTransportState.RequestedDeliveryGuarantee.Value = transportSettingsDataType.RequestedDeliveryGuarantee;
+
+                            transportSettingsState = brokerWriterGroupTransportState;
+                        }
+                    }
+
+                    writerGroupState.TransportSettings = transportSettingsState;
                 }
 
                 MapConfigIdToPubSubNodeState(e.WriterGroupId, writerGroupState);
@@ -479,29 +532,76 @@ namespace SampleServer.PubSub
                 dataSetWriterState.DataSetWriterId.Value = e.DataSetWriterDataType.DataSetWriterId;
                 dataSetWriterState.DataSetFieldContentMask.Value = e.DataSetWriterDataType.DataSetFieldContentMask;
                 dataSetWriterState.KeyFrameCount.Value = e.DataSetWriterDataType.KeyFrameCount;
-                //.MessageSettings
-                UadpDataSetWriterMessageDataType messageSettings = ExtensionObject.ToEncodeable(e.DataSetWriterDataType.MessageSettings)
-                      as UadpDataSetWriterMessageDataType;
+
+                //dataSetWriterState.MessageSettings
+                var messageSettings = ExtensionObject.ToEncodeable(e.DataSetWriterDataType.MessageSettings);
                 if (messageSettings != null)
                 {
-                    UadpDataSetWriterMessageState messageSettingsState = CreateObjectFromType(dataSetWriterState, BrowseNames.MessageSettings, ObjectTypeIds.UadpDataSetWriterMessageType)
-                        as UadpDataSetWriterMessageState;
-                    messageSettingsState.ConfiguredSize.Value = messageSettings.ConfiguredSize;
-                    messageSettingsState.DataSetOffset.Value = messageSettings.DataSetOffset;
-                    messageSettingsState.DataSetMessageContentMask.Value = messageSettings.DataSetMessageContentMask;
-                    messageSettingsState.NetworkMessageNumber.Value = messageSettings.NetworkMessageNumber;
+                    DataSetWriterMessageState messageSettingsState = null;
+                    if (messageSettings is UadpDataSetWriterMessageDataType)
+                    {
+                        UadpDataSetWriterMessageDataType messageSettingsDataType = messageSettings as UadpDataSetWriterMessageDataType;
+                        if (messageSettingsDataType != null)
+                        {
+                            UadpDataSetWriterMessageState uadpMessageSettingsState = CreateObjectFromType(dataSetWriterState, BrowseNames.MessageSettings, ObjectTypeIds.UadpDataSetWriterMessageType)
+                                as UadpDataSetWriterMessageState;
+
+                            uadpMessageSettingsState.ConfiguredSize.Value = messageSettingsDataType.ConfiguredSize;
+                            uadpMessageSettingsState.DataSetOffset.Value = messageSettingsDataType.DataSetOffset;
+                            uadpMessageSettingsState.DataSetMessageContentMask.Value = messageSettingsDataType.DataSetMessageContentMask;
+                            uadpMessageSettingsState.NetworkMessageNumber.Value = messageSettingsDataType.NetworkMessageNumber;
+
+                            messageSettingsState = uadpMessageSettingsState;
+                        }
+                    }
+                    if (messageSettings is JsonDataSetWriterMessageDataType) 
+                    {
+                        JsonDataSetWriterMessageDataType messageSettingsDataType = messageSettings as JsonDataSetWriterMessageDataType;
+                        if (messageSettingsDataType != null)
+                        {
+                            JsonDataSetWriterMessageState jsonMessageSettingsState = CreateObjectFromType(dataSetWriterState, BrowseNames.MessageSettings, ObjectTypeIds.JsonDataSetWriterMessageType)
+                                as JsonDataSetWriterMessageState;
+
+                            jsonMessageSettingsState.DataSetMessageContentMask.Value = messageSettingsDataType.DataSetMessageContentMask;
+
+                            messageSettingsState = jsonMessageSettingsState;
+                        }
+                    }
 
                     dataSetWriterState.MessageSettings = messageSettingsState;
                 }
 
-                //.TransportSettings  
+                //dataSetWriterState.TransportSettings  
+                var transportSettings = ExtensionObject.ToEncodeable(e.DataSetWriterDataType.TransportSettings);
+                if (transportSettings != null)
+                {
+                    DataSetWriterTransportState transportSettingsState = null;
+                    if (transportSettings is BrokerDataSetWriterTransportDataType)
+                    {
+                        BrokerDataSetWriterTransportDataType transportSettingsDataType = transportSettings as BrokerDataSetWriterTransportDataType;
+                        if (transportSettingsDataType != null)
+                        {
+                            BrokerDataSetWriterTransportState brokerDataSetWriterTransportState = CreateObjectFromType(dataSetWriterState, BrowseNames.TransportSettings, ObjectTypeIds.BrokerDataSetWriterTransportType)
+                                as BrokerDataSetWriterTransportState;
+
+                            brokerDataSetWriterTransportState.QueueName.Value = transportSettingsDataType.QueueName;
+                            brokerDataSetWriterTransportState.RequestedDeliveryGuarantee.Value = transportSettingsDataType.RequestedDeliveryGuarantee;
+                            brokerDataSetWriterTransportState.MetaDataQueueName.Value = transportSettingsDataType.MetaDataQueueName;
+                            brokerDataSetWriterTransportState.MetaDataUpdateTime.Value = transportSettingsDataType.MetaDataUpdateTime;
+                            
+                            transportSettingsState = brokerDataSetWriterTransportState;
+                        }
+                    }
+
+                    dataSetWriterState.TransportSettings = transportSettingsState;
+                }
 
                 // add reference to published data set
                 /*The Object has a list of DataSetWriters. A DataSetWriter sends DataSetMessages created from DataSets through a Message Oriented Middleware. 
-                 * The link between the PublishedDataSet Object and a DataSetWriter shall be created when an instance of the DataSetWriterType is created. 
-                 * The DataSetWriterType is defined in 9.1.7.2. If a DataSetWriter is created for the PublishedDataSet, it is added to the list using the ReferenceType DataSetToWriter. 
-                 * The DataSetToWriter ReferenceType is defined in 9.1.4.2.5. If a DataSetWriter for the PublishedDataSet is removed from a group, 
-                 * the Reference to this DataSetWriter shall also be removed from this list. The group model is defined in 9.1.6.*/
+                    * The link between the PublishedDataSet Object and a DataSetWriter shall be created when an instance of the DataSetWriterType is created. 
+                    * The DataSetWriterType is defined in 9.1.7.2. If a DataSetWriter is created for the PublishedDataSet, it is added to the list using the ReferenceType DataSetToWriter. 
+                    * The DataSetToWriter ReferenceType is defined in 9.1.4.2.5. If a DataSetWriter for the PublishedDataSet is removed from a group, 
+                    * the Reference to this DataSetWriter shall also be removed from this list. The group model is defined in 9.1.6.*/
 
                 PublishedDataSetDataType publishedDataSetDataType = m_uaPubSubConfigurator.FindPublishedDataSetByName(e.DataSetWriterDataType.DataSetName);
                 if (publishedDataSetDataType != null)
@@ -623,23 +723,23 @@ namespace SampleServer.PubSub
             if (parentReaderGroupState != null)
             {
                 // create dataset reader state and add it to the address space
-                DataSetReaderState dataSetreaderState = CreateObjectFromType(parentReaderGroupState, e.DataSetReaderDataType.Name,
+                DataSetReaderState dataSetReaderState = CreateObjectFromType(parentReaderGroupState, e.DataSetReaderDataType.Name,
                     ObjectTypeIds.DataSetReaderType, ReferenceTypeIds.HasDataSetReader) as DataSetReaderState;
 
                 //copy properties of configuration to node state object
-                dataSetreaderState.PublisherId.Value = e.DataSetReaderDataType.PublisherId;
-                dataSetreaderState.WriterGroupId.Value = e.DataSetReaderDataType.WriterGroupId;
-                dataSetreaderState.DataSetWriterId.Value = e.DataSetReaderDataType.DataSetWriterId;
-                dataSetreaderState.DataSetMetaData.Value = e.DataSetReaderDataType.DataSetMetaData;
-                dataSetreaderState.DataSetFieldContentMask.Value = e.DataSetReaderDataType.DataSetFieldContentMask;
-                dataSetreaderState.MessageReceiveTimeout.Value = e.DataSetReaderDataType.MessageReceiveTimeout;
-                dataSetreaderState.KeyFrameCount.Value = e.DataSetReaderDataType.KeyFrameCount;
+                dataSetReaderState.PublisherId.Value = e.DataSetReaderDataType.PublisherId;
+                dataSetReaderState.WriterGroupId.Value = e.DataSetReaderDataType.WriterGroupId;
+                dataSetReaderState.DataSetWriterId.Value = e.DataSetReaderDataType.DataSetWriterId;
+                dataSetReaderState.DataSetMetaData.Value = e.DataSetReaderDataType.DataSetMetaData;
+                dataSetReaderState.DataSetFieldContentMask.Value = e.DataSetReaderDataType.DataSetFieldContentMask;
+                dataSetReaderState.MessageReceiveTimeout.Value = e.DataSetReaderDataType.MessageReceiveTimeout;
+                dataSetReaderState.KeyFrameCount.Value = e.DataSetReaderDataType.KeyFrameCount;
                 //SubscribedDataSet
                 TargetVariablesDataType subscribedDataSet = ExtensionObject.ToEncodeable(e.DataSetReaderDataType.SubscribedDataSet)
                       as TargetVariablesDataType;
                 if (subscribedDataSet != null)
                 {
-                    TargetVariablesState targetVariablesState = CreateObjectFromType(dataSetreaderState, BrowseNames.SubscribedDataSet, ObjectTypeIds.TargetVariablesType)
+                    TargetVariablesState targetVariablesState = CreateObjectFromType(dataSetReaderState, BrowseNames.SubscribedDataSet, ObjectTypeIds.TargetVariablesType)
                         as TargetVariablesState;
                     targetVariablesState.TargetVariables.Value = subscribedDataSet.TargetVariables.ToArray();
                     //if (dataSetreaderState.SubscribedDataSet != null)
@@ -648,30 +748,76 @@ namespace SampleServer.PubSub
                     //}
                     //else
                     {
-                        dataSetreaderState.SubscribedDataSet = targetVariablesState;
+                        dataSetReaderState.SubscribedDataSet = targetVariablesState;
                     }
                 }
 
-                //.MessageSettings
-                UadpDataSetReaderMessageDataType messageSettings = ExtensionObject.ToEncodeable(e.DataSetReaderDataType.MessageSettings)
-                    as UadpDataSetReaderMessageDataType;
+                //dataSetReaderState.MessageSettings
+                var messageSettings = ExtensionObject.ToEncodeable(e.DataSetReaderDataType.MessageSettings);
                 if (messageSettings != null)
                 {
-                    UadpDataSetReaderMessageState messageSettingsState = CreateObjectFromType(dataSetreaderState, BrowseNames.MessageSettings, ObjectTypeIds.UadpDataSetReaderMessageType)
-                        as UadpDataSetReaderMessageState;
-                    messageSettingsState.GroupVersion.Value = messageSettings.GroupVersion;
-                    messageSettingsState.DataSetOffset.Value = messageSettings.DataSetOffset;
-                    messageSettingsState.NetworkMessageNumber.Value = messageSettings.NetworkMessageNumber;
-                    messageSettingsState.DataSetMessageContentMask.Value = messageSettings.DataSetMessageContentMask;
-                    messageSettingsState.NetworkMessageContentMask.Value = messageSettings.NetworkMessageContentMask;
+                    DataSetReaderMessageState messageSettingsState = null;
+                    if (messageSettings is UadpDataSetReaderMessageDataType)
+                    {
+                        UadpDataSetReaderMessageDataType messageSettingsDataType = messageSettings as UadpDataSetReaderMessageDataType;
+                        if (messageSettingsDataType != null)
+                        {
+                            UadpDataSetReaderMessageState uadpMessageSettingsState = CreateObjectFromType(dataSetReaderState, BrowseNames.MessageSettings, ObjectTypeIds.UadpDataSetReaderMessageType)
+                                as UadpDataSetReaderMessageState;
 
-                    dataSetreaderState.MessageSettings = messageSettingsState;
+                            uadpMessageSettingsState.GroupVersion.Value = messageSettingsDataType.GroupVersion;
+                            uadpMessageSettingsState.DataSetOffset.Value = messageSettingsDataType.DataSetOffset;
+                            uadpMessageSettingsState.NetworkMessageNumber.Value = messageSettingsDataType.NetworkMessageNumber;
+                            uadpMessageSettingsState.DataSetMessageContentMask.Value = messageSettingsDataType.DataSetMessageContentMask;
+                            uadpMessageSettingsState.NetworkMessageContentMask.Value = messageSettingsDataType.NetworkMessageContentMask;
+                            
+                            messageSettingsState = uadpMessageSettingsState;
+                        }
+                    }
+                    if (messageSettings is JsonDataSetReaderMessageDataType)
+                    {
+                        JsonDataSetReaderMessageDataType messageSettingsDataType = messageSettings as JsonDataSetReaderMessageDataType;
+                        if (messageSettingsDataType != null)
+                        {
+                            JsonDataSetReaderMessageState jsonMessageSettingsState = CreateObjectFromType(dataSetReaderState, BrowseNames.MessageSettings, ObjectTypeIds.JsonDataSetReaderMessageType)
+                                as JsonDataSetReaderMessageState;
+
+                            jsonMessageSettingsState.NetworkMessageContentMask.Value = messageSettingsDataType.NetworkMessageContentMask;
+                            jsonMessageSettingsState.DataSetMessageContentMask.Value = messageSettingsDataType.DataSetMessageContentMask;
+
+                            messageSettingsState = jsonMessageSettingsState;
+                        }
+                    }
+
+                    dataSetReaderState.MessageSettings = messageSettingsState;
                 }
 
-                //.TransportSettings              
+                //dataSetReaderState.TransportSettings  
+                var transportSettings = ExtensionObject.ToEncodeable(e.DataSetReaderDataType.TransportSettings);
+                if (transportSettings != null)
+                {
+                    DataSetReaderTransportState transportSettingsState = null;
+                    if (transportSettings is BrokerDataSetReaderTransportDataType)
+                    {
+                        BrokerDataSetReaderTransportDataType transportSettingsDataType = transportSettings as BrokerDataSetReaderTransportDataType;
+                        if (transportSettingsDataType != null)
+                        {
+                            BrokerDataSetReaderTransportState brokerDataSetReaderTransportState = CreateObjectFromType(dataSetReaderState, BrowseNames.TransportSettings, ObjectTypeIds.BrokerDataSetReaderTransportType)
+                                as BrokerDataSetReaderTransportState;
 
-                MapConfigIdToPubSubNodeState(e.DataSetReaderId, dataSetreaderState);
-                InitializePubSubStatusStateMethods(dataSetreaderState.Status, e.DataSetReaderDataType);
+                            brokerDataSetReaderTransportState.QueueName.Value = transportSettingsDataType.QueueName;
+                            brokerDataSetReaderTransportState.RequestedDeliveryGuarantee.Value = transportSettingsDataType.RequestedDeliveryGuarantee;
+                            brokerDataSetReaderTransportState.MetaDataQueueName.Value = transportSettingsDataType.MetaDataQueueName;
+                            
+                            transportSettingsState = brokerDataSetReaderTransportState;
+                        }
+                    }
+
+                    dataSetReaderState.TransportSettings = transportSettingsState;
+                }
+
+                MapConfigIdToPubSubNodeState(e.DataSetReaderId, dataSetReaderState);
+                InitializePubSubStatusStateMethods(dataSetReaderState.Status, e.DataSetReaderDataType);
             }
         }
         /// <summary>

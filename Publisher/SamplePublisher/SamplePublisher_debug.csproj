@@ -22,6 +22,9 @@
 </ItemGroup>
 
 <ItemGroup>
+<None Update="SamplePublisher_MQTT_UADP.Config.xml">
+  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
 <None Update="SamplePublisher_MQTT_JSON.Config.xml">
   <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 </None>
