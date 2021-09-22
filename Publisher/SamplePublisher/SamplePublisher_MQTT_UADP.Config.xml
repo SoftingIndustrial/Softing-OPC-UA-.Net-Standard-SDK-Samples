@@ -3764,7 +3764,7 @@
             <Body>
               <BrokerWriterGroupTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                 <QueueName>Uadp_WriterGroup_1</QueueName>
-                <RequestedDeliveryGuarantee>BestEffort_1</RequestedDeliveryGuarantee>
+                <RequestedDeliveryGuarantee>NotSpecified_0</RequestedDeliveryGuarantee>
               </BrokerWriterGroupTransportDataType>
             </Body>
           </TransportSettings>
@@ -3798,7 +3798,7 @@
                 <Body>
                   <BrokerDataSetWriterTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <QueueName>Uadp_WriterGroup_1</QueueName>
-                    <RequestedDeliveryGuarantee>BestEffort_1</RequestedDeliveryGuarantee>
+                    <RequestedDeliveryGuarantee>NotSpecified_0</RequestedDeliveryGuarantee>
                     <MetaDataQueueName>Uadp_WriterGroup_1/$Metadata</MetaDataQueueName>
                     <MetaDataUpdateTime>60000</MetaDataUpdateTime>
                   </BrokerDataSetWriterTransportDataType>
@@ -3826,7 +3826,6 @@
               <KeyFrameCount>1</KeyFrameCount>
               <DataSetName>AllTypes</DataSetName>
               <DataSetWriterProperties />
-              <DataSetWriterProperties />
               <TransportSettings>
                 <TypeId>
                   <Identifier>i=16022</Identifier>
@@ -3834,7 +3833,7 @@
                 <Body>
                   <BrokerDataSetWriterTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <QueueName>Uadp_WriterGroup_1</QueueName>
-                    <RequestedDeliveryGuarantee>BestEffort_1</RequestedDeliveryGuarantee>
+                    <RequestedDeliveryGuarantee>NotSpecified_0</RequestedDeliveryGuarantee>
                     <MetaDataQueueName>Uadp_WriterGroup_1/$Metadata</MetaDataQueueName>
                     <MetaDataUpdateTime>60000</MetaDataUpdateTime>
                   </BrokerDataSetWriterTransportDataType>
@@ -3869,7 +3868,7 @@
                 <Body>
                   <BrokerDataSetWriterTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <QueueName>Uadp_WriterGroup_1</QueueName>
-                    <RequestedDeliveryGuarantee>BestEffort_1</RequestedDeliveryGuarantee>
+                    <RequestedDeliveryGuarantee>NotSpecified_0</RequestedDeliveryGuarantee>
                     <MetaDataQueueName>Uadp_WriterGroup_1/$Metadata</MetaDataQueueName>
                     <MetaDataUpdateTime>60000</MetaDataUpdateTime>
                   </BrokerDataSetWriterTransportDataType>
@@ -3881,10 +3880,10 @@
                 </TypeId>
                 <Body>
                   <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <DataSetMessageContentMask>53</DataSetMessageContentMask>
-                    <ConfiguredSize>0</ConfiguredSize>
-                    <NetworkMessageNumber>0</NetworkMessageNumber>
-                    <DataSetOffset>0</DataSetOffset>
+                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
+                    <ConfiguredSize>32</ConfiguredSize>
+                    <NetworkMessageNumber>1</NetworkMessageNumber>
+                    <DataSetOffset>79</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
                 </Body>
               </MessageSettings>

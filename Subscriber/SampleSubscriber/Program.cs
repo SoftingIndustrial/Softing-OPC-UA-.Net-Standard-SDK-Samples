@@ -65,11 +65,13 @@ namespace SampleSubscriber
                 {
                     // the PubSub application can be also created from an instance of PubSubConfigurationDataType
                     // PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration_MqttJson();
-                    // using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(pubSubConfiguration)){
+                    // using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(pubSubConfiguration)){}
 
                     // subscribe to data events 
-                    uaPubSubApplication.DataReceived += PubSubApplication_DataReceived;                   
-
+                    uaPubSubApplication.DataReceived += PubSubApplication_DataReceived;
+                    uaPubSubApplication.RawDataReceived += PubSubApplication_RawDataReceived;
+                    uaPubSubApplication.MetaDataReceived += PubSubApplication_MetaDataReceived;
+                    
                     //start application
                     uaPubSubApplication.Start();
 
@@ -149,6 +151,60 @@ namespace SampleSubscriber
                             Console.WriteLine("\t\t... the rest of {0} elements are omitted.", dataSet.Fields.Length - i);
                             break;
                         }
+                    }
+                }
+                Console.WriteLine("------------------------------------------------");
+            }
+        }
+
+        /// <summary>
+        /// Handler for <see cref="UaPubSubApplication.RawDataReceived" /> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void PubSubApplication_RawDataReceived(object sender, RawDataReceivedEventArgs e)
+        {
+            lock (m_lock)
+            {
+                Console.WriteLine("RawDataReceived bytes:{0}, Source:{1}, TransportProtocol:{2}, MessageMapping:{3}",
+                    e.Message.Length, e.Source, e.TransportProtocol, e.MessageMapping);
+
+                Console.WriteLine("------------------------------------------------");
+            }
+        }
+
+        /// <summary>
+        /// Handler for <see cref="UaPubSubApplication.MetaDataDataReceived" /> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void PubSubApplication_MetaDataReceived(object sender, SubscribedDataEventArgs e)
+        {
+            lock (m_lock)
+            {
+                Console.WriteLine("MetaDataDataReceived event:");
+                if (e.NetworkMessage is JsonNetworkMessage)
+                {
+                    Console.WriteLine("JSON Network MetaData Message: Source={0}, PublisherId={1}, DataSetWriterId={2} Fields count={3}\n",
+                         e.Source,
+                         ((JsonNetworkMessage)e.NetworkMessage).PublisherId,
+                         ((JsonNetworkMessage)e.NetworkMessage).DataSetWriterId,
+                         e.NetworkMessage.DataSetMetaData.Fields.Count);
+                }
+
+                Console.WriteLine("\tMetaData.Name={0}, MajorVersion={1} MinorVersion={2}",
+                    e.NetworkMessage.DataSetMetaData.Name,
+                    e.NetworkMessage.DataSetMetaData.ConfigurationVersion.MajorVersion,
+                    e.NetworkMessage.DataSetMetaData.ConfigurationVersion.MinorVersion);
+
+                for (int i = 0; i < e.NetworkMessage.DataSetMetaData.Fields.Count; i++)
+                {
+                    FieldMetaData metaDataField = e.NetworkMessage.DataSetMetaData.Fields[i];
+                    Console.WriteLine("\t\t{0, -20} DataType:{1, 10}, ValueRank:{2, 5}", metaDataField.Name, metaDataField.DataType, metaDataField.ValueRank);
+                    if (i > MaximumNumberOfFieldsDisplayed)
+                    {
+                        Console.WriteLine("\t\t... the rest of {0} elements are omitted.", e.NetworkMessage.DataSetMetaData.Fields.Count - i);
+                        break;
                     }
                 }
                 Console.WriteLine("------------------------------------------------");
@@ -881,7 +937,7 @@ namespace SampleSubscriber
 
             DataSetReaderDataType dataSetReaderAllTypes = new DataSetReaderDataType();
             dataSetReaderAllTypes.Name = "Reader 2";
-            dataSetReaderAllTypes.PublisherId = (UInt16)50;
+            dataSetReaderAllTypes.PublisherId = (UInt16)10;
             dataSetReaderAllTypes.WriterGroupId = 0;
             dataSetReaderAllTypes.DataSetWriterId = 0;
             dataSetReaderAllTypes.Enabled = true;
@@ -933,6 +989,7 @@ namespace SampleSubscriber
             #region Define DataSetReader 'MassTest' for PublisherId = (UInt16)10, DataSetWriterId = 3
             DataSetReaderDataType dataSetReaderMassTest = new DataSetReaderDataType();
             dataSetReaderMassTest.Name = "Reader 3";
+            dataSetReaderAllTypes.PublisherId = (UInt16)10;
             dataSetReaderMassTest.WriterGroupId = 0;
             dataSetReaderMassTest.DataSetWriterId = 3;
             dataSetReaderMassTest.Enabled = true;

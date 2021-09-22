@@ -156,7 +156,7 @@
                   <Identifier>i=16016</Identifier>
                 </TypeId>
                 <Body>
-                  <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                  <!--<UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <GroupVersion>0</GroupVersion>
                     <NetworkMessageNumber>0</NetworkMessageNumber>
                     <DataSetOffset>15</DataSetOffset>
@@ -164,6 +164,19 @@
                       <String>00000000-0000-0000-0000-000000000000</String>
                     </DataSetClassId>
                     <NetworkMessageContentMask>63</NetworkMessageContentMask>
+                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
+                    <PublishingInterval>0</PublishingInterval>
+                    <ReceiveOffset>0</ReceiveOffset>
+                    <ProcessingOffset>0</ProcessingOffset>
+                  </UadpDataSetReaderMessageDataType>-->
+                  <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <GroupVersion>0</GroupVersion>
+                    <NetworkMessageNumber>0</NetworkMessageNumber>
+                    <DataSetOffset>0</DataSetOffset>
+                    <DataSetClassId>
+                      <String>00000000-0000-0000-0000-000000000000</String>
+                    </DataSetClassId>
+                    <NetworkMessageContentMask>127</NetworkMessageContentMask>
                     <DataSetMessageContentMask>36</DataSetMessageContentMask>
                     <PublishingInterval>0</PublishingInterval>
                     <ReceiveOffset>0</ReceiveOffset>
