@@ -3775,6 +3775,380 @@
         </Body>
       </DataSetSource>
     </PublishedDataSetDataType>
+    <PublishedDataSetDataType>
+      <Name>Simple_Mqtt_Uadp</Name>
+      <DataSetFolder />
+      <DataSetMetaData>
+        <Namespaces />
+        <StructureDataTypes />
+        <EnumDataTypes />
+        <SimpleDataTypes />
+        <Name>Simple_Mqtt_Uadp</Name>
+        <Description i:nil="true" />
+        <Fields>
+          <FieldMetaData>
+            <Name>Mqtt_Uadp_Boolean</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>1</BuiltInType>
+            <DataType>
+              <Identifier>i=1</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>e0596a2b-f32f-4f07-a17b-5176cc5da74f</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>Mqtt_Uadp_Byte</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>3</BuiltInType>
+            <DataType>
+              <Identifier>i=3</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>15994374-fef1-49b5-83a8-db22946078b3</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>Mqtt_Uadp_Int16</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>4</BuiltInType>
+            <DataType>
+              <Identifier>i=4</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>3535bfbe-3fd0-4f2d-a210-23f016126856</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>Mqtt_Uadp_Int32</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>6</BuiltInType>
+            <DataType>
+              <Identifier>i=6</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>d1982563-e19d-4a68-bb75-22ac0def6681</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+        </Fields>
+        <DataSetClassId>
+          <String>00000000-0000-0000-0000-000000000000</String>
+        </DataSetClassId>
+        <ConfigurationVersion>
+          <MajorVersion>1</MajorVersion>
+          <MinorVersion>1</MinorVersion>
+        </ConfigurationVersion>
+      </DataSetMetaData>
+      <ExtensionFields>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>Mqtt_Uadp_Boolean</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Boolean xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">true</Boolean>
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>Mqtt_Uadp_Byte</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Byte xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">1</Byte>
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>Mqtt_Uadp_Int16</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Int16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">100</Int16>
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>Mqtt_Uadp_Int32</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Int32 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">100</Int32>
+            </Value>
+          </Value>
+        </KeyValuePair>
+      </ExtensionFields>
+      <DataSetSource>
+        <TypeId>
+          <Identifier>i=15953</Identifier>
+        </TypeId>
+        <Body>
+          <PublishedDataItemsDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+            <PublishedData>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=10;s=Pub_Mqtt_Uadp_Boolean</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=10;s=Pub_Mqtt_Uadp_Byte</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=10;s=Pub_Mqtt_Uadp_UInt16</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=10;s=Pub_Mqtt_Uadp_Int32</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+            </PublishedData>
+          </PublishedDataItemsDataType>
+        </Body>
+      </DataSetSource>
+    </PublishedDataSetDataType>
+    <PublishedDataSetDataType>
+      <Name>Simple_Mqtt_Json</Name>
+      <DataSetFolder />
+      <DataSetMetaData>
+        <Namespaces />
+        <StructureDataTypes />
+        <EnumDataTypes />
+        <SimpleDataTypes />
+        <Name>Simple_Mqtt_Json</Name>
+        <Description i:nil="true" />
+        <Fields>
+          <FieldMetaData>
+            <Name>Mqtt_Json_Boolean</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>1</BuiltInType>
+            <DataType>
+              <Identifier>i=1</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>e0596a2b-f32f-4f07-a17b-5176cc5da76f</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>Mqtt_Json_Int16</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>4</BuiltInType>
+            <DataType>
+              <Identifier>i=4</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>3535bfbe-3fd0-4f2d-a210-23f016126846</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+          <FieldMetaData>
+            <Name>Mqtt_Json_Int32</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>6</BuiltInType>
+            <DataType>
+              <Identifier>i=6</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>d1982563-e19d-4a68-bb75-22ac0def6691</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+        </Fields>
+        <DataSetClassId>
+          <String>00000000-0000-0000-0000-000000000000</String>
+        </DataSetClassId>
+        <ConfigurationVersion>
+          <MajorVersion>1</MajorVersion>
+          <MinorVersion>1</MinorVersion>
+        </ConfigurationVersion>
+      </DataSetMetaData>
+      <ExtensionFields>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>Mqtt_Json_Boolean</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Boolean xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">true</Boolean>
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <FieldMetaData>
+            <Name>Mqtt_Json_Int16</Name>
+            <Description i:nil="true" />
+            <FieldFlags>0</FieldFlags>
+            <BuiltInType>4</BuiltInType>
+            <DataType>
+              <Identifier>i=4</Identifier>
+            </DataType>
+            <ValueRank>-1</ValueRank>
+            <ArrayDimensions />
+            <MaxStringLength>0</MaxStringLength>
+            <DataSetFieldId>
+              <String>3535bfbe-3fd0-4f2d-a210-23f016126846</String>
+            </DataSetFieldId>
+            <Properties />
+          </FieldMetaData>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>Mqtt_Json_Int32</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Int32 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">100</Int32>
+            </Value>
+          </Value>
+        </KeyValuePair>
+      </ExtensionFields>
+      <DataSetSource>
+        <TypeId>
+          <Identifier>i=15953</Identifier>
+        </TypeId>
+        <Body>
+          <PublishedDataItemsDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+            <PublishedData>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=10;s=Pub_Mqtt_Json_Boolean</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+              <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=10;s=Pub_Mqtt_Json_Int16</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+            <PublishedVariableDataType>
+                <PublishedVariable>
+                  <Identifier>ns=10;s=Pub_Mqtt_Json_Int32</Identifier>
+                </PublishedVariable>
+                <AttributeId>13</AttributeId>
+                <SamplingIntervalHint>0</SamplingIntervalHint>
+                <DeadbandType>0</DeadbandType>
+                <DeadbandValue>0</DeadbandValue>
+                <IndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                <SubstituteValue>
+                  <Value>
+                    <Null />
+                  </Value>
+                </SubstituteValue>
+                <MetaDataProperties />
+              </PublishedVariableDataType>
+            </PublishedData>
+          </PublishedDataItemsDataType>
+        </Body>
+      </DataSetSource>
+    </PublishedDataSetDataType>
   </PublishedDataSets>
   <Connections>
     <PubSubConnectionDataType>
@@ -4028,7 +4402,7 @@
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
       <Name>MqttUadpConnection_Publisher</Name>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
@@ -4151,7 +4525,7 @@
               <DataSetWriterId>1</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <KeyFrameCount>1</KeyFrameCount>
-              <DataSetName>Simple</DataSetName>
+              <DataSetName>Simple_Mqtt_Uadp</DataSetName>
               <DataSetWriterProperties />
               <TransportSettings>
                 <TypeId>
@@ -4180,76 +4554,6 @@
                 </Body>
               </MessageSettings>
             </DataSetWriterDataType>
-            <DataSetWriterDataType>
-              <Name>Writer 2</Name>
-              <Enabled>true</Enabled>
-              <DataSetWriterId>2</DataSetWriterId>
-              <DataSetFieldContentMask>32</DataSetFieldContentMask>
-              <KeyFrameCount>1</KeyFrameCount>
-              <DataSetName>AllTypes</DataSetName>
-              <DataSetWriterProperties />
-              <TransportSettings>
-                <TypeId>
-                  <Identifier>i=16022</Identifier>
-                </TypeId>
-                <Body>
-                  <BrokerDataSetWriterTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <QueueName>Uadp_WriterGroup_1</QueueName>
-                    <RequestedDeliveryGuarantee>BestEffort_1</RequestedDeliveryGuarantee>
-                    <MetaDataQueueName>Uadp_WriterGroup_1/$Metadata</MetaDataQueueName>
-                    <MetaDataUpdateTime>60000</MetaDataUpdateTime>
-                  </BrokerDataSetWriterTransportDataType>
-                </Body>
-              </TransportSettings>
-              <MessageSettings>
-                <TypeId>
-                  <Identifier>i=16015</Identifier>
-                </TypeId>
-                <Body>
-                  <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
-                    <ConfiguredSize>32</ConfiguredSize>
-                    <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>47</DataSetOffset>
-                  </UadpDataSetWriterMessageDataType>
-                </Body>
-              </MessageSettings>
-            </DataSetWriterDataType>
-            <DataSetWriterDataType>
-              <Name>Writer 3</Name>
-              <Enabled>true</Enabled>
-              <DataSetWriterId>3</DataSetWriterId>
-              <DataSetFieldContentMask>32</DataSetFieldContentMask>
-              <KeyFrameCount>1</KeyFrameCount>
-              <DataSetName>MassTest</DataSetName>
-              <DataSetWriterProperties />
-              <TransportSettings>
-                <TypeId>
-                  <Identifier>i=16022</Identifier>
-                </TypeId>
-                <Body>
-                  <BrokerDataSetWriterTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <QueueName>Uadp_WriterGroup_1</QueueName>
-                    <RequestedDeliveryGuarantee>BestEffort_1</RequestedDeliveryGuarantee>
-                    <MetaDataQueueName>Uadp_WriterGroup_1/$Metadata</MetaDataQueueName>
-                    <MetaDataUpdateTime>60000</MetaDataUpdateTime>
-                  </BrokerDataSetWriterTransportDataType>
-                </Body>
-              </TransportSettings>
-              <MessageSettings>
-                <TypeId>
-                  <Identifier>i=16015</Identifier>
-                </TypeId>
-                <Body>
-                  <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <DataSetMessageContentMask>53</DataSetMessageContentMask>
-                    <ConfiguredSize>0</ConfiguredSize>
-                    <NetworkMessageNumber>0</NetworkMessageNumber>
-                    <DataSetOffset>0</DataSetOffset>
-                  </UadpDataSetWriterMessageDataType>
-                </Body>
-              </MessageSettings>
-            </DataSetWriterDataType>
           </DataSetWriters>
         </WriterGroupDataType>
       </WriterGroups>
@@ -4257,7 +4561,7 @@
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
       <Name>MqttJsonConnection_Publisher</Name>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">30</UInt16>
@@ -4365,7 +4669,7 @@
             </TypeId>
             <Body>
               <JsonWriterGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                <NetworkMessageContentMask>59</NetworkMessageContentMask>
+                <NetworkMessageContentMask>63</NetworkMessageContentMask>
               </JsonWriterGroupMessageDataType>
             </Body>
           </MessageSettings>
@@ -4376,7 +4680,7 @@
               <DataSetWriterId>1</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <KeyFrameCount>1</KeyFrameCount>
-              <DataSetName>Simple</DataSetName>
+              <DataSetName>Simple_Mqtt_Json</DataSetName>
               <DataSetWriterProperties />
               <TransportSettings>
                 <TypeId>
@@ -4397,71 +4701,7 @@
                 </TypeId>
                 <Body>
                   <JsonDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <DataSetMessageContentMask>31</DataSetMessageContentMask>
-                  </JsonDataSetWriterMessageDataType>
-                </Body>
-              </MessageSettings>
-            </DataSetWriterDataType>
-            <DataSetWriterDataType>
-              <Name>Writer 2</Name>
-              <Enabled>true</Enabled>
-              <DataSetWriterId>2</DataSetWriterId>
-              <DataSetFieldContentMask>32</DataSetFieldContentMask>
-              <KeyFrameCount>1</KeyFrameCount>
-              <DataSetName>AllTypes</DataSetName>
-              <DataSetWriterProperties />
-              <TransportSettings>
-                <TypeId>
-                  <Identifier>i=16022</Identifier>
-                </TypeId>
-                <Body>
-                  <BrokerDataSetWriterTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <QueueName>Json_WriterGroup_1</QueueName>
-                    <RequestedDeliveryGuarantee>BestEffort_1</RequestedDeliveryGuarantee>
-                    <MetaDataQueueName>Json_WriterGroup_1/$Metadata</MetaDataQueueName>
-                    <MetaDataUpdateTime>0</MetaDataUpdateTime>
-                  </BrokerDataSetWriterTransportDataType>
-                </Body>
-              </TransportSettings>
-              <MessageSettings>
-                <TypeId>
-                  <Identifier>i=16018</Identifier>
-                </TypeId>
-                <Body>
-                  <JsonDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <DataSetMessageContentMask>31</DataSetMessageContentMask>
-                  </JsonDataSetWriterMessageDataType>
-                </Body>
-              </MessageSettings>
-            </DataSetWriterDataType>
-            <DataSetWriterDataType>
-              <Name>Writer 3</Name>
-              <Enabled>true</Enabled>
-              <DataSetWriterId>3</DataSetWriterId>
-              <DataSetFieldContentMask>32</DataSetFieldContentMask>
-              <KeyFrameCount>1</KeyFrameCount>
-              <DataSetName>MassTest</DataSetName>
-              <DataSetWriterProperties />
-              <TransportSettings>
-                <TypeId>
-                  <Identifier>i=16022</Identifier>
-                </TypeId>
-                <Body>
-                  <BrokerDataSetWriterTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <QueueName>Json_WriterGroup_1</QueueName>
-                    <RequestedDeliveryGuarantee>BestEffort_1</RequestedDeliveryGuarantee>
-                    <MetaDataQueueName>Json_WriterGroup_1/$Metadata</MetaDataQueueName>
-                    <MetaDataUpdateTime>0</MetaDataUpdateTime>
-                  </BrokerDataSetWriterTransportDataType>
-                </Body>
-              </TransportSettings>
-              <MessageSettings>
-                <TypeId>
-                  <Identifier>i=16018</Identifier>
-                </TypeId>
-                <Body>
-                  <JsonDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <DataSetMessageContentMask>31</DataSetMessageContentMask>
+                    <DataSetMessageContentMask>63</DataSetMessageContentMask>
                   </JsonDataSetWriterMessageDataType>
                 </Body>
               </MessageSettings>

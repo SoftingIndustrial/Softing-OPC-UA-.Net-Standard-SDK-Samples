@@ -66,7 +66,33 @@ namespace SampleServer.PubSub
 
         public void UpdateMetaData(PublishedDataSetDataType publishedDataSet)
         {
-           
+           // todo:
+        }
+
+        /// <summary>
+        /// Update metadata info in server definitions
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <param name="dataSetMetaData"></param>
+        public void UpdateMetaData(NodeId nodeId, DataSetMetaDataType dataSetMetaData)
+        {
+            // \Objects\Server\PublishSubscribe\subscriber_connection_name\ReaderGroup x\Reader y\DataSetMetaData
+            if (m_associatedNodeManager != null)
+            {
+                INodeManager typeDefinitionNodeManager = null;
+                m_associatedNodeManager.Server.NodeManager.GetManagerHandle(nodeId, out typeDefinitionNodeManager);
+
+                if (typeDefinitionNodeManager is CustomNodeManager2)
+                {
+                    NodeState nodeState = ((CustomNodeManager2)typeDefinitionNodeManager).FindNodeInAddressSpace(nodeId);
+
+                    DataValue dataValue = new DataValue();
+                    dataValue.Value = dataSetMetaData;
+
+                    nodeState.WriteAttribute(m_associatedNodeManager.SystemContext, 13, NumericRange.Empty, dataValue);
+                    nodeState.ClearChangeMasks(m_associatedNodeManager.SystemContext, false);
+                }
+            }
         }
 
         /// <summary>

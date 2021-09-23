@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using KeyValuePair = Opc.Ua.KeyValuePair;
+using Opc.Ua.PubSub.Encoding;
 
 namespace SampleServer.PubSub
 {
@@ -119,6 +120,8 @@ namespace SampleServer.PubSub
                 #region Add Publisher Source Nodes
                 FolderState publisher = CreateFolder(root, "Publisher");
 
+                #region Publisher UDP UADP variables
+
                 BaseDataVariableState variable = CreateVariable(publisher, "BoolToggle", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Pub_BoolToggle", NamespaceIndex));
                 m_dynamicNodes.Add(variable);
                 variable = CreateVariable(publisher, "Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Int32", NamespaceIndex));
@@ -147,11 +150,41 @@ namespace SampleServer.PubSub
                     variable = CreateVariable(publisher, name, DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("Pub_" + name, NamespaceIndex));
                     m_dynamicNodes.Add(variable);
                 }
+
+                #endregion Publisher UDP UADP variables
+
+                #region Publisher MQTT UADP variables
+
+                variable = CreateVariable(publisher, "Mqtt_Uadp_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Boolean", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Mqtt_Uadp_Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Byte", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Mqtt_Uadp_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Int16", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Mqtt_Uadp_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Int32", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+
+                #endregion Publisher MQTT UADP variables
+
+                #region Publisher MQTT MQTT variables
+
+                variable = CreateVariable(publisher, "Mqtt_Json_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Json_Boolean", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Mqtt_Json_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Json_Int16", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Mqtt_Json_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Json_Int32", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+
+                #endregion Publisher MQTT MQTT variables
+
                 m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
+
                 #endregion
 
                 #region Add Subscriber Destination Nodes
                 FolderState subscriber = CreateFolder(root, "Subscriber");
+
+                #region Subscriber UDP UADP variables
 
                 variable = CreateVariable(subscriber, "BoolToggle", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_BoolToggle", NamespaceIndex));
                 variable = CreateVariable(subscriber, "Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Int32", NamespaceIndex));
@@ -169,11 +202,32 @@ namespace SampleServer.PubSub
                     string name = "Mass_" + i;
                     variable = CreateVariable(subscriber, name, DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("Sub_" + name, NamespaceIndex));
                 }
+                #endregion Subscriber UDP UADP variables
+
+                #region Subscriber MQTT UADP variables
+
+                variable = CreateVariable(subscriber, "Mqtt_Uadp_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Boolean", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Uadp_Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Byte", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Uadp_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Int16", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Uadp_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Int32", NamespaceIndex));
+                
+                #endregion Subscriber MQTT UADP variables
+
+                #region Subscriber MQTT MQTT variables
+
+                variable = CreateVariable(subscriber, "Mqtt_Json_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Boolean", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Json_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Int16", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Json_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Int32", NamespaceIndex));
+                
+                #endregion Subscriber MQTT MQTT variables
+
                 #endregion
 
                 if (m_canStartPubSubApplication)
                 {
                     pubSubApplication.DataReceived += PubSubApplication_DataReceived;
+                    //pubSubApplication .RawDataReceived += PubSubApplication_RawDataReceived;
+                    pubSubApplication.MetaDataReceived += PubSubApplication_MetaDataReceived;
                     pubSubApplication.Start();
                 }
             }
@@ -847,6 +901,64 @@ namespace SampleServer.PubSub
                 foreach(Field field in dataSetMessage.DataSet.Fields)
                 {
                     ((UaPubSubApplication)sender).DataStore.WritePublishedDataItem(field.TargetNodeId, field.TargetAttribute, field.Value);                    
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handler for <see cref="UaPubSubApplication.RawDataReceived" /> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        //private void PubSubApplication_RawDataReceived(object sender, RawDataReceivedEventArgs e)
+        //{
+        //    // temporary activated
+        //    //Console.WriteLine("RawDataReceived bytes:{0}, Source:{1}, TransportProtocol:{2}, MessageMapping:{3}",
+        //    //    e.Message.Length, e.Source, e.TransportProtocol, e.MessageMapping);
+
+        //    //Console.WriteLine("------------------------------------------------");
+        //}
+
+        /// <summary>
+        /// Hander for <see cref="UaPubSubApplication.MetaDataDataReceived"/> event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PubSubApplication_MetaDataReceived(object sender, SubscribedDataEventArgs e)
+        {
+            //NodeState nodeState = FindNodeInAddressSpace(new NodeId(1956, 10));
+            // translate the paths.
+            //BrowsePathResultCollection results = null;
+            //DiagnosticInfoCollection diagnosticInfos = null;
+            //string pathsToTranslate = "";
+            //ResponseHeader responseHeader = TranslateBrowsePathsToNodeIds(
+            //    null,
+            //   pathsToTranslate,
+            //   out results,
+            //    out diagnosticInfos);
+
+            if (e.NetworkMessage.IsMetaDataMessage)
+            {
+                //todo: lookup for e.NetworkMessage.DataSetMetaData.PublisherId ...
+                UaPubSubApplication uaPubSubApplication = sender as UaPubSubApplication;
+                if (uaPubSubApplication != null)
+                {
+
+                    object publishedId = null;
+                    if (e.NetworkMessage is UadpNetworkMessage)
+                    {
+                        publishedId = ((UadpNetworkMessage)e.NetworkMessage).PublisherId;
+                    }
+                    if (e.NetworkMessage is JsonNetworkMessage)
+                    {
+                        publishedId = ((JsonNetworkMessage)e.NetworkMessage).PublisherId;
+                    }
+
+                    List<PubSubConnectionDataType> connections = uaPubSubApplication.UaPubSubConfigurator.PubSubConfiguration.Connections.FindAll(x => x.PublisherId == new Variant(publishedId));
+                    if (connections != null)
+                    {
+                        ((UaPubSubApplication)sender).DataStore.UpdateMetaData(new NodeId(1956, 10), e.NetworkMessage.DataSetMetaData);
+                    }
                 }
             }
         }
@@ -1738,9 +1850,13 @@ namespace SampleServer.PubSub
             switch (variable.BrowseName.Name)
             {
                 case "BoolToggle":
+                case "Mqtt_Uadp_Boolean":
+                case "Mqtt_Json_Boolean":
                     bool boolValue = (bool)variable.Value;
                     return !boolValue;
                 case "Int32":
+                case "Mqtt_Uadp_Int32":
+                case "Mqtt_Json_Int32":
                     int intValue = Convert.ToInt32(variable.Value);
                     return (int)(intValue + 1);
                 case "UInt32":
@@ -1752,9 +1868,12 @@ namespace SampleServer.PubSub
                 case "DateTime":
                     return DateTime.Now;
                 case "Byte":
+                case "Mqtt_Uadp_Byte":
                     byte byteValue = Convert.ToByte(variable.Value);
                     return (byte)(byteValue + 1);
                 case "Int16":
+                case "Mqtt_Uadp_Int16":
+                case "Mqtt_Json_Int16":
                     Int16 int16Value = Convert.ToInt16(variable.Value);
                     return (Int16)(int16Value + 1);
                 case "UInt16":
