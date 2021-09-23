@@ -17,16 +17,19 @@
     <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.PubSub" Version="1.4.366.38-beta" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="SamplePublisher_MQTT_JSON.Config.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SamplePublisher_UDP_UADP.AllTypes.Config.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SamplePublisher_UDP_UADP.Config.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+<ItemGroup>
+<None Update="SamplePublisher_MQTT_UADP.Config.xml">
+  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
+<None Update="SamplePublisher_MQTT_JSON.Config.xml">
+  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
+<None Update="SamplePublisher_UDP_UADP.AllTypes.Config.xml">
+  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
+<None Update="SamplePublisher_UDP_UADP.Config.xml">
+  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
+</ItemGroup>
 
 </Project>

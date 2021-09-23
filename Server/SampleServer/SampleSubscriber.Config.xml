@@ -8262,7 +8262,7 @@
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
       <Name>MqttJsonConnection_Subscriber</Name>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">30</UInt16>

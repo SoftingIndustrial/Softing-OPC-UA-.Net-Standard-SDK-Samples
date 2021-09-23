@@ -226,10 +226,11 @@ namespace SampleServer.PubSub
                 if (m_canStartPubSubApplication)
                 {
                     pubSubApplication.DataReceived += PubSubApplication_DataReceived;
-                    //pubSubApplication .RawDataReceived += PubSubApplication_RawDataReceived;
-                    /* commented out because it did not compile in release mode
-                    pubSubApplication.MetaDataReceived += PubSubApplication_MetaDataReceived;
+                    /* commented out because it did not compile in release mode 
                     */
+#if DEBUG
+                    pubSubApplication.MetaDataReceived += PubSubApplication_MetaDataReceived;
+#endif
                     pubSubApplication.Start();
                 }
             }
@@ -907,64 +908,43 @@ namespace SampleServer.PubSub
             }
         }
 
-        /// <summary>
-        /// Handler for <see cref="UaPubSubApplication.RawDataReceived" /> event.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        //private void PubSubApplication_RawDataReceived(object sender, RawDataReceivedEventArgs e)
-        //{
-        //    // temporary activated
-        //    //Console.WriteLine("RawDataReceived bytes:{0}, Source:{1}, TransportProtocol:{2}, MessageMapping:{3}",
-        //    //    e.Message.Length, e.Source, e.TransportProtocol, e.MessageMapping);
-
-        //    //Console.WriteLine("------------------------------------------------");
-        //}
-        /* commented out because it did not compile in release mode
+#if DEBUG
+        // commented out because it did not compile in release mode !? use please only debug version for now
         /// <summary>
         /// Hander for <see cref="UaPubSubApplication.MetaDataDataReceived"/> event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void PubSubApplication_MetaDataReceived(object sender, SubscribedDataEventArgs e)
-        {
-            //NodeState nodeState = FindNodeInAddressSpace(new NodeId(1956, 10));
-            // translate the paths.
-            //BrowsePathResultCollection results = null;
-            //DiagnosticInfoCollection diagnosticInfos = null;
-            //string pathsToTranslate = "";
-            //ResponseHeader responseHeader = TranslateBrowsePathsToNodeIds(
-            //    null,
-            //   pathsToTranslate,
-            //   out results,
-            //    out diagnosticInfos);
+        //private void PubSubApplication_MetaDataReceived(object sender, SubscribedDataEventArgs e)
+        //{
+        //    if (e.NetworkMessage.IsMetaDataMessage)
+        //    {
+        //        UaPubSubApplication uaPubSubApplication = sender as UaPubSubApplication;
+        //        if (uaPubSubApplication != null)
+        //        {
 
-            if (e.NetworkMessage.IsMetaDataMessage)
-            {
-                //todo: lookup for e.NetworkMessage.DataSetMetaData.PublisherId ...
-                UaPubSubApplication uaPubSubApplication = sender as UaPubSubApplication;
-                if (uaPubSubApplication != null)
-                {
+        //            object publishedId = null;
+        //            if (e.NetworkMessage is UadpNetworkMessage)
+        //            {
+        //                publishedId = ((UadpNetworkMessage)e.NetworkMessage).PublisherId;
+        //            }
+        //            if (e.NetworkMessage is JsonNetworkMessage)
+        //            {
+        //                publishedId = ((JsonNetworkMessage)e.NetworkMessage).PublisherId;
+        //            }
 
-                    object publishedId = null;
-                    if (e.NetworkMessage is UadpNetworkMessage)
-                    {
-                        publishedId = ((UadpNetworkMessage)e.NetworkMessage).PublisherId;
-                    }
-                    if (e.NetworkMessage is JsonNetworkMessage)
-                    {
-                        publishedId = ((JsonNetworkMessage)e.NetworkMessage).PublisherId;
-                    }
-
-                    List<PubSubConnectionDataType> connections = uaPubSubApplication.UaPubSubConfigurator.PubSubConfiguration.Connections.FindAll(x => x.PublisherId == new Variant(publishedId));
-                    if (connections != null)
-                    {
-                        ((UaPubSubApplication)sender).DataStore.UpdateMetaData(new NodeId(1956, 10), e.NetworkMessage.DataSetMetaData);
-                    }
-                }
-            }
-        }
-       */
+        //            // identify the subscriber connection (supposing that PublisherId is unique per connection!)
+        //            // documentation: A Subscriber can skip NetworkMessages from Publishers that it does not expect NetworkMessages from.
+        //            PubSubConnectionDataType subscriberConnection = 
+        //                uaPubSubApplication.UaPubSubConfigurator.PubSubConfiguration.Connections.Find(x => x.PublisherId == new Variant(publishedId) && x.ReaderGroups.Count > 0);
+        //            if (subscriberConnection != null)
+        //            {
+        //                ((UaPubSubApplication)sender).DataStore.UpdateMetaData(ServerNode.NodeId, subscriberConnection, e.NetworkMessage.DataSetMetaData);
+        //            }
+        //        }
+        //    }
+        //}
+#endif
         #endregion
 
         #region OnCall method handlers for OPC UA Server Method nodes
