@@ -1147,7 +1147,7 @@ namespace SampleServer.PubSub
         {
             if (configuration != null)
             {
-                //force uadp connection - temporary fix for usage from datafeed client
+                //todo force uadp connection - temporary fix for usage from opc ua client
                 configuration.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
                 StatusCode resultStatusCode = m_uaPubSubConfigurator.AddConnection(configuration);
                 if (StatusCode.IsBad(resultStatusCode))

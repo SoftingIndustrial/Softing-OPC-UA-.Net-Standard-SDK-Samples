@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ApplicationConfiguration xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://opcfoundation.org/UA/SDK/Configuration.xsd">
-  <ApplicationName>dataFEED OPC UA Temporary File Transfer located on Server (download temporary file)</ApplicationName>
+  <ApplicationName>OPC UA Temporary File Transfer located on Server (download temporary file)</ApplicationName>
   <ApplicationUri></ApplicationUri>
   <ProductUri>http://industrial.softing.com/OpcUaNetToolkit/FileTransferServer</ProductUri>
   <ApplicationType>Server_0</ApplicationType>
