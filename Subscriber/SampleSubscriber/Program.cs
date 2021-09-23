@@ -69,9 +69,11 @@ namespace SampleSubscriber
 
                     // subscribe to data events 
                     uaPubSubApplication.DataReceived += PubSubApplication_DataReceived;
+                    /* commented out because it did not compile in release mode
                     uaPubSubApplication.RawDataReceived += PubSubApplication_RawDataReceived;
                     uaPubSubApplication.MetaDataReceived += PubSubApplication_MetaDataReceived;
-                    
+                    */
+
                     //start application
                     uaPubSubApplication.Start();
 
@@ -157,6 +159,7 @@ namespace SampleSubscriber
             }
         }
 
+        /* commented out because it did not compile in release mode
         /// <summary>
         /// Handler for <see cref="UaPubSubApplication.RawDataReceived" /> event.
         /// </summary>
@@ -210,6 +213,7 @@ namespace SampleSubscriber
                 Console.WriteLine("------------------------------------------------");
             }
         }
+        */
         #endregion
 
         #region Create configuration object

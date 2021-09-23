@@ -227,7 +227,9 @@ namespace SampleServer.PubSub
                 {
                     pubSubApplication.DataReceived += PubSubApplication_DataReceived;
                     //pubSubApplication .RawDataReceived += PubSubApplication_RawDataReceived;
+                    /* commented out because it did not compile in release mode
                     pubSubApplication.MetaDataReceived += PubSubApplication_MetaDataReceived;
+                    */
                     pubSubApplication.Start();
                 }
             }
@@ -657,7 +659,7 @@ namespace SampleServer.PubSub
                     * The DataSetToWriter ReferenceType is defined in 9.1.4.2.5. If a DataSetWriter for the PublishedDataSet is removed from a group, 
                     * the Reference to this DataSetWriter shall also be removed from this list. The group model is defined in 9.1.6.*/
 
-                PublishedDataSetDataType publishedDataSetDataType = m_uaPubSubConfigurator.FindPublishedDataSetByName(e.DataSetWriterDataType.DataSetName);
+                    PublishedDataSetDataType publishedDataSetDataType = m_uaPubSubConfigurator.FindPublishedDataSetByName(e.DataSetWriterDataType.DataSetName);
                 if (publishedDataSetDataType != null)
                 {
                     NodeState publishedDataSetNode = FindPubSubNodeState(m_uaPubSubConfigurator.FindIdForObject(publishedDataSetDataType));
@@ -918,7 +920,7 @@ namespace SampleServer.PubSub
 
         //    //Console.WriteLine("------------------------------------------------");
         //}
-
+        /* commented out because it did not compile in release mode
         /// <summary>
         /// Hander for <see cref="UaPubSubApplication.MetaDataDataReceived"/> event
         /// </summary>
@@ -962,6 +964,7 @@ namespace SampleServer.PubSub
                 }
             }
         }
+       */
         #endregion
 
         #region OnCall method handlers for OPC UA Server Method nodes
@@ -1688,7 +1691,7 @@ namespace SampleServer.PubSub
                      typeof(PublishedDataItemsAddVariablesMethodState), MethodIds.PublishedDataItemsType_AddVariables) as PublishedDataItemsAddVariablesMethodState;
              }
              publishedDataItemsState.AddVariables.OnCall = OnCallPublishedDataItemsAddVariablesHandler;*/
-            publishedDataItemsState.AddVariables = null;
+        publishedDataItemsState.AddVariables = null;
             publishedDataItemsState.RemoveVariables = null;
         }
 
