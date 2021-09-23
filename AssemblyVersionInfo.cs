@@ -50,7 +50,7 @@ internal static class AssemblyVersionInfo
     public const string AssemblyCompany = "Softing Industrial Automation GmbH";
 
     /// <summary>The product name.</summary>
-    public const string AssemblyProduct = "dataFEED OPC UA .NET Standard SDK";
+    public const string AssemblyProduct = "OPC UA .NET Standard SDK";
 
 	/// <summary>The product release date.</summary>
     public const string ReleaseDate = "2021/09/21 18:30:43";
