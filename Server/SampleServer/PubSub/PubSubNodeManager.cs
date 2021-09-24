@@ -939,94 +939,101 @@ namespace SampleServer.PubSub
                     if (subscriberConnection != null)
                     {
                         INodeManager serverNodeManager = null;
-                        var serverHandle = Server.NodeManager.GetManagerHandle(ServerNode.NodeId, out serverNodeManager);
-
-                        if (serverNodeManager is CustomNodeManager2)
+                        Server.NodeManager.GetManagerHandle(ServerNode.NodeId, out serverNodeManager);
+                        if (serverNodeManager != null && serverNodeManager is CustomNodeManager2)
                         {
                             PublishSubscribeState publishSubscribeState = ((CustomNodeManager2)serverNodeManager).FindPredefinedNode(ObjectIds.PublishSubscribe, typeof(PublishSubscribeState)) as PublishSubscribeState;
                             if (publishSubscribeState != null)
                             {
-                                //string browsePaths = @"MqttUadpConnection_Subscriber\ReaderGroup 1\Reader 1";
-
-                                // m_sessionManager is null !?
-                                //ResponseHeader responseHeader = m_session.TranslateBrowsePathsToNodeIds(
-                                //    null,
-                                //    browsePaths,
-                                //    out results,
-                                //    out diagnosticInfos);
-
                                 INodeManager publishSubscribeNodeManager = null;
                                 var publishSubscribeHandle = Server.NodeManager.GetManagerHandle(publishSubscribeState.NodeId, out publishSubscribeNodeManager);
-
-
-                                //BrowsePathCollection pathsToTranslate = new BrowsePathCollection();
-
-                                //foreach (BrowsePathEx browsePath in browsePaths)
-                                //{
-                                //    BrowsePath pathToTranslate = new BrowsePath();
-                                //    pathToTranslate.StartingNode = browsePath.StartingNode;
-                                //    pathToTranslate.RelativePath = new RelativePath();
-
-                                //    foreach (QualifiedName pathElement in browsePath.RelativePath)
-                                //    {
-                                //        RelativePathElement element = new RelativePathElement();
-                                //        element.ReferenceTypeId = ReferenceTypeIds.HierarchicalReferences;
-                                //        element.IsInverse = false;
-                                //        element.TargetName = new QualifiedName(pathElement.Name, pathElement.NamespaceIndex);
-
-                                //        pathToTranslate.RelativePath.Elements.Add(element);
-                                //    }
-
-                                //    pathsToTranslate.Add(pathToTranslate);
-                                //}
-
-                                //BrowsePathResultCollection results;
-                                //DiagnosticInfoCollection diagnosticInfos;
-                                // invoke the TranslateBrowsePathsToNodeIds service.
-                                //m_session.TranslateBrowsePathsToNodeIds(null, pathsToTranslate, out results, out diagnosticInfos);
-
-                                BrowsePath pathToTranslate = new BrowsePath();
-                                pathToTranslate.StartingNode = publishSubscribeState.NodeId;//.StartingNode;
-                                pathToTranslate.RelativePath = new RelativePath();
-
-                                RelativePathElement element = new RelativePathElement();
-                                element.ReferenceTypeId = ReferenceTypeIds.HierarchicalReferences;
-                                element.IsInverse = false;
-                                element.TargetName = new QualifiedName(subscriberConnection.Name, NamespaceIndex);
-
-                                pathToTranslate.RelativePath.Elements.Add(element);
-
-                                //RelativePathElement relativePathElement = new RelativePathElement();
-                                //relativePathElement.TargetName = browsePaths;
-                                //relativePathElement.IncludeSubtypes = true;
-                                IList<ExpandedNodeId> targetIds = new List<ExpandedNodeId>();
-                                IList<NodeId> nodeIds = new List<NodeId>();
-                                publishSubscribeNodeManager.TranslateBrowsePath(null, publishSubscribeHandle, element, targetIds, nodeIds);
-
-                                PubSubConnectionState pubSubConnectionState = publishSubscribeState.FindChildBySymbolicName(null, subscriberConnection.Name) as PubSubConnectionState;
-                                if (pubSubConnectionState != null)
+                                if(publishSubscribeHandle != null)
                                 {
-                                    foreach (ReaderGroupDataType readerGroupDataType in subscriberConnection.ReaderGroups)
+                                    ExpandedNodeId connectionNodeId = GetExpandedNodeInServer(subscriberConnection.Name, publishSubscribeNodeManager, publishSubscribeHandle);
+                                    if (connectionNodeId != null)
                                     {
-                                        ReaderGroupState readerGroupState = pubSubConnectionState.FindChildBySymbolicName(null, readerGroupDataType.Name) as ReaderGroupState;
-                                        if (readerGroupState != null)
+                                        PubSubConnectionState pubSubConnectionState = FindNodeInAddressSpace(ExpandedNodeId.ToNodeId(connectionNodeId, Server.NamespaceUris)) as PubSubConnectionState;
+                                        if (pubSubConnectionState != null)
                                         {
-                                            foreach (DataSetReaderDataType dataSetReaderDataType in readerGroupDataType.DataSetReaders)
+                                            var connectionHandle = Server.NodeManager.GetManagerHandle(pubSubConnectionState.NodeId, out publishSubscribeNodeManager);
+                                            foreach (ReaderGroupDataType readerGroupDataType in subscriberConnection.ReaderGroups)
                                             {
-                                                DataSetReaderState dataSetReaderState = readerGroupState.FindChildBySymbolicName(null, dataSetReaderDataType.Name) as DataSetReaderState;
-                                                if (dataSetReaderState != null)
+                                                ExpandedNodeId readerGroupNodeId = GetExpandedNodeInServer(readerGroupDataType.Name, publishSubscribeNodeManager, connectionHandle);
+                                                if (readerGroupNodeId != null)
                                                 {
-                                                    dataSetReaderState.DataSetMetaData.Value = e.NetworkMessage.DataSetMetaData;
+                                                    ReaderGroupState readerGroupState = FindNodeInAddressSpace(ExpandedNodeId.ToNodeId(readerGroupNodeId, Server.NamespaceUris)) as ReaderGroupState;
+                                                    if (readerGroupState != null)
+                                                    {
+                                                        var readerGroupHandle = Server.NodeManager.GetManagerHandle(readerGroupState.NodeId, out publishSubscribeNodeManager);
+                                                        foreach (DataSetReaderDataType dataSetReaderDataType in readerGroupDataType.DataSetReaders)
+                                                        {
+                                                            ExpandedNodeId dataSetReaderNodeId = GetExpandedNodeInServer(dataSetReaderDataType.Name, publishSubscribeNodeManager, readerGroupHandle);
+                                                            if (dataSetReaderNodeId != null)
+                                                            {
+                                                                DataSetReaderState dataSetReaderState = FindNodeInAddressSpace(ExpandedNodeId.ToNodeId(dataSetReaderNodeId, Server.NamespaceUris)) as DataSetReaderState;
+                                                                if (dataSetReaderState != null)
+                                                                {
+                                                                    dataSetReaderState.DataSetMetaData.Value = e.NetworkMessage.DataSetMetaData;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
+                                
+                                //PubSubConnectionState pubSubConnectionState = publishSubscribeState.FindChildBySymbolicName(null, subscriberConnection.Name) as PubSubConnectionState;
+                                //if (pubSubConnectionState != null)
+                                //{
+                                //    foreach (ReaderGroupDataType readerGroupDataType in subscriberConnection.ReaderGroups)
+                                //    {
+                                //        ReaderGroupState readerGroupState = pubSubConnectionState.FindChildBySymbolicName(null, readerGroupDataType.Name) as ReaderGroupState;
+                                //        if (readerGroupState != null)
+                                //        {
+                                //            foreach (DataSetReaderDataType dataSetReaderDataType in readerGroupDataType.DataSetReaders)
+                                //            {
+                                //                DataSetReaderState dataSetReaderState = readerGroupState.FindChildBySymbolicName(null, dataSetReaderDataType.Name) as DataSetReaderState;
+                                //                if (dataSetReaderState != null)
+                                //                {
+                                //                    dataSetReaderState.DataSetMetaData.Value = e.NetworkMessage.DataSetMetaData;
+                                //                }
+                                //            }
+                                //        }
+                                //    }
+                                //}
                             }
                         }
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Get Server node
+        /// </summary>
+        /// <param name="nodeName"></param>
+        /// <param name="nodeManager"></param>
+        /// <param name="sourceHandle"></param>
+        /// <returns></returns>
+        private ExpandedNodeId GetExpandedNodeInServer(string nodeName, INodeManager nodeManager, object sourceHandle)
+        {
+            RelativePathElement relativePath = new RelativePathElement();
+            relativePath.ReferenceTypeId = ReferenceTypeIds.HierarchicalReferences;
+            relativePath.IsInverse = false;
+            relativePath.TargetName = new QualifiedName(nodeName, NamespaceIndex);
+
+            //pathToTranslate.RelativePath.Elements.Add(element);
+            IList<ExpandedNodeId> targetIds = new List<ExpandedNodeId>();
+            IList<NodeId> nodeIds = new List<NodeId>();
+            nodeManager.TranslateBrowsePath(null, sourceHandle, relativePath, targetIds, nodeIds);
+
+            if(targetIds.Count > 0)
+            {
+                return targetIds[0];
+            }
+            return null;
         }
 #endif
         #endregion
