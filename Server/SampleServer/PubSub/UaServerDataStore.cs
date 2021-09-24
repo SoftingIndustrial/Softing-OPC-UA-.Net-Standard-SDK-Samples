@@ -42,7 +42,7 @@ namespace SampleServer.PubSub
         /// <param name="nodeId">NodeId identifier of node</param>
         /// <param name="attributeId">Default value is <see cref="Attributes.Value"/></param>
         /// <returns></returns>
-        public DataValue ReadPublishedDataItem(NodeId nodeId, uint attributeId = 13)
+        public DataValue ReadPublishedDataItem(NodeId nodeId, uint attributeId = Attributes.Value)
         {
             if (nodeId == null)
             {
@@ -65,75 +65,13 @@ namespace SampleServer.PubSub
             return null;
         }
 
-        public DataValue ReadPublishedDataItem(NodeId nodeId, uint attributeId = Attributes.Value, bool deltaFrame = false)
-        {
-            return null;
-        }
-
+        /// <summary>
+        /// Updates the metadata if it has changed from when the DataStore was created.
+        /// </summary>
+        /// <param name="publishedDataSet"></param>
         public void UpdateMetaData(PublishedDataSetDataType publishedDataSet)
         {
            // todo:
-        }
-
-        /// <summary>
-        /// Update metadata info in server definitions
-        /// </summary>
-        /// <param name="serverNodeId"></param>
-        /// <param name="subscriberConnection"></param>
-        /// <param name="dataSetMetaData"></param>
-        public void UpdateMetaData(NodeId serverNodeId, PubSubConnectionDataType subscriberConnection, DataSetMetaDataType dataSetMetaData)
-        {
-            // \Objects\Server\PublishSubscribe\subscriber_connection_name\ReaderGroup x\Reader y\DataSetMetaData
-            if (m_associatedNodeManager != null)
-            {
-                INodeManager typeDefinitionNodeManager = null;
-                var a = m_associatedNodeManager.Server.NodeManager.GetManagerHandle(serverNodeId, out typeDefinitionNodeManager);
-
-                if (typeDefinitionNodeManager is CustomNodeManager2)
-                {
-                    PublishSubscribeState publishSubscribeState = ((CustomNodeManager2)typeDefinitionNodeManager).FindPredefinedNode(ObjectIds.PublishSubscribe, typeof(PublishSubscribeState)) as PublishSubscribeState;
-                    if (publishSubscribeState != null)
-                    {
-                        //string browsePaths = @"MqttUadpConnection_Subscriber\ReaderGroup 1\Reader 1";
-
-                        // m_sessionManager is null !?
-                        //ResponseHeader responseHeader = m_session.TranslateBrowsePathsToNodeIds(
-                        //    null,
-                        //    browsePaths,
-                        //    out results,
-                        //    out diagnosticInfos);
-
-                        //var publishSubscibeManagerHandle = m_associatedNodeManager.Server.NodeManager.GetManagerHandle(publishSubscribeState.NodeId, out typeDefinitionNodeManager);
-
-                        //RelativePathElement relativePathElement = new RelativePathElement();
-                        //relativePathElement.TargetName = browsePaths;
-                        //relativePathElement.IncludeSubtypes = true;
-                        //IList<ExpandedNodeId> targetIds = new List<ExpandedNodeId>();
-                        //IList<NodeId> nodeIds = new List<NodeId>();
-                        //typeDefinitionNodeManager.TranslateBrowsePath(null, publishSubscibeManagerHandle, relativePathElement, targetIds, nodeIds);
-
-                        PubSubConnectionState pubSubConnectionState = publishSubscribeState.FindChildBySymbolicName(null, subscriberConnection.Name) as PubSubConnectionState;
-                        if (pubSubConnectionState != null)
-                        {
-                            foreach(ReaderGroupDataType readerGroupDataType in subscriberConnection.ReaderGroups)
-                            {
-                                ReaderGroupState readerGroupState = pubSubConnectionState.FindChildBySymbolicName(null, readerGroupDataType.Name) as ReaderGroupState;
-                                if (readerGroupState != null)
-                                {
-                                    foreach(DataSetReaderDataType dataSetReaderDataType in readerGroupDataType.DataSetReaders)
-                                    {
-                                        DataSetReaderState dataSetReaderState = readerGroupState.FindChildBySymbolicName(null, dataSetReaderDataType.Name) as DataSetReaderState;
-                                        if (dataSetReaderState != null)
-                                        {
-                                            dataSetReaderState.DataSetMetaData.Value = dataSetMetaData;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         /// <summary>

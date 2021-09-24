@@ -4402,7 +4402,7 @@
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
       <Name>MqttUadpConnection_Publisher</Name>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
