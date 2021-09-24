@@ -947,63 +947,50 @@ namespace SampleServer.PubSub
                             {
                                 INodeManager publishSubscribeNodeManager = null;
                                 var publishSubscribeHandle = Server.NodeManager.GetManagerHandle(publishSubscribeState.NodeId, out publishSubscribeNodeManager);
-                                if(publishSubscribeHandle != null)
+                                if (publishSubscribeHandle != null)
                                 {
-                                    ExpandedNodeId connectionNodeId = GetExpandedNodeInServer(subscriberConnection.Name, publishSubscribeNodeManager, publishSubscribeHandle);
-                                    if (connectionNodeId != null)
+                                    PubSubConnectionState pubSubConnectionState = GetNodeStateInServer(publishSubscribeState, subscriberConnection.Name, publishSubscribeNodeManager) as PubSubConnectionState;
+                                    if (pubSubConnectionState != null)
                                     {
-                                        PubSubConnectionState pubSubConnectionState = FindNodeInAddressSpace(ExpandedNodeId.ToNodeId(connectionNodeId, Server.NamespaceUris)) as PubSubConnectionState;
-                                        if (pubSubConnectionState != null)
+                                        foreach (ReaderGroupDataType readerGroupDataType in subscriberConnection.ReaderGroups)
                                         {
-                                            var connectionHandle = Server.NodeManager.GetManagerHandle(pubSubConnectionState.NodeId, out publishSubscribeNodeManager);
-                                            foreach (ReaderGroupDataType readerGroupDataType in subscriberConnection.ReaderGroups)
+                                            ReaderGroupState readerGroupState = GetNodeStateInServer(pubSubConnectionState, readerGroupDataType.Name, publishSubscribeNodeManager) as ReaderGroupState;
+                                            if(readerGroupState != null)
                                             {
-                                                ExpandedNodeId readerGroupNodeId = GetExpandedNodeInServer(readerGroupDataType.Name, publishSubscribeNodeManager, connectionHandle);
-                                                if (readerGroupNodeId != null)
+                                                foreach (DataSetReaderDataType dataSetReaderDataType in readerGroupDataType.DataSetReaders)
                                                 {
-                                                    ReaderGroupState readerGroupState = FindNodeInAddressSpace(ExpandedNodeId.ToNodeId(readerGroupNodeId, Server.NamespaceUris)) as ReaderGroupState;
-                                                    if (readerGroupState != null)
+                                                    DataSetReaderState dataSetReaderState = GetNodeStateInServer(readerGroupState, dataSetReaderDataType.Name, publishSubscribeNodeManager) as DataSetReaderState;
+                                                    if (dataSetReaderState != null)
                                                     {
-                                                        var readerGroupHandle = Server.NodeManager.GetManagerHandle(readerGroupState.NodeId, out publishSubscribeNodeManager);
-                                                        foreach (DataSetReaderDataType dataSetReaderDataType in readerGroupDataType.DataSetReaders)
-                                                        {
-                                                            ExpandedNodeId dataSetReaderNodeId = GetExpandedNodeInServer(dataSetReaderDataType.Name, publishSubscribeNodeManager, readerGroupHandle);
-                                                            if (dataSetReaderNodeId != null)
-                                                            {
-                                                                DataSetReaderState dataSetReaderState = FindNodeInAddressSpace(ExpandedNodeId.ToNodeId(dataSetReaderNodeId, Server.NamespaceUris)) as DataSetReaderState;
-                                                                if (dataSetReaderState != null)
-                                                                {
-                                                                    dataSetReaderState.DataSetMetaData.Value = e.NetworkMessage.DataSetMetaData;
-                                                                }
-                                                            }
-                                                        }
+                                                        dataSetReaderState.DataSetMetaData.Value = e.NetworkMessage.DataSetMetaData;
                                                     }
                                                 }
                                             }
                                         }
                                     }
                                 }
-                                
-                                //PubSubConnectionState pubSubConnectionState = publishSubscribeState.FindChildBySymbolicName(null, subscriberConnection.Name) as PubSubConnectionState;
-                                //if (pubSubConnectionState != null)
-                                //{
-                                //    foreach (ReaderGroupDataType readerGroupDataType in subscriberConnection.ReaderGroups)
-                                //    {
-                                //        ReaderGroupState readerGroupState = pubSubConnectionState.FindChildBySymbolicName(null, readerGroupDataType.Name) as ReaderGroupState;
-                                //        if (readerGroupState != null)
-                                //        {
-                                //            foreach (DataSetReaderDataType dataSetReaderDataType in readerGroupDataType.DataSetReaders)
-                                //            {
-                                //                DataSetReaderState dataSetReaderState = readerGroupState.FindChildBySymbolicName(null, dataSetReaderDataType.Name) as DataSetReaderState;
-                                //                if (dataSetReaderState != null)
-                                //                {
-                                //                    dataSetReaderState.DataSetMetaData.Value = e.NetworkMessage.DataSetMetaData;
-                                //                }
-                                //            }
-                                //        }
-                                //    }
-                                //}
                             }
+
+                            //PubSubConnectionState pubSubConnectionState = publishSubscribeState.FindChildBySymbolicName(null, subscriberConnection.Name) as PubSubConnectionState;
+                            //if (pubSubConnectionState != null)
+                            //{
+                            //    foreach (ReaderGroupDataType readerGroupDataType in subscriberConnection.ReaderGroups)
+                            //    {
+                            //        ReaderGroupState readerGroupState = pubSubConnectionState.FindChildBySymbolicName(null, readerGroupDataType.Name) as ReaderGroupState;
+                            //        if (readerGroupState != null)
+                            //        {
+                            //            foreach (DataSetReaderDataType dataSetReaderDataType in readerGroupDataType.DataSetReaders)
+                            //            {
+                            //                DataSetReaderState dataSetReaderState = readerGroupState.FindChildBySymbolicName(null, dataSetReaderDataType.Name) as DataSetReaderState;
+                            //                if (dataSetReaderState != null)
+                            //                {
+                            //                    dataSetReaderState.DataSetMetaData.Value = e.NetworkMessage.DataSetMetaData;
+                            //                }
+                            //            }
+                            //        }
+                            //    }
+                            //}
+
                         }
                     }
                 }
@@ -1011,27 +998,41 @@ namespace SampleServer.PubSub
         }
 
         /// <summary>
-        /// Get Server node
+        /// Get Server node state
         /// </summary>
+        /// <param name="nodeState"></param>
         /// <param name="nodeName"></param>
         /// <param name="nodeManager"></param>
-        /// <param name="sourceHandle"></param>
         /// <returns></returns>
-        private ExpandedNodeId GetExpandedNodeInServer(string nodeName, INodeManager nodeManager, object sourceHandle)
+        private NodeState GetNodeStateInServer(NodeState nodeState, string nodeName, INodeManager nodeManager)
         {
+            if(nodeState == null)
+            {
+                return null;
+            }
+
+            object sourceHandle = Server.NodeManager.GetManagerHandle(nodeState.NodeId, out nodeManager);
+            if(sourceHandle == null)
+            {
+                return null;
+            }
+
             RelativePathElement relativePath = new RelativePathElement();
             relativePath.ReferenceTypeId = ReferenceTypeIds.HierarchicalReferences;
             relativePath.IsInverse = false;
             relativePath.TargetName = new QualifiedName(nodeName, NamespaceIndex);
 
-            //pathToTranslate.RelativePath.Elements.Add(element);
-            IList<ExpandedNodeId> targetIds = new List<ExpandedNodeId>();
+            List<ExpandedNodeId> targetIds = new List<ExpandedNodeId>();
             IList<NodeId> nodeIds = new List<NodeId>();
             nodeManager.TranslateBrowsePath(null, sourceHandle, relativePath, targetIds, nodeIds);
 
             if(targetIds.Count > 0)
             {
-                return targetIds[0];
+                ExpandedNodeId expandedNodeId = targetIds[0];
+                if(expandedNodeId != null)
+                {
+                    return FindNodeInAddressSpace(ExpandedNodeId.ToNodeId(expandedNodeId, Server.NamespaceUris));
+                }
             }
             return null;
         }

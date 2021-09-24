@@ -180,7 +180,7 @@
               </PublisherId>
               <WriterGroupId>0</WriterGroupId>
               <DataSetWriterId>0</DataSetWriterId>
-              <DataSetMetaData>
+              <!--<DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
                 <EnumDataTypes />
@@ -340,7 +340,7 @@
                   <MajorVersion>1</MajorVersion>
                   <MinorVersion>1</MinorVersion>
                 </ConfigurationVersion>
-              </DataSetMetaData>
+              </DataSetMetaData>-->
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <MessageReceiveTimeout>0</MessageReceiveTimeout>
               <KeyFrameCount>1</KeyFrameCount>
