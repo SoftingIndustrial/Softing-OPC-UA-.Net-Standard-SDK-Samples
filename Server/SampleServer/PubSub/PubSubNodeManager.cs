@@ -41,6 +41,8 @@ namespace SampleServer.PubSub
         private Timer m_simulationTimer;
         private readonly List<BaseDataVariableState> m_dynamicNodes;
         private bool m_canStartPubSubApplication = false;
+        // will contain a list of the MetaData property nodes that have the specified DatasetWriterNodeId
+        private Dictionary<ushort, List<PropertyState<DataSetMetaDataType>>> m_dataSetReaderMetaDataNodesByWriterId;
         #endregion
 
         #region Constructors
@@ -51,6 +53,7 @@ namespace SampleServer.PubSub
         {
             m_canStartPubSubApplication = canStartPubSubApplication;
             m_dynamicNodes = new List<BaseDataVariableState>();
+            m_dataSetReaderMetaDataNodesByWriterId = new Dictionary<ushort, List<PropertyState<DataSetMetaDataType>>>();
         }
 
         #endregion
@@ -788,6 +791,19 @@ namespace SampleServer.PubSub
                 dataSetReaderState.WriterGroupId.Value = e.DataSetReaderDataType.WriterGroupId;
                 dataSetReaderState.DataSetWriterId.Value = e.DataSetReaderDataType.DataSetWriterId;
                 dataSetReaderState.DataSetMetaData.Value = e.DataSetReaderDataType.DataSetMetaData;
+
+                // remember the DataSetMetaData for the DataSetWriterId in a collection to be able to update it easily
+                List<PropertyState<DataSetMetaDataType>> listOfDsMetaDataNode = new List<PropertyState<DataSetMetaDataType>>();
+                if (m_dataSetReaderMetaDataNodesByWriterId.ContainsKey(e.DataSetReaderDataType.DataSetWriterId))
+                {
+                    listOfDsMetaDataNode = m_dataSetReaderMetaDataNodesByWriterId[e.DataSetReaderDataType.DataSetWriterId];
+                }
+                else
+                {
+                    m_dataSetReaderMetaDataNodesByWriterId[e.DataSetReaderDataType.DataSetWriterId] = listOfDsMetaDataNode;
+                }
+                listOfDsMetaDataNode.Add(dataSetReaderState.DataSetMetaData);
+
                 dataSetReaderState.DataSetFieldContentMask.Value = e.DataSetReaderDataType.DataSetFieldContentMask;
                 dataSetReaderState.MessageReceiveTimeout.Value = e.DataSetReaderDataType.MessageReceiveTimeout;
                 dataSetReaderState.KeyFrameCount.Value = e.DataSetReaderDataType.KeyFrameCount;
@@ -917,125 +933,19 @@ namespace SampleServer.PubSub
         /// <param name="e"></param>
         private void PubSubApplication_MetaDataReceived(object sender, SubscribedDataEventArgs e)
         {
-            if (e.NetworkMessage.IsMetaDataMessage)
+            if (e.NetworkMessage.IsMetaDataMessage && e.NetworkMessage.DataSetWriterId != null)
             {
-                UaPubSubApplication uaPubSubApplication = sender as UaPubSubApplication;
-                if (uaPubSubApplication != null)
+
+                if (m_dataSetReaderMetaDataNodesByWriterId.ContainsKey(e.NetworkMessage.DataSetWriterId.Value))
                 {
-                    string publishedId = null;
-                    if (e.NetworkMessage is UadpNetworkMessage)
+                    foreach(var dataSetMetaDataNode in m_dataSetReaderMetaDataNodesByWriterId[e.NetworkMessage.DataSetWriterId.Value])
                     {
-                        publishedId = ((UadpNetworkMessage)e.NetworkMessage).PublisherId.ToString();
-                    }
-                    if (e.NetworkMessage is JsonNetworkMessage)
-                    {
-                        publishedId = ((JsonNetworkMessage)e.NetworkMessage).PublisherId;
-                    }
-
-                    // identify the subscriber connection (supposing that PublisherId is unique per connection!)
-                    // documentation: A Subscriber can skip NetworkMessages from Publishers that it does not expect NetworkMessages from.
-                    PubSubConnectionDataType subscriberConnection =
-                        uaPubSubApplication.UaPubSubConfigurator.PubSubConfiguration.Connections.Find(x => x.PublisherId.Value.ToString() == publishedId && x.ReaderGroups.Count > 0);
-                    if (subscriberConnection != null)
-                    {
-                        INodeManager serverNodeManager = null;
-                        Server.NodeManager.GetManagerHandle(ServerNode.NodeId, out serverNodeManager);
-                        if (serverNodeManager != null && serverNodeManager is CustomNodeManager2)
-                        {
-                            PublishSubscribeState publishSubscribeState = ((CustomNodeManager2)serverNodeManager).FindPredefinedNode(ObjectIds.PublishSubscribe, typeof(PublishSubscribeState)) as PublishSubscribeState;
-                            if (publishSubscribeState != null)
-                            {
-                                INodeManager publishSubscribeNodeManager = null;
-                                var publishSubscribeHandle = Server.NodeManager.GetManagerHandle(publishSubscribeState.NodeId, out publishSubscribeNodeManager);
-                                if (publishSubscribeHandle != null)
-                                {
-                                    PubSubConnectionState pubSubConnectionState = GetNodeStateInServer(publishSubscribeState, subscriberConnection.Name, publishSubscribeNodeManager) as PubSubConnectionState;
-                                    if (pubSubConnectionState != null)
-                                    {
-                                        foreach (ReaderGroupDataType readerGroupDataType in subscriberConnection.ReaderGroups)
-                                        {
-                                            ReaderGroupState readerGroupState = GetNodeStateInServer(pubSubConnectionState, readerGroupDataType.Name, publishSubscribeNodeManager) as ReaderGroupState;
-                                            if(readerGroupState != null)
-                                            {
-                                                foreach (DataSetReaderDataType dataSetReaderDataType in readerGroupDataType.DataSetReaders)
-                                                {
-                                                    DataSetReaderState dataSetReaderState = GetNodeStateInServer(readerGroupState, dataSetReaderDataType.Name, publishSubscribeNodeManager) as DataSetReaderState;
-                                                    if (dataSetReaderState != null)
-                                                    {
-                                                        dataSetReaderState.DataSetMetaData.Value = e.NetworkMessage.DataSetMetaData;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            //PubSubConnectionState pubSubConnectionState = publishSubscribeState.FindChildBySymbolicName(null, subscriberConnection.Name) as PubSubConnectionState;
-                            //if (pubSubConnectionState != null)
-                            //{
-                            //    foreach (ReaderGroupDataType readerGroupDataType in subscriberConnection.ReaderGroups)
-                            //    {
-                            //        ReaderGroupState readerGroupState = pubSubConnectionState.FindChildBySymbolicName(null, readerGroupDataType.Name) as ReaderGroupState;
-                            //        if (readerGroupState != null)
-                            //        {
-                            //            foreach (DataSetReaderDataType dataSetReaderDataType in readerGroupDataType.DataSetReaders)
-                            //            {
-                            //                DataSetReaderState dataSetReaderState = readerGroupState.FindChildBySymbolicName(null, dataSetReaderDataType.Name) as DataSetReaderState;
-                            //                if (dataSetReaderState != null)
-                            //                {
-                            //                    dataSetReaderState.DataSetMetaData.Value = e.NetworkMessage.DataSetMetaData;
-                            //                }
-                            //            }
-                            //        }
-                            //    }
-                            //}
-
-                        }
+                       dataSetMetaDataNode.Value = e.NetworkMessage.DataSetMetaData;
                     }
                 }
             }
         }
 
-        /// <summary>
-        /// Get Server node state
-        /// </summary>
-        /// <param name="nodeState"></param>
-        /// <param name="nodeName"></param>
-        /// <param name="nodeManager"></param>
-        /// <returns></returns>
-        private NodeState GetNodeStateInServer(NodeState nodeState, string nodeName, INodeManager nodeManager)
-        {
-            if(nodeState == null)
-            {
-                return null;
-            }
-
-            object sourceHandle = Server.NodeManager.GetManagerHandle(nodeState.NodeId, out nodeManager);
-            if(sourceHandle == null)
-            {
-                return null;
-            }
-
-            RelativePathElement relativePath = new RelativePathElement();
-            relativePath.ReferenceTypeId = ReferenceTypeIds.HierarchicalReferences;
-            relativePath.IsInverse = false;
-            relativePath.TargetName = new QualifiedName(nodeName, NamespaceIndex);
-
-            List<ExpandedNodeId> targetIds = new List<ExpandedNodeId>();
-            IList<NodeId> nodeIds = new List<NodeId>();
-            nodeManager.TranslateBrowsePath(null, sourceHandle, relativePath, targetIds, nodeIds);
-
-            if(targetIds.Count > 0)
-            {
-                ExpandedNodeId expandedNodeId = targetIds[0];
-                if(expandedNodeId != null)
-                {
-                    return FindNodeInAddressSpace(ExpandedNodeId.ToNodeId(expandedNodeId, Server.NamespaceUris));
-                }
-            }
-            return null;
-        }
 #endif
         #endregion
 

@@ -4153,7 +4153,7 @@
   <Connections>
     <PubSubConnectionDataType>
       <Name>UdpUadpConnection_Publisher</Name>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
@@ -4166,7 +4166,7 @@
         </TypeId>
         <Body>
           <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-            <NetworkInterface>Ethernet</NetworkInterface>
+            <NetworkInterface>Ethernet 3</NetworkInterface>
             <Url>opc.udp://239.0.0.11:4840</Url>
           </NetworkAddressUrlDataType>
         </Body>
@@ -4487,7 +4487,7 @@
           <SecurityKeyServices />
           <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
           <GroupProperties />
-          <WriterGroupId>1</WriterGroupId>
+          <WriterGroupId>3</WriterGroupId>
           <PublishingInterval>5000</PublishingInterval>
           <KeepAliveTime>5000</KeepAliveTime>
           <Priority>0</Priority>
@@ -4522,7 +4522,7 @@
             <DataSetWriterDataType>
               <Name>Writer 1</Name>
               <Enabled>true</Enabled>
-              <DataSetWriterId>1</DataSetWriterId>
+              <DataSetWriterId>31</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <KeyFrameCount>1</KeyFrameCount>
               <DataSetName>Simple_Mqtt_Uadp</DataSetName>
@@ -4646,7 +4646,7 @@
           <SecurityKeyServices />
           <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
           <GroupProperties />
-          <WriterGroupId>1</WriterGroupId>
+          <WriterGroupId>4</WriterGroupId>
           <PublishingInterval>5000</PublishingInterval>
           <KeepAliveTime>5000</KeepAliveTime>
           <Priority>0</Priority>
@@ -4677,7 +4677,7 @@
             <DataSetWriterDataType>
               <Name>Writer 1</Name>
               <Enabled>true</Enabled>
-              <DataSetWriterId>1</DataSetWriterId>
+              <DataSetWriterId>41</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <KeyFrameCount>1</KeyFrameCount>
               <DataSetName>Simple_Mqtt_Json</DataSetName>

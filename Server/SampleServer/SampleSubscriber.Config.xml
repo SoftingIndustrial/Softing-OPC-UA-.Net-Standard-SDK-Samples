@@ -4,7 +4,7 @@
   <Connections>
     <PubSubConnectionDataType>
       <Name>UdpUadpConnection_Subscriber</Name>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
@@ -17,7 +17,7 @@
         </TypeId>
         <Body>
           <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-            <NetworkInterface>Ethernet</NetworkInterface>
+            <NetworkInterface>Ethernet 3</NetworkInterface>
             <Url>opc.udp://239.0.0.11:4840</Url>
           </NetworkAddressUrlDataType>
         </Body>
@@ -60,7 +60,7 @@
                 </Value>
               </PublisherId>
               <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>0</DataSetWriterId>
+              <DataSetWriterId>1</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <MessageReceiveTimeout>0</MessageReceiveTimeout>
               <KeyFrameCount>1</KeyFrameCount>
@@ -179,7 +179,7 @@
                 </Value>
               </PublisherId>
               <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>0</DataSetWriterId>
+              <DataSetWriterId>2</DataSetWriterId>
               <!--<DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -544,7 +544,7 @@
                 </Value>
               </PublisherId>
               <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>0</DataSetWriterId>
+              <DataSetWriterId>3</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <MessageReceiveTimeout>0</MessageReceiveTimeout>
               <KeyFrameCount>1</KeyFrameCount>
@@ -6363,8 +6363,8 @@
                   <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>0</DataSetWriterId>
+              <WriterGroupId>3</WriterGroupId>
+              <DataSetWriterId>31</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <MessageReceiveTimeout>0</MessageReceiveTimeout>
               <KeyFrameCount>1</KeyFrameCount>
@@ -6594,8 +6594,8 @@
                   <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">30</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>1</WriterGroupId>
-              <DataSetWriterId>1</DataSetWriterId>
+              <WriterGroupId>4</WriterGroupId>
+              <DataSetWriterId>41</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <MessageReceiveTimeout>0</MessageReceiveTimeout>
               <KeyFrameCount>1</KeyFrameCount>
