@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PubSubConfigurationDataType xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
   <PublishedDataSets />
-  
   <Connections>
     <PubSubConnectionDataType>
       <Name>UdpUadpConnection_Subscriber</Name>
@@ -6394,7 +6393,7 @@
                   <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <GroupVersion>0</GroupVersion>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>15</DataSetOffset>
+                    <DataSetOffset>0</DataSetOffset>
                     <DataSetClassId>
                       <String>00000000-0000-0000-0000-000000000000</String>
                     </DataSetClassId>
@@ -6484,7 +6483,7 @@
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
       <Name>MqttJsonConnection_Subscriber</Name>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">30</UInt16>

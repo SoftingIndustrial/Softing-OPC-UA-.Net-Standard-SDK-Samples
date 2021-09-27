@@ -3830,7 +3830,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>3535bfbe-3fd0-4f2d-a210-23f016126856</String>
+              <String>3535bfbe-3fd0-4f2d-a210-23f016126847</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -3946,7 +3946,7 @@
               </PublishedVariableDataType>
               <PublishedVariableDataType>
                 <PublishedVariable>
-                  <Identifier>ns=10;s=Pub_Mqtt_Uadp_UInt16</Identifier>
+                  <Identifier>ns=10;s=Pub_Mqtt_Uadp_Int16</Identifier>
                 </PublishedVariable>
                 <AttributeId>13</AttributeId>
                 <SamplingIntervalHint>0</SamplingIntervalHint>
@@ -4151,10 +4151,9 @@
     </PublishedDataSetDataType>
   </PublishedDataSets>
   <Connections>
-    
     <PubSubConnectionDataType>
       <Name>UdpUadpConnection_Publisher</Name>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
@@ -4513,7 +4512,7 @@
               <UadpWriterGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                 <GroupVersion>0</GroupVersion>
                 <DataSetOrdering>AscendingWriterId_1</DataSetOrdering>
-                <NetworkMessageContentMask>63</NetworkMessageContentMask>
+                <NetworkMessageContentMask>127</NetworkMessageContentMask>
                 <SamplingOffset>0</SamplingOffset>
                 <PublishingOffset />
               </UadpWriterGroupMessageDataType>
@@ -4547,10 +4546,10 @@
                 </TypeId>
                 <Body>
                   <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
+                    <DataSetMessageContentMask>53</DataSetMessageContentMask>
                     <ConfiguredSize>32</ConfiguredSize>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>15</DataSetOffset>
+                    <DataSetOffset>0</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
                 </Body>
               </MessageSettings>

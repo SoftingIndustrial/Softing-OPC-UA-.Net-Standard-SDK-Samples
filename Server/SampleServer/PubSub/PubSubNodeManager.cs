@@ -935,7 +935,6 @@ namespace SampleServer.PubSub
         {
             if (e.NetworkMessage.IsMetaDataMessage && e.NetworkMessage.DataSetWriterId != null)
             {
-
                 if (m_dataSetReaderMetaDataNodesByWriterId.ContainsKey(e.NetworkMessage.DataSetWriterId.Value))
                 {
                     foreach(var dataSetMetaDataNode in m_dataSetReaderMetaDataNodesByWriterId[e.NetworkMessage.DataSetWriterId.Value])
