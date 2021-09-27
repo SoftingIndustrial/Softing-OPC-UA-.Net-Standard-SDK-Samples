@@ -4,7 +4,7 @@
   <Connections>
     <PubSubConnectionDataType>
       <Name>UdpUadpConnection_Subscriber</Name>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
@@ -6252,7 +6252,7 @@
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
       <Name>MqttUadpConnection_Subscriber</Name>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
@@ -6360,7 +6360,7 @@
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
-                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
                 </Value>
               </PublisherId>
               <WriterGroupId>3</WriterGroupId>
@@ -6483,7 +6483,7 @@
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
       <Name>MqttJsonConnection_Subscriber</Name>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">30</UInt16>
