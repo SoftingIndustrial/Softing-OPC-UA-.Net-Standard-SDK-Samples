@@ -4153,7 +4153,7 @@
   <Connections>
     <PubSubConnectionDataType>
       <Name>UdpUadpConnection_Publisher</Name>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
@@ -4285,7 +4285,6 @@
             </DataSetWriterDataType>
           </DataSetWriters>
         </WriterGroupDataType>
-
         <WriterGroupDataType>
           <Name>WriterGroup 2</Name>
           <Enabled>true</Enabled>
@@ -4561,7 +4560,7 @@
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
       <Name>MqttJsonConnection_Publisher</Name>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">30</UInt16>

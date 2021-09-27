@@ -915,11 +915,11 @@ namespace SampleServer.PubSub
         /// <param name="e"></param>
         private void PubSubApplication_DataReceived(object sender, SubscribedDataEventArgs e)
         {
-            foreach(UaDataSetMessage dataSetMessage in e.NetworkMessage.DataSetMessages)
+            foreach (UaDataSetMessage dataSetMessage in e.NetworkMessage.DataSetMessages)
             {
-                foreach(Field field in dataSetMessage.DataSet.Fields)
+                foreach (Field field in dataSetMessage.DataSet.Fields)
                 {
-                    ((UaPubSubApplication)sender).DataStore.WritePublishedDataItem(field.TargetNodeId, field.TargetAttribute, field.Value);                    
+                    ((UaPubSubApplication)sender).DataStore.WritePublishedDataItem(field.TargetNodeId, field.TargetAttribute, field.Value);
                 }
             }
         }
@@ -937,9 +937,9 @@ namespace SampleServer.PubSub
             {
                 if (m_dataSetReaderMetaDataNodesByWriterId.ContainsKey(e.NetworkMessage.DataSetWriterId.Value))
                 {
-                    foreach(var dataSetMetaDataNode in m_dataSetReaderMetaDataNodesByWriterId[e.NetworkMessage.DataSetWriterId.Value])
+                    foreach (var dataSetMetaDataNode in m_dataSetReaderMetaDataNodesByWriterId[e.NetworkMessage.DataSetWriterId.Value])
                     {
-                       dataSetMetaDataNode.Value = e.NetworkMessage.DataSetMetaData;
+                        dataSetMetaDataNode.Value = e.NetworkMessage.DataSetMetaData;
                     }
                 }
             }
