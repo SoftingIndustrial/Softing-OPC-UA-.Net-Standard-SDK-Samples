@@ -163,6 +163,7 @@
         <DefaultEventMiQueueSize>0</DefaultEventMiQueueSize>
         <DecodeCustomDataTypes>true</DecodeCustomDataTypes>
         <DecodeDataTypeDictionaries>true</DecodeDataTypeDictionaries>
+        <ClientCertificateLifeTime>24</ClientCertificateLifeTime>
       </ClientToolkitConfiguration>
     </ua:XmlElement>
     <ua:XmlElement>

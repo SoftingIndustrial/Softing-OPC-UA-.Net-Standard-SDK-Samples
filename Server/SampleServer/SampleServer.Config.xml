@@ -194,6 +194,11 @@
   </ServerConfiguration>
 
   <Extensions>
+     <ua:XmlElement>
+       <ServerToolkitConfiguration>
+         <ServerCertificateLifeTime>24</ServerCertificateLifeTime>
+      </ServerToolkitConfiguration>
+    </ua:XmlElement>
     <ua:XmlElement>
       <SampleServerConfiguration>
         <TimerInterval>1000</TimerInterval>
