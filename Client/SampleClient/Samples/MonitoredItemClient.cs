@@ -164,7 +164,7 @@ namespace SampleClient.Samples
                 //set sampling interval to 3 seconds
                 m_miInt64.SamplingInterval = 3000;
 
-                if (m_miCurrentTime.CurrentState == State.Active)
+                if (m_miInt64.CurrentState == State.Active)
                 {
                     Console.WriteLine("Monitored item '{0}' created. Data value changes are shown:", m_miInt64.DisplayName);
                 }
