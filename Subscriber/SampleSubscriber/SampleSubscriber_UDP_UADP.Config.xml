@@ -7,7 +7,7 @@
       <Enabled>true</Enabled>
       <PublisherId>
         <Value>
-          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
         </Value>
       </PublisherId>
       <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp</TransportProfileUri>
@@ -27,7 +27,7 @@
       <WriterGroups />
       <ReaderGroups>
         <ReaderGroupDataType>
-          <Name>ReaderGroup 1</Name>
+          <Name>ReaderGroup 21</Name>
           <Enabled>true</Enabled>
           <SecurityMode>Invalid_0</SecurityMode>
           <SecurityGroupId i:nil="true" />
@@ -52,15 +52,15 @@
           </MessageSettings>
           <DataSetReaders>
             <DataSetReaderDataType>
-              <Name>Reader 1</Name>
+              <Name>Reader 211</Name>
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
-                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>0</DataSetWriterId>
+              <WriterGroupId>21</WriterGroupId>
+              <DataSetWriterId>211</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -257,15 +257,15 @@
               </SubscribedDataSet>
             </DataSetReaderDataType>
             <DataSetReaderDataType>
-              <Name>Reader 2</Name>
+              <Name>Reader 212</Name>
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
-                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>0</DataSetWriterId>
+              <WriterGroupId>21</WriterGroupId>
+              <DataSetWriterId>212</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -604,15 +604,15 @@
               </SubscribedDataSet>
             </DataSetReaderDataType>
             <DataSetReaderDataType>
-              <Name>Reader 3</Name>
+              <Name>Reader 213</Name>
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
-                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>0</DataSetWriterId>
+              <WriterGroupId>21</WriterGroupId>
+              <DataSetWriterId>213</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -3774,7 +3774,7 @@
           </DataSetReaders>
         </ReaderGroupDataType>
         <ReaderGroupDataType>
-          <Name>ReaderGroup 2</Name>
+          <Name>ReaderGroup 22</Name>
           <Enabled>true</Enabled>
           <SecurityMode>Invalid_0</SecurityMode>
           <SecurityGroupId i:nil="true" />
@@ -3799,15 +3799,15 @@
           </MessageSettings>
           <DataSetReaders>
             <DataSetReaderDataType>
-              <Name>Reader 11</Name>
+              <Name>Reader 221</Name>
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
                   <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
                 </Value>
               </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>11</DataSetWriterId>
+              <WriterGroupId>22</WriterGroupId>
+              <DataSetWriterId>221</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -3991,15 +3991,15 @@
               </SubscribedDataSet>
             </DataSetReaderDataType>
             <DataSetReaderDataType>
-              <Name>Reader 12</Name>
+              <Name>Reader 222</Name>
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
                   <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
                 </Value>
               </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>12</DataSetWriterId>
+              <WriterGroupId>22</WriterGroupId>
+              <DataSetWriterId>222</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -4338,15 +4338,15 @@
               </SubscribedDataSet>
             </DataSetReaderDataType>
             <DataSetReaderDataType>
-              <Name>Reader 13</Name>
+              <Name>Reader 223</Name>
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
                   <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
                 </Value>
               </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>13</DataSetWriterId>
+              <WriterGroupId>22</WriterGroupId>
+              <DataSetWriterId>223</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />

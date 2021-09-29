@@ -3775,7 +3775,7 @@
             <Body>
               <UadpWriterGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                 <GroupVersion>0</GroupVersion>
-                <DataSetOrdering>AscendingWriterId_1</DataSetOrdering>
+                <DataSetOrdering>Undefined_0</DataSetOrdering>
                 <NetworkMessageContentMask>63</NetworkMessageContentMask>
                 <SamplingOffset>0</SamplingOffset>
                 <PublishingOffset />

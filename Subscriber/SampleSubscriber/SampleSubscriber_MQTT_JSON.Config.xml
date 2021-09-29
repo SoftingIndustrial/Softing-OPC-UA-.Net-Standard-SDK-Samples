@@ -83,7 +83,7 @@
       <WriterGroups />
       <ReaderGroups>
         <ReaderGroupDataType>
-          <Name>ReaderGroup 1</Name>
+          <Name>ReaderGroup 11</Name>
           <Enabled>true</Enabled>
           <SecurityMode>Invalid_0</SecurityMode>
           <SecurityGroupId i:nil="true" />
@@ -108,15 +108,15 @@
           </MessageSettings>
           <DataSetReaders>
             <DataSetReaderDataType>
-              <Name>Reader 1</Name>
+              <Name>Reader 111</Name>
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
                   <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>0</DataSetWriterId>
+              <WriterGroupId>11</WriterGroupId>
+              <DataSetWriterId>111</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -137,7 +137,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>1100e799-14de-488d-9fed-b024d6f7ba54</String>
+                      <String>a0717ac2-e61a-418e-8184-10efeeeec718</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -153,7 +153,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>9b4945a9-6dd9-4119-8edc-406bd364da40</String>
+                      <String>315cbfbc-137b-4be1-9943-481c8ab689ab</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -169,7 +169,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>5cd47cec-e25e-4b26-951b-c133901c3e9c</String>
+                      <String>2891fc08-d35c-4d34-a325-775b1c093a08</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -185,7 +185,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>4d8dc29b-5a92-4881-9e88-b903c1dd52ae</String>
+                      <String>aba91a4e-2c7a-4f97-9b93-201071bf98d7</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -213,7 +213,8 @@
                 <Body>
                   <BrokerDataSetReaderTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <QueueName>Json_WriterGroup_1</QueueName>
-                    <RequestedDeliveryGuarantee>NotSpecified_0</RequestedDeliveryGuarantee>
+                    <RequestedDeliveryGuarantee>AtLeastOnce_2</RequestedDeliveryGuarantee>
+                    <MetaDataQueueName>Json_WriterGroup_1/$Metadata</MetaDataQueueName>
                   </BrokerDataSetReaderTransportDataType>
                 </Body>
               </TransportSettings>
@@ -237,7 +238,7 @@
                     <TargetVariables>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>1100e799-14de-488d-9fed-b024d6f7ba54</String>
+                          <String>a0717ac2-e61a-418e-8184-10efeeeec718</String>
                         </DataSetFieldId>
                         <TargetNodeId>
                           <Identifier>ns=2;s=BoolToggle</Identifier>
@@ -252,7 +253,7 @@
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>9b4945a9-6dd9-4119-8edc-406bd364da40</String>
+                          <String>315cbfbc-137b-4be1-9943-481c8ab689ab</String>
                         </DataSetFieldId>
                         <TargetNodeId>
                           <Identifier>ns=2;s=Int32</Identifier>
@@ -267,7 +268,7 @@
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>5cd47cec-e25e-4b26-951b-c133901c3e9c</String>
+                          <String>2891fc08-d35c-4d34-a325-775b1c093a08</String>
                         </DataSetFieldId>
                         <TargetNodeId>
                           <Identifier>ns=2;s=Int32Fast</Identifier>
@@ -282,7 +283,7 @@
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>4d8dc29b-5a92-4881-9e88-b903c1dd52ae</String>
+                          <String>aba91a4e-2c7a-4f97-9b93-201071bf98d7</String>
                         </DataSetFieldId>
                         <TargetNodeId>
                           <Identifier>ns=2;s=DateTime</Identifier>
@@ -301,15 +302,15 @@
               </SubscribedDataSet>
             </DataSetReaderDataType>
             <DataSetReaderDataType>
-              <Name>Reader 2</Name>
+              <Name>Reader 112</Name>
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
                   <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>0</DataSetWriterId>
+              <WriterGroupId>11</WriterGroupId>
+              <DataSetWriterId>112</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -330,7 +331,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>6b081885-78f1-4ce0-9fda-bf75d6a5e3e1</String>
+                      <String>fac5ac26-7a47-435a-9337-b2e3bc1eb786</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -346,7 +347,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>76d51d92-a101-4e0f-bb90-35e1e466cf1e</String>
+                      <String>65494723-eb56-4689-ac76-d8a1b41a5a45</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -362,7 +363,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>3cd9497f-3d10-4fae-ba89-4c81a7c8e8bf</String>
+                      <String>1f82cce7-1384-47ee-90f8-524dec41b702</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -378,7 +379,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>1d3bbf50-afeb-4326-90b3-29ee5e7c6e25</String>
+                      <String>7d90667c-afab-49c3-ac38-a7859a4e0c7d</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -394,7 +395,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>f689f63a-2fa2-44f9-b87c-dd10a01d9464</String>
+                      <String>cdc79eae-2486-487b-bfd1-c874cde801d7</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -410,7 +411,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>7a853998-e336-4584-a373-f2c8084f101b</String>
+                      <String>23eb0307-5091-4641-93ee-0582ca158ab8</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -426,7 +427,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>e970eeee-78d4-4425-a824-fd52ab9e9251</String>
+                      <String>d62cb3ad-5b6d-4ad7-a5ef-4605e76c44d0</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -442,7 +443,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>ff4bf1f3-d565-4efa-be5c-8d580fad966c</String>
+                      <String>def44c8a-7d59-46c8-9075-fbf637ca0106</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -458,7 +459,7 @@
                     <ArrayDimensions />
                     <MaxStringLength>0</MaxStringLength>
                     <DataSetFieldId>
-                      <String>a6d546dc-b119-4dd2-8896-2ba1840481ee</String>
+                      <String>fc3df287-c8cb-4797-9b99-5c7e41b80770</String>
                     </DataSetFieldId>
                     <Properties />
                   </FieldMetaData>
@@ -486,7 +487,8 @@
                 <Body>
                   <BrokerDataSetReaderTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <QueueName>Json_WriterGroup_1</QueueName>
-                    <RequestedDeliveryGuarantee>NotSpecified_0</RequestedDeliveryGuarantee>
+                    <RequestedDeliveryGuarantee>AtLeastOnce_2</RequestedDeliveryGuarantee>
+                    <MetaDataQueueName>Json_WriterGroup_1/$Metadata</MetaDataQueueName>
                   </BrokerDataSetReaderTransportDataType>
                 </Body>
               </TransportSettings>
@@ -510,7 +512,7 @@
                     <TargetVariables>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>6b081885-78f1-4ce0-9fda-bf75d6a5e3e1</String>
+                          <String>fac5ac26-7a47-435a-9337-b2e3bc1eb786</String>
                         </DataSetFieldId>
                         <TargetNodeId>
                           <Identifier>ns=3;s=BoolToggle</Identifier>
@@ -525,7 +527,7 @@
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>76d51d92-a101-4e0f-bb90-35e1e466cf1e</String>
+                          <String>65494723-eb56-4689-ac76-d8a1b41a5a45</String>
                         </DataSetFieldId>
                         <TargetNodeId>
                           <Identifier>ns=3;s=Byte</Identifier>
@@ -540,7 +542,7 @@
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>3cd9497f-3d10-4fae-ba89-4c81a7c8e8bf</String>
+                          <String>1f82cce7-1384-47ee-90f8-524dec41b702</String>
                         </DataSetFieldId>
                         <TargetNodeId>
                           <Identifier>ns=3;s=Int16</Identifier>
@@ -555,7 +557,7 @@
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>1d3bbf50-afeb-4326-90b3-29ee5e7c6e25</String>
+                          <String>7d90667c-afab-49c3-ac38-a7859a4e0c7d</String>
                         </DataSetFieldId>
                         <TargetNodeId>
                           <Identifier>ns=3;s=Int32</Identifier>
@@ -570,7 +572,7 @@
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>f689f63a-2fa2-44f9-b87c-dd10a01d9464</String>
+                          <String>cdc79eae-2486-487b-bfd1-c874cde801d7</String>
                         </DataSetFieldId>
                         <TargetNodeId>
                           <Identifier>ns=3;s=SByte</Identifier>
@@ -585,7 +587,7 @@
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>7a853998-e336-4584-a373-f2c8084f101b</String>
+                          <String>23eb0307-5091-4641-93ee-0582ca158ab8</String>
                         </DataSetFieldId>
                         <TargetNodeId>
                           <Identifier>ns=3;s=UInt16</Identifier>
@@ -600,7 +602,7 @@
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>e970eeee-78d4-4425-a824-fd52ab9e9251</String>
+                          <String>d62cb3ad-5b6d-4ad7-a5ef-4605e76c44d0</String>
                         </DataSetFieldId>
                         <TargetNodeId>
                           <Identifier>ns=3;s=UInt32</Identifier>
@@ -615,7 +617,7 @@
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>ff4bf1f3-d565-4efa-be5c-8d580fad966c</String>
+                          <String>def44c8a-7d59-46c8-9075-fbf637ca0106</String>
                         </DataSetFieldId>
                         <TargetNodeId>
                           <Identifier>ns=3;s=Float</Identifier>
@@ -630,7 +632,7 @@
                       </FieldTargetDataType>
                       <FieldTargetDataType>
                         <DataSetFieldId>
-                          <String>a6d546dc-b119-4dd2-8896-2ba1840481ee</String>
+                          <String>fc3df287-c8cb-4797-9b99-5c7e41b80770</String>
                         </DataSetFieldId>
                         <TargetNodeId>
                           <Identifier>ns=3;s=Double</Identifier>
@@ -649,18 +651,15 @@
               </SubscribedDataSet>
             </DataSetReaderDataType>
             <DataSetReaderDataType>
-              <Name>Reader 3</Name>
+              <Name>Reader 113</Name>
               <Enabled>true</Enabled>
               <PublisherId>
-                <!--<Value>
-                  <Null xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
-                </Value>-->
                 <Value>
                   <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>3</DataSetWriterId>
+              <WriterGroupId>11</WriterGroupId>
+              <DataSetWriterId>113</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />

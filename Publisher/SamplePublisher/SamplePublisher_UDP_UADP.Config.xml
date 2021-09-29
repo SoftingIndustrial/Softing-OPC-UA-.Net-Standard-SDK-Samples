@@ -3669,7 +3669,7 @@
       <Enabled>true</Enabled>
       <PublisherId>
         <Value>
-          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
         </Value>
       </PublisherId>
       <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp</TransportProfileUri>
@@ -3688,14 +3688,14 @@
       <TransportSettings i:nil="true" />
       <WriterGroups>
         <WriterGroupDataType>
-          <Name>WriterGroup 1</Name>
+          <Name>WriterGroup 21</Name>
           <Enabled>true</Enabled>
           <SecurityMode>Invalid_0</SecurityMode>
           <SecurityGroupId i:nil="true" />
           <SecurityKeyServices />
           <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
           <GroupProperties />
-          <WriterGroupId>1</WriterGroupId>
+          <WriterGroupId>21</WriterGroupId>
           <PublishingInterval>5000</PublishingInterval>
           <KeepAliveTime>5000</KeepAliveTime>
           <Priority>0</Priority>
@@ -3719,7 +3719,7 @@
             <Body>
               <UadpWriterGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                 <GroupVersion>0</GroupVersion>
-                <DataSetOrdering>AscendingWriterId_1</DataSetOrdering>
+                <DataSetOrdering>Undefined_0</DataSetOrdering>
                 <NetworkMessageContentMask>63</NetworkMessageContentMask>
                 <SamplingOffset>0</SamplingOffset>
                 <PublishingOffset />
@@ -3728,9 +3728,9 @@
           </MessageSettings>
           <DataSetWriters>
             <DataSetWriterDataType>
-              <Name>Writer 1</Name>
+              <Name>Writer 211</Name>
               <Enabled>true</Enabled>
-              <DataSetWriterId>1</DataSetWriterId>
+              <DataSetWriterId>211</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <KeyFrameCount>1</KeyFrameCount>
               <DataSetName>Simple</DataSetName>
@@ -3751,9 +3751,9 @@
               </MessageSettings>
             </DataSetWriterDataType>
             <DataSetWriterDataType>
-              <Name>Writer 2</Name>
+              <Name>Writer 212</Name>
               <Enabled>true</Enabled>
-              <DataSetWriterId>2</DataSetWriterId>
+              <DataSetWriterId>212</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <KeyFrameCount>1</KeyFrameCount>
               <DataSetName>AllTypes</DataSetName>
@@ -3774,9 +3774,9 @@
               </MessageSettings>
             </DataSetWriterDataType>
             <DataSetWriterDataType>
-              <Name>Writer 3</Name>
+              <Name>Writer 213</Name>
               <Enabled>true</Enabled>
-              <DataSetWriterId>3</DataSetWriterId>
+              <DataSetWriterId>213</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <KeyFrameCount>1</KeyFrameCount>
               <DataSetName>MassTest</DataSetName>
@@ -3803,7 +3803,7 @@
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
       <Name>UADPConection2</Name>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <PublisherId>
         <Value>
           <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
@@ -3825,14 +3825,14 @@
       <TransportSettings i:nil="true" />
       <WriterGroups>
         <WriterGroupDataType>
-          <Name>WriterGroup 2</Name>
+          <Name>WriterGroup 22</Name>
           <Enabled>true</Enabled>
           <SecurityMode>Invalid_0</SecurityMode>
           <SecurityGroupId i:nil="true" />
           <SecurityKeyServices />
           <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
           <GroupProperties />
-          <WriterGroupId>2</WriterGroupId>
+          <WriterGroupId>22</WriterGroupId>
           <PublishingInterval>5000</PublishingInterval>
           <KeepAliveTime>5000</KeepAliveTime>
           <Priority>0</Priority>
@@ -3865,9 +3865,9 @@
           </MessageSettings>
           <DataSetWriters>
             <DataSetWriterDataType>
-              <Name>Writer 11</Name>
+              <Name>Writer 221</Name>
               <Enabled>true</Enabled>
-              <DataSetWriterId>11</DataSetWriterId>
+              <DataSetWriterId>221</DataSetWriterId>
               <DataSetFieldContentMask>0</DataSetFieldContentMask>
               <KeyFrameCount>1</KeyFrameCount>
               <DataSetName>Simple</DataSetName>
@@ -3888,9 +3888,9 @@
               </MessageSettings>
             </DataSetWriterDataType>
             <DataSetWriterDataType>
-              <Name>Writer 12</Name>
+              <Name>Writer 222</Name>
               <Enabled>true</Enabled>
-              <DataSetWriterId>12</DataSetWriterId>
+              <DataSetWriterId>222</DataSetWriterId>
               <DataSetFieldContentMask>0</DataSetFieldContentMask>
               <KeyFrameCount>1</KeyFrameCount>
               <DataSetName>AllTypes</DataSetName>
@@ -3911,9 +3911,9 @@
               </MessageSettings>
             </DataSetWriterDataType>
             <DataSetWriterDataType>
-              <Name>Writer 13</Name>
+              <Name>Writer 223</Name>
               <Enabled>true</Enabled>
-              <DataSetWriterId>13</DataSetWriterId>
+              <DataSetWriterId>223</DataSetWriterId>
               <DataSetFieldContentMask>0</DataSetFieldContentMask>
               <KeyFrameCount>1</KeyFrameCount>
               <DataSetName>MassTest</DataSetName>

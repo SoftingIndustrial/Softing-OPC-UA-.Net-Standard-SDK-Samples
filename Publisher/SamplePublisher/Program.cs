@@ -33,10 +33,10 @@ namespace SamplePublisher
             {
                 LoadTraceLogger();
 
+                string configurationFileName = "SamplePublisher_MQTT_JSON.Config.xml";
                 //string configurationFileName = "SamplePublisher_UDP_UADP.Config.xml";
                 //string configurationFileName = "SamplePublisher_UDP_UADP.AllTypes.Config.xml";
-                //string configurationFileName = "SamplePublisher_MQTT_JSON.Config.xml";
-                string configurationFileName = "SamplePublisher_MQTT_UADP.Config.xml";
+                //string configurationFileName = "SamplePublisher_MQTT_UADP.Config.xml";
 
                 string[] commandLineArguments = Environment.GetCommandLineArgs();
                 if (commandLineArguments.Length > 1)
@@ -54,8 +54,8 @@ namespace SamplePublisher
                 using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(configurationFileName))
                 {
                     // the PubSub application can be also created from an instance of PubSubConfigurationDataType returned by CreateConfiguration() method
-                    //PubSubConfigurationDataType pubSubConfiguration = CreateConfigurationAllDataTypes_UdpUadp();
-                    //using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(pubSubConfiguration)){}
+                    //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration_MqttJson();
+                    //using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(pubSubConfiguration)){
 
                     // Start values simulator
                     dataStoreValuesGenerator = new DataStoreValuesGenerator(uaPubSubApplication);
@@ -112,12 +112,167 @@ namespace SamplePublisher
             }
         }
 
-        #region Create configuration object
+        #region Create configuration objects
+
+        /// <summary>
+        /// Create a PubSubConfigurationDataType object programmatically for MqttJson profile
+        /// </summary>
+        /// <returns></returns>
+        private static PubSubConfigurationDataType CreateConfiguration_MqttJson()
+        {
+            // Define a PubSub connection with PublisherId 10
+            PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
+            pubSubConnection1.Name = "MqttJsonConection";
+            pubSubConnection1.Enabled = true;
+            pubSubConnection1.PublisherId = (UInt16)10;
+            pubSubConnection1.TransportProfileUri = Profiles.PubSubMqttJsonTransport;
+            NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
+            // Leave empty for MQTT.
+            address.NetworkInterface = String.Empty;
+            address.Url = "mqtt://localhost:1883";
+            pubSubConnection1.Address = new ExtensionObject(address);
+
+            // Configure the mqtt specific configuration with the MQTT broker
+            ITransportProtocolConfiguration mqttConfiguration = new MqttClientProtocolConfiguration(version: EnumMqttProtocolVersion.V500);
+            pubSubConnection1.ConnectionProperties = mqttConfiguration.ConnectionProperties;
+
+            string brokerQueueName = "Json_WriterGroup_1";
+            string brokerMetaData = "$Metadata";
+
+            #region Define WriterGroup1
+            WriterGroupDataType writerGroup1 = new WriterGroupDataType();
+            writerGroup1.Name = "WriterGroup 11";
+            writerGroup1.Enabled = true;
+            writerGroup1.WriterGroupId = 11;
+            writerGroup1.PublishingInterval = 5000;
+            writerGroup1.KeepAliveTime = 5000;
+            writerGroup1.MaxNetworkMessageSize = 1500;
+
+            JsonWriterGroupMessageDataType jsonMessageSettings = new JsonWriterGroupMessageDataType()
+            {
+                NetworkMessageContentMask = (uint)(JsonNetworkMessageContentMask.NetworkMessageHeader
+                       | JsonNetworkMessageContentMask.DataSetMessageHeader
+                        | JsonNetworkMessageContentMask.PublisherId
+                        | JsonNetworkMessageContentMask.DataSetClassId
+                        | JsonNetworkMessageContentMask.ReplyTo)
+            };
+
+            writerGroup1.MessageSettings = new ExtensionObject(jsonMessageSettings);
+            writerGroup1.TransportSettings = new ExtensionObject(new BrokerWriterGroupTransportDataType()
+            {
+                QueueName = brokerQueueName,
+            });
+
+            // Define DataSetWriter 'Simple'
+            DataSetWriterDataType dataSetWriter1 = new DataSetWriterDataType();
+            dataSetWriter1.Name = "Writer 111";
+            dataSetWriter1.DataSetWriterId = 111;
+            dataSetWriter1.Enabled = true;
+            dataSetWriter1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetWriter1.DataSetName = "Simple";
+            dataSetWriter1.KeyFrameCount = 1;
+
+            JsonDataSetWriterMessageDataType jsonDataSetWriterMessage = new JsonDataSetWriterMessageDataType()
+            {
+                DataSetMessageContentMask = (uint)(JsonDataSetMessageContentMask.DataSetWriterId
+                | JsonDataSetMessageContentMask.MetaDataVersion
+                | JsonDataSetMessageContentMask.SequenceNumber
+                | JsonDataSetMessageContentMask.Status
+                | JsonDataSetMessageContentMask.Timestamp),
+            };
+            dataSetWriter1.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
+
+            BrokerDataSetWriterTransportDataType jsonDataSetWriterTransport = new BrokerDataSetWriterTransportDataType()
+            {
+                QueueName = brokerQueueName,
+                RequestedDeliveryGuarantee = BrokerTransportQualityOfService.BestEffort,
+                MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}",
+                MetaDataUpdateTime = 0,
+            };
+            dataSetWriter1.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
+            writerGroup1.DataSetWriters.Add(dataSetWriter1);
+
+            // Define DataSetWriter 'AllTypes'
+            DataSetWriterDataType dataSetWriter2 = new DataSetWriterDataType();
+            dataSetWriter2.Name = "Writer 112";
+            dataSetWriter2.DataSetWriterId = 112;
+            dataSetWriter2.Enabled = true;
+            dataSetWriter2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetWriter2.DataSetName = "AllTypes";
+            dataSetWriter2.KeyFrameCount = 1;
+
+            jsonDataSetWriterMessage = new JsonDataSetWriterMessageDataType()
+            {
+                DataSetMessageContentMask = (uint)(JsonDataSetMessageContentMask.DataSetWriterId
+                | JsonDataSetMessageContentMask.MetaDataVersion
+                | JsonDataSetMessageContentMask.SequenceNumber
+                | JsonDataSetMessageContentMask.Status
+                | JsonDataSetMessageContentMask.Timestamp),
+            };
+            dataSetWriter2.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
+
+            jsonDataSetWriterTransport = new BrokerDataSetWriterTransportDataType()
+            {
+                QueueName = brokerQueueName,
+                RequestedDeliveryGuarantee = BrokerTransportQualityOfService.BestEffort,
+                MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}",
+                MetaDataUpdateTime = 0,
+            };
+            dataSetWriter2.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
+
+            writerGroup1.DataSetWriters.Add(dataSetWriter2);
+
+            // Define DataSetWriter 'MassTest'
+            DataSetWriterDataType dataSetWriter3 = new DataSetWriterDataType();
+            dataSetWriter3.Name = "Writer 113";
+            dataSetWriter3.DataSetWriterId = 113;
+            dataSetWriter3.Enabled = true;
+            dataSetWriter3.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetWriter3.DataSetName = "MassTest";
+            dataSetWriter3.KeyFrameCount = 1;
+            jsonDataSetWriterMessage = new JsonDataSetWriterMessageDataType()
+            {
+                DataSetMessageContentMask = (uint)(JsonDataSetMessageContentMask.DataSetWriterId
+               | JsonDataSetMessageContentMask.MetaDataVersion
+               | JsonDataSetMessageContentMask.SequenceNumber
+               | JsonDataSetMessageContentMask.Status
+               | JsonDataSetMessageContentMask.Timestamp),
+            };
+            dataSetWriter3.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
+
+            jsonDataSetWriterTransport = new BrokerDataSetWriterTransportDataType()
+            {
+                QueueName = brokerQueueName,
+                RequestedDeliveryGuarantee = BrokerTransportQualityOfService.BestEffort,
+                MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}",
+                MetaDataUpdateTime = 0,
+            };
+            dataSetWriter3.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
+
+            writerGroup1.DataSetWriters.Add(dataSetWriter3);
+
+            pubSubConnection1.WriterGroups.Add(writerGroup1);
+            #endregion          
+
+            //create  pub sub configuration root object
+            PubSubConfigurationDataType pubSubConfiguration = new PubSubConfigurationDataType();
+            pubSubConfiguration.Connections = new PubSubConnectionDataTypeCollection()
+                {
+                    pubSubConnection1
+                };
+            pubSubConfiguration.PublishedDataSets = new PublishedDataSetDataTypeCollection()
+                {
+                    GetPublishedDataSetSimple(), GetPublishedDataSetAllTypes(), GetPublishedDataSetMassTest()
+                };
+
+            return pubSubConfiguration;
+        }
+
         /// <summary>
         /// Create a PubSubConfigurationDataType object programmatically for UdpUadp profile
         /// </summary>
         /// <returns></returns>
-        public static PubSubConfigurationDataType CreateConfiguration_UdpUadp()
+        private static PubSubConfigurationDataType CreateConfiguration_UdpUadp()
         {
             // Define a PubSub connection with PublisherId 10
             PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
@@ -309,7 +464,7 @@ namespace SamplePublisher
         /// Create a PubSubConfigurationDataType object programmatically for a dataset with all data types for the UdpUadp profile
         /// </summary>
         /// <returns></returns>
-        public static PubSubConfigurationDataType CreateConfigurationAllDataTypes_UdpUadp()
+        private static PubSubConfigurationDataType CreateConfigurationAllDataTypes_UdpUadp()
         {
             // Define a PubSub connection with PublisherId 10
             PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
@@ -428,171 +583,18 @@ namespace SamplePublisher
             return pubSubConfiguration;
         }
 
-        /// <summary>
-        /// Create a PubSubConfigurationDataType object programmatically for MqttJson profile
-        /// </summary>
-        /// <returns></returns>
-        public static PubSubConfigurationDataType CreateConfiguration_MqttJson()
-        {
-            // Define a PubSub connection with PublisherId 50
-            PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
-            pubSubConnection1.Name = "MqttJsonConection";
-            pubSubConnection1.Enabled = true;
-            pubSubConnection1.PublisherId = (UInt16)50;
-            pubSubConnection1.TransportProfileUri = Profiles.PubSubMqttJsonTransport;
-            NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
-            // Leave empty for MQTT.
-            address.NetworkInterface = String.Empty;
-            address.Url = "mqtt://localhost:1883";
-            pubSubConnection1.Address = new ExtensionObject(address);
-
-            // Configure the mqtt specific configuration with the MQTT broker
-            ITransportProtocolConfiguration mqttConfiguration = new MqttClientProtocolConfiguration(version: EnumMqttProtocolVersion.V500);
-            pubSubConnection1.ConnectionProperties = mqttConfiguration.ConnectionProperties;
-
-            string brokerQueueName = "Json_WriterGroup_1";
-            string brokerMetaData = "$Metadata";
-
-            #region Define WriterGroup1
-            WriterGroupDataType writerGroup1 = new WriterGroupDataType();
-            writerGroup1.Name = "WriterGroup 1";
-            writerGroup1.Enabled = true;
-            writerGroup1.WriterGroupId = 1;
-            writerGroup1.PublishingInterval = 5000;
-            writerGroup1.KeepAliveTime = 5000;
-            writerGroup1.MaxNetworkMessageSize = 1500;
-
-            JsonWriterGroupMessageDataType jsonMessageSettings = new JsonWriterGroupMessageDataType()
-            {
-                NetworkMessageContentMask = (uint)(JsonNetworkMessageContentMask.NetworkMessageHeader
-                       | JsonNetworkMessageContentMask.DataSetMessageHeader
-                        | JsonNetworkMessageContentMask.PublisherId
-                        | JsonNetworkMessageContentMask.DataSetClassId
-                        | JsonNetworkMessageContentMask.ReplyTo)
-            };
-
-            writerGroup1.MessageSettings = new ExtensionObject(jsonMessageSettings);
-            writerGroup1.TransportSettings = new ExtensionObject(new BrokerWriterGroupTransportDataType()
-            {
-                QueueName = brokerQueueName,
-            });
-
-            // Define DataSetWriter 'Simple'
-            DataSetWriterDataType dataSetWriter1 = new DataSetWriterDataType();
-            dataSetWriter1.Name = "Writer 1";
-            dataSetWriter1.DataSetWriterId = 1;
-            dataSetWriter1.Enabled = true;
-            dataSetWriter1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetWriter1.DataSetName = "Simple";
-            dataSetWriter1.KeyFrameCount = 1;
-
-            JsonDataSetWriterMessageDataType jsonDataSetWriterMessage = new JsonDataSetWriterMessageDataType()
-            {
-                DataSetMessageContentMask = (uint)(JsonDataSetMessageContentMask.DataSetWriterId
-                | JsonDataSetMessageContentMask.MetaDataVersion 
-                | JsonDataSetMessageContentMask.SequenceNumber
-                | JsonDataSetMessageContentMask.Status
-                | JsonDataSetMessageContentMask.Timestamp),
-            };
-            dataSetWriter1.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
-
-            BrokerDataSetWriterTransportDataType jsonDataSetWriterTransport = new BrokerDataSetWriterTransportDataType()
-            {
-                QueueName = brokerQueueName,
-                RequestedDeliveryGuarantee = BrokerTransportQualityOfService.BestEffort,
-                MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}",
-                MetaDataUpdateTime = 0,
-            };
-            dataSetWriter1.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
-            writerGroup1.DataSetWriters.Add(dataSetWriter1);
-
-            // Define DataSetWriter 'AllTypes'
-            DataSetWriterDataType dataSetWriter2 = new DataSetWriterDataType();
-            dataSetWriter2.Name = "Writer 2";
-            dataSetWriter2.DataSetWriterId = 2;
-            dataSetWriter2.Enabled = true;
-            dataSetWriter2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetWriter2.DataSetName = "AllTypes";
-            dataSetWriter2.KeyFrameCount = 1;
-
-            jsonDataSetWriterMessage = new JsonDataSetWriterMessageDataType()
-            {
-                DataSetMessageContentMask = (uint)(JsonDataSetMessageContentMask.DataSetWriterId
-                | JsonDataSetMessageContentMask.MetaDataVersion 
-                | JsonDataSetMessageContentMask.SequenceNumber
-                | JsonDataSetMessageContentMask.Status
-                | JsonDataSetMessageContentMask.Timestamp),
-            };
-            dataSetWriter2.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
-
-            jsonDataSetWriterTransport = new BrokerDataSetWriterTransportDataType()
-            {
-                QueueName = brokerQueueName,
-                RequestedDeliveryGuarantee = BrokerTransportQualityOfService.BestEffort,
-                MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}",
-                MetaDataUpdateTime = 0,
-            };
-            dataSetWriter2.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
-
-            writerGroup1.DataSetWriters.Add(dataSetWriter2);
-
-            // Define DataSetWriter 'MassTest'
-            DataSetWriterDataType dataSetWriter3 = new DataSetWriterDataType();
-            dataSetWriter3.Name = "Writer 3";
-            dataSetWriter3.DataSetWriterId = 3;
-            dataSetWriter3.Enabled = true;
-            dataSetWriter3.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetWriter3.DataSetName = "MassTest";
-            dataSetWriter3.KeyFrameCount = 1;
-            jsonDataSetWriterMessage = new JsonDataSetWriterMessageDataType()
-            {
-                DataSetMessageContentMask = (uint)(JsonDataSetMessageContentMask.DataSetWriterId
-               | JsonDataSetMessageContentMask.MetaDataVersion 
-               | JsonDataSetMessageContentMask.SequenceNumber
-               | JsonDataSetMessageContentMask.Status
-               | JsonDataSetMessageContentMask.Timestamp),
-            };
-            dataSetWriter3.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
-
-            jsonDataSetWriterTransport = new BrokerDataSetWriterTransportDataType()
-            {
-                QueueName = brokerQueueName,
-                RequestedDeliveryGuarantee = BrokerTransportQualityOfService.BestEffort,
-                MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}",
-                MetaDataUpdateTime = 0,
-            };
-            dataSetWriter3.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
-
-            writerGroup1.DataSetWriters.Add(dataSetWriter3);
-
-            pubSubConnection1.WriterGroups.Add(writerGroup1);
-            #endregion          
-
-            //create  pub sub configuration root object
-            PubSubConfigurationDataType pubSubConfiguration = new PubSubConfigurationDataType();
-            pubSubConfiguration.Connections = new PubSubConnectionDataTypeCollection()
-                {
-                    pubSubConnection1
-                };
-            pubSubConfiguration.PublishedDataSets = new PublishedDataSetDataTypeCollection()
-                {
-                    GetPublishedDataSetSimple(), GetPublishedDataSetAllTypes(), GetPublishedDataSetMassTest()
-                };
-
-            return pubSubConfiguration;
-        }
-
+        
         /// <summary>
         /// Create a PubSubConfigurationDataType object programmatically for MqttUadp profile
         /// </summary>
         /// <returns></returns>
         private static PubSubConfigurationDataType CreateConfiguration_MqttUadp()
         {
-            // Define a PubSub connection with PublisherId 3
+            // Define a PubSub connection with PublisherId 30
             PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
             pubSubConnection1.Name = "MqttUadpConection";
             pubSubConnection1.Enabled = true;
-            pubSubConnection1.PublisherId = (UInt16)3;
+            pubSubConnection1.PublisherId = (UInt16)30;
             pubSubConnection1.TransportProfileUri = Profiles.PubSubMqttUadpTransport;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             // Specify the local Network interface name to be used
@@ -611,9 +613,9 @@ namespace SamplePublisher
 
             #region Define WriterGroup1
             WriterGroupDataType writerGroup1 = new WriterGroupDataType();
-            writerGroup1.Name = "WriterGroup 1";
+            writerGroup1.Name = "WriterGroup 31";
             writerGroup1.Enabled = true;
-            writerGroup1.WriterGroupId = 1;
+            writerGroup1.WriterGroupId = 31;
             writerGroup1.PublishingInterval = 5000;
             writerGroup1.KeepAliveTime = 5000;
             writerGroup1.MaxNetworkMessageSize = 1500;
@@ -636,8 +638,8 @@ namespace SamplePublisher
 
             // Define DataSetWriter 'Simple'
             DataSetWriterDataType dataSetWriter1 = new DataSetWriterDataType();
-            dataSetWriter1.Name = "Writer 1";
-            dataSetWriter1.DataSetWriterId = 1;
+            dataSetWriter1.Name = "Writer 311";
+            dataSetWriter1.DataSetWriterId = 311;
             dataSetWriter1.Enabled = true;
             dataSetWriter1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
             dataSetWriter1.DataSetName = "Simple";
@@ -663,8 +665,8 @@ namespace SamplePublisher
 
             // Define DataSetWriter 'AllTypes'
             DataSetWriterDataType dataSetWriter2 = new DataSetWriterDataType();
-            dataSetWriter2.Name = "Writer 2";
-            dataSetWriter2.DataSetWriterId = 2;
+            dataSetWriter2.Name = "Writer 312";
+            dataSetWriter2.DataSetWriterId = 312;
             dataSetWriter2.Enabled = true;
             dataSetWriter2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
             dataSetWriter2.DataSetName = "AllTypes";
@@ -684,8 +686,8 @@ namespace SamplePublisher
 
             // Define DataSetWriter 'MassTest'
             DataSetWriterDataType dataSetWriter3 = new DataSetWriterDataType();
-            dataSetWriter3.Name = "Writer 3";
-            dataSetWriter3.DataSetWriterId = 3;
+            dataSetWriter3.Name = "Writer 313";
+            dataSetWriter3.DataSetWriterId = 313;
             dataSetWriter3.Enabled = true;
             dataSetWriter3.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
             dataSetWriter3.DataSetName = "MassTest";
@@ -718,9 +720,7 @@ namespace SamplePublisher
 
             return pubSubConfiguration;
         }
-        #endregion
-
-        #region Private Methods
+        
         /// <summary>
         /// Creates and returns an instance of <see cref="PublishedDataSetDataType"/> for Simple DataSet
         /// </summary>
@@ -974,6 +974,10 @@ namespace SamplePublisher
             return publishedDataSetMassTest;
         }
 
+        #endregion Create configuration objects
+
+        #region Private methods
+
         /// <summary>
         /// Print command line parameters for this console application
         /// </summary>
@@ -1068,7 +1072,7 @@ namespace SamplePublisher
                 }
             }
         }
-
+        
         /// <summary>
         /// Load trace configuration for logging
         /// </summary>
@@ -1082,6 +1086,7 @@ namespace SamplePublisher
 
             return traceConfiguration;
         }
-        #endregion
+
+        #endregion Private methods
     }
 }

@@ -3744,14 +3744,14 @@
       <TransportSettings i:nil="true" />
       <WriterGroups>
         <WriterGroupDataType>
-          <Name>WriterGroup 1</Name>
+          <Name>WriterGroup 11</Name>
           <Enabled>true</Enabled>
           <SecurityMode>Invalid_0</SecurityMode>
           <SecurityGroupId i:nil="true" />
           <SecurityKeyServices />
           <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
           <GroupProperties />
-          <WriterGroupId>1</WriterGroupId>
+          <WriterGroupId>11</WriterGroupId>
           <PublishingInterval>5000</PublishingInterval>
           <KeepAliveTime>5000</KeepAliveTime>
           <Priority>0</Priority>
@@ -3780,14 +3780,26 @@
           </MessageSettings>
           <DataSetWriters>
             <DataSetWriterDataType>
-              <Name>Writer 1</Name>
+              <Name>Writer 111</Name>
               <Enabled>true</Enabled>
-              <DataSetWriterId>1</DataSetWriterId>
+              <DataSetWriterId>111</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <KeyFrameCount>1</KeyFrameCount>
               <DataSetName>Simple</DataSetName>
               <DataSetWriterProperties />
-              <TransportSettings i:nil="true" />
+              <TransportSettings>
+                <TypeId>
+                  <Identifier>i=16022</Identifier>
+                </TypeId>
+                <Body>
+                  <BrokerDataSetWriterTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <QueueName>Json_WriterGroup_1</QueueName>
+                    <RequestedDeliveryGuarantee>NotSpecified_0</RequestedDeliveryGuarantee>
+                    <MetaDataQueueName>Json_WriterGroup_1/$Metadata</MetaDataQueueName>
+                    <MetaDataUpdateTime>0</MetaDataUpdateTime>
+                  </BrokerDataSetWriterTransportDataType>
+                </Body>
+              </TransportSettings>
               <MessageSettings>
                 <TypeId>
                   <Identifier>i=16018</Identifier>
@@ -3800,14 +3812,26 @@
               </MessageSettings>
             </DataSetWriterDataType>
             <DataSetWriterDataType>
-              <Name>Writer 2</Name>
+              <Name>Writer 112</Name>
               <Enabled>true</Enabled>
-              <DataSetWriterId>2</DataSetWriterId>
+              <DataSetWriterId>112</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <KeyFrameCount>1</KeyFrameCount>
               <DataSetName>AllTypes</DataSetName>
               <DataSetWriterProperties />
-              <TransportSettings i:nil="true" />
+              <TransportSettings>
+                <TypeId>
+                  <Identifier>i=16022</Identifier>
+                </TypeId>
+                <Body>
+                  <BrokerDataSetWriterTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <QueueName>Json_WriterGroup_1</QueueName>
+                    <RequestedDeliveryGuarantee>NotSpecified_0</RequestedDeliveryGuarantee>
+                    <MetaDataQueueName>Json_WriterGroup_1/$Metadata</MetaDataQueueName>
+                    <MetaDataUpdateTime>0</MetaDataUpdateTime>
+                  </BrokerDataSetWriterTransportDataType>
+                </Body>
+              </TransportSettings>
               <MessageSettings>
                 <TypeId>
                   <Identifier>i=16018</Identifier>
@@ -3820,14 +3844,26 @@
               </MessageSettings>
             </DataSetWriterDataType>
             <DataSetWriterDataType>
-              <Name>Writer 3</Name>
+              <Name>Writer 113</Name>
               <Enabled>true</Enabled>
-              <DataSetWriterId>3</DataSetWriterId>
+              <DataSetWriterId>113</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
               <KeyFrameCount>1</KeyFrameCount>
               <DataSetName>MassTest</DataSetName>
               <DataSetWriterProperties />
-              <TransportSettings i:nil="true" />
+              <TransportSettings>
+                <TypeId>
+                  <Identifier>i=16022</Identifier>
+                </TypeId>
+                <Body>
+                  <BrokerDataSetWriterTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <QueueName>Json_WriterGroup_1</QueueName>
+                    <RequestedDeliveryGuarantee>NotSpecified_0</RequestedDeliveryGuarantee>
+                    <MetaDataQueueName>Json_WriterGroup_1/$Metadata</MetaDataQueueName>
+                    <MetaDataUpdateTime>0</MetaDataUpdateTime>
+                  </BrokerDataSetWriterTransportDataType>
+                </Body>
+              </TransportSettings>
               <MessageSettings>
                 <TypeId>
                   <Identifier>i=16018</Identifier>

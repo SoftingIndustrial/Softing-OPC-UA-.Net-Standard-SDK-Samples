@@ -115,8 +115,8 @@
                   <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>0</DataSetWriterId>
+              <WriterGroupId>1</WriterGroupId>
+              <DataSetWriterId>1</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -318,8 +318,8 @@
                   <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>0</DataSetWriterId>
+              <WriterGroupId>1</WriterGroupId>
+              <DataSetWriterId>2</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -678,8 +678,8 @@
                 </Value>
               </PublisherId>
               </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>0</DataSetWriterId>
+              <WriterGroupId>1</WriterGroupId>
+              <DataSetWriterId>3</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
