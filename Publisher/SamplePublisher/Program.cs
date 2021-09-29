@@ -139,14 +139,14 @@ namespace SamplePublisher
             string brokerQueueName = "Json_WriterGroup_1";
             string brokerMetaData = "$Metadata";
 
-            #region Define WriterGroup1
-            WriterGroupDataType writerGroup1 = new WriterGroupDataType();
-            writerGroup1.Name = "WriterGroup 11";
-            writerGroup1.Enabled = true;
-            writerGroup1.WriterGroupId = 11;
-            writerGroup1.PublishingInterval = 5000;
-            writerGroup1.KeepAliveTime = 5000;
-            writerGroup1.MaxNetworkMessageSize = 1500;
+            #region Define WriterGroup11
+            WriterGroupDataType writerGroup11 = new WriterGroupDataType();
+            writerGroup11.Name = "WriterGroup 11";
+            writerGroup11.Enabled = true;
+            writerGroup11.WriterGroupId = 11;
+            writerGroup11.PublishingInterval = 5000;
+            writerGroup11.KeepAliveTime = 5000;
+            writerGroup11.MaxNetworkMessageSize = 1500;
 
             JsonWriterGroupMessageDataType jsonMessageSettings = new JsonWriterGroupMessageDataType()
             {
@@ -157,20 +157,20 @@ namespace SamplePublisher
                         | JsonNetworkMessageContentMask.ReplyTo)
             };
 
-            writerGroup1.MessageSettings = new ExtensionObject(jsonMessageSettings);
-            writerGroup1.TransportSettings = new ExtensionObject(new BrokerWriterGroupTransportDataType()
+            writerGroup11.MessageSettings = new ExtensionObject(jsonMessageSettings);
+            writerGroup11.TransportSettings = new ExtensionObject(new BrokerWriterGroupTransportDataType()
             {
                 QueueName = brokerQueueName,
             });
 
             // Define DataSetWriter 'Simple'
-            DataSetWriterDataType dataSetWriter1 = new DataSetWriterDataType();
-            dataSetWriter1.Name = "Writer 111";
-            dataSetWriter1.DataSetWriterId = 111;
-            dataSetWriter1.Enabled = true;
-            dataSetWriter1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetWriter1.DataSetName = "Simple";
-            dataSetWriter1.KeyFrameCount = 1;
+            DataSetWriterDataType dataSetWriter111 = new DataSetWriterDataType();
+            dataSetWriter111.Name = "Writer 111";
+            dataSetWriter111.DataSetWriterId = 111;
+            dataSetWriter111.Enabled = true;
+            dataSetWriter111.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetWriter111.DataSetName = "Simple";
+            dataSetWriter111.KeyFrameCount = 1;
 
             JsonDataSetWriterMessageDataType jsonDataSetWriterMessage = new JsonDataSetWriterMessageDataType()
             {
@@ -180,7 +180,7 @@ namespace SamplePublisher
                 | JsonDataSetMessageContentMask.Status
                 | JsonDataSetMessageContentMask.Timestamp),
             };
-            dataSetWriter1.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
+            dataSetWriter111.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
 
             BrokerDataSetWriterTransportDataType jsonDataSetWriterTransport = new BrokerDataSetWriterTransportDataType()
             {
@@ -189,17 +189,17 @@ namespace SamplePublisher
                 MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}",
                 MetaDataUpdateTime = 0,
             };
-            dataSetWriter1.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
-            writerGroup1.DataSetWriters.Add(dataSetWriter1);
+            dataSetWriter111.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
+            writerGroup11.DataSetWriters.Add(dataSetWriter111);
 
             // Define DataSetWriter 'AllTypes'
-            DataSetWriterDataType dataSetWriter2 = new DataSetWriterDataType();
-            dataSetWriter2.Name = "Writer 112";
-            dataSetWriter2.DataSetWriterId = 112;
-            dataSetWriter2.Enabled = true;
-            dataSetWriter2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetWriter2.DataSetName = "AllTypes";
-            dataSetWriter2.KeyFrameCount = 1;
+            DataSetWriterDataType dataSetWriter112 = new DataSetWriterDataType();
+            dataSetWriter112.Name = "Writer 112";
+            dataSetWriter112.DataSetWriterId = 112;
+            dataSetWriter112.Enabled = true;
+            dataSetWriter112.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetWriter112.DataSetName = "AllTypes";
+            dataSetWriter112.KeyFrameCount = 1;
 
             jsonDataSetWriterMessage = new JsonDataSetWriterMessageDataType()
             {
@@ -209,7 +209,7 @@ namespace SamplePublisher
                 | JsonDataSetMessageContentMask.Status
                 | JsonDataSetMessageContentMask.Timestamp),
             };
-            dataSetWriter2.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
+            dataSetWriter112.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
 
             jsonDataSetWriterTransport = new BrokerDataSetWriterTransportDataType()
             {
@@ -218,18 +218,18 @@ namespace SamplePublisher
                 MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}",
                 MetaDataUpdateTime = 0,
             };
-            dataSetWriter2.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
+            dataSetWriter112.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
 
-            writerGroup1.DataSetWriters.Add(dataSetWriter2);
+            writerGroup11.DataSetWriters.Add(dataSetWriter112);
 
             // Define DataSetWriter 'MassTest'
-            DataSetWriterDataType dataSetWriter3 = new DataSetWriterDataType();
-            dataSetWriter3.Name = "Writer 113";
-            dataSetWriter3.DataSetWriterId = 113;
-            dataSetWriter3.Enabled = true;
-            dataSetWriter3.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetWriter3.DataSetName = "MassTest";
-            dataSetWriter3.KeyFrameCount = 1;
+            DataSetWriterDataType dataSetWriter113 = new DataSetWriterDataType();
+            dataSetWriter113.Name = "Writer 113";
+            dataSetWriter113.DataSetWriterId = 113;
+            dataSetWriter113.Enabled = true;
+            dataSetWriter113.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetWriter113.DataSetName = "MassTest";
+            dataSetWriter113.KeyFrameCount = 1;
             jsonDataSetWriterMessage = new JsonDataSetWriterMessageDataType()
             {
                 DataSetMessageContentMask = (uint)(JsonDataSetMessageContentMask.DataSetWriterId
@@ -238,7 +238,7 @@ namespace SamplePublisher
                | JsonDataSetMessageContentMask.Status
                | JsonDataSetMessageContentMask.Timestamp),
             };
-            dataSetWriter3.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
+            dataSetWriter113.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
 
             jsonDataSetWriterTransport = new BrokerDataSetWriterTransportDataType()
             {
@@ -247,11 +247,11 @@ namespace SamplePublisher
                 MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}",
                 MetaDataUpdateTime = 0,
             };
-            dataSetWriter3.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
+            dataSetWriter113.MessageSettings = new ExtensionObject(jsonDataSetWriterMessage);
 
-            writerGroup1.DataSetWriters.Add(dataSetWriter3);
+            writerGroup11.DataSetWriters.Add(dataSetWriter113);
 
-            pubSubConnection1.WriterGroups.Add(writerGroup1);
+            pubSubConnection1.WriterGroups.Add(writerGroup11);
             #endregion          
 
             //create  pub sub configuration root object
@@ -274,46 +274,49 @@ namespace SamplePublisher
         /// <returns></returns>
         private static PubSubConfigurationDataType CreateConfiguration_UdpUadp()
         {
-            // Define a PubSub connection with PublisherId 10
+            // Define a PubSub connection with PublisherId 20
             PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
             pubSubConnection1.Name = "UADPConection1";
             pubSubConnection1.Enabled = true;
-            pubSubConnection1.PublisherId = (UInt16)10;
+            pubSubConnection1.PublisherId = (UInt16)20;
             pubSubConnection1.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = string.Empty;
             address.Url = "opc.udp://239.0.0.1:4840";
             pubSubConnection1.Address = new ExtensionObject(address);
 
-            #region Define WriterGroup1
-            WriterGroupDataType writerGroup1 = new WriterGroupDataType();
-            writerGroup1.Name = "WriterGroup 1";
-            writerGroup1.Enabled = true;
-            writerGroup1.WriterGroupId = 1;
-            writerGroup1.PublishingInterval = 5000;
-            writerGroup1.KeepAliveTime = 5000;
-            writerGroup1.MaxNetworkMessageSize = 1500;
-            writerGroup1.HeaderLayoutUri = "UADP-Cyclic-Fixed";
+            #region Define WriterGroup21
+            WriterGroupDataType writerGroup21 = new WriterGroupDataType();
+            writerGroup21.Name = "WriterGroup 21";
+            writerGroup21.Enabled = true;
+            writerGroup21.WriterGroupId = 21;
+            writerGroup21.PublishingInterval = 5000;
+            writerGroup21.KeepAliveTime = 5000;
+            writerGroup21.MaxNetworkMessageSize = 1500;
+            writerGroup21.HeaderLayoutUri = "UADP-Cyclic-Fixed";
             UadpWriterGroupMessageDataType messageSettings = new UadpWriterGroupMessageDataType()
             {
-                DataSetOrdering = DataSetOrderingType.AscendingWriterId,
+                DataSetOrdering = DataSetOrderingType.Undefined,
                 GroupVersion = 0,
-                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
-                        | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
-                        | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber)
+                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId 
+                    | UadpNetworkMessageContentMask.GroupHeader
+                    | UadpNetworkMessageContentMask.WriterGroupId 
+                    | UadpNetworkMessageContentMask.GroupVersion
+                    | UadpNetworkMessageContentMask.NetworkMessageNumber 
+                    | UadpNetworkMessageContentMask.SequenceNumber)
             };
 
-            writerGroup1.MessageSettings = new ExtensionObject(messageSettings);
-            writerGroup1.TransportSettings = new ExtensionObject(new DatagramWriterGroupTransportDataType());
+            writerGroup21.MessageSettings = new ExtensionObject(messageSettings);
+            writerGroup21.TransportSettings = new ExtensionObject(new DatagramWriterGroupTransportDataType());
 
             // Define DataSetWriter 'Simple'
-            DataSetWriterDataType dataSetWriter1 = new DataSetWriterDataType();
-            dataSetWriter1.Name = "Writer 1";
-            dataSetWriter1.DataSetWriterId = 1;
-            dataSetWriter1.Enabled = true;
-            dataSetWriter1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetWriter1.DataSetName = "Simple";
-            dataSetWriter1.KeyFrameCount = 1;
+            DataSetWriterDataType dataSetReaderSimple1 = new DataSetWriterDataType();
+            dataSetReaderSimple1.Name = "Writer 211";
+            dataSetReaderSimple1.DataSetWriterId = 211;
+            dataSetReaderSimple1.Enabled = true;
+            dataSetReaderSimple1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetReaderSimple1.DataSetName = "Simple";
+            dataSetReaderSimple1.KeyFrameCount = 1;
             UadpDataSetWriterMessageDataType uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
                 ConfiguredSize = 32,
@@ -321,17 +324,17 @@ namespace SamplePublisher
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetWriter1.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
-            writerGroup1.DataSetWriters.Add(dataSetWriter1);
+            dataSetReaderSimple1.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+            writerGroup21.DataSetWriters.Add(dataSetReaderSimple1);
 
             // Define DataSetWriter 'AllTypes'
-            DataSetWriterDataType dataSetWriter2 = new DataSetWriterDataType();
-            dataSetWriter2.Name = "Writer 2";
-            dataSetWriter2.DataSetWriterId = 2;
-            dataSetWriter2.Enabled = true;
-            dataSetWriter2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetWriter2.DataSetName = "AllTypes";
-            dataSetWriter2.KeyFrameCount = 1;
+            DataSetWriterDataType dataSetReaderAllTypes1 = new DataSetWriterDataType();
+            dataSetReaderAllTypes1.Name = "Writer 212";
+            dataSetReaderAllTypes1.DataSetWriterId = 212;
+            dataSetReaderAllTypes1.Enabled = true;
+            dataSetReaderAllTypes1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetReaderAllTypes1.DataSetName = "AllTypes";
+            dataSetReaderAllTypes1.KeyFrameCount = 1;
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
                 ConfiguredSize = 32,
@@ -339,17 +342,17 @@ namespace SamplePublisher
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetWriter2.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
-            writerGroup1.DataSetWriters.Add(dataSetWriter2);
+            dataSetReaderAllTypes1.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+            writerGroup21.DataSetWriters.Add(dataSetReaderAllTypes1);
 
             // Define DataSetWriter 'MassTest'
-            DataSetWriterDataType dataSetWriter3 = new DataSetWriterDataType();
-            dataSetWriter3.Name = "Writer 3";
-            dataSetWriter3.DataSetWriterId = 3;
-            dataSetWriter3.Enabled = true;
-            dataSetWriter3.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetWriter3.DataSetName = "MassTest";
-            dataSetWriter3.KeyFrameCount = 1;
+            DataSetWriterDataType dataSetReaderMassTest1 = new DataSetWriterDataType();
+            dataSetReaderMassTest1.Name = "Writer 213";
+            dataSetReaderMassTest1.DataSetWriterId = 213;
+            dataSetReaderMassTest1.Enabled = true;
+            dataSetReaderMassTest1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetReaderMassTest1.DataSetName = "MassTest";
+            dataSetReaderMassTest1.KeyFrameCount = 1;
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
                 ConfiguredSize = 405,
@@ -357,13 +360,13 @@ namespace SamplePublisher
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetWriter3.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
-            writerGroup1.DataSetWriters.Add(dataSetWriter3);
+            dataSetReaderMassTest1.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+            writerGroup21.DataSetWriters.Add(dataSetReaderMassTest1);
 
-            pubSubConnection1.WriterGroups.Add(writerGroup1);
+            pubSubConnection1.WriterGroups.Add(writerGroup21);
             #endregion
 
-            // Define a PubSub connection with PublisherId 10
+            // Define a PubSub connection with PublisherId 20
             PubSubConnectionDataType pubSubConnection2 = new PubSubConnectionDataType();
             pubSubConnection2.Name = "UADPConection2";
             pubSubConnection2.Enabled = true;
@@ -374,15 +377,15 @@ namespace SamplePublisher
             address.Url = "opc.udp://239.0.0.1:4840";
             pubSubConnection2.Address = new ExtensionObject(address);
 
-            #region Define WriterGroup2
-            WriterGroupDataType writerGroup2 = new WriterGroupDataType();
-            writerGroup2.Name = "WriterGroup 2";
-            writerGroup2.Enabled = true;
-            writerGroup2.WriterGroupId = 2;
-            writerGroup2.PublishingInterval = 5000;
-            writerGroup2.KeepAliveTime = 5000;
-            writerGroup2.MaxNetworkMessageSize = 1500;
-            writerGroup2.HeaderLayoutUri = "UADP-Dynamic";
+            #region Define WriterGroup22
+            WriterGroupDataType writerGroup22 = new WriterGroupDataType();
+            writerGroup22.Name = "WriterGroup 22";
+            writerGroup22.Enabled = true;
+            writerGroup22.WriterGroupId = 22;
+            writerGroup22.PublishingInterval = 5000;
+            writerGroup22.KeepAliveTime = 5000;
+            writerGroup22.MaxNetworkMessageSize = 1500;
+            writerGroup22.HeaderLayoutUri = "UADP-Dynamic";
             messageSettings = new UadpWriterGroupMessageDataType()
             {
                 DataSetOrdering = DataSetOrderingType.Undefined,
@@ -390,60 +393,60 @@ namespace SamplePublisher
                 NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.PayloadHeader)
             };
 
-            writerGroup2.MessageSettings = new ExtensionObject(messageSettings);
-            writerGroup2.TransportSettings = new ExtensionObject(new DatagramWriterGroupTransportDataType());
+            writerGroup22.MessageSettings = new ExtensionObject(messageSettings);
+            writerGroup22.TransportSettings = new ExtensionObject(new DatagramWriterGroupTransportDataType());
 
             // Define DataSetWriter 'Simple'
-            DataSetWriterDataType dataSetWriter11 = new DataSetWriterDataType();
-            dataSetWriter11.Name = "Writer 11";
-            dataSetWriter11.DataSetWriterId = 11;
-            dataSetWriter11.Enabled = true;
-            dataSetWriter11.DataSetFieldContentMask = (uint)DataSetFieldContentMask.None; //Variant encoding
-            dataSetWriter11.DataSetName = "Simple";
-            dataSetWriter11.KeyFrameCount = 1;
+            DataSetWriterDataType dataSetReaderSimple2 = new DataSetWriterDataType();
+            dataSetReaderSimple2.Name = "Writer 221";
+            dataSetReaderSimple2.DataSetWriterId = 221;
+            dataSetReaderSimple2.Enabled = true;
+            dataSetReaderSimple2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.None; //Variant encoding
+            dataSetReaderSimple2.DataSetName = "Simple";
+            dataSetReaderSimple2.KeyFrameCount = 1;
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
                 //DataValue Encoding
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Timestamp | UadpDataSetMessageContentMask.Status
                         | UadpDataSetMessageContentMask.MinorVersion | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetWriter11.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
-            writerGroup2.DataSetWriters.Add(dataSetWriter11);
+            dataSetReaderSimple2.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+            writerGroup22.DataSetWriters.Add(dataSetReaderSimple2);
 
             // Define DataSetWriter 'AllTypes'
-            DataSetWriterDataType dataSetWriter12 = new DataSetWriterDataType();
-            dataSetWriter12.Name = "Writer 12";
-            dataSetWriter12.DataSetWriterId = 12;
-            dataSetWriter12.Enabled = true;
-            dataSetWriter12.DataSetFieldContentMask = (uint)DataSetFieldContentMask.None; //Variant encoding
-            dataSetWriter12.DataSetName = "AllTypes";
-            dataSetWriter12.KeyFrameCount = 1;
+            DataSetWriterDataType dataSetReaderAllTypes2 = new DataSetWriterDataType();
+            dataSetReaderAllTypes2.Name = "Writer 222";
+            dataSetReaderAllTypes2.DataSetWriterId = 222;
+            dataSetReaderAllTypes2.Enabled = true;
+            dataSetReaderAllTypes2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.None; //Variant encoding
+            dataSetReaderAllTypes2.DataSetName = "AllTypes";
+            dataSetReaderAllTypes2.KeyFrameCount = 1;
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Timestamp | UadpDataSetMessageContentMask.Status
                         | UadpDataSetMessageContentMask.MinorVersion | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetWriter12.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
-            writerGroup2.DataSetWriters.Add(dataSetWriter12);
+            dataSetReaderAllTypes2.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+            writerGroup22.DataSetWriters.Add(dataSetReaderAllTypes2);
 
             // Define DataSetWriter 'MassTest'
-            DataSetWriterDataType dataSetWriter13 = new DataSetWriterDataType();
-            dataSetWriter13.Name = "Writer 13";
-            dataSetWriter13.DataSetWriterId = 13;
-            dataSetWriter13.Enabled = true;
-            dataSetWriter13.DataSetFieldContentMask = (uint)DataSetFieldContentMask.None; //Variant encoding
-            dataSetWriter13.DataSetName = "MassTest";
-            dataSetWriter13.KeyFrameCount = 1;
+            DataSetWriterDataType dataSetReaderMassTest2 = new DataSetWriterDataType();
+            dataSetReaderMassTest2.Name = "Writer 223";
+            dataSetReaderMassTest2.DataSetWriterId = 223;
+            dataSetReaderMassTest2.Enabled = true;
+            dataSetReaderMassTest2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.None; //Variant encoding
+            dataSetReaderMassTest2.DataSetName = "MassTest";
+            dataSetReaderMassTest2.KeyFrameCount = 1;
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
                 //DataValue Encoding
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Timestamp | UadpDataSetMessageContentMask.Status
                         | UadpDataSetMessageContentMask.MinorVersion | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetWriter13.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
-            writerGroup2.DataSetWriters.Add(dataSetWriter13);
+            dataSetReaderMassTest2.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+            writerGroup22.DataSetWriters.Add(dataSetReaderMassTest2);
 
-            pubSubConnection2.WriterGroups.Add(writerGroup2);
+            pubSubConnection2.WriterGroups.Add(writerGroup22);
             #endregion            
 
             //create  pub sub configuration root object
@@ -622,11 +625,15 @@ namespace SamplePublisher
             writerGroup1.HeaderLayoutUri = "UADP-Cyclic-Fixed";
             UadpWriterGroupMessageDataType messageSettings = new UadpWriterGroupMessageDataType()
             {
-                DataSetOrdering = DataSetOrderingType.AscendingWriterId,
+                DataSetOrdering = DataSetOrderingType.Undefined,
                 GroupVersion = 0,
-                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
-                        | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
-                        | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber)
+                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId 
+                    | UadpNetworkMessageContentMask.GroupHeader
+                    | UadpNetworkMessageContentMask.WriterGroupId 
+                    | UadpNetworkMessageContentMask.GroupVersion
+                    | UadpNetworkMessageContentMask.NetworkMessageNumber 
+                    | UadpNetworkMessageContentMask.SequenceNumber
+                    | UadpNetworkMessageContentMask.PayloadHeader)
             };
 
             writerGroup1.MessageSettings = new ExtensionObject(messageSettings);
@@ -694,7 +701,7 @@ namespace SamplePublisher
             dataSetWriter3.KeyFrameCount = 1;
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
-                ConfiguredSize = 32,
+                ConfiguredSize = 405,
                 DataSetOffset = 79,
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),

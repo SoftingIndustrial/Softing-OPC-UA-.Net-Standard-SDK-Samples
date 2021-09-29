@@ -3,7 +3,7 @@
   <PublishedDataSets />
   <Connections>
     <PubSubConnectionDataType>
-      <Name>UdpUadpConection1</Name>
+      <Name>UdpUadpConection</Name>
       <Enabled>true</Enabled>
       <PublisherId>
         <Value>
@@ -59,8 +59,8 @@
                   <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>21</WriterGroupId>
-              <DataSetWriterId>211</DataSetWriterId>
+              <WriterGroupId>0</WriterGroupId>
+              <DataSetWriterId>0</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -264,8 +264,8 @@
                   <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>21</WriterGroupId>
-              <DataSetWriterId>212</DataSetWriterId>
+              <WriterGroupId>0</WriterGroupId>
+              <DataSetWriterId>0</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -611,8 +611,8 @@
                   <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>21</WriterGroupId>
-              <DataSetWriterId>213</DataSetWriterId>
+              <WriterGroupId>0</WriterGroupId>
+              <DataSetWriterId>0</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -3806,7 +3806,7 @@
                   <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
                 </Value>
               </PublisherId>
-              <WriterGroupId>22</WriterGroupId>
+              <WriterGroupId>0</WriterGroupId>
               <DataSetWriterId>221</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
@@ -3998,7 +3998,7 @@
                   <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
                 </Value>
               </PublisherId>
-              <WriterGroupId>22</WriterGroupId>
+              <WriterGroupId>0</WriterGroupId>
               <DataSetWriterId>222</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
@@ -4345,7 +4345,7 @@
                   <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
                 </Value>
               </PublisherId>
-              <WriterGroupId>22</WriterGroupId>
+              <WriterGroupId>0</WriterGroupId>
               <DataSetWriterId>223</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />

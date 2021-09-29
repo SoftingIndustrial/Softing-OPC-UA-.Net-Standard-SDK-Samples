@@ -7,7 +7,7 @@
       <Enabled>true</Enabled>
       <PublisherId>
         <Value>
-          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">30</UInt16>
         </Value>
       </PublisherId>
       <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-mqtt-uadp</TransportProfileUri>
@@ -83,7 +83,7 @@
       <WriterGroups />
       <ReaderGroups>
         <ReaderGroupDataType>
-          <Name>ReaderGroup 1</Name>
+          <Name>ReaderGroup 11</Name>
           <Enabled>true</Enabled>
           <SecurityMode>Invalid_0</SecurityMode>
           <SecurityGroupId i:nil="true" />
@@ -108,15 +108,15 @@
           </MessageSettings>
           <DataSetReaders>
             <DataSetReaderDataType>
-              <Name>Reader 1</Name>
+              <Name>Reader 311</Name>
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
-                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">30</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>1</WriterGroupId>
-              <DataSetWriterId>1</DataSetWriterId>
+              <WriterGroupId>31</WriterGroupId>
+              <DataSetWriterId>311</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -226,12 +226,12 @@
                   <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <GroupVersion>0</GroupVersion>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>15</DataSetOffset>
+                    <DataSetOffset>0</DataSetOffset>
                     <DataSetClassId>
                       <String>00000000-0000-0000-0000-000000000000</String>
                     </DataSetClassId>
                     <NetworkMessageContentMask>127</NetworkMessageContentMask>
-                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
+                    <DataSetMessageContentMask>63</DataSetMessageContentMask>
                     <PublishingInterval>0</PublishingInterval>
                     <ReceiveOffset>0</ReceiveOffset>
                     <ProcessingOffset>0</ProcessingOffset>
@@ -311,15 +311,15 @@
               </SubscribedDataSet>
             </DataSetReaderDataType>
             <DataSetReaderDataType>
-              <Name>Reader 2</Name>
+              <Name>Reader 312</Name>
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
-                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">30</UInt16>
                 </Value>
               </PublisherId>
-              <WriterGroupId>1</WriterGroupId>
-              <DataSetWriterId>2</DataSetWriterId>
+              <WriterGroupId>31</WriterGroupId>
+              <DataSetWriterId>312</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -509,7 +509,7 @@
                   <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <GroupVersion>0</GroupVersion>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>47</DataSetOffset>
+                    <DataSetOffset>0</DataSetOffset>
                     <DataSetClassId>
                       <String>00000000-0000-0000-0000-000000000000</String>
                     </DataSetClassId>
@@ -669,17 +669,17 @@
               </SubscribedDataSet>
             </DataSetReaderDataType>
             <DataSetReaderDataType>
-              <Name>Reader 3</Name>
+              <Name>Reader 313</Name>
               <Enabled>true</Enabled>
               <PublisherId>
                 <PublisherId>
                 <Value>
-                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">30</UInt16>
                 </Value>
               </PublisherId>
               </PublisherId>
-              <WriterGroupId>1</WriterGroupId>
-              <DataSetWriterId>3</DataSetWriterId>
+              <WriterGroupId>31</WriterGroupId>
+              <DataSetWriterId>313</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
@@ -2325,12 +2325,12 @@
                   <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <GroupVersion>0</GroupVersion>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>79</DataSetOffset>
+                    <DataSetOffset>0</DataSetOffset>
                     <DataSetClassId>
                       <String>00000000-0000-0000-0000-000000000000</String>
                     </DataSetClassId>
                     <NetworkMessageContentMask>127</NetworkMessageContentMask>
-                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
+                    <DataSetMessageContentMask>63</DataSetMessageContentMask>
                     <PublishingInterval>0</PublishingInterval>
                     <ReceiveOffset>0</ReceiveOffset>
                     <ProcessingOffset>0</ProcessingOffset>

@@ -3665,7 +3665,7 @@
   </PublishedDataSets>
   <Connections>
     <PubSubConnectionDataType>
-      <Name>UADPConection1</Name>
+      <Name>UdpUadpConection1</Name>
       <Enabled>true</Enabled>
       <PublisherId>
         <Value>
@@ -3802,8 +3802,8 @@
       <ReaderGroups />
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
-      <Name>UADPConection2</Name>
-      <Enabled>false</Enabled>
+      <Name>UdpUadpConection2</Name>
+      <Enabled>true</Enabled>
       <PublisherId>
         <Value>
           <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>

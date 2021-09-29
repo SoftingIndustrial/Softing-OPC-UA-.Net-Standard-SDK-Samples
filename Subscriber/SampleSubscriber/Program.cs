@@ -433,50 +433,53 @@ namespace SampleSubscriber
         /// <returns></returns>
         private static PubSubConfigurationDataType CreateConfiguration_UdpUadp()
         {
-            // Define a PubSub connection with PublisherId 10
+            // Define a PubSub connection with PublisherId 20
             PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
             pubSubConnection1.Name = "UADPConection1";
             pubSubConnection1.Enabled = true;
-            pubSubConnection1.PublisherId = (UInt16)10;
+            pubSubConnection1.PublisherId = (UInt16)20;
             pubSubConnection1.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = string.Empty;
             address.Url = "opc.udp://239.0.0.1:4840";
             pubSubConnection1.Address = new ExtensionObject(address);            
 
-            #region Define ReaderGroup1
-            ReaderGroupDataType readerGroup1 = new ReaderGroupDataType();
-            readerGroup1.Name = "ReaderGroup 1";
-            readerGroup1.Enabled = true;
-            readerGroup1.MaxNetworkMessageSize = 1500;
-            readerGroup1.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
-            readerGroup1.TransportSettings = new ExtensionObject(new ReaderGroupTransportDataType());
+            #region Define ReaderGroup21
+            ReaderGroupDataType readerGroup21 = new ReaderGroupDataType();
+            readerGroup21.Name = "ReaderGroup 21";
+            readerGroup21.Enabled = true;
+            readerGroup21.MaxNetworkMessageSize = 1500;
+            readerGroup21.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
+            readerGroup21.TransportSettings = new ExtensionObject(new ReaderGroupTransportDataType());
 
-            #region Define DataSetReader 'Simple' for PublisherId = (UInt16)10, DataSetWriterId = 0            
-            DataSetReaderDataType dataSetReaderSimple = new DataSetReaderDataType();
-            dataSetReaderSimple.Name = "Reader 1";
-            dataSetReaderSimple.PublisherId = (UInt16)10;
-            dataSetReaderSimple.WriterGroupId = 0;
-            dataSetReaderSimple.DataSetWriterId = 0;
-            dataSetReaderSimple.Enabled = true;
-            dataSetReaderSimple.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetReaderSimple.KeyFrameCount = 1;           
+            #region Define DataSetReader 'Simple' for PublisherId = (UInt16)20, WriterGroupId = 0, DataSetWriterId = 0            
+            DataSetReaderDataType dataSetReaderSimple1 = new DataSetReaderDataType();
+            dataSetReaderSimple1.Name = "Reader 211";
+            dataSetReaderSimple1.PublisherId = (UInt16)20;
+            dataSetReaderSimple1.WriterGroupId = 0;
+            dataSetReaderSimple1.DataSetWriterId = 0;
+            dataSetReaderSimple1.Enabled = true;
+            dataSetReaderSimple1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetReaderSimple1.KeyFrameCount = 1;           
 
             UadpDataSetReaderMessageDataType uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
                 DataSetOffset = 15,
                 NetworkMessageNumber = 0,
-                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
-                        | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
-                        | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber),
+                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId 
+                    | UadpNetworkMessageContentMask.GroupHeader
+                    | UadpNetworkMessageContentMask.WriterGroupId 
+                    | UadpNetworkMessageContentMask.GroupVersion
+                    | UadpNetworkMessageContentMask.NetworkMessageNumber 
+                    | UadpNetworkMessageContentMask.SequenceNumber),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetReaderSimple.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
+            dataSetReaderSimple1.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
 
             // Create and set DataSetMetaData
             DataSetMetaDataType simpleMetaData = GetDataSetMetaDataSimple();
-            dataSetReaderSimple.DataSetMetaData = simpleMetaData;
+            dataSetReaderSimple1.DataSetMetaData = simpleMetaData;
             // Create and set SubscribedDataSet
             TargetVariablesDataType subscribedDataSet = new TargetVariablesDataType();
             subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
@@ -492,35 +495,38 @@ namespace SampleSubscriber
                 });
             }
 
-            dataSetReaderSimple.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            dataSetReaderSimple1.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
-            readerGroup1.DataSetReaders.Add(dataSetReaderSimple);
+            readerGroup21.DataSetReaders.Add(dataSetReaderSimple1);
 
-            #region Define DataSetReader 'AllTypes' for PublisherId = (UInt16)10, DataSetWriterId = 0
+            #region Define DataSetReader 'AllTypes' for PublisherId = (UInt16)20, WriterGroupId = 0, DataSetWriterId = 0
 
-            DataSetReaderDataType dataSetReaderAllTypes = new DataSetReaderDataType();
-            dataSetReaderAllTypes.Name = "Reader 2";
-            dataSetReaderAllTypes.PublisherId = (UInt16)10;
-            dataSetReaderAllTypes.WriterGroupId = 0;
-            dataSetReaderAllTypes.DataSetWriterId = 0;
-            dataSetReaderAllTypes.Enabled = true;
-            dataSetReaderAllTypes.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetReaderAllTypes.KeyFrameCount = 1;            
+            DataSetReaderDataType dataSetReaderAllTypes1 = new DataSetReaderDataType();
+            dataSetReaderAllTypes1.Name = "Reader 212";
+            dataSetReaderAllTypes1.PublisherId = (UInt16)20;
+            dataSetReaderAllTypes1.WriterGroupId = 0;
+            dataSetReaderAllTypes1.DataSetWriterId = 0;
+            dataSetReaderAllTypes1.Enabled = true;
+            dataSetReaderAllTypes1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetReaderAllTypes1.KeyFrameCount = 1;            
 
             uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
                 DataSetOffset = 47,
                 NetworkMessageNumber = 0,
-                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
-                        | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
-                        | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber),
+                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId 
+                    | UadpNetworkMessageContentMask.GroupHeader
+                    | UadpNetworkMessageContentMask.WriterGroupId 
+                    | UadpNetworkMessageContentMask.GroupVersion
+                    | UadpNetworkMessageContentMask.NetworkMessageNumber 
+                    | UadpNetworkMessageContentMask.SequenceNumber),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetReaderAllTypes.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
+            dataSetReaderAllTypes1.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
             // Create and set DataSetMetaData
             DataSetMetaDataType allTypesMetaData = GetDataSetMetaDataAllTypes();
-            dataSetReaderAllTypes.DataSetMetaData = allTypesMetaData;
+            dataSetReaderAllTypes1.DataSetMetaData = allTypesMetaData;
             // Create and set SubscribedDataSet
             subscribedDataSet = new TargetVariablesDataType();
             subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
@@ -536,34 +542,37 @@ namespace SampleSubscriber
                 });
             }
 
-            dataSetReaderAllTypes.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            dataSetReaderAllTypes1.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
-            readerGroup1.DataSetReaders.Add(dataSetReaderAllTypes);
+            readerGroup21.DataSetReaders.Add(dataSetReaderAllTypes1);
 
-            #region Define DataSetReader 'MassTest' for PublisherId = (UInt16)10, DataSetWriterId = 0
-            DataSetReaderDataType dataSetReaderMassTest = new DataSetReaderDataType();
-            dataSetReaderMassTest.Name = "Reader 3";
-            dataSetReaderMassTest.PublisherId = (UInt16)10;
-            dataSetReaderMassTest.WriterGroupId = 0;
-            dataSetReaderMassTest.DataSetWriterId = 0;
-            dataSetReaderMassTest.Enabled = true;
-            dataSetReaderMassTest.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetReaderMassTest.KeyFrameCount = 1;          
+            #region Define DataSetReader 'MassTest' for PublisherId = (UInt16)20, WriterGroupId = 0, DataSetWriterId = 0
+            DataSetReaderDataType dataSetReaderMassTest1 = new DataSetReaderDataType();
+            dataSetReaderMassTest1.Name = "Reader 213";
+            dataSetReaderMassTest1.PublisherId = (UInt16)20;
+            dataSetReaderMassTest1.WriterGroupId = 0;
+            dataSetReaderMassTest1.DataSetWriterId = 0;
+            dataSetReaderMassTest1.Enabled = true;
+            dataSetReaderMassTest1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetReaderMassTest1.KeyFrameCount = 1;          
 
             uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
                 DataSetOffset = 79,
                 NetworkMessageNumber = 0,
-                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.GroupHeader
-                        | UadpNetworkMessageContentMask.WriterGroupId | UadpNetworkMessageContentMask.GroupVersion
-                        | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber),
+                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId 
+                    | UadpNetworkMessageContentMask.GroupHeader
+                    | UadpNetworkMessageContentMask.WriterGroupId 
+                    | UadpNetworkMessageContentMask.GroupVersion
+                    | UadpNetworkMessageContentMask.NetworkMessageNumber 
+                    | UadpNetworkMessageContentMask.SequenceNumber),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetReaderMassTest.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
+            dataSetReaderMassTest1.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
             // Set DataSetMetaData
             DataSetMetaDataType massTestMetaData = GetDataSetMetaDataMassTest();
-            dataSetReaderMassTest.DataSetMetaData = massTestMetaData;
+            dataSetReaderMassTest1.DataSetMetaData = massTestMetaData;
             // Create SubscribedDataSet
             subscribedDataSet = new TargetVariablesDataType();
             subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
@@ -579,26 +588,26 @@ namespace SampleSubscriber
                 });
             }
 
-            dataSetReaderMassTest.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            dataSetReaderMassTest1.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
-            readerGroup1.DataSetReaders.Add(dataSetReaderMassTest);
+            readerGroup21.DataSetReaders.Add(dataSetReaderMassTest1);
             #endregion
-            pubSubConnection1.ReaderGroups.Add(readerGroup1);
+            pubSubConnection1.ReaderGroups.Add(readerGroup21);
 
-            #region Define ReaderGroup2
-            ReaderGroupDataType readerGroup2 = new ReaderGroupDataType();
-            readerGroup2.Name = "ReaderGroup 2";
-            readerGroup2.Enabled = true;
-            readerGroup2.MaxNetworkMessageSize = 1500;
-            readerGroup2.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
-            readerGroup2.TransportSettings = new ExtensionObject(new ReaderGroupTransportDataType());
+            #region Define ReaderGroup22
+            ReaderGroupDataType readerGroup22 = new ReaderGroupDataType();
+            readerGroup22.Name = "ReaderGroup 22";
+            readerGroup22.Enabled = true;
+            readerGroup22.MaxNetworkMessageSize = 1500;
+            readerGroup22.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
+            readerGroup22.TransportSettings = new ExtensionObject(new ReaderGroupTransportDataType());
 
-            #region Define DataSetReader 'Simple' for PublisherId = (UInt64)20, DataSetWriterId = 11
+            #region Define DataSetReader 'Simple' for PublisherId = (UInt64)20, WriterGroupId = 0, DataSetWriterId = 221
             DataSetReaderDataType dataSetReaderSimple2 = new DataSetReaderDataType();
-            dataSetReaderSimple2.Name = "Reader 11";
+            dataSetReaderSimple2.Name = "Reader 221";
             dataSetReaderSimple2.PublisherId = (UInt64)20;
             dataSetReaderSimple2.WriterGroupId = 0;
-            dataSetReaderSimple2.DataSetWriterId = 11;
+            dataSetReaderSimple2.DataSetWriterId = 221;
             dataSetReaderSimple2.Enabled = true;
             dataSetReaderSimple2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
             dataSetReaderSimple2.KeyFrameCount = 1;
@@ -630,14 +639,14 @@ namespace SampleSubscriber
 
             dataSetReaderSimple2.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
-            readerGroup2.DataSetReaders.Add(dataSetReaderSimple2);
+            readerGroup22.DataSetReaders.Add(dataSetReaderSimple2);
 
-            #region Define DataSetReader 'AllTypes' for PublisherId = (UInt64)20, DataSetWriterId = 12
+            #region Define DataSetReader 'AllTypes' for PublisherId = (UInt64)20, WriterGroupId = 0, DataSetWriterId = 222
             DataSetReaderDataType dataSetReaderAllTypes2 = new DataSetReaderDataType();
-            dataSetReaderAllTypes2.Name = "Reader 12";
+            dataSetReaderAllTypes2.Name = "Reader 222";
             dataSetReaderAllTypes2.PublisherId = (UInt64)20;
             dataSetReaderAllTypes2.WriterGroupId = 0;
-            dataSetReaderAllTypes2.DataSetWriterId = 12;
+            dataSetReaderAllTypes2.DataSetWriterId = 222;
             dataSetReaderAllTypes2.Enabled = true;
             dataSetReaderAllTypes2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
             dataSetReaderAllTypes2.KeyFrameCount = 1;
@@ -669,14 +678,14 @@ namespace SampleSubscriber
 
             dataSetReaderAllTypes2.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
-            readerGroup2.DataSetReaders.Add(dataSetReaderAllTypes2);
+            readerGroup22.DataSetReaders.Add(dataSetReaderAllTypes2);
 
-            #region Define DataSetReader 'MassTest' for PublisherId = (UInt64)20,  DataSetWriterId = 13
+            #region Define DataSetReader 'MassTest' PublisherId = (UInt64)20, WriterGroupId = 0, DataSetWriterId = 223
             DataSetReaderDataType dataSetReaderMassTest2 = new DataSetReaderDataType();
-            dataSetReaderMassTest2.Name = "Reader 13";
+            dataSetReaderMassTest2.Name = "Reader 223";
             dataSetReaderMassTest2.PublisherId = (UInt64)20;
             dataSetReaderMassTest2.WriterGroupId = 0;
-            dataSetReaderMassTest2.DataSetWriterId = 13;
+            dataSetReaderMassTest2.DataSetWriterId = 223;
             dataSetReaderMassTest2.Enabled = true;
             dataSetReaderMassTest2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
             dataSetReaderMassTest2.KeyFrameCount = 1;
@@ -708,9 +717,9 @@ namespace SampleSubscriber
 
             dataSetReaderMassTest2.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
-            readerGroup2.DataSetReaders.Add(dataSetReaderMassTest2);
+            readerGroup22.DataSetReaders.Add(dataSetReaderMassTest2);
             #endregion
-            pubSubConnection1.ReaderGroups.Add(readerGroup2);
+            pubSubConnection1.ReaderGroups.Add(readerGroup22);
             //create  pub sub configuration root object
             PubSubConfigurationDataType pubSubConfiguration = new PubSubConfigurationDataType();
             pubSubConfiguration.Connections = new PubSubConnectionDataTypeCollection()
