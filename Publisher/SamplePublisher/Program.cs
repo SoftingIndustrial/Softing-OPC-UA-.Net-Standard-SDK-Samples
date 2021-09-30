@@ -52,7 +52,7 @@ namespace SamplePublisher
 
                 // Create the PubSub application
                 using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(configurationFileName))
-                {
+                { 
                     // the PubSub application can be also created from an instance of PubSubConfigurationDataType returned by CreateConfiguration() method
                     //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration_MqttJson();
                     //using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(pubSubConfiguration)){
@@ -276,7 +276,7 @@ namespace SamplePublisher
         {
             // Define a PubSub connection with PublisherId 20
             PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
-            pubSubConnection1.Name = "UADPConection1";
+            pubSubConnection1.Name = "UdpUadpConection1";
             pubSubConnection1.Enabled = true;
             pubSubConnection1.PublisherId = (UInt16)20;
             pubSubConnection1.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
@@ -368,7 +368,7 @@ namespace SamplePublisher
 
             // Define a PubSub connection with PublisherId 20
             PubSubConnectionDataType pubSubConnection2 = new PubSubConnectionDataType();
-            pubSubConnection2.Name = "UADPConection2";
+            pubSubConnection2.Name = "UdpUadpConection2";
             pubSubConnection2.Enabled = true;
             pubSubConnection2.PublisherId = (UInt64)20;
             pubSubConnection2.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
@@ -469,26 +469,26 @@ namespace SamplePublisher
         /// <returns></returns>
         private static PubSubConfigurationDataType CreateConfigurationAllDataTypes_UdpUadp()
         {
-            // Define a PubSub connection with PublisherId 10
-            PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
-            pubSubConnection1.Name = "UADPConection1";
-            pubSubConnection1.Enabled = true;
-            pubSubConnection1.PublisherId = (UInt16)11;
-            pubSubConnection1.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
+            // Define a PubSub connection with PublisherId 20
+            PubSubConnectionDataType pubSubConnection3 = new PubSubConnectionDataType();
+            pubSubConnection3.Name = "UdpUadpConection3";
+            pubSubConnection3.Enabled = true;
+            pubSubConnection3.PublisherId = (UInt16)20;
+            pubSubConnection3.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = string.Empty;
             address.Url = "opc.udp://239.0.0.13:4840";
-            pubSubConnection1.Address = new ExtensionObject(address);
+            pubSubConnection3.Address = new ExtensionObject(address);
 
-            #region Define WriterGroup1
-            WriterGroupDataType writerGroup1 = new WriterGroupDataType();
-            writerGroup1.Name = "WriterGroup 1";
-            writerGroup1.Enabled = true;
-            writerGroup1.WriterGroupId = 1;
-            writerGroup1.PublishingInterval = 5000;
-            writerGroup1.KeepAliveTime = 5000;
-            writerGroup1.MaxNetworkMessageSize = 1500;
-            writerGroup1.HeaderLayoutUri = "UADP-Cyclic-Fixed";
+            #region Define WriterGroup23
+            WriterGroupDataType writerGroup23 = new WriterGroupDataType();
+            writerGroup23.Name = "WriterGroup 23";
+            writerGroup23.Enabled = true;
+            writerGroup23.WriterGroupId = 23;
+            writerGroup23.PublishingInterval = 5000;
+            writerGroup23.KeepAliveTime = 5000;
+            writerGroup23.MaxNetworkMessageSize = 1500;
+            writerGroup23.HeaderLayoutUri = "UADP-Cyclic-Fixed";
             UadpWriterGroupMessageDataType messageSettings = new UadpWriterGroupMessageDataType()
             {
                 DataSetOrdering = DataSetOrderingType.AscendingWriterId,
@@ -498,17 +498,17 @@ namespace SamplePublisher
                         | UadpNetworkMessageContentMask.NetworkMessageNumber | UadpNetworkMessageContentMask.SequenceNumber)
             };
 
-            writerGroup1.MessageSettings = new ExtensionObject(messageSettings);
-            writerGroup1.TransportSettings = new ExtensionObject(new DatagramWriterGroupTransportDataType());
+            writerGroup23.MessageSettings = new ExtensionObject(messageSettings);
+            writerGroup23.TransportSettings = new ExtensionObject(new DatagramWriterGroupTransportDataType());
 
             // Define DataSetWriter 'AllTypes'
-            DataSetWriterDataType dataSetWriter1 = new DataSetWriterDataType();
-            dataSetWriter1.Name = "Writer 1";
-            dataSetWriter1.DataSetWriterId = 1;
-            dataSetWriter1.Enabled = true;
-            dataSetWriter1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetWriter1.DataSetName = "AllTypes";
-            dataSetWriter1.KeyFrameCount = 1;
+            DataSetWriterDataType dataSetReaderAllTypes1 = new DataSetWriterDataType();
+            dataSetReaderAllTypes1.Name = "Writer 231";
+            dataSetReaderAllTypes1.DataSetWriterId = 231;
+            dataSetReaderAllTypes1.Enabled = true;
+            dataSetReaderAllTypes1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
+            dataSetReaderAllTypes1.DataSetName = "AllTypes";
+            dataSetReaderAllTypes1.KeyFrameCount = 1;
             UadpDataSetWriterMessageDataType uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
                 ConfiguredSize = 0,
@@ -516,32 +516,32 @@ namespace SamplePublisher
                 NetworkMessageNumber = 1,
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetWriter1.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
-            writerGroup1.DataSetWriters.Add(dataSetWriter1);
+            dataSetReaderAllTypes1.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+            writerGroup23.DataSetWriters.Add(dataSetReaderAllTypes1);
 
-            pubSubConnection1.WriterGroups.Add(writerGroup1);
+            pubSubConnection3.WriterGroups.Add(writerGroup23);
             #endregion
 
-            // Define a PubSub connection with PublisherId 10
-            PubSubConnectionDataType pubSubConnection2 = new PubSubConnectionDataType();
-            pubSubConnection2.Name = "UADPConection2";
-            pubSubConnection2.Enabled = true;
-            pubSubConnection2.PublisherId = (UInt64)21;
-            pubSubConnection2.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
+            // Define a PubSub connection with PublisherId 20
+            PubSubConnectionDataType pubSubConnection4 = new PubSubConnectionDataType();
+            pubSubConnection4.Name = "UdpUadpConection4";
+            pubSubConnection4.Enabled = true;
+            pubSubConnection4.PublisherId = (UInt64)20;
+            pubSubConnection4.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
             address = new NetworkAddressUrlDataType();
             address.NetworkInterface = string.Empty;
             address.Url = "opc.udp://239.0.0.13:4840";
-            pubSubConnection2.Address = new ExtensionObject(address);
+            pubSubConnection4.Address = new ExtensionObject(address);
 
-            #region Define WriterGroup2
-            WriterGroupDataType writerGroup2 = new WriterGroupDataType();
-            writerGroup2.Name = "WriterGroup 2";
-            writerGroup2.Enabled = true;
-            writerGroup2.WriterGroupId = 2;
-            writerGroup2.PublishingInterval = 5000;
-            writerGroup2.KeepAliveTime = 5000;
-            writerGroup2.MaxNetworkMessageSize = 1500;
-            writerGroup2.HeaderLayoutUri = "UADP-Dynamic";
+            #region Define WriterGroup24
+            WriterGroupDataType writerGroup24 = new WriterGroupDataType();
+            writerGroup24.Name = "WriterGroup 24";
+            writerGroup24.Enabled = true;
+            writerGroup24.WriterGroupId = 24;
+            writerGroup24.PublishingInterval = 5000;
+            writerGroup24.KeepAliveTime = 5000;
+            writerGroup24.MaxNetworkMessageSize = 1500;
+            writerGroup24.HeaderLayoutUri = "UADP-Dynamic";
             messageSettings = new UadpWriterGroupMessageDataType()
             {
                 DataSetOrdering = DataSetOrderingType.Undefined,
@@ -549,34 +549,34 @@ namespace SamplePublisher
                 NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.PayloadHeader)
             };
 
-            writerGroup2.MessageSettings = new ExtensionObject(messageSettings);
-            writerGroup2.TransportSettings = new ExtensionObject(new DatagramWriterGroupTransportDataType());
+            writerGroup24.MessageSettings = new ExtensionObject(messageSettings);
+            writerGroup24.TransportSettings = new ExtensionObject(new DatagramWriterGroupTransportDataType());
 
             // Define DataSetWriter 'AllTypes'
-            DataSetWriterDataType dataSetWriter11 = new DataSetWriterDataType();
-            dataSetWriter11.Name = "Writer 11";
-            dataSetWriter11.DataSetWriterId = 11;
-            dataSetWriter11.Enabled = true;
-            dataSetWriter11.DataSetFieldContentMask = (uint)DataSetFieldContentMask.None; //Variant encoding
-            dataSetWriter11.DataSetName = "AllTypes";
-            dataSetWriter11.KeyFrameCount = 1;
+            DataSetWriterDataType dataSetReaderAllTypes2 = new DataSetWriterDataType();
+            dataSetReaderAllTypes2.Name = "Writer 241";
+            dataSetReaderAllTypes2.DataSetWriterId = 241;
+            dataSetReaderAllTypes2.Enabled = true;
+            dataSetReaderAllTypes2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.None; //Variant encoding
+            dataSetReaderAllTypes2.DataSetName = "AllTypes";
+            dataSetReaderAllTypes2.KeyFrameCount = 1;
             uadpDataSetWriterMessage = new UadpDataSetWriterMessageDataType()
             {
                 //DataValue Encoding
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Timestamp | UadpDataSetMessageContentMask.Status
                         | UadpDataSetMessageContentMask.MinorVersion | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetWriter11.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
-            writerGroup2.DataSetWriters.Add(dataSetWriter11);
+            dataSetReaderAllTypes2.MessageSettings = new ExtensionObject(uadpDataSetWriterMessage);
+            writerGroup24.DataSetWriters.Add(dataSetReaderAllTypes2);
 
-            pubSubConnection2.WriterGroups.Add(writerGroup2);
+            pubSubConnection4.WriterGroups.Add(writerGroup24);
             #endregion                        
 
             //create  pub sub configuration root object
             PubSubConfigurationDataType pubSubConfiguration = new PubSubConfigurationDataType();
             pubSubConfiguration.Connections = new PubSubConnectionDataTypeCollection()
                 {
-                    pubSubConnection1, pubSubConnection2
+                    pubSubConnection3, pubSubConnection4
                 };
             pubSubConfiguration.PublishedDataSets = new PublishedDataSetDataTypeCollection()
                 {
@@ -585,8 +585,7 @@ namespace SamplePublisher
 
             return pubSubConfiguration;
         }
-
-        
+                
         /// <summary>
         /// Create a PubSubConfigurationDataType object programmatically for MqttUadp profile
         /// </summary>

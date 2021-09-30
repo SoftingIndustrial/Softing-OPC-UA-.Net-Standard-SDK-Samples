@@ -7,7 +7,7 @@
       <Enabled>true</Enabled>
       <PublisherId>
         <Value>
-          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">11</UInt16>
+          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
         </Value>
       </PublisherId>
       <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp</TransportProfileUri>
@@ -27,7 +27,7 @@
       <WriterGroups />
       <ReaderGroups>
         <ReaderGroupDataType>
-          <Name>ReaderGroup1</Name>
+          <Name>ReaderGroup 23</Name>
           <Enabled>true</Enabled>
           <SecurityMode>Invalid_0</SecurityMode>
           <SecurityGroupId i:nil="true" />
@@ -52,11 +52,11 @@
           </MessageSettings>
           <DataSetReaders>
             <DataSetReaderDataType>
-              <Name>Reader For Writer1</Name>
+              <Name>Reader For Writer 231</Name>
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
-                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">11</UInt16>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
                 </Value>
               </PublisherId>
               <WriterGroupId>0</WriterGroupId>
@@ -401,7 +401,7 @@
           </DataSetReaders>
         </ReaderGroupDataType>
         <ReaderGroupDataType>
-          <Name>ReaderGroup 2</Name>
+          <Name>ReaderGroup 24</Name>
           <Enabled>true</Enabled>
           <SecurityMode>Invalid_0</SecurityMode>
           <SecurityGroupId i:nil="true" />
@@ -426,15 +426,15 @@
           </MessageSettings>
           <DataSetReaders>
             <DataSetReaderDataType>
-              <Name>Reader For Writer11</Name>
+              <Name>Reader For Writer 241</Name>
               <Enabled>true</Enabled>
               <PublisherId>
                 <Value>
-                  <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">21</UInt64>
+                  <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
                 </Value>
               </PublisherId>
               <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>11</DataSetWriterId>
+              <DataSetWriterId>241</DataSetWriterId>
               <DataSetMetaData>
                 <Namespaces />
                 <StructureDataTypes />
