@@ -4153,7 +4153,7 @@
   <Connections>
     <PubSubConnectionDataType>
       <Name>MqttJsonConnection_Publisher</Name>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
@@ -4267,7 +4267,7 @@
           </MessageSettings>
           <DataSetWriters>
             <DataSetWriterDataType>
-              <Name>Writer 1</Name>
+              <Name>Writer 111</Name>
               <Enabled>true</Enabled>
               <DataSetWriterId>111</DataSetWriterId>
               <DataSetFieldContentMask>32</DataSetFieldContentMask>
@@ -4305,7 +4305,7 @@
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
       <Name>UdpUadpConnection_Publisher</Name>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
@@ -4480,7 +4480,7 @@
             <DataSetWriterDataType>
               <Name>Writer 221</Name>
               <Enabled>true</Enabled>
-              <DataSetWriterId>211</DataSetWriterId>
+              <DataSetWriterId>221</DataSetWriterId>
               <DataSetFieldContentMask>0</DataSetFieldContentMask>
               <KeyFrameCount>1</KeyFrameCount>
               <DataSetName>Simple</DataSetName>
@@ -4553,7 +4553,7 @@
     </PubSubConnectionDataType>
     <PubSubConnectionDataType>
       <Name>MqttUadpConnection_Publisher</Name>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <PublisherId>
         <Value>
           <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">30</UInt16>
