@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Threading;
 using KeyValuePair = Opc.Ua.KeyValuePair;
 using Opc.Ua.PubSub.Encoding;
+using System.Threading.Tasks;
 
 namespace SampleServer.PubSub
 {
@@ -69,169 +70,171 @@ namespace SampleServer.PubSub
         /// </remarks>
         public override void CreateAddressSpace(IDictionary<NodeId, IList<IReference>> externalReferences)
         {
-
             // Execute base class CreateAddressSpace
             base.CreateAddressSpace(externalReferences);
-            m_publishSubscribeState = FindNodeInAddressSpace(ObjectIds.PublishSubscribe) as PublishSubscribeState;
 
-            //update m_publishSubscribeState.SupportedTransportProfiles with existing implementations in PubSub library
-            m_publishSubscribeState.SupportedTransportProfiles.Value = UaPubSubApplication.SupportedTransportProfiles;
+            Task.Run(() => {
+                
+                m_publishSubscribeState = FindNodeInAddressSpace(ObjectIds.PublishSubscribe) as PublishSubscribeState;
 
-            // create PubSub application     
-            UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(new UaServerDataStore(this));
-            // remember reference to UaPubSubConfigurator
-            m_uaPubSubConfigurator = pubSubApplication.UaPubSubConfigurator;
+                //update m_publishSubscribeState.SupportedTransportProfiles with existing implementations in PubSub library
+                m_publishSubscribeState.SupportedTransportProfiles.Value = UaPubSubApplication.SupportedTransportProfiles;
 
-            //attach to events
-            m_uaPubSubConfigurator.PubSubStateChanged += UaPubSubConfigurator_PubSubStateChanged;
-            m_uaPubSubConfigurator.PublishedDataSetAdded += UaPubSubConfigurator_PublishedDataSetAdded;
-            m_uaPubSubConfigurator.PublishedDataSetRemoved += UaPubSubConfigurator_PublishedDataSetRemoved;
-            m_uaPubSubConfigurator.ExtensionFieldAdded += UaPubSubConfigurator_ExtensionFieldAdded;
-            m_uaPubSubConfigurator.ExtensionFieldRemoved += UaPubSubConfigurator_ExtensionFieldRemoved;
-            m_uaPubSubConfigurator.ConnectionAdded += UaPubSubConfigurator_ConnectionAdded;
-            m_uaPubSubConfigurator.ConnectionRemoved += UaPubSubConfigurator_ConnectionRemoved;
-            m_uaPubSubConfigurator.WriterGroupAdded += UaPubSubConfigurator_WriterGroupAdded;
-            m_uaPubSubConfigurator.WriterGroupRemoved += UaPubSubConfigurator_WriterGroupRemoved;
-            m_uaPubSubConfigurator.DataSetWriterAdded += UaPubSubConfigurator_DataSetWriterAdded;
-            m_uaPubSubConfigurator.DataSetWriterRemoved += UaPubSubConfigurator_DataSetWriterRemoved;
-            m_uaPubSubConfigurator.ReaderGroupAdded += UaPubSubConfigurator_ReaderGroupAdded;
-            m_uaPubSubConfigurator.ReaderGroupRemoved += UaPubSubConfigurator_ReaderGroupRemoved;
-            m_uaPubSubConfigurator.DataSetReaderAdded += UaPubSubConfigurator_DataSetReaderAdded;
-            m_uaPubSubConfigurator.DataSetReaderRemoved += UaPubSubConfigurator_DataSetReaderRemoved;
+                // create PubSub application     
+                UaPubSubApplication pubSubApplication = UaPubSubApplication.Create(new UaServerDataStore(this));
+                // remember reference to UaPubSubConfigurator
+                m_uaPubSubConfigurator = pubSubApplication.UaPubSubConfigurator;
 
-            // load configuration
-            string pubConfigurationFileName = "SamplePublisher.Config.xml";
-            m_uaPubSubConfigurator.LoadConfiguration(pubConfigurationFileName);
+                //attach to events
+                m_uaPubSubConfigurator.PubSubStateChanged += UaPubSubConfigurator_PubSubStateChanged;
+                m_uaPubSubConfigurator.PublishedDataSetAdded += UaPubSubConfigurator_PublishedDataSetAdded;
+                m_uaPubSubConfigurator.PublishedDataSetRemoved += UaPubSubConfigurator_PublishedDataSetRemoved;
+                m_uaPubSubConfigurator.ExtensionFieldAdded += UaPubSubConfigurator_ExtensionFieldAdded;
+                m_uaPubSubConfigurator.ExtensionFieldRemoved += UaPubSubConfigurator_ExtensionFieldRemoved;
+                m_uaPubSubConfigurator.ConnectionAdded += UaPubSubConfigurator_ConnectionAdded;
+                m_uaPubSubConfigurator.ConnectionRemoved += UaPubSubConfigurator_ConnectionRemoved;
+                m_uaPubSubConfigurator.WriterGroupAdded += UaPubSubConfigurator_WriterGroupAdded;
+                m_uaPubSubConfigurator.WriterGroupRemoved += UaPubSubConfigurator_WriterGroupRemoved;
+                m_uaPubSubConfigurator.DataSetWriterAdded += UaPubSubConfigurator_DataSetWriterAdded;
+                m_uaPubSubConfigurator.DataSetWriterRemoved += UaPubSubConfigurator_DataSetWriterRemoved;
+                m_uaPubSubConfigurator.ReaderGroupAdded += UaPubSubConfigurator_ReaderGroupAdded;
+                m_uaPubSubConfigurator.ReaderGroupRemoved += UaPubSubConfigurator_ReaderGroupRemoved;
+                m_uaPubSubConfigurator.DataSetReaderAdded += UaPubSubConfigurator_DataSetReaderAdded;
+                m_uaPubSubConfigurator.DataSetReaderRemoved += UaPubSubConfigurator_DataSetReaderRemoved;
 
-            string subConfigurationFileName = "SampleSubscriber.Config.xml";
-            m_uaPubSubConfigurator.LoadConfiguration(subConfigurationFileName, false);
+                // load configuration
+                string pubConfigurationFileName = "SamplePublisher.Config.xml";
+                m_uaPubSubConfigurator.LoadConfiguration(pubConfigurationFileName);
 
-            MapConfigIdToPubSubNodeState(m_uaPubSubConfigurator.FindIdForObject(m_uaPubSubConfigurator.PubSubConfiguration), m_publishSubscribeState);
-            InitializePubSubStatusStateMethods(m_publishSubscribeState.Status, m_uaPubSubConfigurator.PubSubConfiguration);
+                string subConfigurationFileName = "SampleSubscriber.Config.xml";
+                m_uaPubSubConfigurator.LoadConfiguration(subConfigurationFileName, false);
 
-            // add OnCall handlers for m_publishSubscribeState methods 
-            m_publishSubscribeState.AddConnection.OnCall = OnCallAddConnectionMethodHandler;
-            m_publishSubscribeState.RemoveConnection.OnCall = OnCallRemoveConnectionHandler;
+                MapConfigIdToPubSubNodeState(m_uaPubSubConfigurator.FindIdForObject(m_uaPubSubConfigurator.PubSubConfiguration), m_publishSubscribeState);
+                InitializePubSubStatusStateMethods(m_publishSubscribeState.Status, m_uaPubSubConfigurator.PubSubConfiguration);
 
-            InitializeDataSetFolderState(m_publishSubscribeState.PublishedDataSets);
+                // add OnCall handlers for m_publishSubscribeState methods 
+                m_publishSubscribeState.AddConnection.OnCall = OnCallAddConnectionMethodHandler;
+                m_publishSubscribeState.RemoveConnection.OnCall = OnCallRemoveConnectionHandler;
 
-            // create Publisher Source Nodes
-            FolderState root = CreateFolder(null, "PubSub");
-            AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
+                InitializeDataSetFolderState(m_publishSubscribeState.PublishedDataSets);
 
-            #region Add Publisher Source Nodes
-            FolderState publisher = CreateFolder(root, "Publisher");
+                // create Publisher Source Nodes
+                FolderState root = CreateFolder(null, "PubSub");
+                AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
-            #region Publisher UDP UADP variables
+                #region Add Publisher Source Nodes
+                FolderState publisher = CreateFolder(root, "Publisher");
 
-            BaseDataVariableState variable = CreateVariable(publisher, "BoolToggle", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Pub_BoolToggle", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Int32", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "Int32Fast", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Int32Fast", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "DateTime", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("Pub_DateTime", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Pub_Byte", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Pub_Int16", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "SByte", DataTypeIds.SByte, ValueRanks.Scalar, new NodeId("Pub_SByte", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "UInt16", DataTypeIds.UInt16, ValueRanks.Scalar, new NodeId("Pub_UInt16", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "UInt32", DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("Pub_UInt32", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "Float", DataTypeIds.Float, ValueRanks.Scalar, new NodeId("Pub_Float", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "Double", DataTypeIds.Double, ValueRanks.Scalar, new NodeId("Pub_Double", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            for (int i = 0; i < 100; i++)
-            {
-                string name = "Mass_" + i;
-                variable = CreateVariable(publisher, name, DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("Pub_" + name, NamespaceIndex));
+                #region Publisher UDP UADP variables
+
+                BaseDataVariableState variable = CreateVariable(publisher, "BoolToggle", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Pub_BoolToggle", NamespaceIndex));
                 m_dynamicNodes.Add(variable);
-            }
+                variable = CreateVariable(publisher, "Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Int32", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Int32Fast", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Int32Fast", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "DateTime", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("Pub_DateTime", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Pub_Byte", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Pub_Int16", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "SByte", DataTypeIds.SByte, ValueRanks.Scalar, new NodeId("Pub_SByte", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "UInt16", DataTypeIds.UInt16, ValueRanks.Scalar, new NodeId("Pub_UInt16", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "UInt32", DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("Pub_UInt32", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Float", DataTypeIds.Float, ValueRanks.Scalar, new NodeId("Pub_Float", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Double", DataTypeIds.Double, ValueRanks.Scalar, new NodeId("Pub_Double", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                for (int i = 0; i < 100; i++)
+                {
+                    string name = "Mass_" + i;
+                    variable = CreateVariable(publisher, name, DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("Pub_" + name, NamespaceIndex));
+                    m_dynamicNodes.Add(variable);
+                }
 
-            #endregion Publisher UDP UADP variables
+                #endregion Publisher UDP UADP variables
 
-            #region Publisher MQTT UADP variables
+                #region Publisher MQTT UADP variables
 
-            variable = CreateVariable(publisher, "Mqtt_Uadp_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Boolean", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "Mqtt_Uadp_Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Byte", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "Mqtt_Uadp_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Int16", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "Mqtt_Uadp_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Int32", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Mqtt_Uadp_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Boolean", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Mqtt_Uadp_Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Byte", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Mqtt_Uadp_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Int16", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Mqtt_Uadp_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Int32", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
 
-            #endregion Publisher MQTT UADP variables
+                #endregion Publisher MQTT UADP variables
 
-            #region Publisher MQTT MQTT variables
+                #region Publisher MQTT MQTT variables
 
-            variable = CreateVariable(publisher, "Mqtt_Json_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Json_Boolean", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "Mqtt_Json_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Json_Int16", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
-            variable = CreateVariable(publisher, "Mqtt_Json_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Json_Int32", NamespaceIndex));
-            m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Mqtt_Json_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Json_Boolean", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Mqtt_Json_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Json_Int16", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
+                variable = CreateVariable(publisher, "Mqtt_Json_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Json_Int32", NamespaceIndex));
+                m_dynamicNodes.Add(variable);
 
-            #endregion Publisher MQTT MQTT variables
+                #endregion Publisher MQTT MQTT variables
 
-            m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
+                m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
 
-            #endregion
+                #endregion
 
-            #region Add Subscriber Destination Nodes
-            FolderState subscriber = CreateFolder(root, "Subscriber");
+                #region Add Subscriber Destination Nodes
+                FolderState subscriber = CreateFolder(root, "Subscriber");
 
-            #region Subscriber UDP UADP variables
+                #region Subscriber UDP UADP variables
 
-            variable = CreateVariable(subscriber, "BoolToggle", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_BoolToggle", NamespaceIndex));
-            variable = CreateVariable(subscriber, "Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Int32", NamespaceIndex));
-            variable = CreateVariable(subscriber, "Int32Fast", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Int32Fast", NamespaceIndex));
-            variable = CreateVariable(subscriber, "DateTime", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("Sub_DateTime", NamespaceIndex));
-            variable = CreateVariable(subscriber, "Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Sub_Byte", NamespaceIndex));
-            variable = CreateVariable(subscriber, "Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Sub_Int16", NamespaceIndex));
-            variable = CreateVariable(subscriber, "SByte", DataTypeIds.SByte, ValueRanks.Scalar, new NodeId("Sub_SByte", NamespaceIndex));
-            variable = CreateVariable(subscriber, "UInt16", DataTypeIds.UInt16, ValueRanks.Scalar, new NodeId("Sub_UInt16", NamespaceIndex));
-            variable = CreateVariable(subscriber, "UInt32", DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("Sub_UInt32", NamespaceIndex));
-            variable = CreateVariable(subscriber, "Float", DataTypeIds.Float, ValueRanks.Scalar, new NodeId("Sub_Float", NamespaceIndex));
-            variable = CreateVariable(subscriber, "Double", DataTypeIds.Double, ValueRanks.Scalar, new NodeId("Sub_Double", NamespaceIndex));
-            for (int i = 0; i < 100; i++)
-            {
-                string name = "Mass_" + i;
-                variable = CreateVariable(subscriber, name, DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("Sub_" + name, NamespaceIndex));
-            }
-            #endregion Subscriber UDP UADP variables
+                variable = CreateVariable(subscriber, "BoolToggle", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_BoolToggle", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Int32", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Int32Fast", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Int32Fast", NamespaceIndex));
+                variable = CreateVariable(subscriber, "DateTime", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("Sub_DateTime", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Sub_Byte", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Sub_Int16", NamespaceIndex));
+                variable = CreateVariable(subscriber, "SByte", DataTypeIds.SByte, ValueRanks.Scalar, new NodeId("Sub_SByte", NamespaceIndex));
+                variable = CreateVariable(subscriber, "UInt16", DataTypeIds.UInt16, ValueRanks.Scalar, new NodeId("Sub_UInt16", NamespaceIndex));
+                variable = CreateVariable(subscriber, "UInt32", DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("Sub_UInt32", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Float", DataTypeIds.Float, ValueRanks.Scalar, new NodeId("Sub_Float", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Double", DataTypeIds.Double, ValueRanks.Scalar, new NodeId("Sub_Double", NamespaceIndex));
+                for (int i = 0; i < 100; i++)
+                {
+                    string name = "Mass_" + i;
+                    variable = CreateVariable(subscriber, name, DataTypeIds.UInt32, ValueRanks.Scalar, new NodeId("Sub_" + name, NamespaceIndex));
+                }
+                #endregion Subscriber UDP UADP variables
 
-            #region Subscriber MQTT UADP variables
+                #region Subscriber MQTT UADP variables
 
-            variable = CreateVariable(subscriber, "Mqtt_Uadp_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Boolean", NamespaceIndex));
-            variable = CreateVariable(subscriber, "Mqtt_Uadp_Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Byte", NamespaceIndex));
-            variable = CreateVariable(subscriber, "Mqtt_Uadp_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Int16", NamespaceIndex));
-            variable = CreateVariable(subscriber, "Mqtt_Uadp_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Int32", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Uadp_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Boolean", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Uadp_Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Byte", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Uadp_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Int16", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Uadp_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Int32", NamespaceIndex));
 
-            #endregion Subscriber MQTT UADP variables
+                #endregion Subscriber MQTT UADP variables
 
-            #region Subscriber MQTT JSON variables
+                #region Subscriber MQTT JSON variables
 
-            variable = CreateVariable(subscriber, "Mqtt_Json_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Boolean", NamespaceIndex));
-            variable = CreateVariable(subscriber, "Mqtt_Json_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Int16", NamespaceIndex));
-            variable = CreateVariable(subscriber, "Mqtt_Json_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Int32", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Json_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Boolean", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Json_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Int16", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Json_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Int32", NamespaceIndex));
 
-            #endregion Subscriber MQTT JSON variables
+                #endregion Subscriber MQTT JSON variables
 
-            #endregion
+                #endregion
 
-            if (m_canStartPubSubApplication)
-            {
-                pubSubApplication.DataReceived += PubSubApplication_DataReceived;
-                pubSubApplication.MetaDataReceived += PubSubApplication_MetaDataReceived;
-                pubSubApplication.Start();
-            }
-
+                if (m_canStartPubSubApplication)
+                {
+                    pubSubApplication.DataReceived += PubSubApplication_DataReceived;
+                    pubSubApplication.MetaDataReceived += PubSubApplication_MetaDataReceived;
+                    pubSubApplication.Start();
+                }
+            });
         }
         
         #endregion
