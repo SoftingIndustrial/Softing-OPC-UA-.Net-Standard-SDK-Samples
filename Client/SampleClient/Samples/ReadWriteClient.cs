@@ -433,7 +433,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
 
                 // try to get the complex type info for the specified data type Id
-                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId, new Softing.Opc.Ua.Client.Types.Domain());
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
                     Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
@@ -521,7 +521,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
 
                 // try to get the complex type info for the specified data type Id
-                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId, new Domain());
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
                     Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.", 
@@ -1101,7 +1101,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
 
                 // try to get the complex type info for the specified node
-                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId, new Domain());
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
                     Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.", 
@@ -1143,7 +1143,7 @@ namespace SampleClient.Samples
                     //write new value to node 
                     DataValue valueToWrite = new DataValue();
                     // get the EnumTypeInfo that describes this particular Enumeration data type 
-                    EnumTypeInfo enumTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId, new Domain()) as EnumTypeInfo;
+                    EnumTypeInfo enumTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId) as EnumTypeInfo;
                     // get the actual values as an array of values of the type the server expects
                     valueToWrite.Value = EnumValue.GetValueToEncode(enumTypeInfo, defaultValueArray);
 
@@ -1190,7 +1190,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
 
                 // try to get the complex type info for the specified node
-                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId, new Domain());
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
                     Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
@@ -1231,7 +1231,7 @@ namespace SampleClient.Samples
                     //write new value to node 
                     DataValue valueToWrite = new DataValue();
                     // get the EnumTypeInfo that describes this particular Enumeration data type 
-                    EnumTypeInfo enumTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId, new Domain()) as EnumTypeInfo;
+                    EnumTypeInfo enumTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId) as EnumTypeInfo;
                     // get the actual values as an array of values of the type the server expects
                     valueToWrite.Value = EnumValue.GetValueToEncode(enumTypeInfo, defaultValueArray);
 
@@ -1278,7 +1278,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
 
                 // try to get the complex type info for the specified node
-                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId, new Domain());
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
                     Console.WriteLine(" Current session does not know DataType: {0} for NodeId: {0}.  Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.", 
@@ -1366,7 +1366,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
 
                 // try to get the complex type info for the specified node
-                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId, new Domain()); 
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId); 
                 if (baseComplexTypeInfo == null)
                 {
                     Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
@@ -1456,7 +1456,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
 
                 // try to get the complex type info for the specified node
-                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId, new Domain());
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
                     Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
@@ -1547,7 +1547,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
 
                 // try to get the complex type info for the specified node
-                BaseComplexTypeInfo baseComplexTypeInfo = m_session.Factory.GetComplexTypeInfo(dataValueTypeNodeId, new Domain());
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
                     Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
