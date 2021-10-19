@@ -436,6 +436,44 @@ namespace SampleServer.PubSub
             {
                 pubSubConnectionState.ConnectionProperties.Value = e.PubSubConnectionDataType.ConnectionProperties.ToArray();
             }
+
+            if (e.PubSubConnectionDataType.TransportSettings != null)
+            {
+                ConnectionTransportState transportSettings = null;
+                BrokerConnectionTransportDataType brokerConnectionTransportDataType = ExtensionObject.ToEncodeable(e.PubSubConnectionDataType.TransportSettings)
+                      as BrokerConnectionTransportDataType;
+                if (brokerConnectionTransportDataType != null)
+                {
+                    transportSettings = CreateObjectFromType(pubSubConnectionState, BrowseNames.TransportSettings, ObjectTypeIds.BrokerConnectionTransportType)
+                       as ConnectionTransportState;
+
+                    ((BrokerConnectionTransportState)transportSettings).ResourceUri.Value = brokerConnectionTransportDataType.ResourceUri;
+                    ((BrokerConnectionTransportState)transportSettings).AuthenticationProfileUri.Value = brokerConnectionTransportDataType.AuthenticationProfileUri;
+                }
+
+                DatagramConnectionTransportDataType datagramConnectionTransportDataType = ExtensionObject.ToEncodeable(e.PubSubConnectionDataType.TransportSettings)
+                      as DatagramConnectionTransportDataType;
+                
+                if (datagramConnectionTransportDataType != null)
+                {
+                    NetworkAddressUrlDataType address = ExtensionObject.ToEncodeable(datagramConnectionTransportDataType.DiscoveryAddress)
+                                        as NetworkAddressUrlDataType;
+                    transportSettings = CreateObjectFromType(pubSubConnectionState, BrowseNames.TransportSettings, ObjectTypeIds.DatagramConnectionTransportType)
+                        as ConnectionTransportState;
+                    if (address != null && transportSettings != null)
+                    {
+                        NetworkAddressUrlState discoveryAddress = CreateObjectFromType(transportSettings, BrowseNames.DiscoveryAddress, ObjectTypeIds.NetworkAddressUrlType) as NetworkAddressUrlState;
+                        discoveryAddress.NetworkInterface.Value = address.NetworkInterface;
+                        discoveryAddress.Url.Value = address.Url;
+                        ((DatagramConnectionTransportState)transportSettings).DiscoveryAddress = discoveryAddress;
+                    }
+                }
+
+                if (transportSettings != null)
+                {
+                    pubSubConnectionState.TransportSettings = transportSettings;
+                }
+            }
             
             MapConfigIdToPubSubNodeState(e.ConnectionId, pubSubConnectionState);
             InitializePubSubStatusStateMethods(pubSubConnectionState.Status, e.PubSubConnectionDataType);
