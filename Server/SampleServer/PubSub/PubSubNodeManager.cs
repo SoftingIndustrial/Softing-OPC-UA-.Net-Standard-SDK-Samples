@@ -331,7 +331,9 @@ namespace SampleServer.PubSub
                 if (publishedDataItemsState.ExtensionFields == null)
                 {
                     publishedDataItemsState.ExtensionFields = CreateObjectFromType(publishedDataItemsState, BrowseNames.ExtensionFields,
-                        ObjectTypeIds.ExtensionFieldsType, ReferenceTypeIds.HasComponent) as ExtensionFieldsState;                    
+                        ObjectTypeIds.ExtensionFieldsType, ReferenceTypeIds.HasComponent) as ExtensionFieldsState;
+                    publishedDataItemsState.BrowseName = BrowseNames.ExtensionFields;
+
                     if (publishedDataItemsState.ExtensionFields.AddExtensionField == null)
                     {
                         Argument[] inputArguments = new Argument[]
@@ -345,6 +347,7 @@ namespace SampleServer.PubSub
                         };
                         publishedDataItemsState.ExtensionFields.AddExtensionField = CreateMethod(publishedDataItemsState.ExtensionFields, BrowseNames.AddExtensionField, inputArguments, outputArguments, null,
                             typeof(AddExtensionFieldMethodState), MethodIds.ExtensionFieldsType_AddExtensionField) as AddExtensionFieldMethodState;
+                        publishedDataItemsState.ExtensionFields.AddExtensionField.BrowseName = BrowseNames.AddExtensionField;
                     }
                     publishedDataItemsState.ExtensionFields.AddExtensionField.OnCall = OnCallAddExtensionFieldHandler;
                     if (publishedDataItemsState.ExtensionFields.RemoveExtensionField == null)
@@ -353,8 +356,9 @@ namespace SampleServer.PubSub
                         {
                          new Argument(){Name = "FieldId", DataType = DataTypeIds.NodeId,  ValueRank = ValueRanks.Scalar, Description = "The NodeId field Property to remove."},
                         };
-                        publishedDataItemsState.ExtensionFields.RemoveExtensionField = CreateMethod(publishedDataItemsState.ExtensionFields, BrowseNames.AddExtensionField, inputArguments, null, null,
+                        publishedDataItemsState.ExtensionFields.RemoveExtensionField = CreateMethod(publishedDataItemsState.ExtensionFields, BrowseNames.RemoveExtensionField, inputArguments, null, null,
                             typeof(RemoveExtensionFieldMethodState), MethodIds.ExtensionFieldsType_RemoveExtensionField) as RemoveExtensionFieldMethodState;
+                        publishedDataItemsState.ExtensionFields.RemoveExtensionField.BrowseName = BrowseNames.RemoveExtensionField;
                     }
                     publishedDataItemsState.ExtensionFields.RemoveExtensionField.OnCall = OnCallRemoveExtensionFieldHandler;
                 }
@@ -427,8 +431,9 @@ namespace SampleServer.PubSub
             if (networkAddressUrlState != null)
             {
                 NetworkAddressUrlState address = CreateObjectFromType(pubSubConnectionState, BrowseNames.Address, ObjectTypeIds.NetworkAddressUrlType) as NetworkAddressUrlState;
+                address.BrowseName = BrowseNames.Address;
                 address.NetworkInterface.Value = networkAddressUrlState.NetworkInterface;
-                address.Url.Value = networkAddressUrlState.Url;
+                address.Url.Value = networkAddressUrlState.Url;               
                 pubSubConnectionState.Address = address;
             }
 
@@ -446,7 +451,7 @@ namespace SampleServer.PubSub
                 {
                     transportSettings = CreateObjectFromType(pubSubConnectionState, BrowseNames.TransportSettings, ObjectTypeIds.BrokerConnectionTransportType)
                        as ConnectionTransportState;
-
+                    transportSettings.BrowseName = BrowseNames.TransportSettings;
                     ((BrokerConnectionTransportState)transportSettings).ResourceUri.Value = brokerConnectionTransportDataType.ResourceUri;
                     ((BrokerConnectionTransportState)transportSettings).AuthenticationProfileUri.Value = brokerConnectionTransportDataType.AuthenticationProfileUri;
                 }
@@ -462,9 +467,12 @@ namespace SampleServer.PubSub
                         as ConnectionTransportState;
                     if (address != null && transportSettings != null)
                     {
+                        transportSettings.BrowseName = BrowseNames.TransportSettings;
                         NetworkAddressUrlState discoveryAddress = CreateObjectFromType(transportSettings, BrowseNames.DiscoveryAddress, ObjectTypeIds.NetworkAddressUrlType) as NetworkAddressUrlState;
+                        discoveryAddress.BrowseName = BrowseNames.DiscoveryAddress;
                         discoveryAddress.NetworkInterface.Value = address.NetworkInterface;
-                        discoveryAddress.Url.Value = address.Url;
+                        discoveryAddress.Url.Value = address.Url;                       
+
                         ((DatagramConnectionTransportState)transportSettings).DiscoveryAddress = discoveryAddress;
                     }
                 }
@@ -529,6 +537,7 @@ namespace SampleServer.PubSub
                         {
                             UadpWriterGroupMessageState uadpMessageSettingsState = CreateObjectFromType(writerGroupState, BrowseNames.MessageSettings, ObjectTypeIds.UadpWriterGroupMessageType)
                                 as UadpWriterGroupMessageState;
+                            uadpMessageSettingsState.BrowseName = BrowseNames.MessageSettings;
                             uadpMessageSettingsState.GroupVersion.Value = messageSettingsDataType.GroupVersion;
                             uadpMessageSettingsState.DataSetOrdering.Value = messageSettingsDataType.DataSetOrdering;
                             uadpMessageSettingsState.NetworkMessageContentMask.Value = messageSettingsDataType.NetworkMessageContentMask;
@@ -544,6 +553,7 @@ namespace SampleServer.PubSub
                         {
                             JsonWriterGroupMessageState jsonMessageSettingsState = CreateObjectFromType(writerGroupState, BrowseNames.MessageSettings, ObjectTypeIds.JsonWriterGroupMessageType)
                                 as JsonWriterGroupMessageState;
+                            jsonMessageSettingsState.BrowseName = BrowseNames.MessageSettings;
                             jsonMessageSettingsState.NetworkMessageContentMask.Value = messageSettingsDataType.NetworkMessageContentMask;
 
                             messageSettingsState = jsonMessageSettingsState;
@@ -564,7 +574,7 @@ namespace SampleServer.PubSub
                         {
                             DatagramWriterGroupTransportState datagramWriterGroupTransportState = CreateObjectFromType(writerGroupState, BrowseNames.TransportSettings, ObjectTypeIds.DatagramWriterGroupTransportType)
                                 as DatagramWriterGroupTransportState;
-
+                            datagramWriterGroupTransportState.BrowseName = BrowseNames.TransportSettings;
                             datagramWriterGroupTransportState.MessageRepeatCount.Value = transportSettingsDataType.MessageRepeatCount;
                             datagramWriterGroupTransportState.MessageRepeatDelay.Value = transportSettingsDataType.MessageRepeatDelay;
 
@@ -578,7 +588,7 @@ namespace SampleServer.PubSub
                         {
                             BrokerWriterGroupTransportState brokerWriterGroupTransportState = CreateObjectFromType(writerGroupState, BrowseNames.TransportSettings, ObjectTypeIds.BrokerWriterGroupTransportType)
                                 as BrokerWriterGroupTransportState;
-
+                            brokerWriterGroupTransportState.BrowseName = BrowseNames.TransportSettings;
                             brokerWriterGroupTransportState.QueueName.Value = transportSettingsDataType.QueueName;
                             brokerWriterGroupTransportState.RequestedDeliveryGuarantee.Value = transportSettingsDataType.RequestedDeliveryGuarantee;
 
@@ -641,7 +651,7 @@ namespace SampleServer.PubSub
                         {
                             UadpDataSetWriterMessageState uadpMessageSettingsState = CreateObjectFromType(dataSetWriterState, BrowseNames.MessageSettings, ObjectTypeIds.UadpDataSetWriterMessageType)
                                 as UadpDataSetWriterMessageState;
-
+                            uadpMessageSettingsState.BrowseName = BrowseNames.MessageSettings;
                             uadpMessageSettingsState.ConfiguredSize.Value = messageSettingsDataType.ConfiguredSize;
                             uadpMessageSettingsState.DataSetOffset.Value = messageSettingsDataType.DataSetOffset;
                             uadpMessageSettingsState.DataSetMessageContentMask.Value = messageSettingsDataType.DataSetMessageContentMask;
@@ -657,7 +667,7 @@ namespace SampleServer.PubSub
                         {
                             JsonDataSetWriterMessageState jsonMessageSettingsState = CreateObjectFromType(dataSetWriterState, BrowseNames.MessageSettings, ObjectTypeIds.JsonDataSetWriterMessageType)
                                 as JsonDataSetWriterMessageState;
-
+                            jsonMessageSettingsState.BrowseName = BrowseNames.MessageSettings;
                             jsonMessageSettingsState.DataSetMessageContentMask.Value = messageSettingsDataType.DataSetMessageContentMask;
 
                             messageSettingsState = jsonMessageSettingsState;
@@ -679,7 +689,7 @@ namespace SampleServer.PubSub
                         {
                             BrokerDataSetWriterTransportState brokerDataSetWriterTransportState = CreateObjectFromType(dataSetWriterState, BrowseNames.TransportSettings, ObjectTypeIds.BrokerDataSetWriterTransportType)
                                 as BrokerDataSetWriterTransportState;
-
+                            brokerDataSetWriterTransportState.BrowseName = BrowseNames.TransportSettings;
                             brokerDataSetWriterTransportState.QueueName.Value = transportSettingsDataType.QueueName;
                             brokerDataSetWriterTransportState.RequestedDeliveryGuarantee.Value = transportSettingsDataType.RequestedDeliveryGuarantee;
                             brokerDataSetWriterTransportState.MetaDataQueueName.Value = transportSettingsDataType.MetaDataQueueName;
@@ -770,6 +780,7 @@ namespace SampleServer.PubSub
                 {
                     ReaderGroupMessageState messageSettingsState = CreateObjectFromType(readerGroupState, BrowseNames.MessageSettings, ObjectTypeIds.ReaderGroupMessageType)
                         as ReaderGroupMessageState;
+                    messageSettingsState.BrowseName = BrowseNames.MessageSettings;
                     readerGroupState.MessageSettings = messageSettingsState;
                 }
 
@@ -780,7 +791,7 @@ namespace SampleServer.PubSub
                 {
                     ReaderGroupTransportState readerGroupTransportState = CreateObjectFromType(readerGroupState, BrowseNames.TransportSettings, ObjectTypeIds.ReaderGroupTransportType)
                         as ReaderGroupTransportState;
-
+                    readerGroupTransportState.BrowseName = BrowseNames.TransportSettings;
                     readerGroupState.TransportSettings = readerGroupTransportState;
                 }
 
@@ -850,6 +861,7 @@ namespace SampleServer.PubSub
                 {
                     TargetVariablesState targetVariablesState = CreateObjectFromType(dataSetReaderState, BrowseNames.SubscribedDataSet, ObjectTypeIds.TargetVariablesType)
                         as TargetVariablesState;
+                    targetVariablesState.BrowseName = BrowseNames.SubscribedDataSet;
                     targetVariablesState.TargetVariables.Value = subscribedDataSet.TargetVariables.ToArray();
                     //if (dataSetreaderState.SubscribedDataSet != null)
                     //{
@@ -873,7 +885,7 @@ namespace SampleServer.PubSub
                         {
                             UadpDataSetReaderMessageState uadpMessageSettingsState = CreateObjectFromType(dataSetReaderState, BrowseNames.MessageSettings, ObjectTypeIds.UadpDataSetReaderMessageType)
                                 as UadpDataSetReaderMessageState;
-
+                            uadpMessageSettingsState.BrowseName = BrowseNames.MessageSettings;
                             uadpMessageSettingsState.GroupVersion.Value = messageSettingsDataType.GroupVersion;
                             uadpMessageSettingsState.DataSetOffset.Value = messageSettingsDataType.DataSetOffset;
                             uadpMessageSettingsState.NetworkMessageNumber.Value = messageSettingsDataType.NetworkMessageNumber;
@@ -890,7 +902,7 @@ namespace SampleServer.PubSub
                         {
                             JsonDataSetReaderMessageState jsonMessageSettingsState = CreateObjectFromType(dataSetReaderState, BrowseNames.MessageSettings, ObjectTypeIds.JsonDataSetReaderMessageType)
                                 as JsonDataSetReaderMessageState;
-
+                            jsonMessageSettingsState.BrowseName = BrowseNames.MessageSettings;
                             jsonMessageSettingsState.NetworkMessageContentMask.Value = messageSettingsDataType.NetworkMessageContentMask;
                             jsonMessageSettingsState.DataSetMessageContentMask.Value = messageSettingsDataType.DataSetMessageContentMask;
 
@@ -913,7 +925,7 @@ namespace SampleServer.PubSub
                         {
                             BrokerDataSetReaderTransportState brokerDataSetReaderTransportState = CreateObjectFromType(dataSetReaderState, BrowseNames.TransportSettings, ObjectTypeIds.BrokerDataSetReaderTransportType)
                                 as BrokerDataSetReaderTransportState;
-
+                            brokerDataSetReaderTransportState.BrowseName = BrowseNames.TransportSettings;
                             brokerDataSetReaderTransportState.QueueName.Value = transportSettingsDataType.QueueName;
                             brokerDataSetReaderTransportState.RequestedDeliveryGuarantee.Value = transportSettingsDataType.RequestedDeliveryGuarantee;
                             brokerDataSetReaderTransportState.MetaDataQueueName.Value = transportSettingsDataType.MetaDataQueueName;
@@ -1582,6 +1594,7 @@ namespace SampleServer.PubSub
             if (statusNode.Enable == null)
             {
                 statusNode.Enable = CreateMethod(statusNode, BrowseNames.Enable, null, null, OnCallEnableHandler);
+                statusNode.Enable.BrowseName = BrowseNames.Enable;
                 statusNode.Enable.Handle = configId;
             }
             else
@@ -1593,6 +1606,7 @@ namespace SampleServer.PubSub
             if (statusNode.Disable == null)
             {
                 statusNode.Disable = CreateMethod(statusNode, BrowseNames.Disable, null, null, OnCallDisableHandler);
+                statusNode.Disable.BrowseName = BrowseNames.Disable;
                 statusNode.Disable.Handle = configId;
             }
             else
@@ -1626,7 +1640,8 @@ namespace SampleServer.PubSub
                     new Argument(){Name = "DataSetFolderNodeId", DataType = DataTypeIds.NodeId,  ValueRank = ValueRanks.Scalar, Description = "NodeId of the created DataSetFolderType Object."}
                 };
                 dataSetFolderState.AddDataSetFolder = CreateMethod(dataSetFolderState, BrowseNames.AddDataSetFolder, inputArguments, outputArguments, null,
-                    typeof(AddDataSetFolderMethodState), MethodIds.DataSetFolderType_AddDataSetFolder) as AddDataSetFolderMethodState;               
+                    typeof(AddDataSetFolderMethodState), MethodIds.DataSetFolderType_AddDataSetFolder) as AddDataSetFolderMethodState;
+                dataSetFolderState.AddDataSetFolder.BrowseName = BrowseNames.AddDataSetFolder;
             }
             dataSetFolderState.AddDataSetFolder.OnCall = OnCallAddDataSetFolderHandler;
             if (dataSetFolderState.RemoveDataSetFolder == null)
@@ -1637,6 +1652,7 @@ namespace SampleServer.PubSub
                 };
                 dataSetFolderState.RemoveDataSetFolder = CreateMethod(dataSetFolderState, BrowseNames.RemoveDataSetFolder, inputArguments, null, null,
                     typeof(RemoveDataSetFolderMethodState), MethodIds.DataSetFolderType_RemoveDataSetFolder) as RemoveDataSetFolderMethodState;
+                dataSetFolderState.RemoveDataSetFolder.BrowseName = BrowseNames.RemoveDataSetFolder;
             }
             dataSetFolderState.RemoveDataSetFolder.OnCall = OnCallRemoveDataSetFolderHandler;
             if (dataSetFolderState.AddPublishedDataItems == null)
@@ -1655,7 +1671,8 @@ namespace SampleServer.PubSub
                     new Argument(){Name = "AddResults", DataType = DataTypeIds.StatusCode,  ValueRank = ValueRanks.OneDimension, Description = "The result codes for the variables to add."},
                 };
                 dataSetFolderState.AddPublishedDataItems = CreateMethod(dataSetFolderState, BrowseNames.AddPublishedDataItems, inputArguments, outputArguments, null,
-                    typeof(AddPublishedDataItemsMethodState), MethodIds.DataSetFolderType_AddPublishedDataItems) as AddPublishedDataItemsMethodState;                
+                    typeof(AddPublishedDataItemsMethodState), MethodIds.DataSetFolderType_AddPublishedDataItems) as AddPublishedDataItemsMethodState;
+                dataSetFolderState.AddPublishedDataItems.BrowseName = BrowseNames.AddPublishedDataItems;
             }
             dataSetFolderState.AddPublishedDataItems.OnCall = OnCallAddPublishedDataItemsHandler;
             if (dataSetFolderState.RemovePublishedDataSet == null)
@@ -1665,7 +1682,8 @@ namespace SampleServer.PubSub
                     new Argument(){Name = "DataSetNodeId", DataType = DataTypeIds.NodeId,  ValueRank = ValueRanks.Scalar, Description = "NodeId of the PublishedDataSets Object to remove from the Server."},
                 };
                 dataSetFolderState.RemovePublishedDataSet = CreateMethod(dataSetFolderState, BrowseNames.RemovePublishedDataSet, inputArguments, null, null,
-                    typeof(RemovePublishedDataSetMethodState), MethodIds.DataSetFolderType_RemovePublishedDataSet) as RemovePublishedDataSetMethodState;                
+                    typeof(RemovePublishedDataSetMethodState), MethodIds.DataSetFolderType_RemovePublishedDataSet) as RemovePublishedDataSetMethodState;
+                dataSetFolderState.RemovePublishedDataSet.BrowseName = BrowseNames.RemovePublishedDataSet;
             }
             dataSetFolderState.RemovePublishedDataSet.OnCall = OnCallRemovePublishedDataSetHandler;
             if (dataSetFolderState.AddPublishedDataItemsTemplate != null)
@@ -1704,9 +1722,10 @@ namespace SampleServer.PubSub
                  };
                  publishedDataItemsState.AddVariables = CreateMethod(publishedDataItemsState, BrowseNames.AddVariables, inputArguments, outputArguments, null,
                      typeof(PublishedDataItemsAddVariablesMethodState), MethodIds.PublishedDataItemsType_AddVariables) as PublishedDataItemsAddVariablesMethodState;
+            publishedDataItemsState.AddVariables.BrowseName = BrowseNames.AddVariables;
              }
              publishedDataItemsState.AddVariables.OnCall = OnCallPublishedDataItemsAddVariablesHandler;*/
-        publishedDataItemsState.AddVariables = null;
+            publishedDataItemsState.AddVariables = null;
             publishedDataItemsState.RemoveVariables = null;
         }
 
