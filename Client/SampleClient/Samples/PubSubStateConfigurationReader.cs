@@ -20,6 +20,11 @@ namespace SampleClient.Samples
     public class PubSubStateConfigurationReader
     {
         #region Public Methods
+        /// <summary>
+        /// Read PubSub configuration
+        /// </summary>
+        /// <param name="clientSession"></param>
+        /// <returns></returns>
         public static PubSubConfigurationDataType PubSubConfigurationRead(ClientSession clientSession)
         {
 
@@ -69,6 +74,13 @@ namespace SampleClient.Samples
         #endregion
 
         #region Private Methods
+        /// <summary>
+        /// Add PublishedDataSets from PubSub configuration
+        /// </summary>
+        /// <param name="pubSubConfiguration"></param>
+        /// <param name="clientSession"></param>
+        /// <param name="referenceDescriptions"></param>
+        /// <param name="dataSetFolder"></param>
         private static void HandleAddPublishedDataSets(PubSubConfigurationDataType pubSubConfiguration,
                                                        ClientSession clientSession,
                                                        IList<ReferenceDescriptionEx> referenceDescriptions,
@@ -184,6 +196,12 @@ namespace SampleClient.Samples
             }
         }
 
+        /// <summary>
+        /// Add connection from PubSub configuration
+        /// </summary>
+        /// <param name="pubSubConfiguration"></param>
+        /// <param name="clientSession"></param>
+        /// <param name="referenceDescription"></param>
         private static void HandleAddConnection(PubSubConfigurationDataType pubSubConfiguration, ClientSession clientSession, ReferenceDescriptionEx referenceDescription)
         {
             NodeId nodeId = new NodeId(referenceDescription.NodeId.Identifier, referenceDescription.NodeId.NamespaceIndex);
@@ -272,11 +290,17 @@ namespace SampleClient.Samples
             };
             pubSubConfiguration.Connections.Add(pubSubConnectionDataType);
 
-            HandleAddWritterGroups(pubSubConnectionDataType, clientSession, connectionReferenceDescriptions);
+            HandleAddWriterGroups(pubSubConnectionDataType, clientSession, connectionReferenceDescriptions);
             HandleAddReaderGroups(pubSubConnectionDataType, clientSession, connectionReferenceDescriptions);
 
         }
 
+        /// <summary>
+        /// Add ReaderGroups from PubSub configuration
+        /// </summary>
+        /// <param name="pubSubConnectionDataType"></param>
+        /// <param name="clientSession"></param>
+        /// <param name="connectionReferenceDescriptions"></param>
         private static void HandleAddReaderGroups(PubSubConnectionDataType pubSubConnectionDataType, ClientSession clientSession, IList<ReferenceDescriptionEx> connectionReferenceDescriptions)
         {
 
@@ -335,12 +359,19 @@ namespace SampleClient.Samples
 
                 pubSubConnectionDataType.ReaderGroups.Add(readerGroup);
                 
-                HandleAddReaders(readerGroup, clientSession, readerGroupReferenceDescriptions);
+                HandleAddReaders(pubSubConnectionDataType.TransportProfileUri, readerGroup, clientSession, readerGroupReferenceDescriptions);
 
             }
         }
 
-        private static void HandleAddReaders(ReaderGroupDataType readerGroup, ClientSession clientSession, IList<ReferenceDescriptionEx> readerGroupReferenceDescriptions)
+        /// <summary>
+        /// Add Readers from PubSub configuration
+        /// </summary>
+        /// <param name="transportProfileUri"></param>
+        /// <param name="readerGroup"></param>
+        /// <param name="clientSession"></param>
+        /// <param name="readerGroupReferenceDescriptions"></param>
+        private static void HandleAddReaders(string transportProfileUri, ReaderGroupDataType readerGroup, ClientSession clientSession, IList<ReferenceDescriptionEx> readerGroupReferenceDescriptions)
         {
             // Read DataSetReaders
             var dataSetReaderReferences = from refDsc in readerGroupReferenceDescriptions
@@ -462,50 +493,157 @@ namespace SampleClient.Samples
                     targetVariables.Add(fieldTargetDataType);
                 }
 
-                // Read GroupVersion from MessageSettings Node  
-                var messageSettingsNode = (from refDsc in dataSetReaderReferenceDescriptions
-                                             where refDsc.TypeDefinition.IdType == IdType.Numeric &&
-                                                   (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.UadpDataSetReaderMessageType
-                                             select refDsc).First();
-                readValue = new ReadValueId();
-                NodeId messageSettingsNodeNodeId = (NodeId)messageSettingsNode.NodeId;
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.GroupVersion });
-                readValue.NodeId = translateResults?.First();
-                readValue.AttributeId = Attributes.Value;
-                dataValue = clientSession.Read(readValue);
-                uint groupVersionValue = (uint)dataValue.Value;
+                // MessageSettings
+                DataSetReaderMessageDataType messageSettings = null;
+                if (transportProfileUri == Profiles.PubSubMqttJsonTransport)
+                {
+                    var messageSettingsNode = (from refDsc in dataSetReaderReferenceDescriptions
+                                               where refDsc.TypeDefinition.IdType == IdType.Numeric &&
+                                                     (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.JsonDataSetReaderMessageType
+                                               select refDsc).First();
+                    readValue = new ReadValueId();
+                    NodeId messageSettingsNodeNodeId = (NodeId)messageSettingsNode.NodeId;
+                    // Read DataSetMessageContentMask from MessageSettings Node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.DataSetMessageContentMask });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    uint dataSetMessageContentMaskValue = (uint)dataValue.Value;
 
-                // Read DataSetOffset from MessageSettings Node
-                readValue = new ReadValueId();
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.DataSetOffset });
-                readValue.NodeId = translateResults?.First();
-                readValue.AttributeId = Attributes.Value;
-                dataValue = clientSession.Read(readValue);
-                ushort dataSetOffsetValue = (ushort)dataValue.Value;
+                    // Read NetworkMessageContentMask from MessageSettings Node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.NetworkMessageContentMask });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    uint networkMessageContentMaskValue = (uint)dataValue.Value;
 
-                // Read NetworkMessageNumber from MessageSettings Node
-                readValue = new ReadValueId();
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.NetworkMessageNumber });
-                readValue.NodeId = translateResults?.First();
-                readValue.AttributeId = Attributes.Value;
-                dataValue = clientSession.Read(readValue);
-                ushort networkMessageNumberValue = (ushort)dataValue.Value;
+                    messageSettings = new JsonDataSetReaderMessageDataType
+                    {
+                        DataSetMessageContentMask = dataSetMessageContentMaskValue,
+                        NetworkMessageContentMask = networkMessageContentMaskValue,
+                    };
+                }
 
-                // Read DataSetMessageContentMask from MessageSettings Node
-                readValue = new ReadValueId();
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.DataSetMessageContentMask });
-                readValue.NodeId = translateResults?.First();
-                readValue.AttributeId = Attributes.Value;
-                dataValue = clientSession.Read(readValue);
-                uint dataSetMessageContentMaskValue = (uint)dataValue.Value;
+                if (transportProfileUri == Profiles.PubSubUdpUadpTransport || transportProfileUri == Profiles.PubSubMqttUadpTransport)
+                {
+                    // Read GroupVersion from MessageSettings Node  
+                    var messageSettingsNode = (from refDsc in dataSetReaderReferenceDescriptions
+                                               where refDsc.TypeDefinition.IdType == IdType.Numeric &&
+                                                     (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.UadpDataSetReaderMessageType
+                                               select refDsc).First();
+                    readValue = new ReadValueId();
+                    NodeId messageSettingsNodeNodeId = (NodeId)messageSettingsNode.NodeId;
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.GroupVersion });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    uint groupVersionValue = (uint)dataValue.Value;
 
-                // Read NetworkMessageContentMask from MessageSettings Node
-                readValue = new ReadValueId();
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.NetworkMessageContentMask });
-                readValue.NodeId = translateResults?.First();
-                readValue.AttributeId = Attributes.Value;
-                dataValue = clientSession.Read(readValue);
-                uint networkMessageContentMaskValue = (uint)dataValue.Value;
+                    // Read DataSetOffset from MessageSettings Node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.DataSetOffset });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    ushort dataSetOffsetValue = (ushort)dataValue.Value;
+
+                    // Read NetworkMessageNumber from MessageSettings Node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.NetworkMessageNumber });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    ushort networkMessageNumberValue = (ushort)dataValue.Value;
+
+                    // Read DataSetMessageContentMask from MessageSettings Node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.DataSetMessageContentMask });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    uint dataSetMessageContentMaskValue = (uint)dataValue.Value;
+
+                    // Read NetworkMessageContentMask from MessageSettings Node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.NetworkMessageContentMask });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    uint networkMessageContentMaskValue = (uint)dataValue.Value;
+
+                    messageSettings = new UadpDataSetReaderMessageDataType
+                    {
+                        GroupVersion = groupVersionValue,
+                        DataSetOffset = dataSetOffsetValue,
+                        NetworkMessageNumber = networkMessageNumberValue,
+                        DataSetMessageContentMask = dataSetMessageContentMaskValue,
+                        NetworkMessageContentMask = networkMessageContentMaskValue,
+                    };
+                }
+
+                // TransportSettings
+                DataSetReaderTransportDataType transportSettings = new DataSetReaderTransportDataType();
+                if (transportProfileUri == Profiles.PubSubMqttJsonTransport || transportProfileUri == Profiles.PubSubMqttUadpTransport)
+                {
+                    var transportSettingsNode = (from refDsc in dataSetReaderReferenceDescriptions
+                                                 where refDsc.TypeDefinition.IdType == IdType.Numeric &&
+                                                 (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.BrokerDataSetReaderTransportType
+                                                 select refDsc)?.First();
+                    readValue = new ReadValueId();
+                    NodeId transportSettingsNodeId = (NodeId)transportSettingsNode.NodeId;
+                    NodeId transportSettingsType = (NodeId)transportSettingsNode.TypeDefinition;
+
+                    // Read TransportSettings->QueueName from TransportSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.QueueName });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    string queueName = (string)dataValue.Value;
+
+                    // Read TransportSettings->MetaDataQueueName from TransportSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.MetaDataQueueName });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    string metaDataQueueName = (string)dataValue.Value;
+
+                    // Read TransportSettings->RequestedDeliveryGuarantee from TransportSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.RequestedDeliveryGuarantee });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    BrokerTransportQualityOfService requestedDeliveryGuarantee = (BrokerTransportQualityOfService)dataValue.Value;
+
+                    // Read TransportSettings->ResourceUri from TransportSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.ResourceUri });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    string resourceUri = (string)dataValue.Value;
+
+                    // Read TransportSettings->AuthenticationProfileUri from TransportSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.AuthenticationProfileUri });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    string authenticationProfileUri = (string)dataValue.Value;
+
+                    transportSettings = new BrokerDataSetReaderTransportDataType
+                    {
+                        QueueName = queueName,
+                        MetaDataQueueName = metaDataQueueName,
+                        RequestedDeliveryGuarantee = requestedDeliveryGuarantee,
+                        ResourceUri = resourceUri,
+                        AuthenticationProfileUri = authenticationProfileUri
+                    };
+                }
 
                 DataSetReaderDataType readerDataType = new DataSetReaderDataType
                 {
@@ -518,28 +656,25 @@ namespace SampleClient.Samples
                     DataSetFieldContentMask = dataSetFieldContentMaskValue,
                     MessageReceiveTimeout = messageReceiveTimeoutValue,
                     KeyFrameCount = keyFrameCountValue,
-
                     SubscribedDataSet = new ExtensionObject(new TargetVariablesDataType
                     {
                         TargetVariables = targetVariables,
                     }),
-                    MessageSettings = new ExtensionObject(new UadpDataSetReaderMessageDataType
-                    {
-                        GroupVersion = groupVersionValue,
-                        DataSetOffset = dataSetOffsetValue,
-                        NetworkMessageNumber = networkMessageNumberValue,
-                        DataSetMessageContentMask = dataSetMessageContentMaskValue,
-                        NetworkMessageContentMask = networkMessageContentMaskValue,
-                       
-                    }),
-                    
+                    MessageSettings = new ExtensionObject(messageSettings),
+                    TransportSettings = new ExtensionObject(transportSettings)
                 };
 
                 readerGroup.DataSetReaders.Add(readerDataType);
             }
         }
 
-        private static void HandleAddWritterGroups(PubSubConnectionDataType pubSubConnectionDataType, ClientSession clientSession, IList<ReferenceDescriptionEx> connectionReferenceDescriptions)
+        /// <summary>
+        /// Add WriterGroups from PubSub configuration
+        /// </summary>
+        /// <param name="pubSubConnectionDataType"></param>
+        /// <param name="clientSession"></param>
+        /// <param name="connectionReferenceDescriptions"></param>
+        private static void HandleAddWriterGroups(PubSubConnectionDataType pubSubConnectionDataType, ClientSession clientSession, IList<ReferenceDescriptionEx> connectionReferenceDescriptions)
         {
             // Read ReaderGroups
             var writerGroupsReferences = from refDsc in connectionReferenceDescriptions
@@ -576,98 +711,10 @@ namespace SampleClient.Samples
                 dataValue = clientSession.Read(readValue);
                 uint maxNetworkMessageSizeValue = (uint)dataValue.Value;
 
-
-                // Read MessageSettings->DataSetOrdering from MessageSettings node
-                var messageNode = (from refDsc in writerGroupReferenceDescriptions
-                                        where refDsc.TypeDefinition.IdType == IdType.Numeric &&
-                                              (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.UadpWriterGroupMessageType
-                                        select refDsc)?.First();
-                readValue = new ReadValueId();
-                NodeId messageNodeNodeId = (NodeId)messageNode.NodeId;
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(messageNodeNodeId, new List<QualifiedName> { BrowseNames.DataSetOrdering });
-                readValue.NodeId = translateResults?.First();
-                readValue.AttributeId = Attributes.Value;
-                dataValue = clientSession.Read(readValue);
-                DataSetOrderingType dataSetOrderingValue = (DataSetOrderingType)dataValue.Value;
-
-                // Read MessageSettings->GroupVersion from MessageSettings node
-                readValue = new ReadValueId();  
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(messageNodeNodeId, new List<QualifiedName> { BrowseNames.GroupVersion });
-                readValue.NodeId = translateResults?.First();
-                readValue.AttributeId = Attributes.Value;
-                dataValue = clientSession.Read(readValue);
-                uint groupVersionValue = (uint)dataValue.Value;
-
-                // Read MessageSettings->NetworkMessageContentMask from MessageSettings node
-                readValue = new ReadValueId();
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(messageNodeNodeId, new List<QualifiedName> { BrowseNames.NetworkMessageContentMask });
-                readValue.NodeId = translateResults?.First();
-                readValue.AttributeId = Attributes.Value;
-                dataValue = clientSession.Read(readValue);
-                uint networkMessageContentMaskValue = (uint)dataValue.Value;
-
-                // Read MessageSettings->PublishingOffset from MessageSettings node
-                readValue = new ReadValueId();
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(messageNodeNodeId, new List<QualifiedName> { BrowseNames.PublishingOffset });
-                readValue.NodeId = translateResults?.First();
-                readValue.AttributeId = Attributes.Value;
-                dataValue = clientSession.Read(readValue);
-                double[] publishingOffsetValue = (double[])dataValue.Value;
-
-                // Read MessageSettings->SamplingOffset from MessageSettings node
-                readValue = new ReadValueId();
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(messageNodeNodeId, new List<QualifiedName> { BrowseNames.SamplingOffset });
-                readValue.NodeId = translateResults?.First();
-                readValue.AttributeId = Attributes.Value;
-                dataValue = clientSession.Read(readValue);
-                double samplingOffsetValue = (double)dataValue.Value;
-
-                // Read TransportSettings depending on type
-                var transportSettingsNode = (from refDsc in writerGroupReferenceDescriptions
-                                   where refDsc.TypeDefinition.IdType == IdType.Numeric &&
-                                         (  (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.DatagramWriterGroupTransportType ||
-                                            (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.BrokerWriterGroupTransportType )
-                                             select refDsc)?.First();
-                readValue = new ReadValueId();
-                NodeId transportSettingsNodeId = (NodeId)transportSettingsNode.NodeId;
-                NodeId transportSettingsType = (NodeId)transportSettingsNode.TypeDefinition;
-
-                WriterGroupTransportDataType transportSettings = null;
-                switch((uint)transportSettingsType.Identifier)
-                {
-                    case ObjectTypes.DatagramWriterGroupTransportType:
-                    {
-                            // Read TransportSettings->MessageRepeatCount from TransportSettings node
-                            readValue = new ReadValueId();
-                            translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.MessageRepeatCount });
-                            readValue.NodeId = translateResults?.First();
-                            readValue.AttributeId = Attributes.Value;
-                            dataValue = clientSession.Read(readValue);
-                            byte messageRepeatCount = (byte)dataValue.Value;
-
-                            // Read TransportSettings->MessageRepeatDelay from TransportSettings node
-                            readValue = new ReadValueId();
-                            translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.MessageRepeatDelay });
-                            readValue.NodeId = translateResults?.First();
-                            readValue.AttributeId = Attributes.Value;
-                            dataValue = clientSession.Read(readValue);
-                            double messageRepeatDelay = (double)dataValue.Value;
-
-                            transportSettings = new DatagramWriterGroupTransportDataType
-                            { 
-                                MessageRepeatCount = messageRepeatCount,
-                                MessageRepeatDelay = messageRepeatDelay
-                            };
-                            break;
-                    }
-                    case ObjectTypes.BrokerWriterGroupTransportType: // Add support for this type
-                        break;
-                }
-
                 // Read HeaderLayoutUri
                 var headerLayoutUriNodeId = (from refDsc in writerGroupReferenceDescriptions
-                                                   where refDsc.BrowseName.Name.Equals(BrowseNames.HeaderLayoutUri)
-                                                   select refDsc).First();
+                                             where refDsc.BrowseName.Name.Equals(BrowseNames.HeaderLayoutUri)
+                                             select refDsc).First();
                 readValue = new ReadValueId();
                 readValue.NodeId = (NodeId)headerLayoutUriNodeId.NodeId;
                 readValue.AttributeId = Attributes.Value;
@@ -676,8 +723,8 @@ namespace SampleClient.Samples
 
                 // Read PublishingInterval
                 var publishingIntervalNodeId = (from refDsc in writerGroupReferenceDescriptions
-                                             where refDsc.BrowseName.Name.Equals(BrowseNames.PublishingInterval)
-                                             select refDsc).First();
+                                                where refDsc.BrowseName.Name.Equals(BrowseNames.PublishingInterval)
+                                                select refDsc).First();
                 readValue = new ReadValueId();
                 readValue.NodeId = (NodeId)publishingIntervalNodeId.NodeId;
                 readValue.AttributeId = Attributes.Value;
@@ -686,8 +733,8 @@ namespace SampleClient.Samples
 
                 // Read WriterGroupId
                 var writerGroupIdNodeId = (from refDsc in writerGroupReferenceDescriptions
-                                                where refDsc.BrowseName.Name.Equals(BrowseNames.WriterGroupId)
-                                                select refDsc).First();
+                                           where refDsc.BrowseName.Name.Equals(BrowseNames.WriterGroupId)
+                                           select refDsc).First();
                 readValue = new ReadValueId();
                 readValue.NodeId = (NodeId)writerGroupIdNodeId.NodeId;
                 readValue.AttributeId = Attributes.Value;
@@ -703,19 +750,175 @@ namespace SampleClient.Samples
                 readValue.AttributeId = Attributes.Value;
                 dataValue = clientSession.Read(readValue);
                 double keepAliveTimeValue = (double)dataValue.Value;
-               
-                WriterGroupDataType writerGroup = new WriterGroupDataType
+
+                WriterGroupDataType writerGroup = null;
+
+                // Read TransportSettings depending on type
+                var transportSettingsNode = (from refDsc in writerGroupReferenceDescriptions
+                                             where refDsc.TypeDefinition.IdType == IdType.Numeric &&
+                                                   ((uint)refDsc.TypeDefinition.Identifier == ObjectTypes.DatagramWriterGroupTransportType ||
+                                                      (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.BrokerWriterGroupTransportType)
+                                             select refDsc)?.First();
+                readValue = new ReadValueId();
+                NodeId transportSettingsNodeId = (NodeId)transportSettingsNode.NodeId;
+                NodeId transportSettingsType = (NodeId)transportSettingsNode.TypeDefinition;
+
+                WriterGroupTransportDataType transportSettings = null;
+                switch ((uint)transportSettingsType.Identifier)
                 {
-                    Name = writerGroupReference.BrowseName.Name,
-                    Enabled = pubSubStateValue != PubSubState.Disabled,
-                    MessageSettings = new ExtensionObject(new UadpWriterGroupMessageDataType
+                    case ObjectTypes.DatagramWriterGroupTransportType:
+                        // Read TransportSettings->MessageRepeatCount from TransportSettings node
+                        readValue = new ReadValueId();
+                        translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.MessageRepeatCount });
+                        readValue.NodeId = translateResults?.First();
+                        readValue.AttributeId = Attributes.Value;
+                        dataValue = clientSession.Read(readValue);
+                        byte messageRepeatCount = (byte)dataValue.Value;
+
+                        // Read TransportSettings->MessageRepeatDelay from TransportSettings node
+                        readValue = new ReadValueId();
+                        translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.MessageRepeatDelay });
+                        readValue.NodeId = translateResults?.First();
+                        readValue.AttributeId = Attributes.Value;
+                        dataValue = clientSession.Read(readValue);
+                        double messageRepeatDelay = (double)dataValue.Value;
+
+                        transportSettings = new DatagramWriterGroupTransportDataType
+                        {
+                            MessageRepeatCount = messageRepeatCount,
+                            MessageRepeatDelay = messageRepeatDelay
+                        };
+                        break;
+                    case ObjectTypes.BrokerWriterGroupTransportType:
+
+                        // Read TransportSettings->QueueName from TransportSettings node
+                        readValue = new ReadValueId();
+                        translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.QueueName });
+                        readValue.NodeId = translateResults?.First();
+                        readValue.AttributeId = Attributes.Value;
+                        dataValue = clientSession.Read(readValue);
+                        string queueName = (string)dataValue.Value;
+
+                        // Read TransportSettings->RequestedDeliveryGuarantee from TransportSettings node
+                        readValue = new ReadValueId();
+                        translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.RequestedDeliveryGuarantee });
+                        readValue.NodeId = translateResults?.First();
+                        readValue.AttributeId = Attributes.Value;
+                        dataValue = clientSession.Read(readValue);
+                        BrokerTransportQualityOfService requestedDeliveryGuarantee = (BrokerTransportQualityOfService)dataValue.Value;
+
+                        // Read TransportSettings->ResourceUri from TransportSettings node
+                        readValue = new ReadValueId();
+                        translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.ResourceUri });
+                        readValue.NodeId = translateResults?.First();
+                        readValue.AttributeId = Attributes.Value;
+                        dataValue = clientSession.Read(readValue);
+                        string resourceUri = (string)dataValue.Value;
+
+                        // Read TransportSettings->AuthenticationProfileUri from TransportSettings node
+                        readValue = new ReadValueId();
+                        translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.AuthenticationProfileUri });
+                        readValue.NodeId = translateResults?.First();
+                        readValue.AttributeId = Attributes.Value;
+                        dataValue = clientSession.Read(readValue);
+                        string authenticationProfileUri = (string)dataValue.Value;
+
+                        transportSettings = new BrokerWriterGroupTransportDataType
+                        {
+                            QueueName = queueName,
+                            ResourceUri = resourceUri,
+                            AuthenticationProfileUri = authenticationProfileUri,
+                            RequestedDeliveryGuarantee = requestedDeliveryGuarantee
+                        };
+
+                        break;
+                }
+
+                WriterGroupMessageDataType messageSettings = null;
+
+                if (pubSubConnectionDataType.TransportProfileUri == Profiles.PubSubMqttJsonTransport)
+                {
+                    var messageNode = (from refDsc in writerGroupReferenceDescriptions
+                                       where refDsc.TypeDefinition.IdType == IdType.Numeric &&
+                                       (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.JsonWriterGroupMessageType
+                                       select refDsc).First();
+                    readValue = new ReadValueId();
+                    NodeId messageNodeNodeId = (NodeId)messageNode.NodeId;
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageNodeNodeId, new List<QualifiedName> { BrowseNames.NetworkMessageContentMask });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    uint networkMessageContentMaskValue = (uint)dataValue.Value;
+
+                    messageSettings = new JsonWriterGroupMessageDataType
+                    {
+                        NetworkMessageContentMask = networkMessageContentMaskValue
+                    };
+                }
+
+                if (pubSubConnectionDataType.TransportProfileUri == Profiles.PubSubUdpUadpTransport ||
+                    pubSubConnectionDataType.TransportProfileUri == Profiles.PubSubMqttUadpTransport)
+                {
+                    // Read MessageSettings->DataSetOrdering from MessageSettings node
+                    var messageNode = (from refDsc in writerGroupReferenceDescriptions
+                                       where refDsc.TypeDefinition.IdType == IdType.Numeric &&
+                                       (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.UadpWriterGroupMessageType
+                                       select refDsc).First();
+                    readValue = new ReadValueId();
+                    NodeId messageNodeNodeId = (NodeId)messageNode.NodeId;
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageNodeNodeId, new List<QualifiedName> { BrowseNames.DataSetOrdering });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    DataSetOrderingType dataSetOrderingValue = (DataSetOrderingType)dataValue.Value;
+
+                    // Read MessageSettings->GroupVersion from MessageSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageNodeNodeId, new List<QualifiedName> { BrowseNames.GroupVersion });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    uint groupVersionValue = (uint)dataValue.Value;
+
+                    // Read MessageSettings->NetworkMessageContentMask from MessageSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageNodeNodeId, new List<QualifiedName> { BrowseNames.NetworkMessageContentMask });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    uint networkMessageContentMaskValue = (uint)dataValue.Value;
+
+                    // Read MessageSettings->PublishingOffset from MessageSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageNodeNodeId, new List<QualifiedName> { BrowseNames.PublishingOffset });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    double[] publishingOffsetValue = (double[])dataValue.Value;
+
+                    // Read MessageSettings->SamplingOffset from MessageSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageNodeNodeId, new List<QualifiedName> { BrowseNames.SamplingOffset });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    double samplingOffsetValue = (double)dataValue.Value;
+
+                    messageSettings = new UadpWriterGroupMessageDataType
                     {
                         DataSetOrdering = dataSetOrderingValue,
                         GroupVersion = groupVersionValue,
                         NetworkMessageContentMask = networkMessageContentMaskValue,
                         //PublishingOffset = { publishingOffsetValue },
                         SamplingOffset = samplingOffsetValue
-                    }),
+                    };
+               }
+
+                writerGroup = new WriterGroupDataType
+                {
+                    Name = writerGroupReference.BrowseName.Name,
+                    Enabled = pubSubStateValue != PubSubState.Disabled,
+                    MessageSettings = new ExtensionObject(messageSettings),
                     TransportSettings = new ExtensionObject(transportSettings),
                     HeaderLayoutUri = headerLayoutUriValue,
                     // LocaleIds = 
@@ -729,11 +932,18 @@ namespace SampleClient.Samples
 
                 pubSubConnectionDataType.WriterGroups.Add(writerGroup);
 
-                HandleAddWriters(writerGroup, clientSession, writerGroupReferenceDescriptions);
+                HandleAddWriters(pubSubConnectionDataType.TransportProfileUri, writerGroup, clientSession, writerGroupReferenceDescriptions);
             }
         }
 
-        private static void HandleAddWriters(WriterGroupDataType writerGroup, ClientSession clientSession, IList<ReferenceDescriptionEx> writerGroupReferenceDescriptions)
+        /// <summary>
+        /// Add Writers from PubSub configuration
+        /// </summary>
+        /// <param name="transportProfileUri"></param>
+        /// <param name="writerGroup"></param>
+        /// <param name="clientSession"></param>
+        /// <param name="writerGroupReferenceDescriptions"></param>
+        private static void HandleAddWriters(string transportProfileUri, WriterGroupDataType writerGroup, ClientSession clientSession, IList<ReferenceDescriptionEx> writerGroupReferenceDescriptions)
         {
             // Read DataSetReaders
             var dataSetWriterReferences = from refDsc in writerGroupReferenceDescriptions
@@ -744,8 +954,8 @@ namespace SampleClient.Samples
             {
                 NodeId dataSetWriterNodeId = (NodeId)dataSetWriterReference.NodeId;
 
-                var dataSetWriterReferenceDescriptions = clientSession.Browse(dataSetWriterNodeId, 
-                                                                                new BrowseDescriptionEx {BrowseDirection = BrowseDirection.Both});
+                var dataSetWriterReferenceDescriptions = clientSession.Browse(dataSetWriterNodeId,
+                    new BrowseDescriptionEx { BrowseDirection = BrowseDirection.Both });
 
                 // Read Enabled State from Status Node  
                 var enabledStateNode = (from refDsc in dataSetWriterReferenceDescriptions
@@ -780,47 +990,11 @@ namespace SampleClient.Samples
                 dataValue = clientSession.Read(readValue);
                 uint dataSetFieldContentMaskValue = (uint)dataValue.Value;
 
-                // Read DataSetOffset from MessageSettings Node  
-                var messageSettingsNode = (from refDsc in dataSetWriterReferenceDescriptions
-                                           where refDsc.TypeDefinition.IdType == IdType.Numeric &&
-                                                 (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.UadpDataSetWriterMessageType
-                                           select refDsc).First();
-                readValue = new ReadValueId();
-                NodeId messageSettingsNodeNodeId = (NodeId)messageSettingsNode.NodeId;
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.DataSetOffset });
-                readValue.NodeId = translateResults?.First();
-                readValue.AttributeId = Attributes.Value;
-                dataValue = clientSession.Read(readValue);
-                ushort dataSetOffsetValue = (ushort)dataValue.Value;
-
-                // Read NetworkMessageNumber from MessageSettings Node
-                readValue = new ReadValueId();
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.NetworkMessageNumber });
-                readValue.NodeId = translateResults?.First();
-                readValue.AttributeId = Attributes.Value;
-                dataValue = clientSession.Read(readValue);
-                ushort networkMessageNumberValue = (ushort)dataValue.Value;
-
-                // Read DataSetMessageContentMask from MessageSettings Node
-                readValue = new ReadValueId();
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.DataSetMessageContentMask });
-                readValue.NodeId = translateResults?.First();
-                readValue.AttributeId = Attributes.Value;
-                dataValue = clientSession.Read(readValue);
-                uint dataSetMessageContentMaskValue = (uint)dataValue.Value;
-
-                // Read ConfiguredSize from MessageSettings Node
-                readValue = new ReadValueId();
-                translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.ConfiguredSize });
-                readValue.NodeId = translateResults?.First();
-                readValue.AttributeId = Attributes.Value;
-                dataValue = clientSession.Read(readValue);
-                ushort configuredSizeValue = (ushort)dataValue.Value;
-
                 // Read KeyFrameCount
-                var keyFrameCountNodeId = (from refDsc in dataSetWriterReferenceDescriptions
-                                                     where refDsc.BrowseName.Name.Equals(BrowseNames.KeyFrameCount)
-                                                     select refDsc).First();
+                var keyFrameCountNodeId = (from refDsc in
+                                               dataSetWriterReferenceDescriptions
+                                           where refDsc.BrowseName.Name.Equals(BrowseNames.KeyFrameCount)
+                                           select refDsc).First();
                 readValue = new ReadValueId();
                 readValue.NodeId = (NodeId)keyFrameCountNodeId.NodeId;
                 readValue.AttributeId = Attributes.Value;
@@ -829,13 +1003,155 @@ namespace SampleClient.Samples
 
                 // Read DataSetName
                 var dataSetNodeId = (from refDsc in dataSetWriterReferenceDescriptions
-                                           where ((uint)refDsc.ReferenceTypeId.Identifier == (uint)ReferenceTypeIds.DataSetToWriter.Identifier)
-                                           select refDsc).First();
+                                     where ((uint)refDsc.ReferenceTypeId.Identifier == (uint)ReferenceTypeIds.DataSetToWriter.Identifier)
+                                     select refDsc).First();
                 readValue = new ReadValueId();
                 readValue.NodeId = (NodeId)dataSetNodeId.NodeId;
                 readValue.AttributeId = Attributes.BrowseName;
                 dataValue = clientSession.Read(readValue);
                 string dataSetNameValue = ((QualifiedName)dataValue.Value).Name;
+
+                // MessageSettings
+                DataSetWriterMessageDataType messageSettings = null;
+                if (transportProfileUri == Profiles.PubSubMqttJsonTransport)
+                {
+                    // Read DataSetMessageContentMask from MessageSettings Node
+                    var messageSettingsNode = (from refDsc in dataSetWriterReferenceDescriptions
+                                               where refDsc.TypeDefinition.IdType == IdType.Numeric &&
+                                                     (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.JsonDataSetWriterMessageType
+                                               select refDsc).First();
+                    readValue = new ReadValueId();
+                    NodeId messageSettingsNodeNodeId = (NodeId)messageSettingsNode.NodeId;
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.DataSetMessageContentMask });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    uint dataSetMessageContentMaskValue = (uint)dataValue.Value;
+
+                    messageSettings = new JsonDataSetWriterMessageDataType
+                    {
+                        DataSetMessageContentMask = dataSetMessageContentMaskValue
+                    };
+                }
+
+                if (transportProfileUri == Profiles.PubSubUdpUadpTransport || transportProfileUri == Profiles.PubSubMqttUadpTransport)
+                {
+                    // Read DataSetOffset from MessageSettings Node  
+                    var messageSettingsNode = (from refDsc in dataSetWriterReferenceDescriptions
+                                               where refDsc.TypeDefinition.IdType == IdType.Numeric &&
+                                                     (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.UadpDataSetWriterMessageType
+                                               select refDsc).First();
+                    readValue = new ReadValueId();
+                    NodeId messageSettingsNodeNodeId = (NodeId)messageSettingsNode.NodeId;
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.DataSetOffset });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    ushort dataSetOffsetValue = (ushort)dataValue.Value;
+
+                    // Read NetworkMessageNumber from MessageSettings Node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.NetworkMessageNumber });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    ushort networkMessageNumberValue = (ushort)dataValue.Value;
+
+                    // Read DataSetMessageContentMask from MessageSettings Node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.DataSetMessageContentMask });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    uint dataSetMessageContentMaskValue = (uint)dataValue.Value;
+
+                    // Read ConfiguredSize from MessageSettings Node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(messageSettingsNodeNodeId, new List<QualifiedName> { BrowseNames.ConfiguredSize });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    ushort configuredSizeValue = (ushort)dataValue.Value;
+
+                    messageSettings = new UadpDataSetWriterMessageDataType
+                    {
+                        DataSetOffset = dataSetOffsetValue,
+                        NetworkMessageNumber = networkMessageNumberValue,
+                        DataSetMessageContentMask = dataSetMessageContentMaskValue,
+                        ConfiguredSize = configuredSizeValue,
+                    };
+                }
+
+                // TransportSettings
+                DataSetWriterTransportDataType transportSettings = new DataSetWriterTransportDataType();
+                if (transportProfileUri == Profiles.PubSubMqttJsonTransport || transportProfileUri == Profiles.PubSubMqttUadpTransport)
+                {
+                    var transportSettingsNode = (from refDsc in dataSetWriterReferenceDescriptions
+                                                 where refDsc.TypeDefinition.IdType == IdType.Numeric &&
+                                                 (uint)refDsc.TypeDefinition.Identifier == ObjectTypes.BrokerDataSetWriterTransportType
+                                                 select refDsc)?.First();
+                    readValue = new ReadValueId();
+                    NodeId transportSettingsNodeId = (NodeId)transportSettingsNode.NodeId;
+                    NodeId transportSettingsType = (NodeId)transportSettingsNode.TypeDefinition;
+
+                    // Read TransportSettings->QueueName from TransportSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.QueueName });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    string queueName = (string)dataValue.Value;
+
+                    // Read TransportSettings->MetaDataQueueName from TransportSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.MetaDataQueueName });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    string metaDataQueueName = (string)dataValue.Value;
+
+                    // Read TransportSettings->RequestedDeliveryGuarantee from TransportSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.RequestedDeliveryGuarantee });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    BrokerTransportQualityOfService requestedDeliveryGuarantee = (BrokerTransportQualityOfService)dataValue.Value;
+
+                    // Read TransportSettings->ResourceUri from TransportSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.ResourceUri });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    string resourceUri = (string)dataValue.Value;
+
+                    // Read TransportSettings->AuthenticationProfileUri from TransportSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.AuthenticationProfileUri });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    string authenticationProfileUri = (string)dataValue.Value;
+
+                    // Read TransportSettings->MetaDataUpdateTime from TransportSettings node
+                    readValue = new ReadValueId();
+                    translateResults = clientSession.TranslateBrowsePathToNodeIds(transportSettingsNodeId, new List<QualifiedName> { BrowseNames.MetaDataUpdateTime });
+                    readValue.NodeId = translateResults?.First();
+                    readValue.AttributeId = Attributes.Value;
+                    dataValue = clientSession.Read(readValue);
+                    double metaDataUpdateTime = (double)dataValue.Value;
+
+                    transportSettings = new BrokerDataSetWriterTransportDataType
+                    {
+                        QueueName = queueName,
+                        MetaDataQueueName = metaDataQueueName,
+                        RequestedDeliveryGuarantee = requestedDeliveryGuarantee,
+                        ResourceUri = resourceUri,
+                        AuthenticationProfileUri = authenticationProfileUri,
+                        MetaDataUpdateTime = metaDataUpdateTime
+                    };
+                }
 
                 DataSetWriterDataType writerDataType = new DataSetWriterDataType
                 {
@@ -843,13 +1159,8 @@ namespace SampleClient.Samples
                     Enabled = pubSubStateValue != PubSubState.Disabled,
                     DataSetWriterId = dataSetWriterIdValue,
                     DataSetFieldContentMask = dataSetFieldContentMaskValue,
-                    MessageSettings = new ExtensionObject(new UadpDataSetWriterMessageDataType
-                    {
-                        DataSetOffset = dataSetOffsetValue,
-                        NetworkMessageNumber = networkMessageNumberValue,
-                        DataSetMessageContentMask = dataSetMessageContentMaskValue,
-                        ConfiguredSize = configuredSizeValue,
-                    }),
+                    MessageSettings = new ExtensionObject(messageSettings),
+                    TransportSettings = new ExtensionObject(transportSettings),
                     KeyFrameCount = keyFrameCountValue,
                     DataSetName = dataSetNameValue,
                 };
