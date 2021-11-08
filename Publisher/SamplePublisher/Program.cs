@@ -1005,7 +1005,7 @@ namespace SamplePublisher
         private static void DisplayConfigurationState(UaPubSubConfigurator configurator)
         {
             object configurationObject = configurator.PubSubConfiguration;
-            Console.WriteLine("\nConfiguration  \t\t\t\t\t\t-ConfigId={0}, State={1}",
+            Console.WriteLine("\nConfiguration  \t\t\t\t\t\t\t\t-ConfigId={0}, State={1}",
                 configurator.FindIdForObject(configurationObject), configurator.FindStateForObject(configurationObject));
             foreach (var connection in configurator.PubSubConfiguration.Connections)
             {
@@ -1013,21 +1013,21 @@ namespace SamplePublisher
                     connection.Name, configurator.FindIdForObject(connection), configurator.FindStateForObject(connection));
                 foreach (var writerGroup in connection.WriterGroups)
                 {
-                    Console.WriteLine("  WriterGroup Name ='{0}' WriterGroupId={1}\t-ConfigId={2}, State={3}",
+                    Console.WriteLine("  WriterGroup Name ='{0}' WriterGroupId={1}\t\t\t-ConfigId={2}, State={3}",
                         writerGroup.Name, writerGroup.WriterGroupId, configurator.FindIdForObject(writerGroup), configurator.FindStateForObject(writerGroup));
                     foreach (var dataSetWriter in writerGroup.DataSetWriters)
                     {
-                        Console.WriteLine("    DataSetWriter Name ='{0}' DataSetWriterId={1}\t-ConfigId={2}, State={3}",
+                        Console.WriteLine("    DataSetWriter Name ='{0}' DataSetWriterId={1}\t\t-ConfigId={2}, State={3}",
                            dataSetWriter.Name, dataSetWriter.DataSetWriterId, configurator.FindIdForObject(dataSetWriter), configurator.FindStateForObject(dataSetWriter));
                     }
                 }
                 foreach (var readerGroup in connection.ReaderGroups)
                 {
-                    Console.WriteLine("  ReaderGroup Name ='{0}'\t-ConfigId={1}, State={2}",
+                    Console.WriteLine("  ReaderGroup Name ='{0}'\t\t\t-ConfigId={1}, State={2}",
                         readerGroup.Name, configurator.FindIdForObject(readerGroup), configurator.FindStateForObject(readerGroup));
                     foreach (var dataSetReader in readerGroup.DataSetReaders)
                     {
-                        Console.WriteLine("    DataSetReader Name ='{0}'\t-ConfigId={1}, State={2}",
+                        Console.WriteLine("    DataSetReader Name ='{0}'\t\t-ConfigId={1}, State={2}",
                             dataSetReader.Name, configurator.FindIdForObject(dataSetReader), configurator.FindStateForObject(dataSetReader));
                     }
                 }
