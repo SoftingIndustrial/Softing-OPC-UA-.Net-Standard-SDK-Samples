@@ -4,7 +4,7 @@
  *
  * The Software is subject to the Softing Industrial Automation GmbH’s
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en/
+ * https://industrial.softing.com/LA_SIA_EN
  *
  * The Software is based on the OPC Foundation, Inc.’s software. This
  * original OPC Foundation’s software can be found here:
