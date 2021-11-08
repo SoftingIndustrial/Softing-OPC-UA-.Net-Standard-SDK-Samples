@@ -24,7 +24,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>713f56ad-9bfe-4f4e-bbd2-20222a2b94a8</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -40,7 +40,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>64a49e71-a1a2-4657-bb06-dcfb6a7f8f29</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -56,7 +56,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>da1a9f2e-20e0-47d0-8ade-876237374912</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -72,7 +72,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>8c999fff-4766-44b3-a899-f1fb3341ca5e</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -81,8 +81,8 @@
           <String>00000000-0000-0000-0000-000000000000</String>
         </DataSetClassId>
         <ConfigurationVersion>
-          <MajorVersion>1</MajorVersion>
-          <MinorVersion>1</MinorVersion>
+          <MajorVersion>689040000</MajorVersion>
+          <MinorVersion>689040000</MinorVersion>
         </ConfigurationVersion>
       </DataSetMetaData>
       <ExtensionFields>
@@ -126,7 +126,7 @@
           </Key>
           <Value>
             <Value>
-              <DateTime xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">2021-04-13T21:00:00Z</DateTime>
+              <DateTime xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">2021-11-07T22:00:00Z</DateTime>
             </Value>
           </Value>
         </KeyValuePair>
@@ -240,7 +240,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>b9cf2d70-8722-4152-ace2-b07b1174d3e1</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -256,7 +256,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>30d75445-3afb-40a7-b786-2a752b2e4bae</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -272,7 +272,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>347535cb-9ce6-4de7-8d20-3da9cfe96e7a</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -288,7 +288,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>67cc390d-f057-4256-b403-f053f971e326</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -304,7 +304,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>693d26c9-6f86-459b-bd06-cb4231bfca13</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -320,7 +320,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>394ad02c-d56a-4707-ad6b-6ffe663d4f2f</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -336,7 +336,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>9ea5a684-c771-4718-a594-645e7c598a83</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -352,7 +352,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>ec0216dc-7742-4c20-9df9-305c435ea523</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -368,7 +368,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>fc3b30ad-9647-4136-bf67-8120b6d0e410</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -377,8 +377,8 @@
           <String>00000000-0000-0000-0000-000000000000</String>
         </DataSetClassId>
         <ConfigurationVersion>
-          <MajorVersion>1</MajorVersion>
-          <MinorVersion>1</MinorVersion>
+          <MajorVersion>689040000</MajorVersion>
+          <MinorVersion>689040000</MinorVersion>
         </ConfigurationVersion>
       </DataSetMetaData>
       <ExtensionFields />
@@ -552,7 +552,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>cc8d627a-d6b5-40b4-9fb4-12b756d08715</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -568,7 +568,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>93d50043-99ab-44a9-91d0-c68657a850b4</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -584,7 +584,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>8d0f74bb-c114-4d85-a907-329ed73c9bc7</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -600,7 +600,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>2df1eed8-e36f-49d8-aaeb-c5a508f303b6</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -616,7 +616,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>fbf113cb-2fd1-4c09-b16b-70f9216386e6</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -632,7 +632,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>f920a68c-7f4e-4939-9f0e-2d8fbdbb2855</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -648,7 +648,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>0ace9aec-b0ca-462f-b4c0-fb6274fb4562</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -664,7 +664,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>d3c225eb-3981-4c08-bb4f-d33a09907f2c</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -680,7 +680,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>9dc2b518-2e95-497c-9dfb-9ec3b3c6cba3</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -696,7 +696,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>2646c431-7ac9-4c7b-9252-9ccd554bfa0a</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -712,7 +712,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>a9d8b07f-f31f-478f-ab95-23b316b5e471</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -728,7 +728,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>7cd6bee0-ad1f-4c34-be8a-81180c0ff2fe</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -744,7 +744,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>4d418f5d-097a-4987-b391-ba944aa8e5e8</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -760,7 +760,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>b4214b27-542b-4851-8f0e-c487051214bf</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -776,7 +776,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>b2e732de-a90b-46f2-9299-a9ecb138d83d</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -792,7 +792,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>58c598cd-c480-45be-8abb-e41506235f7a</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -808,7 +808,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>3924bf6f-271c-41ce-93cd-1d5c8a6d5475</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -824,7 +824,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>e26f5186-6666-4adb-8ea6-6ba911d9ebe1</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -840,7 +840,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>ffe3f48f-814c-4dcb-b32f-cd895bd0c447</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -856,7 +856,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>211fbd86-4646-4c0b-bc22-a67557de3abf</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -872,7 +872,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>a536bceb-9f96-4cdc-9a2d-c263aafcb2e2</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -888,7 +888,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>353b6af7-06b6-4e83-9ae1-bbb6f91b4bd8</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -904,7 +904,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>b005d5c9-ec25-45ca-a3f0-676f72a7b34a</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -920,7 +920,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>e4cccfee-7e8f-4dde-8a65-71e0af318f87</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -936,7 +936,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>2709f6b9-4e64-4760-8ed0-8c75c2907485</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -952,7 +952,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>1d7db785-35be-404f-ae79-18d9d543ee7a</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -968,7 +968,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>9eb8d5ff-530a-4b3c-b586-380ee35866bb</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -984,7 +984,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>d87c1268-913b-4b54-ae15-326062a9d193</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1000,7 +1000,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>19209ad7-4f4b-4c86-82e0-85998be0f4f4</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1016,7 +1016,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>5a8ab8b9-a8c7-44ca-81b3-7b16d4c3c553</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1032,7 +1032,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>d38670ae-b633-47d0-bb9d-473a23459583</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1048,7 +1048,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>5c0ced0b-20e2-426e-9b64-992f39b04019</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1064,7 +1064,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>38e849e4-41a1-47eb-939b-9c4969102550</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1080,7 +1080,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>3e4efc77-c525-43aa-9a01-fdc6a4732864</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1096,7 +1096,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>48d10d25-a51e-4344-af8a-eb2eaba306ae</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1112,7 +1112,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>a2f4e060-027b-45f5-8b2a-ed3f7740d03f</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1128,7 +1128,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>881d9ca1-57c9-4201-8e4b-4dbd3843a947</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1144,7 +1144,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>59d4ff4e-a70f-485c-b2e9-4de702bc8e81</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1160,7 +1160,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>7bcd6c6c-657c-40d8-ad2f-c826a239bff1</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1176,7 +1176,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>c0f3fd4f-3aea-4922-a64b-e66804753a57</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1192,7 +1192,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>122b0a0c-2022-41d1-b093-85dbd66cd5fc</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1208,7 +1208,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>b3625820-b711-4882-99d0-1ed7326f257f</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1224,7 +1224,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>30c9a784-b7d0-4063-b494-0053d71818b1</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1240,7 +1240,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>a179c9bb-7ccc-4e25-86dc-4e16afc97a20</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1256,7 +1256,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>e3e7be86-2668-4925-95cf-aa0a39fccfee</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1272,7 +1272,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>f12d248d-d1a4-4101-ac02-8b2007cad082</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1288,7 +1288,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>8cf08ec4-48da-48e5-a9fe-b9e5acb8f630</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1304,7 +1304,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>3285e717-0996-462b-97be-9e2d1b0f830e</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1320,7 +1320,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>db52465b-f2e8-42a0-a9cb-8b918a7f6347</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1336,7 +1336,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>6c0d2706-11db-45f5-a38f-165075d1d978</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1352,7 +1352,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>87729eaa-cfe1-4c0f-a8db-69d8173e41f6</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1368,7 +1368,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>0c94c900-beed-4396-ae71-d267e2d6505a</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1384,7 +1384,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>5f5dbb49-08aa-4428-98a7-840bcf734c0e</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1400,7 +1400,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>a39f7485-db1f-4ac0-80f7-87f347f7ae76</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1416,7 +1416,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>73dba654-ae37-4f97-975e-76e1244f2bec</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1432,7 +1432,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>4994141f-1cfd-4e14-9945-2007a9b242f3</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1448,7 +1448,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>1f1d67a8-6565-4bc9-b2c0-69e2d7c33a0f</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1464,7 +1464,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>3f75a615-ab16-4062-83f6-297a315d380b</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1480,7 +1480,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>fa710c82-9b20-4830-8e49-f0f7162ed53e</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1496,7 +1496,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>b805ecb4-6b96-460a-890a-246498e6dd92</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1512,7 +1512,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>d342621a-b947-4885-9a29-8f921ae14262</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1528,7 +1528,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>e8a554c0-3b53-4205-9885-922fdad5bf55</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1544,7 +1544,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>67c7c20f-49c2-4395-9f51-884525f226cb</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1560,7 +1560,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>4911923c-a41a-4cff-82f6-b089d340f710</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1576,7 +1576,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>1419adac-b022-4af6-a033-a5bff5eb9039</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1592,7 +1592,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>a9844c7c-3760-4bfa-91f5-1dd79aaeb19a</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1608,7 +1608,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>3629e581-f47b-4fae-bbad-a094ba479bc4</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1624,7 +1624,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>22ce2832-fd30-4519-bce2-0e41106926f0</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1640,7 +1640,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>78ce39f0-1feb-4f9b-9ab2-2b4a5545cced</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1656,7 +1656,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>af561b5c-f55a-4767-b4cd-fc47831c7030</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1672,7 +1672,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>0e776869-a102-4db7-9349-117e4ef6823e</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1688,7 +1688,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>8b582aa1-7999-4371-9d69-d37493f29bc4</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1704,7 +1704,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>6448b5a9-a240-4be4-beb3-2eb738eda175</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1720,7 +1720,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>8c2dd3a5-47b9-4682-88fd-e31c3cbd61bf</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1736,7 +1736,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>55bf74b0-0142-4b98-8ec1-128a85ff94d0</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1752,7 +1752,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>b7db7cc1-1e28-47c6-91ea-430530b85ce8</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1768,7 +1768,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>a69b255c-ebd5-410c-99df-ee3bb65e8821</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1784,7 +1784,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>da0a4f2c-8e82-479a-8058-a77556d79c01</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1800,7 +1800,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>caa81c5c-42d1-43ab-ac44-c9b6d2e8b291</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1816,7 +1816,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>4e4e5ef8-167b-44cd-bd23-26ae431297ed</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1832,7 +1832,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>0a93f54f-1588-4779-a66a-2771ff7f9f8b</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1848,7 +1848,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>dcaaa7b1-c8ac-4ec8-961a-aa13cd315381</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1864,7 +1864,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>c76af058-dc90-4e75-b923-c7acd7bc2d6d</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1880,7 +1880,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>f6c01f63-a87d-4ff7-89a3-20d3a43cae07</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1896,7 +1896,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>e66ba078-d6f4-4b9b-adf2-ba2c41297b3a</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1912,7 +1912,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>fbcc87c7-ee84-4965-8bdd-89c8a949bafb</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1928,7 +1928,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>4320d0ea-002c-41f4-8bc2-44dbe2fdfc41</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1944,7 +1944,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>b0a923e8-db49-42f4-9acf-a0a7aba3048d</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1960,7 +1960,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>9f47bfc1-9837-4866-9f0d-4520304626a0</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1976,7 +1976,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>cf29990a-7f18-47ca-a422-ca83205b55b1</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -1992,7 +1992,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>50e1ab45-bb57-41d8-8962-34381f209d1f</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -2008,7 +2008,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>fd301c97-13ff-441f-801c-e80e6c8423a2</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -2024,7 +2024,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>87c28e36-f66a-428e-86cb-4b9862abd093</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -2040,7 +2040,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>9ff60b63-2725-4140-a6bb-06fbbd4026fe</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -2056,7 +2056,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>ac0921e2-260a-4bf7-813b-469b09293736</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -2072,7 +2072,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>431feb8c-da77-431f-b43a-ed6f86cfaed6</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -2088,7 +2088,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>d1310e18-f504-4d2e-972f-afcf2b4f9bba</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -2104,7 +2104,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>b71ccad7-8182-480a-bd0a-f3b6a0fdd889</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -2120,7 +2120,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>0f82f011-6b9a-4b42-92a2-a9b6563a1a34</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -2136,7 +2136,7 @@
             <ArrayDimensions />
             <MaxStringLength>0</MaxStringLength>
             <DataSetFieldId>
-              <String>bcd7d344-18ea-4581-8887-4c065c16b1f2</String>
+              <String>00000000-0000-0000-0000-000000000000</String>
             </DataSetFieldId>
             <Properties />
           </FieldMetaData>
@@ -2145,8 +2145,8 @@
           <String>00000000-0000-0000-0000-000000000000</String>
         </DataSetClassId>
         <ConfigurationVersion>
-          <MajorVersion>1</MajorVersion>
-          <MinorVersion>1</MinorVersion>
+          <MajorVersion>689040000</MajorVersion>
+          <MinorVersion>689040000</MinorVersion>
         </ConfigurationVersion>
       </DataSetMetaData>
       <ExtensionFields />
@@ -3665,7 +3665,7 @@
   </PublishedDataSets>
   <Connections>
     <PubSubConnectionDataType>
-      <Name>UdpUadpConection1</Name>
+      <Name>UdpUadpConnection_Publisher</Name>
       <Enabled>true</Enabled>
       <PublisherId>
         <Value>
@@ -3685,7 +3685,25 @@
         </Body>
       </Address>
       <ConnectionProperties />
-      <TransportSettings i:nil="true" />
+      <TransportSettings>
+        <TypeId>
+          <Identifier>i=17472</Identifier>
+        </TypeId>
+        <Body>
+          <DatagramConnectionTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+            <DiscoveryAddress>
+              <TypeId>
+                <Identifier>i=21176</Identifier>
+              </TypeId>
+              <Body>
+                <NetworkAddressUrlDataType>
+                  <Url>opc.udp://224.0.2.15:4840</Url>
+                </NetworkAddressUrlDataType>
+              </Body>
+            </DiscoveryAddress>
+          </DatagramConnectionTransportDataType>
+        </Body>
+      </TransportSettings>
       <WriterGroups>
         <WriterGroupDataType>
           <Name>WriterGroup 21</Name>
@@ -3720,7 +3738,7 @@
               <UadpWriterGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                 <GroupVersion>0</GroupVersion>
                 <DataSetOrdering>Undefined_0</DataSetOrdering>
-                <NetworkMessageContentMask>63</NetworkMessageContentMask>
+                <NetworkMessageContentMask>127</NetworkMessageContentMask>
                 <SamplingOffset>0</SamplingOffset>
                 <PublishingOffset />
               </UadpWriterGroupMessageDataType>
@@ -3743,9 +3761,9 @@
                 <Body>
                   <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <DataSetMessageContentMask>36</DataSetMessageContentMask>
-                    <ConfiguredSize>32</ConfiguredSize>
+                    <ConfiguredSize>0</ConfiguredSize>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>15</DataSetOffset>
+                    <DataSetOffset>0</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
                 </Body>
               </MessageSettings>
@@ -3766,9 +3784,9 @@
                 <Body>
                   <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <DataSetMessageContentMask>36</DataSetMessageContentMask>
-                    <ConfiguredSize>32</ConfiguredSize>
+                    <ConfiguredSize>0</ConfiguredSize>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>47</DataSetOffset>
+                    <DataSetOffset>0</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
                 </Body>
               </MessageSettings>
@@ -3789,145 +3807,8 @@
                 <Body>
                   <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
                     <DataSetMessageContentMask>36</DataSetMessageContentMask>
-                    <ConfiguredSize>405</ConfiguredSize>
+                    <ConfiguredSize>0</ConfiguredSize>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>79</DataSetOffset>
-                  </UadpDataSetWriterMessageDataType>
-                </Body>
-              </MessageSettings>
-            </DataSetWriterDataType>
-          </DataSetWriters>
-        </WriterGroupDataType>
-      </WriterGroups>
-      <ReaderGroups />
-    </PubSubConnectionDataType>
-    <PubSubConnectionDataType>
-      <Name>UdpUadpConection2</Name>
-      <Enabled>true</Enabled>
-      <PublisherId>
-        <Value>
-          <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
-        </Value>
-      </PublisherId>
-      <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp</TransportProfileUri>
-      <Address>
-        <TypeId>
-          <Identifier>i=21176</Identifier>
-        </TypeId>
-        <Body>
-          <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-            <NetworkInterface />
-            <Url>opc.udp://239.0.0.1:4840</Url>
-          </NetworkAddressUrlDataType>
-        </Body>
-      </Address>
-      <ConnectionProperties />
-      <TransportSettings i:nil="true" />
-      <WriterGroups>
-        <WriterGroupDataType>
-          <Name>WriterGroup 22</Name>
-          <Enabled>true</Enabled>
-          <SecurityMode>Invalid_0</SecurityMode>
-          <SecurityGroupId i:nil="true" />
-          <SecurityKeyServices />
-          <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
-          <GroupProperties />
-          <WriterGroupId>22</WriterGroupId>
-          <PublishingInterval>5000</PublishingInterval>
-          <KeepAliveTime>5000</KeepAliveTime>
-          <Priority>0</Priority>
-          <LocaleIds />
-          <HeaderLayoutUri>UADP-Dynamic</HeaderLayoutUri>
-          <TransportSettings>
-            <TypeId>
-              <Identifier>i=21179</Identifier>
-            </TypeId>
-            <Body>
-              <DatagramWriterGroupTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                <MessageRepeatCount>0</MessageRepeatCount>
-                <MessageRepeatDelay>0</MessageRepeatDelay>
-              </DatagramWriterGroupTransportDataType>
-            </Body>
-          </TransportSettings>
-          <MessageSettings>
-            <TypeId>
-              <Identifier>i=16014</Identifier>
-            </TypeId>
-            <Body>
-              <UadpWriterGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                <GroupVersion>0</GroupVersion>
-                <DataSetOrdering>Undefined_0</DataSetOrdering>
-                <NetworkMessageContentMask>65</NetworkMessageContentMask>
-                <SamplingOffset>0</SamplingOffset>
-                <PublishingOffset />
-              </UadpWriterGroupMessageDataType>
-            </Body>
-          </MessageSettings>
-          <DataSetWriters>
-            <DataSetWriterDataType>
-              <Name>Writer 221</Name>
-              <Enabled>true</Enabled>
-              <DataSetWriterId>221</DataSetWriterId>
-              <DataSetFieldContentMask>0</DataSetFieldContentMask>
-              <KeyFrameCount>1</KeyFrameCount>
-              <DataSetName>Simple</DataSetName>
-              <DataSetWriterProperties />
-              <TransportSettings i:nil="true" />
-              <MessageSettings>
-                <TypeId>
-                  <Identifier>i=16015</Identifier>
-                </TypeId>
-                <Body>
-                  <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <DataSetMessageContentMask>53</DataSetMessageContentMask>
-                    <ConfiguredSize>0</ConfiguredSize>
-                    <NetworkMessageNumber>0</NetworkMessageNumber>
-                    <DataSetOffset>0</DataSetOffset>
-                  </UadpDataSetWriterMessageDataType>
-                </Body>
-              </MessageSettings>
-            </DataSetWriterDataType>
-            <DataSetWriterDataType>
-              <Name>Writer 222</Name>
-              <Enabled>true</Enabled>
-              <DataSetWriterId>222</DataSetWriterId>
-              <DataSetFieldContentMask>0</DataSetFieldContentMask>
-              <KeyFrameCount>1</KeyFrameCount>
-              <DataSetName>AllTypes</DataSetName>
-              <DataSetWriterProperties />
-              <TransportSettings i:nil="true" />
-              <MessageSettings>
-                <TypeId>
-                  <Identifier>i=16015</Identifier>
-                </TypeId>
-                <Body>
-                  <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <DataSetMessageContentMask>53</DataSetMessageContentMask>
-                    <ConfiguredSize>0</ConfiguredSize>
-                    <NetworkMessageNumber>0</NetworkMessageNumber>
-                    <DataSetOffset>0</DataSetOffset>
-                  </UadpDataSetWriterMessageDataType>
-                </Body>
-              </MessageSettings>
-            </DataSetWriterDataType>
-            <DataSetWriterDataType>
-              <Name>Writer 223</Name>
-              <Enabled>true</Enabled>
-              <DataSetWriterId>223</DataSetWriterId>
-              <DataSetFieldContentMask>0</DataSetFieldContentMask>
-              <KeyFrameCount>1</KeyFrameCount>
-              <DataSetName>MassTest</DataSetName>
-              <DataSetWriterProperties />
-              <TransportSettings i:nil="true" />
-              <MessageSettings>
-                <TypeId>
-                  <Identifier>i=16015</Identifier>
-                </TypeId>
-                <Body>
-                  <UadpDataSetWriterMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <DataSetMessageContentMask>53</DataSetMessageContentMask>
-                    <ConfiguredSize>0</ConfiguredSize>
-                    <NetworkMessageNumber>0</NetworkMessageNumber>
                     <DataSetOffset>0</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
                 </Body>

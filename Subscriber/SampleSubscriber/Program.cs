@@ -30,7 +30,7 @@ namespace SampleSubscriber
         public const ushort NamespaceIndexSimple = 2;
         public const ushort NamespaceIndexAllTypes = 3;
         public const ushort NamespaceIndexMassTest = 4;
-        private const int MaximumNumberOfFieldsDisplayed = 20;
+        private const int MaximumNumberOfFieldsDisplayed = 15;
         private static object m_lock = new object();
         #endregion
 
@@ -57,6 +57,7 @@ namespace SampleSubscriber
                     }
                 }
 
+                // generate the config using code
                 //var config = CreateConfiguration_UdpUadp();
                 //UaPubSubConfigurationHelper.SaveConfiguration(config, configurationFileName);
 
@@ -75,7 +76,8 @@ namespace SampleSubscriber
                     //start application
                     uaPubSubApplication.Start();
 
-                    Console.WriteLine("SampleSubscriber started at:{0}", DateTime.Now.ToLongTimeString());
+                    Console.WriteLine("SampleSubscriber started at:{0} with configurationFileName:{1}",
+                        DateTime.Now.ToLongTimeString(), configurationFileName);
                     PrintCommandParameters();
 
                     do
@@ -143,8 +145,8 @@ namespace SampleSubscriber
                         dataSetMessage.SequenceNumber, dataSet.Name, dataSet.DataSetWriterId);
                     for (int i = 0; i < dataSet.Fields.Length; i++)
                     {
-                        Console.WriteLine("\t\tTargetNodeId:{0}, Attribute:{1}, Value:{2}",
-                            dataSet.Fields[i].TargetNodeId, dataSet.Fields[i].TargetAttribute, dataSet.Fields[i].Value);
+                        Console.WriteLine("\t\tFieldName:{0}, Value:{1}",
+                            dataSet.Fields[i].FieldMetaData.Name, dataSet.Fields[i].Value);
                         if (i > MaximumNumberOfFieldsDisplayed)
                         {
                             Console.WriteLine("\t\t... the rest of {0} elements are omitted.", dataSet.Fields.Length - i);
@@ -229,7 +231,7 @@ namespace SampleSubscriber
         {
             // Define a PubSub connection with PublisherId 10
             PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
-            pubSubConnection1.Name = "MqttJsonConection";
+            pubSubConnection1.Name = "MqttJsonConnection_Subscriber";
             pubSubConnection1.Enabled = true;
             pubSubConnection1.PublisherId = (UInt16)10;
             pubSubConnection1.TransportProfileUri = Profiles.PubSubMqttJsonTransport;
@@ -242,9 +244,16 @@ namespace SampleSubscriber
             // Configure the mqtt specific configuration with the MQTTbroker
             ITransportProtocolConfiguration mqttConfiguration = new MqttClientProtocolConfiguration(version: EnumMqttProtocolVersion.V500);
             pubSubConnection1.ConnectionProperties = mqttConfiguration.ConnectionProperties;
+            
+            // set the BrokerConnectionTransportDataType TransportSettings
+            pubSubConnection1.TransportSettings = new ExtensionObject()
+            {
+                Body = new BrokerConnectionTransportDataType()
+            };
 
             string brokerQueueName = "Json_WriterGroup_1";
             string brokerMetaData = "$Metadata";
+            string metaDataQueueName = $"{brokerQueueName}/{brokerMetaData}";
 
             #region Define ReaderGroup1
             ReaderGroupDataType readerGroup1 = new ReaderGroupDataType();
@@ -268,7 +277,7 @@ namespace SampleSubscriber
             {
                 QueueName = brokerQueueName,
                 RequestedDeliveryGuarantee = BrokerTransportQualityOfService.AtLeastOnce,
-                MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}"
+                MetaDataQueueName = metaDataQueueName
             };
 
             dataSetReaderSimple.TransportSettings = new ExtensionObject(brokerTransportSettings);
@@ -285,26 +294,7 @@ namespace SampleSubscriber
                         | JsonDataSetMessageContentMask.Status | JsonDataSetMessageContentMask.Timestamp),
             };
             dataSetReaderSimple.MessageSettings = new ExtensionObject(jsonDataSetReaderMessage);
-
-            // Create and set DataSetMetaData
-            DataSetMetaDataType simpleMetaData = GetDataSetMetaDataSimple();
-            dataSetReaderSimple.DataSetMetaData = simpleMetaData;
-            // Create and set SubscribedDataSet
-            TargetVariablesDataType subscribedDataSet = new TargetVariablesDataType();
-            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach (var fieldMetaData in simpleMetaData.Fields)
-            {
-                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
-                {
-                    DataSetFieldId = fieldMetaData.DataSetFieldId,
-                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexSimple),
-                    AttributeId = Attributes.Value,
-                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
-                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
-                });
-            }
-
-            dataSetReaderSimple.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            
             #endregion
             readerGroup1.DataSetReaders.Add(dataSetReaderSimple);
 
@@ -322,7 +312,7 @@ namespace SampleSubscriber
             {
                 QueueName = brokerQueueName,
                 RequestedDeliveryGuarantee = BrokerTransportQualityOfService.AtLeastOnce,
-                MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}"
+                MetaDataQueueName = metaDataQueueName
             };
 
             dataSetReaderAllTypes.TransportSettings = new ExtensionObject(brokerTransportSettings);
@@ -339,25 +329,7 @@ namespace SampleSubscriber
                         | JsonDataSetMessageContentMask.Status | JsonDataSetMessageContentMask.Timestamp),
             };
             dataSetReaderAllTypes.MessageSettings = new ExtensionObject(jsonDataSetReaderMessage);
-            // Create and set DataSetMetaData
-            DataSetMetaDataType allTypesMetaData = GetDataSetMetaDataAllTypes();
-            dataSetReaderAllTypes.DataSetMetaData = allTypesMetaData;
-            // Create and set SubscribedDataSet
-            subscribedDataSet = new TargetVariablesDataType();
-            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach (var fieldMetaData in allTypesMetaData.Fields)
-            {
-                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
-                {
-                    DataSetFieldId = fieldMetaData.DataSetFieldId,
-                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexAllTypes),
-                    AttributeId = Attributes.Value,
-                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
-                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
-                });
-            }
-
-            dataSetReaderAllTypes.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            
             #endregion
             readerGroup1.DataSetReaders.Add(dataSetReaderAllTypes);
 
@@ -388,30 +360,10 @@ namespace SampleSubscriber
             {
                 QueueName = brokerQueueName,
                 RequestedDeliveryGuarantee = BrokerTransportQualityOfService.AtLeastOnce,
-                MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}"
+                MetaDataQueueName = metaDataQueueName
             };
 
-            dataSetReaderMassTest.TransportSettings = new ExtensionObject(brokerTransportSettings);
-
-            // Set DataSetMetaData
-            DataSetMetaDataType massTestMetaData = GetDataSetMetaDataMassTest();
-            dataSetReaderMassTest.DataSetMetaData = massTestMetaData;
-            // Create SubscribedDataSet
-            subscribedDataSet = new TargetVariablesDataType();
-            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach (var fieldMetaData in massTestMetaData.Fields)
-            {
-                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
-                {
-                    DataSetFieldId = fieldMetaData.DataSetFieldId,
-                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexMassTest),
-                    AttributeId = Attributes.Value,
-                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
-                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
-                });
-            }
-
-            dataSetReaderMassTest.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            dataSetReaderMassTest.TransportSettings = new ExtensionObject(brokerTransportSettings);            
             #endregion
             readerGroup1.DataSetReaders.Add(dataSetReaderMassTest);
             #endregion
@@ -435,14 +387,28 @@ namespace SampleSubscriber
         {
             // Define a PubSub connection with PublisherId 20
             PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
-            pubSubConnection1.Name = "UdpUadpConection1";
+            pubSubConnection1.Name = "UdpUadpConnection_Subscriber";
             pubSubConnection1.Enabled = true;
             pubSubConnection1.PublisherId = (UInt16)20;
             pubSubConnection1.TransportProfileUri = Profiles.PubSubUdpUadpTransport;
             NetworkAddressUrlDataType address = new NetworkAddressUrlDataType();
             address.NetworkInterface = string.Empty;
             address.Url = "opc.udp://239.0.0.1:4840";
-            pubSubConnection1.Address = new ExtensionObject(address);            
+            pubSubConnection1.Address = new ExtensionObject(address);
+            // set the DatagramConnectionTransportDataType TransportSettings
+            pubSubConnection1.TransportSettings = new ExtensionObject()
+            {
+                Body = new DatagramConnectionTransportDataType()
+                {
+                    DiscoveryAddress = new ExtensionObject()
+                    {
+                        Body = new NetworkAddressUrlDataType()
+                        {
+                            Url = "opc.udp://224.0.2.15:4840"
+                        }
+                    }
+                }
+            };
 
             #region Define ReaderGroup21
             ReaderGroupDataType readerGroup21 = new ReaderGroupDataType();
@@ -456,8 +422,8 @@ namespace SampleSubscriber
             DataSetReaderDataType dataSetReaderSimple1 = new DataSetReaderDataType();
             dataSetReaderSimple1.Name = "Reader 211";
             dataSetReaderSimple1.PublisherId = (UInt16)20;
-            dataSetReaderSimple1.WriterGroupId = 0;
-            dataSetReaderSimple1.DataSetWriterId = 0;
+            dataSetReaderSimple1.WriterGroupId = 21;
+            dataSetReaderSimple1.DataSetWriterId = 211;
             dataSetReaderSimple1.Enabled = true;
             dataSetReaderSimple1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
             dataSetReaderSimple1.KeyFrameCount = 1;           
@@ -465,37 +431,18 @@ namespace SampleSubscriber
             UadpDataSetReaderMessageDataType uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
-                DataSetOffset = 15,
                 NetworkMessageNumber = 0,
                 NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId 
                     | UadpNetworkMessageContentMask.GroupHeader
                     | UadpNetworkMessageContentMask.WriterGroupId 
                     | UadpNetworkMessageContentMask.GroupVersion
                     | UadpNetworkMessageContentMask.NetworkMessageNumber 
-                    | UadpNetworkMessageContentMask.SequenceNumber),
+                    | UadpNetworkMessageContentMask.SequenceNumber
+                    | UadpNetworkMessageContentMask.PayloadHeader),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
             dataSetReaderSimple1.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
 
-            // Create and set DataSetMetaData
-            DataSetMetaDataType simpleMetaData = GetDataSetMetaDataSimple();
-            dataSetReaderSimple1.DataSetMetaData = simpleMetaData;
-            // Create and set SubscribedDataSet
-            TargetVariablesDataType subscribedDataSet = new TargetVariablesDataType();
-            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach (var fieldMetaData in simpleMetaData.Fields)
-            {
-                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
-                {
-                    DataSetFieldId = fieldMetaData.DataSetFieldId,
-                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexSimple),
-                    AttributeId = Attributes.Value,
-                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
-                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
-                });
-            }
-
-            dataSetReaderSimple1.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
             readerGroup21.DataSetReaders.Add(dataSetReaderSimple1);
 
@@ -504,8 +451,8 @@ namespace SampleSubscriber
             DataSetReaderDataType dataSetReaderAllTypes1 = new DataSetReaderDataType();
             dataSetReaderAllTypes1.Name = "Reader 212";
             dataSetReaderAllTypes1.PublisherId = (UInt16)20;
-            dataSetReaderAllTypes1.WriterGroupId = 0;
-            dataSetReaderAllTypes1.DataSetWriterId = 0;
+            dataSetReaderAllTypes1.WriterGroupId = 21;
+            dataSetReaderAllTypes1.DataSetWriterId = 212;
             dataSetReaderAllTypes1.Enabled = true;
             dataSetReaderAllTypes1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
             dataSetReaderAllTypes1.KeyFrameCount = 1;            
@@ -513,7 +460,6 @@ namespace SampleSubscriber
             uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
-                DataSetOffset = 47,
                 NetworkMessageNumber = 0,
                 NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId 
                     | UadpNetworkMessageContentMask.GroupHeader
@@ -523,26 +469,7 @@ namespace SampleSubscriber
                     | UadpNetworkMessageContentMask.SequenceNumber),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetReaderAllTypes1.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
-            // Create and set DataSetMetaData
-            DataSetMetaDataType allTypesMetaData = GetDataSetMetaDataAllTypes();
-            dataSetReaderAllTypes1.DataSetMetaData = allTypesMetaData;
-            // Create and set SubscribedDataSet
-            subscribedDataSet = new TargetVariablesDataType();
-            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach (var fieldMetaData in allTypesMetaData.Fields)
-            {
-                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
-                {
-                    DataSetFieldId = fieldMetaData.DataSetFieldId,
-                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexAllTypes),
-                    AttributeId = Attributes.Value,
-                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
-                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
-                });
-            }
-
-            dataSetReaderAllTypes1.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            dataSetReaderAllTypes1.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);            
             #endregion
             readerGroup21.DataSetReaders.Add(dataSetReaderAllTypes1);
 
@@ -550,8 +477,8 @@ namespace SampleSubscriber
             DataSetReaderDataType dataSetReaderMassTest1 = new DataSetReaderDataType();
             dataSetReaderMassTest1.Name = "Reader 213";
             dataSetReaderMassTest1.PublisherId = (UInt16)20;
-            dataSetReaderMassTest1.WriterGroupId = 0;
-            dataSetReaderMassTest1.DataSetWriterId = 0;
+            dataSetReaderMassTest1.WriterGroupId = 21;
+            dataSetReaderMassTest1.DataSetWriterId = 213;
             dataSetReaderMassTest1.Enabled = true;
             dataSetReaderMassTest1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
             dataSetReaderMassTest1.KeyFrameCount = 1;          
@@ -559,7 +486,6 @@ namespace SampleSubscriber
             uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
-                DataSetOffset = 79,
                 NetworkMessageNumber = 0,
                 NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId 
                     | UadpNetworkMessageContentMask.GroupHeader
@@ -569,158 +495,12 @@ namespace SampleSubscriber
                     | UadpNetworkMessageContentMask.SequenceNumber),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetReaderMassTest1.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
-            // Set DataSetMetaData
-            DataSetMetaDataType massTestMetaData = GetDataSetMetaDataMassTest();
-            dataSetReaderMassTest1.DataSetMetaData = massTestMetaData;
-            // Create SubscribedDataSet
-            subscribedDataSet = new TargetVariablesDataType();
-            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach (var fieldMetaData in massTestMetaData.Fields)
-            {
-                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
-                {
-                    DataSetFieldId = fieldMetaData.DataSetFieldId,
-                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexMassTest),
-                    AttributeId = Attributes.Value,
-                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
-                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
-                });
-            }
-
-            dataSetReaderMassTest1.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            dataSetReaderMassTest1.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);            
             #endregion
             readerGroup21.DataSetReaders.Add(dataSetReaderMassTest1);
             #endregion
             pubSubConnection1.ReaderGroups.Add(readerGroup21);
-
-            #region Define ReaderGroup22
-            ReaderGroupDataType readerGroup22 = new ReaderGroupDataType();
-            readerGroup22.Name = "ReaderGroup 22";
-            readerGroup22.Enabled = true;
-            readerGroup22.MaxNetworkMessageSize = 1500;
-            readerGroup22.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
-            readerGroup22.TransportSettings = new ExtensionObject(new ReaderGroupTransportDataType());
-
-            #region Define DataSetReader 'Simple' for PublisherId = (UInt64)20, WriterGroupId = 0, DataSetWriterId = 221
-            DataSetReaderDataType dataSetReaderSimple2 = new DataSetReaderDataType();
-            dataSetReaderSimple2.Name = "Reader 221";
-            dataSetReaderSimple2.PublisherId = (UInt64)20;
-            dataSetReaderSimple2.WriterGroupId = 0;
-            dataSetReaderSimple2.DataSetWriterId = 221;
-            dataSetReaderSimple2.Enabled = true;
-            dataSetReaderSimple2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetReaderSimple2.KeyFrameCount = 1;
-            dataSetReaderSimple2.DataSetMetaData = simpleMetaData;
-
-            uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
-            {
-                GroupVersion = 0,
-                DataSetOffset = 0,
-                NetworkMessageNumber = 0,
-                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.PayloadHeader),
-                DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Timestamp | UadpDataSetMessageContentMask.Status
-                        | UadpDataSetMessageContentMask.MinorVersion | UadpDataSetMessageContentMask.SequenceNumber),
-            };
-            dataSetReaderSimple2.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
-            subscribedDataSet = new TargetVariablesDataType();
-            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach (var fieldMetaData in simpleMetaData.Fields)
-            {
-                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
-                {
-                    DataSetFieldId = fieldMetaData.DataSetFieldId,
-                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexSimple),
-                    AttributeId = Attributes.Value,
-                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
-                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
-                });
-            }
-
-            dataSetReaderSimple2.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
-            #endregion
-            readerGroup22.DataSetReaders.Add(dataSetReaderSimple2);
-
-            #region Define DataSetReader 'AllTypes' for PublisherId = (UInt64)20, WriterGroupId = 0, DataSetWriterId = 222
-            DataSetReaderDataType dataSetReaderAllTypes2 = new DataSetReaderDataType();
-            dataSetReaderAllTypes2.Name = "Reader 222";
-            dataSetReaderAllTypes2.PublisherId = (UInt64)20;
-            dataSetReaderAllTypes2.WriterGroupId = 0;
-            dataSetReaderAllTypes2.DataSetWriterId = 222;
-            dataSetReaderAllTypes2.Enabled = true;
-            dataSetReaderAllTypes2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetReaderAllTypes2.KeyFrameCount = 1;
-            dataSetReaderAllTypes2.DataSetMetaData = allTypesMetaData;
-
-            uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
-            {
-                GroupVersion = 0,
-                DataSetOffset = 0,
-                NetworkMessageNumber = 0,
-                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.PayloadHeader),
-                DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Timestamp | UadpDataSetMessageContentMask.Status
-                        | UadpDataSetMessageContentMask.MinorVersion | UadpDataSetMessageContentMask.SequenceNumber),
-            };
-            dataSetReaderAllTypes2.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
-            subscribedDataSet = new TargetVariablesDataType();
-            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach (var fieldMetaData in allTypesMetaData.Fields)
-            {
-                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
-                {
-                    DataSetFieldId = fieldMetaData.DataSetFieldId,
-                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexAllTypes),
-                    AttributeId = Attributes.Value,
-                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
-                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
-                });
-            }
-
-            dataSetReaderAllTypes2.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
-            #endregion
-            readerGroup22.DataSetReaders.Add(dataSetReaderAllTypes2);
-
-            #region Define DataSetReader 'MassTest' PublisherId = (UInt64)20, WriterGroupId = 0, DataSetWriterId = 223
-            DataSetReaderDataType dataSetReaderMassTest2 = new DataSetReaderDataType();
-            dataSetReaderMassTest2.Name = "Reader 223";
-            dataSetReaderMassTest2.PublisherId = (UInt64)20;
-            dataSetReaderMassTest2.WriterGroupId = 0;
-            dataSetReaderMassTest2.DataSetWriterId = 223;
-            dataSetReaderMassTest2.Enabled = true;
-            dataSetReaderMassTest2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetReaderMassTest2.KeyFrameCount = 1;
-            dataSetReaderMassTest2.DataSetMetaData = massTestMetaData;
-
-            uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
-            {
-                GroupVersion = 0,
-                DataSetOffset = 0,
-                NetworkMessageNumber = 0,
-                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId | UadpNetworkMessageContentMask.PayloadHeader),
-                DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Timestamp | UadpDataSetMessageContentMask.Status
-                        | UadpDataSetMessageContentMask.MinorVersion | UadpDataSetMessageContentMask.SequenceNumber),
-            };
-            dataSetReaderMassTest2.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
-            subscribedDataSet = new TargetVariablesDataType();
-            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach (var fieldMetaData in massTestMetaData.Fields)
-            {
-                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
-                {
-                    DataSetFieldId = fieldMetaData.DataSetFieldId,
-                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexMassTest),
-                    AttributeId = Attributes.Value,
-                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
-                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
-                });
-            }
-
-            dataSetReaderMassTest2.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
-            #endregion
-            readerGroup22.DataSetReaders.Add(dataSetReaderMassTest2);
-            #endregion
-
-            pubSubConnection1.ReaderGroups.Add(readerGroup22);
+           
             //create  pub sub configuration root object
             PubSubConfigurationDataType pubSubConfiguration = new PubSubConfigurationDataType();
             pubSubConfiguration.Connections = new PubSubConnectionDataTypeCollection()
@@ -756,8 +536,6 @@ namespace SampleSubscriber
             readerGroup23.MessageSettings = new ExtensionObject(new ReaderGroupMessageDataType());
             readerGroup23.TransportSettings = new ExtensionObject(new ReaderGroupTransportDataType());
 
-            DataSetMetaDataType allTypesMetaData = GetDataSetMetaDataAllTypes();
-
             #region Define DataSetReader 'AllTypes' for PublisherId = (UInt16)20, WriterGroupId = 0, DataSetWriterId = 0
             DataSetReaderDataType dataSetReaderAllTypes1 = new DataSetReaderDataType();
             dataSetReaderAllTypes1.Name = "Reader For Writer 231";
@@ -767,7 +545,6 @@ namespace SampleSubscriber
             dataSetReaderAllTypes1.Enabled = true;
             dataSetReaderAllTypes1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
             dataSetReaderAllTypes1.KeyFrameCount = 1;
-            dataSetReaderAllTypes1.DataSetMetaData = allTypesMetaData;
 
             UadpDataSetReaderMessageDataType uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
@@ -780,21 +557,7 @@ namespace SampleSubscriber
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
             dataSetReaderAllTypes1.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
-            TargetVariablesDataType subscribedDataSet = new TargetVariablesDataType();
-            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach (var fieldMetaData in allTypesMetaData.Fields)
-            {
-                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
-                {
-                    DataSetFieldId = fieldMetaData.DataSetFieldId,
-                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexAllTypes),
-                    AttributeId = Attributes.Value,
-                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
-                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
-                });
-            }
-
-            dataSetReaderAllTypes1.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            
             #endregion
             readerGroup23.DataSetReaders.Add(dataSetReaderAllTypes1);
 
@@ -818,9 +581,6 @@ namespace SampleSubscriber
             dataSetReaderAllTypes2.Enabled = true;
             dataSetReaderAllTypes2.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
             dataSetReaderAllTypes2.KeyFrameCount = 1;
-
-            dataSetReaderAllTypes2.DataSetMetaData = allTypesMetaData;
-
             uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
@@ -831,21 +591,7 @@ namespace SampleSubscriber
                         | UadpDataSetMessageContentMask.MinorVersion | UadpDataSetMessageContentMask.SequenceNumber),
             };
             dataSetReaderAllTypes2.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
-            subscribedDataSet = new TargetVariablesDataType();
-            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach (var fieldMetaData in allTypesMetaData.Fields)
-            {
-                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
-                {
-                    DataSetFieldId = fieldMetaData.DataSetFieldId,
-                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexAllTypes),
-                    AttributeId = Attributes.Value,
-                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
-                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
-                });
-            }
 
-            dataSetReaderAllTypes2.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
             readerGroup24.DataSetReaders.Add(dataSetReaderAllTypes2);
             #endregion
@@ -869,7 +615,7 @@ namespace SampleSubscriber
         {
             // Define a PubSub connection with PublisherId 30
             PubSubConnectionDataType pubSubConnection1 = new PubSubConnectionDataType();
-            pubSubConnection1.Name = "MqttUadpConection";
+            pubSubConnection1.Name = "MqttUadpConnection_Subscriber";
             pubSubConnection1.Enabled = true;
             pubSubConnection1.PublisherId = (UInt16)30;
             pubSubConnection1.TransportProfileUri = Profiles.PubSubMqttUadpTransport;
@@ -885,6 +631,7 @@ namespace SampleSubscriber
 
             string brokerQueueName = "Uadp_WriterGroup_1";
             string brokerMetaData = "$Metadata";
+            string metaDataQueueName = $"{brokerQueueName}/{brokerMetaData}";
 
             #region Define ReaderGroup1
             ReaderGroupDataType readerGroup1 = new ReaderGroupDataType();
@@ -907,7 +654,7 @@ namespace SampleSubscriber
             BrokerDataSetReaderTransportDataType brokerTransportSettings = new BrokerDataSetReaderTransportDataType()
             {
                 QueueName = brokerQueueName,
-                MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}"
+                MetaDataQueueName = metaDataQueueName
             };
             dataSetReaderSimple.TransportSettings = new ExtensionObject(brokerTransportSettings);
 
@@ -924,27 +671,7 @@ namespace SampleSubscriber
                        | UadpNetworkMessageContentMask.SequenceNumber),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetReaderSimple.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
-
-            // Create and set DataSetMetaData
-            DataSetMetaDataType simpleMetaData = GetDataSetMetaDataSimple();
-            dataSetReaderSimple.DataSetMetaData = simpleMetaData;
-            // Create and set SubscribedDataSet
-            TargetVariablesDataType subscribedDataSet = new TargetVariablesDataType();
-            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach (var fieldMetaData in simpleMetaData.Fields)
-            {
-                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
-                {
-                    DataSetFieldId = fieldMetaData.DataSetFieldId,
-                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexSimple),
-                    AttributeId = Attributes.Value,
-                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
-                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
-                });
-            }
-
-            dataSetReaderSimple.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            dataSetReaderSimple.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);            
             #endregion
             readerGroup1.DataSetReaders.Add(dataSetReaderSimple);
 
@@ -963,7 +690,7 @@ namespace SampleSubscriber
             {
                 QueueName = brokerQueueName,
                 RequestedDeliveryGuarantee = BrokerTransportQualityOfService.AtLeastOnce,
-                MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}"
+                MetaDataQueueName = metaDataQueueName
             };
 
             dataSetReaderAllTypes.TransportSettings = new ExtensionObject(brokerTransportSettings);
@@ -982,26 +709,7 @@ namespace SampleSubscriber
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
             dataSetReaderAllTypes.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
-
-            // Create and set DataSetMetaData
-            DataSetMetaDataType allTypesMetaData = GetDataSetMetaDataAllTypes();
-            dataSetReaderAllTypes.DataSetMetaData = allTypesMetaData;
-            // Create and set SubscribedDataSet
-            subscribedDataSet = new TargetVariablesDataType();
-            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach (var fieldMetaData in allTypesMetaData.Fields)
-            {
-                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
-                {
-                    DataSetFieldId = fieldMetaData.DataSetFieldId,
-                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexAllTypes),
-                    AttributeId = Attributes.Value,
-                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
-                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
-                });
-            }
-
-            dataSetReaderAllTypes.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
+            
             #endregion
             readerGroup1.DataSetReaders.Add(dataSetReaderAllTypes);
 
@@ -1019,7 +727,7 @@ namespace SampleSubscriber
             {
                 QueueName = brokerQueueName,
                 RequestedDeliveryGuarantee = BrokerTransportQualityOfService.AtLeastOnce,
-                MetaDataQueueName = $"{brokerQueueName}/{brokerMetaData}"
+                MetaDataQueueName = metaDataQueueName
             };
             dataSetReaderMassTest.TransportSettings = new ExtensionObject(brokerTransportSettings);
 
@@ -1036,27 +744,8 @@ namespace SampleSubscriber
                        | UadpNetworkMessageContentMask.SequenceNumber),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetReaderMassTest.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
+            dataSetReaderMassTest.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);            
             
-            // Set DataSetMetaData
-            DataSetMetaDataType massTestMetaData = GetDataSetMetaDataMassTest();
-            dataSetReaderMassTest.DataSetMetaData = massTestMetaData;
-            // Create SubscribedDataSet
-            subscribedDataSet = new TargetVariablesDataType();
-            subscribedDataSet.TargetVariables = new FieldTargetDataTypeCollection();
-            foreach (var fieldMetaData in massTestMetaData.Fields)
-            {
-                subscribedDataSet.TargetVariables.Add(new FieldTargetDataType()
-                {
-                    DataSetFieldId = fieldMetaData.DataSetFieldId,
-                    TargetNodeId = new NodeId(fieldMetaData.Name, NamespaceIndexMassTest),
-                    AttributeId = Attributes.Value,
-                    OverrideValueHandling = OverrideValueHandling.OverrideValue,
-                    OverrideValue = new Variant(TypeInfo.GetDefaultValue(fieldMetaData.DataType, (int)ValueRanks.Scalar))
-                });
-            }
-
-            dataSetReaderMassTest.SubscribedDataSet = new ExtensionObject(subscribedDataSet);
             #endregion
             readerGroup1.DataSetReaders.Add(dataSetReaderMassTest);
             #endregion
@@ -1072,181 +761,6 @@ namespace SampleSubscriber
 
             return pubSubConfiguration;
         }
-
-        /// <summary>
-        /// Creates and returns an instance of <see cref="DataSetMetaDataType"/> for Simple DataSet
-        /// </summary>
-        private static DataSetMetaDataType GetDataSetMetaDataSimple()
-        {
-            DataSetMetaDataType simpleMetaData = new DataSetMetaDataType();
-            simpleMetaData.DataSetClassId = new Uuid(Guid.Empty);
-            simpleMetaData.Name = "Simple";
-            simpleMetaData.Fields = new FieldMetaDataCollection()
-                {
-                    new FieldMetaData()
-                    {
-                        Name = "BoolToggle",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte) DataTypes.Boolean,
-                        DataType = DataTypeIds.Boolean,
-                        ValueRank = ValueRanks.Scalar
-                    },
-                    new FieldMetaData()
-                    {
-                        Name = "Int32",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte) DataTypes.Int32,
-                        DataType = DataTypeIds.Int32,
-                        ValueRank = ValueRanks.Scalar
-                    },
-                    new FieldMetaData()
-                    {
-                        Name = "Int32Fast",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte) DataTypes.Int32,
-                        DataType = DataTypeIds.Int32,
-                        ValueRank = ValueRanks.Scalar
-                    },
-                    new FieldMetaData()
-                    {
-                        Name = "DateTime",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte) DataTypes.DateTime,
-                        DataType = DataTypeIds.DateTime,
-                        ValueRank = ValueRanks.Scalar
-                    },
-                };
-            simpleMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
-            {
-                MinorVersion = 1,
-                MajorVersion = 1
-            };
-
-            return simpleMetaData;
-        }
-
-        /// <summary>
-        /// Creates and returns an instance of <see cref="DataSetMetaDataType"/> for AllTypes DataSet
-        /// </summary>
-        private static DataSetMetaDataType GetDataSetMetaDataAllTypes()
-        {
-            DataSetMetaDataType allTypesMetaData = new DataSetMetaDataType();
-            allTypesMetaData.DataSetClassId = new Uuid(Guid.Empty);
-            allTypesMetaData.Name = "AllTypes";
-            allTypesMetaData.Fields = new FieldMetaDataCollection()
-            {
-                 new FieldMetaData()
-                    {
-                        Name = "BoolToggle",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte) DataTypes.Boolean,
-                        DataType = DataTypeIds.Boolean,
-                        ValueRank = ValueRanks.Scalar
-                    },
-                    new FieldMetaData()
-                    {
-                        Name = "Byte",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte) DataTypes.Byte,
-                        DataType = DataTypeIds.Byte,
-                        ValueRank = ValueRanks.Scalar
-                    },
-                    new FieldMetaData()
-                    {
-                        Name = "Int16",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte) DataTypes.Int16,
-                        DataType = DataTypeIds.Int16,
-                        ValueRank = ValueRanks.Scalar
-                    },
-                    new FieldMetaData()
-                    {
-                        Name = "Int32",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte) DataTypes.Int32,
-                        DataType = DataTypeIds.Int32,
-                        ValueRank = ValueRanks.Scalar
-                    },
-                    new FieldMetaData()
-                    {
-                        Name = "SByte",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte) DataTypes.SByte,
-                        DataType = DataTypeIds.SByte,
-                        ValueRank = ValueRanks.Scalar
-                    },
-                    new FieldMetaData()
-                    {
-                        Name = "UInt16",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte) DataTypes.UInt16,
-                        DataType = DataTypeIds.UInt16,
-                        ValueRank = ValueRanks.Scalar
-                    },
-                    new FieldMetaData()
-                    {
-                        Name = "UInt32",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte) DataTypes.UInt32,
-                        DataType = DataTypeIds.UInt32,
-                        ValueRank = ValueRanks.Scalar
-                    },
-                    new FieldMetaData()
-                    {
-                        Name = "Float",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte) DataTypes.Float,
-                        DataType = DataTypeIds.Float,
-                        ValueRank = ValueRanks.Scalar
-                    },
-                    new FieldMetaData()
-                    {
-                        Name = "Double",
-                        DataSetFieldId = new Uuid(Guid.NewGuid()),
-                        BuiltInType = (byte) DataTypes.Double,
-                        DataType = DataTypeIds.Double,
-                        ValueRank = ValueRanks.Scalar
-                    },
-
-            };
-            allTypesMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
-            {
-                MinorVersion = 1,
-                MajorVersion = 1
-            };
-            return allTypesMetaData;
-        }
-
-        /// <summary>
-        /// Creates and returns an instance of <see cref="DataSetMetaDataType"/> for MassTest DataSet
-        /// </summary>
-        private static DataSetMetaDataType GetDataSetMetaDataMassTest()
-        {
-            DataSetMetaDataType massTestMetaData = new DataSetMetaDataType();
-            massTestMetaData.DataSetClassId = new Uuid(Guid.Empty);
-            massTestMetaData.Name = "MassData";
-            massTestMetaData.Fields = new FieldMetaDataCollection();
-            for (int i = 0; i < 100; i++)
-            {
-                string name = "Mass_" + i;
-                massTestMetaData.Fields.Add(new FieldMetaData()
-                {
-                    Name = name,
-                    DataSetFieldId = new Uuid(Guid.NewGuid()),
-                    BuiltInType = (byte)DataTypes.UInt32,
-                    DataType = DataTypeIds.UInt32,
-                    ValueRank = ValueRanks.Scalar
-                });
-            }
-            massTestMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
-            {
-                MinorVersion = 1,
-                MajorVersion = 1
-            };
-
-            return massTestMetaData;
-        }
-
         #endregion Create configuration objects
 
         #region Private Methods

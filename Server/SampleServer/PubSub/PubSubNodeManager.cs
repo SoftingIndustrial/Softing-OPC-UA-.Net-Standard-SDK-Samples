@@ -103,6 +103,10 @@ namespace SampleServer.PubSub
                 m_uaPubSubConfigurator.DataSetReaderRemoved += UaPubSubConfigurator_DataSetReaderRemoved;
 
                 // load configuration
+
+
+
+
                 string pubConfigurationFileName = "SamplePublisher.Config.xml";
                 m_uaPubSubConfigurator.LoadConfiguration(pubConfigurationFileName);
 
@@ -125,7 +129,7 @@ namespace SampleServer.PubSub
                 #region Add Publisher Source Nodes
                 FolderState publisher = CreateFolder(root, "Publisher");
 
-                #region Publisher UDP UADP variables
+                #region Publisher Source variables
 
                 BaseDataVariableState variable = CreateVariable(publisher, "BoolToggle", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Pub_BoolToggle", NamespaceIndex));
                 m_dynamicNodes.Add(variable);
@@ -156,31 +160,7 @@ namespace SampleServer.PubSub
                     m_dynamicNodes.Add(variable);
                 }
 
-                #endregion Publisher UDP UADP variables
-
-                #region Publisher MQTT UADP variables
-
-                variable = CreateVariable(publisher, "Mqtt_Uadp_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Boolean", NamespaceIndex));
-                m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "Mqtt_Uadp_Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Byte", NamespaceIndex));
-                m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "Mqtt_Uadp_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Int16", NamespaceIndex));
-                m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "Mqtt_Uadp_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Uadp_Int32", NamespaceIndex));
-                m_dynamicNodes.Add(variable);
-
-                #endregion Publisher MQTT UADP variables
-
-                #region Publisher MQTT MQTT variables
-
-                variable = CreateVariable(publisher, "Mqtt_Json_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Json_Boolean", NamespaceIndex));
-                m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "Mqtt_Json_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Json_Int16", NamespaceIndex));
-                m_dynamicNodes.Add(variable);
-                variable = CreateVariable(publisher, "Mqtt_Json_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Pub_Mqtt_Json_Int32", NamespaceIndex));
-                m_dynamicNodes.Add(variable);
-
-                #endregion Publisher MQTT MQTT variables
+                #endregion Publisher UDP UADP variables               
 
                 m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
 
@@ -212,18 +192,17 @@ namespace SampleServer.PubSub
                 #region Subscriber MQTT UADP variables
 
                 variable = CreateVariable(subscriber, "Mqtt_Uadp_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Boolean", NamespaceIndex));
-                variable = CreateVariable(subscriber, "Mqtt_Uadp_Byte", DataTypeIds.Byte, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Byte", NamespaceIndex));
-                variable = CreateVariable(subscriber, "Mqtt_Uadp_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Int16", NamespaceIndex));
                 variable = CreateVariable(subscriber, "Mqtt_Uadp_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Int32", NamespaceIndex));
-
+                variable = CreateVariable(subscriber, "Mqtt_Uadp_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Int32Fast", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Uadp_Int16", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_DateTime", NamespaceIndex));
                 #endregion Subscriber MQTT UADP variables
 
                 #region Subscriber MQTT JSON variables
 
                 variable = CreateVariable(subscriber, "Mqtt_Json_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Boolean", NamespaceIndex));
-                variable = CreateVariable(subscriber, "Mqtt_Json_Int16", DataTypeIds.Int16, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Int16", NamespaceIndex));
                 variable = CreateVariable(subscriber, "Mqtt_Json_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Int32", NamespaceIndex));
-
+                variable = CreateVariable(subscriber, "Mqtt_Json_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Int32Fast", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Json_Int16", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_DateTime", NamespaceIndex));
                 #endregion Subscriber MQTT JSON variables
 
                 #endregion
@@ -1936,6 +1915,6 @@ namespace SampleServer.PubSub
 
             return null;
         }
-        #endregion
+        #endregion        
     }
 }
