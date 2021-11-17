@@ -194,7 +194,7 @@ namespace SampleServer.PubSub
                 variable = CreateVariable(subscriber, "Mqtt_Uadp_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Boolean", NamespaceIndex));
                 variable = CreateVariable(subscriber, "Mqtt_Uadp_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Int32", NamespaceIndex));
                 variable = CreateVariable(subscriber, "Mqtt_Uadp_Int32Fast", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Int32Fast", NamespaceIndex));
-                variable = CreateVariable(subscriber, "Mqtt_Uadp_Int16", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_DateTime", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Uadp_DateTime", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_DateTime", NamespaceIndex));
                 #endregion Subscriber MQTT UADP variables
 
                 #region Subscriber MQTT JSON variables
@@ -202,7 +202,7 @@ namespace SampleServer.PubSub
                 variable = CreateVariable(subscriber, "Mqtt_Json_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Boolean", NamespaceIndex));
                 variable = CreateVariable(subscriber, "Mqtt_Json_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Int32", NamespaceIndex));
                 variable = CreateVariable(subscriber, "Mqtt_Json_Int32Fast", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Int32Fast", NamespaceIndex));
-                variable = CreateVariable(subscriber, "Mqtt_Json_Int16", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_DateTime", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Json_DateTime", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_DateTime", NamespaceIndex));
                 #endregion Subscriber MQTT JSON variables
 
                 #endregion
@@ -1884,14 +1884,14 @@ namespace SampleServer.PubSub
                     intValue = Convert.ToInt32(variable.Value);
                     return (int)(intValue + 100);
                 case "DateTime":
+                case "Mqtt_Uadp_DateTime":
+                case "Mqtt_Json_DateTime":
                     return DateTime.Now;
                 case "Byte":
                 case "Mqtt_Uadp_Byte":
                     byte byteValue = Convert.ToByte(variable.Value);
                     return (byte)(byteValue + 1);
                 case "Int16":
-                case "Mqtt_Uadp_Int16":
-                case "Mqtt_Json_Int16":
                     Int16 int16Value = Convert.ToInt16(variable.Value);
                     return (Int16)(int16Value + 1);
                 case "UInt16":
