@@ -193,7 +193,7 @@ namespace SampleServer.PubSub
 
                 variable = CreateVariable(subscriber, "Mqtt_Uadp_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Boolean", NamespaceIndex));
                 variable = CreateVariable(subscriber, "Mqtt_Uadp_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Int32", NamespaceIndex));
-                variable = CreateVariable(subscriber, "Mqtt_Uadp_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Int32Fast", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Uadp_Int32Fast", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_Int32Fast", NamespaceIndex));
                 variable = CreateVariable(subscriber, "Mqtt_Uadp_Int16", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Uadp_DateTime", NamespaceIndex));
                 #endregion Subscriber MQTT UADP variables
 
@@ -201,7 +201,7 @@ namespace SampleServer.PubSub
 
                 variable = CreateVariable(subscriber, "Mqtt_Json_Boolean", DataTypeIds.Boolean, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Boolean", NamespaceIndex));
                 variable = CreateVariable(subscriber, "Mqtt_Json_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Int32", NamespaceIndex));
-                variable = CreateVariable(subscriber, "Mqtt_Json_Int32", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Int32Fast", NamespaceIndex));
+                variable = CreateVariable(subscriber, "Mqtt_Json_Int32Fast", DataTypeIds.Int32, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_Int32Fast", NamespaceIndex));
                 variable = CreateVariable(subscriber, "Mqtt_Json_Int16", DataTypeIds.DateTime, ValueRanks.Scalar, new NodeId("Sub_Mqtt_Json_DateTime", NamespaceIndex));
                 #endregion Subscriber MQTT JSON variables
 
@@ -1872,7 +1872,9 @@ namespace SampleServer.PubSub
                     return !boolValue;
                 case "Int32":
                 case "Mqtt_Uadp_Int32":
+                case "Mqtt_Uadp_Int32Fast":
                 case "Mqtt_Json_Int32":
+                case "Mqtt_Json_Int32Fast":
                     int intValue = Convert.ToInt32(variable.Value);
                     return (int)(intValue + 1);
                 case "UInt32":
