@@ -73,7 +73,7 @@ namespace SampleServer
 
             // create the NamespaceMetadata for ReferenceServer Namespace
             ConfigurationNodeManager configurationNodeManager = server.DiagnosticsNodeManager as ConfigurationNodeManager;
-            var metadaata = configurationNodeManager?.CreateNamespaceMetadataState(Namespaces.ReferenceApplications);
+            var metaData = configurationNodeManager?.CreateNamespaceMetadataState(Namespaces.ReferenceApplications);
 
             uint clearCertificatesInterval = 30000;
 
