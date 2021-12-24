@@ -1484,8 +1484,11 @@ namespace SampleServer.ReferenceServer
                 variable.Value = initialValues;
             }
 
-            // The latest UNECE version (Rev 11, published in 2015) is available here:
-            // http://www.opcfoundation.org/UA/EngineeringUnits/UNECE/rec20_latest_08052015.zip
+            variable.Definition.Value = "Analog variable for data type: " + name;
+
+
+           // The latest UNECE version (Rev 11, published in 2015) is available here:
+           // http://www.opcfoundation.org/UA/EngineeringUnits/UNECE/rec20_latest_08052015.zip
             variable.EngineeringUnits.Value = new EUInformation("mV", "millivolt", "http://www.opcfoundation.org/UA/units/un/cefact");
             // The mapping of the UNECE codes to OPC UA(EUInformation.unitId) is available here:
             // http://www.opcfoundation.org/UA/EngineeringUnits/UNECE/UNECE_to_OPCUA.csv
