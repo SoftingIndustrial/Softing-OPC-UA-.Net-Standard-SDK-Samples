@@ -126,7 +126,7 @@
       </ua:UserTokenPolicy>
     </UserTokenPolicies>
     <DiagnosticsEnabled>true</DiagnosticsEnabled>
-    <MaxSessionCount>100</MaxSessionCount>
+    <MaxSessionCount>50</MaxSessionCount>
     <MinSessionTimeout>10000</MinSessionTimeout>
     <MaxSessionTimeout>3600000</MaxSessionTimeout>
     <MaxBrowseContinuationPoints>10</MaxBrowseContinuationPoints>
@@ -167,7 +167,7 @@
     <NodeManagerSaveFile>SampleServer.nodes.xml</NodeManagerSaveFile>
     <MinSubscriptionLifetime>10000</MinSubscriptionLifetime>
     <MaxPublishRequestCount>100</MaxPublishRequestCount>
-    <MaxSubscriptionCount>200</MaxSubscriptionCount>
+    <MaxSubscriptionCount>250</MaxSubscriptionCount>
     <MaxEventQueueSize>10000</MaxEventQueueSize>
     <!-- see https://opcfoundation-onlineapplications.org/profilereporting/ for list of available profiles -->
     <ServerProfileArray>
