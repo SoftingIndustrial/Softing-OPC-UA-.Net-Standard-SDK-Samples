@@ -46,7 +46,7 @@ namespace XamarinSampleServer.Droid
             else
             {
                 if (PackageManager.CheckPermission(Manifest.Permission.ReadExternalStorage, PackageName) != Permission.Granted
-                    && PackageManager.CheckPermission(Manifest.Permission.WriteExternalStorage, PackageName) != Permission.Granted)
+                    || PackageManager.CheckPermission(Manifest.Permission.WriteExternalStorage, PackageName) != Permission.Granted)
                 {
                     var permissions = new string[] { Manifest.Permission.ReadExternalStorage, Manifest.Permission.WriteExternalStorage };
                     RequestPermissions(permissions, 1);
@@ -71,7 +71,7 @@ namespace XamarinSampleServer.Droid
             {
                 AlertDialog.Builder alertDiag = new AlertDialog.Builder(this);
                 alertDiag.SetTitle("Warning");
-                alertDiag.SetMessage("The Sample Client cannot execute without the requested permissions!");
+                alertDiag.SetMessage("The Sample Server cannot execute without the requested permissions!");
 
                 alertDiag.SetPositiveButton("OK", (senderAlert, args) => {
                     System.Diagnostics.Process.GetCurrentProcess().Kill();

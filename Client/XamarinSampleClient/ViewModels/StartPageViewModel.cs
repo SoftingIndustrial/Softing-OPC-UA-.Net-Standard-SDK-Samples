@@ -35,7 +35,7 @@ namespace XamarinSampleClient.ViewModels
         {
             ThreadPool.QueueUserWorkItem(o => InitializeUaApplication());
 
-            Title = "OPC UA sample client";
+            Title = "OPC UA Sample Client";
            
             WelcomeMessage = "Please select a sample from the list below:";
 
