@@ -76,11 +76,11 @@ namespace SampleClient.Samples
         const string StaticCustomStructuredValueArrayNodeId = "ns=11;i=40";
 
         //Browse path: Root\Objects\DataAccess\NodesForRegister\Node0
-        const string RegisterNodeId0 = "ns=3;i=32";
+        const string RegisterNodeId0 = "ns=3;i=49";
         //Browse path: Root\Objects\DataAccess\NodesForRegister\Node1
-        const string RegisterNodeId1 = "ns=3;i=33";
+        const string RegisterNodeId1 = "ns=3;i=50";
         //Browse path: Root\Objects\DataAccess\NodesForRegister\Node2
-        const string RegisterNodeId2 = "ns=3;i=34";
+        const string RegisterNodeId2 = "ns=3;i=51";
         #endregion
 
         #region Constructor
