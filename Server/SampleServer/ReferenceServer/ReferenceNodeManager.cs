@@ -471,6 +471,8 @@ namespace SampleServer.ReferenceServer
                                 item.EURange.Value.High = 0;
                                 item.EURange.Value.Low = 0;
                             }
+
+                            
                         }
                     }
 
@@ -1422,7 +1424,9 @@ namespace SampleServer.ReferenceServer
         /// <returns></returns>
         private DataItemState CreateDataItemVariable(NodeState parent, string name, NodeId dataType, int valueRank = ValueRanks.Scalar)
         {
-            DataItemState variable = base.CreateDataItemVariable(parent, name, dataType, valueRank);           
+            DataItemState variable = base.CreateDataItemVariable(parent, name, dataType, valueRank);
+            // set default value
+            variable.Value = TypeInfo.GetDefaultValue(variable.DataType, variable.ValueRank);
 
             variable.DisplayName = new LocalizedText("en", name);
 
@@ -1469,6 +1473,8 @@ namespace SampleServer.ReferenceServer
             }
 
             AnalogItemState variable = base.CreateAnalogVariable(parent, name, dataType, valueRank, valueRange, new EUInformation());
+            // set default value
+            variable.Value = TypeInfo.GetDefaultValue(variable.DataType, variable.ValueRank);
 
             BuiltInType builtInType = TypeInfo.GetBuiltInType(dataType, Server.TypeTree);
 
@@ -1541,7 +1547,10 @@ namespace SampleServer.ReferenceServer
         private new MultiStateDiscreteState CreateMultiStateDiscreteVariable(NodeState parent, string name, params string[] values)
         {
             MultiStateDiscreteState variable = base.CreateMultiStateDiscreteVariable(parent, name, values);
-            
+            // set default value
+            variable.Value = TypeInfo.GetDefaultValue(variable.DataType, variable.ValueRank);
+
+
             variable.OnWriteValue = OnWriteDiscrete;           
             variable.EnumStrings.AccessLevel = AccessLevels.CurrentReadOrWrite;
             variable.EnumStrings.UserAccessLevel = AccessLevels.CurrentReadOrWrite;            
