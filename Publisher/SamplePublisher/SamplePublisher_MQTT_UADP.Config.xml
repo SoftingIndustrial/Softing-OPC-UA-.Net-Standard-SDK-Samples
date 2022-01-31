@@ -3820,7 +3820,7 @@
                     <DataSetMessageContentMask>36</DataSetMessageContentMask>
                     <ConfiguredSize>32</ConfiguredSize>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>15</DataSetOffset>
+                    <DataSetOffset>0</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
                 </Body>
               </MessageSettings>
@@ -3855,7 +3855,7 @@
                     <DataSetMessageContentMask>36</DataSetMessageContentMask>
                     <ConfiguredSize>32</ConfiguredSize>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>47</DataSetOffset>
+                    <DataSetOffset>0</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
                 </Body>
               </MessageSettings>
@@ -3890,7 +3890,7 @@
                     <DataSetMessageContentMask>36</DataSetMessageContentMask>
                     <ConfiguredSize>405</ConfiguredSize>
                     <NetworkMessageNumber>1</NetworkMessageNumber>
-                    <DataSetOffset>79</DataSetOffset>
+                    <DataSetOffset>0</DataSetOffset>
                   </UadpDataSetWriterMessageDataType>
                 </Body>
               </MessageSettings>
