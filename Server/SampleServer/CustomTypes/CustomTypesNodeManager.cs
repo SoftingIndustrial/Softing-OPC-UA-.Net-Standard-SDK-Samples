@@ -165,17 +165,17 @@ namespace SampleServer.CustomTypes
                 DataTypeState vehicleExtra2Type = CreateDataType(vehicleType.NodeId, "VehicleWithExtra2Type", vehicleStructure);
 
                 // Create Variable node instances for defined DataTypes
-                var engineStateVariable = CreateVariable(m_rootCustomTypesFolder, "EngineState", engineStateType.NodeId);
+                var engineStateVariable = CreateVariableWithValue(m_rootCustomTypesFolder, "EngineState", engineStateType.NodeId);
                 engineStateVariable.Description = "Variable with data type defined as custom Enumeration";
-                var displayWarningVariable = CreateVariable(m_rootCustomTypesFolder, "DisplayWarning", displayWarningType.NodeId);
+                var displayWarningVariable = CreateVariableWithValue(m_rootCustomTypesFolder, "DisplayWarning", displayWarningType.NodeId);
                 displayWarningVariable.Description = "Variable with data type defined as custom OptionSet Enumeration";
-                var featuresOptionSetVariable = CreateVariable(m_rootCustomTypesFolder, "FeaturesOptionSet", featuresOptionSetType.NodeId);
+                var featuresOptionSetVariable = CreateVariableWithValue(m_rootCustomTypesFolder, "FeaturesOptionSet", featuresOptionSetType.NodeId);
                 featuresOptionSetVariable.Description = "Variable with data type defined as custom OptionSet";
-                var ownerVariable = CreateVariable(m_rootCustomTypesFolder, "Owner", ownerType.NodeId);
+                var ownerVariable = CreateVariableWithValue(m_rootCustomTypesFolder, "Owner", ownerType.NodeId);
                 ownerVariable.Description = "Variable with data type defined as StructuredValue with optional fields";
-                var fuelLevelVariable = CreateVariable(m_rootCustomTypesFolder, "FuelLevel", fuelLevelDetailsType.NodeId);
+                var fuelLevelVariable = CreateVariableWithValue(m_rootCustomTypesFolder, "FuelLevel", fuelLevelDetailsType.NodeId);
                 fuelLevelVariable.Description = "Variable with data type defined as Union";
-                var vehicleVariable = CreateVariable(m_rootCustomTypesFolder, "Vehicle", vehicleType.NodeId);
+                var vehicleVariable = CreateVariableWithValue(m_rootCustomTypesFolder, "Vehicle", vehicleType.NodeId);
                 vehicleVariable.Description = "Variable with data type defined as StructuredValue";
                 StructuredValue vehicle = vehicleVariable.Value as StructuredValue;
                 if (vehicle != null)
@@ -184,19 +184,19 @@ namespace SampleServer.CustomTypes
                     // For this you need to know in advance the exact name and type of the field from the type definition
                     vehicle["Name"] = "BMW";
                 }
-                var vehicleExtra1Variable = CreateVariable(m_rootCustomTypesFolder, "VehicleExtra1", vehicleExtra1Type.NodeId);
+                var vehicleExtra1Variable = CreateVariableWithValue(m_rootCustomTypesFolder, "VehicleExtra1", vehicleExtra1Type.NodeId);
                 vehicleExtra1Variable.Description = "Variable with data type defined as StructuredValue and derived from custom type";
 
-                var vehicleExtra2Variable = CreateVariable(m_rootCustomTypesFolder, "VehicleExtra2", vehicleExtra2Type.NodeId);
+                var vehicleExtra2Variable = CreateVariableWithValue(m_rootCustomTypesFolder, "VehicleExtra2", vehicleExtra2Type.NodeId);
                 vehicleExtra2Variable.Description = "Variable with data type defined as StructuredValue and derived from custom type";
 
                 // Create Array variable nodes for defined DataTypes
-                var engineStateArrayVariable = CreateVariable(m_arraysFolder, "EngineStates", engineStateType.NodeId, ValueRanks.OneDimension);
-                var displayWarningArrayVariable = CreateVariable(m_arraysFolder, "DisplayWarnings", displayWarningType.NodeId, ValueRanks.OneDimension);
-                var featuresOptionSetArrayVariable = CreateVariable(m_arraysFolder, "FeaturesOptionSets", featuresOptionSetType.NodeId, ValueRanks.OneDimension);
-                var ownerArrayVariable = CreateVariable(m_arraysFolder, "Owners", ownerType.NodeId, ValueRanks.OneDimension);
-                var fuelLevelArrayVariable = CreateVariable(m_arraysFolder, "FuelLevels", fuelLevelDetailsType.NodeId, ValueRanks.OneDimension);
-                var vehicleArrayVariable = CreateVariable(m_arraysFolder, "Vehicles", vehicleType.NodeId, ValueRanks.OneDimension);
+                var engineStateArrayVariable = CreateVariableWithValue(m_arraysFolder, "EngineStates", engineStateType.NodeId, ValueRanks.OneDimension);
+                var displayWarningArrayVariable = CreateVariableWithValue(m_arraysFolder, "DisplayWarnings", displayWarningType.NodeId, ValueRanks.OneDimension);
+                var featuresOptionSetArrayVariable = CreateVariableWithValue(m_arraysFolder, "FeaturesOptionSets", featuresOptionSetType.NodeId, ValueRanks.OneDimension);
+                var ownerArrayVariable = CreateVariableWithValue(m_arraysFolder, "Owners", ownerType.NodeId, ValueRanks.OneDimension);
+                var fuelLevelArrayVariable = CreateVariableWithValue(m_arraysFolder, "FuelLevels", fuelLevelDetailsType.NodeId, ValueRanks.OneDimension);
+                var vehicleArrayVariable = CreateVariableWithValue(m_arraysFolder, "Vehicles", vehicleType.NodeId, ValueRanks.OneDimension);
 
                 // Create Matrix variable nodes for defined DataTypes
                 var engineStateMatrixVariable = CreateVariable(matrixFolder, "EngineStates", engineStateType.NodeId, ValueRanks.OneOrMoreDimensions);
@@ -440,6 +440,22 @@ namespace SampleServer.CustomTypes
         #endregion
 
         #region Private implementation
+
+        /// <summary>
+        /// Create a varable state node and set its value to defautk value dfor data type
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="dataType"></param>
+        /// <param name="valueRank"></param>
+        /// <returns></returns>
+        private BaseVariableState CreateVariableWithValue(NodeState parent, string name, NodeId dataType, int valueRank = ValueRanks.Scalar )
+        {
+            var variable = CreateVariable(parent, name, dataType, valueRank);
+            variable.Value = GetDefaultValueForDatatype(dataType, valueRank);
+
+            return variable;
+        }
         /// <summary>
         /// Handler for AddVehicle method
         /// </summary>
