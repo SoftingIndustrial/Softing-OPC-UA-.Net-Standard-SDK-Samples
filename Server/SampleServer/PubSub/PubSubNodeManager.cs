@@ -372,7 +372,7 @@ namespace SampleServer.PubSub
             {
                 NodeId dataTypeId = TypeInfo.GetDataTypeId(e.ExtensionField.Value);
                 var variable = CreateVariable(publishedDataSetState.ExtensionFields, e.ExtensionField.Key.Name, dataTypeId);
-                variable.ReferenceTypeId = ReferenceTypeIds.HasProperty;
+                variable.ReferenceTypeId = ReferenceTypeIds.HasComponent;
                 variable.Value = e.ExtensionField.Value;
 
                 MapConfigIdToPubSubNodeState(e.ExtensionFieldId, variable);
