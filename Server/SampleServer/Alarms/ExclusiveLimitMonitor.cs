@@ -243,6 +243,10 @@ namespace SampleServer.Alarms
                     m_alarm.Time.Value = DateTime.UtcNow;
                     m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
 
+                    m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
+                    m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
+                    m_alarm.BranchId.Value = new NodeId();
+
                     // Not interested in disabled or inactive alarms
                     if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
                     {
