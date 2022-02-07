@@ -200,8 +200,10 @@ namespace SampleServer.FileTransfer
             // Link the node handle to a file handler
             byteString.Handle = byteStringPath;
             // Read the file content as byte array
-            byteString.OnSimpleReadValue = OnReadFile; 
-            
+            byteString.OnSimpleReadValue = OnReadFile;
+            // Set the status code of the variable
+            byteString.StatusCode = StatusCodes.Good;
+
             return byteString;
         }
 
