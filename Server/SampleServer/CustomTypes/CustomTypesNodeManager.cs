@@ -354,6 +354,8 @@ namespace SampleServer.CustomTypes
                 // Create Variable node instances for defined VariableTypes
                 var variable = CreateVariableFromType(m_rootCustomTypesFolder, "CustomVariableInstance", customVariableType.NodeId, ReferenceTypeIds.Organizes);
                 variable.Description = "Variable instance of custom VariableType: CustomVariableType ";
+                variable.Value = (uint)0;
+
                 var vehicleVariableInstance = CreateVariableFromType(m_rootCustomTypesFolder, "VehicleVariableInstance", vehicleVariableType.NodeId, ReferenceTypeIds.HasComponent);
                 vehicleVariableInstance.Description = "Variable instance of custom VariableType: VehicleVariableType ";
                 #endregion

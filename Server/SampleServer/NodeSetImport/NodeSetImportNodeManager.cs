@@ -102,10 +102,14 @@ namespace SampleServer.NodeSetImport
                         refrigeratorStatusValue["MotorTemperature"] = 5.6;
 
                         var refrigeratorStatusVariable = CreateVariable(referenceServerVariables, "RefrigeratorStatusVariable", dataTypeRefrigeratorStatus.NodeId);
-                        
+                        refrigeratorStatusVariable.Value = refrigeratorStatusValue;
+
                         var enumerationRefrigeratorState = PredefinedNodes.Values.FirstOrDefault(x => x.BrowseName.Name == "RefrigeratorState");
+                        var enumerationRefrigeratorStateValue = GetDefaultValueForDatatype(enumerationRefrigeratorState.NodeId);
+                        
                         var refrigeratorStateVariable = CreateVariable(referenceServerVariables, "RefrigeratorStateVariable", enumerationRefrigeratorState.NodeId);
-                       
+                        refrigeratorStateVariable.Value = enumerationRefrigeratorStateValue;
+                    
                     }
                 }
                 catch (Exception ex)

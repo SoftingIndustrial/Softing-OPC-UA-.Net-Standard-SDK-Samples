@@ -124,6 +124,7 @@ namespace SampleServer.DataAccess
 
             // Create DoorClosed variable
             m_doorClosed = CreateDataItemVariable(refrigerator, "DoorClosed", DataTypes.Boolean);
+            m_doorClosed.Value = false;
 
             // Create DoorOpened variable
             m_doorOpened = CreateDataItemVariable(refrigerator, "DoorOpened", DataTypes.Boolean);
