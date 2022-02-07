@@ -92,6 +92,8 @@ namespace SampleServer.HistoricalDataAccess
             m_configuration.ReferenceTypeId = ReferenceTypeIds.HasHistoricalConfiguration;
 
             AddChild(m_configuration);
+
+            base.StatusCode = StatusCodes.Good; 
         }
 
         #endregion
