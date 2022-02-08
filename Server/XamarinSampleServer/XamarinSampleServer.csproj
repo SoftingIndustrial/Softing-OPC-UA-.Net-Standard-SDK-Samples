@@ -25,8 +25,9 @@
 
 
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\ExclusiveLimitMonitor.cs" Link="_SampleServer\Alarms\ExclusiveLimitMonitor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\AlarmsNodeManager.cs" Link="_SampleServer\Alarms\AlarmsNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServerBeta\Namespaces.cs" Link="_SampleServerBeta\Namespaces.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServerBeta\Alarms\ExclusiveLimitMonitor.cs" Link="_SampleServerBeta\Alarms\ExclusiveLimitMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServerBeta\Alarms\AlarmsNodeManager.cs" Link="_SampleServerBeta\Alarms\AlarmsNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\DataAccess\DataAccessNodeManager.cs" Link="_SampleServer\DataAccess\DataAccessNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Methods\MethodsNodeManager.cs" Link="_SampleServer\Methods\MethodsNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\NodeSetImportNodeManager.cs" Link="_SampleServer\NodeSetImport\NodeSetImportNodeManager.cs" />
