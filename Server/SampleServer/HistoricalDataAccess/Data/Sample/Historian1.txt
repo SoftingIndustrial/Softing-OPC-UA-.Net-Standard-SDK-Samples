@@ -11,4 +11,5 @@
 2011-01-01T12:01:10Z, 2011-01-01T12:01:10Z, Uncertain, Raw, Double, 70.0
 2011-01-01T12:01:10Z, 2011-01-01T12:01:10Z, Good, Annotation, 2012-01-02T08:00:00Z, Tehnician_1, Value flagged as questionable
 2011-01-01T12:01:20Z, 2011-01-01T12:01:20Z, Good, Raw, Double, 80.0
-2011-01-01T12:01:30Z, 2011-01-01T12:01:30Z, Good, Raw, Double, 90.0
+2011-01-01T12:01:30Z, 2011-01-01T12:01:30Z, Bad, Raw, Double, 90.0
+

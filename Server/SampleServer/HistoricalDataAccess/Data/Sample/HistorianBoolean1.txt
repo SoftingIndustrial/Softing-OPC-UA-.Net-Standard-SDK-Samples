@@ -1,0 +1,17 @@
+﻿Boolean, -1, 10000, 0, 0, 0, 0, 0, 0, 0, 100, 100
+2011-01-01T12:00:10Z, 2011-01-01T12:00:10Z, Good, Raw, Boolean, true
+2011-01-01T12:00:20Z, 2011-01-01T12:00:20Z, Good, Raw, Boolean, true
+2011-01-01T12:00:30Z, 2011-01-01T12:00:30Z, Good, Raw, Boolean, false
+2011-01-01T12:00:32Z, 2011-01-01T12:00:32Z, Bad, Raw, Boolean, false
+2011-01-01T12:00:37Z, 2011-01-01T12:00:37Z, Bad, Raw, Boolean, true
+2011-01-01T12:00:40Z, 2011-01-01T12:00:40Z, Bad, Raw, Boolean, false
+2011-01-01T12:00:40Z, 2011-01-01T12:00:40Z, Good, Annotation, 2012-01-02T08:00:00Z, Operator1, Scan failed,  Bad Data entered
+2011-01-01T12:00:40Z, 2011-01-01T12:00:40Z, Good, Annotation, 2012-01-04T07:10:00Z, , Value cannot be verified
+2011-01-01T12:00:50Z, 2011-01-01T12:00:50Z, Good, Raw, Boolean, true
+2011-01-01T12:00:50Z, 2011-01-01T12:00:50Z, Good, Annotation, 2012-01-04T07:00:00Z, Engineer1, Scanner fixed
+2011-01-01T12:01:00Z, 2011-01-01T12:01:00Z, Good, Raw, Boolean, false
+2011-01-01T12:01:10Z, 2011-01-01T12:01:10Z, Uncertain, Raw, Boolean, true
+2011-01-01T12:01:10Z, 2011-01-01T12:01:10Z, Good, Annotation, 2012-01-02T08:00:00Z, Tehnician_1, Value flagged as questionable
+2011-01-01T12:01:20Z, 2011-01-01T12:01:20Z, Good, Raw, Boolean, true
+2011-01-01T12:01:30Z, 2011-01-01T12:01:30Z, Bad, Raw, Boolean, true
+

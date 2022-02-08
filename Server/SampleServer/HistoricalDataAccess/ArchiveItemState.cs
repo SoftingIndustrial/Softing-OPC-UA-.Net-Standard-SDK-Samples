@@ -56,9 +56,11 @@ namespace SampleServer.HistoricalDataAccess
             UserWriteMask = 0;
             DataType = DataTypeIds.BaseDataType;
             ValueRank = ValueRanks.Scalar;
-            AccessLevel = AccessLevels.HistoryReadOrWrite | AccessLevels.CurrentRead;
-            UserAccessLevel = AccessLevels.HistoryReadOrWrite | AccessLevels.CurrentRead;
+            
+            AccessLevel = AccessLevels.HistoryReadOrWrite | AccessLevels.CurrentRead | AccessLevels.CurrentWrite;
+            UserAccessLevel = AccessLevels.HistoryReadOrWrite | AccessLevels.CurrentRead | AccessLevels.CurrentWrite;
             MinimumSamplingInterval = MinimumSamplingIntervals.Indeterminate;
+            StatusCode = StatusCodes.Good;
             Historizing = true;
 
             m_annotations = new PropertyState<Annotation>(this);
