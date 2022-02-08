@@ -14,7 +14,7 @@ using Opc.Ua;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.Server;
 
-namespace SampleServer.Alarms
+namespace SampleServerBeta.Alarms
 {
     /// <summary>
     /// A node manager for a server that provides an implementation of the Alarms and Conditions OPC UA feature

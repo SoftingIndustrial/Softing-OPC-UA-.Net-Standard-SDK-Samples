@@ -14,8 +14,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Alarms\**" />
+    <Compile Remove="HistoricalDataAccess\**" />
     <Compile Remove="NodeManagement\**" />
+    <EmbeddedResource Remove="Alarms\**" />
+    <EmbeddedResource Remove="HistoricalDataAccess\**" />
     <EmbeddedResource Remove="NodeManagement\**" />
+    <None Remove="Alarms\**" />
+    <None Remove="HistoricalDataAccess\**" />
     <None Remove="NodeManagement\**" />
   </ItemGroup>
 
@@ -42,27 +48,6 @@
     <Content Include="FileTransfer\Files\UploadFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="HistoricalDataAccess\Data\Dynamic\Double.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HistoricalDataAccess\Data\Dynamic\Int32.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HistoricalDataAccess\Data\Events.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HistoricalDataAccess\Data\Sample\Historian1.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HistoricalDataAccess\Data\Sample\Historian2.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HistoricalDataAccess\Data\Sample\Historian3.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HistoricalDataAccess\Data\Sample\Historian4.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="ReferenceServer\Model\ModelDesign.xml" />
     <EmbeddedResource Include="NodeSetImport\Refrigerators.NodeSet2.xml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
@@ -74,7 +59,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Alarms\" />
     <Folder Include="DataAccess\" />
     <Folder Include="Methods\" />
     <Folder Include="UserAuthentication\" />

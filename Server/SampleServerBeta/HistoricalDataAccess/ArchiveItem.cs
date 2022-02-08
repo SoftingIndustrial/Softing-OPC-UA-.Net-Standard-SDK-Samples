@@ -14,7 +14,7 @@ using System.IO;
 using System.Data;
 using Opc.Ua;
 
-namespace SampleServer.HistoricalDataAccess
+namespace SampleServerBeta.HistoricalDataAccess
 {
     /// <summary>
     /// Stores the metadata for a node representing a folder on a file system

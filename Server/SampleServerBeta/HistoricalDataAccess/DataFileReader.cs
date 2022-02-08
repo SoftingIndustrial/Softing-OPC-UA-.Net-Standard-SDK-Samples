@@ -15,7 +15,7 @@ using System.Xml;
 using System.Data;
 using Opc.Ua;
 
-namespace SampleServer.HistoricalDataAccess
+namespace SampleServerBeta.HistoricalDataAccess
 {
     /// <summary>
     /// Reads an item history from a file.

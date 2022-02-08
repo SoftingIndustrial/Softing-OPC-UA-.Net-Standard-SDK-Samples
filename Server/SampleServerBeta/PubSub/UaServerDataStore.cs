@@ -14,7 +14,7 @@ using Opc.Ua.PubSub;
 using Softing.Opc.Ua.Server;
 using System.Collections.Generic;
 
-namespace SampleServer.PubSub
+namespace SampleServerBeta.PubSub
 {
     /// <summary>
     /// Local Implementation of <see cref="IUaPubsubDataStore"/>

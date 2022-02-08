@@ -14,18 +14,14 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using Opc.Ua;
 using Opc.Ua.Server;
-using SampleServer.CustomTypes;
-using SampleServer.DataAccess;
-using SampleServer.FileTransfer;
-using SampleServer.Methods;
-using SampleServer.NodeSetImport;
-using SampleServer.ReferenceServer;
-using SampleServer.UserAuthentication;
+using SampleServerBeta.Alarms;
+using SampleServerBeta.HistoricalDataAccess;
+using SampleServerBeta.PubSub;
 using Softing.Opc.Ua.Server;
 
 using X509Certificate2Collection = System.Security.Cryptography.X509Certificates.X509Certificate2Collection;
 
-namespace SampleServer
+namespace SampleServerBeta
 {
     /// <summary>
     /// A sample implementation of UaServer from Softing OPC UA .Net Standard Toolkit
@@ -67,10 +63,6 @@ namespace SampleServer
         protected override void OnServerStarted(IServerInternal server)
         {
             base.OnServerStarted(server);
-
-            // create the NamespaceMetadata for ReferenceServer Namespace
-            ConfigurationNodeManager configurationNodeManager = server.DiagnosticsNodeManager as ConfigurationNodeManager;
-            var metaData = configurationNodeManager?.CreateNamespaceMetadataState(Namespaces.ReferenceApplications);
 
             uint clearCertificatesInterval = 30000;
 
@@ -116,15 +108,10 @@ namespace SampleServer
             List<INodeManager> nodeManagers = new List<INodeManager>();
             // add RolesNodeManager to support Role based permission handling in this server
             nodeManagers.Add(new RolesNodeManager(server, configuration));
-            nodeManagers.Add(new DataAccessNodeManager(server, configuration));
-            nodeManagers.Add(new MethodsNodeManager(server, configuration));
-            nodeManagers.Add(new NodeSetImportNodeManager(server, configuration));
-            
-            nodeManagers.Add(new UserAuthenticationNodeManager(server, configuration));
-            nodeManagers.Add(new FileTransferNodeManager(server, configuration));
-            nodeManagers.Add(new ReferenceNodeManager(server, configuration));
-            nodeManagers.Add(new CustomTypesNodeManager(server, configuration));
-			
+            nodeManagers.Add(new AlarmsNodeManager(server, configuration));
+            nodeManagers.Add(new SampleHDANodeManager(server, configuration));
+            nodeManagers.Add(new PubSubNodeManager(server, configuration, true));
+
             // Create master node manager
             return new MasterNodeManager(server, configuration, null, nodeManagers.ToArray());
         }

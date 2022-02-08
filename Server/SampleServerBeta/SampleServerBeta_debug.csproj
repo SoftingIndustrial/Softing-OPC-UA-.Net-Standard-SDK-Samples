@@ -1,0 +1,78 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>$(AppTargetFrameworks)</TargetFrameworks>
+    <AssemblyName>SampleServerBeta</AssemblyName>
+    <RootNamespace>SampleServerBeta</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="HistoricalDataAccess\Data\Dynamic\Double.txt" />
+    <None Remove="HistoricalDataAccess\Data\Dynamic\Int32.txt" />
+    <None Remove="HistoricalDataAccess\Data\Events.txt" />
+    <None Remove="HistoricalDataAccess\Data\Sample\Historian1.txt" />
+    <None Remove="HistoricalDataAccess\Data\Sample\Historian2.txt" />
+    <None Remove="HistoricalDataAccess\Data\Sample\Historian3.txt" />
+    <None Remove="HistoricalDataAccess\Data\Sample\Historian4.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="HistoricalDataAccess\Data\Dynamic\Double.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoricalDataAccess\Data\Dynamic\Int32.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoricalDataAccess\Data\Events.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoricalDataAccess\Data\Sample\Historian1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoricalDataAccess\Data\Sample\Historian2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoricalDataAccess\Data\Sample\Historian3.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HistoricalDataAccess\Data\Sample\Historian4.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Libraries\Opc.Ua.Configuration\Opc.Ua.Configuration.csproj" />
+    <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Libraries\Opc.Ua.PubSub\Opc.Ua.PubSub.csproj" />
+    <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Libraries\Opc.Ua.Security.Certificates\Opc.Ua.Security.Certificates.csproj" />
+    <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Libraries\Opc.Ua.Server\Opc.Ua.Server.csproj" />
+    <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Bindings.Https\Opc.Ua.Bindings.Https.csproj" />
+    <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Core\Opc.Ua.Core.csproj" />
+    <ProjectReference Include="..\..\..\Toolkit\Server\Softing.Opc.Ua.Server_debug.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="SamplePublisher.Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleServer.Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleSubscriber.Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!--<PropertyGroup>
+    <OutputType>Exe</OutputType>
+   
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>SampleServerBeta</AssemblyName>
+    <RootNamespace>SampleServer</RootNamespace>
+    <RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
+  </PropertyGroup>-->
+  
+  
+  
+  
+</Project>
