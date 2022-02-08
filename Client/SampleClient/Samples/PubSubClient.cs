@@ -58,7 +58,7 @@ namespace SampleClient.Samples
                 try
                 {
                     // create the session object with no security and anonymous login    
-                    m_session = m_application.CreateSession(Program.ServerUrl);
+                    m_session = m_application.CreateSession(Program.ServerBetaUrl);
                     m_session.SessionName = SessionName;
                     m_session.KeepAlive += Session_KeepAlive;
 

@@ -21,6 +21,7 @@ namespace SampleClient
     {
         #region Private Members
         private string m_serverUrl = "opc.tcp://localhost:61510/SampleServer";
+        private string m_serverBetaUrl = "opc.tcp://localhost:61510/SampleServer";
         private string m_serverUrlHttps = "https://localhost:61511/SampleServer";
         private string m_reverseConnectUrl = "opc.tcp://localhost:65300";
         private string m_reverseConnectServerApplicationUri = "urn:localhost:Softing:UANETStandardToolkit:SampleServer";
@@ -63,11 +64,21 @@ namespace SampleClient
             get { return m_serverUrl; }
             set { m_serverUrl = value; }
         }
-        
+
+        /// <summary>
+        /// Gets or sets the server beta endpoint URL where the client will connect on opc.tcp protocol.
+        /// </summary>
+        [DataMember(IsRequired = false, Order = 2)]
+        public string ServerBetaUrl
+        {
+            get { return m_serverBetaUrl; }
+            set { m_serverBetaUrl = value; }
+        }
+
         /// <summary>
         /// Gets or sets the server endpoint URL where the client will connect on https protocol.
         /// </summary>
-        [DataMember(IsRequired = false, Order = 2)]
+        [DataMember(IsRequired = false, Order = 3)]
         public string ServerUrlHttps
         {
             get { return m_serverUrlHttps; }
@@ -77,7 +88,7 @@ namespace SampleClient
         /// <summary>
         /// Gets or sets the reverse connect endpoint URL where the client will wait for reverse connect messages.
         /// </summary>
-        [DataMember(IsRequired = false, Order = 3)]
+        [DataMember(IsRequired = false, Order = 4)]
         public string ReverseConnectUrl
         {
             get { return m_reverseConnectUrl; }
@@ -87,7 +98,7 @@ namespace SampleClient
         /// <summary>
         /// Gets or sets the server application URI that will be allowed to reverse connect to this client.
         /// </summary>
-        [DataMember(IsRequired = false, Order = 4)]
+        [DataMember(IsRequired = false, Order = 5)]
         public string ReverseConnectServerApplicationUri
         {
             get { return m_reverseConnectServerApplicationUri; }
@@ -100,7 +111,7 @@ namespace SampleClient
         /// <summary>
         /// Gets or sets the <see cref="CertificateIdentifier"/> for the server that will be used to create reverse connect sessions.
         /// </summary>
-        [DataMember(IsRequired = false, Order = 5)]
+        [DataMember(IsRequired = false, Order = 6)]
         public CertificateIdentifier ReverseConnectServerCertificateIdentifier
         {
             get { return m_reverseConnectServerCertificateIdentifier; }
@@ -109,7 +120,6 @@ namespace SampleClient
                 m_reverseConnectServerCertificateIdentifier = value;
             }
         }
-
 
         #endregion
     }
