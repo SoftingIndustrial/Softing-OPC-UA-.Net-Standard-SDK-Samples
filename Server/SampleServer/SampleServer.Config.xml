@@ -40,7 +40,7 @@
     <!-- Indicates whether SHA-1 signed certificates are accepted.-->
     <RejectSHA1SignedCertificates>false</RejectSHA1SignedCertificates>
     <!-- Indicates whether certificates with unavailable revocation lists are not accepted.-->
-    <RejectUnknownRevocationStatus>false</RejectUnknownRevocationStatus>
+    <RejectUnknownRevocationStatus>true</RejectUnknownRevocationStatus>
     <!--Indicates which minimum certificate key strength is accepted.-->
     <MinimumCertificateKeySize>1024</MinimumCertificateKeySize>
     <!--Indicates whether the application cert should be copied to the trusted store.-->
@@ -75,10 +75,10 @@
       <!--<ua:String>https://localhost:61511/SampleServer/</ua:String>-->
     </BaseAddresses>
       <SecurityPolicies>
-        <ServerSecurityPolicy>
+        <!--<ServerSecurityPolicy>
           <SecurityMode>None_1</SecurityMode>
           <SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#None</SecurityPolicyUri>
-        </ServerSecurityPolicy>
+        </ServerSecurityPolicy>-->
         <ServerSecurityPolicy>
           <SecurityMode>Sign_2</SecurityMode>
           <SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256</SecurityPolicyUri>
