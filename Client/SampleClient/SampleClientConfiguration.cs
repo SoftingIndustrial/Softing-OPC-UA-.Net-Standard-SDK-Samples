@@ -21,7 +21,7 @@ namespace SampleClient
     {
         #region Private Members
         private string m_serverUrl = "opc.tcp://localhost:61510/SampleServer";
-        private string m_serverBetaUrl = "opc.tcp://localhost:61510/SampleServer";
+        private string m_serverBetaUrl = "opc.tcp://localhost:61518/SampleServerBeta";
         private string m_serverUrlHttps = "https://localhost:61511/SampleServer";
         private string m_reverseConnectUrl = "opc.tcp://localhost:65300";
         private string m_reverseConnectServerApplicationUri = "urn:localhost:Softing:UANETStandardToolkit:SampleServer";

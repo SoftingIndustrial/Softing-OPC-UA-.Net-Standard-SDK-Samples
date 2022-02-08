@@ -59,11 +59,11 @@ namespace SampleClient.Samples
 
             /*Select the method from the address space*/
             //Browse Path: Root\Objects\Methods
-            NodeId parentObjectId = new NodeId("ns=5;i=1");
+            NodeId parentObjectId = new NodeId("ns=3;i=1");
 
             //Browse Path: Root\Objects\Methods\Add
             string methodPath = "Root\\Objects\\Methods\\Add";
-            NodeId methodId = new NodeId("ns=5;i=2");
+            NodeId methodId = new NodeId("ns=3;i=2");
 
             /*initialize input arguments*/
             float arg1 = 123.123f;
@@ -108,15 +108,15 @@ namespace SampleClient.Samples
 
             /*Select the method from the address space*/
             //Browse Path: Root\Objects\Methods
-            NodeId parentObjectId = new NodeId("ns=5;i=1");
+            NodeId parentObjectId = new NodeId("ns=3;i=1");
 
             //Browse Path: Root\Objects\Methods\CountRefrigeratorStates
             string methodPath = "Root\\Objects\\Methods\\CountRefrigeratorStates";
-            NodeId methodId = new NodeId("ns=5;i=11");
+            NodeId methodId = new NodeId("ns=3;i=11");
 
             /*initialize input arguments*/       
             // initialize array of RefrigeratorState enum
-            EnumValue[] refrigeratorStateArray = m_session.GetDefaultValueForDatatype(new NodeId("ns=13;i=15002"), ValueRanks.OneDimension, 3) as EnumValue[];           
+            EnumValue[] refrigeratorStateArray = m_session.GetDefaultValueForDatatype(new NodeId("ns=10;i=15002"), ValueRanks.OneDimension, 3) as EnumValue[];           
 
             Console.WriteLine("\nMethod '{0}' is called with the following arguments:", methodPath);
             for (int i = 0; i < refrigeratorStateArray.Length; i++)
@@ -156,10 +156,10 @@ namespace SampleClient.Samples
 
             /*Select the method from the address space*/
             //Browse Path: Root\Objects\Methods
-            NodeId parentObjectId = new NodeId(1, 5);
+            NodeId parentObjectId = new NodeId(1, 3);
             //Browse Path: Root\Objects\Methods\Multiply
             string methodPath = "Root\\Objects\\Methods\\Multiply";
-            NodeId methodId = new NodeId("ns=5;i=5");
+            NodeId methodId = new NodeId("ns=3;i=5");
 
             /*initialize input arguments*/
             Int16 arg1 = -34;

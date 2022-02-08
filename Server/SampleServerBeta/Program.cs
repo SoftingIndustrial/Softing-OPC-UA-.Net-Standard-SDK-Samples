@@ -124,9 +124,9 @@ namespace SampleServerBeta
                 new ApplicationConfigurationBuilderEx(ApplicationType.Server);
 
             await applicationConfigurationBuilder
-                .Initialize("urn:localhost:Softing:UANETStandardToolkit:SampleServer",
-                        "http://industrial.softing.com/OpcUaNetStandardToolkit/SampleServer")
-                .SetApplicationName("Softing NET Standard Sample Server")
+                .Initialize("urn:localhost:Softing:UANETStandardToolkit:SampleServerBeta",
+                        "http://industrial.softing.com/OpcUaNetStandardToolkit/SampleServerBeta")
+                .SetApplicationName("Softing NET Standard Sample Server Beta")
                 .DisableHiResClock(true)
                 .SetTransportQuotas(new Opc.Ua.TransportQuotas()
                 {
@@ -136,7 +136,7 @@ namespace SampleServerBeta
                     MaxMessageSize = 4194304,
                     ChannelLifetime = 300000,
                 })
-                .AsServer(new string[] { "opc.tcp://localhost:61510/SampleServer" })
+                .AsServer(new string[] { "opc.tcp://localhost:61518/SampleServerBeta" })
                     .AddUnsecurePolicyNone()
                     .AddSignAndEncryptPolicies()
                     .AddPolicy(Opc.Ua.MessageSecurityMode.Sign, "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256")
@@ -158,7 +158,7 @@ namespace SampleServerBeta
                         new Opc.Ua.SamplingRateGroup(){Start=500, Increment=250, Count=2},
                         new Opc.Ua.SamplingRateGroup(){Start=100, Increment=500, Count=20},
                     })
-                    .SetNodeManagerSaveFile("SampleServer.nodes.xml")
+                    .SetNodeManagerSaveFile("SampleServerBeta.nodes.xml")
                     .SetMaxPublishRequestCount(100)
                     .SetMaxSubscriptionCount(200)
                     .AddServerProfile("http://opcfoundation.org/UA-Profile/Server/StandardUA2017")
@@ -185,7 +185,7 @@ namespace SampleServerBeta
                 .AddExtension<SampleServerConfiguration>(new XmlQualifiedName("SampleServerConfiguration"),
                     new SampleServerConfiguration() { TimerInterval = 1000, ClearCachedCertificatesInterval = 30000 })
                 .SetTraceMasks(1)
-                .SetOutputFilePath("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleServer.log")
+                .SetOutputFilePath("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleServerBeta.log")
                 .SetDeleteOnLoad(true)
                 .Create();
 
