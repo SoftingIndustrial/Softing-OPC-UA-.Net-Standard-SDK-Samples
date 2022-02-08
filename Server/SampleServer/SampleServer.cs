@@ -118,8 +118,7 @@ namespace SampleServer
             nodeManagers.Add(new RolesNodeManager(server, configuration));
             nodeManagers.Add(new DataAccessNodeManager(server, configuration));
             nodeManagers.Add(new MethodsNodeManager(server, configuration));
-            nodeManagers.Add(new NodeSetImportNodeManager(server, configuration));
-            
+            nodeManagers.Add(new NodeSetImportNodeManager(server, configuration));            
             nodeManagers.Add(new UserAuthenticationNodeManager(server, configuration));
             nodeManagers.Add(new FileTransferNodeManager(server, configuration));
             nodeManagers.Add(new ReferenceNodeManager(server, configuration));

@@ -26,6 +26,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="HistoricalDataAccess\**" />
+    <EmbeddedResource Remove="HistoricalDataAccess\**" />
+    <None Remove="HistoricalDataAccess\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="FileTransfer\Files\ByteStringFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -36,27 +42,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="FileTransfer\Files\UploadFile.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HistoricalDataAccess\Data\Dynamic\Double.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HistoricalDataAccess\Data\Dynamic\Int32.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HistoricalDataAccess\Data\Events.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HistoricalDataAccess\Data\Sample\Historian1.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HistoricalDataAccess\Data\Sample\Historian2.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HistoricalDataAccess\Data\Sample\Historian3.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HistoricalDataAccess\Data\Sample\Historian4.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ReferenceServer\Model\ModelDesign.xml" />
