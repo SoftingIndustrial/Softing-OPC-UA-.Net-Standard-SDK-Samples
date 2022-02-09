@@ -262,7 +262,6 @@ namespace SampleClient.Samples
 
                 if (translateResults != null)
                 {
-
                     Console.WriteLine("TranslateBrowsePath returned {0} result(s):", translateResults.Count);
                     //for display reasons create BrowsePathEx
                     BrowsePathEx sourceBrowsePath = new BrowsePathEx(startingNode, browsePath);
