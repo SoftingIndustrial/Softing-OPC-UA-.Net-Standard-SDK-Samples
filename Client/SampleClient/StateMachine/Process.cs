@@ -330,7 +330,7 @@ namespace SampleClient.StateMachine
             m_transitions.Add(endEvents, State.MonitoredEventsAlarms);
 
             //commands for alarms
-            StateTransition startAlarms = new StateTransition(State.MonitoredEventsAlarms, Command.StartAlarms, "3", "Enter Alarms Menu");
+            StateTransition startAlarms = new StateTransition(State.MonitoredEventsAlarms, Command.StartAlarms, "3", "Enter Alarms Menu (Beta)");
             startAlarms.ExecuteCommand += StartAlarms_ExecuteCommand;
             m_transitions.Add(startAlarms, State.Alarms);
             StateTransition refreshAlarms = new StateTransition(State.Alarms, Command.RefreshAlarms, "1", "Refresh active alarms");
@@ -379,7 +379,7 @@ namespace SampleClient.StateMachine
         private void InitializeHistoryTransitions()
         {
             //commands for history
-            StateTransition startHistory = new StateTransition(State.Main, Command.StartHistory, "7", "Enter Read History Menu");
+            StateTransition startHistory = new StateTransition(State.Main, Command.StartHistory, "7", "Enter Read History Menu (Beta)");
             startHistory.ExecuteCommand += StartHistory_ExecuteCommand;
             m_transitions.Add(startHistory, State.History);
             StateTransition historyReadRaw = new StateTransition(State.History, Command.HistoryReadRaw, "1", "History read raw");
@@ -438,7 +438,7 @@ namespace SampleClient.StateMachine
         private void InitializePubSubTransitions()
         {
             //commands for reading PubSubStateMachine
-            StateTransition startPubSubMenu = new StateTransition(State.Main, Command.PubSubConfigMenu, "9", "Enter PubSub Menu");
+            StateTransition startPubSubMenu = new StateTransition(State.Main, Command.PubSubConfigMenu, "9", "Enter PubSub Menu (Beta)");
             startPubSubMenu.ExecuteCommand += StartPubSubCfgMenu_ExecuteCommand;
             m_transitions.Add(startPubSubMenu, State.PubSub);//commands for PubSub
             StateTransition startPubSubReadCfg = new StateTransition(State.PubSub, Command.PubSubReadConfig, "1", "Read PubSubConfiguration");
