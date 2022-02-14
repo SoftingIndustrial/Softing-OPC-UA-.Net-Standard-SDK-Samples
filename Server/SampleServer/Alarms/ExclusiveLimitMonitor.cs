@@ -87,19 +87,61 @@ namespace SampleServer.Alarms
             StateChanged += ExclusiveLimitMonitor_StateChanged;
         }
 
+        /// <summary>
+        /// Update alarm monitor value and limits
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="newValue"></param>
+        /// <param name="highLimit"></param>
+        /// <param name="highHighLimit"></param>
+        /// <param name="lowLimit"></param>
+        /// <param name="lowLowLimit"></param>
+        public void UpdateAlarmMonitor(
+            ISystemContext context,
+            double newValue,
+            double highLimit,
+            double highHighLimit,
+            double lowLimit,
+            double lowLowLimit)
+        {
+            // Update alarm information
+            //m_alarm.AutoReportStateChanges = true; // always reports changes
+            m_alarm.Time.Value = DateTime.UtcNow;
+            m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
+            m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
+            //m_alarm.BranchId.Value = null; // ignore BranchId
+
+            // Set state values
+            //m_alarm.SetEnableState(context, true);
+            //m_alarm.SetLimitState(context, LimitAlarmStates.Inactive); // !? reset this
+            //m_alarm.SetSuppressedState(context, false); // !? reset this
+            //m_alarm.SetAcknowledgedState(context, false); // !? reset this
+            //m_alarm.Retain.Value = false;
+
+            // Change limit values
+            m_alarm.HighLimit.Value = highLimit;
+            m_alarm.HighHighLimit.Value = highHighLimit;
+            m_alarm.LowLimit.Value = lowLimit;
+            m_alarm.LowLowLimit.Value = lowLowLimit;
+
+            m_alarm.Validate(context);
+
+            Value = newValue;
+            ProcessVariableChanged(context, newValue);
+        }
         #endregion
 
         #region Private Methods
 
         private void InitializeAlarmMonitor(
-            ISystemContext context,
-            ushort namespaceIndex,
-            string alarmName,
-            double initialValue,
-            double highLimit,
-            double highHighLimit,
-            double lowLimit,
-            double lowLowLimit)
+        ISystemContext context,
+        ushort namespaceIndex,
+        string alarmName,
+        double initialValue,
+        double highLimit,
+        double highHighLimit,
+        double lowLimit,
+        double lowLowLimit)
         {
             // Create the alarm object
             m_alarm = new ExclusiveLimitAlarmState(this);

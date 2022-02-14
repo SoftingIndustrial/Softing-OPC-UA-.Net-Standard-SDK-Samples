@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Opc.Ua;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.Server;
@@ -21,6 +22,16 @@ namespace SampleServer.Alarms
     /// </summary>
     public class AlarmsNodeManager : NodeManager
     {
+        #region Private Fields
+        private const int AlarmTimeout = 30000;
+        private Timer m_timer;
+
+        //private readonly Random m_random = new Random();
+        private bool m_valueChanged = false;
+
+        Dictionary<string, NodeId> m_exclusiveLimitMonitors = new Dictionary<string, NodeId>();
+        
+        #endregion
 
         #region Constructors
 
@@ -32,7 +43,7 @@ namespace SampleServer.Alarms
         }
 
         #endregion
-        
+
         #region INodeManager Members
 
         /// <summary>
@@ -109,8 +120,10 @@ namespace SampleServer.Alarms
                     2.0);
 
                 // Add sub-notifiers
-                AddNotifier(ServerNode, root, false);  
+                AddNotifier(ServerNode, root, false);
                 AddNotifier(root, machine, true);
+
+                m_timer = new Timer(new TimerCallback(OnTimeout), null, AlarmTimeout, AlarmTimeout);
             }
         }
 
@@ -147,8 +160,101 @@ namespace SampleServer.Alarms
                 lowLimit,
                 lowLowLimit);
 
+            if(exclusiveLimitMonitor != null)
+            {
+                m_exclusiveLimitMonitors.Add(alarmName, exclusiveLimitMonitor.NodeId);
+            }
+
             //remember node in node manager list
             AddPredefinedNode(SystemContext, exclusiveLimitMonitor);
+        }
+
+        private void UpdateExclusiveLimitMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue,
+            double highLimit,
+            double highHighLimit,
+            double lowLimit,
+            double lowLowLimit)
+        {
+        }
+        #endregion
+
+        #region Callbacks methods
+
+
+        /// <summary>
+        /// Handles a file changed event.
+        /// </summary>
+        private void OnTimeout(object state)
+        {
+            try
+            {
+                foreach(string alarmName in m_exclusiveLimitMonitors.Keys)
+                {
+                    NodeId exclusiveLimitMonitorNodeId = m_exclusiveLimitMonitors[alarmName];
+                    if(exclusiveLimitMonitorNodeId != null)
+                    {
+                        ExclusiveLimitMonitor exclusiveLimitMonitor = (ExclusiveLimitMonitor)FindPredefinedNode(
+                          ExpandedNodeId.ToNodeId(exclusiveLimitMonitorNodeId, Server.NamespaceUris),
+                          typeof(ExclusiveLimitMonitor));
+
+                        if(exclusiveLimitMonitor != null)
+                        {
+                            Opc.Ua.ExclusiveLimitAlarmState exclusiveLimitMonitorState = exclusiveLimitMonitor.FindChildBySymbolicName(SystemContext, alarmName) as Opc.Ua.ExclusiveLimitAlarmState;
+                            if(exclusiveLimitMonitorState != null)
+                            {
+                                double exclusiveLimitMonitorValue = exclusiveLimitMonitor.Value;
+
+                                double highLimit = exclusiveLimitMonitorState.HighLimit.Value;
+                                double highHighLimit = exclusiveLimitMonitorState.HighHighLimit.Value;
+                                double lowLimit = exclusiveLimitMonitorState.LowLimit.Value;
+                                double lowLowLimit = exclusiveLimitMonitorState.LowLowLimit.Value;
+
+                                if(exclusiveLimitMonitorValue > highHighLimit)
+                                {
+                                    exclusiveLimitMonitorValue = lowLowLimit - 0.5;
+                                }
+                                else if (exclusiveLimitMonitorValue < highHighLimit && exclusiveLimitMonitorValue > highLimit)
+                                {
+                                    exclusiveLimitMonitorValue = highHighLimit + 0.5;
+                                }
+                                else if (exclusiveLimitMonitorValue < highLimit && exclusiveLimitMonitorValue > lowLimit)
+                                {
+                                    exclusiveLimitMonitorValue = highLimit + 0.5;
+                                }
+                                else if (exclusiveLimitMonitorValue < lowLimit && exclusiveLimitMonitorValue > lowLowLimit)
+                                {
+                                    exclusiveLimitMonitorValue = lowLimit + 0.5;
+                                }
+                                else if (exclusiveLimitMonitorValue < lowLowLimit)
+                                {
+                                    exclusiveLimitMonitorValue = lowLowLimit + 0.5;
+                                }
+
+                                double newValue = exclusiveLimitMonitorValue;
+
+                                // todo: add logic to change alarm limits!
+
+                                exclusiveLimitMonitor.UpdateAlarmMonitor(SystemContext,
+                                    newValue,
+                                    highLimit,
+                                    highHighLimit,
+                                    lowLimit,
+                                    lowLowLimit);
+
+                                Console.WriteLine("Alarm '{0}' changed value: {1}", alarmName, newValue);
+                            }
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Alarm exception: {0}", ex.Message);
+            }
         }
         #endregion
     }
