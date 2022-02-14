@@ -123,7 +123,18 @@ namespace SampleServer.Alarms
                 AddNotifier(ServerNode, root, false);
                 AddNotifier(root, machine, true);
 
-                m_timer = new Timer(new TimerCallback(OnTimeout), null, AlarmTimeout, AlarmTimeout);
+                #region Create Trigger Alarm Method
+                Argument[] inputArgumentsAdd = new Argument[]
+                {
+                    new Argument() {Name = "Alarm NodeId", Description = "Alarm NodeId", DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar},
+                    //new Argument() {Name = "Alarm name", Description = "Alarm name", DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar},
+                };
+               
+                CreateMethod(root, "TriggerAlarm", inputArgumentsAdd, null, OnTriggerAlarmCall);
+                #endregion
+
+                // perhaps it might be used for stress test!?
+                //m_timer = new Timer(new TimerCallback(OnTimeout), null, AlarmTimeout, AlarmTimeout);
             }
         }
 
@@ -255,6 +266,85 @@ namespace SampleServer.Alarms
             {
                 Console.WriteLine("Alarm exception: {0}", ex.Message);
             }
+        }
+        #endregion
+
+        #region Private Methods - OnCall Event Handlers
+
+        /// <summary>
+        /// Handles the trigger alarm method call
+        /// </summary>
+        private ServiceResult OnTriggerAlarmCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            // All arguments must be provided
+            if (inputArguments.Count < 1)
+            {
+                return StatusCodes.BadArgumentsMissing;
+            }
+
+            try
+            {
+                NodeId alarmNodeId = (NodeId)inputArguments[0]; // "PressureMonitor 1";
+
+                Opc.Ua.ExclusiveLimitAlarmState exclusiveLimitMonitorState = (Opc.Ua.ExclusiveLimitAlarmState)FindPredefinedNode(
+                         ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
+                         typeof(Opc.Ua.ExclusiveLimitAlarmState));
+
+                if (exclusiveLimitMonitorState != null)
+                {
+                    ExclusiveLimitMonitor exclusiveLimitMonitor = exclusiveLimitMonitorState.Parent as ExclusiveLimitMonitor;
+                    if (exclusiveLimitMonitor != null)
+                    {
+                        double exclusiveLimitMonitorValue = exclusiveLimitMonitor.Value;
+
+                        double highLimit = exclusiveLimitMonitorState.HighLimit.Value;
+                        double highHighLimit = exclusiveLimitMonitorState.HighHighLimit.Value;
+                        double lowLimit = exclusiveLimitMonitorState.LowLimit.Value;
+                        double lowLowLimit = exclusiveLimitMonitorState.LowLowLimit.Value;
+
+                        if (exclusiveLimitMonitorValue > highHighLimit)
+                        {
+                            exclusiveLimitMonitorValue = lowLowLimit - 0.5;
+                        }
+                        else if (exclusiveLimitMonitorValue < highHighLimit && exclusiveLimitMonitorValue > highLimit)
+                        {
+                            exclusiveLimitMonitorValue = highHighLimit + 0.5;
+                        }
+                        else if (exclusiveLimitMonitorValue < highLimit && exclusiveLimitMonitorValue > lowLimit)
+                        {
+                            exclusiveLimitMonitorValue = highLimit + 0.5;
+                        }
+                        else if (exclusiveLimitMonitorValue < lowLimit && exclusiveLimitMonitorValue > lowLowLimit)
+                        {
+                            exclusiveLimitMonitorValue = lowLimit + 0.5;
+                        }
+                        else if (exclusiveLimitMonitorValue < lowLowLimit)
+                        {
+                            exclusiveLimitMonitorValue = lowLowLimit + 0.5;
+                        }
+
+                        double newValue = exclusiveLimitMonitorValue;
+
+                        // todo: add logic to change alarm limits!
+
+                        exclusiveLimitMonitor.UpdateAlarmMonitor(SystemContext,
+                            newValue,
+                            highLimit,
+                            highHighLimit,
+                            lowLimit,
+                            lowLowLimit);
+
+                        Console.WriteLine("Alarm '{0}' changed value: {1}", exclusiveLimitMonitorState.DisplayName, newValue);
+                    }
+                }
+
+                return ServiceResult.Good;
+            }
+            catch
+            {
+                return new ServiceResult(StatusCodes.BadInvalidArgument);
+            }
+
         }
         #endregion
     }

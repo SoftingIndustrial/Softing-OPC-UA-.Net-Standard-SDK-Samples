@@ -342,6 +342,9 @@ namespace SampleClient.StateMachine
             StateTransition addCommentAllarms = new StateTransition(State.Alarms, Command.AddCommentAlarms, "3", "Add comment to alarm");
             addCommentAllarms.ExecuteCommand += AddCommentAlarms_ExecuteCommand;
             m_transitions.Add(addCommentAllarms, State.Alarms);
+            StateTransition triggerAlarms = new StateTransition(State.Alarms, Command.TriggerAlarms, "4", "Trigger alarm");
+            triggerAlarms.ExecuteCommand += TriggerAlarms_ExecuteCommand;
+            m_transitions.Add(triggerAlarms, State.Alarms);
             StateTransition endAlarms = new StateTransition(State.Alarms, Command.EndAlarms, "0", "Back to MonitoredItem/Events Menu/Alarms Menu");
             endAlarms.ExecuteCommand += EndAlarms_ExecuteCommand;
             m_transitions.Add(endAlarms, State.MonitoredEventsAlarms);
@@ -468,6 +471,14 @@ namespace SampleClient.StateMachine
             if (m_alarmsClient != null)
             {
                 m_alarmsClient.AddCommentToAlarm();
+            }
+        }
+
+        private void TriggerAlarms_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_alarmsClient != null)
+            {
+                m_alarmsClient.TriggerAlarms();
             }
         }
 
