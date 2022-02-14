@@ -17,7 +17,7 @@ namespace SampleServer.Alarms
     /// <summary>
     /// A monitored variable with an ExclusiveLimitAlarm attached.
     /// </summary>
-    class ExclusiveLimitMonitor : BaseDataVariableState<double>
+    internal class ExclusiveLimitMonitor : BaseDataVariableState<double>
     {
 
         #region Private Members
@@ -134,15 +134,15 @@ namespace SampleServer.Alarms
         #region Private Methods
 
         private void InitializeAlarmMonitor(
-        ISystemContext context,
-        ushort namespaceIndex,
-        string alarmName,
-        double initialValue,
-        double highLimit,
-        double highHighLimit,
-        double lowLimit,
-        double lowLowLimit)
-        {
+            ISystemContext context,
+            ushort namespaceIndex,
+            string alarmName,
+            double initialValue,
+            double highLimit,
+            double highHighLimit,
+            double lowLimit,
+            double lowLowLimit)
+        { 
             // Create the alarm object
             m_alarm = new ExclusiveLimitAlarmState(this);
 

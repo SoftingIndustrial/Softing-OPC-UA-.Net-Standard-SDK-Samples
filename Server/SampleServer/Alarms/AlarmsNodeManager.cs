@@ -119,6 +119,12 @@ namespace SampleServer.Alarms
                     4.0,
                     2.0);
 
+                CreateConditionMonitor(
+                    machine,
+                    "ConditionSensor 1",
+                    "ConditionMonitor 1",
+                    7.0);
+
                 // Add sub-notifiers
                 AddNotifier(ServerNode, root, false);
                 AddNotifier(root, machine, true);
@@ -178,6 +184,25 @@ namespace SampleServer.Alarms
 
             //remember node in node manager list
             AddPredefinedNode(SystemContext, exclusiveLimitMonitor);
+        }
+
+        private void CreateConditionMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue)
+        {
+
+            // Create an alarm monitor for a temperature sensor 1.
+            ConditionMonitor conditionMonitor = new ConditionMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, conditionMonitor);
         }
 
         private void UpdateExclusiveLimitMonitor(NodeState parent,
