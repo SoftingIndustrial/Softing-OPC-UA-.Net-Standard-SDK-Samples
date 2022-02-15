@@ -27,6 +27,8 @@ namespace SampleServer.Alarms
         private Timer m_timer;
         private Timer m_exclusiveLimitAlarmTrigger;
         private Timer m_conditionAlarmTrigger;
+        private Timer m_dialogConditionAlarmTrigger;
+        private Timer m_acknowledgeableConditionAlarmTrigger;
         private static NodeId m_alarmNodeId;
 
         //private readonly Random m_random = new Random();
@@ -128,6 +130,18 @@ namespace SampleServer.Alarms
                     "ConditionMonitor 1",
                     7.0);
 
+                CreateDialogConditionMonitor(
+                    machine,
+                    "DialogConditionSensor 1",
+                    "DialogConditionMonitor 1",
+                    7.0);
+
+                CreateAcknowledgeableConditionMonitor(
+                    machine,
+                    "AcknowledgeableConditionSensor 1",
+                    "AcknowledgeableConditionMonitor 1",
+                    7.0);
+
                 // Add sub-notifiers
                 AddNotifier(ServerNode, root, false);
                 AddNotifier(root, machine, true);
@@ -198,6 +212,44 @@ namespace SampleServer.Alarms
 
             // Create an alarm monitor for a temperature sensor 1.
             ConditionMonitor conditionMonitor = new ConditionMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, conditionMonitor);
+        }
+
+        private void CreateDialogConditionMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue)
+        {
+
+            // Create an alarm monitor for a temperature sensor 1.
+            DialogConditionMonitor conditionMonitor = new DialogConditionMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, conditionMonitor);
+        }
+
+        private void CreateAcknowledgeableConditionMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue)
+        {
+
+            // Create an alarm monitor for a temperature sensor 1.
+            AcknowledgeableConditionMonitor conditionMonitor = new AcknowledgeableConditionMonitor(
                 SystemContext,
                 parent,
                 NamespaceIndex,
@@ -301,7 +353,7 @@ namespace SampleServer.Alarms
         /// Handles alarm enabled event.
         /// </summary>
         /// <param name="state"></param>
-        private void OnAlarmEnabled(object state)
+        private void OnExclusiveLimitAlarmEnabled(object state)
         {
             try
             {
@@ -362,45 +414,172 @@ namespace SampleServer.Alarms
                         Console.WriteLine("Alarm '{0}' changed value: {1}", exclusiveLimitMonitorState.DisplayName, newValue);
                     }
                 }
-                else
-                {
-                    Opc.Ua.ConditionState conditionMonitorState = (Opc.Ua.ConditionState)FindPredefinedNode(
-                        ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
-                        typeof(Opc.Ua.ConditionState));
-
-                    if (conditionMonitorState != null)
-                    {
-                        ConditionMonitor conditionMonitor = conditionMonitorState.Parent as ConditionMonitor;
-                        if (conditionMonitor != null)
-                        {
-                            bool alarmEnabled = false;
-                            double newValue = conditionMonitor.Value;
-                            LocalizedText conditionMonitorEnabled = conditionMonitorState.EnabledState.Value;
-                            if(string.Equals(conditionMonitorEnabled.Text, "Enabled"))
-                            {
-                                conditionMonitorState.EnabledState.Value = "False";
-                                alarmEnabled = false;
-                            }
-                            else
-                            {
-                                conditionMonitorState.EnabledState.Value = "True";
-                                alarmEnabled = true;
-                            }
-
-                            conditionMonitor.UpdateConditionAlarmMonitor(SystemContext,
-                                newValue++, 
-                                alarmEnabled);
-
-                            Console.WriteLine("Alarm '{0}' enable state changed: {1}", conditionMonitorState.DisplayName, alarmEnabled);
-                        }
-                    }
-                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Alarm exception: {0}", ex.Message);
             }
         }
+
+        /// <summary>
+        /// Handles alarm enabled event.
+        /// </summary>
+        /// <param name="state"></param>
+        private void OnConditionEnabled(object state)
+        {
+            try
+            {
+                NodeId alarmNodeId = state as NodeId;
+                if (alarmNodeId == null)
+                {
+                    throw new Exception("Alarm NodeId is missing!");
+                }
+
+
+                Opc.Ua.ConditionState conditionMonitorState = (Opc.Ua.ConditionState)FindPredefinedNode(
+                    ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
+                    typeof(Opc.Ua.ConditionState));
+
+                if (conditionMonitorState != null)
+                {
+                    ConditionMonitor conditionMonitor = conditionMonitorState.Parent as ConditionMonitor;
+                    if (conditionMonitor != null)
+                    {
+                        bool alarmEnabled = false;
+                        double newValue = conditionMonitor.Value;
+                        LocalizedText conditionMonitorEnabled = conditionMonitorState.EnabledState.Value;
+                        if (string.Equals(conditionMonitorEnabled.Text, "Enabled"))
+                        {
+                            conditionMonitorState.EnabledState.Value = "False";
+                            alarmEnabled = false;
+                        }
+                        else
+                        {
+                            conditionMonitorState.EnabledState.Value = "True";
+                            alarmEnabled = true;
+                        }
+
+                        conditionMonitor.UpdateConditionAlarmMonitor(SystemContext,
+                            newValue++,
+                            alarmEnabled);
+
+                        Console.WriteLine("Alarm '{0}' enable state changed: {1}", conditionMonitorState.DisplayName, alarmEnabled);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Alarm exception: {0}", ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handles alarm enabled event.
+        /// </summary>
+        /// <param name="state"></param>
+        private void OnDialogConditionEnabled(object state)
+        {
+            try
+            {
+                NodeId alarmNodeId = state as NodeId;
+                if (alarmNodeId == null)
+                {
+                    throw new Exception("Alarm NodeId is missing!");
+                }
+
+
+                Opc.Ua.DialogConditionState conditionMonitorState = (Opc.Ua.DialogConditionState)FindPredefinedNode(
+                    ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
+                    typeof(Opc.Ua.DialogConditionState));
+
+                if (conditionMonitorState != null)
+                {
+                    ConditionMonitor conditionMonitor = conditionMonitorState.Parent as ConditionMonitor;
+                    if (conditionMonitor != null)
+                    {
+                        bool alarmEnabled = false;
+                        double newValue = conditionMonitor.Value;
+                        LocalizedText conditionMonitorEnabled = conditionMonitorState.EnabledState.Value;
+                        if (string.Equals(conditionMonitorEnabled.Text, "Enabled"))
+                        {
+                            conditionMonitorState.EnabledState.Value = "False";
+                            alarmEnabled = false;
+                        }
+                        else
+                        {
+                            conditionMonitorState.EnabledState.Value = "True";
+                            alarmEnabled = true;
+                        }
+
+                        conditionMonitor.UpdateConditionAlarmMonitor(SystemContext,
+                            newValue++,
+                            alarmEnabled);
+
+                        Console.WriteLine("Alarm '{0}' enable state changed: {1}", conditionMonitorState.DisplayName, alarmEnabled);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Alarm exception: {0}", ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handles alarm enabled event.
+        /// </summary>
+        /// <param name="state"></param>
+        private void OnAcknowledgeableConditionEnabled(object state)
+        {
+            try
+            {
+                NodeId alarmNodeId = state as NodeId;
+                if (alarmNodeId == null)
+                {
+                    throw new Exception("Alarm NodeId is missing!");
+                }
+
+
+                Opc.Ua.DialogConditionState conditionMonitorState = (Opc.Ua.DialogConditionState)FindPredefinedNode(
+                    ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
+                    typeof(Opc.Ua.DialogConditionState));
+
+                if (conditionMonitorState != null)
+                {
+                    ConditionMonitor conditionMonitor = conditionMonitorState.Parent as ConditionMonitor;
+                    if (conditionMonitor != null)
+                    {
+                        bool alarmEnabled = false;
+                        double newValue = conditionMonitor.Value;
+                        LocalizedText conditionMonitorEnabled = conditionMonitorState.EnabledState.Value;
+                        if (string.Equals(conditionMonitorEnabled.Text, "Enabled"))
+                        {
+                            conditionMonitorState.EnabledState.Value = "False";
+                            alarmEnabled = false;
+                        }
+                        else
+                        {
+                            conditionMonitorState.EnabledState.Value = "True";
+                            alarmEnabled = true;
+                        }
+
+                        conditionMonitor.UpdateConditionAlarmMonitor(SystemContext,
+                            newValue++,
+                            alarmEnabled);
+
+                        Console.WriteLine("Alarm '{0}' enable state changed: {1}", conditionMonitorState.DisplayName, alarmEnabled);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Alarm exception: {0}", ex.Message);
+            }
+        }
+
 
         #endregion
 
@@ -428,18 +607,34 @@ namespace SampleServer.Alarms
                          typeof(Opc.Ua.ExclusiveLimitAlarmState));
 
                 Opc.Ua.ConditionState conditionMonitorState = (Opc.Ua.ConditionState)FindPredefinedNode(
-                            ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
-                            typeof(Opc.Ua.ConditionState));
+                         ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
+                         typeof(Opc.Ua.ConditionState));
+
+                Opc.Ua.DialogConditionState dialogConditionMonitorState = (Opc.Ua.DialogConditionState)FindPredefinedNode(
+                         ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
+                         typeof(Opc.Ua.DialogConditionState));
+
+                Opc.Ua.DialogConditionState acknowledgeableConditionMonitorState = (Opc.Ua.DialogConditionState)FindPredefinedNode(
+                         ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
+                         typeof(Opc.Ua.AcknowledgeableConditionState));
 
                 if (alarmEnabled)
                 {
                     if (exclusiveLimitMonitorState != null)
                     {
-                        m_exclusiveLimitAlarmTrigger = new Timer(new TimerCallback(OnAlarmEnabled), alarmNodeId, alarmTimeout, alarmTimeout);
+                        m_exclusiveLimitAlarmTrigger = new Timer(new TimerCallback(OnExclusiveLimitAlarmEnabled), alarmNodeId, alarmTimeout, alarmTimeout);
                     }
                     if (conditionMonitorState != null)
                     {
-                        m_conditionAlarmTrigger = new Timer(new TimerCallback(OnAlarmEnabled), alarmNodeId, alarmTimeout, alarmTimeout);
+                        m_conditionAlarmTrigger = new Timer(new TimerCallback(OnConditionEnabled), alarmNodeId, alarmTimeout, alarmTimeout);
+                    }
+                    if (dialogConditionMonitorState != null)
+                    {
+                        m_dialogConditionAlarmTrigger = new Timer(new TimerCallback(OnDialogConditionEnabled), alarmNodeId, alarmTimeout, alarmTimeout);
+                    }
+                    if (acknowledgeableConditionMonitorState != null)
+                    {
+                        m_acknowledgeableConditionAlarmTrigger = new Timer(new TimerCallback(OnAcknowledgeableConditionEnabled), alarmNodeId, alarmTimeout, alarmTimeout);
                     }
                 }
                 else
@@ -454,6 +649,17 @@ namespace SampleServer.Alarms
                         m_conditionAlarmTrigger.Dispose();
                         m_conditionAlarmTrigger = null;
                     }
+                    if (dialogConditionMonitorState != null)
+                    {
+                        m_dialogConditionAlarmTrigger.Dispose();
+                        m_dialogConditionAlarmTrigger = null;
+                    }
+                    if (acknowledgeableConditionMonitorState != null)
+                    {
+                        m_acknowledgeableConditionAlarmTrigger.Dispose();
+                        m_acknowledgeableConditionAlarmTrigger = null;
+                    }
+
                 }
                 
                 return ServiceResult.Good;
