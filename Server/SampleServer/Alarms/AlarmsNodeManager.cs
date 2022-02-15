@@ -25,6 +25,9 @@ namespace SampleServer.Alarms
         #region Private Fields
         private const int AlarmTimeout = 30000;
         private Timer m_timer;
+        private Timer m_exclusiveLimitAlarmTrigger;
+        private Timer m_conditionAlarmTrigger;
+        private static NodeId m_alarmNodeId;
 
         //private readonly Random m_random = new Random();
         private bool m_valueChanged = false;
@@ -133,14 +136,15 @@ namespace SampleServer.Alarms
                 Argument[] inputArgumentsAdd = new Argument[]
                 {
                     new Argument() {Name = "Alarm NodeId", Description = "Alarm NodeId", DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar},
-                    //new Argument() {Name = "Alarm name", Description = "Alarm name", DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar},
+                    new Argument() {Name = "Alarm Enable/Disable", Description = "Alarm Enable/Disable", DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar},
+                    new Argument() {Name = "Alarm Timeout", Description = "Alarm Enable/Disable", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
                 };
                
                 CreateMethod(root, "TriggerAlarm", inputArgumentsAdd, null, OnTriggerAlarmCall);
                 #endregion
 
                 // perhaps it might be used for stress test!?
-                //m_timer = new Timer(new TimerCallback(OnTimeout), null, AlarmTimeout, AlarmTimeout);
+                // m_timer = new Timer(new TimerCallback(OnTimeout), null, AlarmTimeout, AlarmTimeout);
             }
         }
 
@@ -217,11 +221,11 @@ namespace SampleServer.Alarms
         }
         #endregion
 
-        #region Callbacks methods
+        #region Timer methods
 
 
         /// <summary>
-        /// Handles a file changed event.
+        /// Handles exclusive limit monitor changed event.
         /// </summary>
         private void OnTimeout(object state)
         {
@@ -273,7 +277,7 @@ namespace SampleServer.Alarms
 
                                 // todo: add logic to change alarm limits!
 
-                                exclusiveLimitMonitor.UpdateAlarmMonitor(SystemContext,
+                                exclusiveLimitMonitor.UpdateExclusiveLimitAlarmMonitor(SystemContext,
                                     newValue,
                                     highLimit,
                                     highHighLimit,
@@ -289,28 +293,24 @@ namespace SampleServer.Alarms
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Alarm exception: {0}", ex.Message);
+                Console.WriteLine("Alarm. exception: {0}", ex.Message);
             }
         }
-        #endregion
-
-        #region Private Methods - OnCall Event Handlers
 
         /// <summary>
-        /// Handles the trigger alarm method call
+        /// Handles alarm enabled event.
         /// </summary>
-        private ServiceResult OnTriggerAlarmCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        /// <param name="state"></param>
+        private void OnAlarmEnabled(object state)
         {
-            // All arguments must be provided
-            if (inputArguments.Count < 1)
-            {
-                return StatusCodes.BadArgumentsMissing;
-            }
-
             try
             {
-                NodeId alarmNodeId = (NodeId)inputArguments[0]; // "PressureMonitor 1";
-
+                NodeId alarmNodeId = state as NodeId;
+                if (alarmNodeId == null)
+                {
+                    throw new Exception("Alarm NodeId is missing!");
+                }
+                    
                 Opc.Ua.ExclusiveLimitAlarmState exclusiveLimitMonitorState = (Opc.Ua.ExclusiveLimitAlarmState)FindPredefinedNode(
                          ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
                          typeof(Opc.Ua.ExclusiveLimitAlarmState));
@@ -352,7 +352,7 @@ namespace SampleServer.Alarms
 
                         // todo: add logic to change alarm limits!
 
-                        exclusiveLimitMonitor.UpdateAlarmMonitor(SystemContext,
+                        exclusiveLimitMonitor.UpdateExclusiveLimitAlarmMonitor(SystemContext,
                             newValue,
                             highLimit,
                             highHighLimit,
@@ -362,7 +362,100 @@ namespace SampleServer.Alarms
                         Console.WriteLine("Alarm '{0}' changed value: {1}", exclusiveLimitMonitorState.DisplayName, newValue);
                     }
                 }
+                else
+                {
+                    Opc.Ua.ConditionState conditionMonitorState = (Opc.Ua.ConditionState)FindPredefinedNode(
+                        ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
+                        typeof(Opc.Ua.ConditionState));
 
+                    if (conditionMonitorState != null)
+                    {
+                        ConditionMonitor conditionMonitor = conditionMonitorState.Parent as ConditionMonitor;
+                        if (conditionMonitor != null)
+                        {
+                            bool alarmEnabled = false;
+                            double newValue = conditionMonitor.Value;
+                            LocalizedText conditionMonitorEnabled = conditionMonitorState.EnabledState.Value;
+                            if(string.Equals(conditionMonitorEnabled.Text, "Enabled"))
+                            {
+                                conditionMonitorState.EnabledState.Value = "False";
+                                alarmEnabled = false;
+                            }
+                            else
+                            {
+                                conditionMonitorState.EnabledState.Value = "True";
+                                alarmEnabled = true;
+                            }
+
+                            conditionMonitor.UpdateConditionAlarmMonitor(SystemContext,
+                                newValue++, 
+                                alarmEnabled);
+
+                            Console.WriteLine("Alarm '{0}' enable state changed: {1}", conditionMonitorState.DisplayName, alarmEnabled);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Alarm exception: {0}", ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Private Methods - OnCall Event Handlers
+
+        /// <summary>
+        /// Handles the trigger alarm method call
+        /// </summary>
+        private ServiceResult OnTriggerAlarmCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            // All arguments must be provided
+            if (inputArguments.Count < 3)
+            {
+                return StatusCodes.BadArgumentsMissing;
+            }
+
+            try
+            {
+                NodeId alarmNodeId = (NodeId)inputArguments[0]; 
+                bool alarmEnabled = (bool)inputArguments[1]; // "Enabled/Disabled";
+                int alarmTimeout = (int)inputArguments[2]; // "Alarm Timeout";
+
+                Opc.Ua.ExclusiveLimitAlarmState exclusiveLimitMonitorState = (Opc.Ua.ExclusiveLimitAlarmState)FindPredefinedNode(
+                         ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
+                         typeof(Opc.Ua.ExclusiveLimitAlarmState));
+
+                Opc.Ua.ConditionState conditionMonitorState = (Opc.Ua.ConditionState)FindPredefinedNode(
+                            ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
+                            typeof(Opc.Ua.ConditionState));
+
+                if (alarmEnabled)
+                {
+                    if (exclusiveLimitMonitorState != null)
+                    {
+                        m_exclusiveLimitAlarmTrigger = new Timer(new TimerCallback(OnAlarmEnabled), alarmNodeId, alarmTimeout, alarmTimeout);
+                    }
+                    if (conditionMonitorState != null)
+                    {
+                        m_conditionAlarmTrigger = new Timer(new TimerCallback(OnAlarmEnabled), alarmNodeId, alarmTimeout, alarmTimeout);
+                    }
+                }
+                else
+                {
+                    if (exclusiveLimitMonitorState != null)
+                    {
+                        m_exclusiveLimitAlarmTrigger.Dispose();
+                        m_exclusiveLimitAlarmTrigger = null;
+                    }
+                    if (conditionMonitorState != null)
+                    {
+                        m_conditionAlarmTrigger.Dispose();
+                        m_conditionAlarmTrigger = null;
+                    }
+                }
+                
                 return ServiceResult.Good;
             }
             catch

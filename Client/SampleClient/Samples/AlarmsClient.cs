@@ -223,22 +223,51 @@ namespace SampleClient.Samples
             try
             {
                 // Prompt the user to select the alarm from the list of active alarms
-                //Console.WriteLine("Please select the alarm to trigger:");
+                Console.WriteLine("1 - Enable");
+                Console.WriteLine("2 - Disable");
+
+                Console.WriteLine("Please select trigger option.");
+                string triggerOption = Console.ReadLine();
+                bool alarmEnabled = false;
+                int alarmOptionSelected = 0;
+                if(Int32.TryParse(triggerOption, out alarmOptionSelected))
+                {
+                    if(alarmOptionSelected != 1 && alarmOptionSelected != 2)
+                    {
+                        return;
+                    }
+                    alarmEnabled = alarmOptionSelected == 1 ? true : false;
+                }
+
+                int timeout = 30000;
 
                 //Browse Path: Root\Objects\Alarms
                 NodeId parentObjectId = new NodeId("ns=2;i=1");
 
                 //Browse Path: Root\Objects\Alarms\TriggerMethod
-                NodeId methodNodeId = new NodeId("ns=2;i=479");
+                NodeId methodNodeId = new NodeId("ns=2;i=515");
 
                 //Browse Path: Root\Objects\Alarms\PressureSensor 1\PressureMonitor 1 (alarm browse path)
-                NodeId alarmNodeId = new NodeId("ns=2;i=242");
+                NodeId exclusiveLimitAlarmNodeId = new NodeId("ns=2;i=242");
+                
+                // Invoke TriggerAlarm method
+                List<object> inputArgs = new List<object>(3);
+                inputArgs.Add(exclusiveLimitAlarmNodeId);
+                inputArgs.Add(alarmEnabled);
+                inputArgs.Add(timeout);
+
+                IList<object> outputArgs;
+                m_session.Call(parentObjectId, methodNodeId, inputArgs, out outputArgs);
+
+                //Browse Path: Root\Objects\Alarms\PressureSensor 1\PressureMonitor 1 (alarm browse path)
+                NodeId conditionAlarmNodeId = new NodeId("ns=2;i=480");
 
                 // Invoke TriggerAlarm method
-                List<object> inputArgs = new List<object>(2);
-                inputArgs.Add(alarmNodeId);
-                
-                IList<object> outputArgs;
+                inputArgs = new List<object>(3);
+                inputArgs.Add(conditionAlarmNodeId);
+                inputArgs.Add(alarmEnabled);
+                inputArgs.Add(timeout);
+
                 m_session.Call(parentObjectId, methodNodeId, inputArgs, out outputArgs);
             }
             catch (Exception ex)

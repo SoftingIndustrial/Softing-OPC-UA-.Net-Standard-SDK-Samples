@@ -96,7 +96,7 @@ namespace SampleServer.Alarms
         /// <param name="highHighLimit"></param>
         /// <param name="lowLimit"></param>
         /// <param name="lowLowLimit"></param>
-        public void UpdateAlarmMonitor(
+        public void UpdateExclusiveLimitAlarmMonitor(
             ISystemContext context,
             double newValue,
             double highLimit,
@@ -129,20 +129,23 @@ namespace SampleServer.Alarms
             Value = newValue;
             ProcessVariableChanged(context, newValue);
         }
+
+        
+
         #endregion
 
         #region Private Methods
 
         private void InitializeAlarmMonitor(
-            ISystemContext context,
-            ushort namespaceIndex,
-            string alarmName,
-            double initialValue,
-            double highLimit,
-            double highHighLimit,
-            double lowLimit,
-            double lowLowLimit)
-        { 
+        ISystemContext context,
+        ushort namespaceIndex,
+        string alarmName,
+        double initialValue,
+        double highLimit,
+        double highHighLimit,
+        double lowLimit,
+        double lowLowLimit)
+        {
             // Create the alarm object
             m_alarm = new ExclusiveLimitAlarmState(this);
 
