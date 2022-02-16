@@ -17,7 +17,7 @@ namespace SampleServer.Alarms
     /// <summary>
     /// A monitored variable with an ExclusiveLimitAlarm attached.
     /// </summary>
-    internal class ExclusiveLimitMonitor : BaseAlarmMonitor
+    class ExclusiveLimitMonitor : BaseAlarmMonitor
     {
 
         #region Private Members

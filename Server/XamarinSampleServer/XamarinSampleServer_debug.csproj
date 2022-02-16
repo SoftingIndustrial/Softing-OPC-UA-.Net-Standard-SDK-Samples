@@ -26,6 +26,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\ExclusiveLimitMonitor.cs" Link="_SampleServer\Alarms\ExclusiveLimitMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\NonExclusiveLimitMonitor.cs" Link="_SampleServer\Alarms\NonExclusiveLimitMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\NonExclusiveLevelMonitor.cs" Link="_SampleServer\Alarms\NonExclusiveLevelMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\NonExclusiveDeviationMonitor.cs" Link="_SampleServer\Alarms\NonExclusiveDeviationMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\NonExclusiveRateOfChangeMonitor.cs" Link="_SampleServer\Alarms\NonExclusiveRateOfChangeMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\ConditionMonitor.cs" Link="_SampleServer\Alarms\ConditionMonitor.cs" />
 	<Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\DialogConditionMonitor.cs" Link="_SampleServer\Alarms\DialogConditionMonitor.cs" />
 	<Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\AcknowledgeableConditionMonitor.cs" Link="_SampleServer\Alarms\AcknowledgeableConditionMonitor.cs" />

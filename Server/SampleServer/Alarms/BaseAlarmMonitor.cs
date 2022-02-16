@@ -17,7 +17,7 @@ using Opc.Ua;
 
 namespace SampleServer.Alarms
 {
-    internal abstract class BaseAlarmMonitor : BaseDataVariableState<double>
+    abstract class BaseAlarmMonitor : BaseDataVariableState<double>
     {
         #region Private Members
         protected List<ConditionState> m_conditions;

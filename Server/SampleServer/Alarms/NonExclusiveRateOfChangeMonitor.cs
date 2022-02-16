@@ -13,17 +13,17 @@ using Opc.Ua;
 
 namespace SampleServer.Alarms
 {
-    class NonExclusiveLimitMonitor : BaseAlarmMonitor
+    class NonExclusiveRateOfChangeMonitor : BaseAlarmMonitor
     {
         #region Private Members
 
-        private NonExclusiveLimitAlarmState m_alarm;
-       
+        private NonExclusiveRateOfChangeAlarmState m_alarm;
+
         #endregion
 
         #region Constructors
-
-        public NonExclusiveLimitMonitor(ISystemContext context,
+        public NonExclusiveRateOfChangeMonitor(
+            ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
             string name,
@@ -33,7 +33,7 @@ namespace SampleServer.Alarms
             double highHighLimit,
             double lowLimit,
             double lowLowLimit)
-           : base(context, parent, namespaceIndex, name, initialValue)
+            : base(context, parent, namespaceIndex, name, initialValue)
         {
             // Attach the alarm monitor.
             InitializeAlarmMonitor(
@@ -63,7 +63,7 @@ namespace SampleServer.Alarms
             double lowLowLimit)
         {
             // Create the alarm object
-            m_alarm = new NonExclusiveLimitAlarmState(this);
+            m_alarm = new NonExclusiveRateOfChangeAlarmState(this);
 
             // Declare limit components
             m_alarm.HighHighLimit = new PropertyState<double>(m_alarm);
@@ -140,12 +140,14 @@ namespace SampleServer.Alarms
                 bool updateRequired = false;
 
                 // Update alarm data
-                // todo: implement the following conditions
+                // to implement the following conditions
                 // highhigh & high
                 // low
-                // lowlow
-                
-                //if (m_alarm.LowLowLimit != null && m_alarm.ActiveState.Id.Value != ObjectIds.ExclusiveLimitStateMachineType_LowLow
+                // lowlow 
+                // derived from NonExclusiveLimitAlarm
+                // multiple mutually exclusive limits
+
+                //if (m_alarm.LowLowLimit != null && m_alarm.CurrentState.Id.Value != ObjectIds.ExclusiveLimitStateMachineType_LowLow
                 //    && newValue <= m_alarm.LowLowLimit.Value)
                 //{
                 //    m_alarm.SetLimitState(context, LimitAlarmStates.LowLow);
@@ -235,7 +237,7 @@ namespace SampleServer.Alarms
             }
             catch (Exception exception)
             {
-                Utils.Trace(exception, "Alarms.NonExclusiveLimitMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
+                Utils.Trace(exception, "Alarms.NonExclusiveRateOfChangeMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
         }
         #endregion
