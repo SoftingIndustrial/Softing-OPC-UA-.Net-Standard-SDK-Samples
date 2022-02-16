@@ -21,6 +21,7 @@ namespace SampleServer.Alarms
     {
         #region Private Members
         protected List<ConditionState> m_conditions;
+        //private ConditionState alarm;
         #endregion
 
         #region Properties
@@ -54,6 +55,66 @@ namespace SampleServer.Alarms
             }
 
             StateChanged += AlarmMonitor_StateChanged;
+        }
+
+        protected void InitializeAlarmMonitor(
+            ISystemContext context,
+            NodeState parent,
+            ushort namespaceIndex,
+            string alarmName,
+            ConditionState alarm)
+        {
+            if(alarm == null)
+            {
+                return;
+            }
+
+            // Add optional components
+            alarm.LocalTime = new PropertyState<TimeZoneDataType>(alarm);
+            alarm.Comment = new ConditionVariableState<LocalizedText>(alarm);
+            alarm.ClientUserId = new PropertyState<string>(alarm);
+            alarm.AddComment = new AddCommentMethodState(alarm);
+            alarm.Comment.Value = new LocalizedText("en", alarmName);
+            alarm.EnabledState = new TwoStateVariableState(alarm);
+            alarm.Message = new PropertyState<LocalizedText>(parent);
+            alarm.Message.Value = new LocalizedText("en", alarmName);
+
+            // Specify reference type between the source and the alarm.
+            alarm.ReferenceTypeId = ReferenceTypeIds.Organizes;
+
+            // This call initializes the condition from the type model (i.e. creates all of the objects
+            // and variables required to store its state). The information about the type model was 
+            // incorporated into the class when the class was created.
+            //
+            // This method also assigns new NodeIds to all of the components by calling the INodeIdFactory.New
+            // method on the INodeIdFactory object which is part of the system context. The NodeManager provides
+            // the INodeIdFactory implementation used here.
+            alarm.Create(context, null, new QualifiedName(alarmName, namespaceIndex), null, true);
+
+            // Add the alarm with the HasComponent reference to the variable
+            AddChild(alarm);
+
+            // Add the variable as source node of the alarm
+            AddCondition(alarm);
+
+            // Initialize alarm information
+            alarm.SymbolicName = alarmName;
+            alarm.EventType.Value = alarm.TypeDefinitionId;
+            alarm.ConditionName.Value = alarm.SymbolicName;
+            alarm.AutoReportStateChanges = true;
+            alarm.Time.Value = DateTime.UtcNow;
+            alarm.ReceiveTime.Value = alarm.Time.Value;
+            alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
+            //alarm.BranchId.Value = null;
+
+            alarm.BranchId.Value = new NodeId(alarmName, namespaceIndex);
+            alarm.ConditionClassId.Value = new NodeId(alarmName, namespaceIndex);
+            alarm.ConditionClassName.Value = new LocalizedText("en", alarmName);
+            alarm.ClientUserId.Value = "Anonymous";
+
+            // Set state values
+            alarm.SetEnableState(context, true);
+            alarm.Retain.Value = false;
         }
 
         protected void AddCondition(ConditionState condition)
@@ -104,14 +165,6 @@ namespace SampleServer.Alarms
                 ProcessVariableChanged(context, Value);
             }
         }
-
-        //protected virtual void InitializeAlarmMonitor(
-        //    ISystemContext context,
-        //    ushort namespaceIndex,
-        //    string alarmName,
-        //    double initialValue)
-        //{
-        //}
 
         protected virtual void ProcessVariableChanged(ISystemContext context, object value)
         {
