@@ -24,17 +24,17 @@ namespace SampleServer.Alarms
     {
         #region Private Fields
         private const int AlarmTimeout = 30000;
-        private Timer m_timer;
+        //private Timer m_timer;
         private Timer m_exclusiveLimitAlarmTrigger;
         private Timer m_conditionAlarmTrigger;
         private Timer m_dialogConditionAlarmTrigger;
         private Timer m_acknowledgeableConditionAlarmTrigger;
 
         private Timer m_AllAlarmsTrigger;
-        private static NodeId m_alarmNodeId;
+        //private static NodeId m_alarmNodeId;
 
         //private readonly Random m_random = new Random();
-        private bool m_valueChanged = false;
+        //private bool m_valueChanged = false;
 
         Dictionary<string, NodeId> m_exclusiveLimitMonitors = new Dictionary<string, NodeId>();
 
@@ -160,7 +160,7 @@ namespace SampleServer.Alarms
                 {
                     new Argument() {Name = "Alarm NodeId", Description = "Alarm NodeId", DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar},
                     new Argument() {Name = "Alarm Enable/Disable", Description = "Alarm Enable/Disable", DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar},
-                    new Argument() {Name = "Alarm Timeout", Description = "Alarm Enable/Disable", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
+                    new Argument() {Name = "Alarm Timeout", Description = "Alarm Timeout", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
                 };
                
                 CreateMethod(root, "TriggerAlarm", inputArgumentsAdd, null, OnTriggerAlarmCall);
