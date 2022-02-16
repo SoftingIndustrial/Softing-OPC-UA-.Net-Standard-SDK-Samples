@@ -52,6 +52,8 @@ namespace SampleServer.Alarms
                 parent.AddNotifier(context, ReferenceTypeIds.HasEventSource, false, this);
                 AddNotifier(context, ReferenceTypeIds.HasEventSource, true, parent);
             }
+
+            StateChanged += AlarmMonitor_StateChanged;
         }
 
         protected void AddCondition(ConditionState condition)
@@ -95,6 +97,14 @@ namespace SampleServer.Alarms
             }
         }
 
+        protected void AlarmMonitor_StateChanged(ISystemContext context, NodeState node, NodeStateChangeMasks changes)
+        {
+            if ((changes & NodeStateChangeMasks.Value) != 0)
+            {
+                ProcessVariableChanged(context, Value);
+            }
+        }
+
         //protected virtual void InitializeAlarmMonitor(
         //    ISystemContext context,
         //    ushort namespaceIndex,
@@ -103,9 +113,9 @@ namespace SampleServer.Alarms
         //{
         //}
 
-        //protected virtual void ProcessVariableChanged(ISystemContext context, object value)
-        //{
-        //}
+        protected virtual void ProcessVariableChanged(ISystemContext context, object value)
+        {
+        }
 
     }
 }

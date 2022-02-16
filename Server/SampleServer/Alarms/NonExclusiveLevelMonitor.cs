@@ -18,7 +18,7 @@ namespace SampleServer.Alarms
             double initialValue) 
             : base(context, parent, namespaceIndex, name, initialValue)
         {
-
+            StateChanged += AlarmMonitor_StateChanged;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace SampleServer.Alarms
                 lowLimit,
                 lowLowLimit);
 
-            StateChanged += NonExclusiveLimitMonitor_StateChanged;
+            StateChanged += AlarmMonitor_StateChanged;
         }
         #endregion
 
@@ -124,15 +124,7 @@ namespace SampleServer.Alarms
             m_alarm.LowLowLimit.Value = lowLowLimit;
         }
 
-        private void NonExclusiveLimitMonitor_StateChanged(ISystemContext context, NodeState node, NodeStateChangeMasks changes)
-        {
-            if ((changes & NodeStateChangeMasks.Value) != 0)
-            {
-                ProcessVariableChanged(context, Value);
-            }
-        }
-
-        private void ProcessVariableChanged(ISystemContext context, object value)
+       protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
             {

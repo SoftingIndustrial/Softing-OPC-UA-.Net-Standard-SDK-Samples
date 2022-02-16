@@ -127,6 +127,17 @@ namespace SampleServer.Alarms
                     4.0,
                     2.0);
 
+                // Create an alarm monitor for a NonExclusiveLimitAlarm type.
+                CreateNonExclusiveLimitMonitor(
+                    machine,
+                    "NonExclusiveLimitSensor 1",
+                    "NonExclusiveLimitMonitor 1",
+                    8.0,
+                    25.0,
+                    30.0,
+                    8.0,
+                    5.0);
+
                 CreateConditionMonitor(
                     machine,
                     "ConditionSensor 1",
@@ -222,6 +233,50 @@ namespace SampleServer.Alarms
 
             //remember node in node manager list
             AddPredefinedNode(SystemContext, exclusiveLimitMonitor);
+        }
+
+        /// <summary>
+        /// Create an instance of NonExclusiveLimitMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        /// <param name="highLimit"></param>
+        /// <param name="highHighLimit"></param>
+        /// <param name="lowLimit"></param>
+        /// <param name="lowLowLimit"></param>
+        private void CreateNonExclusiveLimitMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue,
+            double highLimit,
+            double highHighLimit,
+            double lowLimit,
+            double lowLowLimit)
+        {
+            // Create an alarm monitor for a temperature sensor 1.
+            NonExclusiveLimitMonitor nonExclusiveLimitMonitor = new NonExclusiveLimitMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue,
+                highLimit,
+                highHighLimit,
+                lowLimit,
+                lowLowLimit);
+
+            if (nonExclusiveLimitMonitor != null)
+            {
+                m_exclusiveLimitMonitors.Add(alarmName, nonExclusiveLimitMonitor.NodeId);
+
+                m_conditionInstances.AddRange(nonExclusiveLimitMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, nonExclusiveLimitMonitor);
         }
 
         private void CreateConditionMonitor(NodeState parent,

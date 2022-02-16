@@ -29,7 +29,7 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
 
-            StateChanged += AlarmConditionMonitor_StateChanged;
+            StateChanged += AlarmMonitor_StateChanged;
         }
 
         public void UpdateConditionAlarmMonitor(
@@ -120,16 +120,7 @@ namespace SampleServer.Alarms
             m_alarm.SetEnableState(context, true);
             m_alarm.Retain.Value = false;
         }
-
-        private void AlarmConditionMonitor_StateChanged(ISystemContext context, NodeState node, NodeStateChangeMasks changes)
-        {
-            if ((changes & NodeStateChangeMasks.Value) != 0)
-            {
-                ProcessVariableChanged(context, Value);
-            }
-        }
-
-        private void ProcessVariableChanged(ISystemContext context, object value)
+        protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
             {

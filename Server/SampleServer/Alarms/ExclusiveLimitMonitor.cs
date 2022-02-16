@@ -26,6 +26,7 @@ namespace SampleServer.Alarms
         
         #endregion
 
+        
         #region Constructors
 
         /// <summary>
@@ -65,7 +66,7 @@ namespace SampleServer.Alarms
                 lowLimit,
                 lowLowLimit);
 
-            StateChanged += ExclusiveLimitMonitor_StateChanged;
+            StateChanged += AlarmMonitor_StateChanged;
         }
 
         /// <summary>
@@ -186,15 +187,7 @@ namespace SampleServer.Alarms
             m_alarm.LowLowLimit.Value = lowLowLimit;
         }
 
-        private void ExclusiveLimitMonitor_StateChanged(ISystemContext context, NodeState node, NodeStateChangeMasks changes)
-        {
-            if ((changes & NodeStateChangeMasks.Value) != 0)
-            {
-                ProcessVariableChanged(context, Value);
-            }
-        }
-
-        private void ProcessVariableChanged(ISystemContext context, object value)
+        protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
             {
