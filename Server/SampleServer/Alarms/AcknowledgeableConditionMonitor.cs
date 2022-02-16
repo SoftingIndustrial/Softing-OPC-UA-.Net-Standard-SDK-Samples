@@ -14,6 +14,13 @@ namespace SampleServer.Alarms
 
         #endregion
 
+        #region Public Members
+        public List<ConditionState> ConditionStates
+        {
+            get { return m_conditions; }
+        }
+        #endregion
+
         public AcknowledgeableConditionMonitor(
             ISystemContext context,
             NodeState parent,

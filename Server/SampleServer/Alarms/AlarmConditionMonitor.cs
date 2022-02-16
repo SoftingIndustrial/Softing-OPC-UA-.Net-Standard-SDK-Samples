@@ -1,29 +1,26 @@
 ﻿using Opc.Ua;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SampleServer.Alarms
 {
-    internal class ConditionMonitor : BaseDataVariableState<double>
+    internal class AlarmConditionMonitor : BaseDataVariableState<double>
     {
 
         #region Private Members
 
-        private ConditionState m_alarm;
+        private AlarmConditionState m_alarm;
         private List<ConditionState> m_conditions;
 
         #endregion
 
         #region Public Members
-        public List<ConditionState> ConditionStates {
+        public List<ConditionState> ConditionStates
+        {
             get { return m_conditions; }
         }
         #endregion
-
-        public ConditionMonitor(
+        public AlarmConditionMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
@@ -56,7 +53,7 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
 
-            StateChanged += ConditionMonitor_StateChanged;
+            StateChanged += AlarmConditionMonitor_StateChanged;
         }
 
         public void UpdateConditionAlarmMonitor(
@@ -106,7 +103,7 @@ namespace SampleServer.Alarms
             double initialValue)
         {
             // Create the alarm object
-            m_alarm = new ConditionState(this);
+            m_alarm = new AlarmConditionState(this);
 
             // Add optional components
             m_alarm.LocalTime = new PropertyState<TimeZoneDataType>(m_alarm);
@@ -190,7 +187,7 @@ namespace SampleServer.Alarms
         }
 
 
-        private void ConditionMonitor_StateChanged(ISystemContext context, NodeState node, NodeStateChangeMasks changes)
+        private void AlarmConditionMonitor_StateChanged(ISystemContext context, NodeState node, NodeStateChangeMasks changes)
         {
             if ((changes & NodeStateChangeMasks.Value) != 0)
             {
@@ -241,7 +238,7 @@ namespace SampleServer.Alarms
             }
             catch (Exception exception)
             {
-                Utils.Trace(exception, "Alarms.ConditionMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
+                Utils.Trace(exception, "Alarms.AlarmConditionMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
     }
 }

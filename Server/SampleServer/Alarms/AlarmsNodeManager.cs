@@ -29,13 +29,16 @@ namespace SampleServer.Alarms
         private Timer m_conditionAlarmTrigger;
         private Timer m_dialogConditionAlarmTrigger;
         private Timer m_acknowledgeableConditionAlarmTrigger;
+
+        private Timer m_AllAlarmsTrigger;
         private static NodeId m_alarmNodeId;
 
         //private readonly Random m_random = new Random();
         private bool m_valueChanged = false;
 
         Dictionary<string, NodeId> m_exclusiveLimitMonitors = new Dictionary<string, NodeId>();
-        
+
+        List<ConditionState> m_conditionInstances = new List<ConditionState>();
         #endregion
 
         #region Constructors
@@ -142,6 +145,12 @@ namespace SampleServer.Alarms
                     "AcknowledgeableConditionMonitor 1",
                     7.0);
 
+                CreateAlarmConditionMonitor(
+                    machine,
+                    "AlarmConditionSensor 1",
+                    "AlarmConditionMonitor 1",
+                    7.0);
+
                 // Add sub-notifiers
                 AddNotifier(ServerNode, root, false);
                 AddNotifier(root, machine, true);
@@ -155,6 +164,15 @@ namespace SampleServer.Alarms
                 };
                
                 CreateMethod(root, "TriggerAlarm", inputArgumentsAdd, null, OnTriggerAlarmCall);
+
+
+                Argument[] inputArgumentsStart = new Argument[]
+                {
+                    new Argument() {Name = "Interval (s)", Description = "Alarm Trigerring Interval", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
+                };
+                CreateMethod(root, "StartAllAlarms", inputArgumentsStart, null, OnTriggerAllConditionsStartCall);
+
+                CreateMethod(root, "StopAllAlarms", null, null, OnTriggerAllConditionsStop);
                 #endregion
 
                 // perhaps it might be used for stress test!?
@@ -198,6 +216,8 @@ namespace SampleServer.Alarms
             if(exclusiveLimitMonitor != null)
             {
                 m_exclusiveLimitMonitors.Add(alarmName, exclusiveLimitMonitor.NodeId);
+
+                m_conditionInstances.AddRange(exclusiveLimitMonitor.ConditionStates);
             }
 
             //remember node in node manager list
@@ -219,6 +239,11 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
 
+            if (conditionMonitor != null)
+            {
+                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+            }
+
             //remember node in node manager list
             AddPredefinedNode(SystemContext, conditionMonitor);
         }
@@ -238,6 +263,11 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
 
+            if (conditionMonitor != null)
+            {
+                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+            }
+
             //remember node in node manager list
             AddPredefinedNode(SystemContext, conditionMonitor);
         }
@@ -256,6 +286,35 @@ namespace SampleServer.Alarms
                 name,
                 alarmName,
                 initialValue);
+
+            if (conditionMonitor != null)
+            {
+                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, conditionMonitor);
+        }
+
+        private void CreateAlarmConditionMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue)
+        {
+
+            // Create an alarm monitor for a temperature sensor 1.
+            AlarmConditionMonitor conditionMonitor = new AlarmConditionMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            if (conditionMonitor != null)
+            {
+                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+            }
 
             //remember node in node manager list
             AddPredefinedNode(SystemContext, conditionMonitor);
@@ -580,6 +639,58 @@ namespace SampleServer.Alarms
             }
         }
 
+        /// <summary>
+        /// Handles all alarms enabled event.
+        /// </summary>
+        /// <param name="state"></param>
+        private void OnAllConditionsStart(object state)
+        {
+            try
+            {
+                var inputs = new List<Variant>();
+
+                foreach (ConditionState ci in m_conditionInstances)
+                {
+                    MethodState enableMethod = (MethodState)ci.FindChild(Server.DefaultSystemContext, new QualifiedName("Enable"));
+                    if (enableMethod != null)
+                    {
+                        enableMethod.Call(Server.DefaultSystemContext, ci.NodeId, inputs, null, null);
+                    }
+                    MethodState disableMethod = (MethodState)ci.FindChild(Server.DefaultSystemContext, new QualifiedName("Disable"));
+                    if (enableMethod != null)
+                    {
+                        disableMethod.Call(Server.DefaultSystemContext, ci.NodeId, inputs, null, null);
+                    }
+                }
+                
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Alarm exception: {0}", ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handles all alarms enabled event.
+        /// </summary>
+        /// <param name="state"></param>
+        private ServiceResult OnTriggerAllConditionsStop(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            try
+            {
+                if (m_AllAlarmsTrigger != null)
+                {
+                    m_AllAlarmsTrigger.Dispose();
+                    m_AllAlarmsTrigger = null;
+                }
+                return ServiceResult.Good;
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult(StatusCodes.BadInvalidArgument);
+            }
+        }
 
         #endregion
 
@@ -662,6 +773,34 @@ namespace SampleServer.Alarms
 
                 }
                 
+                return ServiceResult.Good;
+            }
+            catch
+            {
+                return new ServiceResult(StatusCodes.BadInvalidArgument);
+            }
+
+        }
+
+      
+        /// <summary>
+        /// Handles the trigger alarm method call
+        /// </summary>
+        private ServiceResult OnTriggerAllConditionsStartCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            // All arguments must be provided
+            if (inputArguments.Count != 1)
+            {
+                return StatusCodes.BadArgumentsMissing;
+            }
+
+            try
+            {
+               
+                int triggerInterval = (int)inputArguments[0]; // "Alarm Timeout";
+
+                m_AllAlarmsTrigger = new Timer(new TimerCallback(OnAllConditionsStart), null, triggerInterval, triggerInterval);
+
                 return ServiceResult.Good;
             }
             catch
