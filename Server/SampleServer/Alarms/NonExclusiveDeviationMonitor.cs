@@ -85,6 +85,9 @@ namespace SampleServer.Alarms
             m_alarm.SetAcknowledgedState(context, false);
             m_alarm.SetActiveState(context, false);
 
+            // Set Setpoint node
+            m_alarm.SetpointNode.Value = NodeId;
+
             // Define limit values
             m_alarm.HighLimit.Value = highLimit;
             m_alarm.HighHighLimit.Value = highHighLimit;

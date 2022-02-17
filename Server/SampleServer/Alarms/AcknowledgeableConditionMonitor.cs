@@ -44,6 +44,8 @@ namespace SampleServer.Alarms
             m_alarm = new AcknowledgeableConditionState(this);
 
             InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+
+            m_alarm.AckedState.Value = new LocalizedText("en", alarmName);
         }
 
         protected override void ProcessVariableChanged(ISystemContext context, object value)

@@ -31,6 +31,7 @@ namespace SampleServer.Alarms
         }
         #endregion
 
+        #region Constructors
         public BaseAlarmMonitor(
             ISystemContext context,
             NodeState parent,
@@ -56,7 +57,17 @@ namespace SampleServer.Alarms
 
             StateChanged += AlarmMonitor_StateChanged;
         }
+        #endregion
 
+        #region Protected Methods
+        /// <summary>
+        /// Initialize base alarm default properties
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="alarm"></param>
         protected void InitializeAlarmMonitor(
             ISystemContext context,
             NodeState parent,
@@ -78,6 +89,7 @@ namespace SampleServer.Alarms
             alarm.EnabledState = new TwoStateVariableState(alarm);
             alarm.Message = new PropertyState<LocalizedText>(parent);
             alarm.Message.Value = new LocalizedText("en", alarmName);
+            alarm.Description = alarm.Comment.DisplayName;
 
             // Specify reference type between the source and the alarm.
             alarm.ReferenceTypeId = ReferenceTypeIds.Organizes;
@@ -105,18 +117,21 @@ namespace SampleServer.Alarms
             alarm.Time.Value = DateTime.UtcNow;
             alarm.ReceiveTime.Value = alarm.Time.Value;
             alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-            //alarm.BranchId.Value = null;
-
+            
             alarm.BranchId.Value = new NodeId(alarmName, namespaceIndex);
-            alarm.ConditionClassId.Value = new NodeId(alarmName, namespaceIndex);
-            alarm.ConditionClassName.Value = new LocalizedText("en", alarmName);
+            alarm.ConditionClassId.Value = VariableIds.ConditionType_ConditionClassId;
+            alarm.ConditionClassName.Value = alarm.ConditionClassId.DisplayName;
             alarm.ClientUserId.Value = "Anonymous";
-
+            
             // Set state values
             alarm.SetEnableState(context, true);
             alarm.Retain.Value = false;
         }
 
+        /// <summary>
+        /// Add condition state
+        /// </summary>
+        /// <param name="condition"></param>
         protected void AddCondition(ConditionState condition)
         {
             if (condition == null)
@@ -169,6 +184,7 @@ namespace SampleServer.Alarms
         protected virtual void ProcessVariableChanged(ISystemContext context, object value)
         {
         }
+        #endregion
 
     }
 }

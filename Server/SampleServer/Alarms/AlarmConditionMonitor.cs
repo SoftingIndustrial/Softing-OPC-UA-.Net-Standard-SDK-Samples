@@ -84,6 +84,11 @@ namespace SampleServer.Alarms
             m_alarm = new AlarmConditionState(this);
 
             InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+
+            // Set input node
+            m_alarm.InputNode.Value = NodeId;
+
+            m_alarm.SetActiveState(context, false);
         }
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {

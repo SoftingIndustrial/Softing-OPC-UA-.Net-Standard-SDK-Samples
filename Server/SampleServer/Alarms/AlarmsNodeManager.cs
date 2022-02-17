@@ -463,10 +463,10 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
 
-            if (conditionMonitor != null)
-            {
-                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
-            }
+            //if (conditionMonitor != null)
+            //{
+            //    m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+            //}
 
             //remember node in node manager list
             AddPredefinedNode(SystemContext, conditionMonitor);
