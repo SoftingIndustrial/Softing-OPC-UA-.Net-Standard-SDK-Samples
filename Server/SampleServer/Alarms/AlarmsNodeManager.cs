@@ -132,72 +132,72 @@ namespace SampleServer.Alarms
                     2.0);
 
                 // Create an alarm monitor for a NonExclusiveLimitAlarm type.
-                //CreateNonExclusiveLimitMonitor(
-                //    machine,
-                //    "NonExclusiveLimitSensor 1",
-                //    "NonExclusiveLimitMonitor 1",
-                //    8.0,
-                //    25.0,
-                //    30.0,
-                //    8.0,
-                //    5.0);
+                CreateNonExclusiveLimitMonitor(
+                    machine,
+                    "NonExclusiveLimitSensor 1",
+                    "NonExclusiveLimitMonitor 1",
+                    8.0,
+                    25.0,
+                    30.0,
+                    8.0,
+                    5.0);
 
-                //// Create an alarm monitor for a NonExclusiveLevelAlarm type.
-                //CreateNonExclusiveLevelMonitor(
-                //    machine,
-                //    "NonExclusiveLevelSensor 1",
-                //    "NonExclusiveLevelMonitor 1",
-                //    9.0,
-                //    35.0,
-                //    40.0,
-                //    12.0,
-                //    10.0);
+                // Create an alarm monitor for a NonExclusiveLevelAlarm type.
+                CreateNonExclusiveLevelMonitor(
+                    machine,
+                    "NonExclusiveLevelSensor 1",
+                    "NonExclusiveLevelMonitor 1",
+                    9.0,
+                    35.0,
+                    40.0,
+                    12.0,
+                    10.0);
 
-                //// Create an alarm monitor for a NonExclusiveDeviationAlarm type.
-                //CreateNonExclusiveDeviationMonitor(
-                //    machine,
-                //    "NonExclusiveDeviationSensor 1",
-                //    "NonExclusiveDeviationMonitor 1",
-                //    10.0,
-                //    37.0,
-                //    42.0,
-                //    15.0,
-                //    12.0);
+                // Create an alarm monitor for a NonExclusiveDeviationAlarm type.
+                CreateNonExclusiveDeviationMonitor(
+                    machine,
+                    "NonExclusiveDeviationSensor 1",
+                    "NonExclusiveDeviationMonitor 1",
+                    10.0,
+                    37.0,
+                    42.0,
+                    15.0,
+                    12.0);
 
-                //// Create an alarm monitor for a NonExclusiveRateOfChangeAlarm type.
-                //CreateNonExclusiveRateOfChangeMonitor(
-                //    machine,
-                //    "NonExclusiveRateOfChangeSensor 1",
-                //    "NonExclusiveRateOfChangeMonitor 1",
-                //    11.0,
-                //    39.0,
-                //    45.0,
-                //    18.0,
-                //    15.0);
+                // Create an alarm monitor for a NonExclusiveRateOfChangeAlarm type.
+                CreateNonExclusiveRateOfChangeMonitor(
+                    machine,
+                    "NonExclusiveRateOfChangeSensor 1",
+                    "NonExclusiveRateOfChangeMonitor 1",
+                    11.0,
+                    39.0,
+                    45.0,
+                    18.0,
+                    15.0);
 
-                //CreateConditionMonitor(
-                //    machine,
-                //    "ConditionSensor 1",
-                //    "ConditionMonitor 1",
-                //    7.0);
+                CreateConditionMonitor(
+                    machine,
+                    "ConditionSensor 1",
+                    "ConditionMonitor 1",
+                    7.0);
 
-                //CreateDialogConditionMonitor(
-                //    machine,
-                //    "DialogConditionSensor 1",
-                //    "DialogConditionMonitor 1",
-                //    7.0);
+                CreateDialogConditionMonitor(
+                    machine,
+                    "DialogConditionSensor 1",
+                    "DialogConditionMonitor 1",
+                    7.0);
 
-                //CreateAcknowledgeableConditionMonitor(
-                //    machine,
-                //    "AcknowledgeableConditionSensor 1",
-                //    "AcknowledgeableConditionMonitor 1",
-                //    7.0);
+                CreateAcknowledgeableConditionMonitor(
+                    machine,
+                    "AcknowledgeableConditionSensor 1",
+                    "AcknowledgeableConditionMonitor 1",
+                    7.0);
 
-                //CreateAlarmConditionMonitor(
-                //    machine,
-                //    "AlarmConditionSensor 1",
-                //    "AlarmConditionMonitor 1",
-                //    7.0);
+                CreateAlarmConditionMonitor(
+                    machine,
+                    "AlarmConditionSensor 1",
+                    "AlarmConditionMonitor 1",
+                    7.0);
 
                 // Add sub-notifiers
                 AddNotifier(ServerNode, root, false);
