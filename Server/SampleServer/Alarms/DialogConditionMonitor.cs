@@ -46,11 +46,14 @@ namespace SampleServer.Alarms
 
             InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
 
-            m_alarm.DialogState.Value = new LocalizedText("en", alarmName);
-            m_alarm.Prompt.Value = new LocalizedText("en", alarmName);
-            LocalizedTextCollection responseOptionSet = new LocalizedTextCollection();
-            responseOptionSet.Add(new LocalizedText("en", alarmName));
-            m_alarm.ResponseOptionSet.Value = responseOptionSet.ToArray();
+            // Manadatory fields initialization
+            m_alarm.DialogState.Value = new LocalizedText("en", "DialogStateSample");
+            m_alarm.Prompt.Value = new LocalizedText("en", "PromptSample");
+            m_alarm.ResponseOptionSet.Value = new LocalizedText[] { new LocalizedText("en", "ResponseSample") };
+            m_alarm.DefaultResponse.Value = (int)StatusCodes.Good;
+            m_alarm.LastResponse.Value = (int)StatusCodes.Good;
+            m_alarm.OkResponse.Value = (int)StatusCodes.Good;
+            m_alarm.CancelResponse.Value = (int)StatusCodes.Good;
         }
 
         protected override void ProcessVariableChanged(ISystemContext context, object value)

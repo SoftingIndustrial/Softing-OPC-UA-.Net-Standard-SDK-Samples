@@ -61,7 +61,6 @@ namespace SampleServer.Alarms
                 parent,
                 namespaceIndex,
                 alarmName,
-                initialValue,
                 highLimit,
                 highHighLimit,
                 lowLimit,
@@ -118,15 +117,14 @@ namespace SampleServer.Alarms
         #region Private Methods
 
         private void InitializeAlarmMonitor(
-        ISystemContext context,
-        NodeState parent,
-        ushort namespaceIndex,
-        string alarmName,
-        double initialValue,
-        double highLimit,
-        double highHighLimit,
-        double lowLimit,
-        double lowLowLimit)
+            ISystemContext context,
+            NodeState parent,
+            ushort namespaceIndex,
+            string alarmName,
+            double highLimit,
+            double highHighLimit,
+            double lowLimit,
+            double lowLowLimit)
         {
             // Create the alarm object
             m_alarm = new ExclusiveLimitAlarmState(this);

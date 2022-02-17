@@ -199,6 +199,16 @@ namespace SampleServer.Alarms
                     "AlarmConditionMonitor 1",
                     7.0);
 
+                CreateLimitAlarmConditionMonitor(
+                    machine,
+                    "LimitAlarmConditionSensor 1",
+                    "LimitAlarmConditionMonitor 1",
+                    7.0,
+                    30.0,
+                    80.0,
+                    100.0,
+                    20.0);
+
                 // Add sub-notifiers
                 AddNotifier(ServerNode, root, false);
                 AddNotifier(root, machine, true);
@@ -216,7 +226,7 @@ namespace SampleServer.Alarms
 
                 Argument[] inputArgumentsStart = new Argument[]
                 {
-                    new Argument() {Name = "Interval (s)", Description = "Alarm Trigerring Interval", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
+                    new Argument() {Name = "Interval (ms)", Description = "Alarm Trigerring Interval", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
                 };
                 CreateMethod(root, "StartAllAlarms", inputArgumentsStart, null, OnTriggerAllConditionsStartCall);
 
@@ -534,6 +544,38 @@ namespace SampleServer.Alarms
                 name,
                 alarmName,
                 initialValue);
+
+            if (conditionMonitor != null)
+            {
+                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, conditionMonitor);
+        }
+
+        private void CreateLimitAlarmConditionMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue,
+            double highLimit,
+            double highHighLimit,
+            double lowLimit,
+            double lowLowLimit)
+        {
+
+            // Create an alarm monitor for a temperature sensor 1.
+            LimitAlarmMonitor conditionMonitor = new LimitAlarmMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue,
+                highLimit,
+                highHighLimit,
+                lowLimit,
+                lowLowLimit);
 
             if (conditionMonitor != null)
             {
