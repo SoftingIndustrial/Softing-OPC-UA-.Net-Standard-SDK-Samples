@@ -89,6 +89,7 @@ namespace SampleServer.Alarms
             m_alarm.InputNode.Value = NodeId;
 
             m_alarm.SetActiveState(context, false);
+            m_alarm.AckedState.Value = new LocalizedText("en", alarmName);
         }
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
