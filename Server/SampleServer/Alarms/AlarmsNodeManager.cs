@@ -325,6 +325,10 @@ namespace SampleServer.Alarms
                 CreateMethod(root, "StartAllAlarms", inputArgumentsStart, null, OnTriggerAllConditionsStartCall);
 
                 CreateMethod(root, "StopAllAlarms", null, null, OnTriggerAllConditionsStop);
+
+                CreateMethod(root, "EnableAllAlarms", null, null, OnAllConditionsEnableCall);
+
+                CreateMethod(root, "DisableAllAlarms", null, null, OnAllConditionsDisableCall);
                 #endregion
 
                 // perhaps it might be used for stress test!?
@@ -1532,6 +1536,57 @@ namespace SampleServer.Alarms
                 int triggerInterval = (int)inputArguments[0]; // "Alarm Timeout";
 
                 m_AllAlarmsTrigger = new Timer(new TimerCallback(OnAllConditionsStart), null, triggerInterval, triggerInterval);
+
+                return ServiceResult.Good;
+            }
+            catch
+            {
+                return new ServiceResult(StatusCodes.BadInvalidArgument);
+            }
+
+        }
+
+        /// <summary>
+        /// Handles enabling all conditions
+        /// </summary>
+        private ServiceResult OnAllConditionsEnableCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            try
+            {
+                var inputs = new List<Variant>();
+                foreach (ConditionState ci in m_conditionInstances)
+                {
+                    MethodState enableMethod = (MethodState)ci.FindChild(Server.DefaultSystemContext, new QualifiedName("Enable"));
+                    if (enableMethod != null)
+                    {
+                        enableMethod.Call(Server.DefaultSystemContext, ci.NodeId, inputs, null, null);
+                    }
+                }
+
+                return ServiceResult.Good;
+            }
+            catch
+            {
+                return new ServiceResult(StatusCodes.BadInvalidArgument);
+            }
+        }
+
+        /// <summary>
+        /// Handles disabling all conditions
+        /// </summary>
+        private ServiceResult OnAllConditionsDisableCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            try
+            {
+                var inputs = new List<Variant>();
+                foreach (ConditionState ci in m_conditionInstances)
+                {
+                    MethodState enableMethod = (MethodState)ci.FindChild(Server.DefaultSystemContext, new QualifiedName("Disable"));
+                    if (enableMethod != null)
+                    {
+                        enableMethod.Call(Server.DefaultSystemContext, ci.NodeId, inputs, null, null);
+                    }
+                }
 
                 return ServiceResult.Good;
             }
