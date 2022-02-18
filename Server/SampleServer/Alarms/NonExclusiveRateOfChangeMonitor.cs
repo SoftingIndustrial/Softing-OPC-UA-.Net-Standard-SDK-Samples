@@ -13,6 +13,9 @@ using Opc.Ua;
 
 namespace SampleServer.Alarms
 {
+    /// <summary>
+    /// A monitored variable with an NonExclusiveRateOfChangeAlarm attached.
+    /// </summary>
     class NonExclusiveRateOfChangeMonitor : BaseAlarmMonitor
     {
         #region Private Members
@@ -78,8 +81,8 @@ namespace SampleServer.Alarms
             // Set input node
             m_alarm.InputNode.Value = NodeId;
 
-            // optional
-            m_alarm.EngineeringUnits.Value = new EUInformation();
+            // optional (887 instead 22 - the same issue as 8912 instead 22 [EntentionObject type] )
+            //m_alarm.EngineeringUnits.Value = new EUInformation();
 
             // Set state values
             m_alarm.SetEnableState(context, true);

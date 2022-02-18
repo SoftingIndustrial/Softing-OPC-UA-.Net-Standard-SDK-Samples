@@ -13,6 +13,9 @@ using Opc.Ua;
 
 namespace SampleServer.Alarms
 {
+    /// <summary>
+    /// A monitored variable with an NonExclusiveDeviationAlarm attached.
+    /// </summary>
     class NonExclusiveDeviationMonitor : BaseAlarmMonitor
     {
         #region Private Members

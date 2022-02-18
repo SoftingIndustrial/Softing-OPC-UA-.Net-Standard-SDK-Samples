@@ -37,6 +37,10 @@ namespace SampleServer.Alarms
         //private bool m_valueChanged = false;
 
         Dictionary<string, NodeId> m_exclusiveLimitMonitors = new Dictionary<string, NodeId>();
+        Dictionary<string, NodeId> m_exclusiveLevelMonitors = new Dictionary<string, NodeId>();
+        Dictionary<string, NodeId> m_exclusiveDeviationMonitors = new Dictionary<string, NodeId>();
+        Dictionary<string, NodeId> m_exclusiveRateOfChangeMonitors = new Dictionary<string, NodeId>();
+
         Dictionary<string, NodeId> m_nonExclusiveLimitMonitors = new Dictionary<string, NodeId>();
         Dictionary<string, NodeId> m_nonExclusiveLevelMonitors = new Dictionary<string, NodeId>();
         Dictionary<string, NodeId> m_nonExclusiveDeviationMonitors = new Dictionary<string, NodeId>();
@@ -131,6 +135,39 @@ namespace SampleServer.Alarms
                     4.0,
                     2.0);
 
+                // Create an alarm monitor for a ExclusiveLevelAlarm type.
+                CreateExclusiveLevelMonitor(
+                    machine,
+                    "ExclusiveLevelSensor 1",
+                    "ExclusiveLevelMonitor 1",
+                    9.0,
+                    35.0,
+                    40.0,
+                    12.0,
+                    10.0);
+
+                // Create an alarm monitor for a ExclusiveDeviationAlarm type.
+                CreateExclusiveDeviationMonitor(
+                    machine,
+                    "ExclusiveDeviationSensor 1",
+                    "ExclusiveDeviationMonitor 1",
+                    10.0,
+                    37.0,
+                    42.0,
+                    15.0,
+                    12.0);
+
+                // Create an alarm monitor for a ExclusiveRateOfChangeAlarm type.
+                CreateExclusiveRateOfChangeMonitor(
+                    machine,
+                    "ExclusiveRateOfChangeSensor 1",
+                    "ExclusiveRateOfChangeMonitor 1",
+                    11.0,
+                    39.0,
+                    45.0,
+                    18.0,
+                    15.0);
+
                 // Create an alarm monitor for a NonExclusiveLimitAlarm type.
                 CreateNonExclusiveLimitMonitor(
                     machine,
@@ -209,6 +246,13 @@ namespace SampleServer.Alarms
                     100.0,
                     20.0);
 
+                // Create an alarm monitor for a CertificateExpiratioAlarm type.
+                CreateCertificateExpirationMonitor(
+                    machine,
+                    "CertificateExpiratioSensor 1",
+                    "CertificateExpiratioMonitor 1",
+                    8.0);
+
                 // Add sub-notifiers
                 AddNotifier(ServerNode, root, false);
                 AddNotifier(root, machine, true);
@@ -281,6 +325,139 @@ namespace SampleServer.Alarms
             //remember node in node manager list
             AddPredefinedNode(SystemContext, exclusiveLimitMonitor);
         }
+
+        /// <summary>
+        /// Create an instance of ExclusiveLevelMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        /// <param name="highLimit"></param>
+        /// <param name="highHighLimit"></param>
+        /// <param name="lowLimit"></param>
+        /// <param name="lowLowLimit"></param>
+        private void CreateExclusiveLevelMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue,
+            double highLimit,
+            double highHighLimit,
+            double lowLimit,
+            double lowLowLimit)
+        {
+            // Create an alarm monitor for a ExclusiveLevelMonitor sensor 1.
+            ExclusiveLevelMonitor exclusiveLevelMonitor = new ExclusiveLevelMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue,
+                highLimit,
+                highHighLimit,
+                lowLimit,
+                lowLowLimit);
+
+            if (exclusiveLevelMonitor != null)
+            {
+                m_exclusiveLevelMonitors.Add(alarmName, exclusiveLevelMonitor.NodeId);
+
+                m_conditionInstances.AddRange(exclusiveLevelMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, exclusiveLevelMonitor);
+        }
+
+        /// <summary>
+        /// Create an instance of ExclusiveDeviationMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        /// <param name="highLimit"></param>
+        /// <param name="highHighLimit"></param>
+        /// <param name="lowLimit"></param>
+        /// <param name="lowLowLimit"></param>
+        private void CreateExclusiveDeviationMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue,
+            double highLimit,
+            double highHighLimit,
+            double lowLimit,
+            double lowLowLimit)
+        {
+            // Create an alarm monitor for a NonExclusiveLevelMonitor sensor 1.
+            ExclusiveDeviationMonitor exclusiveDeviationMonitor = new ExclusiveDeviationMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue,
+                highLimit,
+                highHighLimit,
+                lowLimit,
+                lowLowLimit);
+
+            if (exclusiveDeviationMonitor != null)
+            {
+                m_exclusiveDeviationMonitors.Add(alarmName, exclusiveDeviationMonitor.NodeId);
+
+                m_conditionInstances.AddRange(exclusiveDeviationMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, exclusiveDeviationMonitor);
+        }
+
+        /// <summary>
+        /// Create an instance of ExclusiveRateOfChangeMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        /// <param name="highLimit"></param>
+        /// <param name="highHighLimit"></param>
+        /// <param name="lowLimit"></param>
+        /// <param name="lowLowLimit"></param>
+        private void CreateExclusiveRateOfChangeMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue,
+            double highLimit,
+            double highHighLimit,
+            double lowLimit,
+            double lowLowLimit)
+        {
+            // Create an alarm monitor for a NonExclusiveLevelMonitor sensor 1.
+            ExclusiveRateOfChangeMonitor exclusiveRateOfChangeMonitor = new ExclusiveRateOfChangeMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue,
+                highLimit,
+                highHighLimit,
+                lowLimit,
+                lowLowLimit);
+
+            if (exclusiveRateOfChangeMonitor != null)
+            {
+                m_exclusiveRateOfChangeMonitors.Add(alarmName, exclusiveRateOfChangeMonitor.NodeId);
+
+                m_conditionInstances.AddRange(exclusiveRateOfChangeMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, exclusiveRateOfChangeMonitor);
+        }
+
 
         /// <summary>
         /// Create an instance of NonExclusiveLimitMonitor and set provided properties
@@ -586,6 +763,38 @@ namespace SampleServer.Alarms
             AddPredefinedNode(SystemContext, conditionMonitor);
         }
 
+        /// <summary>
+        /// Create an instance of CertificateExpirationMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void CreateCertificateExpirationMonitor(NodeState parent,
+           string name,
+           string alarmName,
+           double initialValue)
+        {
+
+            // Create an alarm monitor for a temperature sensor 1.
+            CertificateExpirationMonitor certificateExpirationMonitor = new CertificateExpirationMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            if (certificateExpirationMonitor != null)
+            {
+                m_conditionInstances.AddRange(certificateExpirationMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, certificateExpirationMonitor);
+        }
+
+
         private void UpdateExclusiveLimitMonitor(NodeState parent,
             string name,
             string alarmName,
@@ -596,6 +805,8 @@ namespace SampleServer.Alarms
             double lowLowLimit)
         {
         }
+
+        
         #endregion
 
         #region Timer methods

@@ -69,6 +69,10 @@ namespace SampleServer.Alarms
             StateChanged += AlarmMonitor_StateChanged;
         }
 
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
         /// Update alarm monitor value and limits
         /// </summary>
@@ -90,16 +94,7 @@ namespace SampleServer.Alarms
             //m_alarm.AutoReportStateChanges = true; // always reports changes
             m_alarm.Time.Value = DateTime.UtcNow;
             m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-            m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-            //m_alarm.BranchId.Value = null; // ignore BranchId
-
-            // Set state values
-            //m_alarm.SetEnableState(context, true);
-            //m_alarm.SetLimitState(context, LimitAlarmStates.Inactive); // !? reset this
-            //m_alarm.SetSuppressedState(context, false); // !? reset this
-            //m_alarm.SetAcknowledgedState(context, false); // !? reset this
-            //m_alarm.Retain.Value = false;
-
+             
             // Change limit values
             m_alarm.HighLimit.Value = highLimit;
             m_alarm.HighHighLimit.Value = highHighLimit;
@@ -154,6 +149,9 @@ namespace SampleServer.Alarms
             m_alarm.LowLowLimit.Value = lowLowLimit;
         }
 
+        #endregion
+
+        #region Prrotected Methods
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
@@ -266,6 +264,7 @@ namespace SampleServer.Alarms
                 Utils.Trace(exception, "Alarms.ExclusiveLimitMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
         }
+
 
         #endregion
     }

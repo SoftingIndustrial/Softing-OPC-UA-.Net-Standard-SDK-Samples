@@ -126,6 +126,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Alarms\Files\opcuser.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="NodeSetImport\NodeSet\Refrigerators.NodeSet2.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

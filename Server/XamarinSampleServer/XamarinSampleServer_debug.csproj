@@ -24,6 +24,9 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\BaseAlarmMonitor.cs" Link="_SampleServer\Alarms\BaseAlarmMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\ExclusiveLimitMonitor.cs" Link="_SampleServer\Alarms\ExclusiveLimitMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\ExclusiveLevelMonitor.cs" Link="_SampleServer\Alarms\ExclusiveLevelMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\ExclusiveDeviationMonitor.cs" Link="_SampleServer\Alarms\ExclusiveDeviationMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\ExclusiveRateOfChangeMonitor.cs" Link="_SampleServer\Alarms\ExclusiveRateOfChangeMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\NonExclusiveLimitMonitor.cs" Link="_SampleServer\Alarms\NonExclusiveLimitMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\NonExclusiveLevelMonitor.cs" Link="_SampleServer\Alarms\NonExclusiveLevelMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\NonExclusiveDeviationMonitor.cs" Link="_SampleServer\Alarms\NonExclusiveDeviationMonitor.cs" />
@@ -33,6 +36,7 @@
 	<Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\AcknowledgeableConditionMonitor.cs" Link="_SampleServer\Alarms\AcknowledgeableConditionMonitor.cs" />
 	  <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\AlarmConditionMonitor.cs" Link="_SampleServer\Alarms\AlarmConditionMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\LimitAlarmMonitor.cs" Link="_SampleServer\Alarms\LimitAlarmMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\CertificateExpirationMonitor.cs" Link="_SampleServer\Alarms\CertificateExpirationMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\AlarmsNodeManager.cs" Link="_SampleServer\Alarms\AlarmsNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\DataAccess\DataAccessNodeManager.cs" Link="_SampleServer\DataAccess\DataAccessNodeManager.cs" />   
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Methods\MethodsNodeManager.cs" Link="_SampleServer\Methods\MethodsNodeManager.cs" />

@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/* ========================================================================
+ * Copyright © 2011-2022 Softing Industrial Automation GmbH. 
+ * All rights reserved.
+ * 
+ * The Software is subject to the Softing Industrial Automation GmbH’s 
+ * license agreement, which can be found here:
+ * https://data-intelligence.softing.com/LA-SDK-en
+ * 
+ * ======================================================================*/
+
+using System;
 using Opc.Ua;
 
 namespace SampleServer.Alarms
 {
+    /// <summary>
+    /// A monitored variable with an NonExclusiveLevelAlarm attached.
+    /// </summary>
     class NonExclusiveLevelMonitor : BaseAlarmMonitor
     {
         #region Private Members
