@@ -272,6 +272,13 @@ namespace SampleServer.Alarms
                     "TrustListOutOfDateMonitor 1",
                     9.0);
 
+                // Create an alarm monitor for a InstrumentDiagnosticAlarm type.
+                CreateInstrumentDiagnosticMonitor(
+                    machine,
+                    "InstrumentDiagnosticSensor 1",
+                    "InstrumentDiagnosticMonitor 1",
+                    10.0);
+
                 CreateOffNormalAlarmConditionMonitor(
                     machine,
                     "OffNormalAlarmConditionSensor 1",
@@ -832,7 +839,7 @@ namespace SampleServer.Alarms
             double lowLowLimit)
         {
 
-            // Create an alarm monitor for a temperature sensor 1.
+            // Create an alarm monitor for a Limit Alarm Condition sensor 1.
             LimitAlarmMonitor conditionMonitor = new LimitAlarmMonitor(
                 SystemContext,
                 parent,
@@ -867,7 +874,7 @@ namespace SampleServer.Alarms
            double initialValue)
         {
 
-            // Create an alarm monitor for a temperature sensor 1.
+            // Create an alarm monitor for a Certificate Expiration sensor 1.
             CertificateExpirationMonitor certificateExpirationMonitor = new CertificateExpirationMonitor(
                 SystemContext,
                 parent,
@@ -898,7 +905,7 @@ namespace SampleServer.Alarms
            double initialValue)
         {
 
-            // Create an alarm monitor for a temperature sensor 1.
+            // Create an alarm monitor for a  Trust List Out Of Date sensor 1.
             TrustListOutOfDateMonitor trustListOutOfDateMonitor = new TrustListOutOfDateMonitor(
                 SystemContext,
                 parent,
@@ -914,6 +921,37 @@ namespace SampleServer.Alarms
 
             //remember node in node manager list
             AddPredefinedNode(SystemContext, trustListOutOfDateMonitor);
+        }
+
+        /// <summary>
+        /// Create an instance of CreateInstrumentDiagnosticMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void CreateInstrumentDiagnosticMonitor(NodeState parent,
+           string name,
+           string alarmName,
+           double initialValue)
+        {
+
+            // Create an alarm monitor for a Instrument Diagnostic sensor 1.
+            InstrumentDiagnosticMonitor instrumentDiagnosticMonitor = new InstrumentDiagnosticMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            if (instrumentDiagnosticMonitor != null)
+            {
+                m_conditionInstances.AddRange(instrumentDiagnosticMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, instrumentDiagnosticMonitor);
         }
 
         private void CreateOffNormalAlarmConditionMonitor(NodeState parent,
