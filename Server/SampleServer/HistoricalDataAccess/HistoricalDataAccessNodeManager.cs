@@ -216,12 +216,6 @@ namespace SampleServer.HistoricalDataAccess
                         continue;
                     }
 
-                    if(context.UserIdentity.DisplayName == "usr")
-                    {
-                        errors[handle.Index] = StatusCodes.BadUserAccessDenied;
-                        continue;
-                    }
-
                     // Load an existing request
                     if(nodeToRead.ContinuationPoint != null)
                     {
@@ -339,12 +333,34 @@ namespace SampleServer.HistoricalDataAccess
                         continue;
                     }
 
-                    if(context.UserIdentity.DisplayName == "usr")
+                    List<NodeId> supportsAll = new List<NodeId>
                     {
-                        errors[handle.Index] = StatusCodes.BadUserAccessDenied;
-                        continue;
-                    }
+                        ObjectIds.AggregateFunction_AnnotationCount, ObjectIds.AggregateFunction_Count,
+                        ObjectIds.AggregateFunction_Start, ObjectIds.AggregateFunction_StartBound,
+                        ObjectIds.AggregateFunction_End, ObjectIds.AggregateFunction_EndBound,
+                        ObjectIds.AggregateFunction_DurationGood, ObjectIds.AggregateFunction_DurationBad,
+                        ObjectIds.AggregateFunction_PercentGood, ObjectIds.AggregateFunction_PercentBad,
+                        ObjectIds.AggregateFunction_WorstQuality, ObjectIds.AggregateFunction_WorstQuality2
+                    };
+                    List<NodeId> supportsBoolean = new List<NodeId>
+                    {
+                        ObjectIds.AggregateFunction_DurationInStateZero, 
+                        ObjectIds.AggregateFunction_DurationInStateNonZero,
+                        ObjectIds.AggregateFunction_NumberOfTransitions
+                    };
 
+                    // check if the aggregate is supported for node data type
+                    BuiltInType builtInType = TypeInfo.GetBuiltInType(((BaseVariableState)source)?.DataType);
+                    if (!TypeInfo.IsNumericType(builtInType))
+                    {
+                        // non numeric types have restrictions
+                        if (!supportsAll.Contains(details.AggregateType[ii])
+                            && (!(builtInType == BuiltInType.Boolean && supportsBoolean.Contains(details.AggregateType[ii]))))
+                        {
+                            errors[handle.Index] = StatusCodes.BadAggregateNotSupported;
+                            continue;
+                        }
+                    }
                     // Load an existing request
                     if(nodeToRead.ContinuationPoint != null)
                     {
@@ -438,12 +454,6 @@ namespace SampleServer.HistoricalDataAccess
                         continue;
                     }
 
-                    if(context.UserIdentity.DisplayName == "usr")
-                    {
-                        errors[handle.Index] = StatusCodes.BadUserAccessDenied;
-                        continue;
-                    }
-
                     // Load an existing request
                     if(nodeToRead.ContinuationPoint != null)
                     {
@@ -529,12 +539,6 @@ namespace SampleServer.HistoricalDataAccess
 
                     if(source == null)
                     {
-                        continue;
-                    }
-
-                    if(context.UserIdentity.DisplayName == "usr")
-                    {
-                        errors[handle.Index] = StatusCodes.BadUserAccessDenied;
                         continue;
                     }
 
