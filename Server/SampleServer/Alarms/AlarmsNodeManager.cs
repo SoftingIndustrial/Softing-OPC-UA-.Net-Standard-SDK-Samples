@@ -236,6 +236,12 @@ namespace SampleServer.Alarms
                     "AlarmConditionMonitor 1",
                     7.0);
 
+                CreateDiscrepancyAlarmConditionMonitor(
+                    machine,
+                    "DiscrepancyAlarmConditionSensor 1",
+                    "DiscrepancyAlarmConditionMonitor 1",
+                    7.0);
+
                 CreateDiscreteMonitor(
                     machine,
                     "DiscreteSensor 1",
@@ -276,6 +282,18 @@ namespace SampleServer.Alarms
                     machine,
                     "TripAlarmConditionSensor 1",
                     "TripNormalAlarmConditionMonitor 1",
+                    7.0);
+
+                CreateSystemOffNormalAlarmConditionMonitor(
+                    machine,
+                    "SystemOffNormalAlarmCondition 1",
+                    "SystemOffNormalAlarmConditionMonitor 1",
+                    7.0);
+
+                CreateSystemDiagnosticConditionMonitor(
+                    machine,
+                    "SystemDiagnosticAlarmCondition 1",
+                    "SystemDiagnosticAlarmConditionMonitor 1",
                     7.0);
 
                 // Add sub-notifiers
@@ -756,6 +774,30 @@ namespace SampleServer.Alarms
             AddPredefinedNode(SystemContext, conditionMonitor);
         }
 
+        private void CreateDiscrepancyAlarmConditionMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue)
+        {
+
+            // Create an alarm monitor for a temperature sensor 1.
+            DiscrepancyAlarmConditionMonitor conditionMonitor = new DiscrepancyAlarmConditionMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            if (conditionMonitor != null)
+            {
+                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, conditionMonitor);
+        }
+
         private void CreateDiscreteMonitor(NodeState parent,
             string name,
             string alarmName,
@@ -906,6 +948,55 @@ namespace SampleServer.Alarms
 
             // Create an alarm monitor for a temperature sensor 1.
             TripAlarmMonitor conditionMonitor = new TripAlarmMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            if (conditionMonitor != null)
+            {
+                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, conditionMonitor);
+        }
+
+        private void CreateSystemOffNormalAlarmConditionMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue)
+        {
+
+            // Create an alarm monitor for a temperature sensor 1.
+            SystemOffNormalAlarmMonitor conditionMonitor = new SystemOffNormalAlarmMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            // Prevent it from being triggered
+            //if (conditionMonitor != null)
+            //{
+            //    m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+            //}
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, conditionMonitor);
+        }
+
+        private void CreateSystemDiagnosticConditionMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue)
+        {
+
+            // Create an alarm monitor for a temperature sensor 1.
+            SystemDiagnosticAlarmMonitor conditionMonitor = new SystemDiagnosticAlarmMonitor(
                 SystemContext,
                 parent,
                 NamespaceIndex,

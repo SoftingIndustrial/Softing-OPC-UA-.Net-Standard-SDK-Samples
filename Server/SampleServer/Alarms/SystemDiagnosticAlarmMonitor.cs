@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace SampleServer.Alarms
 {
-    internal class TripAlarmMonitor : BaseAlarmMonitor
+    internal class SystemDiagnosticAlarmMonitor : BaseAlarmMonitor
     {
 
         #region Private Members
 
-        private TripAlarmState m_alarm;
+        private SystemDiagnosticAlarmState m_alarm;
         
         #endregion
 
-        public TripAlarmMonitor(
+        public SystemDiagnosticAlarmMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
@@ -58,7 +58,7 @@ namespace SampleServer.Alarms
             AddCondition(m_alarm);
 
             // Initialize alarm information
-            m_alarm.SymbolicName = "TripAlarm";
+            m_alarm.SymbolicName = "SystemDiagnosticAlarm";
             m_alarm.EventType.Value = m_alarm.TypeDefinitionId;
             m_alarm.ConditionName.Value = m_alarm.SymbolicName;
             m_alarm.AutoReportStateChanges = true;
@@ -85,7 +85,7 @@ namespace SampleServer.Alarms
             double initialValue)
         {
             // Create the alarm object
-            m_alarm = new TripAlarmState(this);
+            m_alarm = new SystemDiagnosticAlarmState(this);
 
             InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
 
@@ -135,7 +135,7 @@ namespace SampleServer.Alarms
             }
             catch (Exception exception)
             {
-                Utils.Trace(exception, "Alarms.TripAlarmMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
+                Utils.Trace(exception, "Alarms.SystemDiagnosticAlarmMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
     }
 }

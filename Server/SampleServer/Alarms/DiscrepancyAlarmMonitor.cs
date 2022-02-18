@@ -1,29 +1,25 @@
 ﻿using Opc.Ua;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SampleServer.Alarms
 {
-    internal class TripAlarmMonitor : BaseAlarmMonitor
+    internal class DiscrepancyAlarmConditionMonitor : BaseAlarmMonitor
     {
-
         #region Private Members
 
-        private TripAlarmState m_alarm;
+        private DiscrepancyAlarmState m_alarm;
         
         #endregion
 
-        public TripAlarmMonitor(
+        public DiscrepancyAlarmConditionMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
             string name,
             string alarmName,
             double initialValue)
-             : base(context, parent, namespaceIndex, name, initialValue)
+              : base(context, parent, namespaceIndex, name, initialValue)
         {
 
             // Attach the alarm monitor.
@@ -58,7 +54,7 @@ namespace SampleServer.Alarms
             AddCondition(m_alarm);
 
             // Initialize alarm information
-            m_alarm.SymbolicName = "TripAlarm";
+            m_alarm.SymbolicName = "DiscrepancyAlarmCondition Alarm";
             m_alarm.EventType.Value = m_alarm.TypeDefinitionId;
             m_alarm.ConditionName.Value = m_alarm.SymbolicName;
             m_alarm.AutoReportStateChanges = true;
@@ -85,18 +81,28 @@ namespace SampleServer.Alarms
             double initialValue)
         {
             // Create the alarm object
-            m_alarm = new TripAlarmState(this);
+            m_alarm = new DiscrepancyAlarmState(this);
 
             InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
 
-            // Setup the NormalState
-            m_alarm.NormalState.Value = new NodeId();
-        }
+            // Set input node
+            m_alarm.InputNode.Value = NodeId;
+            
+            m_alarm.SetActiveState(context, false);
+            m_alarm.AckedState.Value = new LocalizedText("en", alarmName);
 
+            // error in predefined or in ctt?
+            //m_alarm.AudibleSound.ReferenceTypeId = ReferenceTypeIds.HasProperty;
+
+            m_alarm.TargetValueNode.Value = NodeId;
+            m_alarm.ExpectedTime.Value = (double)DateTime.UtcNow.Ticks;
+            m_alarm.Tolerance.Value = 0;
+        }
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
             {
+
                 string currentUserId = string.Empty;
                 IOperationContext operationContext = context as IOperationContext;
 
@@ -135,7 +141,7 @@ namespace SampleServer.Alarms
             }
             catch (Exception exception)
             {
-                Utils.Trace(exception, "Alarms.TripAlarmMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
+                Utils.Trace(exception, "Alarms.DiscrepancyAlarmConditionMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
     }
 }
