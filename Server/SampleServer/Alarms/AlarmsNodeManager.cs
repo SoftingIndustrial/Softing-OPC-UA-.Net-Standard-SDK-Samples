@@ -259,6 +259,19 @@ namespace SampleServer.Alarms
                     "CertificateExpiratioMonitor 1",
                     8.0);
 
+
+                CreateOffNormalAlarmConditionMonitor(
+                    machine,
+                    "OffNormalAlarmConditionSensor 1",
+                    "OffNormalAlarmConditionMonitor 1",
+                    7.0);
+
+                CreateTripAlarmConditionMonitor(
+                    machine,
+                    "TripAlarmConditionSensor 1",
+                    "TripNormalAlarmConditionMonitor 1",
+                    7.0);
+
                 // Add sub-notifiers
                 AddNotifier(ServerNode, root, false);
                 AddNotifier(root, machine, true);
@@ -825,6 +838,54 @@ namespace SampleServer.Alarms
         }
 
 
+        private void CreateOffNormalAlarmConditionMonitor(NodeState parent,
+           string name,
+           string alarmName,
+           double initialValue)
+        {
+
+            // Create an alarm monitor for a temperature sensor 1.
+            OffNormalAlarmMonitor conditionMonitor = new OffNormalAlarmMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            if (conditionMonitor != null)
+            {
+                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, conditionMonitor);
+        }
+
+        private void CreateTripAlarmConditionMonitor(NodeState parent,
+           string name,
+           string alarmName,
+           double initialValue)
+        {
+
+            // Create an alarm monitor for a temperature sensor 1.
+            TripAlarmMonitor conditionMonitor = new TripAlarmMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            if (conditionMonitor != null)
+            {
+                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, conditionMonitor);
+        }
+
         private void UpdateExclusiveLimitMonitor(NodeState parent,
             string name,
             string alarmName,
@@ -836,7 +897,6 @@ namespace SampleServer.Alarms
         {
         }
 
-        
         #endregion
 
         #region Timer methods
