@@ -106,6 +106,8 @@ namespace SampleServer.Alarms
             m_alarm.HighHighLimit.Value = highHighLimit;
             m_alarm.LowLimit.Value = lowLimit;
             m_alarm.LowLowLimit.Value = lowLowLimit;
+
+
         }
 
         #endregion

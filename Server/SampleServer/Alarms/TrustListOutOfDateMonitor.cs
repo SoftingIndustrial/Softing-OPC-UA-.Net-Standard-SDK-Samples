@@ -9,26 +9,23 @@
  * ======================================================================*/
 
 using System;
-using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using Opc.Ua;
-
 
 namespace SampleServer.Alarms
 {
     /// <summary>
-    /// A monitored variable with an CertificateExpirationAlarm attached.
+    /// A monitored variable with an NonExclusiveRateOfChangeAlarm attached.
     /// </summary>
-    class CertificateExpirationMonitor : BaseAlarmMonitor
+    class TrustListOutOfDateMonitor : BaseAlarmMonitor
     {
         #region Private Members
 
-        private CertificateExpirationAlarmState m_alarm;
+        private TrustListOutOfDateAlarmState m_alarm;
 
         #endregion
 
         #region Constructors
-        public CertificateExpirationMonitor(ISystemContext context,
+        public TrustListOutOfDateMonitor(ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
             string name,
@@ -56,12 +53,14 @@ namespace SampleServer.Alarms
             string alarmName)
         {
             // Create the alarm object
-            m_alarm = new CertificateExpirationAlarmState(this);
+            m_alarm = new TrustListOutOfDateAlarmState(this);
 
             InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
 
             // Set input node
             m_alarm.InputNode.Value = NodeId;
+
+            m_alarm.NormalState.Value = NodeId;
 
             // Set state values
             m_alarm.SetEnableState(context, true);
@@ -69,30 +68,12 @@ namespace SampleServer.Alarms
             m_alarm.SetAcknowledgedState(context, false);
             m_alarm.SetActiveState(context, false);
 
-            // Set certificate expiration mandatory fields
-            m_alarm.NormalState.Value = NodeId;
-            m_alarm.CertificateType.Value = Variables.CertificateExpirationAlarmType_CertificateType;
-            m_alarm.Certificate.Value = GetCertificate().RawData;
-
-            // optional
-            //m_alarm.ExpirationLimit.Value = 120000; // 2 seconds
+            // Set trust list out of date mandatory fields
+            m_alarm.TrustListId.Value = Variables.TrustListOutOfDateAlarmType_TrustListId;
+            m_alarm.LastUpdateTime.Value = DateTime.UtcNow; 
+            m_alarm.UpdateFrequency.Value = 10000;
         }
-
-        private X509Certificate2 GetCertificate()
-        {
-            string certificateFilePath = Path.Combine("Alarms","Files", "opcuser.pfx");
-            if (!File.Exists(certificateFilePath))
-            {
-                Console.WriteLine("The user certificate file is missing ('{0}').", certificateFilePath);
-                return null;
-            }
-            // load the certificate from file
-            X509Certificate2 certificate = new X509Certificate2(certificateFilePath,
-                           null as string,
-                           X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.Exportable);
-
-            return certificate;
-        }
+ 
         #endregion
 
         #region Prrotected Methods
@@ -113,7 +94,7 @@ namespace SampleServer.Alarms
                 bool updateRequired = false;
 
                 // Update alarm data
-                
+
 
                 if (updateRequired)
                 {
@@ -158,10 +139,11 @@ namespace SampleServer.Alarms
             }
             catch (Exception exception)
             {
-                Utils.Trace(exception, "Alarms.CertificateExpirationMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
+                Utils.Trace(exception, "Alarms.TrustListOutOfDateMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
         }
 
         #endregion
+
     }
 }

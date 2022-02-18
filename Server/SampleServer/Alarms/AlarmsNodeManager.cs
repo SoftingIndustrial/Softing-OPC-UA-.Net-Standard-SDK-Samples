@@ -255,10 +255,16 @@ namespace SampleServer.Alarms
                 // Create an alarm monitor for a CertificateExpiratioAlarm type.
                 CreateCertificateExpirationMonitor(
                     machine,
-                    "CertificateExpiratioSensor 1",
-                    "CertificateExpiratioMonitor 1",
+                    "CertificateExpirationSensor 1",
+                    "CertificateExpirationMonitor 1",
                     8.0);
 
+                // Create an alarm monitor for a TrustListOutOfDateAlarm type.
+                CreateTrustListOutOfDateMonitor(
+                    machine,
+                    "TrustListOutOfDateSensor 1",
+                    "TrustListOutOfDateMonitor 1",
+                    9.0);
 
                 CreateOffNormalAlarmConditionMonitor(
                     machine,
@@ -837,6 +843,36 @@ namespace SampleServer.Alarms
             AddPredefinedNode(SystemContext, certificateExpirationMonitor);
         }
 
+        /// <summary>
+        /// Create an instance of TrustListOutOfDateMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void CreateTrustListOutOfDateMonitor(NodeState parent,
+           string name,
+           string alarmName,
+           double initialValue)
+        {
+
+            // Create an alarm monitor for a temperature sensor 1.
+            TrustListOutOfDateMonitor trustListOutOfDateMonitor = new TrustListOutOfDateMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            if (trustListOutOfDateMonitor != null)
+            {
+                m_conditionInstances.AddRange(trustListOutOfDateMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, trustListOutOfDateMonitor);
+        }
 
         private void CreateOffNormalAlarmConditionMonitor(NodeState parent,
            string name,
