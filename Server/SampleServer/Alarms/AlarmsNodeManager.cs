@@ -236,6 +236,12 @@ namespace SampleServer.Alarms
                     "AlarmConditionMonitor 1",
                     7.0);
 
+                CreateDiscreteMonitor(
+                    machine,
+                    "DiscreteSensor 1",
+                    "DiscreteMonitor 1",
+                    7.0);
+
                 CreateLimitAlarmConditionMonitor(
                     machine,
                     "LimitAlarmConditionSensor 1",
@@ -731,6 +737,30 @@ namespace SampleServer.Alarms
             AddPredefinedNode(SystemContext, conditionMonitor);
         }
 
+        private void CreateDiscreteMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue)
+        {
+
+            // Create an alarm monitor for a temperature sensor 1.
+            DiscreteMonitor discreteMonitor = new DiscreteMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            if (discreteMonitor != null)
+            {
+                m_conditionInstances.AddRange(discreteMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, discreteMonitor);
+        }
+        
         private void CreateLimitAlarmConditionMonitor(NodeState parent,
             string name,
             string alarmName,
