@@ -87,7 +87,9 @@ namespace SampleServer.Alarms
 
             // Set Setpoint node
             m_alarm.SetpointNode.Value = NodeId;
-
+            // optional
+            m_alarm.BaseSetpointNode.Value = NodeId;
+            
             // Define limit values
             m_alarm.HighLimit.Value = highLimit;
             m_alarm.HighHighLimit.Value = highHighLimit;
@@ -111,62 +113,73 @@ namespace SampleServer.Alarms
 
                 bool updateRequired = false;
 
-                // Update alarm data
-                // to implement the following conditions
-                // highhigh & high
-                // low
-                // lowlow 
-                // derived from NonExclusiveLimitAlarm
-                // multiple mutually exclusive limits
+                if (m_alarm.LowLowLimit != null && m_alarm.LowLowState.Id.Value == false //ObjectIds.ExclusiveLimitStateMachineType_LowLow
+                    && newValue <= m_alarm.LowLowLimit.Value)
+                {
+                    m_alarm.LowLowState.Id.Value = true;
 
-                //if (m_alarm.LowLowLimit != null && m_alarm.CurrentState.Id.Value != ObjectIds.ExclusiveLimitStateMachineType_LowLow
-                //    && newValue <= m_alarm.LowLowLimit.Value)
-                //{
-                //    m_alarm.SetLimitState(context, LimitAlarmStates.LowLow);
-                //    m_alarm.SetComment(context, new LocalizedText("en-US", "LowLowLimit exceeded."), currentUserId);
-                //    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", m_alarm.LimitState.CurrentState.Value.Text));
-                //    m_alarm.SetSeverity(context, EventSeverity.Max);
-                //    updateRequired = true;
-                //}
-                //else if (m_alarm.LowLimit != null && m_alarm.LimitState.CurrentState.Id.Value != ObjectIds.ExclusiveLimitStateMachineType_Low
-                //         && newValue > m_alarm.LowLowLimit.Value
-                //         && newValue <= m_alarm.LowLimit.Value)
-                //{
-                //    m_alarm.SetLimitState(context, LimitAlarmStates.Low);
-                //    m_alarm.SetComment(context, new LocalizedText("en-US", "LowLimit exceeded."), currentUserId);
-                //    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", m_alarm.LimitState.CurrentState.Value.Text));
-                //    m_alarm.SetSeverity(context, EventSeverity.High);
-                //    updateRequired = true;
-                //}
-                //else if (m_alarm.HighHighLimit != null && m_alarm.LimitState.CurrentState.Id.Value != ObjectIds.ExclusiveLimitStateMachineType_HighHigh
-                //         && newValue >= m_alarm.HighHighLimit.Value)
-                //{
-                //    m_alarm.SetLimitState(context, LimitAlarmStates.HighHigh);
-                //    m_alarm.SetComment(context, new LocalizedText("en-US", "HighHighLimit exceeded."), currentUserId);
-                //    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", m_alarm.LimitState.CurrentState.Value.Text));
-                //    m_alarm.SetSeverity(context, EventSeverity.Max);
-                //    updateRequired = true;
-                //}
-                //else if (m_alarm.HighLimit != null && m_alarm.LimitState.CurrentState.Id.Value != ObjectIds.ExclusiveLimitStateMachineType_High
-                //         && newValue < m_alarm.HighHighLimit.Value
-                //         && newValue >= m_alarm.HighLimit.Value)
-                //{
-                //    m_alarm.SetLimitState(context, LimitAlarmStates.High);
-                //    m_alarm.SetComment(context, new LocalizedText("en-US", "HighLimit exceeded."), currentUserId);
-                //    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", m_alarm.LimitState.CurrentState.Value.Text));
-                //    m_alarm.SetSeverity(context, EventSeverity.High);
-                //    updateRequired = true;
-                //}
-                //else if (m_alarm.ActiveState.Id.Value != false
-                //         && m_alarm.LowLimit != null && newValue > m_alarm.LowLimit.Value
-                //         && m_alarm.HighLimit != null && newValue < m_alarm.HighLimit.Value)
-                //{
-                //    m_alarm.SetLimitState(context, LimitAlarmStates.Inactive);
-                //    m_alarm.SetComment(context, new LocalizedText("en-US", "Alarm inactive."), currentUserId);
-                //    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", LimitAlarmStates.Inactive));
-                //    m_alarm.SetSeverity(context, EventSeverity.Low);
-                //    updateRequired = true;
-                //}
+                    m_alarm.SetLimitState(context, LimitAlarmStates.LowLow);
+                    m_alarm.SetComment(context, new LocalizedText("en-US", "LowLowLimit exceeded."), currentUserId);
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", m_alarm.LowLowState.Value.Text));
+                    m_alarm.SetSeverity(context, EventSeverity.Max);
+
+                    updateRequired = true;
+                }
+                else if (m_alarm.LowLimit != null && m_alarm.LowState.Id.Value == false // ObjectIds.ExclusiveLimitStateMachineType_Low
+                         && newValue > m_alarm.LowLowLimit.Value
+                         && newValue <= m_alarm.LowLimit.Value)
+                {
+                    m_alarm.LowState.Id.Value = true;
+
+                    m_alarm.SetLimitState(context, LimitAlarmStates.Low);
+                    m_alarm.SetComment(context, new LocalizedText("en-US", "LowLimit exceeded."), currentUserId);
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State Low set to: {0}", m_alarm.LowState.Value.Text));
+                    m_alarm.SetSeverity(context, EventSeverity.High);
+
+                    updateRequired = true;
+                }
+                else if (m_alarm.HighHighLimit != null && m_alarm.HighHighState.Id.Value == false // ObjectIds.ExclusiveLimitStateMachineType_HighHigh
+                         && newValue >= m_alarm.HighHighLimit.Value)
+                {
+                    m_alarm.HighState.Id.Value = true;
+                    m_alarm.HighHighState.Id.Value = true;
+
+                    m_alarm.SetLimitState(context, LimitAlarmStates.HighHigh);
+                    m_alarm.SetComment(context, new LocalizedText("en-US", "HighHighLimit exceeded."), currentUserId);
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State HighHigh & High set to: {0} & {1}", m_alarm.HighHighState.Value.Text, m_alarm.HighState.Value.Text));
+                    m_alarm.SetSeverity(context, EventSeverity.Max);
+
+                    updateRequired = true;
+                }
+                else if (m_alarm.HighLimit != null && m_alarm.HighState.Id.Value == false // ObjectIds.ExclusiveLimitStateMachineType_High
+                         && newValue < m_alarm.HighHighLimit.Value
+                         && newValue >= m_alarm.HighLimit.Value)
+                {
+                    m_alarm.HighState.Id.Value = true;
+                    m_alarm.HighHighState.Id.Value = true;
+
+                    m_alarm.SetLimitState(context, LimitAlarmStates.High);
+                    m_alarm.SetComment(context, new LocalizedText("en-US", "HighLimit exceeded."), currentUserId);
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State High & HighHigh set to: {0} & {1}", m_alarm.HighState.Value.Text, m_alarm.HighHighState.Value.Text));
+                    m_alarm.SetSeverity(context, EventSeverity.High);
+                    updateRequired = true;
+                }
+                else if (m_alarm.ActiveState.Id.Value != false
+                         && m_alarm.LowLimit != null && newValue > m_alarm.LowLimit.Value
+                         && m_alarm.HighLimit != null && newValue < m_alarm.HighLimit.Value)
+                {
+                    m_alarm.LowState.Id.Value = false;
+                    m_alarm.LowLowState.Id.Value = false;
+                    m_alarm.HighState.Id.Value = false;
+                    m_alarm.HighHighState.Id.Value = false;
+
+                    m_alarm.SetLimitState(context, LimitAlarmStates.Inactive);
+                    m_alarm.SetComment(context, new LocalizedText("en-US", "Alarm inactive."), currentUserId);
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", LimitAlarmStates.Inactive));
+                    m_alarm.SetSeverity(context, EventSeverity.Low);
+
+                    updateRequired = true;
+                }
 
                 if (updateRequired)
                 {
@@ -187,6 +200,32 @@ namespace SampleServer.Alarms
                     else
                     {
                         m_alarm.Retain.Value = true;
+                    }
+
+                    if (m_alarm.LowLowState.Id.Value)
+                    {
+                        m_alarm.LowState.Id.Value = false;
+                        m_alarm.HighState.Id.Value = false;
+                        m_alarm.HighHighState.Id.Value = false;
+                    }
+                    else if (m_alarm.LowState.Id.Value)
+                    {
+                        m_alarm.LowLowState.Id.Value = false;
+                        m_alarm.HighState.Id.Value = false;
+                        m_alarm.HighHighState.Id.Value = false;
+                    }
+                    else if (m_alarm.HighState.Id.Value && m_alarm.HighHighState.Id.Value)
+                    {
+                        m_alarm.LowState.Id.Value = false;
+                        m_alarm.LowLowState.Id.Value = false;
+                    }
+                    else if (m_alarm.HighState.Id.Value || m_alarm.HighHighState.Id.Value)
+                    {
+                        m_alarm.HighState.Id.Value = true;
+                        m_alarm.HighHighState.Id.Value = true;
+
+                        m_alarm.LowState.Id.Value = false;
+                        m_alarm.LowLowState.Id.Value = false;
                     }
 
                     // Reset the acknowledged flag

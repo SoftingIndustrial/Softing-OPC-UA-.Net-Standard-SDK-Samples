@@ -87,9 +87,12 @@ namespace SampleServer.Alarms
 
             // Set input node
             m_alarm.InputNode.Value = NodeId;
-
+            
             m_alarm.SetActiveState(context, false);
             m_alarm.AckedState.Value = new LocalizedText("en", alarmName);
+
+            // error in predefined or in ctt?
+            //m_alarm.AudibleSound.ReferenceTypeId = ReferenceTypeIds.HasProperty;
         }
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {

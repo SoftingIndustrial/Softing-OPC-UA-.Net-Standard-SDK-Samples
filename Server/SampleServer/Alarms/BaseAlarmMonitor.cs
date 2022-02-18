@@ -89,7 +89,7 @@ namespace SampleServer.Alarms
             alarm.EnabledState = new TwoStateVariableState(alarm);
             alarm.Message = new PropertyState<LocalizedText>(parent);
             alarm.Message.Value = new LocalizedText("en", alarmName);
-            alarm.Description = alarm.Comment.DisplayName;
+            alarm.Description = new LocalizedText("en", alarmName);
 
             // Specify reference type between the source and the alarm.
             alarm.ReferenceTypeId = ReferenceTypeIds.Organizes;
