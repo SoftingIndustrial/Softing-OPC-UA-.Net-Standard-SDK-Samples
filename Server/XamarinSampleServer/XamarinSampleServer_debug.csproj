@@ -39,6 +39,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\DiscreteMonitor.cs" Link="_SampleServer\Alarms\DiscreteMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\CertificateExpirationMonitor.cs" Link="_SampleServer\Alarms\CertificateExpirationMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\TrustListOutOfDateMonitor.cs" Link="_SampleServer\Alarms\TrustListOutOfDateMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\OffNormalAlarmMonitor.cs" Link="_SampleServer\Alarms\OffNormalAlarmMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\SystemDiagnosticAlarmMonitor.cs" Link="_SampleServer\Alarms\SystemDiagnosticAlarmMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\SystemOffNormalAlarmMonitor.cs" Link="_SampleServer\Alarms\SystemOffNormalAlarmMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\TripAlarmMonitor.cs" Link="_SampleServer\Alarms\TripAlarmMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\DiscrepancyAlarmConditionMonitor.cs" Link="_SampleServer\Alarms\DiscrepancyAlarmConditionMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\InstrumentDiagnosticMonitor.cs" Link="_SampleServer\Alarms\InstrumentDiagnosticMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\AlarmsNodeManager.cs" Link="_SampleServer\Alarms\AlarmsNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\DataAccess\DataAccessNodeManager.cs" Link="_SampleServer\DataAccess\DataAccessNodeManager.cs" />   
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Methods\MethodsNodeManager.cs" Link="_SampleServer\Methods\MethodsNodeManager.cs" />
