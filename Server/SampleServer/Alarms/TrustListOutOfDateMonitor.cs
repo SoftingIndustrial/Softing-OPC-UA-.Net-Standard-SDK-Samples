@@ -25,7 +25,9 @@ namespace SampleServer.Alarms
         #endregion
 
         #region Constructors
-        public TrustListOutOfDateMonitor(ISystemContext context,
+        public TrustListOutOfDateMonitor(
+            AlarmsNodeManager alarmsNodeManager,
+            ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
             string name,
@@ -33,12 +35,16 @@ namespace SampleServer.Alarms
             double initialValue)
            : base(context, parent, namespaceIndex, name, initialValue)
         {
+            BaseDataVariableState normalValueVariable = alarmsNodeManager.CreateVariable<double>(this, "NormalValueVariable");
+            normalValueVariable.Value = initialValue;
+
             // Attach the alarm monitor.
             InitializeAlarmMonitor(
                 context,
                 parent,
                 namespaceIndex,
-                alarmName);
+                alarmName,
+                normalValueVariable);
 
             StateChanged += AlarmMonitor_StateChanged;
         }
@@ -50,7 +56,8 @@ namespace SampleServer.Alarms
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
-            string alarmName)
+            string alarmName,
+            BaseDataVariableState normalValueVariable)
         {
             // Create the alarm object
             m_alarm = new TrustListOutOfDateAlarmState(this);
@@ -60,7 +67,9 @@ namespace SampleServer.Alarms
             // Set input node
             m_alarm.InputNode.Value = NodeId;
 
-            m_alarm.NormalState.Value = NodeId;
+            // Setup the NormalState
+            AddChild(normalValueVariable);
+            m_alarm.NormalState.Value = normalValueVariable.NodeId;
 
             // Set state values
             m_alarm.SetEnableState(context, true);

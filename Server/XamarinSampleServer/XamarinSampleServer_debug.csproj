@@ -43,7 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\SystemDiagnosticAlarmMonitor.cs" Link="_SampleServer\Alarms\SystemDiagnosticAlarmMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\SystemOffNormalAlarmMonitor.cs" Link="_SampleServer\Alarms\SystemOffNormalAlarmMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\TripAlarmMonitor.cs" Link="_SampleServer\Alarms\TripAlarmMonitor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\DiscrepancyAlarmConditionMonitor.cs" Link="_SampleServer\Alarms\DiscrepancyAlarmConditionMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\DiscrepancyAlarmMonitor.cs" Link="_SampleServer\Alarms\DiscrepancyAlarmMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\InstrumentDiagnosticMonitor.cs" Link="_SampleServer\Alarms\InstrumentDiagnosticMonitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\AlarmsNodeManager.cs" Link="_SampleServer\Alarms\AlarmsNodeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\DataAccess\DataAccessNodeManager.cs" Link="_SampleServer\DataAccess\DataAccessNodeManager.cs" />   

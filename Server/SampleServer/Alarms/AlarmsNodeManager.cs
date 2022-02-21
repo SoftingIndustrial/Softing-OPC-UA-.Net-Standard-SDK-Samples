@@ -90,7 +90,7 @@ namespace SampleServer.Alarms
                 // Add a folder representing the monitored device.
                 BaseObjectState machine = CreateObject(root, "Machine A");
                 machine.EventNotifier = EventNotifiers.SubscribeToEvents;
-
+                
                 // Create an alarm monitor for a temperature sensor 1.
                 CreateExclusiveLimitMonitor(
                     machine,
@@ -792,7 +792,7 @@ namespace SampleServer.Alarms
         {
 
             // Create an alarm monitor for a temperature sensor 1.
-            DiscrepancyAlarmConditionMonitor conditionMonitor = new DiscrepancyAlarmConditionMonitor(
+            DiscrepancyAlarmMonitor conditionMonitor = new DiscrepancyAlarmMonitor(
                 SystemContext,
                 parent,
                 NamespaceIndex,
@@ -879,7 +879,7 @@ namespace SampleServer.Alarms
         {
 
             // Create an alarm monitor for a Certificate Expiration sensor 1.
-            CertificateExpirationMonitor certificateExpirationMonitor = new CertificateExpirationMonitor(
+            CertificateExpirationMonitor certificateExpirationMonitor = new CertificateExpirationMonitor(this,
                 SystemContext,
                 parent,
                 NamespaceIndex,
@@ -910,7 +910,7 @@ namespace SampleServer.Alarms
         {
 
             // Create an alarm monitor for a  Trust List Out Of Date sensor 1.
-            TrustListOutOfDateMonitor trustListOutOfDateMonitor = new TrustListOutOfDateMonitor(
+            TrustListOutOfDateMonitor trustListOutOfDateMonitor = new TrustListOutOfDateMonitor(this,
                 SystemContext,
                 parent,
                 NamespaceIndex,
@@ -941,7 +941,7 @@ namespace SampleServer.Alarms
         {
 
             // Create an alarm monitor for a Instrument Diagnostic sensor 1.
-            InstrumentDiagnosticMonitor instrumentDiagnosticMonitor = new InstrumentDiagnosticMonitor(
+            InstrumentDiagnosticMonitor instrumentDiagnosticMonitor = new InstrumentDiagnosticMonitor(this,
                 SystemContext,
                 parent,
                 NamespaceIndex,
@@ -963,9 +963,9 @@ namespace SampleServer.Alarms
            string alarmName,
            double initialValue)
         {
-
             // Create an alarm monitor for a temperature sensor 1.
             OffNormalAlarmMonitor conditionMonitor = new OffNormalAlarmMonitor(
+                this,
                 SystemContext,
                 parent,
                 NamespaceIndex,
@@ -989,7 +989,7 @@ namespace SampleServer.Alarms
         {
 
             // Create an alarm monitor for a temperature sensor 1.
-            TripAlarmMonitor conditionMonitor = new TripAlarmMonitor(
+            TripAlarmMonitor conditionMonitor = new TripAlarmMonitor(this,
                 SystemContext,
                 parent,
                 NamespaceIndex,
@@ -1013,7 +1013,7 @@ namespace SampleServer.Alarms
         {
 
             // Create an alarm monitor for a temperature sensor 1.
-            SystemOffNormalAlarmMonitor conditionMonitor = new SystemOffNormalAlarmMonitor(
+            SystemOffNormalAlarmMonitor conditionMonitor = new SystemOffNormalAlarmMonitor(this,
                 SystemContext,
                 parent,
                 NamespaceIndex,
@@ -1038,7 +1038,7 @@ namespace SampleServer.Alarms
         {
 
             // Create an alarm monitor for a temperature sensor 1.
-            SystemDiagnosticAlarmMonitor conditionMonitor = new SystemDiagnosticAlarmMonitor(
+            SystemDiagnosticAlarmMonitor conditionMonitor = new SystemDiagnosticAlarmMonitor(this,
                 SystemContext,
                 parent,
                 NamespaceIndex,

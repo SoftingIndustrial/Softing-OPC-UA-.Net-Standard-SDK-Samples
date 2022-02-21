@@ -54,6 +54,8 @@ namespace SampleServer.Alarms
             m_alarm.LastResponse.Value = (int)StatusCodes.Good;
             m_alarm.OkResponse.Value = (int)StatusCodes.Good;
             m_alarm.CancelResponse.Value = (int)StatusCodes.Good;
+
+            m_alarm.SetEnableState(context, false);
         }
 
         protected override void ProcessVariableChanged(ISystemContext context, object value)

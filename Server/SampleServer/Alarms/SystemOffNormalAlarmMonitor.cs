@@ -17,6 +17,7 @@ namespace SampleServer.Alarms
         #endregion
 
         public SystemOffNormalAlarmMonitor(
+            AlarmsNodeManager alarmsNodeManager,
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
@@ -25,6 +26,8 @@ namespace SampleServer.Alarms
             double initialValue)
              : base(context, parent, namespaceIndex, name, initialValue)
         {
+            BaseDataVariableState normalValueVariable = alarmsNodeManager.CreateVariable<double>(this, "NormalValueVariable");
+            normalValueVariable.Value = initialValue;
 
             // Attach the alarm monitor.
             InitializeAlarmMonitor(
@@ -32,7 +35,8 @@ namespace SampleServer.Alarms
                 parent,
                 namespaceIndex,
                 alarmName,
-                initialValue);
+                initialValue,
+                normalValueVariable);
 
             StateChanged += AlarmMonitor_StateChanged;
         }
@@ -82,15 +86,22 @@ namespace SampleServer.Alarms
             NodeState parent,
             ushort namespaceIndex,
             string alarmName,
-            double initialValue)
+            double initialValue,
+            BaseDataVariableState normalValueVariable)
         {
             // Create the alarm object
             m_alarm = new SystemOffNormalAlarmState(this);
 
             InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
 
+            // Set input node
+            m_alarm.InputNode.Value = NodeId;
+
             // Setup the NormalState
-            m_alarm.NormalState.Value = new NodeId();
+            AddChild(normalValueVariable);
+            m_alarm.NormalState.Value = normalValueVariable.NodeId;
+
+            m_alarm.SetEnableState(context, false);
         }
 
         protected override void ProcessVariableChanged(ISystemContext context, object value)
@@ -117,7 +128,7 @@ namespace SampleServer.Alarms
                     m_alarm.Retain.Value = true;
                 }
 
-                m_alarm.SetEnableState(context, false);
+                m_alarm.SetEnableState(context, m_alarm.NormalState.Value != value);
 
                 // Report changes to node attributes
                 m_alarm.ClearChangeMasks(context, true);

@@ -28,7 +28,9 @@ namespace SampleServer.Alarms
         #endregion
 
         #region Constructors
-        public CertificateExpirationMonitor(ISystemContext context,
+        public CertificateExpirationMonitor(
+            AlarmsNodeManager alarmsNodeManager, 
+            ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
             string name,
@@ -36,12 +38,16 @@ namespace SampleServer.Alarms
             double initialValue)
            : base(context, parent, namespaceIndex, name, initialValue)
         {
+            BaseDataVariableState normalValueVariable = alarmsNodeManager.CreateVariable<double>(this, "NormalValueVariable");
+            normalValueVariable.Value = initialValue;
+
             // Attach the alarm monitor.
             InitializeAlarmMonitor(
                 context,
                 parent,
                 namespaceIndex,
-                alarmName);
+                alarmName, 
+                normalValueVariable);
 
             StateChanged += AlarmMonitor_StateChanged;
         }
@@ -53,7 +59,8 @@ namespace SampleServer.Alarms
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
-            string alarmName)
+            string alarmName,
+            BaseDataVariableState normalValueVariable)
         {
             // Create the alarm object
             m_alarm = new CertificateExpirationAlarmState(this);
@@ -63,6 +70,10 @@ namespace SampleServer.Alarms
             // Set input node
             m_alarm.InputNode.Value = NodeId;
 
+            // Setup the NormalState
+            AddChild(normalValueVariable);
+            m_alarm.NormalState.Value = normalValueVariable.NodeId;
+
             // Set state values
             m_alarm.SetEnableState(context, true);
             m_alarm.SetSuppressedState(context, false);
@@ -70,7 +81,7 @@ namespace SampleServer.Alarms
             m_alarm.SetActiveState(context, false);
 
             // Set certificate expiration mandatory fields
-            m_alarm.NormalState.Value = NodeId;
+            
             m_alarm.CertificateType.Value = Variables.CertificateExpirationAlarmType_CertificateType;
             m_alarm.Certificate.Value = GetCertificate().RawData;
 
@@ -113,7 +124,7 @@ namespace SampleServer.Alarms
                 bool updateRequired = false;
 
                 // Update alarm data
-                
+                m_alarm.SetEnableState(context, m_alarm.NormalState.Value != value);
 
                 if (updateRequired)
                 {

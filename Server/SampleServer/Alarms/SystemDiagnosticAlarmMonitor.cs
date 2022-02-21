@@ -17,6 +17,7 @@ namespace SampleServer.Alarms
         #endregion
 
         public SystemDiagnosticAlarmMonitor(
+            AlarmsNodeManager alarmsNodeManager,
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
@@ -25,6 +26,8 @@ namespace SampleServer.Alarms
             double initialValue)
              : base(context, parent, namespaceIndex, name, initialValue)
         {
+            BaseDataVariableState normalValueVariable = alarmsNodeManager.CreateVariable<double>(this, "NormalValueVariable");
+            normalValueVariable.Value = initialValue;
 
             // Attach the alarm monitor.
             InitializeAlarmMonitor(
@@ -32,7 +35,8 @@ namespace SampleServer.Alarms
                 parent,
                 namespaceIndex,
                 alarmName,
-                initialValue);
+                initialValue,
+                normalValueVariable);
 
             StateChanged += AlarmMonitor_StateChanged;
         }
@@ -82,7 +86,8 @@ namespace SampleServer.Alarms
             NodeState parent,
             ushort namespaceIndex,
             string alarmName,
-            double initialValue)
+            double initialValue,
+            BaseDataVariableState normalValueVariable)
         {
             // Create the alarm object
             m_alarm = new SystemDiagnosticAlarmState(this);
@@ -93,7 +98,8 @@ namespace SampleServer.Alarms
             m_alarm.InputNode.Value = NodeId;
 
             // Setup the NormalState
-            m_alarm.NormalState.Value = new NodeId();
+            AddChild(normalValueVariable);
+            m_alarm.NormalState.Value = normalValueVariable.NodeId;
 
             m_alarm.SetAcknowledgedState(context, false);
             m_alarm.SetActiveState(context, false);
@@ -123,7 +129,7 @@ namespace SampleServer.Alarms
                     m_alarm.Retain.Value = true;
                 }
 
-                m_alarm.SetEnableState(context, false);
+                m_alarm.SetEnableState(context, m_alarm.NormalState.Value != value);
 
                 // Report changes to node attributes
                 m_alarm.ClearChangeMasks(context, true);

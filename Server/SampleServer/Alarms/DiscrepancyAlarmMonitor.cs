@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SampleServer.Alarms
 {
-    internal class DiscrepancyAlarmConditionMonitor : BaseAlarmMonitor
+    internal class DiscrepancyAlarmMonitor : BaseAlarmMonitor
     {
         #region Private Members
 
@@ -12,7 +12,7 @@ namespace SampleServer.Alarms
         
         #endregion
 
-        public DiscrepancyAlarmConditionMonitor(
+        public DiscrepancyAlarmMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,

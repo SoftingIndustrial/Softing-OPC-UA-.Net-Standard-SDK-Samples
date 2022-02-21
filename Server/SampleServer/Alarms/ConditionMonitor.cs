@@ -88,6 +88,8 @@ namespace SampleServer.Alarms
             m_alarm = new ConditionState(this);
 
             InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+
+            m_alarm.SetEnableState(context, false);
         }
 
         protected override void ProcessVariableChanged(ISystemContext context, object value)
