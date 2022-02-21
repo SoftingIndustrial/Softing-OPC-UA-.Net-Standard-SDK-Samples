@@ -88,8 +88,11 @@ namespace SampleServer.Alarms
             // Set input node
             m_alarm.InputNode.Value = NodeId;
             
+            // set acknowledge state
+            m_alarm.SetAcknowledgedState(context, true);
+            m_alarm.AckedState.Value = new LocalizedText("en-US", alarmName);
+
             m_alarm.SetActiveState(context, false);
-            m_alarm.AckedState.Value = new LocalizedText("en", alarmName);
 
             // error in predefined or in ctt?
             //m_alarm.AudibleSound.ReferenceTypeId = ReferenceTypeIds.HasProperty;

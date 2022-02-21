@@ -71,10 +71,12 @@ namespace SampleServer.Alarms
             AddChild(normalValueVariable);
             m_alarm.NormalState.Value = normalValueVariable.NodeId;
 
+            // set acknowledge state
+            m_alarm.SetAcknowledgedState(context, true);
+            m_alarm.AckedState.Value = new LocalizedText("en-US", alarmName);
+
             // Set state values
-            m_alarm.SetEnableState(context, true);
             m_alarm.SetSuppressedState(context, false);
-            m_alarm.SetAcknowledgedState(context, false);
             m_alarm.SetActiveState(context, false);
         }
 

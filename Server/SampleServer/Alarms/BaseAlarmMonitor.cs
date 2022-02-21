@@ -82,10 +82,14 @@ namespace SampleServer.Alarms
 
             // Add optional components
             alarm.LocalTime = new PropertyState<TimeZoneDataType>(alarm);
+
             alarm.Comment = new ConditionVariableState<LocalizedText>(alarm);
-            alarm.ClientUserId = new PropertyState<string>(alarm);
-            alarm.AddComment = new AddCommentMethodState(alarm);
             alarm.Comment.Value = new LocalizedText("en", alarmName);
+
+            alarm.AddComment = new AddCommentMethodState(alarm);
+            
+            alarm.ClientUserId = new PropertyState<string>(alarm);
+                        
             alarm.EnabledState = new TwoStateVariableState(alarm);
             alarm.Message = new PropertyState<LocalizedText>(parent);
             alarm.Message.Value = new LocalizedText("en", alarmName);
@@ -121,8 +125,8 @@ namespace SampleServer.Alarms
             alarm.BranchId.Value = new NodeId(alarmName, namespaceIndex);
             alarm.ConditionClassId.Value = VariableIds.ConditionType_ConditionClassId;
             alarm.ConditionClassName.Value = alarm.ConditionClassId.DisplayName;
-            alarm.ClientUserId.Value = "Anonymous";
-            
+            alarm.ClientUserId.Value = "Anonymous"; 
+                        
             // Set state values
             alarm.SetEnableState(context, true);
             alarm.Retain.Value = false;
@@ -179,6 +183,27 @@ namespace SampleServer.Alarms
             {
                 ProcessVariableChanged(context, Value);
             }
+        }
+
+        protected ServiceResult AlarmMonitor_AddComment(ISystemContext context,
+            ConditionState condition,
+            byte[] eventId,
+            LocalizedText comment)
+        {
+
+
+            return ServiceResult.Good;
+        }
+
+
+        private ServiceResult OnAddComment(
+            ISystemContext _context,
+            MethodState _method,
+            NodeId _objectId,
+            byte[] eventId,
+            LocalizedText comment)
+        {
+            return ServiceResult.Good;
         }
 
         protected virtual void ProcessVariableChanged(ISystemContext context, object value)

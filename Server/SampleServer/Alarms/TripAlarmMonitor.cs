@@ -101,7 +101,10 @@ namespace SampleServer.Alarms
             AddChild(normalValueVariable);
             m_alarm.NormalState.Value = normalValueVariable.NodeId;
 
-            m_alarm.SetAcknowledgedState(context, false);
+            // set acknowledge state
+            m_alarm.SetAcknowledgedState(context, true);
+            m_alarm.AckedState.Value = new LocalizedText("en-US", alarmName);
+
             m_alarm.SetActiveState(context, false);
         }
 
@@ -119,6 +122,8 @@ namespace SampleServer.Alarms
 
                 double? newValue = Convert.ToDouble(value);
 
+                m_alarm.SetEnableState(context, m_alarm.NormalState.Value != value);
+
                 // Not interested in disabled or inactive alarms
                 if (!m_alarm.EnabledState.Id.Value)
                 {
@@ -128,8 +133,6 @@ namespace SampleServer.Alarms
                 {
                     m_alarm.Retain.Value = true;
                 }
-
-                m_alarm.SetEnableState(context, m_alarm.NormalState.Value != value);
 
                 // Report changes to node attributes
                 m_alarm.ClearChangeMasks(context, true);

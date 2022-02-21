@@ -74,10 +74,12 @@ namespace SampleServer.Alarms
             AddChild(normalValueVariable);
             m_alarm.NormalState.Value = normalValueVariable.NodeId;
 
+            // set acknowledge state
+            m_alarm.SetAcknowledgedState(context, true);
+            m_alarm.AckedState.Value = new LocalizedText("en-US", alarmName);
+
             // Set state values
-            m_alarm.SetEnableState(context, true);
             m_alarm.SetSuppressedState(context, false);
-            m_alarm.SetAcknowledgedState(context, false);
             m_alarm.SetActiveState(context, false);
 
             // Set certificate expiration mandatory fields
@@ -121,12 +123,12 @@ namespace SampleServer.Alarms
 
                 double? newValue = Convert.ToDouble(value);
 
-                bool updateRequired = false;
+                //bool updateRequired = false;
 
                 // Update alarm data
                 m_alarm.SetEnableState(context, m_alarm.NormalState.Value != value);
-
-                if (updateRequired)
+                
+                //if (updateRequired)
                 {
                     // Set event data
                     m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
