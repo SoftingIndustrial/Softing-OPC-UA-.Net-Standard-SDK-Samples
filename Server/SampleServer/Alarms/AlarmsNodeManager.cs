@@ -1021,11 +1021,10 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
 
-            // Prevent it from being triggered
-            //if (conditionMonitor != null)
-            //{
-            //    m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
-            //}
+            if (conditionMonitor != null)
+            {
+                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+            }
 
             //remember node in node manager list
             AddPredefinedNode(SystemContext, conditionMonitor);
@@ -1387,19 +1386,27 @@ namespace SampleServer.Alarms
 
                 foreach (ConditionState ci in m_conditionInstances)
                 {
+                    MethodState disableMethod = (MethodState)ci.FindChild(Server.DefaultSystemContext, new QualifiedName("Disable"));
+                    if (disableMethod != null)
+                    {
+                        disableMethod.Call(Server.DefaultSystemContext, ci.NodeId, inputs, null, null);
+                        if (ci is AlarmConditionState aci)
+                        {
+                            aci.SetActiveState(Server.DefaultSystemContext, false);
+                        }
+                        
+                    }
+
                     MethodState enableMethod = (MethodState)ci.FindChild(Server.DefaultSystemContext, new QualifiedName("Enable"));
                     if (enableMethod != null)
                     {
                         enableMethod.Call(Server.DefaultSystemContext, ci.NodeId, inputs, null, null);
-                    }
-                    MethodState disableMethod = (MethodState)ci.FindChild(Server.DefaultSystemContext, new QualifiedName("Disable"));
-                    if (enableMethod != null)
-                    {
-                        disableMethod.Call(Server.DefaultSystemContext, ci.NodeId, inputs, null, null);
+                        if (ci is AlarmConditionState aci)
+                        {
+                            aci.SetActiveState(Server.DefaultSystemContext, true);
+                        }
                     }
                 }
-                
-
             }
             catch (Exception ex)
             {
@@ -1560,6 +1567,11 @@ namespace SampleServer.Alarms
                     if (enableMethod != null)
                     {
                         enableMethod.Call(Server.DefaultSystemContext, ci.NodeId, inputs, null, null);
+                        
+                        if (ci is AlarmConditionState aci)
+                        {
+                            aci.SetActiveState(Server.DefaultSystemContext, true);
+                        }
                     }
                 }
 
@@ -1581,10 +1593,15 @@ namespace SampleServer.Alarms
                 var inputs = new List<Variant>();
                 foreach (ConditionState ci in m_conditionInstances)
                 {
-                    MethodState enableMethod = (MethodState)ci.FindChild(Server.DefaultSystemContext, new QualifiedName("Disable"));
-                    if (enableMethod != null)
+                    MethodState disableMethod = (MethodState)ci.FindChild(Server.DefaultSystemContext, new QualifiedName("Disable"));
+                    if (disableMethod != null)
                     {
-                        enableMethod.Call(Server.DefaultSystemContext, ci.NodeId, inputs, null, null);
+                        disableMethod.Call(Server.DefaultSystemContext, ci.NodeId, inputs, null, null);
+                        
+                        if (ci is AlarmConditionState aci)
+                        {
+                            aci.SetActiveState(Server.DefaultSystemContext, false);
+                        }
                     }
                 }
 
