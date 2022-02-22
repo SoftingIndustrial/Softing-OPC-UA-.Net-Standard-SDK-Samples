@@ -98,8 +98,8 @@ namespace SampleServer.Alarms
             //m_alarm.EngineeringUnits.Value = new EUInformation();
 
             // set acknowledge state
-            m_alarm.SetAcknowledgedState(context, true);
-            m_alarm.AckedState.Value = new LocalizedText("en-US", alarmName);
+            m_alarm.SetAcknowledgedState(context, false);
+            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
 
             // Set state values
             m_alarm.SetLimitState(context, LimitAlarmStates.Inactive);

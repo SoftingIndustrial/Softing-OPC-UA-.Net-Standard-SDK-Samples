@@ -102,8 +102,8 @@ namespace SampleServer.Alarms
             m_alarm.NormalState.Value = normalValueVariable.NodeId;
 
             // set acknowledge state
-            m_alarm.SetAcknowledgedState(context, true);
-            m_alarm.AckedState.Value = new LocalizedText("en-US", alarmName);
+            m_alarm.SetAcknowledgedState(context, false);
+            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
 
             m_alarm.SetActiveState(context, false); 
         }
