@@ -79,8 +79,20 @@ namespace SampleServer.Alarms
 
                 double? newValue = Convert.ToDouble(value);
 
+                // Generate alarm if number is even
+                bool generateEvent = newValue % 2 == 0;
+
+                //m_alarm.SetEnableState(context, generateEvent);
+                m_alarm.SetActiveState(context, generateEvent);
+
+                // Set event data
+                m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
+                m_alarm.Time.Value = DateTime.UtcNow;
+                m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
+
+
                 // Not interested in disabled or inactive alarms
-                if (!m_alarm.EnabledState.Id.Value)
+                if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
                 {
                     m_alarm.Retain.Value = false;
                 }
@@ -88,8 +100,6 @@ namespace SampleServer.Alarms
                 {
                     m_alarm.Retain.Value = true;
                 }
-
-                m_alarm.SetEnableState(context, false);
 
                 // Report changes to node attributes
                 m_alarm.ClearChangeMasks(context, true);
