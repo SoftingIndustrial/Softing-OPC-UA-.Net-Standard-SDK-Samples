@@ -24,6 +24,7 @@ namespace SampleServer.Alarms
     {
         #region Private Fields
         private const int AlarmTimeout = 30000;
+
         //private Timer m_timer;
         private Timer m_exclusiveLimitAlarmTrigger;
         private Timer m_conditionAlarmTrigger;
@@ -31,21 +32,10 @@ namespace SampleServer.Alarms
         private Timer m_acknowledgeableConditionAlarmTrigger;
 
         private Timer m_AllAlarmsTrigger;
-        //private static NodeId m_alarmNodeId;
-
-        //private readonly Random m_random = new Random();
-        //private bool m_valueChanged = false;
+        private Timer m_allAlarmsChangeTrigger;
 
         Dictionary<string, NodeId> m_exclusiveLimitMonitors = new Dictionary<string, NodeId>();
-        Dictionary<string, NodeId> m_exclusiveLevelMonitors = new Dictionary<string, NodeId>();
-        Dictionary<string, NodeId> m_exclusiveDeviationMonitors = new Dictionary<string, NodeId>();
-        Dictionary<string, NodeId> m_exclusiveRateOfChangeMonitors = new Dictionary<string, NodeId>();
 
-        Dictionary<string, NodeId> m_nonExclusiveLimitMonitors = new Dictionary<string, NodeId>();
-        Dictionary<string, NodeId> m_nonExclusiveLevelMonitors = new Dictionary<string, NodeId>();
-        Dictionary<string, NodeId> m_nonExclusiveDeviationMonitors = new Dictionary<string, NodeId>();
-        Dictionary<string, NodeId> m_nonExclusiveRateOfChangeMonitors = new Dictionary<string, NodeId>();
-        
         List<ConditionState> m_conditionInstances = new List<ConditionState>();
         #endregion
 
@@ -90,7 +80,7 @@ namespace SampleServer.Alarms
                 // Add a folder representing the monitored device.
                 BaseObjectState machine = CreateObject(root, "Machine A");
                 machine.EventNotifier = EventNotifiers.SubscribeToEvents;
-                
+
                 // Create an alarm monitor for a temperature sensor 1.
                 CreateExclusiveLimitMonitor(
                     machine,
@@ -307,17 +297,7 @@ namespace SampleServer.Alarms
                 AddNotifier(ServerNode, root, false);
                 AddNotifier(root, machine, true);
 
-                #region Create Trigger Alarm Method
-                Argument[] inputArgumentsAdd = new Argument[]
-                {
-                    new Argument() {Name = "Alarm NodeId", Description = "Alarm NodeId", DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar},
-                    new Argument() {Name = "Alarm Enable/Disable", Description = "Alarm Enable/Disable", DataType = DataTypeIds.Boolean, ValueRank = ValueRanks.Scalar},
-                    new Argument() {Name = "Alarm Timeout", Description = "Alarm Timeout", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
-                };
-               
-                CreateMethod(root, "TriggerAlarm", inputArgumentsAdd, null, OnTriggerAlarmCall);
-
-
+                #region Create Trigger Alarms Methods
                 Argument[] inputArgumentsStart = new Argument[]
                 {
                     new Argument() {Name = "Interval (ms)", Description = "Alarm Trigerring Interval", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
@@ -329,13 +309,19 @@ namespace SampleServer.Alarms
                 CreateMethod(root, "EnableAllAlarms", null, null, OnAllConditionsEnableCall);
 
                 CreateMethod(root, "DisableAllAlarms", null, null, OnAllConditionsDisableCall);
+
+                //Argument[] inputArgumentsChange = new Argument[]
+                //{
+                //    new Argument() {Name = "Interval (ms)", Description = "Alarm change Interval", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
+                //};
+                //CreateMethod(root, "StartAllChangeValues", inputArgumentsChange, null, OnTriggerAllChangeMonitorsValueStart);
+
+                //CreateMethod(root, "StopAllChangeValues", null, null, OnTriggerChangeMonitorsValueStop);
                 #endregion
 
-                // perhaps it might be used for stress test!?
-                // m_timer = new Timer(new TimerCallback(OnTimeout), null, AlarmTimeout, AlarmTimeout);
             }
         }
-
+    
         /// <summary>
         /// Create an instance of ExclusiveLimitMonitor and set provided properties
         /// </summary>
@@ -372,7 +358,7 @@ namespace SampleServer.Alarms
             if(exclusiveLimitMonitor != null)
             {
                 m_exclusiveLimitMonitors.Add(alarmName, exclusiveLimitMonitor.NodeId);
-
+                
                 m_conditionInstances.AddRange(exclusiveLimitMonitor.ConditionStates);
             }
 
@@ -415,8 +401,6 @@ namespace SampleServer.Alarms
 
             if (exclusiveLevelMonitor != null)
             {
-                m_exclusiveLevelMonitors.Add(alarmName, exclusiveLevelMonitor.NodeId);
-
                 m_conditionInstances.AddRange(exclusiveLevelMonitor.ConditionStates);
             }
 
@@ -459,8 +443,6 @@ namespace SampleServer.Alarms
 
             if (exclusiveDeviationMonitor != null)
             {
-                m_exclusiveDeviationMonitors.Add(alarmName, exclusiveDeviationMonitor.NodeId);
-
                 m_conditionInstances.AddRange(exclusiveDeviationMonitor.ConditionStates);
             }
 
@@ -503,8 +485,6 @@ namespace SampleServer.Alarms
 
             if (exclusiveRateOfChangeMonitor != null)
             {
-                m_exclusiveRateOfChangeMonitors.Add(alarmName, exclusiveRateOfChangeMonitor.NodeId);
-
                 m_conditionInstances.AddRange(exclusiveRateOfChangeMonitor.ConditionStates);
             }
 
@@ -548,8 +528,6 @@ namespace SampleServer.Alarms
 
             if (nonExclusiveLimitMonitor != null)
             {
-                m_nonExclusiveLimitMonitors.Add(alarmName, nonExclusiveLimitMonitor.NodeId);
-
                 m_conditionInstances.AddRange(nonExclusiveLimitMonitor.ConditionStates);
             }
 
@@ -592,8 +570,6 @@ namespace SampleServer.Alarms
 
             if (nonExclusiveLevelMonitor != null)
             {
-                m_nonExclusiveLevelMonitors.Add(alarmName, nonExclusiveLevelMonitor.NodeId);
-
                 m_conditionInstances.AddRange(nonExclusiveLevelMonitor.ConditionStates);
             }
 
@@ -636,8 +612,6 @@ namespace SampleServer.Alarms
 
             if (nonExclusiveDeviationMonitor != null)
             {
-                m_nonExclusiveDeviationMonitors.Add(alarmName, nonExclusiveDeviationMonitor.NodeId);
-
                 m_conditionInstances.AddRange(nonExclusiveDeviationMonitor.ConditionStates);
             }
 
@@ -680,8 +654,6 @@ namespace SampleServer.Alarms
 
             if (nonExclusiveRateOfChangeMonitor != null)
             {
-                m_nonExclusiveRateOfChangeMonitors.Add(alarmName, nonExclusiveRateOfChangeMonitor.NodeId);
-
                 m_conditionInstances.AddRange(nonExclusiveRateOfChangeMonitor.ConditionStates);
             }
 
@@ -1054,17 +1026,6 @@ namespace SampleServer.Alarms
             AddPredefinedNode(SystemContext, conditionMonitor);
         }
 
-        private void UpdateExclusiveLimitMonitor(NodeState parent,
-            string name,
-            string alarmName,
-            double initialValue,
-            double highLimit,
-            double highHighLimit,
-            double lowLimit,
-            double lowLowLimit)
-        {
-        }
-
         #endregion
 
         #region Timer methods
@@ -1119,18 +1080,9 @@ namespace SampleServer.Alarms
                                     exclusiveLimitMonitorValue = lowLowLimit + 0.5;
                                 }
 
-                                double newValue = exclusiveLimitMonitorValue;
+                                exclusiveLimitMonitor.Value = exclusiveLimitMonitorValue;
 
-                                // todo: add logic to change alarm limits!
-
-                                exclusiveLimitMonitor.UpdateExclusiveLimitAlarmMonitor(SystemContext,
-                                    newValue,
-                                    highLimit,
-                                    highHighLimit,
-                                    lowLimit,
-                                    lowLowLimit);
-
-                                Console.WriteLine("Alarm '{0}' changed value: {1}", alarmName, newValue);
+                                Console.WriteLine("Exclusive limit alarm '{0}' changed value: {1}", alarmName, exclusiveLimitMonitor.Value);
                             }
                         }
                     }
@@ -1194,18 +1146,9 @@ namespace SampleServer.Alarms
                             exclusiveLimitMonitorValue = lowLowLimit + 0.5;
                         }
 
-                        double newValue = exclusiveLimitMonitorValue;
+                        exclusiveLimitMonitor.Value = exclusiveLimitMonitorValue; 
 
-                        // todo: add logic to change alarm limits!
-
-                        exclusiveLimitMonitor.UpdateExclusiveLimitAlarmMonitor(SystemContext,
-                            newValue,
-                            highLimit,
-                            highHighLimit,
-                            lowLimit,
-                            lowLowLimit);
-
-                        Console.WriteLine("Alarm '{0}' changed value: {1}", exclusiveLimitMonitorState.DisplayName, newValue);
+                        Console.WriteLine("Exclusive limit alarm '{0}' changed value: {1}", exclusiveLimitMonitorState.DisplayName, exclusiveLimitMonitor.Value);
                     }
                 }
             }
@@ -1406,6 +1349,7 @@ namespace SampleServer.Alarms
                             aci.SetActiveState(Server.DefaultSystemContext, true);
                         }
                     }
+  
                 }
             }
             catch (Exception ex)
@@ -1524,7 +1468,6 @@ namespace SampleServer.Alarms
             }
 
         }
-
       
         /// <summary>
         /// Handles the trigger alarm method call
@@ -1613,6 +1556,144 @@ namespace SampleServer.Alarms
             }
 
         }
+
+        /// <summary>
+        ///  Handles start change values for all monitors/alarms.
+        /// </summary>
+        private ServiceResult OnTriggerAllChangeMonitorsValueStart(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            // All arguments must be provided
+            if (inputArguments.Count != 1)
+            {
+                return StatusCodes.BadArgumentsMissing;
+            }
+
+            try
+            {
+
+                int triggerInterval = (int)inputArguments[0]; // "Alarm Timeout";
+
+                m_allAlarmsChangeTrigger = new Timer(new TimerCallback(OnAllChangeMonitorsStart), null, triggerInterval, triggerInterval);
+
+                return ServiceResult.Good;
+            }
+            catch
+            {
+                return new ServiceResult(StatusCodes.BadInvalidArgument);
+            }
+
+        }
+
+        /// <summary>
+        /// Change monitors/alarms values
+        /// </summary>
+        /// <param name="state"></param>
+        private void OnAllChangeMonitorsStart(object state)
+        {
+            try
+            {
+                var inputs = new List<Variant>();
+
+                foreach (ConditionState ci in m_conditionInstances)
+                {
+                    // change monitor values that trigger alarms - deactivated for now
+
+                    if (ci.Parent != null)
+                    {
+                        BaseAlarmMonitor alarmMonitor = ci.Parent as BaseAlarmMonitor;
+                        if (alarmMonitor != null)
+                        {
+                            BaseVariableState normalValue = (BaseVariableState)alarmMonitor.FindChild(SystemContext, new QualifiedName("NormalValueVariable", NamespaceIndex));
+                            if (normalValue != null)
+                            {
+                                if (alarmMonitor.Value.Equals(normalValue.Value))
+                                {
+                                    alarmMonitor.Value++;
+                                }
+                                else
+                                {
+                                    alarmMonitor.Value = (double)normalValue.Value;
+                                }
+                            }
+                            else
+                            {
+                                if (ci is LimitAlarmState)
+                                {
+                                    LimitAlarmState limitMonitorState = ci as LimitAlarmState;
+                                    if (limitMonitorState != null)
+                                    {
+                                        double limitMonitorValue = alarmMonitor.Value;
+
+                                        double highLimit = limitMonitorState.HighLimit.Value;
+                                        double highHighLimit = limitMonitorState.HighHighLimit.Value;
+                                        double lowLimit = limitMonitorState.LowLimit.Value;
+                                        double lowLowLimit = limitMonitorState.LowLowLimit.Value;
+
+                                        if (limitMonitorValue > highHighLimit)
+                                        {
+                                            limitMonitorValue = lowLowLimit - 0.5;
+                                        }
+                                        else if (limitMonitorValue < highHighLimit && limitMonitorValue > highLimit)
+                                        {
+                                            limitMonitorValue = highHighLimit + 0.5;
+                                        }
+                                        else if (limitMonitorValue < highLimit && limitMonitorValue > lowLimit)
+                                        {
+                                            limitMonitorValue = highLimit + 0.5;
+                                        }
+                                        else if (limitMonitorValue < lowLimit && limitMonitorValue > lowLowLimit)
+                                        {
+                                            limitMonitorValue = lowLimit + 0.5;
+                                        }
+                                        else if (limitMonitorValue < lowLowLimit)
+                                        {
+                                            limitMonitorValue = lowLowLimit + 0.5;
+                                        }
+
+                                        alarmMonitor.Value = limitMonitorValue;
+
+                                        Console.WriteLine("Limit alarm '{0}' changed value: {1}", limitMonitorState.DisplayName, alarmMonitor.Value);
+                                    }
+                                }
+                                else
+                                {
+                                    alarmMonitor.Value++;
+                                }
+
+                            }
+                            alarmMonitor.ClearChangeMasks(SystemContext, true);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Alarm OnAllChangeMonitorsStart exception: {0}", ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handles stop change values for all monitors/alarms.
+        /// </summary>
+        /// <param name="state"></param>
+        private ServiceResult OnTriggerChangeMonitorsValueStop(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            try
+            {
+                if (m_allAlarmsChangeTrigger != null)
+                {
+                    m_allAlarmsChangeTrigger.Dispose();
+                    m_allAlarmsChangeTrigger = null;
+                }
+                return ServiceResult.Good;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Alarm OnTriggerChangeMonitorsStop exception: {0}", ex.Message);
+                return new ServiceResult(StatusCodes.BadInvalidArgument);
+            }
+        }
+       
         #endregion
     }
 }

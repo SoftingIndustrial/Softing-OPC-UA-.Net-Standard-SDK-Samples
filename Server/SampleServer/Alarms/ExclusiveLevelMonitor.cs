@@ -108,8 +108,6 @@ namespace SampleServer.Alarms
             m_alarm.HighHighLimit.Value = highHighLimit;
             m_alarm.LowLimit.Value = lowLimit;
             m_alarm.LowLowLimit.Value = lowLowLimit;
-
-
         }
 
         #endregion
@@ -192,7 +190,8 @@ namespace SampleServer.Alarms
                     m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
                     m_alarm.BranchId.Value = new NodeId();
 
-                    m_alarm.SetActiveState(context, true);
+                    bool nonActiveState = newValue > m_alarm.LowLimit.Value && newValue < m_alarm.HighLimit.Value;
+                    m_alarm.SetActiveState(context, !nonActiveState);
 
                     // Not interested in disabled or inactive alarms
                     if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)

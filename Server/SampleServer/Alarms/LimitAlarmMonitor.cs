@@ -135,8 +135,20 @@ namespace SampleServer.Alarms
 
                 double? newValue = Convert.ToDouble(value);
 
+                // Set event data
+                m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
+                m_alarm.Time.Value = DateTime.UtcNow;
+                m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
+
+                m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
+                m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
+                m_alarm.BranchId.Value = new NodeId();
+
+                bool nonActiveState = newValue > m_alarm.LowLimit.Value && newValue < m_alarm.HighLimit.Value;
+                m_alarm.SetActiveState(context, !nonActiveState);
+
                 // Not interested in disabled or inactive alarms
-                if (!m_alarm.EnabledState.Id.Value)
+                if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
                 {
                     m_alarm.Retain.Value = false;
                 }
@@ -144,9 +156,7 @@ namespace SampleServer.Alarms
                 {
                     m_alarm.Retain.Value = true;
                 }
-
-                m_alarm.SetEnableState(context, false);
-
+                
                 // Report changes to node attributes
                 m_alarm.ClearChangeMasks(context, true);
 

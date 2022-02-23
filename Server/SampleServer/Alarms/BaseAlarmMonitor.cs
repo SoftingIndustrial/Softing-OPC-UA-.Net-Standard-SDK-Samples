@@ -190,8 +190,6 @@ namespace SampleServer.Alarms
             byte[] eventId,
             LocalizedText comment)
         {
-
-
             return ServiceResult.Good;
         }
 

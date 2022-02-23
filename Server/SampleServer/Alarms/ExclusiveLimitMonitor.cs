@@ -82,30 +82,30 @@ namespace SampleServer.Alarms
         /// <param name="highHighLimit"></param>
         /// <param name="lowLimit"></param>
         /// <param name="lowLowLimit"></param>
-        public void UpdateExclusiveLimitAlarmMonitor(
-            ISystemContext context,
-            double newValue,
-            double highLimit,
-            double highHighLimit,
-            double lowLimit,
-            double lowLowLimit)
-        {
-            // Update alarm information
-            //m_alarm.AutoReportStateChanges = true; // always reports changes
-            m_alarm.Time.Value = DateTime.UtcNow;
-            m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
+        //public void UpdateExclusiveLimitAlarmMonitor(
+        //    ISystemContext context,
+        //    double newValue,
+        //    double highLimit,
+        //    double highHighLimit,
+        //    double lowLimit,
+        //    double lowLowLimit)
+        //{
+        //    // Update alarm information
+        //    //m_alarm.AutoReportStateChanges = true; // always reports changes
+        //    m_alarm.Time.Value = DateTime.UtcNow;
+        //    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
              
-            // Change limit values
-            m_alarm.HighLimit.Value = highLimit;
-            m_alarm.HighHighLimit.Value = highHighLimit;
-            m_alarm.LowLimit.Value = lowLimit;
-            m_alarm.LowLowLimit.Value = lowLowLimit;
+        //    // Change limit values
+        //    m_alarm.HighLimit.Value = highLimit;
+        //    m_alarm.HighHighLimit.Value = highHighLimit;
+        //    m_alarm.LowLimit.Value = lowLimit;
+        //    m_alarm.LowLowLimit.Value = lowLowLimit;
 
-            m_alarm.Validate(context);
+        //    m_alarm.Validate(context);
 
-            Value = newValue;
-            ProcessVariableChanged(context, newValue);
-        }
+        //    Value = newValue;
+        //    ProcessVariableChanged(context, newValue);
+        //}
 
         #endregion
 
@@ -231,7 +231,8 @@ namespace SampleServer.Alarms
                     m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
                     m_alarm.BranchId.Value = new NodeId();
 
-                    m_alarm.SetActiveState(context, true);
+                    bool nonActiveState = newValue > m_alarm.LowLimit.Value && newValue < m_alarm.HighLimit.Value;
+                    m_alarm.SetActiveState(context, !nonActiveState);
 
                     // Not interested in disabled or inactive alarms
                     if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
