@@ -33,7 +33,7 @@ namespace SampleServer.Alarms
             string name,
             string alarmName,
             double initialValue)
-           : base(context, parent, namespaceIndex, name, initialValue)
+           : base(context, parent, namespaceIndex, name, initialValue, alarmsNodeManager)
         {
             BaseDataVariableState normalValueVariable = alarmsNodeManager.CreateVariable<double>(this, "NormalValueVariable");
             normalValueVariable.Value = initialValue;
@@ -85,68 +85,8 @@ namespace SampleServer.Alarms
         #region Prrotected Methods
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
-            try
-            {
-                string currentUserId = string.Empty;
-                IOperationContext operationContext = context as IOperationContext;
-
-                if (operationContext != null && operationContext.UserIdentity != null)
-                {
-                    currentUserId = operationContext.UserIdentity.DisplayName;
-                }
-
-                double? newValue = Convert.ToDouble(value);
-
-                bool updateRequired = false;
-
-                // Update alarm data
-                m_alarm.SetEnableState(context, m_alarm.NormalState.Value != value);
-
-                if (updateRequired)
-                {
-                    // Set event data
-                    m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
-                    m_alarm.Time.Value = DateTime.UtcNow;
-                    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-
-                    m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
-                    m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
-                    m_alarm.BranchId.Value = new NodeId();
-
-                    m_alarm.SetActiveState(context, true);
-
-                    // Not interested in disabled or inactive alarms
-                    if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
-                    {
-                        m_alarm.Retain.Value = false;
-                    }
-                    else
-                    {
-                        m_alarm.Retain.Value = true;
-                    }
-
-                    // Reset the acknowledged flag
-                    m_alarm.SetAcknowledgedState(context, false);
-
-                    // Report changes to node attributes
-                    m_alarm.ClearChangeMasks(context, true);
-
-                    // Check if events are being monitored for the source
-                    if (m_alarm.AreEventsMonitored)
-                    {
-                        // Create a snapshot
-                        InstanceStateSnapshot e = new InstanceStateSnapshot();
-                        e.Initialize(context, m_alarm);
-
-                        // Report the event
-                        ReportEvent(context, e);
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                Utils.Trace(exception, "Alarms.InstrumentDiagnosticMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
-            }
+            BaseVariableState normalValVar = (BaseVariableState)AlarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
+            OffNormalAlarmMonitor.ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
         }
 
         #endregion

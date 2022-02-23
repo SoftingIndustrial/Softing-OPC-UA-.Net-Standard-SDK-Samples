@@ -13,7 +13,7 @@ namespace SampleServer.Alarms
         #region Private Members
 
         private TripAlarmState m_alarm;
-        
+
         #endregion
 
         public TripAlarmMonitor(
@@ -24,7 +24,7 @@ namespace SampleServer.Alarms
             string name,
             string alarmName,
             double initialValue)
-             : base(context, parent, namespaceIndex, name, initialValue)
+             : base(context, parent, namespaceIndex, name, initialValue, alarmsNodeManager)
         {
             BaseDataVariableState normalValueVariable = alarmsNodeManager.CreateVariable<double>(this, "NormalValueVariable");
             normalValueVariable.Value = initialValue;
@@ -110,48 +110,8 @@ namespace SampleServer.Alarms
 
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
-            try
-            {
-                string currentUserId = string.Empty;
-                IOperationContext operationContext = context as IOperationContext;
-
-                if (operationContext != null && operationContext.UserIdentity != null)
-                {
-                    currentUserId = operationContext.UserIdentity.DisplayName;
-                }
-
-                double? newValue = Convert.ToDouble(value);
-
-                m_alarm.SetEnableState(context, m_alarm.NormalState.Value != value);
-
-                // Not interested in disabled or inactive alarms
-                if (!m_alarm.EnabledState.Id.Value)
-                {
-                    m_alarm.Retain.Value = false;
-                }
-                else
-                {
-                    m_alarm.Retain.Value = true;
-                }
-
-                // Report changes to node attributes
-                m_alarm.ClearChangeMasks(context, true);
-
-                // Check if events are being monitored for the source
-                if (m_alarm.AreEventsMonitored)
-                {
-                    // Create a snapshot
-                    InstanceStateSnapshot e = new InstanceStateSnapshot();
-                    e.Initialize(context, m_alarm);
-
-                    // Report the event
-                    ReportEvent(context, e);
-                }
-            }
-            catch (Exception exception)
-            {
-                Utils.Trace(exception, "Alarms.TripAlarmMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
-            }
+            BaseVariableState normalValVar = (BaseVariableState)AlarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
+            OffNormalAlarmMonitor.ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
+        }
     }
-}
 }

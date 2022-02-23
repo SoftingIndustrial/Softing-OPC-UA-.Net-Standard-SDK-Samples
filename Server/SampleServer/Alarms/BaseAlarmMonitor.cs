@@ -21,13 +21,17 @@ namespace SampleServer.Alarms
     {
         #region Private Members
         protected List<ConditionState> m_conditions;
-        //private ConditionState alarm;
+        protected AlarmsNodeManager m_alarmsNodeManager;
         #endregion
 
         #region Properties
         public List<ConditionState> ConditionStates
         {
             get { return m_conditions; }
+        }
+        public AlarmsNodeManager AlarmsNodeManager
+        {
+            get { return m_alarmsNodeManager; }
         }
         #endregion
 
@@ -37,8 +41,11 @@ namespace SampleServer.Alarms
             NodeState parent,
             ushort namespaceIndex,
             string name,
-            double initialValue) : base(parent)
+            double initialValue,
+            AlarmsNodeManager alarmsNodeManager = null) : base(parent)
         {
+            m_alarmsNodeManager = alarmsNodeManager;
+
             Create(context, null, new QualifiedName(name, namespaceIndex), null, true);
 
             ReferenceTypeId = ReferenceTypeIds.HasComponent;

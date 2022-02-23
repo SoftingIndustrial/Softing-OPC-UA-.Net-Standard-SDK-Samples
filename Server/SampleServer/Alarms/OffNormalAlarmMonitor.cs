@@ -13,7 +13,7 @@ namespace SampleServer.Alarms
         #region Private Members
 
         private OffNormalAlarmState m_alarm;
-        
+
         #endregion
 
         public OffNormalAlarmMonitor(
@@ -24,7 +24,7 @@ namespace SampleServer.Alarms
             string name,
             string alarmName,
             double initialValue)
-             : base(context, parent, namespaceIndex, name, initialValue)
+             : base(context, parent, namespaceIndex, name, initialValue, alarmsNodeManager)
         {
             BaseDataVariableState normalValueVariable = alarmsNodeManager.CreateVariable<double>(this, "NormalValueVariable");
             normalValueVariable.Value = initialValue;
@@ -110,48 +110,62 @@ namespace SampleServer.Alarms
 
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
+            BaseVariableState normalValVar = (BaseVariableState) m_alarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
+            ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
+        }
+
+        internal static void ProcessVariableChanged(ISystemContext context, object value, OffNormalAlarmState offNormalAlarmState, object normalValue)
+        {
             try
             {
-                string currentUserId = string.Empty;
-                IOperationContext operationContext = context as IOperationContext;
+                double? dValue = Convert.ToDouble(value);
+                double? dNormalValue = Convert.ToDouble(normalValue);
 
-                if (operationContext != null && operationContext.UserIdentity != null)
-                {
-                    currentUserId = operationContext.UserIdentity.DisplayName;
-                }
 
-                double? newValue = Convert.ToDouble(value);
+                bool offNormal = dValue != dNormalValue;
 
-                m_alarm.SetEnableState(context, m_alarm.NormalState.Value != value);
+                // Update alarm data
+                offNormalAlarmState.SetActiveState(context, offNormal);
 
                 // Not interested in disabled or inactive alarms
-                if (!m_alarm.EnabledState.Id.Value)
+                if (!offNormalAlarmState.EnabledState.Id.Value || !offNormalAlarmState.ActiveState.Id.Value)
                 {
-                    m_alarm.Retain.Value = false;
+                    offNormalAlarmState.Retain.Value = false;
                 }
                 else
                 {
-                    m_alarm.Retain.Value = true;
+                    offNormalAlarmState.Retain.Value = true;
                 }
-                
-                // Report changes to node attributes
-                m_alarm.ClearChangeMasks(context, true);
 
-                // Check if events are being monitored for the source
-                if (m_alarm.AreEventsMonitored)
+                if (offNormal)
                 {
-                    // Create a snapshot
-                    InstanceStateSnapshot e = new InstanceStateSnapshot();
-                    e.Initialize(context, m_alarm);
+                    // Set event data
+                    offNormalAlarmState.EventId.Value = Guid.NewGuid().ToByteArray();
+                    offNormalAlarmState.Time.Value = DateTime.UtcNow;
+                    offNormalAlarmState.ReceiveTime.Value = offNormalAlarmState.Time.Value;
 
-                    // Report the event
-                    ReportEvent(context, e);
+                    // Reset the acknowledged flag
+                    offNormalAlarmState.SetAcknowledgedState(context, false);
+
+                    // Report changes to node attributes
+                    offNormalAlarmState.ClearChangeMasks(context, true);
+
+                    // Check if events are being monitored for the source
+                    if (offNormalAlarmState.AreEventsMonitored)
+                    {
+                        // Create a snapshot
+                        InstanceStateSnapshot e = new InstanceStateSnapshot();
+                        e.Initialize(context, offNormalAlarmState);
+
+                        // Report the event
+                        offNormalAlarmState.ReportEvent(context, e);
+                    }
                 }
             }
             catch (Exception exception)
             {
-                Utils.Trace(exception, "Alarms.OffNormalAlarmMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
+                Utils.Trace(exception, "Alarms.{0}.ProcessVariableChanged: Unexpected error processing value changed notification.", offNormalAlarmState.GetType());
             }
+        }
     }
-}
 }
