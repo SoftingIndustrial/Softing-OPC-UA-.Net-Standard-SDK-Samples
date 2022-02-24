@@ -134,7 +134,7 @@ namespace SampleServer.Alarms
 
                     m_alarm.SetLimitState(context, LimitAlarmStates.Low);
                     m_alarm.SetComment(context, new LocalizedText("en-US", "LowLimit exceeded."), currentUserId);
-                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State Low set to: {0}", m_alarm.LowState.Value.Text));
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State Low set to {0}", m_alarm.LowState.Value.Text));
                     m_alarm.SetSeverity(context, EventSeverity.High);
 
                     updateRequired = true;

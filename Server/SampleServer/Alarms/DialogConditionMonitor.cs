@@ -10,10 +10,11 @@ namespace SampleServer.Alarms
         #region Private Members
 
         private DialogConditionState m_alarm;
-        
+        double? m_value = 0;
+
         #endregion
 
-        
+
         public DialogConditionMonitor(
             ISystemContext context,
             NodeState parent,
@@ -45,15 +46,19 @@ namespace SampleServer.Alarms
             InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
 
             // Manadatory fields initialization
-            m_alarm.DialogState.Value = new LocalizedText("en", "DialogStateSample");
-            m_alarm.Prompt.Value = new LocalizedText("en", "PromptSample");
-            m_alarm.ResponseOptionSet.Value = new LocalizedText[] { new LocalizedText("en", "ResponseSample") };
-            m_alarm.DefaultResponse.Value = (int)StatusCodes.Good;
-            m_alarm.LastResponse.Value = (int)StatusCodes.Good;
-            m_alarm.OkResponse.Value = (int)StatusCodes.Good;
-            m_alarm.CancelResponse.Value = (int)StatusCodes.Good;
+            m_alarm.DialogState.Value = new LocalizedText("en-US", ConditionStateNames.Inactive);
 
-            m_alarm.SetEnableState(context, false);
+            // Manadatory properties initialization
+            m_alarm.Prompt.Value = new LocalizedText("en-US", "Select option: Ok|Cancel");
+            m_alarm.ResponseOptionSet.Value = new LocalizedText[] { new LocalizedText("en-US", "Ok"), new LocalizedText("en-US", "Cancel") };
+            int response = 0;
+            m_alarm.DefaultResponse.Value = response;
+            m_alarm.LastResponse.Value = response;
+            m_alarm.OkResponse.Value = response;
+            m_alarm.CancelResponse.Value = 1;
+            m_alarm.SetResponse(context, response);
+
+            m_alarm.SetEnableState(context, true);
         }
 
         protected override void ProcessVariableChanged(ISystemContext context, object value)
@@ -71,30 +76,65 @@ namespace SampleServer.Alarms
 
                 double? newValue = Convert.ToDouble(value);
 
-                // Not interested in disabled or inactive alarms
-                if (!m_alarm.EnabledState.Id.Value)
+                bool updateRequired = false;
+
+                if (m_value != newValue)
                 {
-                    m_alarm.Retain.Value = false;
-                }
-                else
-                {
-                    m_alarm.Retain.Value = true;
+                    m_value = newValue;
+                    updateRequired = true;
                 }
 
-                m_alarm.SetEnableState(context, false);
-
-                // Report changes to node attributes
-                m_alarm.ClearChangeMasks(context, true);
-
-                // Check if events are being monitored for the source
-                if (m_alarm.AreEventsMonitored)
+                if (updateRequired)
                 {
-                    // Create a snapshot
-                    InstanceStateSnapshot e = new InstanceStateSnapshot();
-                    e.Initialize(context, m_alarm);
+                    // Set event data
+                    m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
+                    m_alarm.Time.Value = DateTime.UtcNow;
+                    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
 
-                    // Report the event
-                    ReportEvent(context, e);
+                    m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
+                    m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
+                    m_alarm.BranchId.Value = new NodeId();
+                                    
+                    bool dialogState = newValue % 2 == 0;
+                    m_alarm.DialogState.Value = new LocalizedText("en", dialogState ? ConditionStateNames.Active : ConditionStateNames.Inactive);
+                    m_alarm.DialogState.TransitionTime.Value = DateTime.UtcNow;
+
+                    // Not interested in disabled or inactive alarms
+                    if (!m_alarm.EnabledState.Id.Value)
+                    {
+                        m_alarm.Retain.Value = false;
+                    }
+                    else
+                    {
+                        m_alarm.Retain.Value = true;
+                    }
+
+                    int selectedResponse = dialogState ? 0 : 1;
+                    m_alarm.DefaultResponse.Value = selectedResponse;
+                    m_alarm.LastResponse.Value = selectedResponse;
+                    
+                    LocalizedText[] responseOptions  = m_alarm.ResponseOptionSet.Value;
+
+                    m_alarm.SetComment(context, new LocalizedText("en-US", String.Format("Alarm DialogState = {0}", m_alarm.DialogState.Value.Text)), currentUserId);
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm DialogState = {0} - Response answer as {1}", m_alarm.DialogState.Value.Text, responseOptions[selectedResponse].Text));
+                    m_alarm.SetSeverity(context, dialogState ? EventSeverity.Low : EventSeverity.Min);
+
+                    // Report changes to node attributes
+                    m_alarm.ClearChangeMasks(context, true);
+
+                    // Check if events are being monitored for the source
+                    if (m_alarm.AreEventsMonitored)
+                    {
+                        // Create a snapshot
+                        InstanceStateSnapshot e = new InstanceStateSnapshot();
+                        e.Initialize(context, m_alarm);
+
+                        // Report the event
+                        ReportEvent(context, e);
+                    }
+
+                    //send dialog response - the DialogState is reset to Inactive
+                    m_alarm.SetResponse(context, selectedResponse);
                 }
             }
             catch (Exception exception)

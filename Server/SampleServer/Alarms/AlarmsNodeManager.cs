@@ -130,7 +130,7 @@ namespace SampleServer.Alarms
                     machine,
                     "ExclusiveLevelSensor 1",
                     "ExclusiveLevelMonitor 1",
-                    9.0,
+                    18.0,
                     35.0,
                     40.0,
                     12.0,
@@ -141,7 +141,7 @@ namespace SampleServer.Alarms
                     machine,
                     "ExclusiveDeviationSensor 1",
                     "ExclusiveDeviationMonitor 1",
-                    10.0,
+                    20.0,
                     37.0,
                     42.0,
                     15.0,
@@ -152,7 +152,7 @@ namespace SampleServer.Alarms
                     machine,
                     "ExclusiveRateOfChangeSensor 1",
                     "ExclusiveRateOfChangeMonitor 1",
-                    11.0,
+                    21.0,
                     39.0,
                     45.0,
                     18.0,
@@ -164,17 +164,17 @@ namespace SampleServer.Alarms
                     "NonExclusiveLimitSensor 1",
                     "NonExclusiveLimitMonitor 1",
                     8.0,
-                    25.0,
-                    30.0,
-                    8.0,
-                    5.0);
+                    10.0,
+                    15.0,
+                    2.0,
+                    1.0);
 
                 // Create an alarm monitor for a NonExclusiveLevelAlarm type.
                 CreateNonExclusiveLevelMonitor(
                     machine,
                     "NonExclusiveLevelSensor 1",
                     "NonExclusiveLevelMonitor 1",
-                    9.0,
+                    37.0,
                     35.0,
                     40.0,
                     12.0,
@@ -185,7 +185,7 @@ namespace SampleServer.Alarms
                     machine,
                     "NonExclusiveDeviationSensor 1",
                     "NonExclusiveDeviationMonitor 1",
-                    10.0,
+                    18.0,
                     37.0,
                     42.0,
                     15.0,
@@ -196,17 +196,18 @@ namespace SampleServer.Alarms
                     machine,
                     "NonExclusiveRateOfChangeSensor 1",
                     "NonExclusiveRateOfChangeMonitor 1",
-                    11.0,
+                    31.0,
                     39.0,
                     45.0,
                     18.0,
                     15.0);
 
-                CreateConditionMonitor(
-                    machine,
-                    "ConditionSensor 1",
-                    "ConditionMonitor 1",
-                    7.0);
+                // IsAbstract alarm - should not be activated !
+                //CreateConditionMonitor(
+                //    machine,
+                //    "ConditionSensor 1",
+                //    "ConditionMonitor 1",
+                //    7.0);
 
                 CreateDialogConditionMonitor(
                     machine,
@@ -310,13 +311,13 @@ namespace SampleServer.Alarms
 
                 CreateMethod(root, "DisableAllAlarms", null, null, OnAllConditionsDisableCall);
 
-                //Argument[] inputArgumentsChange = new Argument[]
-                //{
-                //    new Argument() {Name = "Interval (ms)", Description = "Alarm change Interval", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
-                //};
-                //CreateMethod(root, "StartAllChangeValues", inputArgumentsChange, null, OnTriggerAllChangeMonitorsValueStart);
+                Argument[] inputArgumentsChange = new Argument[]
+                {
+                    new Argument() {Name = "Interval (ms)", Description = "Alarm change Interval", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
+                };
+                CreateMethod(root, "StartAllChangeValues", inputArgumentsChange, null, OnTriggerAllChangeMonitorsValueStart);
 
-                //CreateMethod(root, "StopAllChangeValues", null, null, OnTriggerChangeMonitorsValueStop);
+                CreateMethod(root, "StopAllChangeValues", null, null, OnTriggerChangeMonitorsValueStop);
                 #endregion
 
             }
