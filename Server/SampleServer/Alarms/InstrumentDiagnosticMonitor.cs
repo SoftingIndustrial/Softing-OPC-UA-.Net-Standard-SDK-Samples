@@ -45,8 +45,6 @@ namespace SampleServer.Alarms
                 namespaceIndex,
                 alarmName,
                 normalValueVariable);
-
-            StateChanged += AlarmMonitor_StateChanged;
         }
         #endregion
 

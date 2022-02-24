@@ -33,8 +33,6 @@ namespace SampleServer.Alarms
                 namespaceIndex,
                 alarmName,
                 initialValue);
-
-            StateChanged += AlarmMonitor_StateChanged;
         }
 
         public void UpdateConditionAlarmMonitor(

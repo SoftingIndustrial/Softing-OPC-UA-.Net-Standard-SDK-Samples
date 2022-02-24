@@ -65,8 +65,6 @@ namespace SampleServer.Alarms
                 highHighLimit,
                 lowLimit,
                 lowLowLimit);
-
-            StateChanged += AlarmMonitor_StateChanged;
         }
 
         #endregion
