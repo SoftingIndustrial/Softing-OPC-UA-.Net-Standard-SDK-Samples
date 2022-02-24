@@ -80,7 +80,7 @@ namespace SampleServer.Alarms
 
         #endregion
 
-        #region Prrotected Methods
+        #region Protected Methods
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             BaseVariableState normalValVar = (BaseVariableState)AlarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);

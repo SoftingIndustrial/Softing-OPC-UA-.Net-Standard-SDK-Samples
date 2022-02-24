@@ -143,7 +143,7 @@ namespace SampleServer.Alarms
                     m_alarm.Tolerance.Value = newValue.Value;
 
                     // Not interested in disabled or inactive alarms
-                    if (!m_alarm.EnabledState.Id.Value)
+                    if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
                     {
                         m_alarm.Retain.Value = false;
                     }

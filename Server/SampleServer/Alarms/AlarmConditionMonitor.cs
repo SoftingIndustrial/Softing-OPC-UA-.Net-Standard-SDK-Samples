@@ -144,7 +144,7 @@ namespace SampleServer.Alarms
                     m_alarm.OutOfServiceState.Value = new LocalizedText("en-US", valueState ? Boolean.TrueString : Boolean.FalseString);
 
                     // Not interested in disabled or inactive alarms
-                    if (!m_alarm.EnabledState.Id.Value)
+                    if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
                     {
                         m_alarm.Retain.Value = false;
                     }

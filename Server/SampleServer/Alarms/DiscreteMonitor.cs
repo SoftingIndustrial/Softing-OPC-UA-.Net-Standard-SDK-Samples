@@ -106,9 +106,9 @@ namespace SampleServer.Alarms
                     // Generate alarm if number is even
                     bool activeState = newValue % 2 == 0;
                     m_alarm.SetActiveState(context, activeState);
-                    
+
                     // Not interested in disabled or inactive alarms
-                    if (!m_alarm.EnabledState.Id.Value)
+                    if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
                     {
                         m_alarm.Retain.Value = false;
                     }

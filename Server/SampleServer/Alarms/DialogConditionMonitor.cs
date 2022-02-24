@@ -100,7 +100,7 @@ namespace SampleServer.Alarms
                     m_alarm.DialogState.TransitionTime.Value = DateTime.UtcNow;
 
                     // Not interested in disabled or inactive alarms
-                    if (!m_alarm.EnabledState.Id.Value)
+                    if (!m_alarm.EnabledState.Id.Value || !m_alarm.DialogState.Id.Value)
                     {
                         m_alarm.Retain.Value = false;
                     }
