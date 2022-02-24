@@ -107,7 +107,7 @@ namespace SampleServer.Alarms
                     //m_alarm.SetEnableState(context, false);
                     m_alarm.SetComment(context, new LocalizedText("en-US", String.Format("Alarm ConfirmedState = {0}", m_alarm.ConfirmedState.Value.Text)), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm AckedState = {0}", m_alarm.AckedState.Value.Text));
-                    m_alarm.SetSeverity(context, valueState ? EventSeverity.Low : EventSeverity.Min);
+                    m_alarm.SetSeverity(context, 0);
 
                     // Report changes to node attributes
                     m_alarm.ClearChangeMasks(context, true);

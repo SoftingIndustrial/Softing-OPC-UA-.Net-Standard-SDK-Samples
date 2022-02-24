@@ -9,9 +9,11 @@ namespace SampleServer.Alarms
         #region Private Members
 
         private DiscrepancyAlarmState m_alarm;
-        
+        double? m_value = 0;
+
         #endregion
 
+        #region Constructors
         public DiscrepancyAlarmMonitor(
             ISystemContext context,
             NodeState parent,
@@ -30,46 +32,47 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
         }
+        #endregion
 
-        public void UpdateConditionAlarmMonitor(
-            ISystemContext context,
-            double newValue,
-            bool enableFlag)
-        {
-            // Update alarm information
-            //m_alarm.AutoReportStateChanges = true; // always reports changes
-            m_alarm.Time.Value = DateTime.UtcNow;
-            m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-            m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-            //m_alarm.BranchId.Value = null; // ignore BranchId
+        //public void UpdateConditionAlarmMonitor(
+        //    ISystemContext context,
+        //    double newValue,
+        //    bool enableFlag)
+        //{
+        //    // Update alarm information
+        //    //m_alarm.AutoReportStateChanges = true; // always reports changes
+        //    m_alarm.Time.Value = DateTime.UtcNow;
+        //    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
+        //    m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
+        //    //m_alarm.BranchId.Value = null; // ignore BranchId
 
-            // Set state values
-            m_alarm.SetEnableState(context, enableFlag);
-            m_alarm.Comment.Value = new LocalizedText(enableFlag.ToString());
-            m_alarm.Message.Value = new LocalizedText(enableFlag.ToString());
+        //    // Set state values
+        //    m_alarm.SetEnableState(context, enableFlag);
+        //    m_alarm.Comment.Value = new LocalizedText(enableFlag.ToString());
+        //    m_alarm.Message.Value = new LocalizedText(enableFlag.ToString());
 
-            // Add the variable as source node of the alarm
-            AddCondition(m_alarm);
+        //    // Add the variable as source node of the alarm
+        //    AddCondition(m_alarm);
 
-            // Initialize alarm information
-            m_alarm.SymbolicName = "DiscrepancyAlarmCondition Alarm";
-            m_alarm.EventType.Value = m_alarm.TypeDefinitionId;
-            m_alarm.ConditionName.Value = m_alarm.SymbolicName;
-            m_alarm.AutoReportStateChanges = true;
-            m_alarm.Time.Value = DateTime.UtcNow;
-            m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-            m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-            m_alarm.BranchId.Value = null;
+        //    // Initialize alarm information
+        //    m_alarm.SymbolicName = "DiscrepancyAlarmCondition Alarm";
+        //    m_alarm.EventType.Value = m_alarm.TypeDefinitionId;
+        //    m_alarm.ConditionName.Value = m_alarm.SymbolicName;
+        //    m_alarm.AutoReportStateChanges = true;
+        //    m_alarm.Time.Value = DateTime.UtcNow;
+        //    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
+        //    m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
+        //    m_alarm.BranchId.Value = null;
 
-            // Set state values
-            m_alarm.SetEnableState(context, true);
-            m_alarm.Retain.Value = false;
+        //    // Set state values
+        //    m_alarm.SetEnableState(context, true);
+        //    m_alarm.Retain.Value = false;
 
-            m_alarm.Validate(context);
+        //    m_alarm.Validate(context);
 
-            Value = newValue;
-            ProcessVariableChanged(context, newValue);
-        }
+        //    Value = newValue;
+        //    ProcessVariableChanged(context, newValue);
+        //}
 
         private void InitializeAlarmMonitor(
             ISystemContext context,
@@ -114,30 +117,60 @@ namespace SampleServer.Alarms
 
                 double? newValue = Convert.ToDouble(value);
 
-                // Not interested in disabled or inactive alarms
-                if (!m_alarm.EnabledState.Id.Value)
+                bool updateRequired = false;
+
+                if (m_value != newValue)
                 {
-                    m_alarm.Retain.Value = false;
-                }
-                else
-                {
-                    m_alarm.Retain.Value = true;
+                    m_value = newValue;
+                    updateRequired = true;
                 }
 
-                m_alarm.SetEnableState(context, false);
-
-                // Report changes to node attributes
-                m_alarm.ClearChangeMasks(context, true);
-
-                // Check if events are being monitored for the source
-                if (m_alarm.AreEventsMonitored)
+                if (updateRequired)
                 {
-                    // Create a snapshot
-                    InstanceStateSnapshot e = new InstanceStateSnapshot();
-                    e.Initialize(context, m_alarm);
+                    // Set event data
+                    m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
+                    m_alarm.Time.Value = DateTime.UtcNow;
+                    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
 
-                    // Report the event
-                    ReportEvent(context, e);
+                    m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
+                    m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
+                    m_alarm.BranchId.Value = new NodeId();
+
+                    // Generate alarm if number is even
+                    bool activeState = newValue % 2 == 0;
+                    m_alarm.SetActiveState(context, activeState);
+                    m_alarm.ExpectedTime.Value = (double)DateTime.UtcNow.Ticks;
+                    m_alarm.Tolerance.Value = newValue.Value;
+
+                    // Not interested in disabled or inactive alarms
+                    if (!m_alarm.EnabledState.Id.Value)
+                    {
+                        m_alarm.Retain.Value = false;
+                    }
+                    else
+                    {
+                        m_alarm.Retain.Value = true;
+                    }
+
+                    m_alarm.SetComment(context, new LocalizedText("en-US", String.Format("Alarm AckedState = {0}, ExpectedTime = {1}, Tolerance = {2}", 
+                        m_alarm.AckedState.Value.Text, m_alarm.ExpectedTime.Value, m_alarm.Tolerance.Value)), currentUserId);
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm AckedState = {0}, ExpectedTime = {1}, Tolerance = {2}",
+                        m_alarm.AckedState.Value.Text, m_alarm.ExpectedTime.Value, m_alarm.Tolerance.Value));
+                    m_alarm.SetSeverity(context, 0);
+
+                    // Report changes to node attributes
+                    m_alarm.ClearChangeMasks(context, true);
+
+                    // Check if events are being monitored for the source
+                    if (m_alarm.AreEventsMonitored)
+                    {
+                        // Create a snapshot
+                        InstanceStateSnapshot e = new InstanceStateSnapshot();
+                        e.Initialize(context, m_alarm);
+
+                        // Report the event
+                        ReportEvent(context, e);
+                    }
                 }
             }
             catch (Exception exception)

@@ -25,7 +25,10 @@ namespace SampleServer.Alarms
         #region Private Members
 
         private DiscreteAlarmState m_alarm;
+        double? m_value = 0;
+        #endregion
 
+        #region Constructors
         public DiscreteMonitor(ISystemContext context, NodeState parent, ushort namespaceIndex, string name, string alarmName, double initialValue)
            : base(context, parent, namespaceIndex, name, initialValue)
         {
@@ -66,7 +69,6 @@ namespace SampleServer.Alarms
         {
             try
             {
-
                 string currentUserId = string.Empty;
                 IOperationContext operationContext = context as IOperationContext;
 
@@ -77,40 +79,61 @@ namespace SampleServer.Alarms
 
                 double? newValue = Convert.ToDouble(value);
 
-                // Generate alarm if number is even
-                bool generateEvent = newValue % 2 == 0;
+                bool updateRequired = false;
 
-                //m_alarm.SetEnableState(context, generateEvent);
-                m_alarm.SetActiveState(context, generateEvent);
-
-                // Set event data
-                m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
-                m_alarm.Time.Value = DateTime.UtcNow;
-                m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-
-
-                // Not interested in disabled or inactive alarms
-                if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
+                if (m_value != newValue)
                 {
-                    m_alarm.Retain.Value = false;
-                }
-                else
-                {
-                    m_alarm.Retain.Value = true;
+                    m_value = newValue;
+                    updateRequired = true;
                 }
 
-                // Report changes to node attributes
-                m_alarm.ClearChangeMasks(context, true);
-
-                // Check if events are being monitored for the source
-                if (m_alarm.AreEventsMonitored)
+                if (updateRequired)
                 {
-                    // Create a snapshot
-                    InstanceStateSnapshot e = new InstanceStateSnapshot();
-                    e.Initialize(context, m_alarm);
+                    // Set event data
+                    m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
+                    m_alarm.Time.Value = DateTime.UtcNow;
+                    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
 
-                    // Report the event
-                    ReportEvent(context, e);
+                    m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
+                    m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
+                    m_alarm.BranchId.Value = new NodeId();
+
+                    // Generate alarm if number is even
+                    //bool generateEvent = newValue % 2 == 0;
+                    ////m_alarm.SetEnableState(context, generateEvent);
+                    //m_alarm.SetActiveState(context, generateEvent);
+
+                    // Generate alarm if number is even
+                    bool activeState = newValue % 2 == 0;
+                    m_alarm.SetActiveState(context, activeState);
+                    
+                    // Not interested in disabled or inactive alarms
+                    if (!m_alarm.EnabledState.Id.Value)
+                    {
+                        m_alarm.Retain.Value = false;
+                    }
+                    else
+                    {
+                        m_alarm.Retain.Value = true;
+                    }
+
+                    m_alarm.SetComment(context, new LocalizedText("en-US", String.Format("Alarm AckedState = {0}", m_alarm.AckedState.Value.Text)), currentUserId);
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm AckedState = {0}", m_alarm.AckedState.Value.Text));
+                    m_alarm.SetSeverity(context, 0);
+
+                    // Report changes to node attributes
+                    m_alarm.ClearChangeMasks(context, true);
+
+                    // Check if events are being monitored for the source
+                    if (m_alarm.AreEventsMonitored)
+                    {
+                        // Create a snapshot
+                        InstanceStateSnapshot e = new InstanceStateSnapshot();
+                        e.Initialize(context, m_alarm);
+
+                        // Report the event
+                        ReportEvent(context, e);
+                    }
                 }
             }
             catch (Exception exception)

@@ -94,7 +94,7 @@ namespace SampleServer.Alarms
                     m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
                     m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
                     m_alarm.BranchId.Value = new NodeId();
-                                    
+
                     bool dialogState = newValue % 2 == 0;
                     m_alarm.DialogState.Value = new LocalizedText("en", dialogState ? ConditionStateNames.Active : ConditionStateNames.Inactive);
                     m_alarm.DialogState.TransitionTime.Value = DateTime.UtcNow;
@@ -117,7 +117,7 @@ namespace SampleServer.Alarms
 
                     m_alarm.SetComment(context, new LocalizedText("en-US", String.Format("Alarm DialogState = {0}", m_alarm.DialogState.Value.Text)), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm DialogState = {0} - Response answer as {1}", m_alarm.DialogState.Value.Text, responseOptions[selectedResponse].Text));
-                    m_alarm.SetSeverity(context, dialogState ? EventSeverity.Low : EventSeverity.Min);
+                    m_alarm.SetSeverity(context, 0);
 
                     // Report changes to node attributes
                     m_alarm.ClearChangeMasks(context, true);
