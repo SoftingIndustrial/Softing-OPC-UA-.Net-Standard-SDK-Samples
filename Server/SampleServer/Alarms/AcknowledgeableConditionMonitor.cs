@@ -1,6 +1,7 @@
 ﻿using Opc.Ua;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SampleServer.Alarms
 {
@@ -138,7 +139,7 @@ namespace SampleServer.Alarms
              LocalizedText comment)
         {
             // check for invalid eventId
-            if (eventId != condition.EventId.Value)
+            if (!eventId.SequenceEqual(condition.EventId.Value))
             {
                 return StatusCodes.BadEventIdUnknown;
             }
