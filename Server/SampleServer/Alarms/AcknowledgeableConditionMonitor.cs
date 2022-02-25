@@ -89,12 +89,12 @@ namespace SampleServer.Alarms
                     m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
                     m_alarm.BranchId.Value = new NodeId();
 
-                    bool valueState = newValue % 2 == 0;
-                    m_alarm.SetAcknowledgedState(context, valueState);
-                    m_alarm.AckedState.Value = new LocalizedText("en-US", valueState ? ConditionStateNames.Acknowledged : ConditionStateNames.Unacknowledged);
+                    //bool valueState = newValue % 2 == 0;
+                    //m_alarm.SetAcknowledgedState(context, valueState);
+                    //m_alarm.AckedState.Value = new LocalizedText("en-US", valueState ? ConditionStateNames.Acknowledged : ConditionStateNames.Unacknowledged);
 
-                    m_alarm.SetConfirmedState(context, false);
-                    m_alarm.ConfirmedState.Value = new LocalizedText("en-US", valueState ? ConditionStateNames.Confirmed : ConditionStateNames.Unconfirmed);
+                    //m_alarm.SetConfirmedState(context, false);
+                    //m_alarm.ConfirmedState.Value = new LocalizedText("en-US", valueState ? ConditionStateNames.Confirmed : ConditionStateNames.Unconfirmed);
 
                     // Not interested in disabled or inactive alarms
                     if (!m_alarm.EnabledState.Id.Value)
@@ -132,27 +132,19 @@ namespace SampleServer.Alarms
             }
         }
 
-        protected ServiceResult AlarmMonitor_OnAcknowledge(ISystemContext context,
+        public static ServiceResult AlarmMonitor_OnAcknowledge(ISystemContext context,
              ConditionState condition,
              byte[] eventId,
              LocalizedText comment)
         {
-            return AcknowledgeableConditionMonitor.OnAcknowledge(context,
-                condition,
-                eventId,
-                comment,
-                m_alarm);
-        }
+            // check for invalid eventId
+            if (eventId != condition.EventId.Value)
+            {
+                return StatusCodes.BadEventIdUnknown;
+            }
+            condition.Retain.Value = false;
 
-        public static ServiceResult OnAcknowledge(ISystemContext context,
-             ConditionState condition,
-             byte[] eventId,
-             LocalizedText comment,
-             AcknowledgeableConditionState conditionState)
-        {
-            conditionState.Retain.Value = false;
-
-            if (conditionState.AckedState.Id.Value)
+            if (((AcknowledgeableConditionState)condition).AckedState.Id.Value)
             {
                 return StatusCodes.BadConditionBranchAlreadyAcked;
             }
