@@ -99,6 +99,27 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="HistoricalDataAccess\Data\Sample\HistorianBoolean1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HistoricalDataAccess\Data\Sample\HistorianBoolean2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HistoricalDataAccess\Data\Sample\HistorianInteger1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HistoricalDataAccess\Data\Sample\HistorianInteger11.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="HistoricalDataAccess\Data\Sample\HistorianInteger2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HistoricalDataAccess\Data\Sample\HistorianString1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HistoricalDataAccess\Data\Sample\HistorianString2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="NodeSetImport\NodeSet\Refrigerators.NodeSet2.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
