@@ -294,6 +294,13 @@ namespace SampleServer.Alarms
                     "SystemDiagnosticAlarmConditionMonitor 1",
                     7.0);
 
+                // Calling AddComment on ConditionType is BadNodeIdInvalid because is an event type but not triggered from an alarm
+                MethodState methodNode = FindNodeInAddressSpace(Opc.Ua.Methods.ConditionType_AddComment) as MethodState;
+                if(methodNode != null)
+                {
+                    methodNode.OnCallMethod += AddCommentCallMethod;
+                }
+                
                 // Add sub-notifiers
                 AddNotifier(ServerNode, root, false);
                 AddNotifier(root, machine, true);
@@ -318,11 +325,39 @@ namespace SampleServer.Alarms
                 CreateMethod(root, "StartAllChangeValues", inputArgumentsChange, null, OnTriggerAllChangeMonitorsValueStart);
 
                 CreateMethod(root, "StopAllChangeValues", null, null, OnTriggerChangeMonitorsValueStop);
+
+
                 #endregion
 
             }
         }
-    
+
+        /// <summary>
+        /// Calling AddComment on ConditionType is BadNodeIdInvalid because is an event type but not triggered from an alarm
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="inputArguments"></param>
+        /// <param name="outputArguments"></param>
+        /// <returns></returns>
+        protected ServiceResult AddCommentCallMethod(
+           ISystemContext context,
+           MethodState method,
+           IList<object> inputArguments,
+           IList<object> outputArguments)
+        {
+            if(inputArguments.Count !=2)
+            {
+                return StatusCodes.BadInvalidArgument;
+            }
+            byte[] eventId = (byte[])inputArguments[0];
+            LocalizedText comment = (LocalizedText)inputArguments[1];
+
+            Console.WriteLine("AddComment on 'ConditionType' - eventId: {0} value: {1}", BitConverter.ToString(eventId).Replace("-", ""), comment.Text);
+
+            return StatusCodes.BadNodeIdInvalid;
+        }
+
         /// <summary>
         /// Create an instance of ExclusiveLimitMonitor and set provided properties
         /// </summary>
@@ -1417,6 +1452,7 @@ namespace SampleServer.Alarms
                          ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
                          typeof(Opc.Ua.AcknowledgeableConditionState));
 
+                
                 if (alarmEnabled)
                 {
                     if (exclusiveLimitMonitorState != null)
@@ -1653,7 +1689,7 @@ namespace SampleServer.Alarms
 
                                         alarmMonitor.Value = limitMonitorValue;
 
-                                        Console.WriteLine("Limit alarm '{0}' changed value: {1}", limitMonitorState.DisplayName, alarmMonitor.Value);
+                                       // Console.WriteLine("Limit alarm '{0}' changed value: {1}", limitMonitorState.DisplayName, alarmMonitor.Value);
                                     }
                                 }
                                 else

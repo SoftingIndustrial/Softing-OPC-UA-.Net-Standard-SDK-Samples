@@ -94,6 +94,7 @@ namespace SampleServer.Alarms
             alarm.Comment.Value = new LocalizedText("en", alarmName);
 
             alarm.AddComment = new AddCommentMethodState(alarm);
+            alarm.OnAddComment += OnAddComment;
             
             alarm.ClientUserId = new PropertyState<string>(alarm);
                         
@@ -192,22 +193,23 @@ namespace SampleServer.Alarms
             }
         }
 
-        protected ServiceResult AlarmMonitor_AddComment(ISystemContext context,
-            ConditionState condition,
-            byte[] eventId,
-            LocalizedText comment)
+        protected ServiceResult OnAddComment(
+             ISystemContext context,
+             ConditionState condition,
+             byte[] eventId,
+             LocalizedText comment)
         {
-            return ServiceResult.Good;
-        }
-
-
-        private ServiceResult OnAddComment(
-            ISystemContext _context,
-            MethodState _method,
-            NodeId _objectId,
-            byte[] eventId,
-            LocalizedText comment)
-        {
+            // check the EventId 
+            if (condition.EventId.Value != eventId)
+            {
+                condition.EventId.Value = eventId;
+            }
+            // check the Comment 
+            if (condition.Comment.Value.Text != comment.Text)
+            {
+                condition.Comment.Value = comment;
+            }
+            Console.WriteLine("AddComment on alarm '{0}' eventId: {1} value: {2}", condition.DisplayName, BitConverter.ToString(eventId).Replace("-", ""), comment.Text);
             return ServiceResult.Good;
         }
 
