@@ -31,6 +31,8 @@ namespace SampleServer.Alarms
                 namespaceIndex,
                 alarmName,
                 initialValue);
+
+            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
         #endregion
 
@@ -88,7 +90,7 @@ namespace SampleServer.Alarms
 
             // Set input node
             m_alarm.InputNode.Value = NodeId;
-            
+
             // set acknowledge state
             m_alarm.SetAcknowledgedState(context, false);
             m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
@@ -152,7 +154,7 @@ namespace SampleServer.Alarms
                         m_alarm.Retain.Value = true;
                     }
 
-                    m_alarm.SetComment(context, new LocalizedText("en-US", String.Format("Alarm AckedState = {0}, ExpectedTime = {1}, Tolerance = {2}", 
+                    m_alarm.SetComment(context, new LocalizedText("en-US", String.Format("Alarm AckedState = {0}, ExpectedTime = {1}, Tolerance = {2}",
                         m_alarm.AckedState.Value.Text, m_alarm.ExpectedTime.Value, m_alarm.Tolerance.Value)), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm AckedState = {0}, ExpectedTime = {1}, Tolerance = {2}",
                         m_alarm.AckedState.Value.Text, m_alarm.ExpectedTime.Value, m_alarm.Tolerance.Value));
@@ -177,6 +179,18 @@ namespace SampleServer.Alarms
             {
                 Utils.Trace(exception, "Alarms.DiscrepancyAlarmConditionMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
+        }
+
+        protected ServiceResult AlarmMonitor_OnAcknowledge(ISystemContext context,
+            ConditionState condition,
+            byte[] eventId,
+            LocalizedText comment)
+        {
+            return AcknowledgeableConditionMonitor.OnAcknowledge(context,
+                condition,
+                eventId,
+                comment,
+                m_alarm);
+        }
     }
-}
 }

@@ -112,8 +112,8 @@ namespace SampleServer.Alarms
                     int selectedResponse = dialogState ? 0 : 1;
                     m_alarm.DefaultResponse.Value = selectedResponse;
                     m_alarm.LastResponse.Value = selectedResponse;
-                    
-                    LocalizedText[] responseOptions  = m_alarm.ResponseOptionSet.Value;
+
+                    LocalizedText[] responseOptions = m_alarm.ResponseOptionSet.Value;
 
                     m_alarm.SetComment(context, new LocalizedText("en-US", String.Format("Alarm DialogState = {0}", m_alarm.DialogState.Value.Text)), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm DialogState = {0} - Response answer as {1}", m_alarm.DialogState.Value.Text, responseOptions[selectedResponse].Text));
@@ -141,6 +141,6 @@ namespace SampleServer.Alarms
             {
                 Utils.Trace(exception, "Alarms.DialogConditionMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
+        }
     }
-}
 }

@@ -37,6 +37,8 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue,
                 normalValueVariable);
+
+            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
 
         //public void UpdateConditionAlarmMonitor(
@@ -164,6 +166,18 @@ namespace SampleServer.Alarms
             {
                 Utils.Trace(exception, "Alarms.{0}.ProcessVariableChanged: Unexpected error processing value changed notification.", offNormalAlarmState.GetType());
             }
+        }
+
+        protected ServiceResult AlarmMonitor_OnAcknowledge(ISystemContext context,
+            ConditionState condition,
+            byte[] eventId,
+            LocalizedText comment)
+        {
+            return AcknowledgeableConditionMonitor.OnAcknowledge(context,
+                condition,
+                eventId,
+                comment,
+                m_alarm);
         }
     }
 }

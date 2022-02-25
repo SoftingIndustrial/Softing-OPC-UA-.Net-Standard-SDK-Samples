@@ -65,6 +65,8 @@ namespace SampleServer.Alarms
                 highHighLimit,
                 lowLimit,
                 lowLowLimit);
+
+            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
 
         #endregion
@@ -151,7 +153,7 @@ namespace SampleServer.Alarms
 
         #endregion
 
-        #region Prrotected Methods
+        #region Protected Methods
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
@@ -267,6 +269,17 @@ namespace SampleServer.Alarms
         }
 
 
+        protected ServiceResult AlarmMonitor_OnAcknowledge(ISystemContext context,
+            ConditionState condition,
+            byte[] eventId,
+            LocalizedText comment)
+        {
+            return AcknowledgeableConditionMonitor.OnAcknowledge(context,
+                condition,
+                eventId,
+                comment,
+                m_alarm);
+        }
         #endregion
     }
 }

@@ -39,6 +39,8 @@ namespace SampleServer.Alarms
                 namespaceIndex,
                 alarmName,
                 initialValue);
+
+            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
 
         #endregion
@@ -140,6 +142,18 @@ namespace SampleServer.Alarms
             {
                 Utils.Trace(exception, "Alarms.AlarmConditionMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
+        }
+
+        protected ServiceResult AlarmMonitor_OnAcknowledge(ISystemContext context,
+            ConditionState condition,
+            byte[] eventId,
+            LocalizedText comment)
+        {
+            return AcknowledgeableConditionMonitor.OnAcknowledge(context,
+                condition,
+                eventId,
+                comment,
+                m_alarm);
         }
     }
 }
