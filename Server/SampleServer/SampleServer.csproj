@@ -99,6 +99,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Alarms\Files\opcuser.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="HistoricalDataAccess\Data\Sample\HistorianBoolean1.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
