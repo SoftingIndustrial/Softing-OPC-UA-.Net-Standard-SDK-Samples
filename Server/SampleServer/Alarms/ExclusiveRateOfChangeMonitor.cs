@@ -23,8 +23,7 @@ namespace SampleServer.Alarms
         private ExclusiveRateOfChangeAlarmState m_alarm;
 
         #endregion
-
-
+        
         #region Constructors
 
         /// <summary>
@@ -115,7 +114,7 @@ namespace SampleServer.Alarms
 
         #endregion
 
-        #region Prrotected Methods
+        #region Protected Methods
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
@@ -139,7 +138,7 @@ namespace SampleServer.Alarms
                     m_alarm.SetLimitState(context, LimitAlarmStates.LowLow);
                     m_alarm.SetComment(context, new LocalizedText("en-US", "LowLowLimit exceeded."), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", m_alarm.LimitState.CurrentState.Value.Text));
-                    m_alarm.SetSeverity(context, EventSeverity.Max);
+                    m_alarm.SetSeverity(context, EventSeverity.Min);
                     updateRequired = true;
                 }
                 else if (m_alarm.LowLimit != null && m_alarm.LimitState.CurrentState.Id.Value != ObjectIds.ExclusiveLimitStateMachineType_Low
@@ -149,7 +148,7 @@ namespace SampleServer.Alarms
                     m_alarm.SetLimitState(context, LimitAlarmStates.Low);
                     m_alarm.SetComment(context, new LocalizedText("en-US", "LowLimit exceeded."), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", m_alarm.LimitState.CurrentState.Value.Text));
-                    m_alarm.SetSeverity(context, EventSeverity.High);
+                    m_alarm.SetSeverity(context, EventSeverity.Low);
                     updateRequired = true;
                 }
                 else if (m_alarm.HighHighLimit != null && m_alarm.LimitState.CurrentState.Id.Value != ObjectIds.ExclusiveLimitStateMachineType_HighHigh
@@ -158,7 +157,7 @@ namespace SampleServer.Alarms
                     m_alarm.SetLimitState(context, LimitAlarmStates.HighHigh);
                     m_alarm.SetComment(context, new LocalizedText("en-US", "HighHighLimit exceeded."), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", m_alarm.LimitState.CurrentState.Value.Text));
-                    m_alarm.SetSeverity(context, EventSeverity.Max);
+                    m_alarm.SetSeverity(context, EventSeverity.MediumHigh);
                     updateRequired = true;
                 }
                 else if (m_alarm.HighLimit != null && m_alarm.LimitState.CurrentState.Id.Value != ObjectIds.ExclusiveLimitStateMachineType_High
@@ -178,7 +177,7 @@ namespace SampleServer.Alarms
                     m_alarm.SetLimitState(context, LimitAlarmStates.Inactive);
                     m_alarm.SetComment(context, new LocalizedText("en-US", "Alarm inactive."), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", LimitAlarmStates.Inactive));
-                    m_alarm.SetSeverity(context, EventSeverity.Low);
+                    m_alarm.SetSeverity(context, 0);
                     updateRequired = true;
                 }
 

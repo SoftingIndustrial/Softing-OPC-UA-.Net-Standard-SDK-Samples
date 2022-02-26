@@ -121,7 +121,7 @@ namespace SampleServer.Alarms
                     m_alarm.SetLimitState(context, LimitAlarmStates.LowLow);
                     m_alarm.SetComment(context, new LocalizedText("en-US", "LowLowLimit exceeded."), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", m_alarm.LowLowState.Value.Text));
-                    m_alarm.SetSeverity(context, EventSeverity.Max);
+                    m_alarm.SetSeverity(context, EventSeverity.Min);
 
                     updateRequired = true;
                 }
@@ -134,7 +134,7 @@ namespace SampleServer.Alarms
                     m_alarm.SetLimitState(context, LimitAlarmStates.Low);
                     m_alarm.SetComment(context, new LocalizedText("en-US", "LowLimit exceeded."), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State Low set to {0}", m_alarm.LowState.Value.Text));
-                    m_alarm.SetSeverity(context, EventSeverity.High);
+                    m_alarm.SetSeverity(context, EventSeverity.Low);
 
                     updateRequired = true;
                 }
@@ -147,7 +147,7 @@ namespace SampleServer.Alarms
                     m_alarm.SetLimitState(context, LimitAlarmStates.HighHigh);
                     m_alarm.SetComment(context, new LocalizedText("en-US", "HighHighLimit exceeded."), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State HighHigh & High set to: {0} & {1}", m_alarm.HighHighState.Value.Text, m_alarm.HighState.Value.Text));
-                    m_alarm.SetSeverity(context, EventSeverity.Max);
+                    m_alarm.SetSeverity(context, EventSeverity.MediumHigh);
 
                     updateRequired = true;
                 }
@@ -176,7 +176,7 @@ namespace SampleServer.Alarms
                     m_alarm.SetLimitState(context, LimitAlarmStates.Inactive);
                     m_alarm.SetComment(context, new LocalizedText("en-US", "Alarm inactive."), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", LimitAlarmStates.Inactive));
-                    m_alarm.SetSeverity(context, EventSeverity.Low);
+                    m_alarm.SetSeverity(context, 0);
 
                     updateRequired = true;
                 }

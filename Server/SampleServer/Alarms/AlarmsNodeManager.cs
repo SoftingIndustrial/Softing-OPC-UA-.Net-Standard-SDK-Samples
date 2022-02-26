@@ -1066,71 +1066,6 @@ namespace SampleServer.Alarms
 
         #region Timer methods
 
-
-        /// <summary>
-        /// Handles exclusive limit monitor changed event.
-        /// </summary>
-        private void OnTimeout(object state)
-        {
-            try
-            {
-                foreach(string alarmName in m_exclusiveLimitMonitors.Keys)
-                {
-                    NodeId exclusiveLimitMonitorNodeId = m_exclusiveLimitMonitors[alarmName];
-                    if(exclusiveLimitMonitorNodeId != null)
-                    {
-                        ExclusiveLimitMonitor exclusiveLimitMonitor = (ExclusiveLimitMonitor)FindPredefinedNode(
-                          ExpandedNodeId.ToNodeId(exclusiveLimitMonitorNodeId, Server.NamespaceUris),
-                          typeof(ExclusiveLimitMonitor));
-
-                        if(exclusiveLimitMonitor != null)
-                        {
-                            Opc.Ua.ExclusiveLimitAlarmState exclusiveLimitMonitorState = exclusiveLimitMonitor.FindChildBySymbolicName(SystemContext, alarmName) as Opc.Ua.ExclusiveLimitAlarmState;
-                            if(exclusiveLimitMonitorState != null)
-                            {
-                                double exclusiveLimitMonitorValue = exclusiveLimitMonitor.Value;
-
-                                double highLimit = exclusiveLimitMonitorState.HighLimit.Value;
-                                double highHighLimit = exclusiveLimitMonitorState.HighHighLimit.Value;
-                                double lowLimit = exclusiveLimitMonitorState.LowLimit.Value;
-                                double lowLowLimit = exclusiveLimitMonitorState.LowLowLimit.Value;
-
-                                if(exclusiveLimitMonitorValue > highHighLimit)
-                                {
-                                    exclusiveLimitMonitorValue = lowLowLimit - 0.5;
-                                }
-                                else if (exclusiveLimitMonitorValue < highHighLimit && exclusiveLimitMonitorValue > highLimit)
-                                {
-                                    exclusiveLimitMonitorValue = highHighLimit + 0.5;
-                                }
-                                else if (exclusiveLimitMonitorValue < highLimit && exclusiveLimitMonitorValue > lowLimit)
-                                {
-                                    exclusiveLimitMonitorValue = highLimit + 0.5;
-                                }
-                                else if (exclusiveLimitMonitorValue < lowLimit && exclusiveLimitMonitorValue > lowLowLimit)
-                                {
-                                    exclusiveLimitMonitorValue = lowLimit + 0.5;
-                                }
-                                else if (exclusiveLimitMonitorValue < lowLowLimit)
-                                {
-                                    exclusiveLimitMonitorValue = lowLowLimit + 0.5;
-                                }
-
-                                exclusiveLimitMonitor.Value = exclusiveLimitMonitorValue;
-
-                                Console.WriteLine("Exclusive limit alarm '{0}' changed value: {1}", alarmName, exclusiveLimitMonitor.Value);
-                            }
-                        }
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Alarm. exception: {0}", ex.Message);
-            }
-        }
-
         /// <summary>
         /// Handles alarm enabled event.
         /// </summary>
@@ -1689,7 +1624,7 @@ namespace SampleServer.Alarms
 
                                         alarmMonitor.Value = limitMonitorValue;
 
-                                       // Console.WriteLine("Limit alarm '{0}' changed value: {1}", limitMonitorState.DisplayName, alarmMonitor.Value);
+                                        Console.WriteLine("Limit alarm '{0}' changed value: {1}", limitMonitorState.DisplayName, alarmMonitor.Value);
                                     }
                                 }
                                 else
