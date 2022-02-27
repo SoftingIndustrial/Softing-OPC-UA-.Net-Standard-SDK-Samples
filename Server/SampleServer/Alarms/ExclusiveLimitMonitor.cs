@@ -220,10 +220,6 @@ namespace SampleServer.Alarms
                     updateRequired = true;
                 }
 
-                if(m_alarm.LastSeverity.Value > 1000)
-                {
-
-                }
                 if (updateRequired)
                 {
                     // Set event data

@@ -295,12 +295,28 @@ namespace SampleServer.Alarms
                     7.0);
 
                 // Calling AddComment on ConditionType is BadNodeIdInvalid because is an event type but not triggered from an alarm
-                MethodState methodNode = FindNodeInAddressSpace(Opc.Ua.Methods.ConditionType_AddComment) as MethodState;
-                if(methodNode != null)
+                MethodState conditionTypeAddCommentNode = FindNodeInAddressSpace(Opc.Ua.Methods.ConditionType_AddComment) as MethodState;
+                if(conditionTypeAddCommentNode != null)
                 {
-                    methodNode.OnCallMethod += AddCommentCallMethod;
+                    conditionTypeAddCommentNode.OnCallMethod += AddCommentCallMethod;
                 }
-                
+                //MethodState conditionTypeConditionRefreshNode = FindNodeInAddressSpace(Opc.Ua.Methods.ConditionType_ConditionRefresh) as MethodState;
+                //if (conditionTypeConditionRefreshNode != null)
+                //{
+                ////    Argument[] inputArgs = conditionTypeConditionRefreshNode.InputArguments.Value;
+                ////    if(inputArgs != null && inputArgs.Length > 0 )
+                ////    {
+                ////        Argument argument = inputArgs[0];
+                ////        LocalizedText description = argument.Description;
+                ////        if(description != null)
+                ////        {
+                ////            // spelling issue in js - su(b)scription
+                ////            description = new LocalizedText("The identifier for the suscription to refresh.") ;
+                ////        }
+                ////        argument.Description = description;
+                ////    }
+                //}
+
                 // Add sub-notifiers
                 AddNotifier(ServerNode, root, false);
                 AddNotifier(root, machine, true);
@@ -356,6 +372,29 @@ namespace SampleServer.Alarms
             Console.WriteLine("AddComment on 'ConditionType' - eventId: {0} value: {1}", BitConverter.ToString(eventId).Replace("-", ""), comment.Text);
 
             return StatusCodes.BadNodeIdInvalid;
+        }
+
+        public override void Call(
+            OperationContext context,
+            IList<CallMethodRequest> methodsToCall,
+            IList<CallMethodResult> results,
+            IList<ServiceResult> errors)
+        {
+            if(methodsToCall.Count == 1)
+            {
+                CallMethodRequest callMethod = methodsToCall[0];
+                if(callMethod != null)
+                {
+                    if(callMethod.MethodId == Opc.Ua.Methods.AcknowledgeableConditionType_Acknowledge &&
+                        callMethod.ObjectId == ObjectTypeIds.ConditionType)
+                    {
+                        errors.Clear();
+                        errors.Add(StatusCodes.BadNodeIdUnknown);
+                    }
+                }
+            }
+            
+            base.Call(context, methodsToCall, results, errors);
         }
 
         /// <summary>
