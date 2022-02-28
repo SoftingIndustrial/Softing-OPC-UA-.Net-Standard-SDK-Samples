@@ -1,4 +1,14 @@
-﻿using Opc.Ua;
+﻿/* ========================================================================
+ * Copyright © 2011-2022 Softing Industrial Automation GmbH. 
+ * All rights reserved.
+ * 
+ * The Software is subject to the Softing Industrial Automation GmbH’s 
+ * license agreement, which can be found here:
+ * https://data-intelligence.softing.com/LA-SDK-en
+ * 
+ * ======================================================================*/
+
+using Opc.Ua;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +17,9 @@ using System.Threading.Tasks;
 
 namespace SampleServer.Alarms
 {
+    /// <summary>
+    /// A monitored variable with an <see cref="OffNormalAlarmState"/> attached.
+    /// </summary>
     internal class OffNormalAlarmMonitor : BaseAlarmMonitor
     {
 
@@ -38,9 +51,18 @@ namespace SampleServer.Alarms
                 initialValue,
                 normalValueVariable);
 
-            m_alarm.OnAcknowledge += AcknowledgeableConditionMonitor.AlarmMonitor_OnAcknowledge;
+            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
 
+        /// <summary>
+        /// Initialize the alarm monitor 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        /// <param name="normalValueVariable"></param>
         private void InitializeAlarmMonitor(
             ISystemContext context,
             NodeState parent,

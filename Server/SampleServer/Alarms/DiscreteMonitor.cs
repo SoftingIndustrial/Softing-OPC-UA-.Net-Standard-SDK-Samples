@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace SampleServer.Alarms
 {
     /// <summary>
-    /// A monitored variable with a DiscreteAlarm attached.
+    /// A monitored variable with an <see cref="DiscreteAlarmState"/> attached.
     /// </summary>
     internal class DiscreteMonitor : BaseAlarmMonitor
     {
@@ -40,11 +40,19 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
 
-            m_alarm.OnAcknowledge += AcknowledgeableConditionMonitor.AlarmMonitor_OnAcknowledge;
+            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
 
         #endregion
 
+        /// <summary>
+        /// Initialize the alarm monitor 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         private void InitializeAlarmMonitor(
            ISystemContext context,
            NodeState parent,

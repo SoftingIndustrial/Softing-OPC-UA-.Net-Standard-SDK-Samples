@@ -14,7 +14,7 @@ using Opc.Ua;
 namespace SampleServer.Alarms
 {
     /// <summary>
-    /// A monitored variable with an NonExclusiveRateOfChangeAlarm attached.
+    /// A monitored variable with an <see cref="InstrumentDiagnosticAlarmState"/> attached.
     /// </summary>
     class InstrumentDiagnosticMonitor : BaseAlarmMonitor
     {
@@ -46,12 +46,20 @@ namespace SampleServer.Alarms
                 alarmName,
                 normalValueVariable);
 
-            m_alarm.OnAcknowledge += AcknowledgeableConditionMonitor.AlarmMonitor_OnAcknowledge;
+            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
         #endregion
 
         #region Private Methods
 
+        /// <summary>
+        /// Initialize the alarm monitor 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="normalValueVariable"></param>
         private void InitializeAlarmMonitor(
             ISystemContext context,
             NodeState parent,

@@ -1,19 +1,41 @@
-﻿using Opc.Ua;
+﻿/* ========================================================================
+ * Copyright © 2011-2022 Softing Industrial Automation GmbH. 
+ * All rights reserved.
+ * 
+ * The Software is subject to the Softing Industrial Automation GmbH’s 
+ * license agreement, which can be found here:
+ * https://data-intelligence.softing.com/LA-SDK-en
+ * 
+ * ======================================================================*/
+
+using Opc.Ua;
 using System;
 using System.Collections.Generic;
 
 namespace SampleServer.Alarms
 {
+    /// <summary>
+    /// A monitored variable with an <see cref="AlarmConditionState"/> attached.
+    /// </summary>
     internal class AlarmConditionMonitor : BaseAlarmMonitor
     {
         #region Private Members
 
         private AlarmConditionState m_alarm;
-        double? m_value = 0;
+        private double? m_value = 0;
 
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Create new instance of <see cref="AlarmConditionMonitor"/>
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         public AlarmConditionMonitor(
             ISystemContext context,
             NodeState parent,
@@ -31,10 +53,18 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
 
-            m_alarm.OnAcknowledge += AcknowledgeableConditionMonitor.AlarmMonitor_OnAcknowledge;
+            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
         #endregion
 
+        /// <summary>
+        /// Initialize the alarm monitor 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         private void InitializeAlarmMonitor(
             ISystemContext context,
             NodeState parent,
@@ -66,6 +96,14 @@ namespace SampleServer.Alarms
             // Disable this property 
             m_alarm.LatchedState = null;
         }
+
+        #region Base Class Overrides
+
+        /// <summary>
+        /// Hendle the Variable value change
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="value"></param>
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
@@ -150,5 +188,7 @@ namespace SampleServer.Alarms
                 Utils.Trace(exception, "Alarms.AlarmConditionMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
         }
+
+        #endregion
     }
 }

@@ -1,20 +1,42 @@
-﻿using Opc.Ua;
+﻿/* ========================================================================
+ * Copyright © 2011-2022 Softing Industrial Automation GmbH. 
+ * All rights reserved.
+ * 
+ * The Software is subject to the Softing Industrial Automation GmbH’s 
+ * license agreement, which can be found here:
+ * https://data-intelligence.softing.com/LA-SDK-en
+ * 
+ * ======================================================================*/
+
+using Opc.Ua;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SampleServer.Alarms
 {
+    /// <summary>
+    /// A monitored variable with an <see cref="AcknowledgeableConditionState"/> attached.
+    /// </summary>
     internal class AcknowledgeableConditionMonitor : BaseAlarmMonitor
     {
 
         #region Private Members
 
         private AcknowledgeableConditionState m_alarm;
-        double? m_value = 0;
+        private double? m_value = 0;
 
         #endregion
 
+        #region Constructor
+
+        /// <summary>
+        /// Create new instance of <see cref="AcknowledgeableConditionMonitor"/>
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         public AcknowledgeableConditionMonitor(
             ISystemContext context,
             NodeState parent,
@@ -35,32 +57,18 @@ namespace SampleServer.Alarms
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
 
-        private void InitializeAlarmMonitor(
-            ISystemContext context,
-            NodeState parent,
-            ushort namespaceIndex,
-            string alarmName,
-            double initialValue)
-        {
-            // Create the alarm object
-            m_alarm = new AcknowledgeableConditionState(this);
+        #endregion
 
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
-
-            // Mandatory fields
-            m_alarm.SetAcknowledgedState(context, false);
-            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
-
-            // Optional fields
-            m_alarm.SetConfirmedState(context, false);
-            m_alarm.ConfirmedState.Value = new LocalizedText("en-US", ConditionStateNames.Unconfirmed);
-        }
-
+        #region Base Class Overrides
+        /// <summary>
+        /// Hendle the Variable value change
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="value"></param>
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
             {
-
                 string currentUserId = string.Empty;
                 IOperationContext operationContext = context as IOperationContext;
 
@@ -89,13 +97,6 @@ namespace SampleServer.Alarms
                     m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
                     m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
                     m_alarm.BranchId.Value = new NodeId();
-
-                    //bool valueState = newValue % 2 == 0;
-                    //m_alarm.SetAcknowledgedState(context, valueState);
-                    //m_alarm.AckedState.Value = new LocalizedText("en-US", valueState ? ConditionStateNames.Acknowledged : ConditionStateNames.Unacknowledged);
-
-                    //m_alarm.SetConfirmedState(context, false);
-                    //m_alarm.ConfirmedState.Value = new LocalizedText("en-US", valueState ? ConditionStateNames.Confirmed : ConditionStateNames.Unconfirmed);
 
                     // Not interested in disabled or inactive alarms
                     if (!m_alarm.EnabledState.Id.Value)
@@ -133,23 +134,38 @@ namespace SampleServer.Alarms
             }
         }
 
-        public static ServiceResult AlarmMonitor_OnAcknowledge(ISystemContext context,
-             ConditionState condition,
-             byte[] eventId,
-             LocalizedText comment)
-        {
-            // check for invalid eventId
-            if (!eventId.SequenceEqual(condition.EventId.Value))
-            {
-                return StatusCodes.BadEventIdUnknown;
-            }
-            condition.Retain.Value = false;
+        #endregion 
 
-            if (((AcknowledgeableConditionState)condition).AckedState.Id.Value)
-            {
-                return StatusCodes.BadConditionBranchAlreadyAcked;
-            }
-            return ServiceResult.Good;
+        #region Private Methods
+        /// <summary>
+        /// Initialize the alarm monitor
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void InitializeAlarmMonitor(
+           ISystemContext context,
+           NodeState parent,
+           ushort namespaceIndex,
+           string alarmName,
+           double initialValue)
+        {
+            // Create the alarm object
+            m_alarm = new AcknowledgeableConditionState(this);
+
+            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+
+            // Mandatory fields
+            m_alarm.SetAcknowledgedState(context, false);
+            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
+
+            // Optional fields
+            m_alarm.SetConfirmedState(context, false);
+            m_alarm.ConfirmedState.Value = new LocalizedText("en-US", ConditionStateNames.Unconfirmed);
         }
+        #endregion
+
     }
 }

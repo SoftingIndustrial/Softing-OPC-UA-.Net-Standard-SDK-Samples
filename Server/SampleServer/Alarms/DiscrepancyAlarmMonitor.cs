@@ -1,9 +1,22 @@
-﻿using Opc.Ua;
+﻿/* ========================================================================
+ * Copyright © 2011-2022 Softing Industrial Automation GmbH. 
+ * All rights reserved.
+ * 
+ * The Software is subject to the Softing Industrial Automation GmbH’s 
+ * license agreement, which can be found here:
+ * https://data-intelligence.softing.com/LA-SDK-en
+ * 
+ * ======================================================================*/
+
+using Opc.Ua;
 using System;
 using System.Collections.Generic;
 
 namespace SampleServer.Alarms
 {
+    /// <summary>
+    /// A monitored variable with an <see cref="DiscrepancyAlarmState"/> attached.
+    /// </summary>
     internal class DiscrepancyAlarmMonitor : BaseAlarmMonitor
     {
         #region Private Members
@@ -32,7 +45,7 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
 
-            m_alarm.OnAcknowledge += AcknowledgeableConditionMonitor.AlarmMonitor_OnAcknowledge;
+            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
         #endregion
 
@@ -76,6 +89,14 @@ namespace SampleServer.Alarms
         //    ProcessVariableChanged(context, newValue);
         //}
 
+        /// <summary>
+        /// Initialize the alarm monitor 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         private void InitializeAlarmMonitor(
             ISystemContext context,
             NodeState parent,

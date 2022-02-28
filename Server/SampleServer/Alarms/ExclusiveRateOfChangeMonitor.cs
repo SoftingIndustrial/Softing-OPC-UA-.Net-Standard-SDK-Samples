@@ -14,7 +14,7 @@ using Opc.Ua;
 namespace SampleServer.Alarms
 {
     /// <summary>
-    /// A monitored variable with an ExclusiveRateOfChangeAlarm attached.
+    /// A monitored variable with an <see cref="ExclusiveRateOfChangeAlarmState"/> attached.
     /// </summary>
     class ExclusiveRateOfChangeMonitor : BaseAlarmMonitor
     {
@@ -63,12 +63,23 @@ namespace SampleServer.Alarms
                 lowLimit,
                 lowLowLimit);
 
-            m_alarm.OnAcknowledge += AcknowledgeableConditionMonitor.AlarmMonitor_OnAcknowledge;
+            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
         #endregion
 
         #region Private Methods
 
+        /// <summary>
+        /// Initialize the alarm monitor 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="highLimit"></param>
+        /// <param name="highHighLimit"></param>
+        /// <param name="lowLimit"></param>
+        /// <param name="lowLowLimit"></param>
         private void InitializeAlarmMonitor(
             ISystemContext context,
             NodeState parent,

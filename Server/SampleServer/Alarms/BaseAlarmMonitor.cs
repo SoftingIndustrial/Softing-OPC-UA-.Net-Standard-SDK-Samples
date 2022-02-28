@@ -11,12 +11,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Opc.Ua;
 
 namespace SampleServer.Alarms
 {
+    /// <summary>
+    /// Base class for a monitored variable with an alarm attached.
+    /// </summary>
     abstract class BaseAlarmMonitor : BaseDataVariableState<double>
     {
         #region Private Members
@@ -24,18 +25,16 @@ namespace SampleServer.Alarms
         protected AlarmsNodeManager m_alarmsNodeManager;
         #endregion
 
-        #region Properties
-        public List<ConditionState> ConditionStates
-        {
-            get { return m_conditions; }
-        }
-        public AlarmsNodeManager AlarmsNodeManager
-        {
-            get { return m_alarmsNodeManager; }
-        }
-        #endregion
-
         #region Constructors
+        /// <summary>
+        /// Crate new instance of <see cref="BaseAlarmMonitor"/>
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="name"></param>
+        /// <param name="initialValue"></param>
+        /// <param name="alarmsNodeManager"></param>
         public BaseAlarmMonitor(
             ISystemContext context,
             NodeState parent,
@@ -64,6 +63,55 @@ namespace SampleServer.Alarms
 
             StateChanged += AlarmMonitor_StateChanged;
         }
+
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// Get the list of <see cref="ConditionState"/>
+        /// </summary>
+        public List<ConditionState> ConditionStates
+        {
+            get { return m_conditions; }
+        }
+
+        /// <summary>
+        /// Get reference to the <see cref="AlarmsNodeManager"/>
+        /// </summary>
+        public AlarmsNodeManager AlarmsNodeManager
+        {
+            get { return m_alarmsNodeManager; }
+        }
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        /// Handler for OnAknowledge method of an aknowlegeable alarm monitor
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="condition"></param>
+        /// <param name="eventId"></param>
+        /// <param name="comment"></param>
+        /// <returns></returns>
+        public static ServiceResult AlarmMonitor_OnAcknowledge(ISystemContext context,
+             ConditionState condition,
+             byte[] eventId,
+             LocalizedText comment)
+        {
+            // check for invalid eventId
+            if (!eventId.SequenceEqual(condition.EventId.Value))
+            {
+                return StatusCodes.BadEventIdUnknown;
+            }
+            condition.Retain.Value = false;
+
+            if (((AcknowledgeableConditionState)condition).AckedState.Id.Value)
+            {
+                return StatusCodes.BadConditionBranchAlreadyAcked;
+            }
+            return ServiceResult.Good;
+        }
+
         #endregion
 
         #region Protected Methods
@@ -94,7 +142,7 @@ namespace SampleServer.Alarms
             alarm.Comment.Value = new LocalizedText("en", alarmName);
 
             alarm.AddComment = new AddCommentMethodState(alarm);
-            alarm.OnAddComment += OnAddComment;
+            alarm.OnAddComment += Alarm_OnAddComment;
             
             alarm.ClientUserId = new PropertyState<string>(alarm);
                         
@@ -183,9 +231,29 @@ namespace SampleServer.Alarms
                 AddReference(ReferenceTypeIds.HasCondition, false, condition.NodeId);
                 condition.AddReference(ReferenceTypeIds.HasCondition, true, NodeId);
             }
+        }       
+
+        /// <summary>
+        /// Process the variable value change
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="value"></param>
+        protected virtual void ProcessVariableChanged(ISystemContext context, object value)
+        {
+
         }
 
-        protected void AlarmMonitor_StateChanged(ISystemContext context, NodeState node, NodeStateChangeMasks changes)
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Handler for <see cref="NodeState.StateChanged"/> event
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="node"></param>
+        /// <param name="changes"></param>
+        private void AlarmMonitor_StateChanged(ISystemContext context, NodeState node, NodeStateChangeMasks changes)
         {
             if ((changes & NodeStateChangeMasks.Value) != 0)
             {
@@ -193,7 +261,15 @@ namespace SampleServer.Alarms
             }
         }
 
-        protected ServiceResult OnAddComment(
+        /// <summary>
+        /// Handler for <see cref="ConditionState.OnAddComment"/> 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="condition"></param>
+        /// <param name="eventId"></param>
+        /// <param name="comment"></param>
+        /// <returns></returns>
+        private ServiceResult Alarm_OnAddComment(
              ISystemContext context,
              ConditionState condition,
              byte[] eventId,
@@ -213,9 +289,6 @@ namespace SampleServer.Alarms
             return ServiceResult.Good;
         }
 
-        protected virtual void ProcessVariableChanged(ISystemContext context, object value)
-        {
-        }
         #endregion
 
     }
