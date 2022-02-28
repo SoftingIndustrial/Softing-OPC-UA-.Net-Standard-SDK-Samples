@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Opc.Ua;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.Server;
@@ -26,11 +27,7 @@ namespace SampleServer.Alarms
         private const int AlarmTimeout = 30000;
 
         //private Timer m_timer;
-        private Timer m_exclusiveLimitAlarmTrigger;
-        private Timer m_conditionAlarmTrigger;
-        private Timer m_dialogConditionAlarmTrigger;
-        private Timer m_acknowledgeableConditionAlarmTrigger;
-
+        
         private Timer m_AllAlarmsTrigger;
         private Timer m_allAlarmsChangeTrigger;
 
@@ -300,23 +297,7 @@ namespace SampleServer.Alarms
                 {
                     conditionTypeAddCommentNode.OnCallMethod += AddCommentCallMethod;
                 }
-                //MethodState conditionTypeConditionRefreshNode = FindNodeInAddressSpace(Opc.Ua.Methods.ConditionType_ConditionRefresh) as MethodState;
-                //if (conditionTypeConditionRefreshNode != null)
-                //{
-                ////    Argument[] inputArgs = conditionTypeConditionRefreshNode.InputArguments.Value;
-                ////    if(inputArgs != null && inputArgs.Length > 0 )
-                ////    {
-                ////        Argument argument = inputArgs[0];
-                ////        LocalizedText description = argument.Description;
-                ////        if(description != null)
-                ////        {
-                ////            // spelling issue in js - su(b)scription
-                ////            description = new LocalizedText("The identifier for the suscription to refresh.") ;
-                ////        }
-                ////        argument.Description = description;
-                ////    }
-                //}
-
+                
                 // Add sub-notifiers
                 AddNotifier(ServerNode, root, false);
                 AddNotifier(root, machine, true);
@@ -374,6 +355,13 @@ namespace SampleServer.Alarms
             return StatusCodes.BadNodeIdInvalid;
         }
 
+        /// <summary>
+        /// CustomNodeManager.Call override
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="methodsToCall"></param>
+        /// <param name="results"></param>
+        /// <param name="errors"></param>
         public override void Call(
             OperationContext context,
             IList<CallMethodRequest> methodsToCall,
@@ -396,6 +384,16 @@ namespace SampleServer.Alarms
             
             base.Call(context, methodsToCall, results, errors);
         }
+
+        //public override ServiceResult Call(
+        //    ISystemContext context,
+        //    NodeId objectId,
+        //    IList<Variant> inputArguments,
+        //    IList<ServiceResult> argumentErrors,
+        //    IList<Variant> outputArguments)
+        //{
+        //    base.Call(context, objectId, inputArguments, argumentErrors, outputArguments);
+        //}
 
         /// <summary>
         /// Create an instance of ExclusiveLimitMonitor and set provided properties
@@ -1396,93 +1394,6 @@ namespace SampleServer.Alarms
         /// <summary>
         /// Handles the trigger alarm method call
         /// </summary>
-        private ServiceResult OnTriggerAlarmCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
-        {
-            // All arguments must be provided
-            if (inputArguments.Count < 3)
-            {
-                return StatusCodes.BadArgumentsMissing;
-            }
-
-            try
-            {
-                NodeId alarmNodeId = (NodeId)inputArguments[0]; 
-                bool alarmEnabled = (bool)inputArguments[1]; // "Enabled/Disabled";
-                int alarmTimeout = (int)inputArguments[2]; // "Alarm Timeout";
-
-                Opc.Ua.ExclusiveLimitAlarmState exclusiveLimitMonitorState = (Opc.Ua.ExclusiveLimitAlarmState)FindPredefinedNode(
-                         ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
-                         typeof(Opc.Ua.ExclusiveLimitAlarmState));
-
-                Opc.Ua.ConditionState conditionMonitorState = (Opc.Ua.ConditionState)FindPredefinedNode(
-                         ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
-                         typeof(Opc.Ua.ConditionState));
-
-                Opc.Ua.DialogConditionState dialogConditionMonitorState = (Opc.Ua.DialogConditionState)FindPredefinedNode(
-                         ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
-                         typeof(Opc.Ua.DialogConditionState));
-
-                Opc.Ua.DialogConditionState acknowledgeableConditionMonitorState = (Opc.Ua.DialogConditionState)FindPredefinedNode(
-                         ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
-                         typeof(Opc.Ua.AcknowledgeableConditionState));
-
-                
-                if (alarmEnabled)
-                {
-                    if (exclusiveLimitMonitorState != null)
-                    {
-                        m_exclusiveLimitAlarmTrigger = new Timer(new TimerCallback(OnExclusiveLimitAlarmEnabled), alarmNodeId, alarmTimeout, alarmTimeout);
-                    }
-                    if (conditionMonitorState != null)
-                    {
-                        m_conditionAlarmTrigger = new Timer(new TimerCallback(OnConditionEnabled), alarmNodeId, alarmTimeout, alarmTimeout);
-                    }
-                    if (dialogConditionMonitorState != null)
-                    {
-                        m_dialogConditionAlarmTrigger = new Timer(new TimerCallback(OnDialogConditionEnabled), alarmNodeId, alarmTimeout, alarmTimeout);
-                    }
-                    if (acknowledgeableConditionMonitorState != null)
-                    {
-                        m_acknowledgeableConditionAlarmTrigger = new Timer(new TimerCallback(OnAcknowledgeableConditionEnabled), alarmNodeId, alarmTimeout, alarmTimeout);
-                    }
-                }
-                else
-                {
-                    if (exclusiveLimitMonitorState != null)
-                    {
-                        m_exclusiveLimitAlarmTrigger.Dispose();
-                        m_exclusiveLimitAlarmTrigger = null;
-                    }
-                    if (conditionMonitorState != null)
-                    {
-                        m_conditionAlarmTrigger.Dispose();
-                        m_conditionAlarmTrigger = null;
-                    }
-                    if (dialogConditionMonitorState != null)
-                    {
-                        m_dialogConditionAlarmTrigger.Dispose();
-                        m_dialogConditionAlarmTrigger = null;
-                    }
-                    if (acknowledgeableConditionMonitorState != null)
-                    {
-                        m_acknowledgeableConditionAlarmTrigger.Dispose();
-                        m_acknowledgeableConditionAlarmTrigger = null;
-                    }
-
-                }
-                
-                return ServiceResult.Good;
-            }
-            catch
-            {
-                return new ServiceResult(StatusCodes.BadInvalidArgument);
-            }
-
-        }
-      
-        /// <summary>
-        /// Handles the trigger alarm method call
-        /// </summary>
         private ServiceResult OnTriggerAllConditionsStartCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
             // All arguments must be provided
@@ -1605,10 +1516,59 @@ namespace SampleServer.Alarms
             {
                 var inputs = new List<Variant>();
 
+                List<ConditionState> conditionStates = m_conditionInstances.FindAll(x => x.EnabledState.Id.Value == false);
+                if (conditionStates.Count > 0)
+                {
+                    int repeatEnableDisableCount = 9;
+                    //}
+                    //if (m_countDisabled > conditionStates.Count)
+                    //{
+                    //    foreach (ConditionState ci in conditionStates)
+                    //    {
+                    //        if (ci is LimitAlarmState)
+                    //        {
+                    //            ((LimitAlarmState)ci).SetActiveState(SystemContext, true);
+                    //        }
+                    //        //m_enableState = !ci.EnabledState.Id.Value;
+                    //        ci.SetEnableState(SystemContext, true);
+                    //    }
+                    //    //m_countDisabled = conditionStates.Count;
+                    //    Console.WriteLine("Disabled alarm count '{0}' ", conditionStates.Count);
+                    //}
+
+                    //else
+                    //{
+                    Console.WriteLine("Disabled alarm count '{0}' enabledisable count {1}", conditionStates.Count, repeatEnableDisableCount);
+                    if (repeatEnableDisableCount > 0)
+                    {
+                        for (int i = 0; i < repeatEnableDisableCount; i++)
+                        {
+                            foreach (ConditionState ci in conditionStates)
+                            {
+                                if (ci.EnabledState.Id.Value == false)
+                                {
+                                    BaseVariableState activeState = (BaseVariableState)ci.FindChild(SystemContext, new QualifiedName("ActiveState"));
+                                    if (activeState != null)
+                                    {
+                                        ((AlarmConditionState)ci).SetActiveState(SystemContext, true);
+                                    }
+                                    ci.SetEnableState(SystemContext, true);
+                                }
+                                else
+                                {
+                                    ci.SetEnableState(SystemContext, false);
+                                }
+
+                            }
+                            //Task.Delay(5000);
+                            Thread.Sleep(500);
+                        }
+                    }
+                    Console.WriteLine("Disabled alarm count '{0}' enabledisable count {1}", conditionStates.Count, repeatEnableDisableCount);
+                }
+
                 foreach (ConditionState ci in m_conditionInstances)
                 {
-                    // change monitor values that trigger alarms - deactivated for now
-
                     if (ci.Parent != null)
                     {
                         BaseAlarmMonitor alarmMonitor = ci.Parent as BaseAlarmMonitor;

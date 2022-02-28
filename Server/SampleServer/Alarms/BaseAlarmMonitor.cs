@@ -130,7 +130,7 @@ namespace SampleServer.Alarms
             string alarmName,
             ConditionState alarm)
         {
-            if(alarm == null)
+            if (alarm == null)
             {
                 return;
             }
@@ -143,10 +143,12 @@ namespace SampleServer.Alarms
 
             alarm.AddComment = new AddCommentMethodState(alarm);
             alarm.OnAddComment += Alarm_OnAddComment;
-            
+
             alarm.ClientUserId = new PropertyState<string>(alarm);
-                        
+
             alarm.EnabledState = new TwoStateVariableState(alarm);
+            alarm.OnEnableDisable += OnEnableDisable;
+
             alarm.Message = new PropertyState<LocalizedText>(parent);
             alarm.Message.Value = new LocalizedText("en", alarmName);
             alarm.Description = new LocalizedText("en", alarmName);
@@ -177,12 +179,12 @@ namespace SampleServer.Alarms
             alarm.Time.Value = DateTime.UtcNow;
             alarm.ReceiveTime.Value = alarm.Time.Value;
             alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-            
+
             alarm.BranchId.Value = new NodeId(alarmName, namespaceIndex);
             alarm.ConditionClassId.Value = VariableIds.ConditionType_ConditionClassId;
             alarm.ConditionClassName.Value = alarm.ConditionClassId.DisplayName;
-            alarm.ClientUserId.Value = "Anonymous"; 
-                        
+            alarm.ClientUserId.Value = "Anonymous";
+
             // Set state values
             alarm.SetEnableState(context, true);
             alarm.Retain.Value = false;
@@ -288,6 +290,22 @@ namespace SampleServer.Alarms
             Console.WriteLine("AddComment on alarm '{0}' eventId: {1} value: {2}", condition.DisplayName, BitConverter.ToString(eventId).Replace("-", ""), comment.Text);
             return ServiceResult.Good;
         }
+
+
+        protected ServiceResult OnEnableDisable(
+            ISystemContext context,
+            ConditionState condition,
+            bool enabling)
+        {
+            //condition.SetEnableState(context, enabling);
+            condition.Retain.Value = condition.EnabledState.Id.Value;
+
+            Console.WriteLine("Enable state alarm name: '{0}' enabled: {1} retain: {2}",
+                condition.DisplayName, condition.EnabledState.Id.Value, condition.Retain.Value);
+
+            return ServiceResult.Good;
+        }
+
 
         #endregion
 

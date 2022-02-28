@@ -78,7 +78,6 @@ namespace SampleServer.Alarms
             m_alarm.CancelResponse.Value = 1;
             m_alarm.SetResponse(context, response);
 
-            m_alarm.SetEnableState(context, true);
         }
 
         protected override void ProcessVariableChanged(ISystemContext context, object value)
