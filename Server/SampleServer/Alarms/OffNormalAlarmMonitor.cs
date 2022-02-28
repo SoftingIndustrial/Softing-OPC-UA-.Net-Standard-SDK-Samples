@@ -10,10 +10,6 @@
 
 using Opc.Ua;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SampleServer.Alarms
 {
@@ -25,7 +21,7 @@ namespace SampleServer.Alarms
 
         #region Private Members
 
-        private OffNormalAlarmState m_alarm;
+        protected OffNormalAlarmState m_alarm;
 
         #endregion
 
@@ -65,69 +61,18 @@ namespace SampleServer.Alarms
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
 
-        #endregion       
+        #endregion
 
-        #region Public Methods
-
+        #region Virtual Methods
         /// <summary>
-        /// Handler for instances of <see cref="OffNormalAlarmState"/> alarms
+        /// Create an instance of the appropriate alarm state to be used by current monitor
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="value"></param>
-        /// <param name="offNormalAlarmState"></param>
-        /// <param name="normalValue"></param>
-        public static void ProcessVariableChanged(ISystemContext context, object value, OffNormalAlarmState offNormalAlarmState, object normalValue)
+        /// <returns></returns>
+        protected virtual OffNormalAlarmState GetInstanceOfAlarmState()
         {
-            try
-            {
-                double? dValue = Convert.ToDouble(value);
-                double? dNormalValue = Convert.ToDouble(normalValue);
-
-                bool offNormal = dValue != dNormalValue;
-
-                // Update alarm data
-                offNormalAlarmState.SetActiveState(context, offNormal);
-
-                // Not interested in disabled or inactive alarms
-                if (!offNormalAlarmState.EnabledState.Id.Value || !offNormalAlarmState.ActiveState.Id.Value)
-                {
-                    offNormalAlarmState.Retain.Value = false;
-                }
-                else
-                {
-                    offNormalAlarmState.Retain.Value = true;
-                }
-
-                if (offNormal)
-                {
-                    // Set event data
-                    offNormalAlarmState.EventId.Value = Guid.NewGuid().ToByteArray();
-                    offNormalAlarmState.Time.Value = DateTime.UtcNow;
-                    offNormalAlarmState.ReceiveTime.Value = offNormalAlarmState.Time.Value;
-
-                    // Reset the acknowledged flag
-                    offNormalAlarmState.SetAcknowledgedState(context, false);
-
-                    // Report changes to node attributes
-                    offNormalAlarmState.ClearChangeMasks(context, true);
-
-                    // Check if events are being monitored for the source
-                    if (offNormalAlarmState.AreEventsMonitored)
-                    {
-                        // Create a snapshot
-                        InstanceStateSnapshot e = new InstanceStateSnapshot();
-                        e.Initialize(context, offNormalAlarmState);
-
-                        // Report the event
-                        offNormalAlarmState.ReportEvent(context, e);
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                Utils.Trace(exception, "Alarms.{0}.ProcessVariableChanged: Unexpected error processing value changed notification.", offNormalAlarmState.GetType());
-            }
+            return new OffNormalAlarmState(this);
         }
+
         #endregion
 
         #region Base Class Overrides
@@ -140,7 +85,57 @@ namespace SampleServer.Alarms
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             BaseVariableState normalValVar = (BaseVariableState) m_alarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
-            ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
+            object normalValue = normalValVar.Value;            
+
+            try
+            {
+                double? dValue = Convert.ToDouble(value);
+                double? dNormalValue = Convert.ToDouble(normalValue);
+
+                bool offNormal = dValue != dNormalValue;
+
+                // Update alarm data
+                m_alarm.SetActiveState(context, offNormal);
+
+                // Not interested in disabled or inactive alarms
+                if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
+                {
+                    m_alarm.Retain.Value = false;
+                }
+                else
+                {
+                    m_alarm.Retain.Value = true;
+                }
+
+                if (offNormal)
+                {
+                    // Set event data
+                    m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
+                    m_alarm.Time.Value = DateTime.UtcNow;
+                    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
+
+                    // Reset the acknowledged flag
+                    m_alarm.SetAcknowledgedState(context, false);
+
+                    // Report changes to node attributes
+                    m_alarm.ClearChangeMasks(context, true);
+
+                    // Check if events are being monitored for the source
+                    if (m_alarm.AreEventsMonitored)
+                    {
+                        // Create a snapshot
+                        InstanceStateSnapshot e = new InstanceStateSnapshot();
+                        e.Initialize(context, m_alarm);
+
+                        // Report the event
+                        m_alarm.ReportEvent(context, e);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Utils.Trace(exception, "Alarms.{0}.ProcessVariableChanged: Unexpected error processing value changed notification.", m_alarm.GetType());
+            }
         }
         #endregion
 
@@ -163,7 +158,7 @@ namespace SampleServer.Alarms
             BaseDataVariableState normalValueVariable)
         {
             // Create the alarm object
-            m_alarm = new OffNormalAlarmState(this);
+            m_alarm = GetInstanceOfAlarmState();
 
             InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
 

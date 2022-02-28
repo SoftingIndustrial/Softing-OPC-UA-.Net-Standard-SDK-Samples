@@ -18,15 +18,19 @@ namespace SampleServer.Alarms
     /// <summary>
     /// A monitored variable with an <see cref="CertificateExpirationAlarmState"/> attached.
     /// </summary>
-    class CertificateExpirationMonitor : BaseAlarmMonitor
+    class CertificateExpirationMonitor : OffNormalAlarmMonitor
     {
-        #region Private Members
-
-        private CertificateExpirationAlarmState m_alarm;
-
-        #endregion
-
         #region Constructors
+        /// <summary>
+        /// Create new instance of <see cref="CertificateExpirationMonitor"/>
+        /// </summary>
+        /// <param name="alarmsNodeManager"></param>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         public CertificateExpirationMonitor(
             AlarmsNodeManager alarmsNodeManager, 
             ISystemContext context,
@@ -35,86 +39,32 @@ namespace SampleServer.Alarms
             string name,
             string alarmName,
             double initialValue)
-           : base(context, parent, namespaceIndex, name, initialValue, alarmsNodeManager)
-        {
-            BaseDataVariableState normalValueVariable = alarmsNodeManager.CreateVariable<double>(this, "NormalValueVariable");
-            normalValueVariable.Value = initialValue;
+           : base(alarmsNodeManager, context, parent, namespaceIndex, name, alarmName, initialValue)
+        {            
+            CertificateExpirationAlarmState certificateExpirationAlarmState = m_alarm as CertificateExpirationAlarmState;
 
-            // Attach the alarm monitor.
-            InitializeAlarmMonitor(
-                context,
-                parent,
-                namespaceIndex,
-                alarmName, 
-                normalValueVariable);
-
-            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
+            if (certificateExpirationAlarmState != null)
+            {
+                // Set certificate expiration mandatory fields
+                certificateExpirationAlarmState.CertificateType.Value = Variables.CertificateExpirationAlarmType_CertificateType;
+                certificateExpirationAlarmState.Certificate.Value = GetCertificate().RawData;
+            }
         }
         #endregion
 
         #region Base Class Overrides
 
         /// <summary>
-        /// Hendle the Variable value change
+        /// Create and return new instance of <see cref="CertificateExpirationAlarmState"/> to be used by the monitor
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="value"></param>
-        protected override void ProcessVariableChanged(ISystemContext context, object value)
+        /// <returns></returns>
+        protected override OffNormalAlarmState GetInstanceOfAlarmState()
         {
-            BaseVariableState normalValVar = (BaseVariableState)AlarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
-            OffNormalAlarmMonitor.ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
+            return new CertificateExpirationAlarmState(this); 
         }
-
         #endregion
 
-        #region Private Methods
-        /// <summary>
-        /// Initialize the alarm monitor 
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="parent"></param>
-        /// <param name="namespaceIndex"></param>
-        /// <param name="alarmName"></param>
-        /// <param name="normalValueVariable"></param>
-        private void InitializeAlarmMonitor(
-            ISystemContext context,
-            NodeState parent,
-            ushort namespaceIndex,
-            string alarmName,
-            BaseDataVariableState normalValueVariable)
-        {
-            // Create the alarm object
-            m_alarm = new CertificateExpirationAlarmState(this);
-
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
-
-            // Set input node
-            m_alarm.InputNode.Value = NodeId;
-
-            // Setup the NormalState
-            AddChild(normalValueVariable);
-            m_alarm.NormalState.Value = normalValueVariable.NodeId;
-
-            // set acknowledge state
-            m_alarm.SetAcknowledgedState(context, false);
-            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
-
-            // Set state values
-            m_alarm.SetSuppressedState(context, false);
-            m_alarm.SetActiveState(context, false);
-
-            // Set certificate expiration mandatory fields
-            
-            m_alarm.CertificateType.Value = Variables.CertificateExpirationAlarmType_CertificateType;
-            m_alarm.Certificate.Value = GetCertificate().RawData;
-
-            // optional
-            //m_alarm.ExpirationLimit.Value = 120000; // 2 seconds
-
-            // Disable this property 
-            m_alarm.LatchedState = null;
-        }
-
+        #region Private Methods    
         /// <summary>
         /// Get the certificate
         /// </summary>
@@ -135,7 +85,6 @@ namespace SampleServer.Alarms
             return certificate;
         }
 
-        #endregion
-        
+        #endregion        
     }
 }
