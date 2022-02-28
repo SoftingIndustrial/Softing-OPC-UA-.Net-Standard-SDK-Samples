@@ -35,46 +35,6 @@ namespace SampleServer.Alarms
         }
         #endregion
 
-        //public void UpdateConditionAlarmMonitor(
-        //    ISystemContext context,
-        //    double newValue,
-        //    bool enableFlag)
-        //{
-        //    // Update alarm information
-        //    //m_alarm.AutoReportStateChanges = true; // always reports changes
-        //    m_alarm.Time.Value = DateTime.UtcNow;
-        //    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-        //    m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-        //    //m_alarm.BranchId.Value = null; // ignore BranchId
-
-        //    // Set state values
-        //    m_alarm.SetEnableState(context, enableFlag);
-        //    m_alarm.Comment.Value = new LocalizedText(enableFlag.ToString());
-        //    m_alarm.Message.Value = new LocalizedText(enableFlag.ToString());
-
-        //    // Add the variable as source node of the alarm
-        //    AddCondition(m_alarm);
-
-        //    // Initialize alarm information
-        //    m_alarm.SymbolicName = "Condition Alarm";
-        //    m_alarm.EventType.Value = m_alarm.TypeDefinitionId;
-        //    m_alarm.ConditionName.Value = m_alarm.SymbolicName;
-        //    m_alarm.AutoReportStateChanges = true;
-        //    m_alarm.Time.Value = DateTime.UtcNow;
-        //    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-        //    m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-        //    m_alarm.BranchId.Value = null;
-
-        //    // Set state values
-        //    m_alarm.SetEnableState(context, true);
-        //    m_alarm.Retain.Value = false;
-
-        //    m_alarm.Validate(context);
-
-        //    Value = newValue;
-        //    ProcessVariableChanged(context, newValue);
-        //}
-
         private void InitializeAlarmMonitor(
             ISystemContext context,
             NodeState parent,
@@ -102,6 +62,9 @@ namespace SampleServer.Alarms
 
             // error in predefined or in ctt?
             //m_alarm.AudibleSound.ReferenceTypeId = ReferenceTypeIds.HasProperty;
+
+            // Disable this property 
+            m_alarm.LatchedState = null;
         }
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
@@ -138,12 +101,18 @@ namespace SampleServer.Alarms
                     m_alarm.BranchId.Value = new NodeId();
 
                     // Generate alarm if number is even
-                    bool valueState = newValue % 2 == 0;
-                    m_alarm.SetActiveState(context, valueState);
-                    // m_alarm.SetEnableState(context, false);
+                    bool activeState = newValue % 2 == 0;
+                    m_alarm.SetActiveState(context, activeState);
 
-                    m_alarm.SuppressedState.Value = new LocalizedText("en-US", valueState ? ConditionStateNames.Suppressed : ConditionStateNames.Unsuppressed);
-                    m_alarm.OutOfServiceState.Value = new LocalizedText("en-US", valueState ? Boolean.TrueString : Boolean.FalseString);
+                    // Bring back AcknowledgedState and ConfirmedState
+                    if (m_alarm.AckedState.Id.Value && activeState)
+                    {
+                        m_alarm.SetAcknowledgedState(context, false);
+                        m_alarm.SetConfirmedState(context, false);
+                    }
+
+                    m_alarm.SuppressedState.Value = new LocalizedText("en-US", activeState ? ConditionStateNames.Suppressed : ConditionStateNames.Unsuppressed);
+                    m_alarm.OutOfServiceState.Value = new LocalizedText("en-US", activeState ? Boolean.TrueString : Boolean.FalseString);
 
                     // Not interested in disabled or inactive alarms
                     if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)

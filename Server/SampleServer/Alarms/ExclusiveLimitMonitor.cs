@@ -73,40 +73,6 @@ namespace SampleServer.Alarms
 
         #region Public Methods
 
-        /// <summary>
-        /// Update alarm monitor value and limits
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="newValue"></param>
-        /// <param name="highLimit"></param>
-        /// <param name="highHighLimit"></param>
-        /// <param name="lowLimit"></param>
-        /// <param name="lowLowLimit"></param>
-        //public void UpdateExclusiveLimitAlarmMonitor(
-        //    ISystemContext context,
-        //    double newValue,
-        //    double highLimit,
-        //    double highHighLimit,
-        //    double lowLimit,
-        //    double lowLowLimit)
-        //{
-        //    // Update alarm information
-        //    //m_alarm.AutoReportStateChanges = true; // always reports changes
-        //    m_alarm.Time.Value = DateTime.UtcNow;
-        //    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-             
-        //    // Change limit values
-        //    m_alarm.HighLimit.Value = highLimit;
-        //    m_alarm.HighHighLimit.Value = highHighLimit;
-        //    m_alarm.LowLimit.Value = lowLimit;
-        //    m_alarm.LowLowLimit.Value = lowLowLimit;
-
-        //    m_alarm.Validate(context);
-
-        //    Value = newValue;
-        //    ProcessVariableChanged(context, newValue);
-        //}
-
         #endregion
 
         #region Private Methods
@@ -149,6 +115,9 @@ namespace SampleServer.Alarms
             m_alarm.HighHighLimit.Value = highHighLimit;
             m_alarm.LowLimit.Value = lowLimit;
             m_alarm.LowLowLimit.Value = lowLowLimit;
+
+            // Disable this property 
+            m_alarm.LatchedState = null;
         }
 
         #endregion

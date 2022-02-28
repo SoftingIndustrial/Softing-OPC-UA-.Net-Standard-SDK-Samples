@@ -78,6 +78,9 @@ namespace SampleServer.Alarms
             // Set state values
             m_alarm.SetSuppressedState(context, false);
             m_alarm.SetActiveState(context, false);
+
+            // Disable this property 
+            m_alarm.LatchedState = null;
         }
 
         #endregion

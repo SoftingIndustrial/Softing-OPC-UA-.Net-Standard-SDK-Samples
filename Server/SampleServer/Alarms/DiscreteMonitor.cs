@@ -65,6 +65,9 @@ namespace SampleServer.Alarms
             m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
 
             m_alarm.SetActiveState(context, false);
+
+            // Disable this property 
+            m_alarm.LatchedState = null;
         }
 
         protected override void ProcessVariableChanged(ISystemContext context, object value)
@@ -108,6 +111,13 @@ namespace SampleServer.Alarms
                     // Generate alarm if number is even
                     bool activeState = newValue % 2 == 0;
                     m_alarm.SetActiveState(context, activeState);
+
+                    // Bring back AcknowledgedState and ConfirmedState
+                    if (m_alarm.AckedState.Id.Value && activeState)
+                    {
+                        m_alarm.SetAcknowledgedState(context, false);
+                        m_alarm.SetConfirmedState(context, false);
+                    }
 
                     // Not interested in disabled or inactive alarms
                     if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)

@@ -83,6 +83,9 @@ namespace SampleServer.Alarms
             m_alarm.TrustListId.Value = Variables.TrustListOutOfDateAlarmType_TrustListId;
             m_alarm.LastUpdateTime.Value = DateTime.UtcNow; 
             m_alarm.UpdateFrequency.Value = 10000;
+
+            // Disable this property 
+            m_alarm.LatchedState = null;
         }
  
         #endregion

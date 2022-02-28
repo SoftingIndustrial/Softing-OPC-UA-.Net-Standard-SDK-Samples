@@ -103,6 +103,9 @@ namespace SampleServer.Alarms
             m_alarm.TargetValueNode.Value = NodeId;
             m_alarm.ExpectedTime.Value = (double)DateTime.UtcNow.Ticks;
             m_alarm.Tolerance.Value = 0;
+
+            // Disable this property 
+            m_alarm.LatchedState = null;
         }
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
@@ -141,6 +144,14 @@ namespace SampleServer.Alarms
                     // Generate alarm if number is even
                     bool activeState = newValue % 2 == 0;
                     m_alarm.SetActiveState(context, activeState);
+
+                    // Bring back AcknowledgedState and ConfirmedState
+                    if (m_alarm.AckedState.Id.Value && activeState)
+                    {
+                        m_alarm.SetAcknowledgedState(context, false);
+                        m_alarm.SetConfirmedState(context, false);
+                    }
+
                     m_alarm.ExpectedTime.Value = (double)DateTime.UtcNow.Ticks;
                     m_alarm.Tolerance.Value = newValue.Value;
 

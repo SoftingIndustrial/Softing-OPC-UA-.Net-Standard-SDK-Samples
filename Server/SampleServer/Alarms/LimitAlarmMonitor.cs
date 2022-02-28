@@ -44,46 +44,6 @@ namespace SampleServer.Alarms
             m_alarm.OnAcknowledge += AcknowledgeableConditionMonitor.AlarmMonitor_OnAcknowledge;
         }
 
-        //public void UpdateConditionAlarmMonitor(
-        //    ISystemContext context,
-        //    double newValue,
-        //    bool enableFlag)
-        //{
-        //    // Update alarm information
-        //    //m_alarm.AutoReportStateChanges = true; // always reports changes
-        //    m_alarm.Time.Value = DateTime.UtcNow;
-        //    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-        //    m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-        //    //m_alarm.BranchId.Value = null; // ignore BranchId
-
-        //    // Set state values
-        //    m_alarm.SetEnableState(context, enableFlag);
-        //    m_alarm.Comment.Value = new LocalizedText(enableFlag.ToString());
-        //    m_alarm.Message.Value = new LocalizedText(enableFlag.ToString());
-
-        //    // Add the variable as source node of the alarm
-        //    AddCondition(m_alarm);
-
-        //    // Initialize alarm information
-        //    m_alarm.SymbolicName = "Condition Alarm";
-        //    m_alarm.EventType.Value = m_alarm.TypeDefinitionId;
-        //    m_alarm.ConditionName.Value = m_alarm.SymbolicName;
-        //    m_alarm.AutoReportStateChanges = true;
-        //    m_alarm.Time.Value = DateTime.UtcNow;
-        //    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-        //    m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-        //    m_alarm.BranchId.Value = null;
-
-        //    // Set state values
-        //    m_alarm.SetEnableState(context, true);
-        //    m_alarm.Retain.Value = false;
-
-        //    m_alarm.Validate(context);
-
-        //    Value = newValue;
-        //    ProcessVariableChanged(context, newValue);
-        //}
-
         private void InitializeAlarmMonitor(
             ISystemContext context,
             NodeState parent,
@@ -119,6 +79,9 @@ namespace SampleServer.Alarms
             m_alarm.HighHighLimit.Value = highHighLimit;
             m_alarm.LowLimit.Value = lowLimit;
             m_alarm.LowLowLimit.Value = lowLowLimit;
+
+            // Disable this property 
+            m_alarm.LatchedState = null;
         }
 
         protected override void ProcessVariableChanged(ISystemContext context, object value)

@@ -89,6 +89,9 @@ namespace SampleServer.Alarms
 
             // optional
             //m_alarm.ExpirationLimit.Value = 120000; // 2 seconds
+
+            // Disable this property 
+            m_alarm.LatchedState = null;
         }
 
         private X509Certificate2 GetCertificate()
