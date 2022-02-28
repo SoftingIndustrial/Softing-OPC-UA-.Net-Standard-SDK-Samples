@@ -13,7 +13,6 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Opc.Ua;
 
-
 namespace SampleServer.Alarms
 {
     /// <summary>
@@ -51,6 +50,21 @@ namespace SampleServer.Alarms
 
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
+        #endregion
+
+        #region Base Class Overrides
+
+        /// <summary>
+        /// Hendle the Variable value change
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="value"></param>
+        protected override void ProcessVariableChanged(ISystemContext context, object value)
+        {
+            BaseVariableState normalValVar = (BaseVariableState)AlarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
+            OffNormalAlarmMonitor.ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
+        }
+
         #endregion
 
         #region Private Methods
@@ -101,6 +115,10 @@ namespace SampleServer.Alarms
             m_alarm.LatchedState = null;
         }
 
+        /// <summary>
+        /// Get the certificate
+        /// </summary>
+        /// <returns></returns>
         private X509Certificate2 GetCertificate()
         {
             string certificateFilePath = Path.Combine("Alarms","Files", "opcuser.pfx");
@@ -116,15 +134,8 @@ namespace SampleServer.Alarms
 
             return certificate;
         }
-        #endregion
-
-        #region Prrotected Methods
-        protected override void ProcessVariableChanged(ISystemContext context, object value)
-        {
-            BaseVariableState normalValVar = (BaseVariableState)AlarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
-            OffNormalAlarmMonitor.ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
-        }
 
         #endregion
+        
     }
 }

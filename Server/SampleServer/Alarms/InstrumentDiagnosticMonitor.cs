@@ -50,6 +50,21 @@ namespace SampleServer.Alarms
         }
         #endregion
 
+        #region Base Class Overrides
+
+        /// <summary>
+        /// Hendle the Variable value change
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="value"></param>
+        protected override void ProcessVariableChanged(ISystemContext context, object value)
+        {
+            BaseVariableState normalValVar = (BaseVariableState)AlarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
+            OffNormalAlarmMonitor.ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
+        }
+
+        #endregion
+
         #region Private Methods
 
         /// <summary>
@@ -91,15 +106,6 @@ namespace SampleServer.Alarms
             m_alarm.LatchedState = null;
         }
 
-        #endregion
-
-        #region Protected Methods
-        protected override void ProcessVariableChanged(ISystemContext context, object value)
-        {
-            BaseVariableState normalValVar = (BaseVariableState)AlarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
-            OffNormalAlarmMonitor.ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
-        }
-
-        #endregion
+        #endregion       
     }
 }

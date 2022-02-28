@@ -29,6 +29,17 @@ namespace SampleServer.Alarms
 
         #endregion
 
+        #region Constructor
+        /// <summary>
+        /// Create instance of <see cref="TripAlarmMonitor"/>
+        /// </summary>
+        /// <param name="alarmsNodeManager"></param>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         public TripAlarmMonitor(
             AlarmsNodeManager alarmsNodeManager,
             ISystemContext context,
@@ -53,7 +64,23 @@ namespace SampleServer.Alarms
 
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
+        #endregion
 
+        #region Base Class Overrides
+
+        /// <summary>
+        /// Hendle the Variable value change
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="value"></param>
+        protected override void ProcessVariableChanged(ISystemContext context, object value)
+        {
+            BaseVariableState normalValVar = (BaseVariableState)AlarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
+            OffNormalAlarmMonitor.ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
+        }
+        #endregion
+
+        #region Private Methods
         /// <summary>
         /// Initialize the alarm monitor 
         /// </summary>
@@ -92,11 +119,6 @@ namespace SampleServer.Alarms
             // Disable this property 
             m_alarm.LatchedState = null;
         }
-
-        protected override void ProcessVariableChanged(ISystemContext context, object value)
-        {
-            BaseVariableState normalValVar = (BaseVariableState)AlarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
-            OffNormalAlarmMonitor.ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
-        }
+        #endregion
     }
 }

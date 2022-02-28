@@ -10,7 +10,6 @@
 
 using Opc.Ua;
 using System;
-using System.Collections.Generic;
 
 namespace SampleServer.Alarms
 {
@@ -55,47 +54,7 @@ namespace SampleServer.Alarms
 
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
-        #endregion
-
-        /// <summary>
-        /// Initialize the alarm monitor 
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="parent"></param>
-        /// <param name="namespaceIndex"></param>
-        /// <param name="alarmName"></param>
-        /// <param name="initialValue"></param>
-        private void InitializeAlarmMonitor(
-            ISystemContext context,
-            NodeState parent,
-            ushort namespaceIndex,
-            string alarmName,
-            double initialValue)
-        {
-            // Create the alarm object
-            m_alarm = new AlarmConditionState(this);
-
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
-
-            // set acknowledge state
-            m_alarm.SetAcknowledgedState(context, false);
-            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
-
-            // Mandatory fields
-            // Set input node
-            m_alarm.InputNode.Value = NodeId;
-            m_alarm.SetActiveState(context, false);
-
-            // optional fields
-            m_alarm.SuppressedState.Value = new LocalizedText("en-US", ConditionStateNames.Unsuppressed);
-            m_alarm.OutOfServiceState.Value = new LocalizedText("en-US", Boolean.FalseString);
-
-            // error in predefined or in ctt?
-            //m_alarm.AudibleSound.ReferenceTypeId = ReferenceTypeIds.HasProperty;
-
-            // Disable this property 
-            m_alarm.LatchedState = null;
-        }
+        #endregion       
 
         #region Base Class Overrides
 
@@ -187,6 +146,49 @@ namespace SampleServer.Alarms
             {
                 Utils.Trace(exception, "Alarms.AlarmConditionMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
+        }
+
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Initialize the alarm monitor 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void InitializeAlarmMonitor(
+            ISystemContext context,
+            NodeState parent,
+            ushort namespaceIndex,
+            string alarmName,
+            double initialValue)
+        {
+            // Create the alarm object
+            m_alarm = new AlarmConditionState(this);
+
+            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+
+            // set acknowledge state
+            m_alarm.SetAcknowledgedState(context, false);
+            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
+
+            // Mandatory fields
+            // Set input node
+            m_alarm.InputNode.Value = NodeId;
+            m_alarm.SetActiveState(context, false);
+
+            // optional fields
+            m_alarm.SuppressedState.Value = new LocalizedText("en-US", ConditionStateNames.Unsuppressed);
+            m_alarm.OutOfServiceState.Value = new LocalizedText("en-US", Boolean.FalseString);
+
+            // error in predefined or in ctt?
+            //m_alarm.AudibleSound.ReferenceTypeId = ReferenceTypeIds.HasProperty;
+
+            // Disable this property 
+            m_alarm.LatchedState = null;
         }
 
         #endregion

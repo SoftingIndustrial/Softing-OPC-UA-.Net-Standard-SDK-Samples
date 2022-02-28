@@ -54,69 +54,13 @@ namespace SampleServer.Alarms
         }
         #endregion
 
-        #region Public Methods
+        #region Base Class Overrides
 
         /// <summary>
-        /// Initialize the alarm monitor 
+        /// Hendle the Variable value change
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="parent"></param>
-        /// <param name="namespaceIndex"></param>
-        /// <param name="alarmName"></param>
-        /// <param name="initialValue"></param>
-        /// <param name="highLimit"></param>
-        /// <param name="highHighLimit"></param>
-        /// <param name="lowLimit"></param>
-        /// <param name="lowLowLimit"></param>
-        private void InitializeAlarmMonitor(
-            ISystemContext context,
-            NodeState parent,
-            ushort namespaceIndex,
-            string alarmName,
-            double initialValue,
-            double highLimit,
-            double highHighLimit,
-            double lowLimit,
-            double lowLowLimit)
-        {
-            // Create the alarm object
-            m_alarm = new NonExclusiveDeviationAlarmState(this);
-
-            // Declare limit components
-            m_alarm.HighHighLimit = new PropertyState<double>(m_alarm);
-            m_alarm.HighLimit = new PropertyState<double>(m_alarm);
-            m_alarm.LowLimit = new PropertyState<double>(m_alarm);
-            m_alarm.LowLowLimit = new PropertyState<double>(m_alarm);
-
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
-
-            // Set input node
-            m_alarm.InputNode.Value = NodeId;
-
-            // set acknowledge state
-            m_alarm.SetAcknowledgedState(context, false);
-            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
-
-            // Set state values
-            m_alarm.SetLimitState(context, LimitAlarmStates.Inactive);
-            m_alarm.SetSuppressedState(context, false);
-            m_alarm.SetActiveState(context, false);
-
-            // Set Setpoint node
-            m_alarm.SetpointNode.Value = NodeId;
-            // optional
-            m_alarm.BaseSetpointNode.Value = NodeId;
-            
-            // Define limit values
-            m_alarm.HighLimit.Value = highLimit;
-            m_alarm.HighHighLimit.Value = highHighLimit;
-            m_alarm.LowLimit.Value = lowLimit;
-            m_alarm.LowLowLimit.Value = lowLowLimit;
-
-            // Disable this property 
-            m_alarm.LatchedState = null;
-        }
-
+        /// <param name="value"></param>
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
@@ -275,5 +219,69 @@ namespace SampleServer.Alarms
             }
         }
         #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Initialize the alarm monitor 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        /// <param name="highLimit"></param>
+        /// <param name="highHighLimit"></param>
+        /// <param name="lowLimit"></param>
+        /// <param name="lowLowLimit"></param>
+        private void InitializeAlarmMonitor(
+            ISystemContext context,
+            NodeState parent,
+            ushort namespaceIndex,
+            string alarmName,
+            double initialValue,
+            double highLimit,
+            double highHighLimit,
+            double lowLimit,
+            double lowLowLimit)
+        {
+            // Create the alarm object
+            m_alarm = new NonExclusiveDeviationAlarmState(this);
+
+            // Declare limit components
+            m_alarm.HighHighLimit = new PropertyState<double>(m_alarm);
+            m_alarm.HighLimit = new PropertyState<double>(m_alarm);
+            m_alarm.LowLimit = new PropertyState<double>(m_alarm);
+            m_alarm.LowLowLimit = new PropertyState<double>(m_alarm);
+
+            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+
+            // Set input node
+            m_alarm.InputNode.Value = NodeId;
+
+            // set acknowledge state
+            m_alarm.SetAcknowledgedState(context, false);
+            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
+
+            // Set state values
+            m_alarm.SetLimitState(context, LimitAlarmStates.Inactive);
+            m_alarm.SetSuppressedState(context, false);
+            m_alarm.SetActiveState(context, false);
+
+            // Set Setpoint node
+            m_alarm.SetpointNode.Value = NodeId;
+            // optional
+            m_alarm.BaseSetpointNode.Value = NodeId;
+            
+            // Define limit values
+            m_alarm.HighLimit.Value = highLimit;
+            m_alarm.HighHighLimit.Value = highHighLimit;
+            m_alarm.LowLimit.Value = lowLimit;
+            m_alarm.LowLowLimit.Value = lowLowLimit;
+
+            // Disable this property 
+            m_alarm.LatchedState = null;
+        }
+        #endregion       
     }
 }

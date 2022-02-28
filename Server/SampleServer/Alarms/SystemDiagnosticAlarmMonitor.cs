@@ -9,11 +9,6 @@
  * ======================================================================*/
 
 using Opc.Ua;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SampleServer.Alarms
 {
@@ -29,6 +24,17 @@ namespace SampleServer.Alarms
 
         #endregion
 
+        #region Constructor
+        /// <summary>
+        /// Create new instance of <see cref="SystemDiagnosticAlarmMonitor"/>
+        /// </summary>
+        /// <param name="alarmsNodeManager"></param>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         public SystemDiagnosticAlarmMonitor(
             AlarmsNodeManager alarmsNodeManager,
             ISystemContext context,
@@ -53,6 +59,23 @@ namespace SampleServer.Alarms
 
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
+        #endregion
+
+        #region Base Class Overrides
+
+        /// <summary>
+        /// Hendle the Variable value change
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="value"></param>
+        protected override void ProcessVariableChanged(ISystemContext context, object value)
+        {
+            BaseVariableState normalValVar = (BaseVariableState)AlarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
+            OffNormalAlarmMonitor.ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
+        }
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Initialize the alarm monitor 
@@ -93,10 +116,6 @@ namespace SampleServer.Alarms
             m_alarm.LatchedState = null;
         }
 
-        protected override void ProcessVariableChanged(ISystemContext context, object value)
-        {
-            BaseVariableState normalValVar = (BaseVariableState)AlarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
-            OffNormalAlarmMonitor.ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
-        }
+        #endregion
     }
 }

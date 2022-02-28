@@ -10,7 +10,6 @@
 
 using Opc.Ua;
 using System;
-using System.Collections.Generic;
 
 namespace SampleServer.Alarms
 {
@@ -47,87 +46,15 @@ namespace SampleServer.Alarms
 
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
-        #endregion
+        #endregion        
 
-        //public void UpdateConditionAlarmMonitor(
-        //    ISystemContext context,
-        //    double newValue,
-        //    bool enableFlag)
-        //{
-        //    // Update alarm information
-        //    //m_alarm.AutoReportStateChanges = true; // always reports changes
-        //    m_alarm.Time.Value = DateTime.UtcNow;
-        //    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-        //    m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-        //    //m_alarm.BranchId.Value = null; // ignore BranchId
-
-        //    // Set state values
-        //    m_alarm.SetEnableState(context, enableFlag);
-        //    m_alarm.Comment.Value = new LocalizedText(enableFlag.ToString());
-        //    m_alarm.Message.Value = new LocalizedText(enableFlag.ToString());
-
-        //    // Add the variable as source node of the alarm
-        //    AddCondition(m_alarm);
-
-        //    // Initialize alarm information
-        //    m_alarm.SymbolicName = "DiscrepancyAlarmCondition Alarm";
-        //    m_alarm.EventType.Value = m_alarm.TypeDefinitionId;
-        //    m_alarm.ConditionName.Value = m_alarm.SymbolicName;
-        //    m_alarm.AutoReportStateChanges = true;
-        //    m_alarm.Time.Value = DateTime.UtcNow;
-        //    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-        //    m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-        //    m_alarm.BranchId.Value = null;
-
-        //    // Set state values
-        //    m_alarm.SetEnableState(context, true);
-        //    m_alarm.Retain.Value = false;
-
-        //    m_alarm.Validate(context);
-
-        //    Value = newValue;
-        //    ProcessVariableChanged(context, newValue);
-        //}
+        #region Base Class Overrides
 
         /// <summary>
-        /// Initialize the alarm monitor 
+        /// Hendle the Variable value change
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="parent"></param>
-        /// <param name="namespaceIndex"></param>
-        /// <param name="alarmName"></param>
-        /// <param name="initialValue"></param>
-        private void InitializeAlarmMonitor(
-            ISystemContext context,
-            NodeState parent,
-            ushort namespaceIndex,
-            string alarmName,
-            double initialValue)
-        {
-            // Create the alarm object
-            m_alarm = new DiscrepancyAlarmState(this);
-
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
-
-            // Set input node
-            m_alarm.InputNode.Value = NodeId;
-
-            // set acknowledge state
-            m_alarm.SetAcknowledgedState(context, false);
-            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
-
-            m_alarm.SetActiveState(context, false);
-
-            // error in predefined or in ctt?
-            //m_alarm.AudibleSound.ReferenceTypeId = ReferenceTypeIds.HasProperty;
-
-            m_alarm.TargetValueNode.Value = NodeId;
-            m_alarm.ExpectedTime.Value = (double)DateTime.UtcNow.Ticks;
-            m_alarm.Tolerance.Value = 0;
-
-            // Disable this property 
-            m_alarm.LatchedState = null;
-        }
+        /// <param name="value"></param>
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
@@ -212,5 +139,50 @@ namespace SampleServer.Alarms
                 Utils.Trace(exception, "Alarms.DiscrepancyAlarmConditionMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
         }
+
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Initialize the alarm monitor 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void InitializeAlarmMonitor(
+            ISystemContext context,
+            NodeState parent,
+            ushort namespaceIndex,
+            string alarmName,
+            double initialValue)
+        {
+            // Create the alarm object
+            m_alarm = new DiscrepancyAlarmState(this);
+
+            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+
+            // Set input node
+            m_alarm.InputNode.Value = NodeId;
+
+            // set acknowledge state
+            m_alarm.SetAcknowledgedState(context, false);
+            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
+
+            m_alarm.SetActiveState(context, false);
+
+            // error in predefined or in ctt?
+            //m_alarm.AudibleSound.ReferenceTypeId = ReferenceTypeIds.HasProperty;
+
+            m_alarm.TargetValueNode.Value = NodeId;
+            m_alarm.ExpectedTime.Value = (double)DateTime.UtcNow.Ticks;
+            m_alarm.Tolerance.Value = 0;
+
+            // Disable this property 
+            m_alarm.LatchedState = null;
+        }
+
+        #endregion
     }
 }

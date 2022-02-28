@@ -45,39 +45,13 @@ namespace SampleServer.Alarms
 
         #endregion
 
+        #region Base Class Overrides
+
         /// <summary>
-        /// Initialize the alarm monitor 
+        /// Hendle the Variable value change
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="parent"></param>
-        /// <param name="namespaceIndex"></param>
-        /// <param name="alarmName"></param>
-        /// <param name="initialValue"></param>
-        private void InitializeAlarmMonitor(
-           ISystemContext context,
-           NodeState parent,
-           ushort namespaceIndex,
-           string alarmName,
-           double initialValue)
-        {
-            // Create the alarm object
-            m_alarm = new DiscreteAlarmState(this);
-
-            base.InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
-
-            // Set input node
-            m_alarm.InputNode.Value = NodeId;
-
-            // set acknowledge state
-            m_alarm.SetAcknowledgedState(context, false);
-            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
-
-            m_alarm.SetActiveState(context, false);
-
-            // Disable this property 
-            m_alarm.LatchedState = null;
-        }
-
+        /// <param name="value"></param>
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
@@ -110,11 +84,6 @@ namespace SampleServer.Alarms
                     m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
                     m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
                     m_alarm.BranchId.Value = new NodeId();
-
-                    // Generate alarm if number is even
-                    //bool generateEvent = newValue % 2 == 0;
-                    ////m_alarm.SetEnableState(context, generateEvent);
-                    //m_alarm.SetActiveState(context, generateEvent);
 
                     // Generate alarm if number is even
                     bool activeState = newValue % 2 == 0;
@@ -161,5 +130,43 @@ namespace SampleServer.Alarms
                 Utils.Trace(exception, "Alarms.AlarmConditionMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
         }
+
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Initialize the alarm monitor 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void InitializeAlarmMonitor(
+           ISystemContext context,
+           NodeState parent,
+           ushort namespaceIndex,
+           string alarmName,
+           double initialValue)
+        {
+            // Create the alarm object
+            m_alarm = new DiscreteAlarmState(this);
+
+            base.InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+
+            // Set input node
+            m_alarm.InputNode.Value = NodeId;
+
+            // set acknowledge state
+            m_alarm.SetAcknowledgedState(context, false);
+            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
+
+            m_alarm.SetActiveState(context, false);
+
+            // Disable this property 
+            m_alarm.LatchedState = null;
+        }
+
+        #endregion
     }
 }

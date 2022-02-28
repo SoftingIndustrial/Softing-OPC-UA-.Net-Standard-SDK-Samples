@@ -22,9 +22,19 @@ namespace SampleServer.Alarms
         #region Private Members
 
         private ConditionState m_alarm;
-        
+
         #endregion
 
+        #region Constructor
+        /// <summary>
+        /// Create new instance of <see cref="ConditionMonitor"/>
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         public ConditionMonitor(
             ISystemContext context,
             NodeState parent,
@@ -44,17 +54,24 @@ namespace SampleServer.Alarms
                 initialValue);
         }
 
+        #endregion       
+
+        #region Public Methods
+        /// <summary>
+        /// Updates the Condition alarm
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="newValue"></param>
+        /// <param name="enableFlag"></param>
         public void UpdateConditionAlarmMonitor(
             ISystemContext context,
             double newValue,
             bool enableFlag)
         {
             // Update alarm information
-            //m_alarm.AutoReportStateChanges = true; // always reports changes
             m_alarm.Time.Value = DateTime.UtcNow;
             m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
             m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-            //m_alarm.BranchId.Value = null; // ignore BranchId
 
             // Set state values
             m_alarm.SetEnableState(context, enableFlag);
@@ -84,29 +101,15 @@ namespace SampleServer.Alarms
             ProcessVariableChanged(context, newValue);
         }
 
+        #endregion
+
+        #region Base Class Overrides
+
         /// <summary>
-        /// Initialize the alarm monitor 
+        /// Hendle the Variable value change
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="parent"></param>
-        /// <param name="namespaceIndex"></param>
-        /// <param name="alarmName"></param>
-        /// <param name="initialValue"></param>
-        private void InitializeAlarmMonitor(
-            ISystemContext context,
-            NodeState parent,
-            ushort namespaceIndex,
-            string alarmName,
-            double initialValue)
-        {
-            // Create the alarm object
-            m_alarm = new ConditionState(this);
-
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
-
-            m_alarm.SetEnableState(context, false);
-        }
-
+        /// <param name="value"></param>
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
@@ -151,6 +154,35 @@ namespace SampleServer.Alarms
             {
                 Utils.Trace(exception, "Alarms.ConditionMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
+        }
+
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Initialize the alarm monitor 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void InitializeAlarmMonitor(
+            ISystemContext context,
+            NodeState parent,
+            ushort namespaceIndex,
+            string alarmName,
+            double initialValue)
+        {
+            // Create the alarm object
+            m_alarm = new ConditionState(this);
+
+            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+
+            m_alarm.SetEnableState(context, false);
+        }
+
+        #endregion
+
     }
-}
 }

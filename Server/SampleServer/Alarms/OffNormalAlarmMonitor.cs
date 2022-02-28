@@ -29,6 +29,17 @@ namespace SampleServer.Alarms
 
         #endregion
 
+        #region Constructor
+        /// <summary>
+        /// Create new instance of <see cref="OffNormalAlarmMonitor"/>
+        /// </summary>
+        /// <param name="alarmsNodeManager"></param>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         public OffNormalAlarmMonitor(
             AlarmsNodeManager alarmsNodeManager,
             ISystemContext context,
@@ -54,58 +65,23 @@ namespace SampleServer.Alarms
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
 
+        #endregion       
+
+        #region Public Methods
+
         /// <summary>
-        /// Initialize the alarm monitor 
+        /// Handler for instances of <see cref="OffNormalAlarmState"/> alarms
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="parent"></param>
-        /// <param name="namespaceIndex"></param>
-        /// <param name="alarmName"></param>
-        /// <param name="initialValue"></param>
-        /// <param name="normalValueVariable"></param>
-        private void InitializeAlarmMonitor(
-            ISystemContext context,
-            NodeState parent,
-            ushort namespaceIndex,
-            string alarmName,
-            double initialValue,
-            BaseDataVariableState normalValueVariable)
-        {
-            // Create the alarm object
-            m_alarm = new OffNormalAlarmState(this);
-
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
-
-            // Set input node
-            m_alarm.InputNode.Value = NodeId;
-
-            // Setup the NormalState
-            AddChild(normalValueVariable);
-            m_alarm.NormalState.Value = normalValueVariable.NodeId;
-
-            // set acknowledge state
-            m_alarm.SetAcknowledgedState(context, false);
-            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
-
-            m_alarm.SetActiveState(context, false);
-
-            // Disable this property 
-            m_alarm.LatchedState = null;
-        }
-
-        protected override void ProcessVariableChanged(ISystemContext context, object value)
-        {
-            BaseVariableState normalValVar = (BaseVariableState) m_alarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
-            ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
-        }
-
-        internal static void ProcessVariableChanged(ISystemContext context, object value, OffNormalAlarmState offNormalAlarmState, object normalValue)
+        /// <param name="value"></param>
+        /// <param name="offNormalAlarmState"></param>
+        /// <param name="normalValue"></param>
+        public static void ProcessVariableChanged(ISystemContext context, object value, OffNormalAlarmState offNormalAlarmState, object normalValue)
         {
             try
             {
                 double? dValue = Convert.ToDouble(value);
                 double? dNormalValue = Convert.ToDouble(normalValue);
-
 
                 bool offNormal = dValue != dNormalValue;
 
@@ -152,5 +128,61 @@ namespace SampleServer.Alarms
                 Utils.Trace(exception, "Alarms.{0}.ProcessVariableChanged: Unexpected error processing value changed notification.", offNormalAlarmState.GetType());
             }
         }
+        #endregion
+
+        #region Base Class Overrides
+
+        /// <summary>
+        /// Hendle the Variable value change
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="value"></param>
+        protected override void ProcessVariableChanged(ISystemContext context, object value)
+        {
+            BaseVariableState normalValVar = (BaseVariableState) m_alarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
+            ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
+        }
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Initialize the alarm monitor 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        /// <param name="normalValueVariable"></param>
+        private void InitializeAlarmMonitor(
+            ISystemContext context,
+            NodeState parent,
+            ushort namespaceIndex,
+            string alarmName,
+            double initialValue,
+            BaseDataVariableState normalValueVariable)
+        {
+            // Create the alarm object
+            m_alarm = new OffNormalAlarmState(this);
+
+            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+
+            // Set input node
+            m_alarm.InputNode.Value = NodeId;
+
+            // Setup the NormalState
+            AddChild(normalValueVariable);
+            m_alarm.NormalState.Value = normalValueVariable.NodeId;
+
+            // set acknowledge state
+            m_alarm.SetAcknowledgedState(context, false);
+            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
+
+            m_alarm.SetActiveState(context, false);
+
+            // Disable this property 
+            m_alarm.LatchedState = null;
+        }
+        #endregion        
     }
 }

@@ -10,7 +10,6 @@
 
 using Opc.Ua;
 using System;
-using System.Collections.Generic;
 
 namespace SampleServer.Alarms
 {
@@ -27,7 +26,17 @@ namespace SampleServer.Alarms
 
         #endregion
 
+        #region Constructor
 
+        /// <summary>
+        /// Create instance of <see cref="DialogConditionMonitor"/>
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         public DialogConditionMonitor(
             ISystemContext context,
             NodeState parent,
@@ -45,41 +54,16 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
         }
+
+        #endregion
+              
+        #region Base Class Overrides
+
         /// <summary>
-        /// Initialize the alarm monitor 
+        /// Hendle the Variable value change
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="parent"></param>
-        /// <param name="namespaceIndex"></param>
-        /// <param name="alarmName"></param>
-        /// <param name="initialValue"></param>
-        private void InitializeAlarmMonitor(
-            ISystemContext context,
-            NodeState parent,
-            ushort namespaceIndex,
-            string alarmName,
-            double initialValue)
-        {
-            // Create the alarm object
-            m_alarm = new DialogConditionState(this);
-
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
-
-            // Manadatory fields initialization
-            m_alarm.DialogState.Value = new LocalizedText("en-US", ConditionStateNames.Inactive);
-
-            // Manadatory properties initialization
-            m_alarm.Prompt.Value = new LocalizedText("en-US", "Select option: Ok|Cancel");
-            m_alarm.ResponseOptionSet.Value = new LocalizedText[] { new LocalizedText("en-US", "Ok"), new LocalizedText("en-US", "Cancel") };
-            int response = 0;
-            m_alarm.DefaultResponse.Value = response;
-            m_alarm.LastResponse.Value = response;
-            m_alarm.OkResponse.Value = response;
-            m_alarm.CancelResponse.Value = 1;
-            m_alarm.SetResponse(context, response);
-
-        }
-
+        /// <param name="value"></param>
         protected override void ProcessVariableChanged(ISystemContext context, object value)
         {
             try
@@ -161,5 +145,45 @@ namespace SampleServer.Alarms
                 Utils.Trace(exception, "Alarms.DialogConditionMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
         }
+
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Initialize the alarm monitor 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void InitializeAlarmMonitor(
+            ISystemContext context,
+            NodeState parent,
+            ushort namespaceIndex,
+            string alarmName,
+            double initialValue)
+        {
+            // Create the alarm object
+            m_alarm = new DialogConditionState(this);
+
+            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+
+            // Manadatory fields initialization
+            m_alarm.DialogState.Value = new LocalizedText("en-US", ConditionStateNames.Inactive);
+
+            // Manadatory properties initialization
+            m_alarm.Prompt.Value = new LocalizedText("en-US", "Select option: Ok|Cancel");
+            m_alarm.ResponseOptionSet.Value = new LocalizedText[] { new LocalizedText("en-US", "Ok"), new LocalizedText("en-US", "Cancel") };
+            int response = 0;
+            m_alarm.DefaultResponse.Value = response;
+            m_alarm.LastResponse.Value = response;
+            m_alarm.OkResponse.Value = response;
+            m_alarm.CancelResponse.Value = 1;
+            m_alarm.SetResponse(context, response);
+
+        }
+
+        #endregion
     }
 }

@@ -10,10 +10,6 @@
 
 using Opc.Ua;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SampleServer.Alarms
 {
@@ -29,6 +25,21 @@ namespace SampleServer.Alarms
 
         #endregion
 
+        #region Constructor
+
+        /// <summary>
+        /// Create new instance of <see cref="LimitAlarmMonitor"/>
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parent"></param>
+        /// <param name="namespaceIndex"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        /// <param name="highLimit"></param>
+        /// <param name="highHighLimit"></param>
+        /// <param name="lowLimit"></param>
+        /// <param name="lowLowLimit"></param>
         public LimitAlarmMonitor(
             ISystemContext context,
             NodeState parent,
@@ -56,6 +67,75 @@ namespace SampleServer.Alarms
 
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
+
+        #endregion
+
+        #region Base Class Overrides
+
+        /// <summary>
+        /// Hendle the Variable value change
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="value"></param>
+        protected override void ProcessVariableChanged(ISystemContext context, object value)
+        {
+            try
+            {
+                string currentUserId = string.Empty;
+                IOperationContext operationContext = context as IOperationContext;
+
+                if (operationContext != null && operationContext.UserIdentity != null)
+                {
+                    currentUserId = operationContext.UserIdentity.DisplayName;
+                }
+
+                double? newValue = Convert.ToDouble(value);
+
+                // Set event data
+                m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
+                m_alarm.Time.Value = DateTime.UtcNow;
+                m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
+
+                m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
+                m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
+                m_alarm.BranchId.Value = new NodeId();
+
+                bool nonActiveState = newValue > m_alarm.LowLimit.Value && newValue < m_alarm.HighLimit.Value;
+                m_alarm.SetActiveState(context, !nonActiveState);
+
+                // Not interested in disabled or inactive alarms
+                if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
+                {
+                    m_alarm.Retain.Value = false;
+                }
+                else
+                {
+                    m_alarm.Retain.Value = true;
+                }
+
+                // Report changes to node attributes
+                m_alarm.ClearChangeMasks(context, true);
+
+                // Check if events are being monitored for the source
+                if (m_alarm.AreEventsMonitored)
+                {
+                    // Create a snapshot
+                    InstanceStateSnapshot e = new InstanceStateSnapshot();
+                    e.Initialize(context, m_alarm);
+
+                    // Report the event
+                    ReportEvent(context, e);
+                }
+            }
+            catch (Exception exception)
+            {
+                Utils.Trace(exception, "Alarms.LimitAlarmMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Initialize the alarm monitor 
@@ -108,60 +188,6 @@ namespace SampleServer.Alarms
             m_alarm.LatchedState = null;
         }
 
-        protected override void ProcessVariableChanged(ISystemContext context, object value)
-        {
-            try
-            {
-                string currentUserId = string.Empty;
-                IOperationContext operationContext = context as IOperationContext;
-
-                if (operationContext != null && operationContext.UserIdentity != null)
-                {
-                    currentUserId = operationContext.UserIdentity.DisplayName;
-                }
-
-                double? newValue = Convert.ToDouble(value);
-
-                // Set event data
-                m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
-                m_alarm.Time.Value = DateTime.UtcNow;
-                m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-
-                m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
-                m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
-                m_alarm.BranchId.Value = new NodeId();
-
-                bool nonActiveState = newValue > m_alarm.LowLimit.Value && newValue < m_alarm.HighLimit.Value;
-                m_alarm.SetActiveState(context, !nonActiveState);
-
-                // Not interested in disabled or inactive alarms
-                if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
-                {
-                    m_alarm.Retain.Value = false;
-                }
-                else
-                {
-                    m_alarm.Retain.Value = true;
-                }
-                
-                // Report changes to node attributes
-                m_alarm.ClearChangeMasks(context, true);
-
-                // Check if events are being monitored for the source
-                if (m_alarm.AreEventsMonitored)
-                {
-                    // Create a snapshot
-                    InstanceStateSnapshot e = new InstanceStateSnapshot();
-                    e.Initialize(context, m_alarm);
-
-                    // Report the event
-                    ReportEvent(context, e);
-                }
-            }
-            catch (Exception exception)
-            {
-                Utils.Trace(exception, "Alarms.LimitAlarmMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
-            }
-        }
+        #endregion
     }
 }

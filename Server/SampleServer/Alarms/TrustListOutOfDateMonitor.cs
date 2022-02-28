@@ -16,7 +16,7 @@ namespace SampleServer.Alarms
     /// <summary>
     /// A monitored variable with an <see cref="TrustListOutOfDateAlarmState"/> attached.
     /// </summary>
-    class TrustListOutOfDateMonitor : BaseAlarmMonitor
+    internal class TrustListOutOfDateMonitor : BaseAlarmMonitor
     {
         #region Private Members
 
@@ -48,6 +48,21 @@ namespace SampleServer.Alarms
 
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
+        #endregion
+
+        #region Base Class Overrides
+
+        /// <summary>
+        /// Hendle the Variable value change
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="value"></param>
+        protected override void ProcessVariableChanged(ISystemContext context, object value)
+        {
+            BaseVariableState normalValVar = (BaseVariableState)AlarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
+            OffNormalAlarmMonitor.ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
+        }
+
         #endregion
 
         #region Private Methods
@@ -95,17 +110,8 @@ namespace SampleServer.Alarms
             // Disable this property 
             m_alarm.LatchedState = null;
         }
- 
-        #endregion
-
-        #region Prrotected Methods
-        protected override void ProcessVariableChanged(ISystemContext context, object value)
-        {
-            BaseVariableState normalValVar = (BaseVariableState)AlarmsNodeManager.FindNodeInAddressSpace(m_alarm.NormalState.Value);
-            OffNormalAlarmMonitor.ProcessVariableChanged(context, value, m_alarm, normalValVar.Value);
-        }
 
         #endregion
-
+             
     }
 }
