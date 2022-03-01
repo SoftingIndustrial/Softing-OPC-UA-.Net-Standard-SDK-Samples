@@ -1504,46 +1504,6 @@ namespace SampleServer.Alarms
         {
             try
             {
-                #region A and C Enable only
-                
-                // enable this code only if test: A and C Enable only
-                // a start/stop is necessary after running tests [enable/disable] instable test for the other option
-
-                //var inputs = new List<Variant>();
-
-                //List<ConditionState> conditionStates = m_conditionInstances.FindAll(x => x.EnabledState.Id.Value == false);
-                //if (conditionStates.Count > 0)
-                //{
-                //    int repeatEnableDisableCount = 9;
-                //    if (repeatEnableDisableCount > 0)
-                //    {
-                //        for (int i = 0; i < repeatEnableDisableCount; i++)
-                //        {
-                //            foreach (ConditionState ci in conditionStates)
-                //            {
-                //                if (ci.EnabledState.Id.Value == false)
-                //                {
-                //                    BaseVariableState activeState = (BaseVariableState)ci.FindChild(SystemContext, new QualifiedName("ActiveState"));
-                //                    if (activeState != null)
-                //                    {
-                //                        ((AlarmConditionState)ci).SetActiveState(SystemContext, true);
-                //                    }
-                //                    ci.SetEnableState(SystemContext, true);
-                //                }
-                //                else
-                //                {
-                //                    ci.SetEnableState(SystemContext, false);
-                //                }
-
-                //            }
-                //            //Task.Delay(1000);
-                //            Thread.Sleep(1000);
-                //        }
-                //    }
-                //}
-                #endregion
-
-
                 foreach (ConditionState ci in m_conditionInstances)
                 {
                     if (ci.Parent != null)
@@ -1557,10 +1517,12 @@ namespace SampleServer.Alarms
                                 if (alarmMonitor.Value.Equals(normalValue.Value))
                                 {
                                     alarmMonitor.Value++;
+                                    Console.WriteLine("Alarm '{0}' changed value: {1}", alarmMonitor.DisplayName, alarmMonitor.Value);
                                 }
                                 else
                                 {
                                     alarmMonitor.Value = (double)normalValue.Value;
+                                    Console.WriteLine("Alarm '{0}' changed value: {1}", alarmMonitor.DisplayName, alarmMonitor.Value);
                                 }
                             }
                             else
@@ -1606,6 +1568,7 @@ namespace SampleServer.Alarms
                                 else
                                 {
                                     alarmMonitor.Value++;
+                                    Console.WriteLine("Alarm '{0}' changed value: {1}", alarmMonitor.DisplayName, alarmMonitor.Value);
                                 }
 
                             }
