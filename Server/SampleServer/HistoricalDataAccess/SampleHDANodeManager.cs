@@ -86,27 +86,88 @@ namespace SampleServer.HistoricalDataAccess
             // Historian nodes
             ArchiveItem itemHistorian1 = new ArchiveItem("StaticHistoricalDataItem_Historian1", new FileInfo(Path.Combine("HistoricalDataAccess","Data","Sample","Historian1.txt")));
             ArchiveItemState nodeHistorian1 = new ArchiveItemState(SystemContext, itemHistorian1, NamespaceIndex);
-            nodeHistorian1.ReloadFromSource(SystemContext);   
+            nodeHistorian1.ReloadFromSource(SystemContext);
+            nodeHistorian1.Value = GetDefaultValueForDatatype(nodeHistorian1.DataType);
             AddPredefinedNode(SystemContext, nodeHistorian1);
             AddReference(root, ReferenceTypeIds.Organizes, false, nodeHistorian1.NodeId, true);
 
+            AddReference(nodeHistorian1.HistoricalDataConfiguration.AggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Count, false);
+
+            AddReference(nodeHistorian1.HistoricalDataConfiguration.AggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Interpolative, false);
+
             ArchiveItem itemHistorian2 = new ArchiveItem("StaticHistoricalDataItem_Historian2", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "Historian2.txt")));
             ArchiveItemState nodeHistorian2 = new ArchiveItemState(SystemContext, itemHistorian2, NamespaceIndex);
-            nodeHistorian2.ReloadFromSource(SystemContext);            
+            nodeHistorian2.ReloadFromSource(SystemContext);
+            nodeHistorian2.Value = GetDefaultValueForDatatype(nodeHistorian2.DataType);
             AddPredefinedNode(SystemContext, nodeHistorian2);
             AddReference(root, ReferenceTypeIds.Organizes, false, nodeHistorian2.NodeId, true);
 
             ArchiveItem itemHistorian3 = new ArchiveItem("StaticHistoricalDataItem_Historian3", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "Historian3.txt")));
             ArchiveItemState nodeHistorian3 = new ArchiveItemState(SystemContext, itemHistorian3, NamespaceIndex);
             nodeHistorian3.ReloadFromSource(SystemContext);
+            nodeHistorian3.Value = GetDefaultValueForDatatype(nodeHistorian3.DataType);
             AddPredefinedNode(SystemContext, nodeHistorian3);
             AddReference(root, ReferenceTypeIds.Organizes, false, nodeHistorian3.NodeId, true);
 
             ArchiveItem itemHistorian4 = new ArchiveItem("StaticHistoricalDataItem_Historian4", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "Historian4.txt")));
             ArchiveItemState nodeHistorian4 = new ArchiveItemState(SystemContext, itemHistorian4, NamespaceIndex);
             nodeHistorian4.ReloadFromSource(SystemContext);
+            nodeHistorian4.Value = GetDefaultValueForDatatype(nodeHistorian4.DataType);
             AddPredefinedNode(SystemContext, nodeHistorian4);
             AddReference(root, ReferenceTypeIds.Organizes, false, nodeHistorian4.NodeId, true);
+
+            // boolean nodes
+            ArchiveItem itemHistorianBool1 = new ArchiveItem("StaticHistoricalDataItem_HistorianBool1", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "HistorianBoolean1.txt")));
+            
+            ArchiveItemState nodeHistorianBool1 = new ArchiveItemState(SystemContext, itemHistorianBool1, NamespaceIndex);
+            nodeHistorianBool1.ReloadFromSource(SystemContext);
+            nodeHistorianBool1.Value = GetDefaultValueForDatatype(nodeHistorianBool1.DataType);
+            AddPredefinedNode(SystemContext, nodeHistorianBool1);
+            AddReference(root, ReferenceTypeIds.Organizes, false, nodeHistorianBool1.NodeId, true);
+
+            ArchiveItem itemHistorianBool2 = new ArchiveItem("StaticHistoricalDataItem_HistorianBool2", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "HistorianBoolean2.txt")));
+
+            ArchiveItemState nodeHistorianBool2 = new ArchiveItemState(SystemContext, itemHistorianBool2, NamespaceIndex);
+            nodeHistorianBool2.ReloadFromSource(SystemContext);
+            nodeHistorianBool2.Value = GetDefaultValueForDatatype(nodeHistorianBool1.DataType);
+            AddPredefinedNode(SystemContext, nodeHistorianBool2);
+            AddReference(root, ReferenceTypeIds.Organizes, false, nodeHistorianBool2.NodeId, true);
+
+            // integer nodes
+            ArchiveItem itemHistorianInt1 = new ArchiveItem("StaticHistoricalDataItem_HistorianInt1", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "HistorianInteger1.txt")));
+
+            ArchiveItemState nodeHistorianInt1 = new ArchiveItemState(SystemContext, itemHistorianInt1, NamespaceIndex);
+            nodeHistorianInt1.ReloadFromSource(SystemContext);
+            nodeHistorianInt1.Value = GetDefaultValueForDatatype(nodeHistorianInt1.DataType);
+            AddPredefinedNode(SystemContext, nodeHistorianInt1);
+            AddReference(root, ReferenceTypeIds.Organizes, false, nodeHistorianInt1.NodeId, true);
+
+            ArchiveItem itemHistorianInt2 = new ArchiveItem("StaticHistoricalDataItem_HistorianInt2", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "HistorianInteger2.txt")));
+
+            ArchiveItemState nodeHistorianInt2 = new ArchiveItemState(SystemContext, itemHistorianInt2, NamespaceIndex);
+            nodeHistorianInt2.ReloadFromSource(SystemContext);
+            nodeHistorianInt2.Value = GetDefaultValueForDatatype(nodeHistorianInt2.DataType);
+            AddPredefinedNode(SystemContext, nodeHistorianInt2);
+            AddReference(root, ReferenceTypeIds.Organizes, false, nodeHistorianInt2.NodeId, true);
+
+            // string nodes
+            ArchiveItem itemHistorianString1 = new ArchiveItem("StaticHistoricalDataItem_HistorianString1", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "HistorianString1.txt")));
+
+            ArchiveItemState nodeHistorianString1 = new ArchiveItemState(SystemContext, itemHistorianString1, NamespaceIndex);
+            nodeHistorianString1.ReloadFromSource(SystemContext);
+            nodeHistorianString1.Value = GetDefaultValueForDatatype(nodeHistorianString1.DataType);
+            AddPredefinedNode(SystemContext, nodeHistorianString1);
+            AddReference(root, ReferenceTypeIds.Organizes, false, nodeHistorianString1.NodeId, true);
+
+            ArchiveItem itemHistorianString2 = new ArchiveItem("StaticHistoricalDataItem_HistorianString2", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Sample", "HistorianString2.txt")));
+
+            ArchiveItemState nodeHistorianString2 = new ArchiveItemState(SystemContext, itemHistorianString2, NamespaceIndex);
+            nodeHistorianString2.ReloadFromSource(SystemContext);
+            nodeHistorianString2.Value = GetDefaultValueForDatatype(nodeHistorianString2.DataType);
+            AddPredefinedNode(SystemContext, nodeHistorianString2);
+            AddReference(root, ReferenceTypeIds.Organizes, false, nodeHistorianString2.NodeId, true);
         }
 
         /// <summary>

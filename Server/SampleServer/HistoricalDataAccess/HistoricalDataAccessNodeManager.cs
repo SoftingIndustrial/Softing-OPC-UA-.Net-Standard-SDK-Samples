@@ -102,6 +102,86 @@ namespace SampleServer.HistoricalDataAccess
                     capabilities.InsertAnnotationCapability.Value = true;
                 }
             }
+            NodeState aggregateFunctions = FindNodeInAddressSpace(ObjectIds.Server_ServerCapabilities_AggregateFunctions);
+            
+            AddReference(aggregateFunctions,
+                ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Interpolative , false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Average, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_TimeAverage, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_TimeAverage2, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Total, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Total2, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Minimum, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Minimum2, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_MinimumActualTime, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_MinimumActualTime2, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Maximum, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Maximum2, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_MaximumActualTime, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_MaximumActualTime2, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Range, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Range2, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_AnnotationCount, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Count, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_DurationInStateZero, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_DurationInStateNonZero, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_NumberOfTransitions, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Start, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_End, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_Delta, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_StartBound, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_EndBound, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_DeltaBounds, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_DurationGood, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_DurationBad, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_PercentGood, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_PercentBad, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_WorstQuality, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_WorstQuality2, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_StandardDeviationSample, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_StandardDeviationPopulation, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_VarianceSample, false);
+            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
+                ObjectIds.AggregateFunction_VariancePopulation, false);
+
+
+
         }
         #endregion
 
@@ -133,12 +213,6 @@ namespace SampleServer.HistoricalDataAccess
 
                     if(source == null)
                     {
-                        continue;
-                    }
-
-                    if(context.UserIdentity.DisplayName == "usr")
-                    {
-                        errors[handle.Index] = StatusCodes.BadUserAccessDenied;
                         continue;
                     }
 
@@ -228,7 +302,21 @@ namespace SampleServer.HistoricalDataAccess
             List<NodeHandle> nodesToProcess,
             IDictionary<NodeId, NodeState> cache)
         {
-            for(int ii = 0; ii < nodesToRead.Count; ii++)
+            if (details.StartTime == details.EndTime)
+            {
+                foreach (HistoryReadResult result in results)
+                {
+                    result.StatusCode = StatusCodes.BadInvalidArgument;
+                }
+                for (int i = 0; i < errors.Count; i++)
+                {
+                    errors[i] = StatusCodes.BadInvalidArgument;
+                }
+                return;
+            }
+
+
+            for (int ii = 0; ii < nodesToRead.Count; ii++)
             {
                 NodeHandle handle = nodesToProcess[ii];
                 HistoryReadValueId nodeToRead = nodesToRead[handle.Index];
@@ -245,12 +333,34 @@ namespace SampleServer.HistoricalDataAccess
                         continue;
                     }
 
-                    if(context.UserIdentity.DisplayName == "usr")
+                    List<NodeId> supportsAll = new List<NodeId>
                     {
-                        errors[handle.Index] = StatusCodes.BadUserAccessDenied;
-                        continue;
-                    }
+                        ObjectIds.AggregateFunction_AnnotationCount, ObjectIds.AggregateFunction_Count,
+                        ObjectIds.AggregateFunction_Start, ObjectIds.AggregateFunction_StartBound,
+                        ObjectIds.AggregateFunction_End, ObjectIds.AggregateFunction_EndBound,
+                        ObjectIds.AggregateFunction_DurationGood, ObjectIds.AggregateFunction_DurationBad,
+                        ObjectIds.AggregateFunction_PercentGood, ObjectIds.AggregateFunction_PercentBad,
+                        ObjectIds.AggregateFunction_WorstQuality, ObjectIds.AggregateFunction_WorstQuality2
+                    };
+                    List<NodeId> supportsBoolean = new List<NodeId>
+                    {
+                        ObjectIds.AggregateFunction_DurationInStateZero, 
+                        ObjectIds.AggregateFunction_DurationInStateNonZero,
+                        ObjectIds.AggregateFunction_NumberOfTransitions
+                    };
 
+                    // check if the aggregate is supported for node data type
+                    BuiltInType builtInType = TypeInfo.GetBuiltInType(((BaseVariableState)source)?.DataType);
+                    if (!TypeInfo.IsNumericType(builtInType))
+                    {
+                        // non numeric types have restrictions
+                        if (!supportsAll.Contains(details.AggregateType[ii])
+                            && (!(builtInType == BuiltInType.Boolean && supportsBoolean.Contains(details.AggregateType[ii]))))
+                        {
+                            errors[handle.Index] = StatusCodes.BadAggregateNotSupported;
+                            continue;
+                        }
+                    }
                     // Load an existing request
                     if(nodeToRead.ContinuationPoint != null)
                     {
@@ -344,12 +454,6 @@ namespace SampleServer.HistoricalDataAccess
                         continue;
                     }
 
-                    if(context.UserIdentity.DisplayName == "usr")
-                    {
-                        errors[handle.Index] = StatusCodes.BadUserAccessDenied;
-                        continue;
-                    }
-
                     // Load an existing request
                     if(nodeToRead.ContinuationPoint != null)
                     {
@@ -435,12 +539,6 @@ namespace SampleServer.HistoricalDataAccess
 
                     if(source == null)
                     {
-                        continue;
-                    }
-
-                    if(context.UserIdentity.DisplayName == "usr")
-                    {
-                        errors[handle.Index] = StatusCodes.BadUserAccessDenied;
                         continue;
                     }
 
@@ -1141,7 +1239,7 @@ namespace SampleServer.HistoricalDataAccess
         {
             DataValue proccessedValue = calculator.GetProcessedValue(returnPartial);
 
-            while(proccessedValue != null)
+            while(proccessedValue != null)// && StatusCode.IsGood(proccessedValue.StatusCode))
             {
                 // Apply any index range or encoding
                 if(applyIndexRangeOrEncoding)

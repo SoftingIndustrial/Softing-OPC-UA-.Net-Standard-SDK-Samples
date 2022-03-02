@@ -67,7 +67,7 @@ namespace SampleClient.Samples
             }
             try
             {
-                if (m_alarmsMonitoredItem != null && m_subscription!= null)
+                if (m_alarmsMonitoredItem != null && m_subscription != null)
                 {
                     // Clear the local list of alarms
                     m_retainedAlarms.Clear();
@@ -78,7 +78,7 @@ namespace SampleClient.Samples
 
                     Console.WriteLine("ConditionRefresh method invoked.");
                 }
-            }            
+            }
             catch (Exception ex)
             {
                 Program.PrintException("AlarmsClient.ConditionRefresh", ex);
@@ -139,12 +139,14 @@ namespace SampleClient.Samples
                 IList<object> outputArgs;
                 m_session.Call(selectedAlarm.EventNode, MethodIds.ConditionType_AddComment, inputArgs, out outputArgs);
                 Console.WriteLine("AddComment request sent for alarm with SourceName = {0}", selectedAlarm.SourceName);
-            }            
+            }
             catch (Exception ex)
             {
                 Program.PrintException("AlarmsClient.AcknowledgeAlarms", ex);
             }
         }
+
+
 
         /// <summary>
         /// Allows user to acknowledge alarm
@@ -200,11 +202,79 @@ namespace SampleClient.Samples
                 IList<object> outputArgs;
                 m_session.Call(selectedAlarm.EventNode, MethodIds.AcknowledgeableConditionType_Acknowledge, inputArgs, out outputArgs);
                 Console.WriteLine("Acknowledge request sent for alarm with SourceName = {0}", selectedAlarm.SourceName);
-            }            
+            }
             catch (Exception ex)
             {
                 Program.PrintException("AlarmsClient.AcknowledgeAlarms", ex);
             }
+        }
+
+        /// <summary>
+        /// Trigger an alarm - no matter if a alarm was initiated before
+        /// </summary>
+        public void TriggerAlarms()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("TriggerAlarms: The session is not initialized!");
+                return;
+            }
+
+            try
+            {
+                // Prompt the user to select the alarm from the list of active alarms
+                Console.WriteLine("1 - Enable");
+                Console.WriteLine("2 - Disable");
+
+                Console.WriteLine("Please select trigger option.");
+                string triggerOption = Console.ReadLine();
+                bool alarmEnabled = false;
+                int alarmOptionSelected = 0;
+                if(Int32.TryParse(triggerOption, out alarmOptionSelected))
+                {
+                    if(alarmOptionSelected != 1 && alarmOptionSelected != 2)
+                    {
+                        return;
+                    }
+                    alarmEnabled = alarmOptionSelected == 1 ? true : false;
+                }
+
+                int timeout = 30000;
+
+                //Browse Path: Root\Objects\Alarms
+                NodeId parentObjectId = new NodeId("ns=2;i=1");
+
+                //Browse Path: Root\Objects\Alarms\TriggerMethod
+                NodeId methodNodeId = new NodeId("ns=2;i=515");
+
+                //Browse Path: Root\Objects\Alarms\PressureSensor 1\PressureMonitor 1 (alarm browse path)
+                NodeId exclusiveLimitAlarmNodeId = new NodeId("ns=2;i=242");
+                
+                // Invoke TriggerAlarm method
+                List<object> inputArgs = new List<object>(3);
+                inputArgs.Add(exclusiveLimitAlarmNodeId);
+                inputArgs.Add(alarmEnabled);
+                inputArgs.Add(timeout);
+
+                IList<object> outputArgs;
+                m_session.Call(parentObjectId, methodNodeId, inputArgs, out outputArgs);
+
+                //Browse Path: Root\Objects\Alarms\PressureSensor 1\PressureMonitor 1 (alarm browse path)
+                NodeId conditionAlarmNodeId = new NodeId("ns=2;i=480");
+
+                // Invoke TriggerAlarm method
+                inputArgs = new List<object>(3);
+                inputArgs.Add(conditionAlarmNodeId);
+                inputArgs.Add(alarmEnabled);
+                inputArgs.Add(timeout);
+
+                m_session.Call(parentObjectId, methodNodeId, inputArgs, out outputArgs);
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("AlarmsClient.TriggerAlarm", ex);
+            }
+
         }
 
         #endregion
@@ -242,7 +312,7 @@ namespace SampleClient.Samples
                 catch (Exception ex)
                 {
                     Program.PrintException("AlarmsClient.Initialize", ex);
-                
+
                     if (m_session != null)
                     {
                         m_session.Dispose();
@@ -383,9 +453,9 @@ namespace SampleClient.Samples
                     eventFields.AppendFormat("SourceNode   = {0}\r\n", eventNotification.EventFields[3]);
                     eventFields.AppendFormat("SourceName   = {0}\r\n", eventNotification.EventFields[4]);
                     eventFields.AppendFormat("SourceName   = {0}\r\n", eventNotification.EventFields[4]);
-                    eventFields.AppendFormat("Time         = {0:HH:mm:ss.fff}\r\n", ((DateTime) eventNotification.EventFields[5].Value).ToLocalTime());
+                    eventFields.AppendFormat("Time         = {0:HH:mm:ss.fff}\r\n", ((DateTime)eventNotification.EventFields[5].Value).ToLocalTime());
                     eventFields.AppendFormat("Message      = {0}\r\n", eventNotification.EventFields[6]);
-                    eventFields.AppendFormat("Severity     = {0}\r\n", (EventSeverity) ((ushort) eventNotification.EventFields[7].Value));
+                    eventFields.AppendFormat("Severity     = {0}\r\n", (EventSeverity)((ushort)eventNotification.EventFields[7].Value));
                     eventFields.AppendFormat("EnabledState = {0}\r\n", eventNotification.EventFields[8]);
                     eventFields.AppendFormat("ActiveState  = {0}\r\n", eventNotification.EventFields[9]);
                     eventFields.AppendFormat("AckedState   = {0}\r\n", eventNotification.EventFields[10]);
@@ -398,20 +468,20 @@ namespace SampleClient.Samples
                     if (eventNotification.EventFields[3] != Variant.Null &&
                         eventNotification.EventFields[12] != Variant.Null)
                     {
-                        bool retain = (bool) eventNotification.EventFields[12].Value;
-                        NodeId sourceNode = (NodeId) eventNotification.EventFields[3].Value;
+                        bool retain = (bool)eventNotification.EventFields[12].Value;
+                        NodeId sourceNode = (NodeId)eventNotification.EventFields[3].Value;
 
                         // Update the list of active alarms and store only the events with "retain" bit set to true.
                         if (retain)
                         {
                             EventDetails eventDetails = new EventDetails();
-                            eventDetails.EventNode = (NodeId) eventNotification.EventFields[0].Value;
-                            eventDetails.EventId = (byte[]) eventNotification.EventFields[1].Value;
+                            eventDetails.EventNode = (NodeId)eventNotification.EventFields[0].Value;
+                            eventDetails.EventId = (byte[])eventNotification.EventFields[1].Value;
                             eventDetails.SourceNode = sourceNode;
                             eventDetails.SourceName = eventNotification.EventFields[4].Value.ToString();
-                            eventDetails.Message = (LocalizedText) eventNotification.EventFields[6].Value;
-                            eventDetails.Severity = (EventSeverity) ((ushort) eventNotification.EventFields[7].Value);
-                            eventDetails.Comment = (LocalizedText) eventNotification.EventFields[11].Value;
+                            eventDetails.Message = (LocalizedText)eventNotification.EventFields[6].Value;
+                            eventDetails.Severity = (EventSeverity)((ushort)eventNotification.EventFields[7].Value);
+                            eventDetails.Comment = (LocalizedText)eventNotification.EventFields[11].Value;
 
                             m_retainedAlarms[sourceNode] = eventDetails;
                         }

@@ -14,17 +14,16 @@ using Opc.Ua;
 namespace SampleServer.Alarms
 {
     /// <summary>
-    /// A monitored variable with an <see cref="ExclusiveLimitAlarmState"/> attached.
+    /// A monitored variable with an <see cref="ExclusiveDeviationAlarmState"/> attached.
     /// </summary>
-    class ExclusiveLimitMonitor : BaseAlarmMonitor
+    class ExclusiveDeviationMonitor : BaseAlarmMonitor
     {
-
         #region Private Members
 
-        private ExclusiveLimitAlarmState m_alarm;
-        
+        private ExclusiveDeviationAlarmState m_alarm;
+
         #endregion
-        
+
         #region Constructors
 
         /// <summary>
@@ -40,7 +39,7 @@ namespace SampleServer.Alarms
         /// <param name="highHighLimit">The HighHigh limit of the alarm.</param>
         /// <param name="lowLimit">The Low limit of the alarm.</param>
         /// <param name="lowLowLimit">The LowLow limit of the alarm.</param>
-        public ExclusiveLimitMonitor(
+        public ExclusiveDeviationMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
@@ -66,11 +65,6 @@ namespace SampleServer.Alarms
 
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
-
-        #endregion
-
-        #region Public Methods
-
         #endregion
 
         #region Base Class Overrides
@@ -190,10 +184,9 @@ namespace SampleServer.Alarms
             }
             catch (Exception exception)
             {
-                Utils.Trace(exception, "Alarms.ExclusiveLimitMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
+                Utils.Trace(exception, "Alarms.ExclusiveDeviationMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
         }
-
         #endregion
 
         #region Private Methods
@@ -220,7 +213,7 @@ namespace SampleServer.Alarms
             double lowLowLimit)
         {
             // Create the alarm object
-            m_alarm = new ExclusiveLimitAlarmState(this);
+            m_alarm = new ExclusiveDeviationAlarmState(this);
 
             // Declare limit components
             m_alarm.HighHighLimit = new PropertyState<double>(m_alarm);
@@ -241,7 +234,12 @@ namespace SampleServer.Alarms
             m_alarm.SetLimitState(context, LimitAlarmStates.Inactive);
             m_alarm.SetSuppressedState(context, false);
             m_alarm.SetActiveState(context, false);
-            
+
+            // Set Setpoint node
+            m_alarm.SetpointNode.Value = NodeId;
+            // optional
+            m_alarm.BaseSetpointNode.Value = NodeId;
+
             // Define limit values
             m_alarm.HighLimit.Value = highLimit;
             m_alarm.HighHighLimit.Value = highHighLimit;
@@ -252,6 +250,6 @@ namespace SampleServer.Alarms
             m_alarm.LatchedState = null;
         }
 
-        #endregion        
+        #endregion       
     }
 }

@@ -14,15 +14,14 @@ using Opc.Ua;
 namespace SampleServer.Alarms
 {
     /// <summary>
-    /// A monitored variable with an <see cref="ExclusiveLimitAlarmState"/> attached.
+    /// A monitored variable with an <see cref="ExclusiveRateOfChangeAlarmState"/> attached.
     /// </summary>
-    class ExclusiveLimitMonitor : BaseAlarmMonitor
+    class ExclusiveRateOfChangeMonitor : BaseAlarmMonitor
     {
-
         #region Private Members
 
-        private ExclusiveLimitAlarmState m_alarm;
-        
+        private ExclusiveRateOfChangeAlarmState m_alarm;
+
         #endregion
         
         #region Constructors
@@ -40,7 +39,7 @@ namespace SampleServer.Alarms
         /// <param name="highHighLimit">The HighHigh limit of the alarm.</param>
         /// <param name="lowLimit">The Low limit of the alarm.</param>
         /// <param name="lowLowLimit">The LowLow limit of the alarm.</param>
-        public ExclusiveLimitMonitor(
+        public ExclusiveRateOfChangeMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
@@ -66,11 +65,6 @@ namespace SampleServer.Alarms
 
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
-
-        #endregion
-
-        #region Public Methods
-
         #endregion
 
         #region Base Class Overrides
@@ -190,10 +184,9 @@ namespace SampleServer.Alarms
             }
             catch (Exception exception)
             {
-                Utils.Trace(exception, "Alarms.ExclusiveLimitMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
+                Utils.Trace(exception, "Alarms.ExclusiveRateOfChangeMonitor.ProcessVariableChanged: Unexpected error processing value changed notification.");
             }
         }
-
         #endregion
 
         #region Private Methods
@@ -220,7 +213,7 @@ namespace SampleServer.Alarms
             double lowLowLimit)
         {
             // Create the alarm object
-            m_alarm = new ExclusiveLimitAlarmState(this);
+            m_alarm = new ExclusiveRateOfChangeAlarmState(this);
 
             // Declare limit components
             m_alarm.HighHighLimit = new PropertyState<double>(m_alarm);
@@ -233,6 +226,9 @@ namespace SampleServer.Alarms
             // Set input node
             m_alarm.InputNode.Value = NodeId;
 
+            // optional (887 instead 22 - the same issue as 8912 instead 22 [EntentionObject type] )
+            //m_alarm.EngineeringUnits.Value = new EUInformation();
+
             // set acknowledge state
             m_alarm.SetAcknowledgedState(context, false);
             m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
@@ -241,7 +237,7 @@ namespace SampleServer.Alarms
             m_alarm.SetLimitState(context, LimitAlarmStates.Inactive);
             m_alarm.SetSuppressedState(context, false);
             m_alarm.SetActiveState(context, false);
-            
+
             // Define limit values
             m_alarm.HighLimit.Value = highLimit;
             m_alarm.HighHighLimit.Value = highHighLimit;
@@ -252,6 +248,6 @@ namespace SampleServer.Alarms
             m_alarm.LatchedState = null;
         }
 
-        #endregion        
+        #endregion       
     }
 }

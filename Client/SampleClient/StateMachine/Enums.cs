@@ -88,6 +88,7 @@ namespace SampleClient.StateMachine
         RefreshAlarms,
         AcknowledgeAlarms,
         AddCommentAlarms,
+        TriggerAlarms,
         EndAlarms,
 
         StartAccessRights,
