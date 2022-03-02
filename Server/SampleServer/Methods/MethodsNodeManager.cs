@@ -21,10 +21,6 @@ namespace SampleServer.Methods
     /// </summary>
     public class MethodsNodeManager : NodeManager
     {
-        #region Private Fields
-        private const string RefrigeratorStateArrayNodeId = "ns=10;i=15002";
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -102,7 +98,7 @@ namespace SampleServer.Methods
                 #endregion
 
                 #region Create Method with arguments of enumeration type array
-                NodeId refrigeratorStateEnumTypeId = new NodeId(RefrigeratorStateArrayNodeId);
+                NodeId refrigeratorStateEnumTypeId = new NodeId("ns=13;i=15002");
 
                 Argument[] inputArgumentsCountRefrigeratorStates = new Argument[]
                 {

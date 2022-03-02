@@ -25,7 +25,7 @@ namespace SampleClient.Samples
         private const string SessionName = "HistoryClient Session";
         private readonly UaApplication m_application;
         private ClientSession m_session;
-        private readonly NodeId m_historianNodeId = new NodeId("ns=3;s=StaticHistoricalDataItem_Historian2");
+        private readonly NodeId m_historianNodeId = new NodeId("ns=4;s=StaticHistoricalDataItem_Historian2");
 
         #endregion
 
@@ -210,7 +210,7 @@ namespace SampleClient.Samples
             try
             {
                 // create the session object with no security and anonymous login    
-                m_session = m_application.CreateSession(Program.ServerBetaUrl);
+                m_session = m_application.CreateSession(Program.ServerUrl);
                 m_session.SessionName = SessionName;
 
                 //connect session

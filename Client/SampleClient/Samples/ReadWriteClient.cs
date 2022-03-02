@@ -46,41 +46,41 @@ namespace SampleClient.Samples
          const string StaticComplexNodeId = "ns=7;i=15013";
 
         //Browse path: Root\Objects\CustomTypes\EngineState
-        const string StaticCustomEnumerationNodeId = "ns=8;i=27";
+        const string StaticCustomEnumerationNodeId = "ns=11;i=27";
         //Browse path: Root\Objects\CustomTypes\Arrays\EngineStates
-        const string StaticCustomEnumerationArrayNodeId = "ns=8;i=35";
+        const string StaticCustomEnumerationArrayNodeId = "ns=11;i=35";
 
         //Browse path: Root\Objects\CustomTypes\DisplayWarning
-        const string StaticCustomOptionSetEnumerationNodeId = "ns=8;i=28";
+        const string StaticCustomOptionSetEnumerationNodeId = "ns=11;i=28";
         //Browse path: Root\Objects\CustomTypes\Arrays\DisplayWarnings
-        const string StaticCustomOptionSetEnumerationArrayNodeId = "ns=8;i=36";
+        const string StaticCustomOptionSetEnumerationArrayNodeId = "ns=11;i=36";
 
         //Browse path: Root\Objects\CustomTypes\FeaturesOptionSet
-        const string StaticCustomOptionSetNodeId = "ns=8;i=29";
+        const string StaticCustomOptionSetNodeId = "ns=11;i=29";
         //Browse path: Root\Objects\CustomTypes\Arrays\FeaturesOptionSets
-        const string StaticCustomOptionSetArrayNodeId = "ns=8;i=37";
+        const string StaticCustomOptionSetArrayNodeId = "ns=11;i=37";
 
         //Browse path: Root\Objects\CustomTypes\Owner
-        const string StaticCustomStructureWithOptionalFieldsNodeId = "ns=8;i=30";
+        const string StaticCustomStructureWithOptionalFieldsNodeId = "ns=11;i=30";
         //Browse path: Root\Objects\CustomTypes\Arrays\Owners
-        const string StaticCustomStructureWithOptionalFieldsArrayNodeId = "ns=8;i=38";
+        const string StaticCustomStructureWithOptionalFieldsArrayNodeId = "ns=11;i=38";
 
         //Browse path: Root\Objects\CustomTypes\FuelLevel
-        const string StaticCustomUnionNodeId = "ns=8;i=31";
+        const string StaticCustomUnionNodeId = "ns=11;i=31";
         //Browse path: Root\Objects\CustomTypes\Arrays\FuelLevels
-        const string StaticCustomUnionArrayNodeId = "ns=8;i=39";
+        const string StaticCustomUnionArrayNodeId = "ns=11;i=39";
 
         //Browse path: Root\Objects\CustomTypes\Vehicle
-        const string StaticCustomStructuredValueNodeId = "ns=8;i=32";
+        const string StaticCustomStructuredValueNodeId = "ns=11;i=32";
         //Browse path: Root\Objects\CustomTypes\Arrays\Vehicles
-        const string StaticCustomStructuredValueArrayNodeId = "ns=8;i=40";
+        const string StaticCustomStructuredValueArrayNodeId = "ns=11;i=40";
 
         //Browse path: Root\Objects\DataAccess\NodesForRegister\Node0
-        const string RegisterNodeId0 = "ns=2;i=49";
+        const string RegisterNodeId0 = "ns=3;i=49";
         //Browse path: Root\Objects\DataAccess\NodesForRegister\Node1
-        const string RegisterNodeId1 = "ns=2;i=50";
+        const string RegisterNodeId1 = "ns=3;i=50";
         //Browse path: Root\Objects\DataAccess\NodesForRegister\Node2
-        const string RegisterNodeId2 = "ns=2;i=51";
+        const string RegisterNodeId2 = "ns=3;i=51";
         #endregion
 
         #region Constructor

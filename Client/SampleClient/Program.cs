@@ -24,7 +24,6 @@ namespace SampleClient
     static class Program
     {
         public static string ServerUrl { get; private set; }
-        public static string ServerBetaUrl { get; private set; }
         public static string ServerUrlHttps { get; private set; }
 
         /// <summary>
@@ -49,7 +48,6 @@ namespace SampleClient
             {
                 // use ServerUrl from client configuration Extension
                 ServerUrl = sampleClientConfiguration.ServerUrl;
-                ServerBetaUrl = sampleClientConfiguration.ServerBetaUrl;
                 ServerUrlHttps = sampleClientConfiguration.ServerUrlHttps;
             }
 

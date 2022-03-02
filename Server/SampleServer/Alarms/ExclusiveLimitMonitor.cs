@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using Opc.Ua;
 
-namespace SampleServerBeta.Alarms
+namespace SampleServer.Alarms
 {
     /// <summary>
     /// A monitored variable with an ExclusiveLimitAlarm attached.

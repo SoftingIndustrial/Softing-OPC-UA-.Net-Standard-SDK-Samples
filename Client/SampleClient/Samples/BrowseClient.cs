@@ -251,17 +251,18 @@ namespace SampleClient.Samples
                 // define the starting node as the "Objects" node.
                 NodeId startingNode = ObjectIds.ObjectsFolder;
 
-                // define the BrowsePath to the "DataAccess\Refrigerator\DoorMotor" node.
+                // define the BrowsePath to the "Static\Scalar\Int32Value" node.
                 List<QualifiedName> browsePath = new List<QualifiedName>();
-                browsePath.Add(new QualifiedName("DataAccess", 2));
-                browsePath.Add(new QualifiedName("Refrigerator", 2));
-                browsePath.Add(new QualifiedName("DoorMotor", 2));
+                browsePath.Add(new QualifiedName("DataAccess", 3));
+                browsePath.Add(new QualifiedName("Refrigerator", 3));
+                browsePath.Add(new QualifiedName("DoorMotor", 3));
 
                 // invoke the TranslateBrowsePath service.
                 IList<NodeId> translateResults = m_session.TranslateBrowsePathToNodeIds(startingNode, browsePath);
 
                 if (translateResults != null)
                 {
+
                     Console.WriteLine("TranslateBrowsePath returned {0} result(s):", translateResults.Count);
                     //for display reasons create BrowsePathEx
                     BrowsePathEx sourceBrowsePath = new BrowsePathEx(startingNode, browsePath);
@@ -302,9 +303,9 @@ namespace SampleClient.Samples
                 browsePath.StartingNode = ObjectIds.ObjectsFolder;
 
                 // define the relative browse path to the "DataAccess\Refrigerator\DoorMotor" node.
-                browsePath.RelativePath.Add(new QualifiedName("DataAccess", 2));
-                browsePath.RelativePath.Add(new QualifiedName("Refrigerator", 2));
-                browsePath.RelativePath.Add(new QualifiedName("DoorMotor", 2));
+                browsePath.RelativePath.Add(new QualifiedName("DataAccess", 3));
+                browsePath.RelativePath.Add(new QualifiedName("Refrigerator", 3));
+                browsePath.RelativePath.Add(new QualifiedName("DoorMotor", 3));
                 browsePaths.Add(browsePath);
 
                 // define the starting node as the "Objects" node.
@@ -312,9 +313,9 @@ namespace SampleClient.Samples
                 browsePath.StartingNode = ObjectIds.ObjectsFolder;
 
                 // define the relative browse path to the "DataAccess\Refrigerator\LightStatus" node.
-                browsePath.RelativePath.Add(new QualifiedName("DataAccess", 2));
-                browsePath.RelativePath.Add(new QualifiedName("Refrigerator", 2));
-                browsePath.RelativePath.Add(new QualifiedName("LightStatus", 2));
+                browsePath.RelativePath.Add(new QualifiedName("DataAccess", 3));
+                browsePath.RelativePath.Add(new QualifiedName("Refrigerator", 3));
+                browsePath.RelativePath.Add(new QualifiedName("LightStatus", 3));
                 browsePaths.Add(browsePath);
 
                 // invoke the TranslateBrowsePathsToNodeIds service.

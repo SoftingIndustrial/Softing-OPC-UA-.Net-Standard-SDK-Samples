@@ -15,7 +15,7 @@ using System.Threading;
 using Opc.Ua.Server;
 using Opc.Ua;
 
-namespace SampleServerBeta.HistoricalDataAccess
+namespace SampleServer.HistoricalDataAccess
 {
     /// <summary>
     /// Sample implementation of a historical data access node manager

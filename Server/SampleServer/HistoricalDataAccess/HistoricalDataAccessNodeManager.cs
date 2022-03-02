@@ -16,7 +16,7 @@ using Opc.Ua.Server;
 using Opc.Ua;
 using Softing.Opc.Ua.Server;
 
-namespace SampleServerBeta.HistoricalDataAccess
+namespace SampleServer.HistoricalDataAccess
 {
     public abstract class HistoricalDataAccessNodeManager : NodeManager
     {

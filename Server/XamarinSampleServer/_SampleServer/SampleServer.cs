@@ -16,7 +16,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using Opc.Ua;
 using Opc.Ua.Server;
-using SampleServerBeta.Alarms;
+using SampleServer.Alarms;
 using SampleServer.DataAccess;
 using SampleServer.HistoricalDataAccess;
 using SampleServer.Methods;

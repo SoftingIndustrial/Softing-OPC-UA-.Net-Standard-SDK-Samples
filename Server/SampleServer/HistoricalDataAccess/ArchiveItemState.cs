@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
-namespace SampleServerBeta.HistoricalDataAccess
+namespace SampleServer.HistoricalDataAccess
 {
     
     /// <summary>

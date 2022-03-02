@@ -22,7 +22,7 @@ using KeyValuePair = Opc.Ua.KeyValuePair;
 using Opc.Ua.PubSub.Encoding;
 using System.Threading.Tasks;
 
-namespace SampleServerBeta.PubSub
+namespace SampleServer.PubSub
 {
     /// <summary>
     /// Node manager specialized in PubSub functionality.
