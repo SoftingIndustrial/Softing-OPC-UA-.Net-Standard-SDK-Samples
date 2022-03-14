@@ -121,7 +121,7 @@ namespace SampleClient
             }
 
             // Set the AcceptAll flag to signal the CertificateValidator if the Certificate shall be accepted.
-            // If this flag is set on true the CertificateValidation events for e.Error.InnerResult will be supressed.
+            // If this flag is set on true the CertificateValidation events for e.Error.InnerResult will be suppressed.
             e.AcceptAll = isCertificateAccepted;
         }
 

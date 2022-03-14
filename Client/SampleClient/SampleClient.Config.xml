@@ -164,6 +164,7 @@
         <DecodeCustomDataTypes>true</DecodeCustomDataTypes>
         <DecodeDataTypeDictionaries>true</DecodeDataTypeDictionaries>
         <ClientCertificateLifeTime>24</ClientCertificateLifeTime>
+        <ReuseCustomDataTypeInfoAtReconnect>true</ReuseCustomDataTypeInfoAtReconnect>
       </ClientToolkitConfiguration>
     </ua:XmlElement>
     <ua:XmlElement>

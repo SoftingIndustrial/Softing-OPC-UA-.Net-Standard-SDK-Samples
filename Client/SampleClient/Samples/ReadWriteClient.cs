@@ -27,6 +27,7 @@ namespace SampleClient.Samples
         private const string SessionName = "ReadWriteClient Session";
         private readonly UaApplication m_application;
         private ClientSession m_session;
+        private ClientSession m_session2;
         private readonly Random m_random = new Random();
 
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Int32
@@ -43,7 +44,7 @@ namespace SampleClient.Samples
         //Browse path: Root\Objects\CTT\StructuredTypeVariables\EnumerationType1Variable
         const string StaticEnumNodeId = "ns=7;i=15014";
         //Browse path: Root\Objects\CTT\StructuredTypeVariables\DataType5Variable
-         const string StaticComplexNodeId = "ns=7;i=15013";
+        const string StaticComplexNodeId = "ns=7;i=15013";
 
         //Browse path: Root\Objects\CustomTypes\EngineState
         const string StaticCustomEnumerationNodeId = "ns=11;i=27";
@@ -105,7 +106,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("ReadVariableNode: The session is not initialized!");
                 return;
             }
-           
+
             try
             {
                 NodeId nodeId = new NodeId(StaticUInt32NodeId);
@@ -133,7 +134,7 @@ namespace SampleClient.Samples
                         Console.WriteLine("  Value sampling interval: {0}", variableNode.MinimumSamplingIntervalText);
                     }
                 }
-            }            
+            }
             catch (Exception ex)
             {
                 Program.PrintException("ReadVariableNode", ex);
@@ -174,7 +175,7 @@ namespace SampleClient.Samples
                         Console.WriteLine("  EventNotifier :  {0}", variableNode.EventNotifierText);
                     }
                 }
-            }            
+            }
             catch (Exception ex)
             {
                 Program.PrintException("ReadObjectNode", ex);
@@ -184,7 +185,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Reads value for an uint node providing the NodeID without reading the whole node information.
         /// </summary>
-        public void ReadValueForNode ()
+        public void ReadValueForNode()
         {
             if (m_session == null)
             {
@@ -257,7 +258,7 @@ namespace SampleClient.Samples
                 return;
             }
             ReadValueId readValueId = new ReadValueId();
-            readValueId.NodeId = new NodeId(StaticComplexNodeId); 
+            readValueId.NodeId = new NodeId(StaticComplexNodeId);
             readValueId.AttributeId = Attributes.Value;
 
             Console.WriteLine("\n Read complex value for NodeId:{0}", StaticComplexNodeId);
@@ -302,12 +303,12 @@ namespace SampleClient.Samples
                 return;
             }
             Console.WriteLine("\n Read enum value for NodeId:{0}", StaticEnumNodeId);
-            NodeId nodeId =  new NodeId(StaticEnumNodeId);
+            NodeId nodeId = new NodeId(StaticEnumNodeId);
             try
             {
                 // we need the data type id and this is why we read node
                 BaseNode baseNode = m_session.ReadNode(nodeId);
-                
+
                 if (baseNode.NodeClass == NodeClass.Variable)
                 {
                     VariableNodeEx variableNode = baseNode as VariableNodeEx;
@@ -344,7 +345,7 @@ namespace SampleClient.Samples
                 Program.PrintException("ReadEnumValue", ex);
             }
         }
-       
+
         /// <summary>
         /// Reads a list of values for a list of nodes providing the NodeIDs and without read the whole node information.
         /// The list of values contains values for an uint node, a GUID node and a datetime node.
@@ -462,7 +463,7 @@ namespace SampleClient.Samples
                             Console.WriteLine("   {0}   ", enumValue.ValueStrings[i]);
                         }
 
-                        Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}({3})", StaticCustomEnumerationNodeId, enumValue.TypeName.Name, enumValue.ValueString, enumValue.Value);                        
+                        Console.WriteLine("  The Value of NodeId {0} is an instance of {1}: {2}({3})", StaticCustomEnumerationNodeId, enumValue.TypeName.Name, enumValue.ValueString, enumValue.Value);
                     }
 
                     // read array value 
@@ -524,7 +525,7 @@ namespace SampleClient.Samples
                 BaseComplexTypeInfo baseComplexTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
-                    Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.", 
+                    Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
                         dataValueTypeNodeId, StaticCustomOptionSetEnumerationNodeId);
                     return;
                 }
@@ -679,7 +680,7 @@ namespace SampleClient.Samples
                 else
                 {
                     Console.WriteLine("  The Value of NodeId {0} cannot be decoded as an OptionalFieldsStructuredValue instance ", StaticCustomStructureWithOptionalFieldsNodeId);
-                }                
+                }
 
                 // read value for array node
                 readValueId.NodeId = StaticCustomStructureWithOptionalFieldsArrayNodeId;
@@ -765,7 +766,7 @@ namespace SampleClient.Samples
                         if (unionStructuredValue != null)
                         {
                             Console.Write("{0}, ", unionStructuredValue);
-                        }                        
+                        }
                     }
                     Console.WriteLine();
                 }
@@ -923,7 +924,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("WriteComplexValueForNode: The session is not initialized!");
                 return;
             }
-           
+
             try
             {
                 //read data type id for node StaticComplexNodeId
@@ -932,7 +933,7 @@ namespace SampleClient.Samples
                 readValueId.AttributeId = Attributes.DataType;
 
                 Console.WriteLine("\n Read DataType Id for NodeId:{0}", StaticComplexNodeId);
-               
+
                 DataValueEx dataValuetypeId = m_session.Read(readValueId);
 
                 //Get Default value for data type
@@ -980,7 +981,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("WriteEnumValueForNode: The session is not initialized!");
                 return;
             }
-            
+
             WriteValue writeValue = new WriteValue();
             writeValue.AttributeId = Attributes.Value;
             writeValue.NodeId = new NodeId(StaticEnumNodeId);
@@ -1068,7 +1069,7 @@ namespace SampleClient.Samples
             WriteValuesForCustomEnumerationDataType();
             WriteValuesForCustomOptionSetEnumerationDataType();
 
-            WriteValuesForCustomStructuredValueDataType();            
+            WriteValuesForCustomStructuredValueDataType();
             WriteValuesForCustomStructureWithOptionalFieldsDataType();
             WriteValuesForCustomUnionDataType();
 
@@ -1104,7 +1105,7 @@ namespace SampleClient.Samples
                 BaseComplexTypeInfo baseComplexTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
-                    Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.", 
+                    Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
                         dataValueTypeNodeId, StaticCustomEnumerationNodeId);
                     return;
                 }
@@ -1281,7 +1282,7 @@ namespace SampleClient.Samples
                 BaseComplexTypeInfo baseComplexTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
-                    Console.WriteLine(" Current session does not know DataType: {0} for NodeId: {0}.  Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.", 
+                    Console.WriteLine(" Current session does not know DataType: {0} for NodeId: {0}.  Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
                         dataValueTypeNodeId, StaticCustomOptionSetNodeId);
                     return;
                 }
@@ -1366,7 +1367,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("  Status Code is {0}.", dataValueTypeId.StatusCode);
 
                 // try to get the complex type info for the specified node
-                BaseComplexTypeInfo baseComplexTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId); 
+                BaseComplexTypeInfo baseComplexTypeInfo = m_session.GetComplexTypeInfo(dataValueTypeNodeId);
                 if (baseComplexTypeInfo == null)
                 {
                     Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
@@ -1405,7 +1406,7 @@ namespace SampleClient.Samples
                     //change some fields for default object
                     defaultValueArray[0]["Name"] = "John Smith";
                     defaultValueArray[0]["Age"] = (byte)30;
-                    
+
                     defaultValueArray[1]["Name"] = "John Smith";
                     defaultValueArray[1]["Details"] = "bla bla";
                     //write new value to node 
@@ -1568,7 +1569,7 @@ namespace SampleClient.Samples
                         owner["Name"] = "John Doe";
                         owner["Age"] = (byte)50;
                     }
-                    OptionSetValue features =  defaultValue["Features"] as OptionSetValue;
+                    OptionSetValue features = defaultValue["Features"] as OptionSetValue;
                     if (features != null)
                     {
                         features["ABS"] = true;
@@ -1608,7 +1609,7 @@ namespace SampleClient.Samples
                     Console.WriteLine(" Status code is {0}", statusCode);
                 }
                 // For this data type the default value is of type StructuredValue
-               StructuredValue[] defaultValueArray = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId, ValueRanks.OneDimension, 3) as StructuredValue[];
+                StructuredValue[] defaultValueArray = m_session.GetDefaultValueForDatatype(dataValueTypeNodeId, ValueRanks.OneDimension, 3) as StructuredValue[];
                 // write value into array variable node
                 if (defaultValueArray != null)
                 {
@@ -1746,6 +1747,16 @@ namespace SampleClient.Samples
                         Task.Delay(500).Wait();
                     }
                 }
+
+                m_session2 = m_application.CreateSessionCopy(m_session);
+                m_session2.SessionName = SessionName + "2";
+                m_session.Disconnect(true);
+
+                ////connect session
+                m_session2.Connect(false, true);
+
+                m_session = m_session2;
+
                 Console.WriteLine("Session - Custom Data Types information is loaded.");
             }
             catch (Exception ex)
@@ -1759,6 +1770,7 @@ namespace SampleClient.Samples
                 }
             }
         }
+
 
         /// <summary>
         /// Disconnects the current session.
@@ -1793,7 +1805,7 @@ namespace SampleClient.Samples
         {
             Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
             Console.WriteLine("  Data Value is {0}.", dataValue.Value);
-        } 
+        }
         #endregion
     }
 }
