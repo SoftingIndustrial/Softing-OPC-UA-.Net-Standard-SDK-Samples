@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PubSubConfigurationDataType xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+  <PublishedDataSets />
+  <Connections>
+    <PubSubConnectionDataType>
+      <Name>MqttJsonConnection_Subscriber</Name>
+      <Enabled>true</Enabled>
+      <PublisherId>
+        <Value>
+          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+        </Value>
+      </PublisherId>
+      <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-mqtt-json</TransportProfileUri>
+      <Address>
+        <TypeId>
+          <Identifier>i=21176</Identifier>
+        </TypeId>
+        <Body>
+          <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+            <NetworkInterface />
+            <Url>mqtt://localhost:1883</Url>
+          </NetworkAddressUrlDataType>
+        </Body>
+      </Address>
+      <ConnectionProperties>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>UserName</Name>
+          </Key>
+          <Value>
+            <Value>
+              <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>Password</Name>
+          </Key>
+          <Value>
+            <Value>
+              <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>AzureClientId</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Null xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>CleanSession</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Boolean xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">true</Boolean>
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>ProtocolVersion</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Int32 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">5</Int32>
+            </Value>
+          </Value>
+        </KeyValuePair>
+      </ConnectionProperties>
+      <TransportSettings>
+        <TypeId>
+          <Identifier>i=15579</Identifier>
+        </TypeId>
+        <Body>
+          <BrokerConnectionTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+        </Body>
+      </TransportSettings>
+      <WriterGroups />
+      <ReaderGroups>
+        <ReaderGroupDataType>
+          <Name>ReaderGroup 11</Name>
+          <Enabled>true</Enabled>
+          <SecurityMode>Invalid_0</SecurityMode>
+          <SecurityGroupId i:nil="true" />
+          <SecurityKeyServices />
+          <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
+          <GroupProperties />
+          <TransportSettings>
+            <TypeId>
+              <Identifier>i=15995</Identifier>
+            </TypeId>
+            <Body>
+              <ReaderGroupTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Body>
+          </TransportSettings>
+          <MessageSettings>
+            <TypeId>
+              <Identifier>i=15996</Identifier>
+            </TypeId>
+            <Body>
+              <ReaderGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Body>
+          </MessageSettings>
+          <DataSetReaders>
+            <DataSetReaderDataType>
+              <Name>Reader 111</Name>
+              <Enabled>true</Enabled>
+              <PublisherId>
+                <Value>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+                </Value>
+              </PublisherId>
+              <WriterGroupId>11</WriterGroupId>
+              <DataSetWriterId>111</DataSetWriterId>
+              <DataSetMetaData>
+                <Namespaces />
+                <StructureDataTypes />
+                <EnumDataTypes />
+                <SimpleDataTypes />
+                <Name i:nil="true" />
+                <Description i:nil="true" />
+                <Fields />
+                <DataSetClassId>
+                  <String>00000000-0000-0000-0000-000000000000</String>
+                </DataSetClassId>
+                <ConfigurationVersion>
+                  <MajorVersion>0</MajorVersion>
+                  <MinorVersion>0</MinorVersion>
+                </ConfigurationVersion>
+              </DataSetMetaData>
+              <DataSetFieldContentMask>32</DataSetFieldContentMask>
+              <MessageReceiveTimeout>0</MessageReceiveTimeout>
+              <KeyFrameCount>1</KeyFrameCount>
+              <HeaderLayoutUri i:nil="true" />
+              <SecurityMode>Invalid_0</SecurityMode>
+              <SecurityGroupId i:nil="true" />
+              <SecurityKeyServices />
+              <DataSetReaderProperties />
+              <TransportSettings>
+                <TypeId>
+                  <Identifier>i=16023</Identifier>
+                </TypeId>
+                <Body>
+                  <BrokerDataSetReaderTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <QueueName>Json_WriterGroup_1</QueueName>
+                    <RequestedDeliveryGuarantee>AtLeastOnce_2</RequestedDeliveryGuarantee>
+                    <MetaDataQueueName>Json_WriterGroup_1/$Metadata</MetaDataQueueName>
+                  </BrokerDataSetReaderTransportDataType>
+                </Body>
+              </TransportSettings>
+              <MessageSettings>
+                <TypeId>
+                  <Identifier>i=16019</Identifier>
+                </TypeId>
+                <Body>
+                  <JsonDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <NetworkMessageContentMask>59</NetworkMessageContentMask>
+                    <DataSetMessageContentMask>31</DataSetMessageContentMask>
+                  </JsonDataSetReaderMessageDataType>
+                </Body>
+              </MessageSettings>
+              <SubscribedDataSet i:nil="true" />
+            </DataSetReaderDataType>
+            <DataSetReaderDataType>
+              <Name>Reader 112</Name>
+              <Enabled>true</Enabled>
+              <PublisherId>
+                <Value>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+                </Value>
+              </PublisherId>
+              <WriterGroupId>11</WriterGroupId>
+              <DataSetWriterId>112</DataSetWriterId>
+              <DataSetMetaData>
+                <Namespaces />
+                <StructureDataTypes />
+                <EnumDataTypes />
+                <SimpleDataTypes />
+                <Name i:nil="true" />
+                <Description i:nil="true" />
+                <Fields />
+                <DataSetClassId>
+                  <String>00000000-0000-0000-0000-000000000000</String>
+                </DataSetClassId>
+                <ConfigurationVersion>
+                  <MajorVersion>0</MajorVersion>
+                  <MinorVersion>0</MinorVersion>
+                </ConfigurationVersion>
+              </DataSetMetaData>
+              <DataSetFieldContentMask>32</DataSetFieldContentMask>
+              <MessageReceiveTimeout>0</MessageReceiveTimeout>
+              <KeyFrameCount>1</KeyFrameCount>
+              <HeaderLayoutUri i:nil="true" />
+              <SecurityMode>Invalid_0</SecurityMode>
+              <SecurityGroupId i:nil="true" />
+              <SecurityKeyServices />
+              <DataSetReaderProperties />
+              <TransportSettings>
+                <TypeId>
+                  <Identifier>i=16023</Identifier>
+                </TypeId>
+                <Body>
+                  <BrokerDataSetReaderTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <QueueName>Json_WriterGroup_1</QueueName>
+                    <RequestedDeliveryGuarantee>AtLeastOnce_2</RequestedDeliveryGuarantee>
+                    <MetaDataQueueName>Json_WriterGroup_1/$Metadata</MetaDataQueueName>
+                  </BrokerDataSetReaderTransportDataType>
+                </Body>
+              </TransportSettings>
+              <MessageSettings>
+                <TypeId>
+                  <Identifier>i=16019</Identifier>
+                </TypeId>
+                <Body>
+                  <JsonDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <NetworkMessageContentMask>59</NetworkMessageContentMask>
+                    <DataSetMessageContentMask>31</DataSetMessageContentMask>
+                  </JsonDataSetReaderMessageDataType>
+                </Body>
+              </MessageSettings>
+              <SubscribedDataSet i:nil="true" />
+            </DataSetReaderDataType>
+            <DataSetReaderDataType>
+              <Name>Reader 113</Name>
+              <Enabled>true</Enabled>
+              <PublisherId>
+                <Value>
+                  <Null xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+                </Value>
+              </PublisherId>
+              <WriterGroupId>11</WriterGroupId>
+              <DataSetWriterId>113</DataSetWriterId>
+              <DataSetMetaData>
+                <Namespaces />
+                <StructureDataTypes />
+                <EnumDataTypes />
+                <SimpleDataTypes />
+                <Name i:nil="true" />
+                <Description i:nil="true" />
+                <Fields />
+                <DataSetClassId>
+                  <String>00000000-0000-0000-0000-000000000000</String>
+                </DataSetClassId>
+                <ConfigurationVersion>
+                  <MajorVersion>0</MajorVersion>
+                  <MinorVersion>0</MinorVersion>
+                </ConfigurationVersion>
+              </DataSetMetaData>
+              <DataSetFieldContentMask>32</DataSetFieldContentMask>
+              <MessageReceiveTimeout>0</MessageReceiveTimeout>
+              <KeyFrameCount>1</KeyFrameCount>
+              <HeaderLayoutUri i:nil="true" />
+              <SecurityMode>Invalid_0</SecurityMode>
+              <SecurityGroupId i:nil="true" />
+              <SecurityKeyServices />
+              <DataSetReaderProperties />
+              <TransportSettings>
+                <TypeId>
+                  <Identifier>i=16023</Identifier>
+                </TypeId>
+                <Body>
+                  <BrokerDataSetReaderTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <QueueName>Json_WriterGroup_1</QueueName>
+                    <RequestedDeliveryGuarantee>AtLeastOnce_2</RequestedDeliveryGuarantee>
+                    <MetaDataQueueName>Json_WriterGroup_1/$Metadata</MetaDataQueueName>
+                  </BrokerDataSetReaderTransportDataType>
+                </Body>
+              </TransportSettings>
+              <MessageSettings>
+                <TypeId>
+                  <Identifier>i=16019</Identifier>
+                </TypeId>
+                <Body>
+                  <JsonDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <NetworkMessageContentMask>59</NetworkMessageContentMask>
+                    <DataSetMessageContentMask>31</DataSetMessageContentMask>
+                  </JsonDataSetReaderMessageDataType>
+                </Body>
+              </MessageSettings>
+              <SubscribedDataSet i:nil="true" />
+            </DataSetReaderDataType>
+          </DataSetReaders>
+        </ReaderGroupDataType>
+      </ReaderGroups>
+    </PubSubConnectionDataType>
+  </Connections>
+  <Enabled>true</Enabled>
+</PubSubConfigurationDataType>

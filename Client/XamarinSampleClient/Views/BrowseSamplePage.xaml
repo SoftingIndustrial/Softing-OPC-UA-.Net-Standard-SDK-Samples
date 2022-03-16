@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviours="clr-namespace:XamarinSampleClient.Behaviours;assembly=XamarinSampleClient"
+             x:Class="XamarinSampleClient.Views.BrowseSamplePage"
+             Title="{Binding Title}">
+    <ContentPage.Content>
+        <ScrollView>
+            <Grid>
+                <Grid VerticalOptions="FillAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"
+                           Margin="8,8, 0, 0" 
+                           Text="SampleServer URL:" 
+                           VerticalOptions="Center"/>
+                    <Entry Grid.Row="1"
+                           Placeholder="Enter SampleServer URL..." 
+                           IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                           Text="{Binding SampleServerUrl}" Keyboard="Url"
+                           HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                    <Button Grid.Row="2"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                        Clicked="Browse_OnClicked" Text="Browse"/>
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label 
+                            Margin="8,8, 8, 0" 
+                            Text="Max references returned:" 
+                            VerticalOptions="Center" LineBreakMode="NoWrap" HorizontalOptions="Fill"/>
+                        <Entry Grid.Column="1"
+                            Placeholder="maximum references returned..." 
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                            Text="{Binding MaxReferencesReturned}" Keyboard="Numeric"
+                            HorizontalOptions="Fill" VerticalOptions="Center">
+                            <Entry.Behaviors>
+                                <behaviours:UInt32ValidationBehaviour />
+                            </Entry.Behaviors>
+                        </Entry>
+                    </Grid>
+                    <Button Grid.Row="4"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                        Clicked="BrowseWithOptions_OnClicked" Text="Browse with options"/>
+
+                    <StackLayout Grid.Row="5"
+                        Orientation="Horizontal" Margin="4, 4, 0, 0">
+                        <Label Text="Session status:" Style="{StaticResource BoldLabel}" VerticalTextAlignment="Center"/>
+                        <Label Text="{Binding SessionStatusText}" VerticalTextAlignment="Center"/>
+                    </StackLayout>
+
+                    <Label  Grid.Row="6"
+                        Margin="4,4, 0, 0" 
+                            Text="Results:"
+                            Style="{StaticResource BoldLabel}"/>
+                    <!-- Results list -->
+                    <ListView Grid.Row="7"
+                            Margin="4,0,0,0"
+                            ItemsSource="{Binding Results}"
+                            CachingStrategy="RecycleElement"
+                            HasUnevenRows="True"
+                            IsPullToRefreshEnabled="false" VerticalOptions="FillAndExpand" HeightRequest="800" >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label  Margin="1" Text="{Binding Text}"/>
+                                        <Label IsVisible="{Binding Info, Converter={StaticResource NullToFalseConverter}}"
+                                            Margin="1" Text="{Binding Info, StringFormat='[{0}]'}"/>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+                <!--IsBusy indicator-->
+                <ActivityIndicator 
+                    IsVisible="{Binding IsBusy}"
+                    IsRunning="{Binding IsBusy}"/>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

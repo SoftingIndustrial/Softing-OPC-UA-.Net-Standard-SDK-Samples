@@ -1,0 +1,2612 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PubSubConfigurationDataType xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+  <PublishedDataSets />
+  <Connections>
+    <PubSubConnectionDataType>
+      <Name>MqttJsonConnection_Subscriber</Name>
+      <Enabled>false</Enabled>
+      <PublisherId>
+        <Value>
+          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+        </Value>
+      </PublisherId>
+      <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-mqtt-json</TransportProfileUri>
+      <Address>
+        <TypeId>
+          <Identifier>i=21176</Identifier>
+        </TypeId>
+        <Body>
+          <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+            <NetworkInterface />
+            <Url>mqtt://localhost:1883</Url>
+          </NetworkAddressUrlDataType>
+        </Body>
+      </Address>
+      <ConnectionProperties>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>UserName</Name>
+          </Key>
+          <Value>
+            <Value>
+              <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>Password</Name>
+          </Key>
+          <Value>
+            <Value>
+              <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>AzureClientId</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Null xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>CleanSession</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Boolean xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">true</Boolean>
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>ProtocolVersion</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Int32 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">5</Int32>
+            </Value>
+          </Value>
+        </KeyValuePair>
+      </ConnectionProperties>
+      <TransportSettings>
+        <TypeId>
+          <Identifier>i=15579</Identifier>
+        </TypeId>
+        <Body>
+          <BrokerConnectionTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+        </Body>
+      </TransportSettings>
+      <WriterGroups />
+      <ReaderGroups>
+        <ReaderGroupDataType>
+          <Name>ReaderGroup 11</Name>
+          <Enabled>true</Enabled>
+          <SecurityMode>Invalid_0</SecurityMode>
+          <SecurityGroupId i:nil="true" />
+          <SecurityKeyServices />
+          <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
+          <GroupProperties />
+          <TransportSettings>
+            <TypeId>
+              <Identifier>i=15995</Identifier>
+            </TypeId>
+            <Body>
+              <ReaderGroupTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Body>
+          </TransportSettings>
+          <MessageSettings>
+            <TypeId>
+              <Identifier>i=15996</Identifier>
+            </TypeId>
+            <Body>
+              <ReaderGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Body>
+          </MessageSettings>
+          <DataSetReaders>
+            <DataSetReaderDataType>
+              <Name>Reader 111</Name>
+              <Enabled>true</Enabled>
+              <PublisherId>
+                <Value>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">10</UInt16>
+                </Value>
+              </PublisherId>
+              <WriterGroupId>11</WriterGroupId>
+              <DataSetWriterId>111</DataSetWriterId>
+              <DataSetFieldContentMask>32</DataSetFieldContentMask>
+              <MessageReceiveTimeout>0</MessageReceiveTimeout>
+              <KeyFrameCount>1</KeyFrameCount>
+              <HeaderLayoutUri i:nil="true" />
+              <SecurityMode>Invalid_0</SecurityMode>
+              <SecurityGroupId i:nil="true" />
+              <SecurityKeyServices />
+              <DataSetReaderProperties />
+              <TransportSettings>
+                <TypeId>
+                  <Identifier>i=16023</Identifier>
+                </TypeId>
+                <Body>
+                  <BrokerDataSetReaderTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <QueueName>Json_WriterGroup_1</QueueName>
+                    <RequestedDeliveryGuarantee>AtLeastOnce_2</RequestedDeliveryGuarantee>
+                    <MetaDataQueueName>Json_WriterGroup_1/$Metadata</MetaDataQueueName>
+                  </BrokerDataSetReaderTransportDataType>
+                </Body>
+              </TransportSettings>
+              <MessageSettings>
+                <TypeId>
+                  <Identifier>i=16019</Identifier>
+                </TypeId>
+                <Body>
+                  <JsonDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <NetworkMessageContentMask>59</NetworkMessageContentMask>
+                    <DataSetMessageContentMask>31</DataSetMessageContentMask>
+                  </JsonDataSetReaderMessageDataType>
+                </Body>
+              </MessageSettings>
+              <SubscribedDataSet>
+                <TypeId>
+                  <Identifier>i=16011</Identifier>
+                </TypeId>
+                <Body>
+                  <TargetVariablesDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <TargetVariables>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>123c96b9-8e35-4dec-bb68-b3502a7b952d</String>
+                        </DataSetFieldId>
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mqtt_Json_Boolean</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Boolean>false</Boolean>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>                      
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>ae068341-12c6-478d-b540-80740010accd</String>
+                        </DataSetFieldId>
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mqtt_Json_Int32</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Int32>0</Int32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>ae068341-12c6-478d-b540-80740010accd</String>
+                        </DataSetFieldId>
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mqtt_Json_Int32Fast</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Int32>0</Int32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>ae068341-12c6-478d-b540-80740010accd</String>
+                        </DataSetFieldId>
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mqtt_Json_DateTime</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Int32>0</Int32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                    </TargetVariables>
+                  </TargetVariablesDataType>
+                </Body>
+              </SubscribedDataSet>
+            </DataSetReaderDataType>
+          </DataSetReaders>
+        </ReaderGroupDataType>
+      </ReaderGroups>
+    </PubSubConnectionDataType>
+    <PubSubConnectionDataType>
+      <Name>UdpUadpConnection_Subscriber</Name>
+      <Enabled>false</Enabled>
+      <PublisherId>
+        <Value>
+          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
+        </Value>
+      </PublisherId>
+      <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp</TransportProfileUri>
+      <Address>
+        <TypeId>
+          <Identifier>i=21176</Identifier>
+        </TypeId>
+        <Body>
+          <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+            <NetworkInterface></NetworkInterface>
+            <Url>opc.udp://239.0.0.1:4840</Url>
+          </NetworkAddressUrlDataType>
+        </Body>
+      </Address>
+      <ConnectionProperties />
+      <TransportSettings>
+        <TypeId>
+          <Identifier>i=17472</Identifier>
+        </TypeId>
+        <Body>
+          <DatagramConnectionTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+            <DiscoveryAddress>
+              <TypeId>
+                <Identifier>i=21176</Identifier>
+              </TypeId>
+              <Body>
+                <NetworkAddressUrlDataType>
+                  <Url>opc.udp://224.0.2.15:4840</Url>
+                </NetworkAddressUrlDataType>
+              </Body>
+            </DiscoveryAddress>
+          </DatagramConnectionTransportDataType>
+        </Body>
+      </TransportSettings>
+      <WriterGroups />
+      <ReaderGroups>
+        <ReaderGroupDataType>
+          <Name>ReaderGroup 21</Name>
+          <Enabled>true</Enabled>
+          <SecurityMode>Invalid_0</SecurityMode>
+          <SecurityGroupId i:nil="true" />
+          <SecurityKeyServices />
+          <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
+          <GroupProperties />
+          <TransportSettings>
+            <TypeId>
+              <Identifier>i=15995</Identifier>
+            </TypeId>
+            <Body>
+              <ReaderGroupTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Body>
+          </TransportSettings>
+          <MessageSettings>
+            <TypeId>
+              <Identifier>i=15996</Identifier>
+            </TypeId>
+            <Body>
+              <ReaderGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Body>
+          </MessageSettings>
+          <DataSetReaders>
+            <DataSetReaderDataType>
+              <Name>Reader 211</Name>
+              <Enabled>true</Enabled>
+              <PublisherId>
+                <Value>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
+                </Value>
+              </PublisherId>
+              <WriterGroupId>21</WriterGroupId>
+              <DataSetWriterId>211</DataSetWriterId>
+              <DataSetFieldContentMask>32</DataSetFieldContentMask>
+              <MessageReceiveTimeout>0</MessageReceiveTimeout>
+              <KeyFrameCount>1</KeyFrameCount>
+              <HeaderLayoutUri i:nil="true" />
+              <SecurityMode>Invalid_0</SecurityMode>
+              <SecurityGroupId i:nil="true" />
+              <SecurityKeyServices />
+              <DataSetReaderProperties />
+              <TransportSettings i:nil="true" />
+              <MessageSettings>
+                <TypeId>
+                  <Identifier>i=16016</Identifier>
+                </TypeId>
+                <Body>
+                  <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <GroupVersion>0</GroupVersion>
+                    <NetworkMessageNumber>0</NetworkMessageNumber>
+                    <DataSetOffset>0</DataSetOffset>
+                    <DataSetClassId>
+                      <String>00000000-0000-0000-0000-000000000000</String>
+                    </DataSetClassId>
+                    <NetworkMessageContentMask>127</NetworkMessageContentMask>
+                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
+                    <PublishingInterval>0</PublishingInterval>
+                    <ReceiveOffset>0</ReceiveOffset>
+                    <ProcessingOffset>0</ProcessingOffset>
+                  </UadpDataSetReaderMessageDataType>
+                </Body>
+              </MessageSettings>
+              <SubscribedDataSet>
+                <TypeId>
+                  <Identifier>i=16011</Identifier>
+                </TypeId>
+                <Body>
+                  <TargetVariablesDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <TargetVariables>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>081ad188-a5c8-4b7c-8b2c-5a49fa585a4f</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_BoolToggle</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Boolean>false</Boolean>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>b7c26383-5b60-465b-96b1-360d606fcde7</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Int32</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Int32>0</Int32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>cde64a12-d870-46e8-a7e1-d66516931455</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Int32Fast</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Int32>0</Int32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>3e04966d-47ba-4b12-8733-9a113e9af8f4</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_DateTime</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <DateTime>0001-01-01T00:00:00</DateTime>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                    </TargetVariables>
+                  </TargetVariablesDataType>
+                </Body>
+              </SubscribedDataSet>
+            </DataSetReaderDataType>
+            <DataSetReaderDataType>
+              <Name>Reader 212</Name>
+              <Enabled>true</Enabled>
+              <PublisherId>
+                <Value>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
+                </Value>
+              </PublisherId>
+              <WriterGroupId>21</WriterGroupId>
+              <DataSetWriterId>212</DataSetWriterId>
+              <DataSetFieldContentMask>32</DataSetFieldContentMask>
+              <MessageReceiveTimeout>0</MessageReceiveTimeout>
+              <KeyFrameCount>1</KeyFrameCount>
+              <HeaderLayoutUri i:nil="true" />
+              <SecurityMode>Invalid_0</SecurityMode>
+              <SecurityGroupId i:nil="true" />
+              <SecurityKeyServices />
+              <DataSetReaderProperties />
+              <TransportSettings i:nil="true" />
+              <MessageSettings>
+                <TypeId>
+                  <Identifier>i=16016</Identifier>
+                </TypeId>
+                <Body>
+                  <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <GroupVersion>0</GroupVersion>
+                    <NetworkMessageNumber>0</NetworkMessageNumber>
+                    <DataSetOffset>0</DataSetOffset>
+                    <DataSetClassId>
+                      <String>00000000-0000-0000-0000-000000000000</String>
+                    </DataSetClassId>
+                    <NetworkMessageContentMask>63</NetworkMessageContentMask>
+                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
+                    <PublishingInterval>0</PublishingInterval>
+                    <ReceiveOffset>0</ReceiveOffset>
+                    <ProcessingOffset>0</ProcessingOffset>
+                  </UadpDataSetReaderMessageDataType>
+                </Body>
+              </MessageSettings>
+              <SubscribedDataSet>
+                <TypeId>
+                  <Identifier>i=16011</Identifier>
+                </TypeId>
+                <Body>
+                  <TargetVariablesDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <TargetVariables>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>6e8e6f72-8959-45f4-832a-5b376190d761</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_BoolToggle</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Boolean>false</Boolean>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>4eadcf63-719e-435a-9a79-29ef9968ee3d</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Byte</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Byte>0</Byte>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>3e432ae4-e95c-4b0d-b755-add3165ee4eb</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Int16</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Int16>0</Int16>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>e49d25c4-fa9d-4b17-a740-4f39af08bcaa</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Int32</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Int32>0</Int32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>6905f24a-0af5-43ca-8a61-1137c2611abd</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_SByte</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <SByte>0</SByte>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>72876911-140a-4ee6-a5ed-b9d0e76a16b3</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_UInt16</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt16>0</UInt16>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>692c9b1b-c079-42f5-beeb-03b519aafb77</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_UInt32</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>257280c3-e556-4223-9afc-5553beeffd3f</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Float</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Float>0</Float>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>d77a4704-cdfc-4f83-bd3f-5b323b9a45e9</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Double</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Double>0</Double>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                    </TargetVariables>
+                  </TargetVariablesDataType>
+                </Body>
+              </SubscribedDataSet>
+            </DataSetReaderDataType>
+            <DataSetReaderDataType>
+              <Name>Reader 213</Name>
+              <Enabled>true</Enabled>
+              <PublisherId>
+                <Value>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
+                </Value>
+              </PublisherId>
+              <WriterGroupId>21</WriterGroupId>
+              <DataSetWriterId>213</DataSetWriterId>
+              <DataSetFieldContentMask>32</DataSetFieldContentMask>
+              <MessageReceiveTimeout>0</MessageReceiveTimeout>
+              <KeyFrameCount>1</KeyFrameCount>
+              <HeaderLayoutUri i:nil="true" />
+              <SecurityMode>Invalid_0</SecurityMode>
+              <SecurityGroupId i:nil="true" />
+              <SecurityKeyServices />
+              <DataSetReaderProperties />
+              <TransportSettings i:nil="true" />
+              <MessageSettings>
+                <TypeId>
+                  <Identifier>i=16016</Identifier>
+                </TypeId>
+                <Body>
+                  <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <GroupVersion>0</GroupVersion>
+                    <NetworkMessageNumber>0</NetworkMessageNumber>
+                    <DataSetOffset>0</DataSetOffset>
+                    <DataSetClassId>
+                      <String>00000000-0000-0000-0000-000000000000</String>
+                    </DataSetClassId>
+                    <NetworkMessageContentMask>63</NetworkMessageContentMask>
+                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
+                    <PublishingInterval>0</PublishingInterval>
+                    <ReceiveOffset>0</ReceiveOffset>
+                    <ProcessingOffset>0</ProcessingOffset>
+                  </UadpDataSetReaderMessageDataType>
+                </Body>
+              </MessageSettings>
+              <SubscribedDataSet>
+                <TypeId>
+                  <Identifier>i=16011</Identifier>
+                </TypeId>
+                <Body>
+                  <TargetVariablesDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <TargetVariables>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>292e38c5-e3ab-4284-953e-57ce58db0e87</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_0</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>21acc9d2-6579-4af8-bc7a-8f19bf66b0b2</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_1</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>b42cb003-0f21-4bdb-a838-00471a93e49b</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_2</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>962c2b94-4aab-4ce0-8d9f-2b8fe3d2aa52</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_3</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>a2b9d863-b731-4c45-b578-22b2dd5c4cec</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_4</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>e6c120c7-3d29-43fb-8a20-6e32c6aa2803</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_5</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>067eb38e-2081-4c61-a97a-8a0c32a15d66</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_6</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>db12cf58-efb5-4b33-89ce-260a703eaa1e</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_7</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>f3b51839-c307-47fe-a56b-56945f6bace4</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_8</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>00fef1d4-e8d0-4ed6-9eda-4c8215561593</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_9</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>6f84ce14-ee0e-4601-a9b9-267a17bbe500</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_10</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>9fcc2022-18c7-4376-8d94-fa0ecb61df56</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_11</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>0ae62f18-d3c5-410a-92cc-359a0cd3dcd8</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_12</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>ae134b52-5cdf-43e8-8329-721d4358c26f</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_13</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>7df161b5-41bd-4a3f-997b-c1fa0a322637</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_14</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>754402a9-1375-4438-bb4f-7dbbfb6b56b3</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_15</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>977c2ce4-074f-45ec-b22e-deafc3bb73d7</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_16</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>fa5d4a8b-7a5d-470f-a82d-1b403b0871b2</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_17</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>24c6601a-049b-477d-adc5-d5989dddece7</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_18</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>6b3b381f-c1c9-4a08-82e0-3bd0785b6470</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_19</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>9e7baa34-ce4f-4989-9109-26f783a73b9b</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_20</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>f49d5f78-bd3c-475c-b7bb-4289e619ea3a</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_21</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>c3bcd60f-4906-4f38-86de-88dfbd73ce01</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_22</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>6e0b6ef2-81b1-4cac-878c-d9c743c8f223</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_23</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>d560deaa-4b98-4962-b5f3-e2f295f4ecd0</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_24</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>e7aa14f6-f540-4193-8aea-8a10c3722e75</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_25</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>dc3dfbe4-dfaa-4bf8-a16c-cb6e9c0a95db</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_26</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>8af32b34-d2c5-4c22-ab7b-072e751fdb26</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_27</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>47aab849-0444-4a9e-9eab-97c7c8ceed54</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_28</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>2dcdd9e6-272b-46d5-8110-5830236e80c5</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_29</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>a8eabf09-77c1-49e4-a5b7-c6cd3f790868</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_30</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>a2a01f30-51c4-4c23-8dc3-c323e6204b93</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_31</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>76cf7571-1e38-4acb-aa39-c917328f92d5</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_32</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>ca0e9475-f31d-4aea-9f36-e50aa9d182ce</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_33</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>35457257-672e-40d2-b571-dc592ef49e42</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_34</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>e28f5cf6-274f-420f-b4ad-cf4bdf070022</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_35</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>46f10260-be92-4ae6-a6e1-775902d55ea6</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_36</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>e949ae9f-4f90-4a3c-a8e8-09b341895eb8</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_37</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>3e1a5bf1-4f2c-4224-bdbe-cf4c27f3e541</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_38</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>cb77dfac-d8f7-4867-aca5-4891e37c4c68</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_39</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>057082e5-562c-4539-8d46-58d9f3212b5c</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_40</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>59189c05-cace-446a-b22f-3e93d3848eb8</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_41</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>978d54b6-4aaa-44ed-af3e-fc939abf5c42</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_42</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>9237bb4d-207e-4b72-9e8c-67451d0b2aa6</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_43</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>5e1e1a27-6709-41b3-ad7a-a56bfd88bf9e</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_44</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>12be207f-e5da-41f4-9e09-a96235a95ea2</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_45</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>4bc2c8e9-7f26-4a5d-a76e-1c0904b582e3</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_46</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>208a00d4-24af-440a-9fc1-0060975d7795</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_47</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>e479e7bc-1fe6-4e8b-bac3-3fa0409c655e</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_48</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>41e96328-5b9f-4bda-8017-62d0dba7d932</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_49</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>ba46804e-40e3-4da6-b7bc-110a7c9d677e</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_50</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>0ca9fce5-dc79-483b-afef-fedefcd09cc0</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_51</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>334c5d91-64e2-4fe1-aa7a-b9816153f98d</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_52</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>1ee732ef-ae59-465d-903e-19da53b41289</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_53</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>92873fd1-bea1-4925-b9f0-1270a0bc5c14</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_54</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>9435334c-4a07-4b32-9aa9-7e0e435d3031</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_55</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>addac5c5-ca8a-4c64-81b0-8b8452712919</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_56</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>6a20a4e3-4282-44c0-9425-a8aeb577ac8a</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_57</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>9ee82587-f4ce-4aa4-b5c3-dd7ca9f3db41</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_58</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>97ad7353-43ca-4afe-89f0-ac20ebac226c</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_59</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>a0365487-f309-4447-a649-fee7a9f6a499</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_60</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>0b9548d5-b0c0-46be-9d89-7a021c13bb8a</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_61</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>3f3ec175-9cfa-439c-bb54-1078d8995b4d</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_62</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>1e0df5f8-5caf-422f-90dd-2b11a40b04e9</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_63</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>d8462442-1272-4041-a9f8-2d1669c6d963</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_64</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>4c3bfec0-4b5c-4631-9670-94b99bf3ba41</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_65</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>4beef1a2-822e-458a-ae7e-af62927c427f</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_66</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>986cd0b2-d383-49c6-a5cd-87eb98533ed1</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_67</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>de1bd57e-1975-47dc-8fab-fe48cb553904</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_68</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>cf83ec76-d32f-4411-ab8f-462d91d11493</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_69</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>39d68cf5-e083-4f6a-81f5-8750c3d461bb</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_70</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>3caf4b59-eca0-4e8a-82cb-10089054ad60</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_71</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>cb464b02-30c1-4b0a-885a-2ae5a919aaf2</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_72</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>8b1d2bdb-feb5-42e2-9d28-4e7a9895d9ac</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_73</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>a20df1ae-5e9d-4528-ad7e-29f2a66cdf8a</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_74</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>4167288f-4074-4470-ba49-06da4c39fb6c</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_75</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>b3148872-1ce7-4bee-8cea-066ee28b003d</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_76</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>99f7b415-625c-4c05-9a5b-1704be0cbf51</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_77</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>285e8507-118b-4d24-b367-fbab44ec5387</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_78</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>30a94dce-2e15-42e0-b906-055e96556631</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_79</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>65f51e84-1f99-4693-8521-f0c038a7fbd6</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_80</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>c7cad117-7d7c-44ac-9d17-91a5d372d2f9</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_81</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>9973ab0e-9913-4c03-9b3b-3f7260f9ee90</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_82</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>39cec815-a131-4d32-9d26-6ecc65625604</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_83</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>b8aa4ef6-ce09-4369-bc60-8cce9495c9e1</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_84</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>c03fa9a9-0ec4-49d0-9afa-72bc2dfd183e</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_85</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>fa00723d-7177-49e4-826e-f0b31e4cf2aa</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_86</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>b69db945-89ac-43a7-802d-5abd9d090e89</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_87</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>06112e9e-c0aa-471c-8b96-346f2a137342</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_88</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>e57fd264-f359-4e26-8be1-ac9548a6d326</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_89</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>90a2d580-dae4-425f-b968-ff3e07c00953</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_90</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>8e0f1589-d275-4b5c-a8a7-629b0c8dda54</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_91</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>30f7ab4a-b790-439d-b9eb-b7998aa64bee</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_92</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>48a7a80b-a7a4-4803-a35e-5b8d02422111</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_93</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>f3fb33cb-f818-4b61-8d81-2eb829c26c24</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_94</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>e81ee435-5874-45ca-b768-a50c4784cf3e</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_95</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>fffbc4df-fda7-44fd-9b02-d8ae2083726d</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_96</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>15592fce-921b-4e17-abad-9287b06e50ba</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_97</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>7808be9d-9a34-4867-b5ec-ae418d301577</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_98</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>5b71cb97-0c92-4895-ba35-dae23ff62515</String>
+                        </DataSetFieldId>
+                        <ReceiverIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mass_99</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <WriteIndexRange p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <UInt32>0</UInt32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                    </TargetVariables>
+                  </TargetVariablesDataType>
+                </Body>
+              </SubscribedDataSet>
+            </DataSetReaderDataType>
+          </DataSetReaders>
+        </ReaderGroupDataType>       
+      </ReaderGroups>
+    </PubSubConnectionDataType>
+    <PubSubConnectionDataType>
+      <Name>MqttUadpConnection_Subscriber</Name>
+      <Enabled>false</Enabled>
+      <PublisherId>
+        <Value>
+          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">30</UInt16>
+        </Value>
+      </PublisherId>
+      <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-mqtt-uadp</TransportProfileUri>
+      <Address>
+        <TypeId>
+          <Identifier>i=21176</Identifier>
+        </TypeId>
+        <Body>
+          <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+            <NetworkInterface />
+            <Url>mqtt://localhost:1883</Url>
+          </NetworkAddressUrlDataType>
+        </Body>
+      </Address>
+      <ConnectionProperties>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>UserName</Name>
+          </Key>
+          <Value>
+            <Value>
+              <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>Password</Name>
+          </Key>
+          <Value>
+            <Value>
+              <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>AzureClientId</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Null xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>CleanSession</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Boolean xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">true</Boolean>
+            </Value>
+          </Value>
+        </KeyValuePair>
+        <KeyValuePair>
+          <Key>
+            <NamespaceIndex>0</NamespaceIndex>
+            <Name>ProtocolVersion</Name>
+          </Key>
+          <Value>
+            <Value>
+              <Int32 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">5</Int32>
+            </Value>
+          </Value>
+        </KeyValuePair>
+      </ConnectionProperties>
+      <TransportSettings i:nil="true" />
+      <WriterGroups />
+      <ReaderGroups>
+        <ReaderGroupDataType>
+          <Name>ReaderGroup 31</Name>
+          <Enabled>true</Enabled>
+          <SecurityMode>Invalid_0</SecurityMode>
+          <SecurityGroupId i:nil="true" />
+          <SecurityKeyServices />
+          <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
+          <GroupProperties />
+          <TransportSettings>
+            <TypeId>
+              <Identifier>i=15995</Identifier>
+            </TypeId>
+            <Body>
+              <ReaderGroupTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Body>
+          </TransportSettings>
+          <MessageSettings>
+            <TypeId>
+              <Identifier>i=15996</Identifier>
+            </TypeId>
+            <Body>
+              <ReaderGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+            </Body>
+          </MessageSettings>
+          <DataSetReaders>
+            <DataSetReaderDataType>
+              <Name>Reader 311</Name>
+              <Enabled>true</Enabled>
+              <PublisherId>
+                <Value>
+                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">30</UInt16>
+                </Value>
+              </PublisherId>
+              <WriterGroupId>31</WriterGroupId>
+              <DataSetWriterId>311</DataSetWriterId>
+              <DataSetFieldContentMask>32</DataSetFieldContentMask>
+              <MessageReceiveTimeout>0</MessageReceiveTimeout>
+              <KeyFrameCount>1</KeyFrameCount>
+              <HeaderLayoutUri i:nil="true" />
+              <SecurityMode>Invalid_0</SecurityMode>
+              <SecurityGroupId i:nil="true" />
+              <SecurityKeyServices />
+              <DataSetReaderProperties />
+              <TransportSettings>
+                <TypeId>
+                  <Identifier>i=16023</Identifier>
+                </TypeId>
+                <Body>
+                  <BrokerDataSetReaderTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <QueueName>Uadp_WriterGroup_1</QueueName>
+                    <RequestedDeliveryGuarantee>NotSpecified_0</RequestedDeliveryGuarantee>
+                    <MetaDataQueueName>Uadp_WriterGroup_1/$Metadata</MetaDataQueueName>
+                  </BrokerDataSetReaderTransportDataType>
+                </Body>
+              </TransportSettings>
+              <MessageSettings>
+                <TypeId>
+                  <Identifier>i=16016</Identifier>
+                </TypeId>
+                <Body>
+                  <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <GroupVersion>0</GroupVersion>
+                    <NetworkMessageNumber>1</NetworkMessageNumber>
+                    <DataSetOffset>0</DataSetOffset>
+                    <DataSetClassId>
+                      <String>00000000-0000-0000-0000-000000000000</String>
+                    </DataSetClassId>
+                    <NetworkMessageContentMask>127</NetworkMessageContentMask>
+                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
+                    <PublishingInterval>0</PublishingInterval>
+                    <ReceiveOffset>0</ReceiveOffset>
+                    <ProcessingOffset>0</ProcessingOffset>
+                  </UadpDataSetReaderMessageDataType>
+                </Body>
+              </MessageSettings>
+              <SubscribedDataSet>
+                <TypeId>
+                  <Identifier>i=16011</Identifier>
+                </TypeId>
+                <Body>
+                  <TargetVariablesDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+                    <TargetVariables>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>aa509114-65c8-48af-a4fb-5fb2c6523271</String>
+                        </DataSetFieldId>
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mqtt_Uadp_Boolean</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Boolean>false</Boolean>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>  
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>6795d5f9-5eb8-4828-a730-0c533188296e</String>
+                        </DataSetFieldId>
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mqtt_Uadp_Int32</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                         <Value>
+                            <Int32>0</Int32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>6795d5f9-5eb8-4828-a730-0c533188296e</String>
+                        </DataSetFieldId>
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mqtt_Uadp_Int32Fast</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                         <Value>
+                            <Int32>0</Int32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                      <FieldTargetDataType>
+                        <DataSetFieldId>
+                          <String>6795d5f9-5eb8-4828-a730-0c533188296e</String>
+                        </DataSetFieldId>
+                        <TargetNodeId>
+                          <Identifier>ns=10;s=Sub_Mqtt_Uadp_DateTime</Identifier>
+                        </TargetNodeId>
+                        <AttributeId>13</AttributeId>
+                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+                        <OverrideValue>
+                          <Value>
+                            <Int32>0</Int32>
+                          </Value>
+                        </OverrideValue>
+                      </FieldTargetDataType>
+                    </TargetVariables>
+                  </TargetVariablesDataType>
+                </Body>
+              </SubscribedDataSet>
+            </DataSetReaderDataType>
+          </DataSetReaders>
+        </ReaderGroupDataType>
+      </ReaderGroups>
+    </PubSubConnectionDataType>
+  </Connections>
+  <Enabled>true</Enabled>
+</PubSubConfigurationDataType>

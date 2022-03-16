@@ -1,0 +1,629 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UANodeSet xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+  <NamespaceUris>
+    <Uri>http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications</Uri>
+  </NamespaceUris>
+  <Models>
+    <Model ModelUri="http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications">
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.04.4" PublicationDate="2020-01-08T00:00:00Z" />
+    </Model>
+  </Models>
+  <Aliases>
+    <Alias Alias="Boolean">i=1</Alias>
+    <Alias Alias="SByte">i=2</Alias>
+    <Alias Alias="Byte">i=3</Alias>
+    <Alias Alias="Int16">i=4</Alias>
+    <Alias Alias="UInt16">i=5</Alias>
+    <Alias Alias="Int32">i=6</Alias>
+    <Alias Alias="UInt32">i=7</Alias>
+    <Alias Alias="Int64">i=8</Alias>
+    <Alias Alias="UInt64">i=9</Alias>
+    <Alias Alias="Float">i=10</Alias>
+    <Alias Alias="Double">i=11</Alias>
+    <Alias Alias="DateTime">i=13</Alias>
+    <Alias Alias="String">i=12</Alias>
+    <Alias Alias="ByteString">i=15</Alias>
+    <Alias Alias="Guid">i=14</Alias>
+    <Alias Alias="XmlElement">i=16</Alias>
+    <Alias Alias="NodeId">i=17</Alias>
+    <Alias Alias="ExpandedNodeId">i=18</Alias>
+    <Alias Alias="QualifiedName">i=20</Alias>
+    <Alias Alias="LocalizedText">i=21</Alias>
+    <Alias Alias="StatusCode">i=19</Alias>
+    <Alias Alias="Structure">i=22</Alias>
+    <Alias Alias="Number">i=26</Alias>
+    <Alias Alias="Integer">i=27</Alias>
+    <Alias Alias="UInteger">i=28</Alias>
+    <Alias Alias="HasComponent">i=47</Alias>
+    <Alias Alias="HasProperty">i=46</Alias>
+    <Alias Alias="Organizes">i=35</Alias>
+    <Alias Alias="HasEventSource">i=36</Alias>
+    <Alias Alias="HasNotifier">i=48</Alias>
+    <Alias Alias="HasSubtype">i=45</Alias>
+    <Alias Alias="HasTypeDefinition">i=40</Alias>
+    <Alias Alias="HasModellingRule">i=37</Alias>
+    <Alias Alias="HasEncoding">i=38</Alias>
+    <Alias Alias="HasDescription">i=39</Alias>
+  </Aliases>
+  <UADataType NodeId="ns=1;i=15001" BrowseName="1:DataType1">
+    <DisplayName>DataType1</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+    </References>
+    <Definition Name="1:DataType1">
+      <Field Name="Int32Field" DataType="i=6" />
+      <Field Name="FloatField" DataType="i=10" />
+    </Definition>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=15002" BrowseName="1:DataType2">
+    <DisplayName>DataType2</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=15001</Reference>
+    </References>
+    <Definition Name="1:DataType2">
+      <Field Name="Int32Field" DataType="i=6" />
+      <Field Name="FloatField" DataType="i=10" />
+      <Field Name="StringField" DataType="i=12" />
+    </Definition>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=15003" BrowseName="1:DataType3">
+    <DisplayName>DataType3</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+    </References>
+    <Definition Name="1:DataType3">
+      <Field Name="Int32Field" DataType="i=6" />
+      <Field Name="ByteField" DataType="i=3" />
+      <Field Name="FloatField" DataType="i=10" />
+    </Definition>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=15004" BrowseName="1:DataType4">
+    <DisplayName>DataType4</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+    </References>
+    <Definition Name="1:DataType4">
+      <Field Name="Int32Field" DataType="i=6" />
+      <Field Name="FloatField" DataType="i=10" />
+      <Field Name="ByteField" DataType="i=3" />
+    </Definition>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=15005" BrowseName="1:EnumerationType1">
+    <DisplayName>EnumerationType1</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty">ns=1;i=15006</Reference>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+    </References>
+    <Definition Name="1:EnumerationType1">
+      <Field Name="Stopped" Value="0">
+        <DisplayName>Stopped</DisplayName>
+      </Field>
+      <Field Name="Starting" Value="1">
+        <DisplayName>Starting</DisplayName>
+      </Field>
+      <Field Name="Running" Value="2">
+        <DisplayName>Running</DisplayName>
+      </Field>
+      <Field Name="Fault" Value="3">
+        <DisplayName>Fault</DisplayName>
+      </Field>
+    </Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=1;i=15006" BrowseName="EnumStrings" ParentNodeId="ns=1;i=15005" DataType="LocalizedText" ValueRank="1" ArrayDimensions="0">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=15005</Reference>
+    </References>
+    <Value>
+      <ListOfLocalizedText xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+        <LocalizedText>
+          <Locale>
+          </Locale>
+          <Text>Stopped</Text>
+        </LocalizedText>
+        <LocalizedText>
+          <Locale>
+          </Locale>
+          <Text>Starting</Text>
+        </LocalizedText>
+        <LocalizedText>
+          <Locale>
+          </Locale>
+          <Text>Running</Text>
+        </LocalizedText>
+        <LocalizedText>
+          <Locale>
+          </Locale>
+          <Text>Fault</Text>
+        </LocalizedText>
+      </ListOfLocalizedText>
+    </Value>
+  </UAVariable>
+  <UADataType NodeId="ns=1;i=15007" BrowseName="1:DataType5">
+    <DisplayName>DataType5</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+    </References>
+    <Definition Name="1:DataType5">
+      <Field Name="Int32Field" DataType="i=6" />
+      <Field Name="FloatField" DataType="i=10" />
+      <Field Name="StringField" DataType="i=12" />
+      <Field Name="DataType2Field" DataType="ns=1;i=15002" />
+      <Field Name="EnumerationType1Field" DataType="ns=1;i=15005" />
+    </Definition>
+  </UADataType>
+  <UAObject NodeId="ns=1;i=15008" BrowseName="1:StructuredTypeVariables">
+    <DisplayName>StructuredTypeVariables</DisplayName>
+    <References>
+      <Reference ReferenceType="HasComponent">ns=1;i=15009</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15010</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15011</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15012</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15013</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15014</Reference>
+      <Reference ReferenceType="Organizes" IsForward="false">ns=1;s=CTT</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=15009" BrowseName="1:DataType1Variable" ParentNodeId="ns=1;i=15008" DataType="ns=1;i=15001" AccessLevel="3">
+    <DisplayName>DataType1Variable</DisplayName>
+    <Description>Instance of a variable node with DataType1 type.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15008</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15010" BrowseName="1:DataType2Variable" ParentNodeId="ns=1;i=15008" DataType="ns=1;i=15002" AccessLevel="3">
+    <DisplayName>DataType2Variable</DisplayName>
+    <Description>Instance of a variable node with DataType2 type.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15008</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15011" BrowseName="1:DataType3Variable" ParentNodeId="ns=1;i=15008" DataType="ns=1;i=15003" AccessLevel="3">
+    <DisplayName>DataType3Variable</DisplayName>
+    <Description>Instance of a variable node with DataType3 type.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15008</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15012" BrowseName="1:DataType4Variable" ParentNodeId="ns=1;i=15008" DataType="ns=1;i=15004" AccessLevel="3">
+    <DisplayName>DataType4Variable</DisplayName>
+    <Description>Instance of a variable node with DataType4 type.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15008</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15013" BrowseName="1:DataType5Variable" ParentNodeId="ns=1;i=15008" DataType="ns=1;i=15007" AccessLevel="3">
+    <DisplayName>DataType5Variable</DisplayName>
+    <Description>Instance of a variable node with DataType5 type.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15008</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15014" BrowseName="1:EnumerationType1Variable" ParentNodeId="ns=1;i=15008" DataType="ns=1;i=15005" AccessLevel="3">
+    <DisplayName>EnumerationType1Variable</DisplayName>
+    <Description>Instance of a variable node with EnumerationType1 type.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15008</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=15015" BrowseName="Default Binary" SymbolicName="DefaultBinary">
+    <DisplayName>Default Binary</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15001</Reference>
+      <Reference ReferenceType="HasDescription">ns=1;i=15024</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=15016" BrowseName="Default Binary" SymbolicName="DefaultBinary">
+    <DisplayName>Default Binary</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15002</Reference>
+      <Reference ReferenceType="HasDescription">ns=1;i=15027</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=15017" BrowseName="Default Binary" SymbolicName="DefaultBinary">
+    <DisplayName>Default Binary</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15003</Reference>
+      <Reference ReferenceType="HasDescription">ns=1;i=15030</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=15018" BrowseName="Default Binary" SymbolicName="DefaultBinary">
+    <DisplayName>Default Binary</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15004</Reference>
+      <Reference ReferenceType="HasDescription">ns=1;i=15033</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=15019" BrowseName="Default Binary" SymbolicName="DefaultBinary">
+    <DisplayName>Default Binary</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15007</Reference>
+      <Reference ReferenceType="HasDescription">ns=1;i=15036</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=15020" BrowseName="1:ReferenceServer" SymbolicName="ReferenceApplications_BinarySchema" DataType="ByteString">
+    <DisplayName>ReferenceServer</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty">ns=1;i=15022</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=15023</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15024</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15027</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15030</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15033</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15036</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=93</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=72</Reference>
+    </References>
+    <Value>
+      <ByteString xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">PG9wYzpUeXBlRGljdGlvbmFyeQ0KICB4bWxuczpvcGM9Imh0dHA6Ly9vcGNmb3VuZGF0aW9uLm9y
+Zy9CaW5hcnlTY2hlbWEvIg0KICB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1M
+U2NoZW1hLWluc3RhbmNlIg0KICB4bWxuczp1YT0iaHR0cDovL29wY2ZvdW5kYXRpb24ub3JnL1VB
+LyINCiAgeG1sbnM6dG5zPSJodHRwOi8vc29mdGluZy5jb20vU29mdGluZy5PcGMuVWEuVG9vbGtp
+dC5TYW1wbGVzL1JlZmVyZW5jZUFwcGxpY2F0aW9ucyINCiAgRGVmYXVsdEJ5dGVPcmRlcj0iTGl0
+dGxlRW5kaWFuIg0KICBUYXJnZXROYW1lc3BhY2U9Imh0dHA6Ly9zb2Z0aW5nLmNvbS9Tb2Z0aW5n
+Lk9wYy5VYS5Ub29sa2l0LlNhbXBsZXMvUmVmZXJlbmNlQXBwbGljYXRpb25zIg0KPg0KICA8b3Bj
+OkltcG9ydCBOYW1lc3BhY2U9Imh0dHA6Ly9vcGNmb3VuZGF0aW9uLm9yZy9VQS8iIExvY2F0aW9u
+PSJPcGMuVWEuQmluYXJ5U2NoZW1hLmJzZCIvPg0KDQogIDxvcGM6U3RydWN0dXJlZFR5cGUgTmFt
+ZT0iRGF0YVR5cGUxIiBCYXNlVHlwZT0idWE6RXh0ZW5zaW9uT2JqZWN0Ij4NCiAgICA8b3BjOkZp
+ZWxkIE5hbWU9IkludDMyRmllbGQiIFR5cGVOYW1lPSJvcGM6SW50MzIiIC8+DQogICAgPG9wYzpG
+aWVsZCBOYW1lPSJGbG9hdEZpZWxkIiBUeXBlTmFtZT0ib3BjOkZsb2F0IiAvPg0KICA8L29wYzpT
+dHJ1Y3R1cmVkVHlwZT4NCg0KICA8b3BjOlN0cnVjdHVyZWRUeXBlIE5hbWU9IkRhdGFUeXBlMiIg
+QmFzZVR5cGU9InRuczpEYXRhVHlwZTEiPg0KICAgIDxvcGM6RmllbGQgTmFtZT0iSW50MzJGaWVs
+ZCIgVHlwZU5hbWU9Im9wYzpJbnQzMiIgU291cmNlVHlwZT0idG5zOkRhdGFUeXBlMSIgLz4NCiAg
+ICA8b3BjOkZpZWxkIE5hbWU9IkZsb2F0RmllbGQiIFR5cGVOYW1lPSJvcGM6RmxvYXQiIFNvdXJj
+ZVR5cGU9InRuczpEYXRhVHlwZTEiIC8+DQogICAgPG9wYzpGaWVsZCBOYW1lPSJTdHJpbmdGaWVs
+ZCIgVHlwZU5hbWU9Im9wYzpTdHJpbmciIC8+DQogIDwvb3BjOlN0cnVjdHVyZWRUeXBlPg0KDQog
+IDxvcGM6U3RydWN0dXJlZFR5cGUgTmFtZT0iRGF0YVR5cGUzIiBCYXNlVHlwZT0idWE6RXh0ZW5z
+aW9uT2JqZWN0Ij4NCiAgICA8b3BjOkZpZWxkIE5hbWU9IkludDMyRmllbGQiIFR5cGVOYW1lPSJv
+cGM6SW50MzIiIC8+DQogICAgPG9wYzpGaWVsZCBOYW1lPSJCeXRlRmllbGQiIFR5cGVOYW1lPSJv
+cGM6Qnl0ZSIgLz4NCiAgICA8b3BjOkZpZWxkIE5hbWU9IkZsb2F0RmllbGQiIFR5cGVOYW1lPSJv
+cGM6RmxvYXQiIC8+DQogIDwvb3BjOlN0cnVjdHVyZWRUeXBlPg0KDQogIDxvcGM6U3RydWN0dXJl
+ZFR5cGUgTmFtZT0iRGF0YVR5cGU0IiBCYXNlVHlwZT0idWE6RXh0ZW5zaW9uT2JqZWN0Ij4NCiAg
+ICA8b3BjOkZpZWxkIE5hbWU9IkludDMyRmllbGQiIFR5cGVOYW1lPSJvcGM6SW50MzIiIC8+DQog
+ICAgPG9wYzpGaWVsZCBOYW1lPSJGbG9hdEZpZWxkIiBUeXBlTmFtZT0ib3BjOkZsb2F0IiAvPg0K
+ICAgIDxvcGM6RmllbGQgTmFtZT0iQnl0ZUZpZWxkIiBUeXBlTmFtZT0ib3BjOkJ5dGUiIC8+DQog
+IDwvb3BjOlN0cnVjdHVyZWRUeXBlPg0KDQogIDxvcGM6RW51bWVyYXRlZFR5cGUgTmFtZT0iRW51
+bWVyYXRpb25UeXBlMSIgTGVuZ3RoSW5CaXRzPSIzMiI+DQogICAgPG9wYzpFbnVtZXJhdGVkVmFs
+dWUgTmFtZT0iU3RvcHBlZCIgVmFsdWU9IjAiIC8+DQogICAgPG9wYzpFbnVtZXJhdGVkVmFsdWUg
+TmFtZT0iU3RhcnRpbmciIFZhbHVlPSIxIiAvPg0KICAgIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5h
+bWU9IlJ1bm5pbmciIFZhbHVlPSIyIiAvPg0KICAgIDxvcGM6RW51bWVyYXRlZFZhbHVlIE5hbWU9
+IkZhdWx0IiBWYWx1ZT0iMyIgLz4NCiAgPC9vcGM6RW51bWVyYXRlZFR5cGU+DQoNCiAgPG9wYzpT
+dHJ1Y3R1cmVkVHlwZSBOYW1lPSJEYXRhVHlwZTUiIEJhc2VUeXBlPSJ1YTpFeHRlbnNpb25PYmpl
+Y3QiPg0KICAgIDxvcGM6RmllbGQgTmFtZT0iSW50MzJGaWVsZCIgVHlwZU5hbWU9Im9wYzpJbnQz
+MiIgLz4NCiAgICA8b3BjOkZpZWxkIE5hbWU9IkZsb2F0RmllbGQiIFR5cGVOYW1lPSJvcGM6Rmxv
+YXQiIC8+DQogICAgPG9wYzpGaWVsZCBOYW1lPSJTdHJpbmdGaWVsZCIgVHlwZU5hbWU9Im9wYzpT
+dHJpbmciIC8+DQogICAgPG9wYzpGaWVsZCBOYW1lPSJEYXRhVHlwZTJGaWVsZCIgVHlwZU5hbWU9
+InRuczpEYXRhVHlwZTIiIC8+DQogICAgPG9wYzpGaWVsZCBOYW1lPSJFbnVtZXJhdGlvblR5cGUx
+RmllbGQiIFR5cGVOYW1lPSJ0bnM6RW51bWVyYXRpb25UeXBlMSIgLz4NCiAgPC9vcGM6U3RydWN0
+dXJlZFR5cGU+DQoNCjwvb3BjOlR5cGVEaWN0aW9uYXJ5Pg==</ByteString>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15022" BrowseName="NamespaceUri" ParentNodeId="ns=1;i=15020" DataType="String">
+    <DisplayName>NamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=15020</Reference>
+    </References>
+    <Value>
+      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications</String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15023" BrowseName="Deprecated" ParentNodeId="ns=1;i=15020" DataType="Boolean">
+    <DisplayName>Deprecated</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=15020</Reference>
+    </References>
+    <Value>
+      <Boolean xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">true</Boolean>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15024" BrowseName="1:DataType1" ParentNodeId="ns=1;i=15020" DataType="String">
+    <DisplayName>DataType1</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=69</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15020</Reference>
+    </References>
+    <Value>
+      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">DataType1</String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15027" BrowseName="1:DataType2" ParentNodeId="ns=1;i=15020" DataType="String">
+    <DisplayName>DataType2</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=69</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15020</Reference>
+    </References>
+    <Value>
+      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">DataType2</String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15030" BrowseName="1:DataType3" ParentNodeId="ns=1;i=15020" DataType="String">
+    <DisplayName>DataType3</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=69</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15020</Reference>
+    </References>
+    <Value>
+      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">DataType3</String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15033" BrowseName="1:DataType4" ParentNodeId="ns=1;i=15020" DataType="String">
+    <DisplayName>DataType4</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=69</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15020</Reference>
+    </References>
+    <Value>
+      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">DataType4</String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15036" BrowseName="1:DataType5" ParentNodeId="ns=1;i=15020" DataType="String">
+    <DisplayName>DataType5</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=69</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15020</Reference>
+    </References>
+    <Value>
+      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">DataType5</String>
+    </Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=15039" BrowseName="Default XML" SymbolicName="DefaultXml">
+    <DisplayName>Default XML</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15001</Reference>
+      <Reference ReferenceType="HasDescription">ns=1;i=15048</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=15040" BrowseName="Default XML" SymbolicName="DefaultXml">
+    <DisplayName>Default XML</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15002</Reference>
+      <Reference ReferenceType="HasDescription">ns=1;i=15051</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=15041" BrowseName="Default XML" SymbolicName="DefaultXml">
+    <DisplayName>Default XML</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15003</Reference>
+      <Reference ReferenceType="HasDescription">ns=1;i=15054</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=15042" BrowseName="Default XML" SymbolicName="DefaultXml">
+    <DisplayName>Default XML</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15004</Reference>
+      <Reference ReferenceType="HasDescription">ns=1;i=15057</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=15043" BrowseName="Default XML" SymbolicName="DefaultXml">
+    <DisplayName>Default XML</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15007</Reference>
+      <Reference ReferenceType="HasDescription">ns=1;i=15060</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=15044" BrowseName="1:ReferenceServer" SymbolicName="ReferenceApplications_XmlSchema" DataType="ByteString">
+    <DisplayName>ReferenceServer</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty">ns=1;i=15046</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=15047</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15048</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15051</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15054</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15057</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=15060</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=92</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=72</Reference>
+    </References>
+    <Value>
+      <ByteString xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">PHhzOnNjaGVtYQ0KICB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEi
+DQogIHhtbG5zOnVhPSJodHRwOi8vb3BjZm91bmRhdGlvbi5vcmcvVUEvMjAwOC8wMi9UeXBlcy54
+c2QiDQogIHhtbG5zOnRucz0iaHR0cDovL3NvZnRpbmcuY29tL1NvZnRpbmcuT3BjLlVhLlRvb2xr
+aXQuU2FtcGxlcy9SZWZlcmVuY2VBcHBsaWNhdGlvbnMiDQogIHRhcmdldE5hbWVzcGFjZT0iaHR0
+cDovL3NvZnRpbmcuY29tL1NvZnRpbmcuT3BjLlVhLlRvb2xraXQuU2FtcGxlcy9SZWZlcmVuY2VB
+cHBsaWNhdGlvbnMiDQogIGVsZW1lbnRGb3JtRGVmYXVsdD0icXVhbGlmaWVkIg0KPg0KICA8eHM6
+aW1wb3J0IG5hbWVzcGFjZT0iaHR0cDovL29wY2ZvdW5kYXRpb24ub3JnL1VBLzIwMDgvMDIvVHlw
+ZXMueHNkIiAvPg0KDQogIDx4czpjb21wbGV4VHlwZSBuYW1lPSJEYXRhVHlwZTEiPg0KICAgIDx4
+czpzZXF1ZW5jZT4NCiAgICAgIDx4czplbGVtZW50IG5hbWU9IkludDMyRmllbGQiIHR5cGU9Inhz
+OmludCIgbWluT2NjdXJzPSIwIiAvPg0KICAgICAgPHhzOmVsZW1lbnQgbmFtZT0iRmxvYXRGaWVs
+ZCIgdHlwZT0ieHM6ZmxvYXQiIG1pbk9jY3Vycz0iMCIgLz4NCiAgICA8L3hzOnNlcXVlbmNlPg0K
+ICA8L3hzOmNvbXBsZXhUeXBlPg0KICA8eHM6ZWxlbWVudCBuYW1lPSJEYXRhVHlwZTEiIHR5cGU9
+InRuczpEYXRhVHlwZTEiIC8+DQoNCiAgPHhzOmNvbXBsZXhUeXBlIG5hbWU9Ikxpc3RPZkRhdGFU
+eXBlMSI+DQogICAgPHhzOnNlcXVlbmNlPg0KICAgICAgPHhzOmVsZW1lbnQgbmFtZT0iRGF0YVR5
+cGUxIiB0eXBlPSJ0bnM6RGF0YVR5cGUxIiBtaW5PY2N1cnM9IjAiIG1heE9jY3Vycz0idW5ib3Vu
+ZGVkIiBuaWxsYWJsZT0idHJ1ZSIgLz4NCiAgICA8L3hzOnNlcXVlbmNlPg0KICA8L3hzOmNvbXBs
+ZXhUeXBlPg0KICA8eHM6ZWxlbWVudCBuYW1lPSJMaXN0T2ZEYXRhVHlwZTEiIHR5cGU9InRuczpM
+aXN0T2ZEYXRhVHlwZTEiIG5pbGxhYmxlPSJ0cnVlIj48L3hzOmVsZW1lbnQ+DQoNCiAgPHhzOmNv
+bXBsZXhUeXBlIG5hbWU9IkRhdGFUeXBlMiI+DQogICAgPHhzOmNvbXBsZXhDb250ZW50IG1peGVk
+PSJmYWxzZSI+DQogICAgICA8eHM6ZXh0ZW5zaW9uIGJhc2U9InRuczpEYXRhVHlwZTEiPg0KICAg
+ICAgICA8eHM6c2VxdWVuY2U+DQogICAgICAgICAgPHhzOmVsZW1lbnQgbmFtZT0iU3RyaW5nRmll
+bGQiIHR5cGU9InhzOnN0cmluZyIgbWluT2NjdXJzPSIwIiBuaWxsYWJsZT0idHJ1ZSIgLz4NCiAg
+ICAgICAgPC94czpzZXF1ZW5jZT4NCiAgICAgIDwveHM6ZXh0ZW5zaW9uPg0KICAgIDwveHM6Y29t
+cGxleENvbnRlbnQ+DQogIDwveHM6Y29tcGxleFR5cGU+DQogIDx4czplbGVtZW50IG5hbWU9IkRh
+dGFUeXBlMiIgdHlwZT0idG5zOkRhdGFUeXBlMiIgLz4NCg0KICA8eHM6Y29tcGxleFR5cGUgbmFt
+ZT0iTGlzdE9mRGF0YVR5cGUyIj4NCiAgICA8eHM6c2VxdWVuY2U+DQogICAgICA8eHM6ZWxlbWVu
+dCBuYW1lPSJEYXRhVHlwZTIiIHR5cGU9InRuczpEYXRhVHlwZTIiIG1pbk9jY3Vycz0iMCIgbWF4
+T2NjdXJzPSJ1bmJvdW5kZWQiIG5pbGxhYmxlPSJ0cnVlIiAvPg0KICAgIDwveHM6c2VxdWVuY2U+
+DQogIDwveHM6Y29tcGxleFR5cGU+DQogIDx4czplbGVtZW50IG5hbWU9Ikxpc3RPZkRhdGFUeXBl
+MiIgdHlwZT0idG5zOkxpc3RPZkRhdGFUeXBlMiIgbmlsbGFibGU9InRydWUiPjwveHM6ZWxlbWVu
+dD4NCg0KICA8eHM6Y29tcGxleFR5cGUgbmFtZT0iRGF0YVR5cGUzIj4NCiAgICA8eHM6c2VxdWVu
+Y2U+DQogICAgICA8eHM6ZWxlbWVudCBuYW1lPSJJbnQzMkZpZWxkIiB0eXBlPSJ4czppbnQiIG1p
+bk9jY3Vycz0iMCIgLz4NCiAgICAgIDx4czplbGVtZW50IG5hbWU9IkJ5dGVGaWVsZCIgdHlwZT0i
+eHM6dW5zaWduZWRCeXRlIiBtaW5PY2N1cnM9IjAiIC8+DQogICAgICA8eHM6ZWxlbWVudCBuYW1l
+PSJGbG9hdEZpZWxkIiB0eXBlPSJ4czpmbG9hdCIgbWluT2NjdXJzPSIwIiAvPg0KICAgIDwveHM6
+c2VxdWVuY2U+DQogIDwveHM6Y29tcGxleFR5cGU+DQogIDx4czplbGVtZW50IG5hbWU9IkRhdGFU
+eXBlMyIgdHlwZT0idG5zOkRhdGFUeXBlMyIgLz4NCg0KICA8eHM6Y29tcGxleFR5cGUgbmFtZT0i
+TGlzdE9mRGF0YVR5cGUzIj4NCiAgICA8eHM6c2VxdWVuY2U+DQogICAgICA8eHM6ZWxlbWVudCBu
+YW1lPSJEYXRhVHlwZTMiIHR5cGU9InRuczpEYXRhVHlwZTMiIG1pbk9jY3Vycz0iMCIgbWF4T2Nj
+dXJzPSJ1bmJvdW5kZWQiIG5pbGxhYmxlPSJ0cnVlIiAvPg0KICAgIDwveHM6c2VxdWVuY2U+DQog
+IDwveHM6Y29tcGxleFR5cGU+DQogIDx4czplbGVtZW50IG5hbWU9Ikxpc3RPZkRhdGFUeXBlMyIg
+dHlwZT0idG5zOkxpc3RPZkRhdGFUeXBlMyIgbmlsbGFibGU9InRydWUiPjwveHM6ZWxlbWVudD4N
+Cg0KICA8eHM6Y29tcGxleFR5cGUgbmFtZT0iRGF0YVR5cGU0Ij4NCiAgICA8eHM6c2VxdWVuY2U+
+DQogICAgICA8eHM6ZWxlbWVudCBuYW1lPSJJbnQzMkZpZWxkIiB0eXBlPSJ4czppbnQiIG1pbk9j
+Y3Vycz0iMCIgLz4NCiAgICAgIDx4czplbGVtZW50IG5hbWU9IkZsb2F0RmllbGQiIHR5cGU9Inhz
+OmZsb2F0IiBtaW5PY2N1cnM9IjAiIC8+DQogICAgICA8eHM6ZWxlbWVudCBuYW1lPSJCeXRlRmll
+bGQiIHR5cGU9InhzOnVuc2lnbmVkQnl0ZSIgbWluT2NjdXJzPSIwIiAvPg0KICAgIDwveHM6c2Vx
+dWVuY2U+DQogIDwveHM6Y29tcGxleFR5cGU+DQogIDx4czplbGVtZW50IG5hbWU9IkRhdGFUeXBl
+NCIgdHlwZT0idG5zOkRhdGFUeXBlNCIgLz4NCg0KICA8eHM6Y29tcGxleFR5cGUgbmFtZT0iTGlz
+dE9mRGF0YVR5cGU0Ij4NCiAgICA8eHM6c2VxdWVuY2U+DQogICAgICA8eHM6ZWxlbWVudCBuYW1l
+PSJEYXRhVHlwZTQiIHR5cGU9InRuczpEYXRhVHlwZTQiIG1pbk9jY3Vycz0iMCIgbWF4T2NjdXJz
+PSJ1bmJvdW5kZWQiIG5pbGxhYmxlPSJ0cnVlIiAvPg0KICAgIDwveHM6c2VxdWVuY2U+DQogIDwv
+eHM6Y29tcGxleFR5cGU+DQogIDx4czplbGVtZW50IG5hbWU9Ikxpc3RPZkRhdGFUeXBlNCIgdHlw
+ZT0idG5zOkxpc3RPZkRhdGFUeXBlNCIgbmlsbGFibGU9InRydWUiPjwveHM6ZWxlbWVudD4NCg0K
+ICA8eHM6c2ltcGxlVHlwZSAgbmFtZT0iRW51bWVyYXRpb25UeXBlMSI+DQogICAgPHhzOnJlc3Ry
+aWN0aW9uIGJhc2U9InhzOnN0cmluZyI+DQogICAgICA8eHM6ZW51bWVyYXRpb24gdmFsdWU9IlN0
+b3BwZWRfMCIgLz4NCiAgICAgIDx4czplbnVtZXJhdGlvbiB2YWx1ZT0iU3RhcnRpbmdfMSIgLz4N
+CiAgICAgIDx4czplbnVtZXJhdGlvbiB2YWx1ZT0iUnVubmluZ18yIiAvPg0KICAgICAgPHhzOmVu
+dW1lcmF0aW9uIHZhbHVlPSJGYXVsdF8zIiAvPg0KICAgIDwveHM6cmVzdHJpY3Rpb24+DQogIDwv
+eHM6c2ltcGxlVHlwZT4NCiAgPHhzOmVsZW1lbnQgbmFtZT0iRW51bWVyYXRpb25UeXBlMSIgdHlw
+ZT0idG5zOkVudW1lcmF0aW9uVHlwZTEiIC8+DQoNCiAgPHhzOmNvbXBsZXhUeXBlIG5hbWU9Ikxp
+c3RPZkVudW1lcmF0aW9uVHlwZTEiPg0KICAgIDx4czpzZXF1ZW5jZT4NCiAgICAgIDx4czplbGVt
+ZW50IG5hbWU9IkVudW1lcmF0aW9uVHlwZTEiIHR5cGU9InRuczpFbnVtZXJhdGlvblR5cGUxIiBt
+aW5PY2N1cnM9IjAiIG1heE9jY3Vycz0idW5ib3VuZGVkIiAvPg0KICAgIDwveHM6c2VxdWVuY2U+
+DQogIDwveHM6Y29tcGxleFR5cGU+DQogIDx4czplbGVtZW50IG5hbWU9Ikxpc3RPZkVudW1lcmF0
+aW9uVHlwZTEiIHR5cGU9InRuczpMaXN0T2ZFbnVtZXJhdGlvblR5cGUxIiBuaWxsYWJsZT0idHJ1
+ZSI+PC94czplbGVtZW50Pg0KDQogIDx4czpjb21wbGV4VHlwZSBuYW1lPSJEYXRhVHlwZTUiPg0K
+ICAgIDx4czpzZXF1ZW5jZT4NCiAgICAgIDx4czplbGVtZW50IG5hbWU9IkludDMyRmllbGQiIHR5
+cGU9InhzOmludCIgbWluT2NjdXJzPSIwIiAvPg0KICAgICAgPHhzOmVsZW1lbnQgbmFtZT0iRmxv
+YXRGaWVsZCIgdHlwZT0ieHM6ZmxvYXQiIG1pbk9jY3Vycz0iMCIgLz4NCiAgICAgIDx4czplbGVt
+ZW50IG5hbWU9IlN0cmluZ0ZpZWxkIiB0eXBlPSJ4czpzdHJpbmciIG1pbk9jY3Vycz0iMCIgbmls
+bGFibGU9InRydWUiIC8+DQogICAgICA8eHM6ZWxlbWVudCBuYW1lPSJEYXRhVHlwZTJGaWVsZCIg
+dHlwZT0idG5zOkRhdGFUeXBlMiIgbWluT2NjdXJzPSIwIiBuaWxsYWJsZT0idHJ1ZSIgLz4NCiAg
+ICAgIDx4czplbGVtZW50IG5hbWU9IkVudW1lcmF0aW9uVHlwZTFGaWVsZCIgdHlwZT0idG5zOkVu
+dW1lcmF0aW9uVHlwZTEiIG1pbk9jY3Vycz0iMCIgLz4NCiAgICA8L3hzOnNlcXVlbmNlPg0KICA8
+L3hzOmNvbXBsZXhUeXBlPg0KICA8eHM6ZWxlbWVudCBuYW1lPSJEYXRhVHlwZTUiIHR5cGU9InRu
+czpEYXRhVHlwZTUiIC8+DQoNCiAgPHhzOmNvbXBsZXhUeXBlIG5hbWU9Ikxpc3RPZkRhdGFUeXBl
+NSI+DQogICAgPHhzOnNlcXVlbmNlPg0KICAgICAgPHhzOmVsZW1lbnQgbmFtZT0iRGF0YVR5cGU1
+IiB0eXBlPSJ0bnM6RGF0YVR5cGU1IiBtaW5PY2N1cnM9IjAiIG1heE9jY3Vycz0idW5ib3VuZGVk
+IiBuaWxsYWJsZT0idHJ1ZSIgLz4NCiAgICA8L3hzOnNlcXVlbmNlPg0KICA8L3hzOmNvbXBsZXhU
+eXBlPg0KICA8eHM6ZWxlbWVudCBuYW1lPSJMaXN0T2ZEYXRhVHlwZTUiIHR5cGU9InRuczpMaXN0
+T2ZEYXRhVHlwZTUiIG5pbGxhYmxlPSJ0cnVlIj48L3hzOmVsZW1lbnQ+DQoNCjwveHM6c2NoZW1h
+Pg==</ByteString>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15046" BrowseName="NamespaceUri" ParentNodeId="ns=1;i=15044" DataType="String">
+    <DisplayName>NamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=15044</Reference>
+    </References>
+    <Value>
+      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications</String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15047" BrowseName="Deprecated" ParentNodeId="ns=1;i=15044" DataType="Boolean">
+    <DisplayName>Deprecated</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=15044</Reference>
+    </References>
+    <Value>
+      <Boolean xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">true</Boolean>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15048" BrowseName="1:DataType1" ParentNodeId="ns=1;i=15044" DataType="String">
+    <DisplayName>DataType1</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=69</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15044</Reference>
+    </References>
+    <Value>
+      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">//xs:element[@name='DataType1']</String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15051" BrowseName="1:DataType2" ParentNodeId="ns=1;i=15044" DataType="String">
+    <DisplayName>DataType2</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=69</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15044</Reference>
+    </References>
+    <Value>
+      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">//xs:element[@name='DataType2']</String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15054" BrowseName="1:DataType3" ParentNodeId="ns=1;i=15044" DataType="String">
+    <DisplayName>DataType3</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=69</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15044</Reference>
+    </References>
+    <Value>
+      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">//xs:element[@name='DataType3']</String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15057" BrowseName="1:DataType4" ParentNodeId="ns=1;i=15044" DataType="String">
+    <DisplayName>DataType4</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=69</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15044</Reference>
+    </References>
+    <Value>
+      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">//xs:element[@name='DataType4']</String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=15060" BrowseName="1:DataType5" ParentNodeId="ns=1;i=15044" DataType="String">
+    <DisplayName>DataType5</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=69</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=15044</Reference>
+    </References>
+    <Value>
+      <String xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">//xs:element[@name='DataType5']</String>
+    </Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=15063" BrowseName="Default JSON" SymbolicName="DefaultJson">
+    <DisplayName>Default JSON</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15001</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=15064" BrowseName="Default JSON" SymbolicName="DefaultJson">
+    <DisplayName>Default JSON</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15002</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=15065" BrowseName="Default JSON" SymbolicName="DefaultJson">
+    <DisplayName>Default JSON</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15003</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=15066" BrowseName="Default JSON" SymbolicName="DefaultJson">
+    <DisplayName>Default JSON</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15004</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=15067" BrowseName="Default JSON" SymbolicName="DefaultJson">
+    <DisplayName>Default JSON</DisplayName>
+    <References>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=15007</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+    </References>
+  </UAObject>
+</UANodeSet>

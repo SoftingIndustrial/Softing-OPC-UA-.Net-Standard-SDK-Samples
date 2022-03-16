@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ApplicationConfiguration
+  xmlns:ua="http://opcfoundation.org/UA/2008/02/Types.xsd"
+  xmlns="http://opcfoundation.org/UA/SDK/Configuration.xsd"
+  schemaLocation="./Schema/ApplicationConfiguration.xsd"
+>
+  <!-- A human readable but not necessarily unique name for the application instance -->
+  <ApplicationName>Softing .NET Standard Sample Client</ApplicationName>
+
+  <!-- A globally unique identifier for the application instance.
+       This is overridden with the value contained in the application certificate. -->
+  <ApplicationUri>urn:localhost:Softing:UANETStandardToolkit:SampleClient</ApplicationUri>
+
+  <!-- A globally unique URI for the product (usually assigned by the product vendor) -->
+  <ProductUri>http://industrial.softing.com/OpcUaNetStandardToolkit/SampleClient</ProductUri>
+
+  <!-- Indicates the type of application (Client, Server or ClientServer). -->
+  <ApplicationType>Client_1</ApplicationType>
+
+  <!-- Specifies security related configuration information -->
+  <SecurityConfiguration>
+
+    <!-- The location of the application instance certificate in the Windows certificate store -->
+    <ApplicationCertificate>
+      <StoreType>Directory</StoreType>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
+
+      <!-- The subject for the certificate 
+           Note that subject names are complex structures. Only text that appears here is treated as the CommonName component.
+           The first certificate found is used if multiple certificates with the same CommonName and a matching hostname exist.
+           Also a complete distinguished name can be specified here: 'CN=UA Sample Client, DC=localhost'.
+           In this case the first certificate matching the complete distinguished name is used. localhost is replaced with the hostname.
+           If no certificate is found, a new self signed application certificate is created.
+           The Thumbprint should be specified if the CN or DN does not uniquely identify a certificate. -->
+      <SubjectName>SoftingOpcUaSampleClient</SubjectName>
+    </ApplicationCertificate>
+    <TrustedIssuerCertificates>
+      <StoreType>Directory</StoreType>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/issuer</StorePath>
+    </TrustedIssuerCertificates>
+    <!-- The list of trusted certificates.
+         Some UA applications will use self-signed certificates (certificates without a CA)
+         which means that every application which communicates with it must be configured to 
+         trust it.
+         Administrators may designate a certificate store that contains trusted UA application 
+         instance certificates (this store should not be the same as the store used for CAs 
+         certificates). Alternately, Administrators may enter the certificates explicitly in
+         this list.
+         Note that entries in this list may either reference a certificate in the store or
+         may contained the entire certificate encoded as base64 data.
+         -->
+    <TrustedPeerCertificates>
+      <StoreType>Directory</StoreType>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/trusted</StorePath>
+    </TrustedPeerCertificates>
+
+    <!-- Applications exchange Nonces during the CreateSession. This value specifies the length. Must be >= 32 -->
+    <NonceLength>32</NonceLength>
+
+    <!-- The directory used to store invalid certificates for later review by the administrator. -->
+    <RejectedCertificateStore>
+      <StoreType>Directory</StoreType>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/rejected</StorePath>
+    </RejectedCertificateStore>
+
+    <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
+    be used for easy debugging purposes ONLY and turned off for production deployments! -->
+    <AutoAcceptUntrustedCertificates>false</AutoAcceptUntrustedCertificates>
+    <RejectSHA1SignedCertificates>false</RejectSHA1SignedCertificates>
+    <MinimumCertificateKeySize>1024</MinimumCertificateKeySize>
+  </SecurityConfiguration>
+
+  <TransportConfigurations></TransportConfigurations>
+
+  <!-- Specifies quotas used to by the transport layer -->
+  <TransportQuotas>
+
+    <!-- The default timeout in milliseconds for operations (used by clients) -->
+    <OperationTimeout>120000</OperationTimeout>
+
+    <!-- The maximum length for a string value in any message -->
+    <MaxStringLength>1048576</MaxStringLength>
+
+    <!-- The maximum length for a byte string value in any message -->
+    <MaxByteStringLength>4194304</MaxByteStringLength>
+
+    <!-- The maximum length for any array in a message. 
+         Note that some protocols do not distinguish between bytes and arrays. 
+         In these cases the binding will choose the larger of 
+         MaxByteStringLength or MaxArrayLength-->
+    <MaxArrayLength>65535</MaxArrayLength>
+
+    <!-- The maximum size of any message -->
+    <MaxMessageSize>4194304</MaxMessageSize>
+
+    <!-- The maximum buffer size 
+         This value controls how big a block of memory the transport layer allocates.
+         Setting this value to a large value will reduce performance and use a lot of RAM -->
+    <MaxBufferSize>65535</MaxBufferSize>
+
+    <!-- The lifetime of a SecureChannel in milliseconds.
+         This specifies how long the server will keep a broken channel around while waiting 
+         for a client to reconnect.
+         Not used by HTTP or .NET TCP bindings -->
+    <ChannelLifetime>300000</ChannelLifetime>
+
+    <!-- The lifetime of a SecurityToken in milliseconds.
+         This specifies how long a security token can be used without renewal. -->
+    <SecurityTokenLifetime>3600000</SecurityTokenLifetime>
+  </TransportQuotas>
+
+  <!-- This element is only required for Client and ClientServer applications -->
+  <ClientConfiguration>
+    <!-- The default timeout for new sessions -->
+    <DefaultSessionTimeout>600000</DefaultSessionTimeout>
+
+    <!-- The well-known URLs for the local discovery servers
+         URLs are tested in the order they appear in this list. -->
+    <WellKnownDiscoveryUrls>
+      <ua:String>opc.tcp://{0}:4840/UADiscovery</ua:String>
+      <ua:String>http://{0}:52601/UADiscovery</ua:String>
+      <ua:String>http://{0}/UADiscovery/Default.svc</ua:String>
+    </WellKnownDiscoveryUrls>
+
+    <!-- EndpointDescriptions for system wide discovery servers -->
+    <DiscoveryServers></DiscoveryServers>
+
+    <!-- The minimum subscription lifetime.
+  This ensures subscriptions are not set to expire too quickly. The requested lifetime count
+  and keep alive count are calculated using this value and the request publishing interval -->
+    <MinSubscriptionLifetime>10000</MinSubscriptionLifetime>
+  </ClientConfiguration>
+
+  <Extensions>
+    <ua:XmlElement>
+      <SampleClientConfiguration>
+        <!-- Configurable URL of the OPC UA Server where this OPC UA Client will connect -->
+        <ServerUrl>opc.tcp://localhost:61510/SampleServer</ServerUrl>
+        <ServerUrlHttps>https://localhost:61511/SampleServer</ServerUrlHttps>
+        <ReverseConnectUrl>opc.tcp://localhost:61512</ReverseConnectUrl>
+        <ReverseConnectServerApplicationUri>urn:localhost:Softing:UANETStandardToolkit:SampleServer</ReverseConnectServerApplicationUri>
+        <ReverseConnectServerCertificateIdentifier>
+          <StoreType>Directory</StoreType>
+          <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
+          <!-- The subject for the certificate of the SampleServer -->
+          <SubjectName>SoftingOpcUaSampleServer</SubjectName>
+        </ReverseConnectServerCertificateIdentifier>
+      </SampleClientConfiguration>
+    </ua:XmlElement>
+    <ua:XmlElement>
+      <ClientToolkitConfiguration>
+        <!-- Client custom configuration please use the same order!!!!-->
+        <DiscoveryOperationTimeout>10000</DiscoveryOperationTimeout>
+        <DefaultKeepAliveInterval>5000</DefaultKeepAliveInterval>
+        <SessionReconnectDelay>5000</SessionReconnectDelay>
+        <DefaultSubscriptionPublishingInterval>1000</DefaultSubscriptionPublishingInterval>
+        <DefaultSubscriptionKeepAliveCount>10</DefaultSubscriptionKeepAliveCount>
+        <DefaultSubscriptionLifeTimeCount>1000</DefaultSubscriptionLifeTimeCount>
+        <DefaultSubscriptionMaxNotificationsPerPublish>0</DefaultSubscriptionMaxNotificationsPerPublish>
+        <DefaultSubscriptionPriority>255</DefaultSubscriptionPriority>
+        <DefaultMiSamplingInterval>1000</DefaultMiSamplingInterval>
+        <DefaultMiQueueSize>1</DefaultMiQueueSize>
+        <DefaultEventMiQueueSize>0</DefaultEventMiQueueSize>
+        <DecodeCustomDataTypes>true</DecodeCustomDataTypes>
+        <DecodeDataTypeDictionaries>true</DecodeDataTypeDictionaries>
+        <ClientCertificateLifeTime>24</ClientCertificateLifeTime>
+        <ReuseCustomDataTypeInfoAtReconnect>true</ReuseCustomDataTypeInfoAtReconnect>
+      </ClientToolkitConfiguration>
+    </ua:XmlElement>
+    <ua:XmlElement>
+      <GdsConnectionConfiguration>
+        <!-- GDS connection configuration please use the same order!!!!-->
+        <GdsUrl>opc.tcp://localhost:58810</GdsUrl>
+        <!-- The next 3 elemennts are used to explicitly select the endpoint exposed by the GDS server to which the connection is established
+        Comment out, to let the application use the first secure endpoint exposed by the GDS server-->
+        <MessageSecurityMode>SignAndEncrypt_3</MessageSecurityMode>
+        <SecurityPolicy>Basic256Sha256</SecurityPolicy>
+        <MessageEncoding>Binary</MessageEncoding>
+        <PreferredLocales>
+          <ua:String>en-us</ua:String>
+          <ua:String>de</ua:String>
+        </PreferredLocales>
+      </GdsConnectionConfiguration>
+    </ua:XmlElement>
+  </Extensions>
+  
+  <TraceConfiguration>
+    <OutputFilePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleClient.log</OutputFilePath>
+    <DeleteOnLoad>true</DeleteOnLoad>
+    <!-- Show Only Errors -->
+    <!-- <TraceMasks>1</TraceMasks> -->
+    <!-- Show Only Security and Errors -->
+    <!-- <TraceMasks>513</TraceMasks> -->
+    <!-- Show Only Security, Errors and Trace -->
+    <!-- <TraceMasks>515</TraceMasks> -->
+    <!-- Show Only Security, COM Calls, Errors and Trace -->
+    <!-- <TraceMasks>771</TraceMasks> -->
+    <!-- Show Only Security, Service Calls, Errors and Trace -->
+    <!-- <TraceMasks>523</TraceMasks> -->
+    <!-- Show Only Security, ServiceResultExceptions, Errors and Trace -->
+   <TraceMasks>1</TraceMasks>
+  </TraceConfiguration>
+  <!-- Enables the hi-res clock for the process to allows for shorter (<100ms) publishing and sampling intervals. -->
+  <!-- QueryPerformanceCounter does not work on all multi-core machines so enabling the hi-res clock by default is not recommended. -->
+  <DisableHiResClock>true</DisableHiResClock>  
+</ApplicationConfiguration>

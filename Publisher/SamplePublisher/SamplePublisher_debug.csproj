@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+<PropertyGroup>
+<OutputType>Exe</OutputType>
+<TargetFrameworks>$(AppTargetFrameworks)</TargetFrameworks>
+<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+<RootNamespace>SamplePublisher</RootNamespace>
+<AssemblyName>SamplePublisher</AssemblyName>
+<RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
+</PropertyGroup>
+
+<ItemGroup>
+<Compile Include="..\..\..\Include\AssemblyVersionInfo.cs" Link="Properties\AssemblyVersionInfo.cs" />
+</ItemGroup>
+
+<ItemGroup>
+<ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Libraries\Opc.Ua.Configuration\Opc.Ua.Configuration.csproj" />
+<ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Libraries\Opc.Ua.PubSub\Opc.Ua.PubSub.csproj" />
+<ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Libraries\Opc.Ua.Server\Opc.Ua.Server.csproj" />
+<ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Bindings.Https\Opc.Ua.Bindings.Https.csproj" />
+<ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Core\Opc.Ua.Core.csproj" />
+</ItemGroup>
+
+<ItemGroup>
+<None Update="SamplePublisher_MQTT_UADP.Config.xml">
+  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
+<None Update="SamplePublisher_MQTT_JSON.Config.xml">
+  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
+<None Update="SamplePublisher_UDP_UADP.AllTypes.Config.xml">
+  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
+<None Update="SamplePublisher_UDP_UADP.Config.xml">
+  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</None>
+</ItemGroup>
+
+</Project>

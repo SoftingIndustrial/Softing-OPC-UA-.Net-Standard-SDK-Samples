@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamarinSampleServer.Views.StartPage"
+             Title="{Binding Title}">
+    <ContentPage.Content>        
+        <Grid>
+            <Grid VerticalOptions="Fill">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!--Server URL-->
+                <Frame VerticalOptions="FillAndExpand"
+                    Grid.Row="0"
+                    Margin="2" Padding="2" CornerRadius="3" OutlineColor="{StaticResource softing_secondary_dark_gray}">
+                    <StackLayout Margin="0" VerticalOptions="StartAndExpand" Spacing="0" >
+                        <Label  Margin="2" Style="{StaticResource BoldLabel}" 
+                            Text="Available server URLs:" />
+                        <StackLayout Margin="0" 
+                                    VerticalOptions="FillAndExpand" BindingContextChanged="ServerIpsList_Changed" />   
+                        <Grid >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                IsEnabled="{Binding CanStartServer}"
+                                Clicked="StartServer_OnClicked" 
+                                Text="Start Server"/>
+                            <Button Grid.Column="1"
+                                IsEnabled="{Binding CanStopServer}"
+                                Clicked="StopServer_OnClicked" 
+                                Text="Stop Server"/>
+                        </Grid>
+                       
+                    </StackLayout>
+                </Frame>
+                <StackLayout Grid.Row="1" Orientation="Vertical" >
+                        <!-- Results label -->
+                        <Label VerticalOptions="Start"
+                            Margin="4" Text="{Binding ResultsText}" Style="{StaticResource BoldLabel}" />
+                        <!--Sessions list-->
+                        <Grid 
+                            VerticalOptions="Fill" Margin="4" IsVisible="{Binding CanStopServer}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Text="{Binding ConnectedSessions.Count, StringFormat='{0} connected session(s):'}"/>
+                            <ListView Grid.Row="1" ItemsSource="{Binding ConnectedSessions}" 
+                                    CachingStrategy="RecycleElement"
+                                    HasUnevenRows="True"
+                                    IsPullToRefreshEnabled="True"
+                                    x:Name="SessionsListView"
+                                    IsRefreshing="{Binding IsRefreshingSessions, Mode=OneWay}"
+                                    RefreshCommand="{Binding LoadSessionsCommand}"
+                                    VerticalOptions="Fill">
+                                <ListView.Header>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0.7*"/>
+                                            <ColumnDefinition Width="0.3*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0"  Margin="1" Text="Name"/>
+                                        <Label Grid.Column="1"  Margin="1" Text="Subscriptions"/>
+                                    </Grid>
+                                </ListView.Header>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <ViewCell>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="0.7*"/>
+                                                    <ColumnDefinition Width="0.3*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Label Grid.Column="0"  Margin="1" Text="{Binding SessionName}"/>
+                                                <Label Grid.Column="1"  Margin="1" Text="{Binding SubscriptionsCount}"/>
+                                            </Grid>
+                                        </ViewCell>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
+                    </StackLayout>
+            </Grid>
+            <!--IsBusy indicator-->
+            <ActivityIndicator 
+                IsVisible="{Binding IsBusy}"
+                IsRunning="{Binding IsBusy}"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

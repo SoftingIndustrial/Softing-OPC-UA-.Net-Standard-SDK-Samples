@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:converters="clr-namespace:XamarinSampleClient.Converters;assembly=XamarinSampleClient"
+             x:Class="XamarinSampleClient.App">
+  <Application.Resources>
+        <ResourceDictionary>
+            <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <converters:NullToFalseConverter x:Key="NullToFalseConverter" />
+            <converters:AreObjectsEqualConverter x:Key="AreObjectsEqualConverter"/>
+            
+            
+            <Color x:Key="softing_primary_color">#009ee3</Color>
+            <Color x:Key="softing_industrial_color">#005591</Color>
+            <Color x:Key="softing_secondary_light_gray">#D8E0E8</Color>
+            <Color x:Key="softing_secondary_medium_gray">#B0B8C0</Color> ]
+            <Color x:Key="softing_secondary_dark_gray">#5C676D</Color>
+            <Color x:Key="softing_textColor">#000000</Color>
+            <Color x:Key="softing_white">#ffffff</Color>
+
+            <Color x:Key="view_background">#ffffff</Color>
+
+
+            <Color x:Key="Primary">#2196F3</Color>
+            <Color x:Key="PrimaryDark">#1976D2</Color>
+            <Color x:Key="Accent">#96d1ff</Color>
+            <Color x:Key="LightBackgroundColor">#FAFAFA</Color>
+            <Color x:Key="DarkBackgroundColor">#C0C0C0</Color>
+            <Color x:Key="MediumGrayTextColor">#4d4d4d</Color>
+            <Color x:Key="LightTextColor">#999999</Color>
+
+
+            <Style TargetType="ContentPage">
+                <Setter Property="BackgroundColor" Value="{StaticResource view_background}" />
+            </Style>
+            
+            <Style TargetType="NavigationPage">
+                <Setter Property="BarBackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="BarTextColor" Value="White" />
+            </Style>
+
+            <Style TargetType="Label">
+                <Setter Property="FontFamily" Value="Calibri Regular" />
+                <Setter Property="TextColor" Value="{StaticResource MediumGrayTextColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style TargetType="Entry">
+                <Setter Property="FontSize" Value="Small" />
+                <Setter Property="FontFamily" Value="Calibri Regular" />
+                <Setter Property="TextColor" Value="{StaticResource MediumGrayTextColor}" />
+            </Style>
+
+            <Style TargetType="ActivityIndicator">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Color" Value="{StaticResource softing_secondary_dark_gray}" />
+            </Style>
+
+            <Style x:Key="HeaderLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="Large" />
+                <Setter Property="FontAttributes" Value="Bold"/>
+            </Style>
+
+            <Style x:Key="BoldLabel" TargetType="Label">
+                <Setter Property="FontAttributes" Value="Bold"/>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

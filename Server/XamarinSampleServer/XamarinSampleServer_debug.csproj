@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>XamarinSampleServer</AssemblyName>
+    <RootNamespace>XamarinSampleServer</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+   <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="App.xaml.cs">
+      <DependentUpon>*.xaml</DependentUpon>
+    </Compile>
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="MainPage.xaml.cs">
+      <DependentUpon>*.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  
+  
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\BaseAlarmMonitor.cs" Link="_SampleServer\Alarms\BaseAlarmMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\ExclusiveLimitMonitor.cs" Link="_SampleServer\Alarms\ExclusiveLimitMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\ExclusiveLevelMonitor.cs" Link="_SampleServer\Alarms\ExclusiveLevelMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\ExclusiveDeviationMonitor.cs" Link="_SampleServer\Alarms\ExclusiveDeviationMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\ExclusiveRateOfChangeMonitor.cs" Link="_SampleServer\Alarms\ExclusiveRateOfChangeMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\NonExclusiveLimitMonitor.cs" Link="_SampleServer\Alarms\NonExclusiveLimitMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\NonExclusiveLevelMonitor.cs" Link="_SampleServer\Alarms\NonExclusiveLevelMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\NonExclusiveDeviationMonitor.cs" Link="_SampleServer\Alarms\NonExclusiveDeviationMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\NonExclusiveRateOfChangeMonitor.cs" Link="_SampleServer\Alarms\NonExclusiveRateOfChangeMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\ConditionMonitor.cs" Link="_SampleServer\Alarms\ConditionMonitor.cs" />
+	<Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\DialogConditionMonitor.cs" Link="_SampleServer\Alarms\DialogConditionMonitor.cs" />
+	<Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\AcknowledgeableConditionMonitor.cs" Link="_SampleServer\Alarms\AcknowledgeableConditionMonitor.cs" />
+	  <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\AlarmConditionMonitor.cs" Link="_SampleServer\Alarms\AlarmConditionMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\LimitAlarmMonitor.cs" Link="_SampleServer\Alarms\LimitAlarmMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\DiscreteMonitor.cs" Link="_SampleServer\Alarms\DiscreteMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\CertificateExpirationMonitor.cs" Link="_SampleServer\Alarms\CertificateExpirationMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\TrustListOutOfDateMonitor.cs" Link="_SampleServer\Alarms\TrustListOutOfDateMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\OffNormalAlarmMonitor.cs" Link="_SampleServer\Alarms\OffNormalAlarmMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\SystemDiagnosticAlarmMonitor.cs" Link="_SampleServer\Alarms\SystemDiagnosticAlarmMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\SystemOffNormalAlarmMonitor.cs" Link="_SampleServer\Alarms\SystemOffNormalAlarmMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\TripAlarmMonitor.cs" Link="_SampleServer\Alarms\TripAlarmMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\DiscrepancyAlarmMonitor.cs" Link="_SampleServer\Alarms\DiscrepancyAlarmMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\InstrumentDiagnosticMonitor.cs" Link="_SampleServer\Alarms\InstrumentDiagnosticMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Alarms\AlarmsNodeManager.cs" Link="_SampleServer\Alarms\AlarmsNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\DataAccess\DataAccessNodeManager.cs" Link="_SampleServer\DataAccess\DataAccessNodeManager.cs" />   
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Methods\MethodsNodeManager.cs" Link="_SampleServer\Methods\MethodsNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\NodeSetImportNodeManager.cs" Link="_SampleServer\NodeSetImport\NodeSetImportNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\ReferenceServer\ReferenceNodeManager.cs" Link="_SampleServer\ReferenceServer\ReferenceNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\UserAuthentication\UserAuthenticationNodeManager.cs" Link="_SampleServer\UserAuthentication\UserAuthenticationNodeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\Namespaces.cs" Link="_SampleServer\Namespaces.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\..\SampleServer\SampleServerConfiguration.cs" Link="_SampleServer\SampleServerConfiguration.cs" />
+    
+  </ItemGroup>
+  
+  <ItemGroup>
+    
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" Link="_SampleServer\ReferenceServer\Model\ReferenceServer.NodeSet2.xml" />
+	  <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" Link="_SampleServer\NodeSetImport\Refrigerators.NodeSet2.xml" />
+	  <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\SampleServer\NodeSetImport\RefrigeratorsInstances.NodeSet2.xml" Link="_SampleServer\NodeSetImport\RefrigeratorsInstances.NodeSet2.xml" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Libraries\Opc.Ua.Configuration\Opc.Ua.Configuration.csproj" />
+    <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Libraries\Opc.Ua.Server\Opc.Ua.Server.csproj" />
+    <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Bindings.Https\Opc.Ua.Bindings.Https.csproj" />
+    <ProjectReference Include="..\..\..\git\UA-.NETStandardLibrary\Stack\Opc.Ua.Core\Opc.Ua.Core.csproj" />
+    <ProjectReference Include="..\..\..\Toolkit\Server\Softing.Opc.Ua.Server_debug.csproj" />
+  </ItemGroup>
+</Project>

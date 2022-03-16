@@ -1,0 +1,14 @@
+<Project>
+  <Choose>
+    <When  Condition="'$(VisualStudioVersion)' == '16.0'">
+      <PropertyGroup>
+        <AppTargetFrameworks>net462;netcoreapp3.1</AppTargetFrameworks>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <AppTargetFrameworks>net462;netcoreapp2.1</AppTargetFrameworks>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+</Project>
