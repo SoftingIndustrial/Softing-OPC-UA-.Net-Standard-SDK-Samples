@@ -5,7 +5,11 @@ This repository hosts the Samples for the [OPC UA .NET Standard SDK](https://ind
 In order to run the samples you need to download the SDK from the website or use the [NuGet package](https://www.nuget.org/profiles/Softing).
 
 ## License and Trial Version
-The OPC UA .NET Standard SDK provides a trial version of 90 minutes until restart of the application. The trial version includes all features for testing. If you have trouble on setting up your OPC UA Application you can get in touch with our sales team <info.automation@softing.com>
+The OPC UA .NET Standard SDK provides a trial version of 90 minutes until restart of the application. The trial version includes all features for testing. If you have trouble on setting up your OPC UA Application you can get in touch with our sales team.
+
+In order to use the the SDK without a limitation you need to obtain a license from Softing Industrial. Our sales team will be glad to assist you.
+
+__contact sales team: <info.automation@softing.com>__
 
 ## Following samples are provided
 - OPC UA Client
