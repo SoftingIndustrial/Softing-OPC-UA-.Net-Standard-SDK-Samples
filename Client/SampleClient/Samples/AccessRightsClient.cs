@@ -13,6 +13,7 @@ using Softing.Opc.Ua.Client;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SampleClient.Samples
 {
@@ -73,7 +74,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Read nodes from Objects\CTT\AccessRights\AccessRestrictions with sessions created with various security settings
         /// </summary>
-        public void SampleAccessRestrictions()
+        public async Task SampleAccessRestrictions()
         {
             Console.WriteLine(@"Read the nodes from SampleServer Objects\CTT\AccessRights\AccessRestrictions folder with various sessions security options.");
             // create a session with no security 
@@ -82,12 +83,15 @@ namespace SampleClient.Samples
             {
                 try
                 {
-                    noSecuritySession.Connect(true, true);
+                    await noSecuritySession.ConnectAsync(true, true).ConfigureAwait(false);
+
                     // read value attribute for all variables under Objects\CTT\AccessRights\AccessRestrictions folder
                     ReadVariableAttribute(noSecuritySession, new NodeId(NodeIdAccessRestrictionsNone), (uint)Attributes.Value);
                     ReadVariableAttribute(noSecuritySession, new NodeId(NodeIdAccessRestrictionsSigningRequired), (uint)Attributes.Value);
                     ReadVariableAttribute(noSecuritySession, new NodeId(NodeIdAccessRestrictionsEncryptionRequired), (uint)Attributes.Value);
                     ReadVariableAttribute(noSecuritySession, new NodeId(NodeIdAccessRestrictionsSessionRequired), (uint)Attributes.Value);
+
+                    await noSecuritySession.DisconnectAsync(true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -101,12 +105,14 @@ namespace SampleClient.Samples
             {
                 try
                 {
-                    signSession.Connect(true, true);
+                    await signSession.ConnectAsync(true, true).ConfigureAwait(false);
                     // read value attribute for all variables under Objects\CTT\AccessRights\AccessRestrictions folder
                     ReadVariableAttribute(signSession, new NodeId(NodeIdAccessRestrictionsNone), (uint)Attributes.Value);
                     ReadVariableAttribute(signSession, new NodeId(NodeIdAccessRestrictionsSigningRequired), (uint)Attributes.Value);
                     ReadVariableAttribute(signSession, new NodeId(NodeIdAccessRestrictionsEncryptionRequired), (uint)Attributes.Value);
                     ReadVariableAttribute(signSession, new NodeId(NodeIdAccessRestrictionsSessionRequired), (uint)Attributes.Value);
+
+                    await signSession.DisconnectAsync(true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -120,12 +126,14 @@ namespace SampleClient.Samples
             {
                 try
                 {
-                    encryptionSession.Connect(true, true);
+                    await encryptionSession.ConnectAsync(true, true).ConfigureAwait(false);
                     // read value attribute for all variables under Objects\CTT\AccessRights\AccessRestrictions folder
                     ReadVariableAttribute(encryptionSession, new NodeId(NodeIdAccessRestrictionsNone), (uint)Attributes.Value);
                     ReadVariableAttribute(encryptionSession, new NodeId(NodeIdAccessRestrictionsSigningRequired), (uint)Attributes.Value);
                     ReadVariableAttribute(encryptionSession, new NodeId(NodeIdAccessRestrictionsEncryptionRequired), (uint)Attributes.Value);
                     ReadVariableAttribute(encryptionSession, new NodeId(NodeIdAccessRestrictionsSessionRequired), (uint)Attributes.Value);
+
+                    await encryptionSession.DisconnectAsync(true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -137,7 +145,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Access nodes from  Objects\CTT\AccessRights\RolePermissions with sessions created with various users that have specific user roles in SampleServer
         /// </summary>
-        public void SampleRolePermissions()
+        public async Task SampleRolePermissions()
         {
             Console.WriteLine(@"Read the nodes from SampleServer Objects\CTT\AccessRights\RolePermissions folder with various user identities.");
             // create a session for anonymous user
@@ -146,11 +154,13 @@ namespace SampleClient.Samples
             {
                 try
                 {
-                    anonymousSession.Connect(true, true);
+                    await anonymousSession.ConnectAsync(true, true).ConfigureAwait(false);
                     // read value attribute for some variables under Objects\CTT\AccessRights\RolePermissions folder
                     ReadVariableAttribute(anonymousSession, new NodeId(NodeIdRolePermissionsAnonymous), (uint)Attributes.Value);
                     ReadVariableAttribute(anonymousSession, new NodeId(NodeIdRolePermissionsAuthenticated), (uint)Attributes.Value);
                     ReadVariableAttribute(anonymousSession, new NodeId(NodeIdRolePermissionsOperator), (uint)Attributes.Value);
+
+                    await anonymousSession.DisconnectAsync(true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -164,11 +174,13 @@ namespace SampleClient.Samples
             {
                 try
                 {
-                    authenticatedSession.Connect(true, true);
+                    await authenticatedSession.ConnectAsync(true, true).ConfigureAwait(false);
                     // read value attribute for some variables under Objects\CTT\AccessRights\RolePermissions folder
                     ReadVariableAttribute(authenticatedSession, new NodeId(NodeIdRolePermissionsAnonymous), (uint)Attributes.Value);
                     ReadVariableAttribute(authenticatedSession, new NodeId(NodeIdRolePermissionsAuthenticated), (uint)Attributes.Value);
                     ReadVariableAttribute(authenticatedSession, new NodeId(NodeIdRolePermissionsOperator), (uint)Attributes.Value);
+
+                    await authenticatedSession.DisconnectAsync(true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -182,11 +194,13 @@ namespace SampleClient.Samples
             {
                 try
                 {
-                    operatorSession.Connect(true, true);
+                    await operatorSession.ConnectAsync(true, true).ConfigureAwait(false);
                     // read value attribute for some variables under Objects\CTT\AccessRights\RolePermissions folder
                     ReadVariableAttribute(operatorSession, new NodeId(NodeIdRolePermissionsAnonymous), (uint)Attributes.Value);
                     ReadVariableAttribute(operatorSession, new NodeId(NodeIdRolePermissionsAuthenticated), (uint)Attributes.Value);
                     ReadVariableAttribute(operatorSession, new NodeId(NodeIdRolePermissionsOperator), (uint)Attributes.Value);
+
+                    await operatorSession.DisconnectAsync(true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -198,7 +212,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Access nodes from  Objects\CTT\AccessRights\UserRolePermissions with sessions created with various users that have specific user roles in SampleServer
         /// </summary>
-        public void SampleUserRolePermissions()
+        public async Task SampleUserRolePermissions()
         {
             // create a session for operator user
             using (ClientSession anonymousSession = CreateSession(SessionNameAnonymous, Program.ServerUrl,
@@ -206,10 +220,12 @@ namespace SampleClient.Samples
             {
                 try
                 {
-                    anonymousSession.Connect(true, true);
+                    await anonymousSession.ConnectAsync(true, true).ConfigureAwait(false);
                     // read value attribute for some variables under Objects\CTT\AccessRights\RolePermissions folder that have user roles handled
                     ReadVariableAttribute(anonymousSession, new NodeId(NodeIdUserRolePermissionsAllForOperator), (uint)Attributes.Value);
                     ReadVariableAttribute(anonymousSession, new NodeId(NodeIdUserRolePermissionsForEngineer), (uint)Attributes.Value);
+
+                    await anonymousSession.DisconnectAsync(true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -222,10 +238,12 @@ namespace SampleClient.Samples
             {
                 try
                 {
-                    operatorSession.Connect(true, true);
+                    await operatorSession.ConnectAsync(true, true).ConfigureAwait(false);
                     // read value attribute for some variables under Objects\CTT\AccessRights\RolePermissions folder that have user roles handled
                     ReadVariableAttribute(operatorSession, new NodeId(NodeIdUserRolePermissionsAllForOperator), (uint)Attributes.Value);
                     ReadVariableAttribute(operatorSession, new NodeId(NodeIdUserRolePermissionsForEngineer), (uint)Attributes.Value);
+
+                    await operatorSession.DisconnectAsync(true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -239,10 +257,12 @@ namespace SampleClient.Samples
             {
                 try
                 {
-                    engineerSession.Connect(true, true);
+                    await engineerSession.ConnectAsync(true, true).ConfigureAwait(false);
                     // read value attribute for some variables under Objects\CTT\AccessRights\RolePermissions folder that have user roles handled
                     ReadVariableAttribute(engineerSession, new NodeId(NodeIdUserRolePermissionsAllForOperator), (uint)Attributes.Value);
                     ReadVariableAttribute(engineerSession, new NodeId(NodeIdUserRolePermissionsForEngineer), (uint)Attributes.Value);
+
+                    await engineerSession.DisconnectAsync(true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -260,7 +280,6 @@ namespace SampleClient.Samples
             m_application.Configuration.CertificateValidator.CertificateValidation -= Program.CertificateValidator_CertificateValidation;
         }
         #endregion
-
 
         #region Private Helper Methods
         /// <summary>
@@ -310,8 +329,7 @@ namespace SampleClient.Samples
             {
                 Console.WriteLine("tRead '{0}' for '{1}' throws Exception:{2}", Attributes.GetBrowseName(attribute), nodeId, ex.Message);
             }
-        }
-        
+        }       
         
         #endregion
     }

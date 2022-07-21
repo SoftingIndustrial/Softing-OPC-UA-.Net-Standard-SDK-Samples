@@ -15,9 +15,8 @@ namespace SampleServer.Alarms
     /// <summary>
     /// A monitored variable with an <see cref="SystemOffNormalAlarmMonitor"/> attached.
     /// </summary>
-    internal class SystemOffNormalAlarmMonitor : OffNormalAlarmMonitor
+    class SystemOffNormalAlarmMonitor : OffNormalAlarmMonitor
     {
-
         #region Constructor
         /// <summary>
         /// Create instance of <see cref="SystemOffNormalAlarmMonitor"/>

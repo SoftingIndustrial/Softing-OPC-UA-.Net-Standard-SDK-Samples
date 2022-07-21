@@ -58,7 +58,7 @@ namespace SampleClient
 
             // TODO - Client binary license activation
             // Fill in your Client binary license activation keys here
-            // clientLicensingStatus = application.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
+            //clientLicensingStatus = application.ActivateLicense(LicenseFeature.Client, "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX");
             if (clientLicensingStatus != LicensingStatus.Ok)
             {
                 Console.WriteLine("Client license status is: {0}!", clientLicensingStatus);
@@ -75,7 +75,7 @@ namespace SampleClient
                 // Read commands
                 string inputCommand = Console.ReadKey().KeyChar.ToString();
                 // Execute command
-                process.ExecuteCommand(inputCommand);
+                process.ExecuteCommand(inputCommand).GetAwaiter().GetResult();
             }
         }
 

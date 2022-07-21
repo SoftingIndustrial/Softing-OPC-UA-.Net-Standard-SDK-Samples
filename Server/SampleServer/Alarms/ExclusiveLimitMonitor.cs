@@ -16,15 +16,8 @@ namespace SampleServer.Alarms
     /// <summary>
     /// A monitored variable with an <see cref="ExclusiveLimitAlarmState"/> attached.
     /// </summary>
-    class ExclusiveLimitMonitor : BaseAlarmMonitor
+    class ExclusiveLimitMonitor : LimitAlarmMonitor<ExclusiveLimitAlarmState>
     {
-
-        #region Private Members
-
-        private ExclusiveLimitAlarmState m_alarm;
-        
-        #endregion
-        
         #region Constructors
 
         /// <summary>
@@ -51,20 +44,8 @@ namespace SampleServer.Alarms
             double highHighLimit,
             double lowLimit,
             double lowLowLimit)
-            : base(context, parent, namespaceIndex, name, initialValue)
+            : base(context, parent, namespaceIndex, name, alarmName, initialValue, highLimit, highHighLimit, lowLimit, lowLowLimit)
         {
-            // Attach the alarm monitor.
-            InitializeAlarmMonitor(
-                context,
-                parent,
-                namespaceIndex,
-                alarmName,
-                highLimit,
-                highHighLimit,
-                lowLimit,
-                lowLowLimit);
-
-            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
 
         #endregion
@@ -196,7 +177,7 @@ namespace SampleServer.Alarms
 
         #endregion
 
-        #region Private Methods
+        #region Protected Methods
 
         /// <summary>
         /// Initialize the alarm monitor 
@@ -209,7 +190,7 @@ namespace SampleServer.Alarms
         /// <param name="highHighLimit"></param>
         /// <param name="lowLimit"></param>
         /// <param name="lowLowLimit"></param>
-        private void InitializeAlarmMonitor(
+        protected override void InitializeAlarmMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
@@ -222,34 +203,10 @@ namespace SampleServer.Alarms
             // Create the alarm object
             m_alarm = new ExclusiveLimitAlarmState(this);
 
-            // Declare limit components
-            m_alarm.HighHighLimit = new PropertyState<double>(m_alarm);
-            m_alarm.HighLimit = new PropertyState<double>(m_alarm);
-            m_alarm.LowLimit = new PropertyState<double>(m_alarm);
-            m_alarm.LowLowLimit = new PropertyState<double>(m_alarm);
-
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
-
-            // Set input node
-            m_alarm.InputNode.Value = NodeId;
-
-            // set acknowledge state
-            m_alarm.SetAcknowledgedState(context, false);
-            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
+            base.InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, highLimit, highHighLimit, lowLimit, lowLowLimit);
 
             // Set state values
             m_alarm.SetLimitState(context, LimitAlarmStates.Inactive);
-            m_alarm.SetSuppressedState(context, false);
-            m_alarm.SetActiveState(context, false);
-            
-            // Define limit values
-            m_alarm.HighLimit.Value = highLimit;
-            m_alarm.HighHighLimit.Value = highHighLimit;
-            m_alarm.LowLimit.Value = lowLimit;
-            m_alarm.LowLowLimit.Value = lowLowLimit;
-
-            // Disable this property 
-            m_alarm.LatchedState = null;
         }
 
         #endregion        

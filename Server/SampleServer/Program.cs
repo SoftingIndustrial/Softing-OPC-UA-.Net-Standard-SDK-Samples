@@ -270,7 +270,7 @@ namespace SampleServer
                     StringBuilder line = new StringBuilder();
 
                     line.AppendFormat("{0,20}", session.SessionDiagnostics.SessionName);
-                    if (session.SessionDiagnostics != null && session.SessionDiagnostics.ClientConnectionTime != null)
+                    if (session.SessionDiagnostics != null)
                     {
                         line.AppendFormat(";ConnectionTime: {0}", session.SessionDiagnostics.ClientConnectionTime);
                     }

@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
+﻿/* ========================================================================
+ * Copyright © 2011-2022 Softing Industrial Automation GmbH. 
+ * All rights reserved.
+ * 
+ * The Software is subject to the Softing Industrial Automation GmbH’s 
+ * license agreement, which can be found here:
+ * https://data-intelligence.softing.com/LA-SDK-en
+ * 
+ * ======================================================================*/
+
 using Opc.Ua;
-using Opc.Ua.Server;
-using Softing.Opc.Ua.Server;
+using System;
+using System.IO;
 
 namespace SampleServer.FileTransfer
 {

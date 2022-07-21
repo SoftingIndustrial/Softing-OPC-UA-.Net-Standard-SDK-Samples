@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\Include\AssemblyVersionInfo.cs" Link="Properties\AssemblyVersionInfo.cs" />
+    <Compile Include="..\..\Include\AssemblyVersionInfo.cs" Link="Properties\AssemblyVersionInfo.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,16 +29,16 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
+	
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+		<Reference Include="Softing.Opc.Ua.Client">
+			<HintPath>..\..\..\..\bin\net6.0\Softing.Opc.Ua.Client.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+	
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <Reference Include="Softing.Opc.Ua.Client">
       <HintPath>..\..\..\..\bin\net462\Softing.Opc.Ua.Client.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
-    <Reference Include="Softing.Opc.Ua.Client">
-      <HintPath>..\..\..\..\bin\netstandard2.0\Softing.Opc.Ua.Client.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -49,11 +49,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.4.367.100" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.4.369.30" />
   </ItemGroup>
 
   <!--<ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Bindings.Https" Version="1.4.367.100" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Bindings.Https" Version="1.4.369.30" />
   </ItemGroup>-->
 
   <ItemGroup>

@@ -26,6 +26,7 @@ namespace SampleClient.StateMachine
         Events,
         History,       
         Alarms,
+        TriggerAlarms,
         AccessRights,
         RolePermissions,
         ReadWriteRegisterNodes,
@@ -88,8 +89,12 @@ namespace SampleClient.StateMachine
         RefreshAlarms,
         AcknowledgeAlarms,
         AddCommentAlarms,
-        TriggerAlarms,
         EndAlarms,
+
+        StartTriggerAlarms,
+        EnableTriggerAlarms,
+        DisableTriggerAlarms,
+        EndTriggerAlarms,
 
         StartAccessRights,
         AccessRestrictions,

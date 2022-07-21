@@ -8,24 +8,20 @@
  * 
  * ======================================================================*/
 
-using Opc.Ua;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Opc.Ua;
 
 namespace SampleServer.Alarms
 {
     /// <summary>
     /// A monitored variable with an <see cref="DiscreteAlarmState"/> attached.
     /// </summary>
-    internal class DiscreteMonitor : BaseAlarmMonitor
+    class DiscreteMonitor : BaseAlarmMonitor<DiscreteAlarmState>
     {
         #region Private Members
 
-        private DiscreteAlarmState m_alarm;
         double? m_value = 0;
+
         #endregion
 
         #region Constructors
@@ -37,8 +33,7 @@ namespace SampleServer.Alarms
                 context,
                 parent,
                 namespaceIndex,
-                alarmName,
-                initialValue);
+                alarmName);
 
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
@@ -142,17 +137,16 @@ namespace SampleServer.Alarms
         /// <param name="namespaceIndex"></param>
         /// <param name="alarmName"></param>
         /// <param name="initialValue"></param>
-        private void InitializeAlarmMonitor(
+        protected override void InitializeAlarmMonitor(
            ISystemContext context,
            NodeState parent,
            ushort namespaceIndex,
-           string alarmName,
-           double initialValue)
+           string alarmName)
         {
             // Create the alarm object
             m_alarm = new DiscreteAlarmState(this);
 
-            base.InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+            base.InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName);
 
             // Set input node
             m_alarm.InputNode.Value = NodeId;
@@ -161,6 +155,8 @@ namespace SampleServer.Alarms
             m_alarm.SetAcknowledgedState(context, false);
             m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
 
+            // Set state values
+            m_alarm.SetSuppressedState(context, false);
             m_alarm.SetActiveState(context, false);
 
             // Disable this property 

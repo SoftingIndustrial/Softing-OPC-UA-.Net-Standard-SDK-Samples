@@ -18,11 +18,12 @@ namespace SampleServer.Alarms
     /// <summary>
     /// Base class for a monitored variable with an alarm attached.
     /// </summary>
-    abstract class BaseAlarmMonitor : BaseDataVariableState<double>
+    abstract class BaseAlarmMonitor<T> : BaseDataVariableState<double> where T : class
     {
         #region Private Members
         protected List<ConditionState> m_conditions;
         protected AlarmsNodeManager m_alarmsNodeManager;
+        protected T m_alarm;
         #endregion
 
         #region Constructors
@@ -115,6 +116,7 @@ namespace SampleServer.Alarms
         #endregion
 
         #region Protected Methods
+
         /// <summary>
         /// Initialize base alarm default properties
         /// </summary>
@@ -122,73 +124,72 @@ namespace SampleServer.Alarms
         /// <param name="parent"></param>
         /// <param name="namespaceIndex"></param>
         /// <param name="alarmName"></param>
-        /// <param name="alarm"></param>
-        protected void InitializeAlarmMonitor(
-            ISystemContext context,
+        protected virtual void InitializeAlarmMonitor(
+           ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
-            string alarmName,
-            ConditionState alarm)
+            string alarmName)
         {
-            if (alarm == null)
+            if (m_alarm != null)
             {
-                return;
+                ConditionState alarm = m_alarm as ConditionState;
+                if (alarm != null)
+                {
+                    // Add optional components
+                    alarm.LocalTime = new PropertyState<TimeZoneDataType>(alarm);
+
+                    alarm.Comment = new ConditionVariableState<LocalizedText>(alarm);
+                    alarm.Comment.Value = new LocalizedText("en", alarmName);
+
+                    alarm.AddComment = new AddCommentMethodState(alarm);
+                    alarm.OnAddComment += Alarm_OnAddComment;
+
+                    alarm.ClientUserId = new PropertyState<string>(alarm);
+
+                    alarm.EnabledState = new TwoStateVariableState(alarm);
+                    alarm.OnEnableDisable += OnEnableDisable;
+
+                    alarm.Message = new PropertyState<LocalizedText>(parent);
+                    alarm.Message.Value = new LocalizedText("en", alarmName);
+                    alarm.Description = new LocalizedText("en", alarmName);
+
+                    // Specify reference type between the source and the alarm.
+                    alarm.ReferenceTypeId = ReferenceTypeIds.Organizes;
+
+                    // This call initializes the condition from the type model (i.e. creates all of the objects
+                    // and variables required to store its state). The information about the type model was 
+                    // incorporated into the class when the class was created.
+                    //
+                    // This method also assigns new NodeIds to all of the components by calling the INodeIdFactory.New
+                    // method on the INodeIdFactory object which is part of the system context. The NodeManager provides
+                    // the INodeIdFactory implementation used here.
+                    alarm.Create(context, null, new QualifiedName(alarmName, namespaceIndex), null, true);
+
+                    // Add the alarm with the HasComponent reference to the variable
+                    AddChild(alarm);
+
+                    // Add the variable as source node of the alarm
+                    AddCondition(alarm);
+
+                    // Initialize alarm information
+                    alarm.SymbolicName = alarmName;
+                    alarm.EventType.Value = alarm.TypeDefinitionId;
+                    alarm.ConditionName.Value = alarm.SymbolicName;
+                    alarm.AutoReportStateChanges = true;
+                    alarm.Time.Value = DateTime.UtcNow;
+                    alarm.ReceiveTime.Value = alarm.Time.Value;
+                    alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
+
+                    alarm.BranchId.Value = new NodeId(alarmName, namespaceIndex);
+                    alarm.ConditionClassId.Value = VariableIds.ConditionType_ConditionClassId;
+                    alarm.ConditionClassName.Value = alarm.ConditionClassId.DisplayName;
+                    alarm.ClientUserId.Value = "Anonymous";
+
+                    // Set state values
+                    alarm.SetEnableState(context, false);
+                }
             }
-
-            // Add optional components
-            alarm.LocalTime = new PropertyState<TimeZoneDataType>(alarm);
-
-            alarm.Comment = new ConditionVariableState<LocalizedText>(alarm);
-            alarm.Comment.Value = new LocalizedText("en", alarmName);
-
-            alarm.AddComment = new AddCommentMethodState(alarm);
-            alarm.OnAddComment += Alarm_OnAddComment;
-
-            alarm.ClientUserId = new PropertyState<string>(alarm);
-
-            alarm.EnabledState = new TwoStateVariableState(alarm);
-            alarm.OnEnableDisable += OnEnableDisable;
-
-            alarm.Message = new PropertyState<LocalizedText>(parent);
-            alarm.Message.Value = new LocalizedText("en", alarmName);
-            alarm.Description = new LocalizedText("en", alarmName);
-
-            // Specify reference type between the source and the alarm.
-            alarm.ReferenceTypeId = ReferenceTypeIds.Organizes;
-
-            // This call initializes the condition from the type model (i.e. creates all of the objects
-            // and variables required to store its state). The information about the type model was 
-            // incorporated into the class when the class was created.
-            //
-            // This method also assigns new NodeIds to all of the components by calling the INodeIdFactory.New
-            // method on the INodeIdFactory object which is part of the system context. The NodeManager provides
-            // the INodeIdFactory implementation used here.
-            alarm.Create(context, null, new QualifiedName(alarmName, namespaceIndex), null, true);
-
-            // Add the alarm with the HasComponent reference to the variable
-            AddChild(alarm);
-
-            // Add the variable as source node of the alarm
-            AddCondition(alarm);
-
-            // Initialize alarm information
-            alarm.SymbolicName = alarmName;
-            alarm.EventType.Value = alarm.TypeDefinitionId;
-            alarm.ConditionName.Value = alarm.SymbolicName;
-            alarm.AutoReportStateChanges = true;
-            alarm.Time.Value = DateTime.UtcNow;
-            alarm.ReceiveTime.Value = alarm.Time.Value;
-            alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-
-            alarm.BranchId.Value = new NodeId(alarmName, namespaceIndex);
-            alarm.ConditionClassId.Value = VariableIds.ConditionType_ConditionClassId;
-            alarm.ConditionClassName.Value = alarm.ConditionClassId.DisplayName;
-            alarm.ClientUserId.Value = "Anonymous";
-
-            // Set state values
-            alarm.SetEnableState(context, true);
-            alarm.Retain.Value = false;
-        }
+         }
 
         /// <summary>
         /// Add condition state
@@ -242,7 +243,6 @@ namespace SampleServer.Alarms
         /// <param name="value"></param>
         protected virtual void ProcessVariableChanged(ISystemContext context, object value)
         {
-
         }
 
         #endregion
@@ -287,11 +287,16 @@ namespace SampleServer.Alarms
             {
                 condition.Comment.Value = comment;
             }
-            Console.WriteLine("AddComment on alarm '{0}' eventId: {1} value: {2}", condition.DisplayName, BitConverter.ToString(eventId).Replace("-", ""), comment.Text);
             return ServiceResult.Good;
         }
 
-
+        /// <summary>
+        /// Handler for <see cref="ConditionState.OnEnableDisable"/>
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="condition"></param>
+        /// <param name="enabling"></param>
+        /// <returns></returns>
         protected ServiceResult OnEnableDisable(
             ISystemContext context,
             ConditionState condition,
@@ -299,9 +304,6 @@ namespace SampleServer.Alarms
         {
             //condition.SetEnableState(context, enabling);
             condition.Retain.Value = condition.EnabledState.Id.Value;
-
-            Console.WriteLine("Enable state alarm name: '{0}' enabled: {1} retain: {2}",
-                condition.DisplayName, condition.EnabledState.Id.Value, condition.Retain.Value);
 
             return ServiceResult.Good;
         }

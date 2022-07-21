@@ -34,6 +34,18 @@ namespace SampleServer.ReferenceServer
         private Dictionary<string, int> m_usedIdentifiers;
         #endregion
 
+        #region Public Members
+        /// <summary>
+        /// Custom Role 'Tester' Node id
+        /// </summary>
+        public static NodeId TesterRoleNodeId;
+
+        /// <summary>
+        /// CustomRole UserCertificate role. Will be assigned to the provided test user certificate thumbprint.
+        /// </summary>
+        public static NodeId UserCertificateRoleNodeId;
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -770,6 +782,45 @@ namespace SampleServer.ReferenceServer
                         },                        
                     };
                     variables.Add(variableOperatorRoleAccess);
+
+                    // Create the Tester custom role
+                    var roleSetState = FindNodeInAddressSpace(ObjectIds.Server_ServerCapabilities_RoleSet);
+                    var testerRole = CreateObjectFromType(null, "Tester", ObjectTypeIds.RoleType);
+                    // add reference to RoleSet node
+                    AddReference(roleSetState, ReferenceTypeIds.HasComponent, false, testerRole.NodeId, true);
+                    TesterRoleNodeId = testerRole.NodeId;
+
+                    BaseDataVariableState variableTesterRoleAccess = CreateVariable(folderRolePermissions, "TesterAccess", BuiltInType.Int16);
+                    variableTesterRoleAccess.Description = "This node can be accessed by users that have Tester custom Role";
+                    variableTesterRoleAccess.RolePermissions = new RolePermissionTypeCollection()
+                    {
+                        // allow access to users with Tester role
+                        new RolePermissionType()
+                        {
+                            RoleId = TesterRoleNodeId,
+                            Permissions = (uint)( PermissionType.Browse | PermissionType.Read|PermissionType.ReadRolePermissions | PermissionType.Write)
+                        },
+                    };
+                    variables.Add(variableTesterRoleAccess);
+
+                    // Create the Certificate custom role
+                    var userCertificateRole = CreateObjectFromType(null, "UserCertificate", ObjectTypeIds.RoleType);
+                    // add reference to RoleSet node
+                    AddReference(roleSetState, ReferenceTypeIds.HasComponent, false, userCertificateRole.NodeId, true);
+                    UserCertificateRoleNodeId = userCertificateRole.NodeId;
+
+                    BaseDataVariableState variableUserCertRoleAccess = CreateVariable(folderRolePermissions, "UserCertificateAccess", BuiltInType.Int16);
+                    variableUserCertRoleAccess.Description = "This node can be accessed when logged in using the user certificate";
+                    variableUserCertRoleAccess.RolePermissions = new RolePermissionTypeCollection()
+                    {
+                        // allow access to users with Tester role
+                        new RolePermissionType()
+                        {
+                            RoleId = UserCertificateRoleNodeId,
+                            Permissions = (uint)( PermissionType.Browse | PermissionType.Read|PermissionType.ReadRolePermissions | PermissionType.Write)
+                        },
+                    };
+                    variables.Add(variableUserCertRoleAccess);
 
                     // create a Variable node that has UserRolePermissions and will asign all permissions for user Operator 
                     BaseDataVariableState variableUserRolePermissionsForOperator = CreateVariable(folderRolePermissions, "UserRolePermissionsForOperator", BuiltInType.Int16);

@@ -57,12 +57,12 @@ namespace SampleClient.Samples
         /// Get all server endpoints using Reverse connect mechanism and then create a Reverse Connect session to each of them
         /// </summary>
         /// <param name="connectAsync">flag that indicates whether the connect will be performed asynchronously</param>
-        public void GetEndpointsAndReverseConnect(bool connectAsync)
+        public async Task GetEndpointsAndReverseConnect(bool connectAsync)
         {
             try
             {
                 Console.WriteLine("\nGet Endpoints of '{0}' using reverse connection endpoint '{1}'", m_serverApplicationUri, m_reverseConnectUrl);
-                var endpoints = m_application.GetEndpointsAsync(m_reverseConnectUrl, m_serverApplicationUri).GetAwaiter().GetResult();
+                var endpoints = await m_application.GetEndpointsAsync(m_reverseConnectUrl, m_serverApplicationUri).ConfigureAwait(false);
                 Console.WriteLine("The server returned {0} endpoints.", endpoints.Count);
 
                 int index = 0;
@@ -85,11 +85,11 @@ namespace SampleClient.Samples
                         if (connectAsync)
                         {
                             // trigger connect session asynchronously. The execution will continue immediately and will not wait for the method to complete
-                            ConnectTestAsync(session);
+                            _ = ConnectTestAsync(session).ConfigureAwait(false);
                         }
                         else
                         {
-                            ConnectTest(session);
+                            await ConnectTest(session).ConfigureAwait(false);
                             // session was disconnected it is safe to dispose it
                             session.Dispose();
                         }
@@ -98,6 +98,7 @@ namespace SampleClient.Samples
                     {
                         Program.PrintException("ExecuteReverseConnectSample.CreateConnection to endpoint:" + endpoint, ex);
                     }
+                    //break;
                 }
             }
             catch (Exception ex)
@@ -110,7 +111,7 @@ namespace SampleClient.Samples
         /// Creates and connects a reverse session on opc.tcp protocol with no security and anonymous user identity.
         /// This sample will get the server application URI from the server certificate specified in sample client config file
         /// </summary>
-        public void CreateOpcTcpSessionWithNoSecurity()
+        public async Task CreateOpcTcpSessionWithNoSecurity()
         {
             string reverseConnectServerApplicationUri = m_serverApplicationUri;
             try
@@ -119,7 +120,7 @@ namespace SampleClient.Samples
                 if (m_reverseConnectServerCertificateIdentifier != null)
                 {
                     // This method will find the first certificate with the specified CertificateIdentifier.SubjectName from the specified CertificateIdentifier.StorePath
-                    X509Certificate2 reverseConnectServerCertificate = m_reverseConnectServerCertificateIdentifier.Find(false).Result;
+                    X509Certificate2 reverseConnectServerCertificate = await m_reverseConnectServerCertificateIdentifier.Find(false).ConfigureAwait(false);
 
                     if (reverseConnectServerCertificate != null)
                     {
@@ -147,7 +148,7 @@ namespace SampleClient.Samples
             using (ClientSession session = CreateReverseConnectSession("UaBinaryNoSecurityReverseConnectSession", reverseConnectServerApplicationUri,
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity()))
             {
-                ConnectTest(session);
+                await ConnectTest(session).ConfigureAwait(false);
             }
         }
 
@@ -194,19 +195,19 @@ namespace SampleClient.Samples
         /// Performs a Connect/Disconnect test for the specified session.
         /// </summary>
         /// <param name="session"></param>
-        private void ConnectTest(ClientSession session)
+        private async Task ConnectTest(ClientSession session)
         {
             try
             {
                 // Attempt to connect to server.
                 Console.WriteLine("Connecting session {0}...", session.SessionName);
 
-                session.Connect(false, true);
+                await session.ConnectAsync(false, true).ConfigureAwait(false);
 
                 Console.WriteLine("Session state = {0}. Success!", session.CurrentState);
 
                 // Disconnect the session.
-                session.Disconnect(true);
+                await session.DisconnectAsync(true).ConfigureAwait(false);
 
                 Console.WriteLine("Session is disconnected.");
             }
@@ -247,7 +248,7 @@ namespace SampleClient.Samples
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void AsyncSessionStateChanged(object sender, System.EventArgs e)
+        private async void AsyncSessionStateChanged(object sender, System.EventArgs e)
         {
             ClientSession clientSession = sender as ClientSession;
 
@@ -263,7 +264,7 @@ namespace SampleClient.Samples
                 {
                     // trigger session disconnect
                     Console.WriteLine("\nTrigger session.DisconnectAsync for session {0}...", clientSession.SessionName);
-                    clientSession.DisconnectAsync(true);
+                    await clientSession.DisconnectAsync(true).ConfigureAwait(false);
                 }
                 else if (clientSession.CurrentState == State.Disconnected)
                 {

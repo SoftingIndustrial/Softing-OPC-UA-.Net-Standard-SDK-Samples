@@ -8,19 +8,18 @@
  * 
  * ======================================================================*/
 
-using Opc.Ua;
 using System;
+using Opc.Ua;
 
 namespace SampleServer.Alarms
 {
     /// <summary>
     /// A monitored variable with an <see cref="DiscrepancyAlarmState"/> attached.
     /// </summary>
-    internal class DiscrepancyAlarmMonitor : BaseAlarmMonitor
+    class DiscrepancyAlarmMonitor : BaseAlarmMonitor<DiscrepancyAlarmState>
     {
         #region Private Members
 
-        private DiscrepancyAlarmState m_alarm;
         double? m_value = 0;
 
         #endregion
@@ -41,8 +40,7 @@ namespace SampleServer.Alarms
                 context,
                 parent,
                 namespaceIndex,
-                alarmName,
-                initialValue);
+                alarmName);
 
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
@@ -151,17 +149,16 @@ namespace SampleServer.Alarms
         /// <param name="namespaceIndex"></param>
         /// <param name="alarmName"></param>
         /// <param name="initialValue"></param>
-        private void InitializeAlarmMonitor(
+        protected override void InitializeAlarmMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
-            string alarmName,
-            double initialValue)
+            string alarmName)
         {
             // Create the alarm object
             m_alarm = new DiscrepancyAlarmState(this);
 
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+            base.InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName);
 
             // Set input node
             m_alarm.InputNode.Value = NodeId;
@@ -170,8 +167,10 @@ namespace SampleServer.Alarms
             m_alarm.SetAcknowledgedState(context, false);
             m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
 
+            // Set state values
+            m_alarm.SetSuppressedState(context, false);
             m_alarm.SetActiveState(context, false);
-
+            
             // error in predefined or in ctt?
             //m_alarm.AudibleSound.ReferenceTypeId = ReferenceTypeIds.HasProperty;
 

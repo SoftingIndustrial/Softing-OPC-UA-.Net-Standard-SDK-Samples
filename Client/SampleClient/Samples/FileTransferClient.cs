@@ -16,6 +16,7 @@ using Softing.Opc.Ua.Client;
 using SampleClient.Helpers;
 using System.IO;
 using Opc.Ua.Client;
+using System.Threading.Tasks;
 
 namespace SampleClient.Samples
 {
@@ -63,7 +64,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Initialize session
         /// </summary>
-        public void Initialize()
+        public async Task Initialize()
         {
             if (m_session == null)
             {
@@ -75,9 +76,8 @@ namespace SampleClient.Samples
                     m_session.KeepAlive += Session_KeepAlive;
 
                     // connect session
-                    m_session.Connect(false, true);
+                    await m_session.ConnectAsync(false, true).ConfigureAwait(false);
                     Console.WriteLine("Session is connected.");
-
                 }
                 catch (Exception ex)
                 {
@@ -106,13 +106,13 @@ namespace SampleClient.Samples
         /// <summary>
         /// Disconnect the current session
         /// </summary>
-        public void Disconnect()
+        public async Task Disconnect()
         {
             try
             {
                 if (m_session != null)
                 {
-                    m_session.Disconnect(true);
+                    await m_session.DisconnectAsync(true).ConfigureAwait(false);
                     m_session.Dispose();
                     m_session = null;
 

@@ -8,7 +8,6 @@
  * 
  * ======================================================================*/
 
-using System;
 using Opc.Ua;
 
 namespace SampleServer.Alarms
@@ -16,9 +15,8 @@ namespace SampleServer.Alarms
     /// <summary>
     /// A monitored variable with an <see cref="InstrumentDiagnosticAlarmState"/> attached.
     /// </summary>
-    internal class InstrumentDiagnosticMonitor : OffNormalAlarmMonitor
+    class InstrumentDiagnosticMonitor : OffNormalAlarmMonitor
     {
-
         #region Constructors
         /// <summary>
         /// Create new instance of <see cref="InstrumentDiagnosticMonitor"/>

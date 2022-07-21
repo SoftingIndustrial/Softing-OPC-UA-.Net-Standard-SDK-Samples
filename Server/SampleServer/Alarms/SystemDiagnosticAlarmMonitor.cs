@@ -15,7 +15,7 @@ namespace SampleServer.Alarms
     /// <summary>
     /// A monitored variable with an <see cref="SystemDiagnosticAlarmMonitor"/> attached.
     /// </summary>
-    internal class SystemDiagnosticAlarmMonitor : OffNormalAlarmMonitor
+    class SystemDiagnosticAlarmMonitor : OffNormalAlarmMonitor
     {
         #region Constructor
         /// <summary>

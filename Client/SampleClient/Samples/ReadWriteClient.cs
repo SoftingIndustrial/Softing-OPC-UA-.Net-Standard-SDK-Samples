@@ -27,7 +27,6 @@ namespace SampleClient.Samples
         private const string SessionName = "ReadWriteClient Session";
         private readonly UaApplication m_application;
         private ClientSession m_session;
-        private ClientSession m_session2;
         private readonly Random m_random = new Random();
 
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Int32
@@ -47,34 +46,34 @@ namespace SampleClient.Samples
         const string StaticComplexNodeId = "ns=7;i=15013";
 
         //Browse path: Root\Objects\CustomTypes\EngineState
-        const string StaticCustomEnumerationNodeId = "ns=11;i=27";
+        const string StaticCustomEnumerationNodeId = "ns=10;i=27";
         //Browse path: Root\Objects\CustomTypes\Arrays\EngineStates
-        const string StaticCustomEnumerationArrayNodeId = "ns=11;i=35";
+        const string StaticCustomEnumerationArrayNodeId = "ns=10;i=35";
 
         //Browse path: Root\Objects\CustomTypes\DisplayWarning
-        const string StaticCustomOptionSetEnumerationNodeId = "ns=11;i=28";
+        const string StaticCustomOptionSetEnumerationNodeId = "ns=10;i=28";
         //Browse path: Root\Objects\CustomTypes\Arrays\DisplayWarnings
-        const string StaticCustomOptionSetEnumerationArrayNodeId = "ns=11;i=36";
+        const string StaticCustomOptionSetEnumerationArrayNodeId = "ns=10;i=36";
 
         //Browse path: Root\Objects\CustomTypes\FeaturesOptionSet
-        const string StaticCustomOptionSetNodeId = "ns=11;i=29";
+        const string StaticCustomOptionSetNodeId = "ns=10;i=29";
         //Browse path: Root\Objects\CustomTypes\Arrays\FeaturesOptionSets
-        const string StaticCustomOptionSetArrayNodeId = "ns=11;i=37";
+        const string StaticCustomOptionSetArrayNodeId = "ns=10;i=37";
 
         //Browse path: Root\Objects\CustomTypes\Owner
-        const string StaticCustomStructureWithOptionalFieldsNodeId = "ns=11;i=30";
+        const string StaticCustomStructureWithOptionalFieldsNodeId = "ns=10;i=30";
         //Browse path: Root\Objects\CustomTypes\Arrays\Owners
-        const string StaticCustomStructureWithOptionalFieldsArrayNodeId = "ns=11;i=38";
+        const string StaticCustomStructureWithOptionalFieldsArrayNodeId = "ns=10;i=38";
 
         //Browse path: Root\Objects\CustomTypes\FuelLevel
-        const string StaticCustomUnionNodeId = "ns=11;i=31";
+        const string StaticCustomUnionNodeId = "ns=10;i=31";
         //Browse path: Root\Objects\CustomTypes\Arrays\FuelLevels
-        const string StaticCustomUnionArrayNodeId = "ns=11;i=39";
+        const string StaticCustomUnionArrayNodeId = "ns=10;i=39";
 
         //Browse path: Root\Objects\CustomTypes\Vehicle
-        const string StaticCustomStructuredValueNodeId = "ns=11;i=32";
+        const string StaticCustomStructuredValueNodeId = "ns=10;i=32";
         //Browse path: Root\Objects\CustomTypes\Arrays\Vehicles
-        const string StaticCustomStructuredValueArrayNodeId = "ns=11;i=40";
+        const string StaticCustomStructuredValueArrayNodeId = "ns=10;i=40";
 
         //Browse path: Root\Objects\DataAccess\NodesForRegister\Node0
         const string RegisterNodeId0 = "ns=3;i=49";
@@ -424,6 +423,7 @@ namespace SampleClient.Samples
                 //read DataType attribute for node StaticCustomEnumerationNodeId
                 ReadValueId readValueId = new ReadValueId();
                 readValueId.NodeId = new NodeId(StaticCustomEnumerationNodeId);
+
                 readValueId.AttributeId = Attributes.DataType;
                 Console.WriteLine("\n Read values for custom Enumeration data type");
                 Console.WriteLine(" Read DataType Id for NodeId:{0}", StaticCustomEnumerationNodeId);
@@ -439,7 +439,7 @@ namespace SampleClient.Samples
                 {
                     Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
                         dataValueTypeNodeId, StaticCustomEnumerationNodeId);
-                    return;
+                   return;
                 }
 
                 if (dataValueTypeNodeId != null)
@@ -1715,49 +1715,34 @@ namespace SampleClient.Samples
         #region InitializeSession & DisconnectSession
 
         /// <summary>
-        /// Initialize session object
+        /// Initialize session object for reading and writing values
         /// </summary>
-        public void InitializeSession()
+        public async Task InitializeSession()
         {
             try
             {
+                // ensure that the custom data type information will be retrieved from the server
+                m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = true;
+                m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = true;
+
                 // create the session object with no security and anonymous login    
                 m_session = m_application.CreateSession(Program.ServerUrl);
                 m_session.SessionName = SessionName;
 
                 //connect session
-                m_session.Connect(false, true);
+                await m_session.ConnectAsync(false, true).ConfigureAwait(false);
 
                 Console.WriteLine("Session is connected.");
 
                 //wait until custom data types are loaded
-                if (m_application.ClientToolkitConfiguration.DecodeCustomDataTypes)
+                if (m_session.DataTypeDefinitionsLoaded)
                 {
-                    //wait until all data type definitions are loaded
-                    while (!m_session.DataTypeDefinitionsLoaded)
-                    {
-                        Task.Delay(500).Wait();
-                    }
+                    Console.WriteLine("Session.DataTypeDefinitionsLoaded is TRUE.");
                 }
-                if (m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries)
+                if (m_session.TypeDictionariesLoaded)
                 {
-                    //wait until all data types dictionaries are loaded 
-                    while (!m_session.TypeDictionariesLoaded)
-                    {
-                        Task.Delay(500).Wait();
-                    }
+                    Console.WriteLine("Session.TypeDictionariesLoaded is TRUE.");
                 }
-
-                m_session2 = m_application.CreateSessionCopy(m_session);
-                m_session2.SessionName = SessionName + "2";
-                m_session.Disconnect(true);
-
-                ////connect session
-                m_session2.Connect(false, true);
-
-                m_session = m_session2;
-
-                Console.WriteLine("Session - Custom Data Types information is loaded.");
             }
             catch (Exception ex)
             {
@@ -1771,11 +1756,10 @@ namespace SampleClient.Samples
             }
         }
 
-
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
-        public void DisconnectSession()
+        public async Task DisconnectSession()
         {
             if (m_session == null)
             {
@@ -1784,7 +1768,7 @@ namespace SampleClient.Samples
 
             try
             {
-                m_session.Disconnect(true);
+               await m_session.DisconnectAsync(true).ConfigureAwait(false);
                 m_session.Dispose();
                 m_session = null;
                 Console.WriteLine("Session is disconnected.");

@@ -38,6 +38,7 @@ namespace SampleClient.StateMachine
         private FileTransferClient m_fileTransferClient;
         private GdsClient m_gdsClient;
         private PubSubClient m_pubSubClient;
+
         #endregion
 
         #region Constructor
@@ -133,7 +134,7 @@ namespace SampleClient.StateMachine
         /// </summary>
         /// <param name="commandKeyword"></param>
         /// <returns>true if command was executed</returns>
-        public void ExecuteCommand(string commandKeyword)
+        public async Task ExecuteCommand(string commandKeyword)
         {
             IList<CommandDescriptor> possibleCommands = GetPossibleCommands();
             foreach (var commandDescriptor in possibleCommands)
@@ -147,7 +148,7 @@ namespace SampleClient.StateMachine
                         Console.WriteLine("\r\nExecuting command '{0}'...", commandDescriptor.Description);
                         //change current state before execution to have the right current state at execution time
                         CurrentState = m_transitions[stateTransitionToExecute];
-                        stateTransitionToExecute.OnExecuteCommand();
+                        await stateTransitionToExecute.OnExecuteCommand().ConfigureAwait(false);
 
                         Console.WriteLine("'{0}' execution ended.", commandDescriptor.Description);
                         DisplayListOfCommands();
@@ -167,7 +168,7 @@ namespace SampleClient.StateMachine
         /// <summary>
         /// Initializes all sub menu transitions for BrowseClient (1)
         /// </summary>
-        private void InitializeDiscoveryConnectTransitions()
+        private void  InitializeDiscoveryConnectTransitions()
         {
             //commAands for browse
             StateTransition startDCClient = new StateTransition(State.Main, Command.DiscoveryConnect, "1", "Enter Connect/Reverse Connect/Discovery/GDS Menu");            
@@ -342,12 +343,23 @@ namespace SampleClient.StateMachine
             StateTransition addCommentAllarms = new StateTransition(State.Alarms, Command.AddCommentAlarms, "3", "Add comment to alarm");
             addCommentAllarms.ExecuteCommand += AddCommentAlarms_ExecuteCommand;
             m_transitions.Add(addCommentAllarms, State.Alarms);
-            StateTransition triggerAlarms = new StateTransition(State.Alarms, Command.TriggerAlarms, "4", "Trigger alarm");
-            triggerAlarms.ExecuteCommand += TriggerAlarms_ExecuteCommand;
-            m_transitions.Add(triggerAlarms, State.Alarms);
+            StateTransition startTriggerAlarms = new StateTransition(State.Alarms, Command.StartTriggerAlarms, "4", "Trigger Alarms Menu");
+            startTriggerAlarms.ExecuteCommand += StartTriggerAlarms_ExecuteCommand;
+            m_transitions.Add(startTriggerAlarms, State.TriggerAlarms);
             StateTransition endAlarms = new StateTransition(State.Alarms, Command.EndAlarms, "0", "Back to MonitoredItem/Events Menu/Alarms Menu");
             endAlarms.ExecuteCommand += EndAlarms_ExecuteCommand;
             m_transitions.Add(endAlarms, State.MonitoredEventsAlarms);
+
+            //commands for trigger alarms
+            StateTransition enableTriggerAlarms = new StateTransition(State.TriggerAlarms, Command.EnableTriggerAlarms, "1", "Enable Trigger Alarms (refresh timeout = 10 seconds)");
+            enableTriggerAlarms.ExecuteCommand += EnableTriggerAlarms_ExecuteCommand;
+            m_transitions.Add(enableTriggerAlarms, State.TriggerAlarms);
+            StateTransition disableTriggerAlarms = new StateTransition(State.TriggerAlarms, Command.DisableTriggerAlarms, "2", "Disable Trigger Alarms");
+            disableTriggerAlarms.ExecuteCommand += DisableTriggerAlarms_ExecuteCommand;
+            m_transitions.Add(disableTriggerAlarms, State.TriggerAlarms);
+            StateTransition endTriggerAlarms = new StateTransition(State.TriggerAlarms, Command.EndTriggerAlarms, "0", "Back to Menu/Alarms Menu");
+            endTriggerAlarms.ExecuteCommand += EndTriggerAlarms_ExecuteCommand;
+            m_transitions.Add(endTriggerAlarms, State.Alarms);
 
             StateTransition end = new StateTransition(State.MonitoredEventsAlarms, Command.EndMonitoredEventsAlarms, "0", "Back to Main Menu");
             m_transitions.Add(end, State.Main);
@@ -457,97 +469,131 @@ namespace SampleClient.StateMachine
 
         #region ExecuteCommand Handler for Alarms
 
-        private void EndAlarms_ExecuteCommand(object sender, EventArgs e)
+        private async Task EndAlarms_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_alarmsClient != null)
             {
-                m_alarmsClient.Disconnect();
+                // disconnect
+                await m_alarmsClient.Disconnect().ConfigureAwait(false);
                 m_alarmsClient = null;
             }
         }
 
-        private void AddCommentAlarms_ExecuteCommand(object sender, EventArgs e)
+        private Task AddCommentAlarms_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_alarmsClient != null)
             {
                 m_alarmsClient.AddCommentToAlarm();
             }
+            return Task.CompletedTask;
         }
 
-        private void TriggerAlarms_ExecuteCommand(object sender, EventArgs e)
+        private async Task StartTriggerAlarms_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_alarmsClient != null)
+            if (m_alarmsClient == null)
             {
-                m_alarmsClient.TriggerAlarms();
+                m_alarmsClient = new AlarmsClient(m_application);
+                await m_alarmsClient.Initialize().ConfigureAwait(false);
             }
         }
 
-        private void AcknowledgeAlarms_ExecuteCommand(object sender, EventArgs e)
+        private Task EnableTriggerAlarms_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_alarmsClient != null)
+            {
+                m_alarmsClient.CallTriggerAlarms(TriggerAlarmsOption.Enable);
+                Console.WriteLine("Please wait ...");
+            }
+            return Task.CompletedTask;
+        }
+
+        private Task DisableTriggerAlarms_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_alarmsClient != null)
+            {
+                m_alarmsClient.CallTriggerAlarms(TriggerAlarmsOption.Disable);
+            }
+            return Task.CompletedTask;
+        }
+
+        private Task EndTriggerAlarms_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_alarmsClient != null)
+            {
+                m_alarmsClient.CallTriggerAlarms(TriggerAlarmsOption.Disable);
+            }
+            return Task.CompletedTask;
+        }
+
+        private Task AcknowledgeAlarms_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_alarmsClient != null)
             {
                 m_alarmsClient.AcknowledgeAlarm();
             }
+            return Task.CompletedTask;
         }
 
-        private void RefreshAlarms_ExecuteCommand(object sender, EventArgs e)
+        private Task RefreshAlarms_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_alarmsClient != null)
             {
                 m_alarmsClient.ConditionRefresh();
             }
+            return Task.CompletedTask;
         }
 
-        private void StartAlarms_ExecuteCommand(object sender, EventArgs e)
+        private async Task StartAlarms_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_alarmsClient == null)
             {
                 m_alarmsClient = new AlarmsClient(m_application);
-                m_alarmsClient.Initialize();
+                await m_alarmsClient.Initialize().ConfigureAwait(false);
             }
-
         }
 
         #endregion
 
         #region ExecuteCommand Handler for Access Rights
 
-        private void EndAccessRights_ExecuteCommand(object sender, EventArgs e)
+        private Task EndAccessRights_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_accessRightsClient != null)
             {
                 m_accessRightsClient.Dispose();
                 m_accessRightsClient = null;
             }
+            return Task.CompletedTask;
         }
-        private void StartAccessRights_ExecuteCommand(object sender, EventArgs e)
+        private Task StartAccessRights_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_accessRightsClient == null)
             {
                 m_accessRightsClient = new AccessRightsClient();               
             }
+            return Task.CompletedTask;
         }
 
-        private void AccessRestrictions_ExecuteCommand(object sender, EventArgs e)
+        private async Task AccessRestrictions_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_accessRightsClient != null)
             {
-                m_accessRightsClient.SampleAccessRestrictions();
+                await m_accessRightsClient.SampleAccessRestrictions().ConfigureAwait(false);
             }
         }
-        private void RolePermissions_ExecuteCommand(object sender, EventArgs e)
+        private async Task RolePermissions_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_accessRightsClient != null)
             {
-                m_accessRightsClient.SampleRolePermissions();
+                await m_accessRightsClient.SampleRolePermissions().ConfigureAwait(false);
             }
         }
 
-        private void UserRolePermissions_ExecuteCommand(object sender, EventArgs e)
+        private async Task UserRolePermissions_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_accessRightsClient != null)
             {
-                m_accessRightsClient.SampleUserRolePermissions();
+                await m_accessRightsClient.SampleUserRolePermissions().ConfigureAwait(false);
             }
         }
 
@@ -555,25 +601,25 @@ namespace SampleClient.StateMachine
 
         #region  ExecuteCommand Handlers for Browse & Translate
 
-        private void StartBrowseClient_ExecuteCommand(object sender, EventArgs e)
+        private async Task StartBrowseClient_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_browseClient == null)
             {
                 m_browseClient = new BrowseClient(m_application);
-                m_browseClient.InitializeSession();
+                await m_browseClient.InitializeSession().ConfigureAwait(false);
             }
         }
 
-        private void EndBrowseClient_ExecuteCommand(object sender, EventArgs e)
+        private async Task EndBrowseClient_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_browseClient != null)
             {
-                m_browseClient.DisconnectSession();
+                await m_browseClient.DisconnectSession().ConfigureAwait(false);
                 m_browseClient = null;
             }
         }
 
-        private void Translate_ExecuteCommand(object sender, EventArgs e)
+        private Task Translate_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_browseClient != null)
             {
@@ -582,29 +628,32 @@ namespace SampleClient.StateMachine
                 //call translate multiple paths
                 m_browseClient.TranslateBrowsePathsToNodeIds();
             }
+            return Task.CompletedTask;
         }
 
-        private void BrowseServerWithOptions_ExecuteCommand(object sender, EventArgs e)
+        private Task BrowseServerWithOptions_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_browseClient != null)
             {
                 m_browseClient.BrowseWithOptions();
             }
+            return Task.CompletedTask;
         }
 
-        private void BrowseServer_ExecuteCommand(object sender, EventArgs e)
+        private Task BrowseServer_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_browseClient != null)
             {
                 m_browseClient.BrowseTheServer();
             }
+            return Task.CompletedTask;
         }
 
         #endregion
 
         #region ExecuteCommand Handlers for Connect
 
-        private void ConnectSample_ExecuteCommand(object sender, EventArgs e)
+        private async Task ConnectSample_ExecuteCommand(object sender, EventArgs e)
         {
             //ConnectClient sample does not need to lpad data type dictionaries or to decode custom data types
             bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
@@ -615,27 +664,26 @@ namespace SampleClient.StateMachine
 
             ConnectClient connectClient = new ConnectClient(m_application);
 
-            connectClient.CreateOpcTcpSessionWithNoSecurity();
-            connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.Sign, SecurityPolicy.Basic256Sha256);
-            connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic256Sha256);
-            connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.Sign, SecurityPolicy.Aes128_Sha256_RsaOaep);
-            connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Aes128_Sha256_RsaOaep);
-            connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.Sign, SecurityPolicy.Aes256_Sha256_RsaPss);
-            connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Aes256_Sha256_RsaPss);
-            connectClient.CreateOpcTcpSessionWithUserId();
-            connectClient.CreateOpcTcpSessionWithCertificate();
+            await connectClient.CreateOpcTcpSessionWithNoSecurity().ConfigureAwait(false);
+            await connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.Sign, SecurityPolicy.Basic256Sha256).ConfigureAwait(false);
+            await connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic256Sha256).ConfigureAwait(false);
+            await connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.Sign, SecurityPolicy.Aes128_Sha256_RsaOaep).ConfigureAwait(false);
+            await connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Aes128_Sha256_RsaOaep).ConfigureAwait(false);
+            await connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.Sign, SecurityPolicy.Aes256_Sha256_RsaPss).ConfigureAwait(false);
+            await connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Aes256_Sha256_RsaPss).ConfigureAwait(false);
+            await connectClient.CreateOpcTcpSessionWithUserId().ConfigureAwait(false);
+            await connectClient.CreateOpcTcpSessionWithCertificate().ConfigureAwait(false);
 
-            //connectClient.CreateHttpsSessionWithAnomymousUserId();
-            //connectClient.CreateHttpsSessionWithUserId();
+            //await connectClient.CreateHttpsSessionWithAnonymousUserId().ConfigureAwait(false);
+            //await connectClient.CreateHttpsSessionWithUserId().ConfigureAwait(false);
 
-            connectClient.CreateSessionUsingDiscovery();
-
+            await connectClient.CreateSessionUsingDiscovery().ConfigureAwait(false);
 
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
         }
 
-        private void ReverseConnectSample_ExecuteCommand(object sender, EventArgs e)
+        private async Task ReverseConnectSample_ExecuteCommand(object sender, EventArgs e)
         {
             //ConnectClient sample does not need to lpad data type dictionaries or to decode custom data types
             bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
@@ -645,20 +693,20 @@ namespace SampleClient.StateMachine
 
             
             ReverseConnectClient reverseConnectClient = new ReverseConnectClient(m_application);
-            reverseConnectClient.CreateOpcTcpSessionWithNoSecurity();
+            //await reverseConnectClient.CreateOpcTcpSessionWithNoSecurity().ConfigureAwait(false);
 
             // get all endpoints and create sessions that will be connected synchronously
-            reverseConnectClient.GetEndpointsAndReverseConnect(false);
+            await reverseConnectClient.GetEndpointsAndReverseConnect(false).ConfigureAwait(false);
 
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
         }
 
-        private void ReverseConnectSampleAsync_ExecuteCommand(object sender, EventArgs e)
+        private async Task ReverseConnectSampleAsync_ExecuteCommand(object sender, EventArgs e)
         {
             ReverseConnectClient reverseConnectClient = new ReverseConnectClient(m_application);
             
-            reverseConnectClient.GetEndpointsAndReverseConnect(true);
+            await reverseConnectClient.GetEndpointsAndReverseConnect(true).ConfigureAwait(false);
         }
 
         #endregion
@@ -670,12 +718,13 @@ namespace SampleClient.StateMachine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DiscoverServersSample_ExecuteCommand(object sender, EventArgs e)
+        private Task DiscoverServersSample_ExecuteCommand(object sender, EventArgs e)
         {
             //initialize discovery sample
             DiscoveryClient discoveryClientSample = new DiscoveryClient(m_application);
             //call sample discovery methods
             discoveryClientSample.DiscoverServers();
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -683,12 +732,13 @@ namespace SampleClient.StateMachine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DiscoverServersOnNetworkSample_ExecuteCommand(object sender, EventArgs e)
+        private Task DiscoverServersOnNetworkSample_ExecuteCommand(object sender, EventArgs e)
         {
             //initialize discovery sample
             DiscoveryClient discoveryClientSample = new DiscoveryClient(m_application);
             //call sample discovery methods
             discoveryClientSample.DiscoverServersOnNetwork();
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -696,12 +746,12 @@ namespace SampleClient.StateMachine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DiscoverServersSampleAsync_ExecuteCommand(object sender, EventArgs e)
+        private async Task DiscoverServersSampleAsync_ExecuteCommand(object sender, EventArgs e)
         {
             //initialize discovery sample
             DiscoveryClient discoveryClientSample = new DiscoveryClient(m_application);
             //call sample discovery methods
-            Task.Run(async () => await discoveryClientSample.DiscoverServersAsync().ConfigureAwait(false));
+            await discoveryClientSample.DiscoverServersAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -709,13 +759,13 @@ namespace SampleClient.StateMachine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DiscoverServersOnNetworkSampleAsync_ExecuteCommand(object sender, EventArgs e)
+        private async Task DiscoverServersOnNetworkSampleAsync_ExecuteCommand(object sender, EventArgs e)
         {
             //initialize discovery sample
             DiscoveryClient discoveryClientSample = new DiscoveryClient(m_application);
 
             //call sample discovery methods
-            Task.Run(async () => await discoveryClientSample.DiscoverServersOnNetworkAsync().ConfigureAwait(false));
+            await discoveryClientSample.DiscoverServersOnNetworkAsync().ConfigureAwait(false);
         }
 
 
@@ -724,7 +774,7 @@ namespace SampleClient.StateMachine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GdsPullRegisterAndSignCertificateSample_ExecuteCommand(object sender, EventArgs e)
+        private Task GdsPullRegisterAndSignCertificateSample_ExecuteCommand(object sender, EventArgs e)
         {
             InitializeGdsClient();
 
@@ -732,6 +782,7 @@ namespace SampleClient.StateMachine
             {
                 m_gdsClient.ExecutePullRegisterAndSignSample();
             }
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -739,13 +790,13 @@ namespace SampleClient.StateMachine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GdsPullTrustListSample_ExecuteCommand(object sender, EventArgs e)
+        private async Task GdsPullTrustListSample_ExecuteCommand(object sender, EventArgs e)
         {
             InitializeGdsClient();
 
             if (m_gdsClient != null)
             {
-                m_gdsClient.ExecutePullGetTrustListSample();
+                await m_gdsClient.ExecutePullGetTrustListSample().ConfigureAwait(false);
             }
         }
 
@@ -754,13 +805,13 @@ namespace SampleClient.StateMachine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GDSPushCertificateSample_ExecuteCommand(object sender, EventArgs e)
+        private async Task GDSPushCertificateSample_ExecuteCommand(object sender, EventArgs e)
         {
             InitializeGdsClient();
 
             if (m_gdsClient != null)
             {
-                m_gdsClient.ExecutePushCertificateSample();
+                await m_gdsClient.ExecutePushCertificateSample().ConfigureAwait(false);
             }
         }
 
@@ -769,13 +820,13 @@ namespace SampleClient.StateMachine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GDSPushTrustListSample_ExecuteCommand(object sender, EventArgs e)
+        private async Task GDSPushTrustListSample_ExecuteCommand(object sender, EventArgs e)
         {
             InitializeGdsClient();
 
             if (m_gdsClient != null)
             {
-                m_gdsClient.ExecutePushTrustListSample();
+                await m_gdsClient.ExecutePushTrustListSample().ConfigureAwait(false);
             }
         }
         /// <summary>
@@ -799,37 +850,39 @@ namespace SampleClient.StateMachine
 
         #region  ExecuteCommand Handlers for Events
 
-        private void EndEvents_ExecuteCommand(object sender, EventArgs e)
+        private async Task EndEvents_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_eventsClient != null)
             {
-                m_eventsClient.Disconnect();
+                await m_eventsClient.Disconnect().ConfigureAwait(false);
                 m_eventsClient = null;
             }
         }
 
-        private void DeleteEventMonitorItem_ExecuteCommand(object sender, EventArgs e)
+        private Task DeleteEventMonitorItem_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_eventsClient != null)
             {
                 m_eventsClient.DeleteEventMonitoredItem();
             }
+            return Task.CompletedTask;
         }
 
-        private void CreateEventMonitorItem_ExecuteCommand(object sender, EventArgs e)
+        private Task CreateEventMonitorItem_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_eventsClient != null)
             {
                 m_eventsClient.CreateEventMonitoredItem();
             }
+            return Task.CompletedTask;
         }
 
-        private void StartEventsClient_ExecuteCommand(object sender, EventArgs e)
+        private async Task StartEventsClient_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_eventsClient == null)
             {
                 m_eventsClient = new EventsClient(m_application);
-                m_eventsClient.Initialize();
+                await m_eventsClient.Initialize().ConfigureAwait(false);
             }
         }
 
@@ -837,45 +890,48 @@ namespace SampleClient.StateMachine
 
         #region  ExecuteCommand Handlers for History
 
-        private void EndHistory_ExecuteCommand(object sender, EventArgs e)
+        private async Task EndHistory_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_historyClient != null)
             {
-                m_historyClient.DisconnectSession();
+                await m_historyClient.DisconnectSession().ConfigureAwait(false);
                 m_historyClient = null;
             }
         }
 
-        private void HistoryReadProcessed_ExecuteCommand(object sender, EventArgs e)
+        private Task HistoryReadProcessed_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_historyClient != null)
             {
                 m_historyClient.HistoryReadProcessed();
             }
+            return Task.CompletedTask;
         }
 
-        private void HistoryReadAtTime_ExecuteCommand(object sender, EventArgs e)
+        private Task HistoryReadAtTime_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_historyClient != null)
             {
                 m_historyClient.HistoryReadAtTime();
             }
+            return Task.CompletedTask;
         }
 
-        private void HistoryReadRaw_ExecuteCommand(object sender, EventArgs e)
+        private Task HistoryReadRaw_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_historyClient != null)
             {
                 m_historyClient.HistoryReadRaw();
             }
+            return Task.CompletedTask;
         }
 
-        private void StartHistory_ExecuteCommand(object sender, EventArgs e)
+        private async Task StartHistory_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_historyClient == null)
             {
                 m_historyClient = new HistoryClient(m_application);
-                m_historyClient.InitializeSession();
+                await m_historyClient.InitializeSession().ConfigureAwait(false);
             }
         }
 
@@ -883,36 +939,38 @@ namespace SampleClient.StateMachine
 
         #region  ExecuteCommand Handlers for MonitoredItem
 
-        private void StartMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        private async Task StartMonitoredItem_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_monitoredItemClient == null)
             {
                 m_monitoredItemClient = new MonitoredItemClient(m_application);
-                m_monitoredItemClient.Initialize();
+                await m_monitoredItemClient.Initialize().ConfigureAwait(false);
             }
         }
 
-        private void CreateMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        private Task CreateMonitoredItem_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_monitoredItemClient != null)
             {
                 m_monitoredItemClient.CreateMonitoredItem();
             }
+            return Task.CompletedTask;
         }
 
-        private void DeleteMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        private Task DeleteMonitoredItem_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_monitoredItemClient != null)
             {
                 m_monitoredItemClient.DeleteMonitoredItem();
             }
+            return Task.CompletedTask;
         }
 
-        private void EndMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        private async Task EndMonitoredItem_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_monitoredItemClient != null)
             {
-                m_monitoredItemClient.Disconnect();
+                await m_monitoredItemClient.Disconnect().ConfigureAwait(false);
                 m_monitoredItemClient = null;
             }
         }
@@ -926,13 +984,13 @@ namespace SampleClient.StateMachine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void CallMethods_ExecuteCommand(object sender, EventArgs e)
+        private async Task CallMethods_ExecuteCommand(object sender, EventArgs e)
         {
             //initialize method call sample
             MethodCallClient methodCallClient = new MethodCallClient(m_application);
 
             //initialize session
-            methodCallClient.InitializeSession();
+            await methodCallClient.InitializeSession().ConfigureAwait(false);
             //call method 
             methodCallClient.CallMethod();
 
@@ -942,23 +1000,23 @@ namespace SampleClient.StateMachine
 
             //wait and close session
             Task.Delay(1000).Wait();
-            methodCallClient.DisconnectSession();
+            await methodCallClient.DisconnectSession().ConfigureAwait(false);
         }
 
         #endregion
 
         #region ExecuteCommand Handler for Read Write 
 
-        private void EndReadWrite_ExecuteCommand(object sender, EventArgs e)
+        private async Task EndReadWrite_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_readWriteClient != null)
             {
-                m_readWriteClient.DisconnectSession();
+                await m_readWriteClient.DisconnectSession().ConfigureAwait(false);
                 m_readWriteClient = null;
             }
         }
 
-        private void Write_ExecuteCommand(object sender, EventArgs e)
+        private Task Write_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_readWriteClient != null)
             {
@@ -969,9 +1027,10 @@ namespace SampleClient.StateMachine
                 m_readWriteClient.WriteMultipleNodesValues();
                 m_readWriteClient.WriteValuesForCustomDataTypes();
             }
+            return Task.CompletedTask;
         }
 
-        private void Read_ExecuteCommand(object sender, EventArgs e)
+        private Task Read_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_readWriteClient != null)
             {
@@ -984,22 +1043,24 @@ namespace SampleClient.StateMachine
                 m_readWriteClient.ReadMultipleNodesValues();
                 m_readWriteClient.ReadValuesForCustomDataTypes();
             }
+            return Task.CompletedTask;
         }
 
-        private void RegisterNodes_ExecuteCommand(object sender, EventArgs e)
+        private Task RegisterNodes_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_readWriteClient != null)
             {
                 m_readWriteClient.RegisterNodesSample();
             }
+            return Task.CompletedTask;
         }
 
-        private void StartReadWrite_ExecuteCommand(object sender, EventArgs e)
+        private async Task StartReadWrite_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_readWriteClient == null)
             {    
                 m_readWriteClient = new ReadWriteClient(m_application);
-                m_readWriteClient.InitializeSession();
+                await m_readWriteClient.InitializeSession().ConfigureAwait(false);
             }
         }
 
@@ -1007,86 +1068,92 @@ namespace SampleClient.StateMachine
 
         #region  ExecuteCommand Handlers for FileTransfer
 
-        private void StartFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        private async Task StartFileTransfer_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_fileTransferClient == null)
             {
                 m_fileTransferClient = new FileTransferClient(m_application);
-                m_fileTransferClient.Initialize();
+                await m_fileTransferClient.Initialize().ConfigureAwait(false);
             }
         }
 
-        private void UploadFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        private Task UploadFileTransfer_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_fileTransferClient != null)
             {
                 m_fileTransferClient.UploadFile();
             }
+            return Task.CompletedTask;
         }
 
-        private void DownloadFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        private Task DownloadFileTransfer_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_fileTransferClient != null)
             {
                 m_fileTransferClient.DownloadFile();
             }
+            return Task.CompletedTask;
         }
 
-        private void ReadByteArrayFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        private Task ReadByteArrayFileTransfer_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_fileTransferClient != null)
             {
                 m_fileTransferClient.ReadByteString();
             }
+            return Task.CompletedTask;
         }
 
-        private void ReadTemporaryFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        private Task ReadTemporaryFileTransfer_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_fileTransferClient != null)
             {
                 m_fileTransferClient.DownloadTemporaryFile();
             }
+            return Task.CompletedTask;
         }
 
-        private void WriteTemporaryFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        private Task WriteTemporaryFileTransfer_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_fileTransferClient != null)
             {
                 m_fileTransferClient.UploadTemporaryFile();
             }
+            return Task.CompletedTask;
         }
 
-        private void EndFileTransfer_ExecuteCommand(object sender, EventArgs e)
+        private async Task EndFileTransfer_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_fileTransferClient != null)
             {
-                m_fileTransferClient.Disconnect();
+                await m_fileTransferClient.Disconnect().ConfigureAwait(false);
                 m_fileTransferClient = null;
             }
         }
 
-        private void StartPubSubCfgMenu_ExecuteCommand(object sender, EventArgs e)
+        private async Task StartPubSubCfgMenu_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_pubSubClient == null)
             {
                 m_pubSubClient = new PubSubClient(m_application);
-                m_pubSubClient.Initialize();
+                await m_pubSubClient.Initialize().ConfigureAwait(false);
             }
         }
 
-        private void StartPubSubReadCfg_ExecuteCommand(object sender, EventArgs e)
+        private Task StartPubSubReadCfg_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_pubSubClient != null)
             {
-                m_pubSubClient.PubSubReadCfg();
+                m_pubSubClient.ReadPubSubConfiguration();
             }
+            return Task.CompletedTask;
         }
 
-        private void ExitPubSubCfgMenu_ExecuteCommand(object sender, EventArgs e)
+        private async Task ExitPubSubCfgMenu_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_pubSubClient != null)
             {
-                m_pubSubClient.Disconnect();
+                await m_pubSubClient.Disconnect().ConfigureAwait(false);
                 m_pubSubClient = null;
             }
         }
@@ -1096,27 +1163,35 @@ namespace SampleClient.StateMachine
 
         #region ExecuteCommand Handler for Exit
 
-        private void Exit_ExecuteCommand(object sender, EventArgs e)
+        private async Task Exit_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_browseClient != null)
             {
-                m_browseClient.DisconnectSession();
+                await m_browseClient.DisconnectSession().ConfigureAwait(false);
             }
             if (m_monitoredItemClient != null)
             {
-                m_monitoredItemClient.Disconnect();
+                await m_monitoredItemClient.Disconnect().ConfigureAwait(false);
+            }
+            if (m_fileTransferClient != null)
+            {
+                await m_fileTransferClient.Disconnect().ConfigureAwait(false);
             }
             if (m_alarmsClient != null)
             {
-                m_alarmsClient.Disconnect();
+                await m_alarmsClient.Disconnect().ConfigureAwait(false);
             }
             if (m_eventsClient != null)
             {
-                m_eventsClient.Disconnect();
+                await m_eventsClient.Disconnect().ConfigureAwait(false);
             }
             if (m_historyClient != null)
             {
-                m_historyClient.DisconnectSession();
+                await m_historyClient.DisconnectSession().ConfigureAwait(false);
+            }
+            if (m_readWriteClient != null)
+            {
+                await m_readWriteClient.DisconnectSession().ConfigureAwait(false);
             }
         }
 

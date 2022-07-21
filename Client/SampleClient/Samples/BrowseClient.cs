@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
 
@@ -46,7 +47,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Initialize session object
         /// </summary>
-        public void InitializeSession()
+        public async Task InitializeSession()
         {
             try
             {
@@ -54,7 +55,7 @@ namespace SampleClient.Samples
                 m_session = m_application.CreateSession(Program.ServerUrl);
                 m_session.SessionName = SessionName;
 
-                m_session.Connect(false, true);
+                await m_session.ConnectAsync(false, true).ConfigureAwait(false);
                 Console.WriteLine("Session is connected.");
             }
             catch (Exception ex)
@@ -72,7 +73,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
-        public void DisconnectSession()
+        public async Task DisconnectSession()
         {
             if (m_session == null)
             {
@@ -81,7 +82,7 @@ namespace SampleClient.Samples
 
             try
             {
-                m_session.Disconnect(true);
+                await m_session.DisconnectAsync(true).ConfigureAwait(false);
                 m_session.Dispose();
                 m_session = null;
                 Console.WriteLine("Session is disconnected.");

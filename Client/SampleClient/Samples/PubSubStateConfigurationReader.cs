@@ -232,7 +232,7 @@ namespace SampleClient.Samples
 
             dataValue = clientSession.Read(readValue);
             
-            Variant publisherIdValue;
+            Variant publisherIdValue = Variant.Null;
             if (dataValue.Value.GetType() == typeof(UInt16))
             {
                 publisherIdValue = (UInt16)dataValue.Value;
@@ -405,7 +405,7 @@ namespace SampleClient.Samples
                 readValue.AttributeId = Attributes.Value;
                 dataValue = clientSession.Read(readValue);
 
-                Variant publisherIdValue;
+                Variant publisherIdValue = Variant.Null;
                 if (dataValue.Value.GetType() == typeof(UInt16))
                 {
                     publisherIdValue = (UInt16)dataValue.Value;

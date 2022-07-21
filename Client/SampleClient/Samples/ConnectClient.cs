@@ -64,33 +64,33 @@ namespace SampleClient.Samples
         /// <summary>
         /// Creates and connects a session on opc.tcp protocol with no security and anonymous user identity.
         /// </summary>
-        public void CreateOpcTcpSessionWithNoSecurity()
+        public async Task CreateOpcTcpSessionWithNoSecurity()
         {
             // create the session object.
             using (ClientSession session = CreateSession("UaBinaryNoSecuritySession", Program.ServerUrl,
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity()))
             {
-                ConnectTest(session);
+                await ConnectTest(session).ConfigureAwait(false);
             }
         }
 
         /// <summary>
         /// Creates and connects a session on opc.tcp protocol with no security and a username/password user identity.
         /// </summary>
-        public void CreateOpcTcpSessionWithUserId()
+        public async Task CreateOpcTcpSessionWithUserId()
         {
             // create the session object.
             using (ClientSession session = CreateSession("UaBinaryUserIdSession", Program.ServerUrl,
                 MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity("usr", "pwd")))
             {
-                ConnectTest(session);
+                await ConnectTest(session).ConfigureAwait(false);
             }
         }
 
         /// <summary>
         /// Creates and connects a session on opc.tcp protocol with no security and a certificate user identity.
         /// </summary>
-        public void CreateOpcTcpSessionWithCertificate()
+        public async Task CreateOpcTcpSessionWithCertificate()
         {
             try
             {
@@ -113,10 +113,10 @@ namespace SampleClient.Samples
 
                     Console.WriteLine("Create session using certificate located at '{0}'", certificateFilePath);
                     // create the session object.
-                    using (ClientSession session = CreateSession("UaBinaryUserIdSession", Program.ServerUrl,
+                    using (ClientSession session = CreateSession("UaBinaryUserCertificateSession", Program.ServerUrl,
                         MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, certificateUserIdentity))
                     {
-                        ConnectTest(session);
+                        await ConnectTest(session).ConfigureAwait(false);
                     }
                 }
                 else
@@ -135,53 +135,53 @@ namespace SampleClient.Samples
         /// </summary>
         /// <param name="messageSecurityMode"> Desired security mode</param>
         /// <param name="securityPolicy"> Desired security policy</param>
-        public void CreateOpcTcpSessionWithSecurity(MessageSecurityMode messageSecurityMode, SecurityPolicy securityPolicy)
+        public async Task CreateOpcTcpSessionWithSecurity(MessageSecurityMode messageSecurityMode, SecurityPolicy securityPolicy)
         {
             // create the session object.
             using (ClientSession session = CreateSession("UaBinarySecureSession", Program.ServerUrl,
                 messageSecurityMode, securityPolicy, MessageEncoding.Binary,
                 new UserIdentity()))
             {
-                ConnectTest(session);
+                await ConnectTest(session).ConfigureAwait(false);
             }
         }
 
         /// <summary>
         /// Creates and connects a session on HTTPS protocol with anonymous user identity and using xml message encoding.
         /// </summary>
-        public void CreateHttpsSessionWithAnomymousUserId()
+        public async Task CreateHttpsSessionWithAnonymousUserId()
         {
             // create the session object.
             using (ClientSession session = CreateSession("HttpsAnonymousUserIdSession", Program.ServerUrlHttps,
                 MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic256Sha256, MessageEncoding.Binary, new UserIdentity()))
             {
-                ConnectTest(session);
+                await ConnectTest(session).ConfigureAwait(false);
             }
         }
 
         /// <summary>
         /// Creates and connects a session on HTTPS protocol with a username/password user identity.
         /// </summary>
-        public void CreateHttpsSessionWithUserId()
+        public async Task CreateHttpsSessionWithUserId()
         {
             // create the session object.
             using (ClientSession session = CreateSession("HttpsUserIdSession", Program.ServerUrlHttps,
                 MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic256Sha256, MessageEncoding.Binary, new UserIdentity("usr", "pwd")))
             {
-                ConnectTest(session);
+               await ConnectTest(session).ConfigureAwait(false);
             }
         }
 
         /// <summary>
         /// Creates and connects a session using the Discovery process.
         /// </summary>
-        public void CreateSessionUsingDiscovery()
+        public async Task CreateSessionUsingDiscovery()
         {
             try
             {
                 // Retrieve the list of available server connection channels by calling GetEndpoints on the Server's discovery endpoint.
                 Console.WriteLine("\r\nDiscovering available endpoints...");
-                IList<EndpointDescriptionEx> endpoints = m_application.GetEndpoints(Program.ServerUrl);
+                IList<EndpointDescriptionEx> endpoints = await m_application.GetEndpointsAsync(Program.ServerUrl).ConfigureAwait(false);
 
                 Console.WriteLine("GetEndpoints returned {0} endpoints.", endpoints.Count);
 
@@ -192,7 +192,7 @@ namespace SampleClient.Samples
                 foreach (var endpoint in endpoints)
                 {
                     if ((endpoint.EndpointUrl.StartsWith("opc.tcp://") &&
-                         endpoint.SecurityMode == MessageSecurityMode.None))
+                            endpoint.SecurityMode == MessageSecurityMode.None))
                     {
                         selectedEndpoint = endpoint;
                         break;
@@ -209,7 +209,7 @@ namespace SampleClient.Samples
                         selectedEndpoint.Encoding[0],
                         new UserIdentity()))
                     {
-                        ConnectTest(session);
+                        await ConnectTest(session).ConfigureAwait(false);
                     }
                 }
             }
@@ -302,17 +302,17 @@ namespace SampleClient.Samples
         /// <summary>
         /// Performs a Connect/Disconnect test for the specified session.
         /// </summary>
-        private void ConnectTest(ClientSession session)
+        private async Task ConnectTest(ClientSession session)
         {
             try
             {
                 // Attempt to connect to server.
                 Console.WriteLine("Connecting session {0}...", session.SessionName);
-                session.Connect(false, true);
+                await session.ConnectAsync(false, true).ConfigureAwait(false);
                 Console.WriteLine("Session state = {0}. Success!", session.CurrentState);
 
                 // Disconnect the session.
-                session.Disconnect(true);
+                await session.DisconnectAsync(true).ConfigureAwait(false);
                 Console.WriteLine("Session is disconnected.");
             }
             catch (Exception ex)

@@ -39,6 +39,8 @@ namespace SampleServer
         private const string OperatorUser1 = "operator1";
         private const string OperatorUser2 = "operator2";
         private const string EngineerUser = "engineer";
+        private const string TesterUser = "tester";
+        private const string UserCertificateThumbprint = "27bf2204fbbc1dc904ace3fee754f76e55369967";
 
         private Dictionary<string, string> m_userNameIdentities;
         private Timer m_certificatesTimer;
@@ -55,6 +57,7 @@ namespace SampleServer
             m_userNameIdentities.Add(OperatorUser1, "pwd");
             m_userNameIdentities.Add(OperatorUser2, "pwd");
             m_userNameIdentities.Add(EngineerUser, "pwd");
+            m_userNameIdentities.Add(TesterUser, "pwd");
             m_userNameIdentities.Add("usr", "pwd");
             m_userNameIdentities.Add("admin", "admin");
             ManufacturerName = "Softing";
@@ -85,6 +88,10 @@ namespace SampleServer
             }
 
             m_certificatesTimer = new Timer(ClearCachedCertificates, null, clearCertificatesInterval, clearCertificatesInterval);
+
+            // set the supported aggregates
+            NodeState aggregateFunctions = server.DiagnosticsNodeManager.FindNodeInAddressSpace(ObjectIds.Server_ServerCapabilities_AggregateFunctions);
+            HistoricalDataAccessNodeManager.SetTheRightSupportedAggregates(aggregateFunctions);            
         }
 
         /// <summary>
@@ -127,8 +134,11 @@ namespace SampleServer
             nodeManagers.Add(new ReferenceNodeManager(server, configuration));
             nodeManagers.Add(new UserAuthenticationNodeManager(server, configuration));
             nodeManagers.Add(new FileTransferNodeManager(server, configuration));
-            nodeManagers.Add(new PubSubNodeManager(server, configuration, true));
             nodeManagers.Add(new CustomTypesNodeManager(server, configuration));
+
+            // uncomment the PubSubNodeManager for PubSub functionality
+            // nodeManagers.Add(new PubSubNodeManager(server, configuration, true));
+
 
             // Create master node manager
             return new MasterNodeManager(server, configuration, null, nodeManagers.ToArray());
@@ -190,11 +200,29 @@ namespace SampleServer
                      CriteriaType = IdentityCriteriaType.UserName,
                      Criteria = OperatorUser1
                  });
+
             // add username identity mapping to operator role
             roleStateHelper.AddIdentityToRoleState(ObjectIds.WellKnownRole_Operator,
                 new IdentityMappingRuleType {
                     CriteriaType = IdentityCriteriaType.UserName,
                     Criteria = OperatorUser2
+                });
+
+            // add username identity mapping to custom Tester role
+            roleStateHelper.AddIdentityToRoleState(ReferenceNodeManager.TesterRoleNodeId,
+                new IdentityMappingRuleType
+                {
+                    CriteriaType = IdentityCriteriaType.UserName,
+                    Criteria = TesterUser
+                });
+
+
+            // add username identity mapping to custom user certificate role. It will match with the thumbprint of Samples\Client\SampleClient\Files\opcuser.pfx certificate
+            roleStateHelper.AddIdentityToRoleState(ReferenceNodeManager.UserCertificateRoleNodeId,
+                new IdentityMappingRuleType
+                {
+                    CriteriaType = IdentityCriteriaType.Thumbprint,
+                    Criteria = UserCertificateThumbprint
                 });
 
             // configure operator role to include all applicationUris 
@@ -241,7 +269,7 @@ namespace SampleServer
             // If there is any trusted certificate containing the given thumbprint
             foreach (X509Certificate2 trustedCertificate in trustedCertificates)
             {
-                bool? found = trustedCertificate?.Thumbprint?.Equals(thumbprint);
+                bool? found = trustedCertificate?.Thumbprint?.ToUpper()?.Equals(thumbprint?.ToUpper());
                 if (found ?? false)
                 {
                     return ServiceResult.Good;

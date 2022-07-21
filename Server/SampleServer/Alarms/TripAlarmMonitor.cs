@@ -9,20 +9,14 @@
  * ======================================================================*/
 
 using Opc.Ua;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SampleServer.Alarms
 {
     /// <summary>
     /// A monitored variable with an <see cref="TripAlarmMonitor"/> attached.
     /// </summary>
-    internal class TripAlarmMonitor : OffNormalAlarmMonitor
+    class TripAlarmMonitor : OffNormalAlarmMonitor
     {
-
         #region Constructor
         /// <summary>
         /// Create instance of <see cref="TripAlarmMonitor"/>

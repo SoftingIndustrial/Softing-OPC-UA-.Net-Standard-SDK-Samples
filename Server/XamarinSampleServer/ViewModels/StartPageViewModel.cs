@@ -58,7 +58,7 @@ namespace XamarinSampleServer.ViewModels
                 ServerIps.Add(ipAddress.ToString());
             }
            
-            LoadSessionsCommand = new Command(async () => await ExecuteLoadSessionsCommand());
+            LoadSessionsCommand = new Command(() => ExecuteLoadSessionsCommand());
             m_connectedSessions = new ObservableCollection<ConnectedSession>();
 
             // TODO - Server binary license activation
@@ -253,7 +253,7 @@ namespace XamarinSampleServer.ViewModels
 
         #region Execute Command Methods
 
-        public async Task ExecuteLoadSessionsCommand()
+        public void ExecuteLoadSessionsCommand()
         {
             if (IsRefreshingSessions)
                 return;

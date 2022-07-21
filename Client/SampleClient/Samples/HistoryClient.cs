@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
 
@@ -62,8 +63,8 @@ namespace SampleClient.Samples
             ReadRawModifiedDetails argument = new ReadRawModifiedDetails()
             {
                 IsReadModified = false,
-                StartTime = new DateTime(2011, 1, 1, 14, 0, 0),
-                EndTime = new DateTime(2011, 1, 1, 14, 1, 0),
+                StartTime = new DateTime(2011, 1, 1, 12, 0, 0, DateTimeKind.Utc),
+                EndTime = new DateTime(2011, 1, 1, 12, 1, 0, DateTimeKind.Utc),
                 NumValuesPerNode = 3,
                 ReturnBounds = false
             };
@@ -111,8 +112,8 @@ namespace SampleClient.Samples
                 return;
             }
             DateTimeCollection requiredTimes = new DateTimeCollection();
-            requiredTimes.Add(new DateTime(2011, 1, 1, 12, 0, 0));
-            requiredTimes.Add(new DateTime(2011, 7, 1, 12, 1, 0));
+            requiredTimes.Add(new DateTime(2011, 1, 1, 12, 0, 10, DateTimeKind.Utc));
+            requiredTimes.Add(new DateTime(2011, 7, 1, 12, 1, 0, DateTimeKind.Utc));
             ReadAtTimeDetails argument = new ReadAtTimeDetails()
             {
                 ReqTimes = requiredTimes,
@@ -166,8 +167,8 @@ namespace SampleClient.Samples
 
             ReadProcessedDetails argument = new ReadProcessedDetails()
             {
-                StartTime = new DateTime(2011, 1, 1, 12, 0, 0),
-                EndTime = new DateTime(2011, 1, 1, 12, 1, 40),
+                StartTime = new DateTime(2011, 1, 1, 12, 0, 10, DateTimeKind.Utc),
+                EndTime = new DateTime(2011, 1, 1, 12, 1, 40, DateTimeKind.Utc),
                 ProcessingInterval = 10000,
                 AggregateType = aggregateTypes
             };
@@ -205,7 +206,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Initialize session object
         /// </summary>
-        public void InitializeSession()
+        public async Task InitializeSession()
         {
             try
             {
@@ -214,7 +215,7 @@ namespace SampleClient.Samples
                 m_session.SessionName = SessionName;
 
                 //connect session
-                m_session.Connect(false, true);
+                await m_session.ConnectAsync(false, true).ConfigureAwait(false);
 
                 Console.WriteLine("Session is connected.");
             }
@@ -234,7 +235,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
-        public void DisconnectSession()
+        public async Task DisconnectSession()
         {
             if (m_session == null)
             {
@@ -243,7 +244,7 @@ namespace SampleClient.Samples
 
             try
             {
-                m_session.Disconnect(true);
+                await m_session.DisconnectAsync(true).ConfigureAwait(false);
                 m_session.Dispose();
                 m_session = null;
                 Console.WriteLine("Session is disconnected.");

@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
 
@@ -54,7 +55,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Initialize session and subscription
         /// </summary>
-        public void Initialize()
+        public async Task Initialize()
         {
             try
             {
@@ -64,7 +65,7 @@ namespace SampleClient.Samples
 
                 m_session.KeepAlive += Session_KeepAlive;
                 //connect session
-                m_session.Connect(false, true);
+                await m_session.ConnectAsync(false, true).ConfigureAwait(false);
                 Console.WriteLine("Session is connected.");
 
                 //create the subscription
@@ -89,21 +90,21 @@ namespace SampleClient.Samples
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
-        public void Disconnect()
+        public async Task Disconnect()
         {
             try
             {
                 //disconnect subscription
                 if (m_subscription != null)
                 {
-                    m_subscription.Disconnect(true);
+                    await m_subscription.DisconnectAsync(true).ConfigureAwait(false);
                     m_subscription.Delete();
                     m_subscription = null;
                     Console.WriteLine("Subscription is deleted.");
                 }
                 if (m_session != null)
                 {
-                    m_session.Disconnect(true);
+                    await m_session.DisconnectAsync(true).ConfigureAwait(false);
                     m_session.Dispose();
                     m_session = null;
                     Console.WriteLine("Session is disconnected.");
@@ -146,7 +147,6 @@ namespace SampleClient.Samples
                 //ObjectIds.Server BrowsePath: Root\Objects\Server
                 m_eventMonitoredItem = new ClientMonitoredItem(m_subscription, ObjectIds.Server, "Sample Event Monitored Item", null);
                 m_eventMonitoredItem.EventsReceived += EventMonitoredItem_EventsReceived;
-
 
                 Console.WriteLine("Event Monitored Item is created and with state {0}.", m_eventMonitoredItem.CurrentState);
             }

@@ -25,6 +25,7 @@ namespace SampleClient.Samples
         #region Private Fields
 
         private const string SessionName = "MethodCallClient Session";
+        private static readonly NodeId RefrgeratorStateEnumId = new NodeId("ns=12;i=15002");
         private readonly UaApplication m_application;
         private ClientSession m_session;
         private int m_callIdentifier;
@@ -116,7 +117,7 @@ namespace SampleClient.Samples
 
             /*initialize input arguments*/       
             // initialize array of RefrigeratorState enum
-            EnumValue[] refrigeratorStateArray = m_session.GetDefaultValueForDatatype(new NodeId("ns=13;i=15002"), ValueRanks.OneDimension, 3) as EnumValue[];           
+            EnumValue[] refrigeratorStateArray = m_session.GetDefaultValueForDatatype(RefrgeratorStateEnumId, ValueRanks.OneDimension, 3) as EnumValue[];           
 
             Console.WriteLine("\nMethod '{0}' is called with the following arguments:", methodPath);
             for (int i = 0; i < refrigeratorStateArray.Length; i++)
@@ -190,7 +191,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Initialize session object
         /// </summary>
-        public void InitializeSession()
+        public async Task InitializeSession()
         {
             if (m_session == null)
             {
@@ -203,19 +204,7 @@ namespace SampleClient.Samples
                     m_session = m_application.CreateSession(Program.ServerUrl);
                     m_session.SessionName = SessionName;
 
-                    m_session.Connect(false, true);
-                    
-                    //wait until custom data types are loaded
-                    if (m_application.ClientToolkitConfiguration.DecodeCustomDataTypes || m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries)
-                    {
-                        //wait until all data types are loaded (data type definitions and dictionaries)
-                        while (!m_session.TypeDictionariesLoaded && !m_session.DataTypeDefinitionsLoaded)
-                        {
-                            Task.Delay(500).Wait();
-                        }
-                    }
-
-
+                    await m_session.ConnectAsync(false, true).ConfigureAwait(false);
 
                     //add handler for CallCompleted event
                     m_session.CallCompleted += Session_CallCompleted;
@@ -238,7 +227,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
-        public void DisconnectSession()
+        public async Task DisconnectSession()
         {
             if (m_session == null)
             {
@@ -251,7 +240,7 @@ namespace SampleClient.Samples
                 //remove handler for CallCompleted event
                 m_session.CallCompleted -= Session_CallCompleted;
 
-                m_session.Disconnect(true);
+                await m_session.DisconnectAsync(true).ConfigureAwait(false);
                 m_session.Dispose();
                 m_session = null;
 

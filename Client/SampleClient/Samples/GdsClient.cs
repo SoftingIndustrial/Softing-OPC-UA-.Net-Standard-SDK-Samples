@@ -18,6 +18,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using Opc.Ua.Security.Certificates;
 using static Opc.Ua.Utils;
+using System.Threading.Tasks;
 
 namespace SampleClient.Samples
 {
@@ -91,7 +92,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Executes sample code for GDS - Pull Get Trust List Scenario
         /// </summary>
-        public void ExecutePullGetTrustListSample()
+        public async Task ExecutePullGetTrustListSample()
         {
             Console.WriteLine("Connecting to configured GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
             UserIdentity gdsUserIdentity = new UserIdentity(GdsAdminUser, GdsAdminPassword);
@@ -101,7 +102,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("Reading the GDS connection parameters from the configuration file: '{0}'", m_application.Configuration.SourceFilePath);
                 GdsConnectionConfiguration gdsConnectionConfiguration = m_application.Configuration.ParseExtension<GdsConnectionConfiguration>();
                 Console.WriteLine("Registering and pulling the application TrustListData from the GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
-                TrustListDataType[] trustListData = m_application.GdsGetTrustList(gdsConnectionConfiguration, gdsUserIdentity);
+                TrustListDataType[] trustListData = await m_application.GdsGetTrustListAsync(gdsConnectionConfiguration, gdsUserIdentity).ConfigureAwait(false);
                 if (trustListData.Length > 0)
                 {
                     Console.WriteLine("Successfully received and copied to the trusted store the application TrustList and CRL from the GDS: '{0}'", GdsConnectionConfiguration.GdsUrl);
@@ -141,19 +142,19 @@ namespace SampleClient.Samples
         /// <summary>
         /// Executes sample code for GDS - Push Application certificate Scenario
         /// </summary>
-        public void ExecutePushCertificateSample()
+        public async Task ExecutePushCertificateSample()
         {
             ClientSession gdsSession = null, uaServerSession = null;
             try
             {
                 // create connection to GDS 
                 gdsSession = GetGdsClientSession();
-                gdsSession.Connect(true, true);
+                await gdsSession.ConnectAsync(true, true).ConfigureAwait(false);
                 Console.WriteLine("Connection to '{0}' established.", gdsSession.Url);
 
                 // create connection to OPC UA Server 
                 uaServerSession = GetPushServerClientSession();
-                uaServerSession.Connect(true, true);
+                await uaServerSession .ConnectAsync(true, true).ConfigureAwait(false);
                 Console.WriteLine("Connection to '{0}' established.", uaServerSession.Url);
 
                 Console.WriteLine("\nCreate a SigningRequest to '{0}'.", Program.ServerUrl);
@@ -260,12 +261,12 @@ namespace SampleClient.Samples
             {
                 if (gdsSession != null)
                 {
-                    gdsSession.Disconnect(true);
+                    await gdsSession.DisconnectAsync(true).ConfigureAwait(false);
                     gdsSession.Dispose();
                 }
                 if (uaServerSession != null)
                 {
-                    uaServerSession.Disconnect(true);
+                    await uaServerSession.DisconnectAsync(true).ConfigureAwait(false);
                     uaServerSession.Dispose();
                 }
             }
@@ -274,19 +275,19 @@ namespace SampleClient.Samples
         /// <summary>
         /// Execute sample code for GDS - Push Trust list Scenario
         /// </summary>
-        public void ExecutePushTrustListSample()
+        public async Task ExecutePushTrustListSample()
         {
             ClientSession gdsSession = null, uaServerSession = null;
             try
             {
                 // create connection to GDS 
                 gdsSession = GetGdsClientSession();
-                gdsSession.Connect(true, true);
+                await gdsSession.ConnectAsync(true, true).ConfigureAwait(false);
                 Console.WriteLine("Connection to '{0}' established.", gdsSession.Url);
 
                 // create connection to OPC UA Server 
                 uaServerSession = GetPushServerClientSession();
-                uaServerSession.Connect(true, true);
+                await uaServerSession.ConnectAsync(true, true).ConfigureAwait(false);
                 Console.WriteLine("Connection to '{0}' established.", uaServerSession.Url);
 
                 Console.WriteLine("\nGet ApplicationID for '{0}'.", Program.ServerUrl);
@@ -360,12 +361,12 @@ namespace SampleClient.Samples
             {
                 if (gdsSession != null)
                 {
-                    gdsSession.Disconnect(true);
+                    await gdsSession.DisconnectAsync(true).ConfigureAwait(false);
                     gdsSession.Dispose();
                 }
                 if (uaServerSession != null)
                 {
-                    uaServerSession.Disconnect(true);
+                    await uaServerSession.DisconnectAsync(true).ConfigureAwait(false);
                     uaServerSession.Dispose();
                 }
             }

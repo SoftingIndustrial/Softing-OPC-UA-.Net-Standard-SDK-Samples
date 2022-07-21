@@ -8,20 +8,19 @@
  * 
  * ======================================================================*/
 
-using Opc.Ua;
 using System;
+using Opc.Ua;
 
 namespace SampleServer.Alarms
 {
     /// <summary>
     /// A monitored variable with an <see cref="AlarmConditionState"/> attached.
     /// </summary>
-    internal class AlarmConditionMonitor : BaseAlarmMonitor
+    class AlarmConditionMonitor : BaseAlarmMonitor<AlarmConditionState>
     {
         #region Private Members
 
-        private AlarmConditionState m_alarm;
-        private double? m_value = 0;
+       private double? m_value = 0;
 
         #endregion
 
@@ -49,8 +48,7 @@ namespace SampleServer.Alarms
                 context,
                 parent,
                 namespaceIndex,
-                alarmName,
-                initialValue);
+                alarmName);
 
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
@@ -158,18 +156,16 @@ namespace SampleServer.Alarms
         /// <param name="parent"></param>
         /// <param name="namespaceIndex"></param>
         /// <param name="alarmName"></param>
-        /// <param name="initialValue"></param>
-        private void InitializeAlarmMonitor(
+        protected override void InitializeAlarmMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
-            string alarmName,
-            double initialValue)
+            string alarmName)
         {
             // Create the alarm object
             m_alarm = new AlarmConditionState(this);
 
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+            base.InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName);
 
             // set acknowledge state
             m_alarm.SetAcknowledgedState(context, false);
@@ -178,6 +174,9 @@ namespace SampleServer.Alarms
             // Mandatory fields
             // Set input node
             m_alarm.InputNode.Value = NodeId;
+            
+            // Set state values
+            m_alarm.SetSuppressedState(context, false);
             m_alarm.SetActiveState(context, false);
 
             // optional fields

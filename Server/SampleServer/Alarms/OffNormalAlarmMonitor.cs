@@ -8,23 +8,16 @@
  * 
  * ======================================================================*/
 
-using Opc.Ua;
 using System;
+using Opc.Ua;
 
 namespace SampleServer.Alarms
 {
     /// <summary>
     /// A monitored variable with an <see cref="OffNormalAlarmState"/> attached.
     /// </summary>
-    internal class OffNormalAlarmMonitor : BaseAlarmMonitor
+    class OffNormalAlarmMonitor : BaseAlarmMonitor<OffNormalAlarmState>
     {
-
-        #region Private Members
-
-        protected OffNormalAlarmState m_alarm;
-
-        #endregion
-
         #region Constructor
         /// <summary>
         /// Create new instance of <see cref="OffNormalAlarmMonitor"/>
@@ -114,6 +107,10 @@ namespace SampleServer.Alarms
                     m_alarm.Time.Value = DateTime.UtcNow;
                     m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
 
+                    m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
+                    m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
+                    m_alarm.BranchId.Value = new NodeId();
+
                     // Reset the acknowledged flag
                     m_alarm.SetAcknowledgedState(context, false);
 
@@ -160,7 +157,7 @@ namespace SampleServer.Alarms
             // Create the alarm object
             m_alarm = GetInstanceOfAlarmState();
 
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+            base.InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName);
 
             // Set input node
             m_alarm.InputNode.Value = NodeId;
@@ -173,6 +170,8 @@ namespace SampleServer.Alarms
             m_alarm.SetAcknowledgedState(context, false);
             m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
 
+            // Set state values
+            m_alarm.SetSuppressedState(context, false);
             m_alarm.SetActiveState(context, false);
 
             // Disable this property 

@@ -98,7 +98,7 @@ namespace SampleServer.Methods
                 #endregion
 
                 #region Create Method with arguments of enumeration type array
-                NodeId refrigeratorStateEnumTypeId = new NodeId("ns=13;i=15002");
+                NodeId refrigeratorStateEnumTypeId = new NodeId("ns=12;i=15002");
 
                 Argument[] inputArgumentsCountRefrigeratorStates = new Argument[]
                 {

@@ -9,6 +9,7 @@
  * ======================================================================*/
 
 using System;
+using System.Threading.Tasks;
 
 namespace SampleClient.StateMachine
 {
@@ -31,8 +32,9 @@ namespace SampleClient.StateMachine
         /// <summary>
         /// Event that is raised when a command is executed
         /// </summary>
-        public event EventHandler ExecuteCommand;
+        public delegate Task ExecuteCommandHandler(object sender, EventArgs e);
 
+        public ExecuteCommandHandler ExecuteCommand;
         #endregion
 
         #region Constructor
@@ -57,9 +59,12 @@ namespace SampleClient.StateMachine
         /// <summary>
         /// Raise ExecuteCommand event
         /// </summary>
-        public void OnExecuteCommand()
+        public async Task OnExecuteCommand()
         {
-            ExecuteCommand?.Invoke(this, EventArgs.Empty);
+            if (ExecuteCommand != null)
+            {
+                await ExecuteCommand.Invoke(this, EventArgs.Empty).ConfigureAwait(false);
+            }
         }
 
         #endregion

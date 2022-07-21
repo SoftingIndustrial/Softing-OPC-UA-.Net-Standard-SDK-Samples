@@ -8,23 +8,16 @@
  * 
  * ======================================================================*/
 
-using Opc.Ua;
 using System;
+using Opc.Ua;
 
 namespace SampleServer.Alarms
 {
     /// <summary>
     /// A monitored variable with an <see cref="ConditionState"/> attached.
     /// </summary>
-    internal class ConditionMonitor : BaseAlarmMonitor
+    class ConditionMonitor : BaseAlarmMonitor<ConditionState>
     {
-
-        #region Private Members
-
-        private ConditionState m_alarm;
-
-        #endregion
-
         #region Constructor
         /// <summary>
         /// Create new instance of <see cref="ConditionMonitor"/>
@@ -50,58 +43,10 @@ namespace SampleServer.Alarms
                 context,
                 parent,
                 namespaceIndex,
-                alarmName,
-                initialValue);
+                alarmName);
         }
 
         #endregion       
-
-        #region Public Methods
-        /// <summary>
-        /// Updates the Condition alarm
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="newValue"></param>
-        /// <param name="enableFlag"></param>
-        public void UpdateConditionAlarmMonitor(
-            ISystemContext context,
-            double newValue,
-            bool enableFlag)
-        {
-            // Update alarm information
-            m_alarm.Time.Value = DateTime.UtcNow;
-            m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-            m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-
-            // Set state values
-            m_alarm.SetEnableState(context, enableFlag);
-            m_alarm.Comment.Value = new LocalizedText(enableFlag.ToString());
-            m_alarm.Message.Value = new LocalizedText(enableFlag.ToString());
-
-            // Add the variable as source node of the alarm
-            AddCondition(m_alarm);
-
-            // Initialize alarm information
-            m_alarm.SymbolicName = "Condition Alarm";
-            m_alarm.EventType.Value = m_alarm.TypeDefinitionId;
-            m_alarm.ConditionName.Value = m_alarm.SymbolicName;
-            m_alarm.AutoReportStateChanges = true;
-            m_alarm.Time.Value = DateTime.UtcNow;
-            m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-            m_alarm.LocalTime.Value = Utils.GetTimeZoneInfo();
-            m_alarm.BranchId.Value = null;
-
-            // Set state values
-            m_alarm.SetEnableState(context, true);
-            m_alarm.Retain.Value = false;
-
-            m_alarm.Validate(context);
-
-            Value = newValue;
-            ProcessVariableChanged(context, newValue);
-        }
-
-        #endregion
 
         #region Base Class Overrides
 
@@ -134,8 +79,6 @@ namespace SampleServer.Alarms
                     m_alarm.Retain.Value = true;
                 }
 
-                m_alarm.SetEnableState(context, false);
-
                 // Report changes to node attributes
                 m_alarm.ClearChangeMasks(context, true);
 
@@ -166,20 +109,16 @@ namespace SampleServer.Alarms
         /// <param name="parent"></param>
         /// <param name="namespaceIndex"></param>
         /// <param name="alarmName"></param>
-        /// <param name="initialValue"></param>
-        private void InitializeAlarmMonitor(
+        protected override void InitializeAlarmMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
-            string alarmName,
-            double initialValue)
+            string alarmName)
         {
             // Create the alarm object
             m_alarm = new ConditionState(this);
 
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
-
-            m_alarm.SetEnableState(context, false);
+            base.InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName);
         }
 
         #endregion

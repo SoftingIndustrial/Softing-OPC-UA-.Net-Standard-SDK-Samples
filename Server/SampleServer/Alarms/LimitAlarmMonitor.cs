@@ -8,23 +8,16 @@
  * 
  * ======================================================================*/
 
-using Opc.Ua;
 using System;
+using Opc.Ua;
 
 namespace SampleServer.Alarms
 {
     /// <summary>
     /// A monitored variable with an <see cref="LimitAlarmState"/> attached.
     /// </summary>
-    internal class LimitAlarmMonitor : BaseAlarmMonitor
+    class LimitAlarmMonitor<T> : BaseAlarmMonitor<T> where T : class
     {
-
-        #region Private Members
-
-        private LimitAlarmState m_alarm;
-
-        #endregion
-
         #region Constructor
 
         /// <summary>
@@ -53,7 +46,6 @@ namespace SampleServer.Alarms
             double lowLowLimit)
              : base(context, parent, namespaceIndex, name, initialValue)
         {
-
             // Attach the alarm monitor.
             InitializeAlarmMonitor(
                 context,
@@ -65,7 +57,7 @@ namespace SampleServer.Alarms
                 lowLimit,
                 lowLowLimit);
 
-            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
+            //m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
 
         #endregion
@@ -90,41 +82,100 @@ namespace SampleServer.Alarms
                 }
 
                 double? newValue = Convert.ToDouble(value);
-
-                // Set event data
-                m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
-                m_alarm.Time.Value = DateTime.UtcNow;
-                m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-
-                m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
-                m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
-                m_alarm.BranchId.Value = new NodeId();
-
-                bool nonActiveState = newValue > m_alarm.LowLimit.Value && newValue < m_alarm.HighLimit.Value;
-                m_alarm.SetActiveState(context, !nonActiveState);
-
-                // Not interested in disabled or inactive alarms
-                if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
+                if (m_alarm is LimitAlarmState)
                 {
-                    m_alarm.Retain.Value = false;
-                }
-                else
-                {
-                    m_alarm.Retain.Value = true;
-                }
+                    LimitAlarmState alarm = m_alarm as LimitAlarmState;
+                    if (alarm != null)
+                    {
+                        bool updateRequired = false;
 
-                // Report changes to node attributes
-                m_alarm.ClearChangeMasks(context, true);
+                        if (alarm.LowLowLimit != null 
+                            && newValue <= alarm.LowLowLimit.Value)
+                        {
+                            alarm.SetComment(context, new LocalizedText("en-US", "LowLowLimit exceeded."), currentUserId);
+                            alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", LimitAlarmStates.LowLow));
+                            alarm.SetSeverity(context, EventSeverity.Min);
 
-                // Check if events are being monitored for the source
-                if (m_alarm.AreEventsMonitored)
-                {
-                    // Create a snapshot
-                    InstanceStateSnapshot e = new InstanceStateSnapshot();
-                    e.Initialize(context, m_alarm);
+                            updateRequired = true;
+                        }
+                        else if (alarm.LowLimit != null
+                                 && newValue > alarm.LowLowLimit.Value
+                                 && newValue <= alarm.LowLimit.Value)
+                        {
+                            alarm.SetComment(context, new LocalizedText("en-US", "LowLimit exceeded."), currentUserId);
+                            alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", LimitAlarmStates.Low));
+                            alarm.SetSeverity(context, EventSeverity.Low);
 
-                    // Report the event
-                    ReportEvent(context, e);
+                            updateRequired = true;
+                        }
+                        else if (alarm.HighHighLimit != null
+                                 && newValue >= alarm.HighHighLimit.Value)
+                        {
+                            alarm.SetComment(context, new LocalizedText("en-US", "HighHighLimit exceeded."), currentUserId);
+                            alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", LimitAlarmStates.HighHigh));
+                            alarm.SetSeverity(context, EventSeverity.MediumHigh);
+
+                            updateRequired = true;
+                        }
+                        else if (alarm.HighLimit != null 
+                                 && newValue < alarm.HighHighLimit.Value
+                                 && newValue >= alarm.HighLimit.Value)
+                        {
+                            alarm.SetComment(context, new LocalizedText("en-US", "HighLimit exceeded."), currentUserId);
+                            alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", LimitAlarmStates.High));
+                            alarm.SetSeverity(context, EventSeverity.High);
+                            updateRequired = true;
+                        }
+                        else if (alarm.ActiveState.Id.Value != false
+                                 && alarm.LowLimit != null && newValue > alarm.LowLimit.Value
+                                 && alarm.HighLimit != null && newValue < alarm.HighLimit.Value)
+                        {
+                            alarm.SetComment(context, new LocalizedText("en-US", "Alarm inactive."), currentUserId);
+                            alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", LimitAlarmStates.Inactive));
+                            alarm.SetSeverity(context, 0);
+
+                            updateRequired = true;
+                        }
+
+                        if (updateRequired)
+                        {
+                            // Set event data
+                            alarm.EventId.Value = Guid.NewGuid().ToByteArray();
+                            alarm.Time.Value = DateTime.UtcNow;
+                            alarm.ReceiveTime.Value = alarm.Time.Value;
+
+                            alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
+                            alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
+                            alarm.BranchId.Value = new NodeId();
+
+                            bool nonActiveState = newValue > alarm.LowLimit.Value && newValue < alarm.HighLimit.Value;
+                            alarm.SetActiveState(context, !nonActiveState);
+
+                            // Not interested in disabled or inactive alarms
+                            if (!alarm.EnabledState.Id.Value || !alarm.ActiveState.Id.Value)
+                            {
+                                alarm.Retain.Value = false;
+                            }
+                            else
+                            {
+                                alarm.Retain.Value = true;
+                            }
+
+                            // Report changes to node attributes
+                            alarm.ClearChangeMasks(context, true);
+
+                            // Check if events are being monitored for the source
+                            if (alarm.AreEventsMonitored)
+                            {
+                                // Create a snapshot
+                                InstanceStateSnapshot e = new InstanceStateSnapshot();
+                                e.Initialize(context, alarm);
+
+                                // Report the event
+                                ReportEvent(context, e);
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception exception)
@@ -135,7 +186,7 @@ namespace SampleServer.Alarms
 
         #endregion
 
-        #region Private Methods
+        #region Protected Methods
 
         /// <summary>
         /// Initialize the alarm monitor 
@@ -148,7 +199,7 @@ namespace SampleServer.Alarms
         /// <param name="highHighLimit"></param>
         /// <param name="lowLimit"></param>
         /// <param name="lowLowLimit"></param>
-        private void InitializeAlarmMonitor(
+        protected virtual void InitializeAlarmMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
@@ -159,33 +210,48 @@ namespace SampleServer.Alarms
             double lowLowLimit)
         {
             // Create the alarm object
-            m_alarm = new LimitAlarmState(this);
+            if (m_alarm == null)
+            {
+                m_alarm = (T)Activator.CreateInstance(typeof(T), new object[] { this });
+            }
 
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+            if (m_alarm is LimitAlarmState)
+            {
+                LimitAlarmState alarm = m_alarm as LimitAlarmState;
+                if (alarm != null)
+                {
+                    // Declare limit components
+                    alarm.HighHighLimit = new PropertyState<double>(alarm);
+                    alarm.HighLimit = new PropertyState<double>(alarm);
+                    alarm.LowLimit = new PropertyState<double>(alarm);
+                    alarm.LowLowLimit = new PropertyState<double>(alarm);
 
-            m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
-            m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
-            m_alarm.BranchId.Value = new NodeId();
+                    base.InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName);
 
-            // Set input node
-            m_alarm.InputNode.Value = NodeId;
+                    // Set input node
+                    alarm.InputNode.Value = NodeId;
 
-            // set acknowledge state
-            m_alarm.SetAcknowledgedState(context, false);
-            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
+                    // set acknowledge state
+                    alarm.SetAcknowledgedState(context, false);
+                    alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
 
-            // Set state values
-            m_alarm.SetSuppressedState(context, false);
-            m_alarm.SetActiveState(context, false);
+                    // Set state values
+                    // m_alarm.SetLimitState(context, LimitAlarmStates.Inactive);
+                    alarm.SetSuppressedState(context, false);
+                    alarm.SetActiveState(context, false);
 
-            // Define limit values
-            m_alarm.HighLimit.Value = highLimit;
-            m_alarm.HighHighLimit.Value = highHighLimit;
-            m_alarm.LowLimit.Value = lowLimit;
-            m_alarm.LowLowLimit.Value = lowLowLimit;
+                    // Define limit values
+                    alarm.HighLimit.Value = highLimit;
+                    alarm.HighHighLimit.Value = highHighLimit;
+                    alarm.LowLimit.Value = lowLimit;
+                    alarm.LowLowLimit.Value = lowLowLimit;
 
-            // Disable this property 
-            m_alarm.LatchedState = null;
+                    // Disable this property 
+                    alarm.LatchedState = null;
+
+                    alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
+                }
+            }
         }
 
         #endregion

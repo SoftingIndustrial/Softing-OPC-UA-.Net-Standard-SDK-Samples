@@ -10,7 +10,7 @@
 2011-01-01T12:01:10Z, 2011-01-01T12:01:10Z, Good, Raw, String, ewrwrwr
 2011-01-01T12:01:10Z, 2011-01-01T12:01:10Z, Good, Annotation, 2012-01-04T07:00:00Z, Engineer1, Scanner fixed
 2011-01-01T12:01:20Z, 2011-01-01T12:01:20Z, Good, Raw, String, qwerty
-2011-01-01T12:01:30Z, 2011-01-01T12:01:30Z, Uncertain, Raw, Int32, ytrewq
+2011-01-01T12:01:30Z, 2011-01-01T12:01:30Z, Uncertain, Raw, String, ytrewq
 2011-01-01T12:01:30Z, 2011-01-01T12:01:30Z, Good, Annotation, 2012-01-02T08:00:00Z, Tehnician_1, Value flagged as questionable
 2011-01-01T12:01:40Z, 2011-01-01T12:04:20Z, Good, Raw, String, aaaaaaa
 2011-01-01T12:01:50Z, 2011-01-01T12:01:50Z, Bad, Raw, String, vvvvvvv

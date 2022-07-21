@@ -8,13 +8,12 @@
  * 
  * ======================================================================*/
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Opc.Ua;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.Server;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace SampleServer.Alarms
 {
@@ -24,16 +23,8 @@ namespace SampleServer.Alarms
     public class AlarmsNodeManager : NodeManager
     {
         #region Private Fields
-        private const int AlarmTimeout = 30000;
-
-        //private Timer m_timer;
-        
-        private Timer m_AllAlarmsTrigger;
-        private Timer m_allAlarmsChangeTrigger;
-
-        Dictionary<string, NodeId> m_exclusiveLimitMonitors = new Dictionary<string, NodeId>();
-
-        List<ConditionState> m_conditionInstances = new List<ConditionState>();
+        private Timer m_allAlarmsChangeValues;
+        private List<ConditionState> m_conditionInstances = new List<ConditionState>();
         #endregion
 
         #region Constructors
@@ -78,25 +69,36 @@ namespace SampleServer.Alarms
                 BaseObjectState machine = CreateObject(root, "Machine A");
                 machine.EventNotifier = EventNotifiers.SubscribeToEvents;
 
+                // Create an alarm monitor for a LimitAlarm type.
+                CreateLimitAlarmMonitor(
+                    machine,
+                    "LimitAlarmSensor 1",
+                    "LimitAlarmMonitor 1",
+                    10.0,
+                    50.0,
+                    80.0,
+                    30.0,
+                    20.0);
+
                 // Create an alarm monitor for a temperature sensor 1.
                 CreateExclusiveLimitMonitor(
                     machine,
                     "TemperatureSensor 1",
                     "TemperatureMonitor 1",
-                    30.0,
+                    10.0,
+                    50.0,
                     80.0,
-                    100.0,
-                    20.0,
-                    10.0);
+                    30.0,
+                    20.0);
 
                 // Create an alarm monitor for a temperature sensor 2.
                 CreateExclusiveLimitMonitor(
                     machine,
                     "TemperatureSensor 2",
                     "TemperatureMonitor 2",
+                    10.0,
                     50.0,
-                    90.0,
-                    120.0,
+                    80.0,
                     30.0,
                     20.0);
 
@@ -105,99 +107,99 @@ namespace SampleServer.Alarms
                     machine,
                     "PressureSensor 1",
                     "PressureMonitor 1",
-                    5.0,
                     10.0,
-                    15.0,
-                    2.0,
-                    1.0);
+                    50.0,
+                    80.0,
+                    30.0,
+                    20.0);
 
                 // Create an alarm monitor for a pressure sensor 2.
                 CreateExclusiveLimitMonitor(
                     machine,
                     "PressureSensor 2",
                     "PressureMonitor 2",
-                    6.0,
-                    15.0,
-                    20.0,
-                    4.0,
-                    2.0);
+                    10.0,
+                    50.0,
+                    80.0,
+                    30.0,
+                    20.0);
 
                 // Create an alarm monitor for a ExclusiveLevelAlarm type.
                 CreateExclusiveLevelMonitor(
                     machine,
                     "ExclusiveLevelSensor 1",
                     "ExclusiveLevelMonitor 1",
-                    18.0,
-                    35.0,
-                    40.0,
-                    12.0,
-                    10.0);
+                    10.0,
+                    50.0,
+                    80.0,
+                    30.0,
+                    20.0);
 
                 // Create an alarm monitor for a ExclusiveDeviationAlarm type.
                 CreateExclusiveDeviationMonitor(
                     machine,
                     "ExclusiveDeviationSensor 1",
                     "ExclusiveDeviationMonitor 1",
-                    20.0,
-                    37.0,
-                    42.0,
-                    15.0,
-                    12.0);
+                    10.0,
+                    50.0,
+                    80.0,
+                    30.0,
+                    20.0);
 
                 // Create an alarm monitor for a ExclusiveRateOfChangeAlarm type.
                 CreateExclusiveRateOfChangeMonitor(
                     machine,
                     "ExclusiveRateOfChangeSensor 1",
                     "ExclusiveRateOfChangeMonitor 1",
-                    21.0,
-                    39.0,
-                    45.0,
-                    18.0,
-                    15.0);
+                    10.0,
+                    50.0,
+                    80.0,
+                    30.0,
+                    20.0);
 
                 // Create an alarm monitor for a NonExclusiveLimitAlarm type.
                 CreateNonExclusiveLimitMonitor(
                     machine,
                     "NonExclusiveLimitSensor 1",
                     "NonExclusiveLimitMonitor 1",
-                    8.0,
                     10.0,
-                    15.0,
-                    2.0,
-                    1.0);
+                    50.0,
+                    80.0,
+                    30.0,
+                    20.0);
 
                 // Create an alarm monitor for a NonExclusiveLevelAlarm type.
                 CreateNonExclusiveLevelMonitor(
                     machine,
                     "NonExclusiveLevelSensor 1",
                     "NonExclusiveLevelMonitor 1",
-                    37.0,
-                    35.0,
-                    40.0,
-                    12.0,
-                    10.0);
+                    10.0,
+                    50.0,
+                    80.0,
+                    30.0,
+                    20.0);
 
                 // Create an alarm monitor for a NonExclusiveDeviationAlarm type.
                 CreateNonExclusiveDeviationMonitor(
                     machine,
                     "NonExclusiveDeviationSensor 1",
                     "NonExclusiveDeviationMonitor 1",
-                    18.0,
-                    37.0,
-                    42.0,
-                    15.0,
-                    12.0);
+                    10.0,
+                    50.0,
+                    80.0,
+                    30.0,
+                    20.0);
 
                 // Create an alarm monitor for a NonExclusiveRateOfChangeAlarm type.
                 CreateNonExclusiveRateOfChangeMonitor(
                     machine,
                     "NonExclusiveRateOfChangeSensor 1",
                     "NonExclusiveRateOfChangeMonitor 1",
-                    31.0,
-                    39.0,
-                    45.0,
-                    18.0,
-                    15.0);
+                    10.0,
+                    50.0,
+                    80.0,
+                    30.0,
+                    20.0);
 
                 // IsAbstract alarm - should not be activated !
                 //CreateConditionMonitor(
@@ -206,59 +208,54 @@ namespace SampleServer.Alarms
                 //    "ConditionMonitor 1",
                 //    7.0);
 
+                // Create an alarm monitor for a DialogConditionAlarm type.
                 CreateDialogConditionMonitor(
                     machine,
                     "DialogConditionSensor 1",
                     "DialogConditionMonitor 1",
-                    7.0);
+                    10.0);
 
+                // Create an alarm monitor for a AcknowledgeableCondition type.
                 CreateAcknowledgeableConditionMonitor(
                     machine,
                     "AcknowledgeableConditionSensor 1",
                     "AcknowledgeableConditionMonitor 1",
-                    7.0);
+                    10.0);
 
+                // Create an alarm monitor for a AlarmCondition type.
                 CreateAlarmConditionMonitor(
                     machine,
                     "AlarmConditionSensor 1",
                     "AlarmConditionMonitor 1",
-                    7.0);
+                    10.0);
 
-                CreateDiscrepancyAlarmConditionMonitor(
+                // Create an alarm monitor for a DiscrepancyAlarmCondition type.
+                CreateDiscrepancyAlarmMonitor(
                     machine,
-                    "DiscrepancyAlarmConditionSensor 1",
-                    "DiscrepancyAlarmConditionMonitor 1",
-                    7.0);
+                    "DiscrepancyAlarmSensor 1",
+                    "DiscrepancyAlarmMonitor 1",
+                    10.0);
 
+                // Create an alarm monitor for a Discrete type.
                 CreateDiscreteMonitor(
                     machine,
                     "DiscreteSensor 1",
                     "DiscreteMonitor 1",
-                    7.0);
-
-                CreateLimitAlarmConditionMonitor(
-                    machine,
-                    "LimitAlarmConditionSensor 1",
-                    "LimitAlarmConditionMonitor 1",
-                    7.0,
-                    30.0,
-                    80.0,
-                    100.0,
-                    20.0);
+                    10.0);
 
                 // Create an alarm monitor for a CertificateExpiratioAlarm type.
                 CreateCertificateExpirationMonitor(
                     machine,
                     "CertificateExpirationSensor 1",
                     "CertificateExpirationMonitor 1",
-                    8.0);
+                    10.0);
 
                 // Create an alarm monitor for a TrustListOutOfDateAlarm type.
                 CreateTrustListOutOfDateMonitor(
                     machine,
                     "TrustListOutOfDateSensor 1",
                     "TrustListOutOfDateMonitor 1",
-                    9.0);
+                    10.0);
 
                 // Create an alarm monitor for a InstrumentDiagnosticAlarm type.
                 CreateInstrumentDiagnosticMonitor(
@@ -267,29 +264,33 @@ namespace SampleServer.Alarms
                     "InstrumentDiagnosticMonitor 1",
                     10.0);
 
-                CreateOffNormalAlarmConditionMonitor(
+                // Create an alarm monitor for a OffNormalAlarm type.
+                CreateOffNormalAlarmMonitor(
                     machine,
-                    "OffNormalAlarmConditionSensor 1",
-                    "OffNormalAlarmConditionMonitor 1",
-                    7.0);
+                    "OffNormalAlarmSensor 1",
+                    "OffNormalAlarmMonitor 1",
+                    10.0);
 
-                CreateTripAlarmConditionMonitor(
+                // Create an alarm monitor for a TripAlarm type.
+                CreateTripAlarmMonitor(
                     machine,
-                    "TripAlarmConditionSensor 1",
-                    "TripNormalAlarmConditionMonitor 1",
-                    7.0);
+                    "TripAlarmSensor 1",
+                    "TripAlarmMonitor 1",
+                    10.0);
 
-                CreateSystemOffNormalAlarmConditionMonitor(
+                // Create an alarm monitor for a SystemOffNormalAlarm type.
+                CreateSystemOffNormalAlarmMonitor(
                     machine,
-                    "SystemOffNormalAlarmCondition 1",
-                    "SystemOffNormalAlarmConditionMonitor 1",
-                    7.0);
+                    "SystemOffNormalAlarmSensor 1",
+                    "SystemOffNormalAlarmMonitor 1",
+                    10.0);
 
-                CreateSystemDiagnosticConditionMonitor(
+                // Create an alarm monitor for a SystemDiagnostic type.
+                CreateSystemDiagnosticMonitor(
                     machine,
-                    "SystemDiagnosticAlarmCondition 1",
-                    "SystemDiagnosticAlarmConditionMonitor 1",
-                    7.0);
+                    "SystemDiagnosticAlarmSensor 1",
+                    "SystemDiagnosticAlarmMonitor 1",
+                    10.0);
 
                 // Calling AddComment on ConditionType is BadNodeIdInvalid because is an event type but not triggered from an alarm
                 MethodState conditionTypeAddCommentNode = FindNodeInAddressSpace(Opc.Ua.Methods.ConditionType_AddComment) as MethodState;
@@ -303,25 +304,14 @@ namespace SampleServer.Alarms
                 AddNotifier(root, machine, true);
 
                 #region Create Trigger Alarms Methods
-                Argument[] inputArgumentsStart = new Argument[]
-                {
-                    new Argument() {Name = "Interval (ms)", Description = "Alarm Trigerring Interval", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
-                };
-                CreateMethod(root, "StartAllAlarms", inputArgumentsStart, null, OnTriggerAllConditionsStartCall);
-
-                CreateMethod(root, "StopAllAlarms", null, null, OnTriggerAllConditionsStop);
-
-                CreateMethod(root, "EnableAllAlarms", null, null, OnAllConditionsEnableCall);
-
-                CreateMethod(root, "DisableAllAlarms", null, null, OnAllConditionsDisableCall);
-
+                
                 Argument[] inputArgumentsChange = new Argument[]
                 {
-                    new Argument() {Name = "Interval (ms)", Description = "Alarm change Interval", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
+                    new Argument() {Name = "Interval (ms)", Description = "Alarm change values interval", DataType = DataTypeIds.Int32, ValueRank = ValueRanks.Scalar},
                 };
-                CreateMethod(root, "StartAllChangeValues", inputArgumentsChange, null, OnTriggerAllChangeMonitorsValueStart);
+                CreateMethod(root, "StartAllAlarmsChangeValues", inputArgumentsChange, null, OnStartAllAlarmsChangeValues);
 
-                CreateMethod(root, "StopAllChangeValues", null, null, OnTriggerChangeMonitorsValueStop);
+                CreateMethod(root, "StopAllAlarmsChangeValues", null, null, OnStopAllAlarmsChangeValues);
 
                 #endregion
 
@@ -348,8 +338,6 @@ namespace SampleServer.Alarms
             }
             byte[] eventId = (byte[])inputArguments[0];
             LocalizedText comment = (LocalizedText)inputArguments[1];
-
-            Console.WriteLine("AddComment on 'ConditionType' - eventId: {0} value: {1}", BitConverter.ToString(eventId).Replace("-", ""), comment.Text);
 
             return StatusCodes.BadNodeIdInvalid;
         }
@@ -380,11 +368,53 @@ namespace SampleServer.Alarms
         //            }
         //        }
         //    }
-            
+
         //    base.Call(context, methodsToCall, results, errors);
         //}
 
-        
+        /// <summary>
+        /// Create an instance of LimitAlarmConditionMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        /// <param name="highLimit"></param>
+        /// <param name="highHighLimit"></param>
+        /// <param name="lowLimit"></param>
+        /// <param name="lowLowLimit"></param>
+        private void CreateLimitAlarmMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue,
+            double highLimit,
+            double highHighLimit,
+            double lowLimit,
+            double lowLowLimit)
+        {
+
+            // Create an alarm monitor for a LimitAlarm sensor 1.
+            LimitAlarmMonitor<LimitAlarmState> limitAlarmMonitor = new LimitAlarmMonitor<LimitAlarmState>(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue,
+                highLimit,
+                highHighLimit,
+                lowLimit,
+                lowLowLimit);
+
+            if (limitAlarmMonitor != null)
+            {
+                m_conditionInstances.AddRange(limitAlarmMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, limitAlarmMonitor);
+        }
+
         /// <summary>
         /// Create an instance of ExclusiveLimitMonitor and set provided properties
         /// </summary>
@@ -420,8 +450,6 @@ namespace SampleServer.Alarms
 
             if(exclusiveLimitMonitor != null)
             {
-                m_exclusiveLimitMonitors.Add(alarmName, exclusiveLimitMonitor.NodeId);
-                
                 m_conditionInstances.AddRange(exclusiveLimitMonitor.ConditionStates);
             }
 
@@ -449,7 +477,7 @@ namespace SampleServer.Alarms
             double lowLimit,
             double lowLowLimit)
         {
-            // Create an alarm monitor for a ExclusiveLevelMonitor sensor 1.
+            // Create an alarm monitor for a ExclusiveLevel sensor 1.
             ExclusiveLevelMonitor exclusiveLevelMonitor = new ExclusiveLevelMonitor(
                 SystemContext,
                 parent,
@@ -491,7 +519,7 @@ namespace SampleServer.Alarms
             double lowLimit,
             double lowLowLimit)
         {
-            // Create an alarm monitor for a NonExclusiveLevelMonitor sensor 1.
+            // Create an alarm monitor for a ExclusiveDeviation sensor 1.
             ExclusiveDeviationMonitor exclusiveDeviationMonitor = new ExclusiveDeviationMonitor(
                 SystemContext,
                 parent,
@@ -533,7 +561,7 @@ namespace SampleServer.Alarms
             double lowLimit,
             double lowLowLimit)
         {
-            // Create an alarm monitor for a NonExclusiveLevelMonitor sensor 1.
+            // Create an alarm monitor for a ExclusiveRateOfChange sensor 1.
             ExclusiveRateOfChangeMonitor exclusiveRateOfChangeMonitor = new ExclusiveRateOfChangeMonitor(
                 SystemContext,
                 parent,
@@ -576,7 +604,7 @@ namespace SampleServer.Alarms
             double lowLimit,
             double lowLowLimit)
         {
-            // Create an alarm monitor for a NonExclusiveLimitMonitor sensor 1.
+            // Create an alarm monitor for a NonExclusiveLimit sensor 1.
             NonExclusiveLimitMonitor nonExclusiveLimitMonitor = new NonExclusiveLimitMonitor(
                 SystemContext,
                 parent,
@@ -618,7 +646,7 @@ namespace SampleServer.Alarms
             double lowLimit,
             double lowLowLimit)
         {
-            // Create an alarm monitor for a NonExclusiveLevelMonitor sensor 1.
+            // Create an alarm monitor for a NonExclusiveLevel sensor 1.
             NonExclusiveLevelMonitor nonExclusiveLevelMonitor = new NonExclusiveLevelMonitor(
                 SystemContext,
                 parent,
@@ -660,7 +688,7 @@ namespace SampleServer.Alarms
             double lowLimit,
             double lowLowLimit)
         {
-            // Create an alarm monitor for a NonExclusiveLevelMonitor sensor 1.
+            // Create an alarm monitor for a NonExclusiveDeviation sensor 1.
             NonExclusiveDeviationMonitor nonExclusiveDeviationMonitor = new NonExclusiveDeviationMonitor(
                 SystemContext,
                 parent,
@@ -702,7 +730,7 @@ namespace SampleServer.Alarms
             double lowLimit,
             double lowLowLimit)
         {
-            // Create an alarm monitor for a NonExclusiveLevelMonitor sensor 1.
+            // Create an alarm monitor for a NonExclusiveRateOfChange sensor 1.
             NonExclusiveRateOfChangeMonitor nonExclusiveRateOfChangeMonitor = new NonExclusiveRateOfChangeMonitor(
                 SystemContext,
                 parent,
@@ -724,13 +752,20 @@ namespace SampleServer.Alarms
             AddPredefinedNode(SystemContext, nonExclusiveRateOfChangeMonitor);
         }
 
+        /// <summary>
+        /// Create an instance of ConditionMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         private void CreateConditionMonitor(NodeState parent,
             string name,
             string alarmName,
             double initialValue)
         {
 
-            // Create an alarm monitor for a temperature sensor 1.
+            // Create an alarm monitor for a Condition state sensor 1.
             ConditionMonitor conditionMonitor = new ConditionMonitor(
                 SystemContext,
                 parent,
@@ -748,38 +783,21 @@ namespace SampleServer.Alarms
             AddPredefinedNode(SystemContext, conditionMonitor);
         }
 
-        private void CreateDialogConditionMonitor(NodeState parent,
-            string name,
-            string alarmName,
-            double initialValue)
-        {
-
-            // Create an alarm monitor for a temperature sensor 1.
-            DialogConditionMonitor conditionMonitor = new DialogConditionMonitor(
-                SystemContext,
-                parent,
-                NamespaceIndex,
-                name,
-                alarmName,
-                initialValue);
-
-            if (conditionMonitor != null)
-            {
-                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
-            }
-
-            //remember node in node manager list
-            AddPredefinedNode(SystemContext, conditionMonitor);
-        }
-
+        /// <summary>
+        /// Create an instance of AcknowledgeableConditionMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         private void CreateAcknowledgeableConditionMonitor(NodeState parent,
             string name,
             string alarmName,
             double initialValue)
         {
 
-            // Create an alarm monitor for a temperature sensor 1.
-            AcknowledgeableConditionMonitor conditionMonitor = new AcknowledgeableConditionMonitor(
+            // Create an alarm monitor for a AcknowledgeableCondition sensor 1.
+            AcknowledgeableConditionMonitor acknowledgeableMonitor = new AcknowledgeableConditionMonitor(
                 SystemContext,
                 parent,
                 NamespaceIndex,
@@ -787,23 +805,30 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
 
-            if (conditionMonitor != null)
+            if (acknowledgeableMonitor != null)
             {
-                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+                m_conditionInstances.AddRange(acknowledgeableMonitor.ConditionStates);
             }
 
             //remember node in node manager list
-            AddPredefinedNode(SystemContext, conditionMonitor);
+            AddPredefinedNode(SystemContext, acknowledgeableMonitor);
         }
 
+        /// <summary>
+        /// Create an instance of AlarmConditionMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         private void CreateAlarmConditionMonitor(NodeState parent,
             string name,
             string alarmName,
             double initialValue)
         {
 
-            // Create an alarm monitor for a temperature sensor 1.
-            AlarmConditionMonitor conditionMonitor = new AlarmConditionMonitor(
+            // Create an alarm monitor for a AlarmCondition sensor 1.
+            AlarmConditionMonitor alarmConditionMonitor = new AlarmConditionMonitor(
                 SystemContext,
                 parent,
                 NamespaceIndex,
@@ -811,23 +836,30 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
 
-            if (conditionMonitor != null)
+            if (alarmConditionMonitor != null)
             {
-                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+                m_conditionInstances.AddRange(alarmConditionMonitor.ConditionStates);
             }
 
             //remember node in node manager list
-            AddPredefinedNode(SystemContext, conditionMonitor);
+            AddPredefinedNode(SystemContext, alarmConditionMonitor);
         }
 
-        private void CreateDiscrepancyAlarmConditionMonitor(NodeState parent,
+        /// <summary>
+        /// Create an instance of DialogConditionMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void CreateDialogConditionMonitor(NodeState parent,
             string name,
             string alarmName,
             double initialValue)
         {
 
-            // Create an alarm monitor for a temperature sensor 1.
-            DiscrepancyAlarmMonitor conditionMonitor = new DiscrepancyAlarmMonitor(
+            // Create an alarm monitor for a DialogCondition sensor 1.
+            DialogConditionMonitor dialogConditionMonitor = new DialogConditionMonitor(
                 SystemContext,
                 parent,
                 NamespaceIndex,
@@ -835,22 +867,60 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
 
-            if (conditionMonitor != null)
+            if (dialogConditionMonitor != null)
             {
-                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+                m_conditionInstances.AddRange(dialogConditionMonitor.ConditionStates);
             }
 
             //remember node in node manager list
-            AddPredefinedNode(SystemContext, conditionMonitor);
+            AddPredefinedNode(SystemContext, dialogConditionMonitor);
+        }
+        
+        /// <summary>
+        /// Create an instance of DiscrepancyAlarmCondition and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void CreateDiscrepancyAlarmMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue)
+        {
+
+            // Create an alarm monitor for a DiscrepancyAlarm sensor 1.
+            DiscrepancyAlarmMonitor discrepancyAlarmMonitor = new DiscrepancyAlarmMonitor(
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            if (discrepancyAlarmMonitor != null)
+            {
+                m_conditionInstances.AddRange(discrepancyAlarmMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, discrepancyAlarmMonitor);
         }
 
+        /// <summary>
+        /// Create an instance of DiscreteMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
         private void CreateDiscreteMonitor(NodeState parent,
             string name,
             string alarmName,
             double initialValue)
         {
 
-            // Create an alarm monitor for a temperature sensor 1.
+            // Create an alarm monitor for a Discrete sensor 1.
             DiscreteMonitor discreteMonitor = new DiscreteMonitor(
                 SystemContext,
                 parent,
@@ -867,37 +937,66 @@ namespace SampleServer.Alarms
             //remember node in node manager list
             AddPredefinedNode(SystemContext, discreteMonitor);
         }
-        
-        private void CreateLimitAlarmConditionMonitor(NodeState parent,
-            string name,
-            string alarmName,
-            double initialValue,
-            double highLimit,
-            double highHighLimit,
-            double lowLimit,
-            double lowLowLimit)
-        {
 
-            // Create an alarm monitor for a Limit Alarm Condition sensor 1.
-            LimitAlarmMonitor conditionMonitor = new LimitAlarmMonitor(
+        /// <summary>
+        /// Create an instance of OffNormalAlarmConditionMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void CreateOffNormalAlarmMonitor(NodeState parent,
+           string name,
+           string alarmName,
+           double initialValue)
+        {
+            // Create an alarm monitor for a OffNormalAlarm sensor 1.
+            OffNormalAlarmMonitor offNormalAlarmMonitor = new OffNormalAlarmMonitor(
+                this,
                 SystemContext,
                 parent,
                 NamespaceIndex,
                 name,
                 alarmName,
-                initialValue,
-                highLimit,
-                highHighLimit,
-                lowLimit,
-                lowLowLimit);
+                initialValue);
 
-            if (conditionMonitor != null)
+            if (offNormalAlarmMonitor != null)
             {
-                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+                m_conditionInstances.AddRange(offNormalAlarmMonitor.ConditionStates);
             }
 
             //remember node in node manager list
-            AddPredefinedNode(SystemContext, conditionMonitor);
+            AddPredefinedNode(SystemContext, offNormalAlarmMonitor);
+        }
+
+        /// <summary>
+        /// Create an instance of SystemOffNormalAlarmConditionMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void CreateSystemOffNormalAlarmMonitor(NodeState parent,
+            string name,
+            string alarmName,
+            double initialValue)
+        {
+            // Create an alarm monitor for a SystemOffNormalAlarm sensor 1.
+            SystemOffNormalAlarmMonitor systemOffNormalAlarmMonitor = new SystemOffNormalAlarmMonitor(this,
+                SystemContext,
+                parent,
+                NamespaceIndex,
+                name,
+                alarmName,
+                initialValue);
+
+            if (systemOffNormalAlarmMonitor != null)
+            {
+                m_conditionInstances.AddRange(systemOffNormalAlarmMonitor.ConditionStates);
+            }
+
+            //remember node in node manager list
+            AddPredefinedNode(SystemContext, systemOffNormalAlarmMonitor);
         }
 
         /// <summary>
@@ -913,7 +1012,7 @@ namespace SampleServer.Alarms
            double initialValue)
         {
 
-            // Create an alarm monitor for a Certificate Expiration sensor 1.
+            // Create an alarm monitor for a CertificateExpiration sensor 1.
             CertificateExpirationMonitor certificateExpirationMonitor = new CertificateExpirationMonitor(this,
                 SystemContext,
                 parent,
@@ -944,7 +1043,7 @@ namespace SampleServer.Alarms
            double initialValue)
         {
 
-            // Create an alarm monitor for a  Trust List Out Of Date sensor 1.
+            // Create an alarm monitor for a TrustListOutOfDate sensor 1.
             TrustListOutOfDateMonitor trustListOutOfDateMonitor = new TrustListOutOfDateMonitor(this,
                 SystemContext,
                 parent,
@@ -975,7 +1074,7 @@ namespace SampleServer.Alarms
            double initialValue)
         {
 
-            // Create an alarm monitor for a Instrument Diagnostic sensor 1.
+            // Create an alarm monitor for a InstrumentDiagnostic sensor 1.
             InstrumentDiagnosticMonitor instrumentDiagnosticMonitor = new InstrumentDiagnosticMonitor(this,
                 SystemContext,
                 parent,
@@ -993,38 +1092,21 @@ namespace SampleServer.Alarms
             AddPredefinedNode(SystemContext, instrumentDiagnosticMonitor);
         }
 
-        private void CreateOffNormalAlarmConditionMonitor(NodeState parent,
-           string name,
-           string alarmName,
-           double initialValue)
-        {
-            // Create an alarm monitor for a temperature sensor 1.
-            OffNormalAlarmMonitor conditionMonitor = new OffNormalAlarmMonitor(
-                this,
-                SystemContext,
-                parent,
-                NamespaceIndex,
-                name,
-                alarmName,
-                initialValue);
-
-            if (conditionMonitor != null)
-            {
-                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
-            }
-
-            //remember node in node manager list
-            AddPredefinedNode(SystemContext, conditionMonitor);
-        }
-
-        private void CreateTripAlarmConditionMonitor(NodeState parent,
+        /// <summary>
+        /// Create an instance of TripAlarmConditionMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void CreateTripAlarmMonitor(NodeState parent,
            string name,
            string alarmName,
            double initialValue)
         {
 
-            // Create an alarm monitor for a temperature sensor 1.
-            TripAlarmMonitor conditionMonitor = new TripAlarmMonitor(this,
+            // Create an alarm monitor for a TripAlarm sensor 1.
+            TripAlarmMonitor tripAlarmMonitor = new TripAlarmMonitor(this,
                 SystemContext,
                 parent,
                 NamespaceIndex,
@@ -1032,23 +1114,32 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
 
-            if (conditionMonitor != null)
+            if (tripAlarmMonitor != null)
             {
-                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+                m_conditionInstances.AddRange(tripAlarmMonitor.ConditionStates);
             }
 
             //remember node in node manager list
-            AddPredefinedNode(SystemContext, conditionMonitor);
+            AddPredefinedNode(SystemContext, tripAlarmMonitor);
         }
 
-        private void CreateSystemOffNormalAlarmConditionMonitor(NodeState parent,
+        
+
+        /// <summary>
+        /// Create an instance of SystemDiagnosticConditionMonitor and set provided properties
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="alarmName"></param>
+        /// <param name="initialValue"></param>
+        private void CreateSystemDiagnosticMonitor(NodeState parent,
             string name,
             string alarmName,
             double initialValue)
         {
 
-            // Create an alarm monitor for a temperature sensor 1.
-            SystemOffNormalAlarmMonitor conditionMonitor = new SystemOffNormalAlarmMonitor(this,
+            // Create an alarm monitor for a SystemDiagnosticAlarm sensor 1.
+            SystemDiagnosticAlarmMonitor systemDiagnosticAlarmMonitor = new SystemDiagnosticAlarmMonitor(this,
                 SystemContext,
                 parent,
                 NamespaceIndex,
@@ -1056,423 +1147,23 @@ namespace SampleServer.Alarms
                 alarmName,
                 initialValue);
 
-            if (conditionMonitor != null)
+            if (systemDiagnosticAlarmMonitor != null)
             {
-                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
+                m_conditionInstances.AddRange(systemDiagnosticAlarmMonitor.ConditionStates);
             }
 
             //remember node in node manager list
-            AddPredefinedNode(SystemContext, conditionMonitor);
-        }
-
-        private void CreateSystemDiagnosticConditionMonitor(NodeState parent,
-            string name,
-            string alarmName,
-            double initialValue)
-        {
-
-            // Create an alarm monitor for a temperature sensor 1.
-            SystemDiagnosticAlarmMonitor conditionMonitor = new SystemDiagnosticAlarmMonitor(this,
-                SystemContext,
-                parent,
-                NamespaceIndex,
-                name,
-                alarmName,
-                initialValue);
-
-            if (conditionMonitor != null)
-            {
-                m_conditionInstances.AddRange(conditionMonitor.ConditionStates);
-            }
-
-            //remember node in node manager list
-            AddPredefinedNode(SystemContext, conditionMonitor);
+            AddPredefinedNode(SystemContext, systemDiagnosticAlarmMonitor);
         }
 
         #endregion
 
-        #region Timer methods
-
-        /// <summary>
-        /// Handles alarm enabled event.
-        /// </summary>
-        /// <param name="state"></param>
-        private void OnExclusiveLimitAlarmEnabled(object state)
-        {
-            try
-            {
-                NodeId alarmNodeId = state as NodeId;
-                if (alarmNodeId == null)
-                {
-                    throw new Exception("Alarm NodeId is missing!");
-                }
-                    
-                Opc.Ua.ExclusiveLimitAlarmState exclusiveLimitMonitorState = (Opc.Ua.ExclusiveLimitAlarmState)FindPredefinedNode(
-                         ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
-                         typeof(Opc.Ua.ExclusiveLimitAlarmState));
-
-                if (exclusiveLimitMonitorState != null)
-                {
-                    ExclusiveLimitMonitor exclusiveLimitMonitor = exclusiveLimitMonitorState.Parent as ExclusiveLimitMonitor;
-                    if (exclusiveLimitMonitor != null)
-                    {
-                        double exclusiveLimitMonitorValue = exclusiveLimitMonitor.Value;
-
-                        double highLimit = exclusiveLimitMonitorState.HighLimit.Value;
-                        double highHighLimit = exclusiveLimitMonitorState.HighHighLimit.Value;
-                        double lowLimit = exclusiveLimitMonitorState.LowLimit.Value;
-                        double lowLowLimit = exclusiveLimitMonitorState.LowLowLimit.Value;
-
-                        if (exclusiveLimitMonitorValue > highHighLimit)
-                        {
-                            exclusiveLimitMonitorValue = lowLowLimit - 0.5;
-                        }
-                        else if (exclusiveLimitMonitorValue < highHighLimit && exclusiveLimitMonitorValue > highLimit)
-                        {
-                            exclusiveLimitMonitorValue = highHighLimit + 0.5;
-                        }
-                        else if (exclusiveLimitMonitorValue < highLimit && exclusiveLimitMonitorValue > lowLimit)
-                        {
-                            exclusiveLimitMonitorValue = highLimit + 0.5;
-                        }
-                        else if (exclusiveLimitMonitorValue < lowLimit && exclusiveLimitMonitorValue > lowLowLimit)
-                        {
-                            exclusiveLimitMonitorValue = lowLimit + 0.5;
-                        }
-                        else if (exclusiveLimitMonitorValue < lowLowLimit)
-                        {
-                            exclusiveLimitMonitorValue = lowLowLimit + 0.5;
-                        }
-
-                        exclusiveLimitMonitor.Value = exclusiveLimitMonitorValue; 
-
-                        Console.WriteLine("Exclusive limit alarm '{0}' changed value: {1}", exclusiveLimitMonitorState.DisplayName, exclusiveLimitMonitor.Value);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Alarm exception: {0}", ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Handles alarm enabled event.
-        /// </summary>
-        /// <param name="state"></param>
-        private void OnConditionEnabled(object state)
-        {
-            try
-            {
-                NodeId alarmNodeId = state as NodeId;
-                if (alarmNodeId == null)
-                {
-                    throw new Exception("Alarm NodeId is missing!");
-                }
-
-
-                Opc.Ua.ConditionState conditionMonitorState = (Opc.Ua.ConditionState)FindPredefinedNode(
-                    ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
-                    typeof(Opc.Ua.ConditionState));
-
-                if (conditionMonitorState != null)
-                {
-                    ConditionMonitor conditionMonitor = conditionMonitorState.Parent as ConditionMonitor;
-                    if (conditionMonitor != null)
-                    {
-                        bool alarmEnabled = false;
-                        double newValue = conditionMonitor.Value;
-                        LocalizedText conditionMonitorEnabled = conditionMonitorState.EnabledState.Value;
-                        if (string.Equals(conditionMonitorEnabled.Text, "Enabled"))
-                        {
-                            conditionMonitorState.EnabledState.Value = "False";
-                            alarmEnabled = false;
-                        }
-                        else
-                        {
-                            conditionMonitorState.EnabledState.Value = "True";
-                            alarmEnabled = true;
-                        }
-
-                        conditionMonitor.UpdateConditionAlarmMonitor(SystemContext,
-                            newValue++,
-                            alarmEnabled);
-
-                        Console.WriteLine("Alarm '{0}' enable state changed: {1}", conditionMonitorState.DisplayName, alarmEnabled);
-                    }
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Alarm exception: {0}", ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Handles alarm enabled event.
-        /// </summary>
-        /// <param name="state"></param>
-        private void OnDialogConditionEnabled(object state)
-        {
-            try
-            {
-                NodeId alarmNodeId = state as NodeId;
-                if (alarmNodeId == null)
-                {
-                    throw new Exception("Alarm NodeId is missing!");
-                }
-
-
-                Opc.Ua.DialogConditionState conditionMonitorState = (Opc.Ua.DialogConditionState)FindPredefinedNode(
-                    ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
-                    typeof(Opc.Ua.DialogConditionState));
-
-                if (conditionMonitorState != null)
-                {
-                    ConditionMonitor conditionMonitor = conditionMonitorState.Parent as ConditionMonitor;
-                    if (conditionMonitor != null)
-                    {
-                        bool alarmEnabled = false;
-                        double newValue = conditionMonitor.Value;
-                        LocalizedText conditionMonitorEnabled = conditionMonitorState.EnabledState.Value;
-                        if (string.Equals(conditionMonitorEnabled.Text, "Enabled"))
-                        {
-                            conditionMonitorState.EnabledState.Value = "False";
-                            alarmEnabled = false;
-                        }
-                        else
-                        {
-                            conditionMonitorState.EnabledState.Value = "True";
-                            alarmEnabled = true;
-                        }
-
-                        conditionMonitor.UpdateConditionAlarmMonitor(SystemContext,
-                            newValue++,
-                            alarmEnabled);
-
-                        Console.WriteLine("Alarm '{0}' enable state changed: {1}", conditionMonitorState.DisplayName, alarmEnabled);
-                    }
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Alarm exception: {0}", ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Handles alarm enabled event.
-        /// </summary>
-        /// <param name="state"></param>
-        private void OnAcknowledgeableConditionEnabled(object state)
-        {
-            try
-            {
-                NodeId alarmNodeId = state as NodeId;
-                if (alarmNodeId == null)
-                {
-                    throw new Exception("Alarm NodeId is missing!");
-                }
-
-
-                Opc.Ua.DialogConditionState conditionMonitorState = (Opc.Ua.DialogConditionState)FindPredefinedNode(
-                    ExpandedNodeId.ToNodeId(alarmNodeId, Server.NamespaceUris),
-                    typeof(Opc.Ua.DialogConditionState));
-
-                if (conditionMonitorState != null)
-                {
-                    ConditionMonitor conditionMonitor = conditionMonitorState.Parent as ConditionMonitor;
-                    if (conditionMonitor != null)
-                    {
-                        bool alarmEnabled = false;
-                        double newValue = conditionMonitor.Value;
-                        LocalizedText conditionMonitorEnabled = conditionMonitorState.EnabledState.Value;
-                        if (string.Equals(conditionMonitorEnabled.Text, "Enabled"))
-                        {
-                            conditionMonitorState.EnabledState.Value = "False";
-                            alarmEnabled = false;
-                        }
-                        else
-                        {
-                            conditionMonitorState.EnabledState.Value = "True";
-                            alarmEnabled = true;
-                        }
-
-                        conditionMonitor.UpdateConditionAlarmMonitor(SystemContext,
-                            newValue++,
-                            alarmEnabled);
-
-                        Console.WriteLine("Alarm '{0}' enable state changed: {1}", conditionMonitorState.DisplayName, alarmEnabled);
-                    }
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Alarm exception: {0}", ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Handles all alarms enabled event.
-        /// </summary>
-        /// <param name="state"></param>
-        private void OnAllConditionsStart(object state)
-        {
-            try
-            {
-                var inputs = new List<Variant>();
-
-                foreach (ConditionState ci in m_conditionInstances)
-                {
-                    MethodState disableMethod = (MethodState)ci.FindChild(Server.DefaultSystemContext, new QualifiedName("Disable"));
-                    if (disableMethod != null)
-                    {
-                        disableMethod.Call(Server.DefaultSystemContext, ci.NodeId, inputs, null, null);
-                        if (ci is AlarmConditionState aci)
-                        {
-                            aci.SetActiveState(Server.DefaultSystemContext, false);
-                        }
-                        
-                    }
-
-                    MethodState enableMethod = (MethodState)ci.FindChild(Server.DefaultSystemContext, new QualifiedName("Enable"));
-                    if (enableMethod != null)
-                    {
-                        enableMethod.Call(Server.DefaultSystemContext, ci.NodeId, inputs, null, null);
-                        if (ci is AlarmConditionState aci)
-                        {
-                            aci.SetActiveState(Server.DefaultSystemContext, true);
-                        }
-                    }
-  
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Alarm exception: {0}", ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Handles all alarms enabled event.
-        /// </summary>
-        /// <param name="state"></param>
-        private ServiceResult OnTriggerAllConditionsStop(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
-        {
-            try
-            {
-                if (m_AllAlarmsTrigger != null)
-                {
-                    m_AllAlarmsTrigger.Dispose();
-                    m_AllAlarmsTrigger = null;
-                }
-                return ServiceResult.Good;
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResult(StatusCodes.BadInvalidArgument);
-            }
-        }
-
-        #endregion
-
-        #region Private Methods - OnCall Event Handlers
-
-        /// <summary>
-        /// Handles the trigger alarm method call
-        /// </summary>
-        private ServiceResult OnTriggerAllConditionsStartCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
-        {
-            // All arguments must be provided
-            if (inputArguments.Count != 1)
-            {
-                return StatusCodes.BadArgumentsMissing;
-            }
-
-            try
-            {
-               
-                int triggerInterval = (int)inputArguments[0]; // "Alarm Timeout";
-
-                m_AllAlarmsTrigger = new Timer(new TimerCallback(OnAllConditionsStart), null, triggerInterval, triggerInterval);
-
-                return ServiceResult.Good;
-            }
-            catch
-            {
-                return new ServiceResult(StatusCodes.BadInvalidArgument);
-            }
-
-        }
-
-        /// <summary>
-        /// Handles enabling all conditions
-        /// </summary>
-        private ServiceResult OnAllConditionsEnableCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
-        {
-            try
-            {
-                var inputs = new List<Variant>();
-                foreach (ConditionState ci in m_conditionInstances)
-                {
-                    MethodState enableMethod = (MethodState)ci.FindChild(Server.DefaultSystemContext, new QualifiedName("Enable"));
-                    if (enableMethod != null)
-                    {
-                        enableMethod.Call(Server.DefaultSystemContext, ci.NodeId, inputs, null, null);
-                        
-                        if (ci is AlarmConditionState aci)
-                        {
-                            aci.SetActiveState(Server.DefaultSystemContext, true);
-                        }
-                    }
-                }
-
-                return ServiceResult.Good;
-            }
-            catch
-            {
-                return new ServiceResult(StatusCodes.BadInvalidArgument);
-            }
-        }
-
-        /// <summary>
-        /// Handles disabling all conditions
-        /// </summary>
-        private ServiceResult OnAllConditionsDisableCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
-        {
-            try
-            {
-                var inputs = new List<Variant>();
-                foreach (ConditionState ci in m_conditionInstances)
-                {
-                    MethodState disableMethod = (MethodState)ci.FindChild(Server.DefaultSystemContext, new QualifiedName("Disable"));
-                    if (disableMethod != null)
-                    {
-                        disableMethod.Call(Server.DefaultSystemContext, ci.NodeId, inputs, null, null);
-                        
-                        if (ci is AlarmConditionState aci)
-                        {
-                            aci.SetActiveState(Server.DefaultSystemContext, false);
-                        }
-                    }
-                }
-
-                return ServiceResult.Good;
-            }
-            catch
-            {
-                return new ServiceResult(StatusCodes.BadInvalidArgument);
-            }
-
-        }
+        #region Private Methods - OnCall Alarm Event Handlers
 
         /// <summary>
         ///  Handles start change values for all monitors/alarms.
         /// </summary>
-        private ServiceResult OnTriggerAllChangeMonitorsValueStart(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        private ServiceResult OnStartAllAlarmsChangeValues(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
             // All arguments must be provided
             if (inputArguments.Count != 1)
@@ -1485,7 +1176,7 @@ namespace SampleServer.Alarms
 
                 int triggerInterval = (int)inputArguments[0]; // "Alarm Timeout";
 
-                m_allAlarmsChangeTrigger = new Timer(new TimerCallback(OnAllChangeMonitorsStart), null, triggerInterval, triggerInterval);
+                m_allAlarmsChangeValues = new Timer(new TimerCallback(OnAllAlarmsChangeValues), null, triggerInterval, triggerInterval);
 
                 return ServiceResult.Good;
             }
@@ -1500,15 +1191,21 @@ namespace SampleServer.Alarms
         /// Change monitors/alarms values
         /// </summary>
         /// <param name="state"></param>
-        private void OnAllChangeMonitorsStart(object state)
+        private void OnAllAlarmsChangeValues(object state)
         {
             try
             {
                 foreach (ConditionState ci in m_conditionInstances)
                 {
+                    if (ci.EnabledState.Id.Value == false)
+                    {
+                        // Enable the connection for this case
+                        ci.SetEnableState(SystemContext, true);
+                    }
+
                     if (ci.Parent != null)
                     {
-                        BaseAlarmMonitor alarmMonitor = ci.Parent as BaseAlarmMonitor;
+                        BaseVariableState alarmMonitor = ci.Parent as BaseVariableState;
                         if (alarmMonitor != null)
                         {
                             BaseVariableState normalValue = (BaseVariableState)alarmMonitor.FindChild(SystemContext, new QualifiedName("NormalValueVariable", NamespaceIndex));
@@ -1516,13 +1213,11 @@ namespace SampleServer.Alarms
                             {
                                 if (alarmMonitor.Value.Equals(normalValue.Value))
                                 {
-                                    alarmMonitor.Value++;
-                                    Console.WriteLine("Alarm '{0}' changed value: {1}", alarmMonitor.DisplayName, alarmMonitor.Value);
+                                    alarmMonitor.Value = (double)alarmMonitor.Value + 1;
                                 }
                                 else
                                 {
                                     alarmMonitor.Value = (double)normalValue.Value;
-                                    Console.WriteLine("Alarm '{0}' changed value: {1}", alarmMonitor.DisplayName, alarmMonitor.Value);
                                 }
                             }
                             else
@@ -1532,7 +1227,7 @@ namespace SampleServer.Alarms
                                     LimitAlarmState limitMonitorState = ci as LimitAlarmState;
                                     if (limitMonitorState != null)
                                     {
-                                        double limitMonitorValue = alarmMonitor.Value;
+                                        double limitMonitorValue = (double)alarmMonitor.Value;
 
                                         double highLimit = limitMonitorState.HighLimit.Value;
                                         double highHighLimit = limitMonitorState.HighHighLimit.Value;
@@ -1561,16 +1256,12 @@ namespace SampleServer.Alarms
                                         }
 
                                         alarmMonitor.Value = limitMonitorValue;
-
-                                        Console.WriteLine("Limit alarm '{0}' changed value: {1}", limitMonitorState.DisplayName, alarmMonitor.Value);
                                     }
                                 }
                                 else
                                 {
-                                    alarmMonitor.Value++;
-                                    Console.WriteLine("Alarm '{0}' changed value: {1}", alarmMonitor.DisplayName, alarmMonitor.Value);
+                                    alarmMonitor.Value = (double)alarmMonitor.Value + 1;
                                 }
-
                             }
                             alarmMonitor.ClearChangeMasks(SystemContext, true);
                         }
@@ -1587,14 +1278,22 @@ namespace SampleServer.Alarms
         /// Handles stop change values for all monitors/alarms.
         /// </summary>
         /// <param name="state"></param>
-        private ServiceResult OnTriggerChangeMonitorsValueStop(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        private ServiceResult OnStopAllAlarmsChangeValues(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
             try
             {
-                if (m_allAlarmsChangeTrigger != null)
+                foreach (ConditionState ci in m_conditionInstances)
                 {
-                    m_allAlarmsChangeTrigger.Dispose();
-                    m_allAlarmsChangeTrigger = null;
+                    if (ci.EnabledState.Id.Value == true)
+                    {
+                        // Enable the connection for this case
+                        ci.SetEnableState(SystemContext, false);
+                    }
+                }
+                if (m_allAlarmsChangeValues != null)
+                {
+                    m_allAlarmsChangeValues.Dispose();
+                    m_allAlarmsChangeValues = null;
                 }
                 return ServiceResult.Good;
             }

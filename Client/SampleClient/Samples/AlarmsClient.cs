@@ -11,11 +11,21 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
 
 namespace SampleClient.Samples
 {
+    /// <summary>
+    /// Trigger alarms menu option
+    /// </summary>
+    public enum TriggerAlarmsOption
+    {
+        Enable,
+        Disable
+    }
+
     /// <summary>
     /// Class that contains sample code for alarms functionality
     /// </summary>
@@ -30,6 +40,18 @@ namespace SampleClient.Samples
         private ClientSession m_session;
         private ClientSubscription m_subscription;
         private ClientMonitoredItem m_alarmsMonitoredItem;
+
+        //Refresh alarms values timeout
+        private const int RefreshTimeout = 10000;
+
+        //Alarms folder browse path: Root\Objects\Alarms
+        private const string AlarmsNodeId = "ns=2;i=1";
+        
+        //Method browse path: Root\Objects\Alarms\StartAllChangeValues
+        private const string StartAllChangeValuesNodeId = "ns=2;i=2660";
+
+        //Method browse path: Root\Objects\Alarms\StopAllChangeValues
+        private const string StopAllChangeValuesNodeId = "ns=2;i=2662";
 
         //Browse name for m_alarmsModuleNodeId: Objects\Alarms
         private static readonly string m_alarmsModuleNodeId = "ns=2;i=2";
@@ -146,8 +168,6 @@ namespace SampleClient.Samples
             }
         }
 
-
-
         /// <summary>
         /// Allows user to acknowledge alarm
         /// </summary>
@@ -210,71 +230,47 @@ namespace SampleClient.Samples
         }
 
         /// <summary>
-        /// Trigger an alarm - no matter if a alarm was initiated before
+        /// Call the alarm method based on enable/disable option
         /// </summary>
-        public void TriggerAlarms()
+        /// <param name="triggerAlarmOption"></param>
+        public void CallTriggerAlarms(TriggerAlarmsOption triggerAlarmOption)
         {
             if (m_session == null)
             {
-                Console.WriteLine("TriggerAlarms: The session is not initialized!");
+                Console.WriteLine("TriggerAlarms(alarmEnabled): The session is not initialized!");
                 return;
             }
 
             try
             {
-                // Prompt the user to select the alarm from the list of active alarms
-                Console.WriteLine("1 - Enable");
-                Console.WriteLine("2 - Disable");
+                //Alarm folder browse Path: Root\Objects\Alarms
+                NodeId parentObjectId = new NodeId(AlarmsNodeId);
 
-                Console.WriteLine("Please select trigger option.");
-                string triggerOption = Console.ReadLine();
-                bool alarmEnabled = false;
-                int alarmOptionSelected = 0;
-                if(Int32.TryParse(triggerOption, out alarmOptionSelected))
+                NodeId methodNodeId = null;
+                List<object> inputArgs = null;
+                IList<object> outputArgs;
+                if (triggerAlarmOption == TriggerAlarmsOption.Enable)
                 {
-                    if(alarmOptionSelected != 1 && alarmOptionSelected != 2)
-                    {
-                        return;
-                    }
-                    alarmEnabled = alarmOptionSelected == 1 ? true : false;
+                    //Method browse path: Root\Objects\Alarms\StartAllChangeValues
+                    methodNodeId = new NodeId(StartAllChangeValuesNodeId);
+
+                    // enter the StartAllChangeValues timeout parameter
+                    inputArgs = new List<object>(1);
+                    inputArgs.Add(RefreshTimeout);
+                }
+                else
+                {
+                    //Method browse Path: Root\Objects\Alarms\StopAllChangeValues
+                    methodNodeId = new NodeId(StopAllChangeValuesNodeId);
                 }
 
-                int timeout = 30000;
-
-                //Browse Path: Root\Objects\Alarms
-                NodeId parentObjectId = new NodeId("ns=2;i=1");
-
-                //Browse Path: Root\Objects\Alarms\TriggerMethod
-                NodeId methodNodeId = new NodeId("ns=2;i=515");
-
-                //Browse Path: Root\Objects\Alarms\PressureSensor 1\PressureMonitor 1 (alarm browse path)
-                NodeId exclusiveLimitAlarmNodeId = new NodeId("ns=2;i=242");
-                
-                // Invoke TriggerAlarm method
-                List<object> inputArgs = new List<object>(3);
-                inputArgs.Add(exclusiveLimitAlarmNodeId);
-                inputArgs.Add(alarmEnabled);
-                inputArgs.Add(timeout);
-
-                IList<object> outputArgs;
-                m_session.Call(parentObjectId, methodNodeId, inputArgs, out outputArgs);
-
-                //Browse Path: Root\Objects\Alarms\PressureSensor 1\PressureMonitor 1 (alarm browse path)
-                NodeId conditionAlarmNodeId = new NodeId("ns=2;i=480");
-
-                // Invoke TriggerAlarm method
-                inputArgs = new List<object>(3);
-                inputArgs.Add(conditionAlarmNodeId);
-                inputArgs.Add(alarmEnabled);
-                inputArgs.Add(timeout);
-
+                // Invoke Trigger alarm method
                 m_session.Call(parentObjectId, methodNodeId, inputArgs, out outputArgs);
             }
             catch (Exception ex)
             {
-                Program.PrintException("AlarmsClient.TriggerAlarm", ex);
+                Program.PrintException("AlarmsClient.TriggerAlarms", ex);
             }
-
         }
 
         #endregion
@@ -284,7 +280,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Initialize session and subscription
         /// </summary>
-        public void Initialize()
+        public async Task Initialize()
         {
             if (m_session == null)
             {
@@ -295,7 +291,7 @@ namespace SampleClient.Samples
                     m_session.SessionName = SessionName;
 
                     //connect session
-                    m_session.Connect(false, true);
+                    await m_session.ConnectAsync(false, true).ConfigureAwait(false);
                     Console.WriteLine("Session is connected.");
 
                     if (m_subscription == null)
@@ -377,21 +373,21 @@ namespace SampleClient.Samples
         /// <summary>
         /// Disconnects the current session.
         /// </summary>
-        public void Disconnect()
+        public async Task Disconnect()
         {
             try
             {
                 //disconnect subscription
                 if (m_subscription != null)
                 {
-                    m_subscription.Disconnect(true);
+                    await m_subscription.DisconnectAsync(true).ConfigureAwait(false);
                     m_subscription.Delete();
                     m_subscription = null;
                     Console.WriteLine("Subscription is deleted.");
                 }
                 if (m_session != null)
                 {
-                    m_session.Disconnect(true);
+                    await m_session.DisconnectAsync(true).ConfigureAwait(false);
                     m_session.Dispose();
                     m_session = null;
                     Console.WriteLine("Session is disconnected.");

@@ -16,9 +16,8 @@ namespace SampleServer.Alarms
     /// <summary>
     /// A monitored variable with an <see cref="TrustListOutOfDateAlarmState"/> attached.
     /// </summary>
-    internal class TrustListOutOfDateMonitor : OffNormalAlarmMonitor
+    class TrustListOutOfDateMonitor : OffNormalAlarmMonitor
     {
-
         #region Constructors
         /// <summary>
         /// Create new instance of <see cref="TrustListOutOfDateMonitor"/>

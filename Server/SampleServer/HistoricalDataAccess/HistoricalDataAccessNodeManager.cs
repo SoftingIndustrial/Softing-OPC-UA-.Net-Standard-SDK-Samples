@@ -86,7 +86,7 @@ namespace SampleServer.HistoricalDataAccess
         {
             base.CreateAddressSpace(externalReferences);
 
-            lock(Server.DiagnosticsLock)
+            lock (Server.DiagnosticsLock)
             {
                 // find HistoryServerCapabilities node.
                 HistoryServerCapabilitiesState capabilities = Server.DiagnosticsNodeManager.FindPredefinedNode(ObjectIds.HistoryServerCapabilities, null) as HistoryServerCapabilitiesState;
@@ -101,89 +101,48 @@ namespace SampleServer.HistoricalDataAccess
                     capabilities.DeleteAtTimeCapability.Value = true;
                     capabilities.InsertAnnotationCapability.Value = true;
                 }
-            }
-            NodeState aggregateFunctions = FindNodeInAddressSpace(ObjectIds.Server_ServerCapabilities_AggregateFunctions);
-            
-            AddReference(aggregateFunctions,
-                ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_Interpolative , false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_Average, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_TimeAverage, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_TimeAverage2, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_Total, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_Total2, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_Minimum, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_Minimum2, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_MinimumActualTime, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_MinimumActualTime2, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_Maximum, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_Maximum2, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_MaximumActualTime, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_MaximumActualTime2, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_Range, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_Range2, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_AnnotationCount, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_Count, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_DurationInStateZero, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_DurationInStateNonZero, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_NumberOfTransitions, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_Start, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_End, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_Delta, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_StartBound, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_EndBound, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_DeltaBounds, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_DurationGood, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_DurationBad, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_PercentGood, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_PercentBad, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_WorstQuality, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_WorstQuality2, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_StandardDeviationSample, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_StandardDeviationPopulation, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_VarianceSample, false);
-            AddReference(aggregateFunctions, ReferenceTypeIds.HasComponent, false,
-                ObjectIds.AggregateFunction_VariancePopulation, false);
-
-
-
+            }            
         }
+
         #endregion
+
+        internal static void SetTheRightSupportedAggregates(NodeState aggregateFunctions)
+        {
+            NodeId[] supportedAggregates = new NodeId[] {
+                ObjectIds.AggregateFunction_Interpolative,  ObjectIds.AggregateFunction_Average,
+                //ObjectIds.AggregateFunction_TimeAverage, 
+                ObjectIds.AggregateFunction_TimeAverage2,
+                ObjectIds.AggregateFunction_Total, ObjectIds.AggregateFunction_Total2,
+                ObjectIds.AggregateFunction_Minimum, ObjectIds.AggregateFunction_Minimum2,
+                ObjectIds.AggregateFunction_MinimumActualTime, ObjectIds.AggregateFunction_MinimumActualTime2,
+                ObjectIds.AggregateFunction_Maximum, ObjectIds.AggregateFunction_Maximum2,
+                ObjectIds.AggregateFunction_MaximumActualTime, ObjectIds.AggregateFunction_MaximumActualTime2,
+                ObjectIds.AggregateFunction_Range, ObjectIds.AggregateFunction_Range2,
+                //ObjectIds.AggregateFunction_AnnotationCount,
+                ObjectIds.AggregateFunction_Count,
+                ObjectIds.AggregateFunction_DurationInStateZero, ObjectIds.AggregateFunction_DurationInStateNonZero,
+               // ObjectIds.AggregateFunction_NumberOfTransitions,
+                ObjectIds.AggregateFunction_Start, ObjectIds.AggregateFunction_End,
+                ObjectIds.AggregateFunction_Delta, 
+                ObjectIds.AggregateFunction_StartBound,  ObjectIds.AggregateFunction_EndBound,
+                ObjectIds.AggregateFunction_DeltaBounds,
+                ObjectIds.AggregateFunction_DurationGood, ObjectIds.AggregateFunction_DurationBad,
+                ObjectIds.AggregateFunction_PercentGood, ObjectIds.AggregateFunction_PercentBad,
+                ObjectIds.AggregateFunction_WorstQuality, ObjectIds.AggregateFunction_WorstQuality2,
+                //ObjectIds.AggregateFunction_StandardDeviationSample, ObjectIds.AggregateFunction_StandardDeviationPopulation,
+                //ObjectIds.AggregateFunction_VarianceSample, ObjectIds.AggregateFunction_VariancePopulation
+            };
+
+            // rempve all references from aggregateFunctions
+            aggregateFunctions.RemoveReferences(ReferenceTypeIds.Organizes, false);
+
+            // add reference to supported aggregates
+            foreach(NodeId aggregateId in supportedAggregates)
+            {
+                aggregateFunctions.AddReference(ReferenceTypeIds.Organizes, false, aggregateId);
+                aggregateFunctions.AddReference(ReferenceTypeIds.HasComponent, false, aggregateId);
+            }
+        }
 
         #region Historian Functions
         /// <summary>
@@ -340,7 +299,7 @@ namespace SampleServer.HistoricalDataAccess
                         ObjectIds.AggregateFunction_End, ObjectIds.AggregateFunction_EndBound,
                         ObjectIds.AggregateFunction_DurationGood, ObjectIds.AggregateFunction_DurationBad,
                         ObjectIds.AggregateFunction_PercentGood, ObjectIds.AggregateFunction_PercentBad,
-                        ObjectIds.AggregateFunction_WorstQuality, ObjectIds.AggregateFunction_WorstQuality2
+                        ObjectIds.AggregateFunction_WorstQuality, ObjectIds.AggregateFunction_WorstQuality2,
                     };
                     List<NodeId> supportsBoolean = new List<NodeId>
                     {
@@ -769,7 +728,7 @@ namespace SampleServer.HistoricalDataAccess
             bool sizeLimited = (details.StartTime == DateTime.MinValue || details.EndTime == DateTime.MinValue);
             bool applyIndexRangeOrEncoding = (nodeToRead.ParsedIndexRange != NumericRange.Empty || !QualifiedName.IsNull(nodeToRead.DataEncoding));
             bool returnBounds = !details.IsReadModified && details.ReturnBounds;
-            bool timeFlowsBackward = (details.StartTime == DateTime.MinValue) || (details.EndTime != DateTime.MinValue && details.EndTime < details.StartTime);
+            bool timeFlowsBackward = (details.EndTime == DateTime.MinValue) || (details.EndTime != DateTime.MinValue && details.EndTime < details.StartTime);
 
             // Find the archive item
             ArchiveItemState item = Reload(context, handle);
@@ -1027,6 +986,7 @@ namespace SampleServer.HistoricalDataAccess
             // Choose the aggregate configuration
             AggregateConfiguration configuration = (AggregateConfiguration) details.AggregateConfiguration.MemberwiseClone();
             ReviseAggregateConfiguration(context, item, configuration);
+          
 
             // Create the aggregate calculator
             IAggregateCalculator calculator = Server.AggregateManager.CreateCalculator(
@@ -1034,7 +994,7 @@ namespace SampleServer.HistoricalDataAccess
                 details.StartTime,
                 details.EndTime,
                 details.ProcessingInterval,
-                item.ArchiveItem.Stepped,
+                !configuration.UseSlopedExtrapolation,
                 configuration);
 
             int ii = (timeFlowsBackward) ? view.Count - 1 : 0;
@@ -1383,20 +1343,10 @@ namespace SampleServer.HistoricalDataAccess
                 {
                     configuration = Server.AggregateManager.GetDefaultConfiguration(null);
                 }
-
-                configurationToUse.UseSlopedExtrapolation = configuration.UseSlopedExtrapolation;
-                configurationToUse.TreatUncertainAsBad = configuration.TreatUncertainAsBad;
-                configurationToUse.PercentDataBad = configuration.PercentDataBad;
-                configurationToUse.PercentDataGood = configuration.PercentDataGood;
             }
 
             // Override configuration when it does not make sense for the item
             configurationToUse.UseServerCapabilitiesDefaults = false;
-
-            if (item.ArchiveItem.Stepped)
-            {
-                configurationToUse.UseSlopedExtrapolation = false;
-            }
         }
         #endregion
 

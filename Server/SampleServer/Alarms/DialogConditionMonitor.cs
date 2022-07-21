@@ -8,20 +8,18 @@
  * 
  * ======================================================================*/
 
-using Opc.Ua;
 using System;
+using Opc.Ua;
 
 namespace SampleServer.Alarms
 {
     /// <summary>
     /// A monitored variable with an <see cref="DialogConditionState"/> attached.
     /// </summary>
-    internal class DialogConditionMonitor : BaseAlarmMonitor
+    class DialogConditionMonitor : BaseAlarmMonitor<DialogConditionState>
     {
-
         #region Private Members
 
-        private DialogConditionState m_alarm;
         double? m_value = 0;
 
         #endregion
@@ -51,8 +49,7 @@ namespace SampleServer.Alarms
                 context,
                 parent,
                 namespaceIndex,
-                alarmName,
-                initialValue);
+                alarmName);
         }
 
         #endregion
@@ -68,7 +65,6 @@ namespace SampleServer.Alarms
         {
             try
             {
-
                 string currentUserId = string.Empty;
                 IOperationContext operationContext = context as IOperationContext;
 
@@ -157,17 +153,16 @@ namespace SampleServer.Alarms
         /// <param name="namespaceIndex"></param>
         /// <param name="alarmName"></param>
         /// <param name="initialValue"></param>
-        private void InitializeAlarmMonitor(
+        protected override void InitializeAlarmMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
-            string alarmName,
-            double initialValue)
+            string alarmName)
         {
             // Create the alarm object
             m_alarm = new DialogConditionState(this);
 
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+            base.InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName);
 
             // Manadatory fields initialization
             m_alarm.DialogState.Value = new LocalizedText("en-US", ConditionStateNames.Inactive);

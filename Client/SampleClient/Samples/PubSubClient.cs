@@ -12,6 +12,7 @@ using System;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
 using Opc.Ua.Client;
+using System.Threading.Tasks;
 
 namespace SampleClient.Samples
 {
@@ -27,12 +28,10 @@ namespace SampleClient.Samples
         #endregion
 
         #region Constructor
-
         public PubSubClient(UaApplication application)
         {
             m_application = application;
         }
-
         #endregion
 
         #region Private Methods
@@ -51,7 +50,7 @@ namespace SampleClient.Samples
         /// <summary>
         /// Initialize session
         /// </summary>
-        public void Initialize()
+        public async Task Initialize()
         {
             if (m_session == null)
             {
@@ -63,7 +62,7 @@ namespace SampleClient.Samples
                     m_session.KeepAlive += Session_KeepAlive;
 
                     // connect session
-                    m_session.Connect(false, true);
+                    await m_session.ConnectAsync(false, true).ConfigureAwait(false);
                     Console.WriteLine("Session is connected.");
 
                 }
@@ -80,20 +79,18 @@ namespace SampleClient.Samples
                     return;
                 }
             }
-        }
-
-      
+        }      
 
         /// <summary>
         /// Disconnect the current session
         /// </summary>
-        public void Disconnect()
+        public async Task Disconnect()
         {
             try
             {
                 if (m_session != null)
                 {
-                    m_session.Disconnect(true);
+                    await m_session.DisconnectAsync(true).ConfigureAwait(false);
                     m_session.Dispose();
                     m_session = null;
 
@@ -110,11 +107,10 @@ namespace SampleClient.Samples
             }
         }
 
-
         /// <summary>
-        /// Read the configuration of the PubSubConfig.
+        /// Read the configuration of the PubSub.
         /// </summary>
-        public void PubSubReadCfg()
+        public void ReadPubSubConfiguration()
         {
             if (m_session == null)
             {
@@ -124,11 +120,12 @@ namespace SampleClient.Samples
 
             try
             {
-                PubSubConfigurationDataType pubSubConfigurationData = PubSubStateConfigurationReader.PubSubConfigurationRead(m_session);
+                PubSubConfigurationDataType pubSubConfigurationData = 
+                    PubSubStateConfigurationReader.PubSubConfigurationRead(m_session);
             }
             catch (Exception ex)
             {
-                Program.PrintException("DownloadFile", ex);
+                Program.PrintException("ReadPubSubConfiguration", ex);
             }
         }
     }

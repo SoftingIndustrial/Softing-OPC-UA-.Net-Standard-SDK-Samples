@@ -8,20 +8,18 @@
  * 
  * ======================================================================*/
 
-using Opc.Ua;
 using System;
+using Opc.Ua;
 
 namespace SampleServer.Alarms
 {
     /// <summary>
     /// A monitored variable with an <see cref="AcknowledgeableConditionState"/> attached.
     /// </summary>
-    internal class AcknowledgeableConditionMonitor : BaseAlarmMonitor
+    class AcknowledgeableConditionMonitor : BaseAlarmMonitor<AcknowledgeableConditionState>
     {
-
         #region Private Members
 
-        private AcknowledgeableConditionState m_alarm;
         private double? m_value = 0;
 
         #endregion
@@ -51,8 +49,7 @@ namespace SampleServer.Alarms
                 context,
                 parent,
                 namespaceIndex,
-                alarmName,
-                initialValue);
+                alarmName);
 
             m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
@@ -108,7 +105,6 @@ namespace SampleServer.Alarms
                         m_alarm.Retain.Value = true;
                     }
 
-                    //m_alarm.SetEnableState(context, false);
                     m_alarm.SetComment(context, new LocalizedText("en-US", String.Format("Alarm ConfirmedState = {0}", m_alarm.ConfirmedState.Value.Text)), currentUserId);
                     m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm AckedState = {0}", m_alarm.AckedState.Value.Text));
                     m_alarm.SetSeverity(context, 0);
@@ -144,18 +140,16 @@ namespace SampleServer.Alarms
         /// <param name="parent"></param>
         /// <param name="namespaceIndex"></param>
         /// <param name="alarmName"></param>
-        /// <param name="initialValue"></param>
-        private void InitializeAlarmMonitor(
+        protected override void InitializeAlarmMonitor(
            ISystemContext context,
            NodeState parent,
            ushort namespaceIndex,
-           string alarmName,
-           double initialValue)
+           string alarmName)
         {
             // Create the alarm object
             m_alarm = new AcknowledgeableConditionState(this);
 
-            InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName, m_alarm);
+            base.InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName);
 
             // Mandatory fields
             m_alarm.SetAcknowledgedState(context, false);

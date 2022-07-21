@@ -318,14 +318,17 @@ namespace SampleServer.CustomTypes
                 PropertyState propertyStateBase1 = CreateProperty(customVariableType, "MandatoryBoolBaseProperty", DataTypeIds.Boolean);
                 // for properties that need to be created on instances of type the modelling rule has to be specified
                 propertyStateBase1.ModellingRuleId = Objects.ModellingRule_Mandatory;
+                propertyStateBase1.Value = true;
 
                 PropertyState propertyStateBase2 = CreateProperty(customVariableType, "OptionalBoolBaseProperty", DataTypeIds.Boolean);
                 // for properties that need to be created on instances of type the modelling rule has to be specified
                 propertyStateBase2.ModellingRuleId = Objects.ModellingRule_Optional;
+                propertyStateBase2.Value = false;
 
                 PropertyState propertyStateBase3 = CreateProperty(customVariableType, "BoolPropertyToOverride", DataTypeIds.Boolean);
                 // for properties that need to be created on instances of type the modelling rule has to be specified
                 propertyStateBase3.ModellingRuleId = Objects.ModellingRule_Optional;
+                propertyStateBase3.Value = false;
 
                 // Create a VariableType node that has DataType = VehicleType complex type
                 BaseVariableTypeState vehicleVariableType = CreateVariableType(customVariableType.NodeId, "VehicleVariableType", vehicleType.NodeId, ValueRanks.Scalar);
