@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  * 
  * ======================================================================*/
 
@@ -15,6 +15,7 @@ using Softing.Opc.Ua.Server;
 using Softing.Opc.Ua.Server.Types;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SampleServer.CustomTypes
@@ -471,6 +472,7 @@ namespace SampleServer.CustomTypes
         /// <returns></returns>
         private ServiceResult ParkingLotAddVehicleOnCallHandler(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
+            StatusCode result = StatusCodes.BadInvalidArgument;
             if (inputArguments != null && inputArguments.Count == 1)
             {
                 ExtensionObject extensionObject = inputArguments[0] as ExtensionObject;
@@ -483,16 +485,19 @@ namespace SampleServer.CustomTypes
                         // create new Vehicle variable instance inside Vehicles folders
                         var vehicleVariable = CreateVariable(vehiclesFolder, vehicle["Name"] as String, m_vehicleDataTypeNodeId);
                         vehicleVariable.Description = "Variable instance added by AddVehicleMethod";
-                        vehicleVariable.Value = vehicle;
+                        vehicleVariable.Value = vehicle;                        
 
                         // set output arguments as the NodeId of the created Vehicle variable
                         outputArguments[0] = vehicleVariable.NodeId;
-                        return ServiceResult.Good;
+                        result = StatusCodes.Good;
                     }
                 }
             }
 
-            return new ServiceResult(StatusCodes.BadInvalidArgument);
+            // report update method audit event                        
+            ReportAuditUpdateMethodEvent(context, method.Parent.NodeId, method.NodeId, inputArguments?.ToArray(), "Execute AddVehicle method", result);
+            return new ServiceResult(result);
+
         }
 
         /// <summary>

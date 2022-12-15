@@ -4,11 +4,12 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  * 
  * ======================================================================*/
 
 using System;
+using System.Collections.Generic;
 using Opc.Ua;
 
 namespace SampleServer.Alarms
@@ -35,14 +36,16 @@ namespace SampleServer.Alarms
         /// <param name="name"></param>
         /// <param name="alarmName"></param>
         /// <param name="initialValue"></param>
+        /// <param name="alarmsNodeManager"></param>        
         public AcknowledgeableConditionMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
             string name,
             string alarmName,
-            double initialValue)
-             : base(context, parent, namespaceIndex, name, initialValue)
+            double initialValue,
+            AlarmsNodeManager alarmsNodeManager)
+             : base(context, parent, namespaceIndex, name, initialValue, alarmsNodeManager)
         {
             // Attach the alarm monitor.
             InitializeAlarmMonitor(
@@ -51,7 +54,13 @@ namespace SampleServer.Alarms
                 namespaceIndex,
                 alarmName);
 
-            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
+            // Create ResetAcknowledge method
+            MethodState resetAcknowledgeMethod = alarmsNodeManager.CreateMethod(this, "ResetAcknowledge");
+            resetAcknowledgeMethod.OnCallMethod = ResetAcknowledgeCall;
+
+            // Create ResetConfirm method
+            MethodState resetConfirmMethod = alarmsNodeManager.CreateMethod(this, "ResetConfirm");
+            resetConfirmMethod.OnCallMethod = ResetConfirmCall;
         }
 
         #endregion
@@ -86,15 +95,6 @@ namespace SampleServer.Alarms
 
                 if (updateRequired)
                 {
-                    // Set event data
-                    m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
-                    m_alarm.Time.Value = DateTime.UtcNow;
-                    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-
-                    m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
-                    m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
-                    m_alarm.BranchId.Value = new NodeId();
-
                     // Not interested in disabled or inactive alarms
                     if (!m_alarm.EnabledState.Id.Value)
                     {
@@ -105,23 +105,12 @@ namespace SampleServer.Alarms
                         m_alarm.Retain.Value = true;
                     }
 
-                    m_alarm.SetComment(context, new LocalizedText("en-US", String.Format("Alarm ConfirmedState = {0}", m_alarm.ConfirmedState.Value.Text)), currentUserId);
-                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm AckedState = {0}", m_alarm.AckedState.Value.Text));
-                    m_alarm.SetSeverity(context, 0);
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm AckedState = {0}, ConfirmedState = {1}",
+                        m_alarm.AckedState?.Value, m_alarm.ConfirmedState?.Value));
+                    m_alarm.SetSeverity(context, EventSeverity.Medium);
 
-                    // Report changes to node attributes
-                    m_alarm.ClearChangeMasks(context, true);
+                    base.ProcessVariableChanged(context, value);
 
-                    // Check if events are being monitored for the source
-                    if (m_alarm.AreEventsMonitored)
-                    {
-                        // Create a snapshot
-                        InstanceStateSnapshot e = new InstanceStateSnapshot();
-                        e.Initialize(context, m_alarm);
-
-                        // Report the event
-                        ReportEvent(context, e);
-                    }
                 }
             }
             catch (Exception exception)
@@ -152,13 +141,52 @@ namespace SampleServer.Alarms
             base.InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName);
 
             // Mandatory fields
-            m_alarm.SetAcknowledgedState(context, false);
-            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
+            m_alarm.SetAcknowledgedState(context, true);
 
             // Optional fields
-            m_alarm.SetConfirmedState(context, false);
-            m_alarm.ConfirmedState.Value = new LocalizedText("en-US", ConditionStateNames.Unconfirmed);
+            m_alarm.SetConfirmedState(context, true);
+
+            m_alarm.Retain.Value = false;
+
+            #region disable unused properties
+
+            #endregion
         }
+
+        #endregion
+
+        #region Methods Callbacks
+
+        /// <summary>
+        /// Reset alarm Acknowledge flag
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="inputArguments"></param>
+        /// <param name="outputArguments"></param>
+        /// <returns></returns>
+        private ServiceResult ResetAcknowledgeCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            m_alarm.SetAcknowledgedState(context, false);
+
+            return new ServiceResult(StatusCodes.Good);
+        }
+
+        /// <summary>
+        /// Reset alarm Confirm flag
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="inputArguments"></param>
+        /// <param name="outputArguments"></param>
+        /// <returns></returns>
+        private ServiceResult ResetConfirmCall(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            m_alarm.SetConfirmedState(context, false);
+
+            return new ServiceResult(StatusCodes.Good);
+        }
+
         #endregion
 
     }

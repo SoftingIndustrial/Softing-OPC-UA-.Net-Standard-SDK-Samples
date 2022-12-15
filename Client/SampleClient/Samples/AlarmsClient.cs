@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  *  
  * ======================================================================*/
 
@@ -42,16 +42,16 @@ namespace SampleClient.Samples
         private ClientMonitoredItem m_alarmsMonitoredItem;
 
         //Refresh alarms values timeout
-        private const int RefreshTimeout = 10000;
+        private const int RefreshTimeout = 15000;
 
         //Alarms folder browse path: Root\Objects\Alarms
         private const string AlarmsNodeId = "ns=2;i=1";
         
         //Method browse path: Root\Objects\Alarms\StartAllChangeValues
-        private const string StartAllChangeValuesNodeId = "ns=2;i=2660";
+        private const string StartAllChangeValuesNodeId = "ns=2;i=2662";
 
         //Method browse path: Root\Objects\Alarms\StopAllChangeValues
-        private const string StopAllChangeValuesNodeId = "ns=2;i=2662";
+        private const string StopAllChangeValuesNodeId = "ns=2;i=2664";
 
         //Browse name for m_alarmsModuleNodeId: Objects\Alarms
         private static readonly string m_alarmsModuleNodeId = "ns=2;i=2";

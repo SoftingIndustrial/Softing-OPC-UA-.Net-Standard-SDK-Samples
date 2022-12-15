@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  * 
  * ======================================================================*/
 
@@ -18,36 +18,48 @@ namespace SampleServer.Alarms
     /// <summary>
     /// A monitored variable with an <see cref="CertificateExpirationAlarmState"/> attached.
     /// </summary>
-    class CertificateExpirationMonitor : OffNormalAlarmMonitor
+    class CertificateExpirationMonitor : SystemOffNormalAlarmMonitor
     {
         #region Constructors
         /// <summary>
         /// Create new instance of <see cref="CertificateExpirationMonitor"/>
         /// </summary>
-        /// <param name="alarmsNodeManager"></param>
         /// <param name="context"></param>
         /// <param name="parent"></param>
         /// <param name="namespaceIndex"></param>
         /// <param name="name"></param>
         /// <param name="alarmName"></param>
         /// <param name="initialValue"></param>
+        /// <param name="alarmsNodeManager"></param>
         public CertificateExpirationMonitor(
-            AlarmsNodeManager alarmsNodeManager, 
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
             string name,
             string alarmName,
-            double initialValue)
-           : base(alarmsNodeManager, context, parent, namespaceIndex, name, alarmName, initialValue)
+            double initialValue,
+            AlarmsNodeManager alarmsNodeManager)
+           : base(context, parent, namespaceIndex, name, alarmName, initialValue, alarmsNodeManager)
         {            
             CertificateExpirationAlarmState certificateExpirationAlarmState = m_alarm as CertificateExpirationAlarmState;
 
             if (certificateExpirationAlarmState != null)
             {
+                // optional
+                DisablePropertyUsage<double>(certificateExpirationAlarmState.ExpirationLimit);
+
                 // Set certificate expiration mandatory fields
                 certificateExpirationAlarmState.CertificateType.Value = Variables.CertificateExpirationAlarmType_CertificateType;
-                certificateExpirationAlarmState.Certificate.Value = GetCertificate().RawData;
+                X509Certificate2 certificate = GetCertificate();
+                if(certificate != null)
+                {
+                    certificateExpirationAlarmState.Certificate.Value = certificate.RawData;
+                    DateTime expirationDate= DateTime.MinValue;
+                    if (DateTime.TryParse(certificate.GetExpirationDateString(), out expirationDate))
+                    {
+                        certificateExpirationAlarmState.ExpirationDate.Value = expirationDate;
+                    }
+                }
             }
         }
         #endregion

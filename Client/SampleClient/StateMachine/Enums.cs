@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  *  
  * ======================================================================*/
  
@@ -26,7 +26,6 @@ namespace SampleClient.StateMachine
         Events,
         History,       
         Alarms,
-        TriggerAlarms,
         AccessRights,
         RolePermissions,
         ReadWriteRegisterNodes,

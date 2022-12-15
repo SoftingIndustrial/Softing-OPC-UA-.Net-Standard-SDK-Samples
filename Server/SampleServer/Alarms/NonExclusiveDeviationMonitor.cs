@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  * 
  * ======================================================================*/
 
@@ -29,8 +29,10 @@ namespace SampleServer.Alarms
             double highLimit,
             double highHighLimit,
             double lowLimit,
-            double lowLowLimit)
-             : base(context, parent, namespaceIndex, name, alarmName, initialValue, highLimit, highHighLimit, lowLimit, lowLowLimit)
+            double lowLowLimit,
+            AlarmsNodeManager alarmsNodeManager)
+             : base(context, parent, namespaceIndex, name, alarmName,
+                   initialValue, highLimit, highHighLimit, lowLimit, lowLowLimit, alarmsNodeManager)
         {
 
         }
@@ -59,15 +61,20 @@ namespace SampleServer.Alarms
 
                 bool updateRequired = false;
 
+                bool isAlarmActive = m_alarm.ActiveState.Id.Value;
+
+                bool nonActiveState = newValue > m_alarm.LowLimit.Value && newValue < m_alarm.HighLimit.Value;
+                
+                ValidateActiveStateFlags(context, m_alarm, nonActiveState);
+
                 if (m_alarm.LowLowLimit != null && m_alarm.LowLowState.Id.Value == false 
                     && newValue <= m_alarm.LowLowLimit.Value)
                 {
                     m_alarm.LowLowState.Id.Value = true;
 
                     m_alarm.SetLimitState(context, LimitAlarmStates.LowLow);
-                    m_alarm.SetComment(context, new LocalizedText("en-US", "LowLowLimit exceeded."), currentUserId);
-                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", m_alarm.LowLowState.Value.Text));
-                    m_alarm.SetSeverity(context, EventSeverity.Min);
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm ActiveState = {0}, State LowLow = {1}", m_alarm.ActiveState.Value, m_alarm.LowLowState?.Value));
+                    m_alarm.SetSeverity(context, EventSeverity.Low);
 
                     updateRequired = true;
                 }
@@ -78,21 +85,19 @@ namespace SampleServer.Alarms
                     m_alarm.LowState.Id.Value = true;
 
                     m_alarm.SetLimitState(context, LimitAlarmStates.Low);
-                    m_alarm.SetComment(context, new LocalizedText("en-US", "LowLimit exceeded."), currentUserId);
-                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State Low set to {0}", m_alarm.LowState.Value.Text));
-                    m_alarm.SetSeverity(context, EventSeverity.Low);
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm ActiveState = {0}, State Low = {1}", m_alarm.ActiveState.Value, m_alarm.LowState?.Value));
+                    m_alarm.SetSeverity(context, EventSeverity.MediumLow);
 
                     updateRequired = true;
                 }
-                else if (m_alarm.HighHighLimit != null && m_alarm.HighHighState.Id.Value == false 
+                else if (m_alarm.HighHighLimit != null // && m_alarm.HighHighState.Id.Value == false 
                          && newValue >= m_alarm.HighHighLimit.Value)
                 {
                     m_alarm.HighState.Id.Value = true;
                     m_alarm.HighHighState.Id.Value = true;
 
                     m_alarm.SetLimitState(context, LimitAlarmStates.HighHigh);
-                    m_alarm.SetComment(context, new LocalizedText("en-US", "HighHighLimit exceeded."), currentUserId);
-                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State HighHigh & High set to: {0} & {1}", m_alarm.HighHighState.Value.Text, m_alarm.HighState.Value.Text));
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm ActiveState = {0}, State HighHigh & High = {1} & {2}", m_alarm.ActiveState.Value, m_alarm.HighHighState?.Value, m_alarm.HighState?.Value));
                     m_alarm.SetSeverity(context, EventSeverity.MediumHigh);
 
                     updateRequired = true;
@@ -105,12 +110,11 @@ namespace SampleServer.Alarms
                     m_alarm.HighHighState.Id.Value = true;
 
                     m_alarm.SetLimitState(context, LimitAlarmStates.High);
-                    m_alarm.SetComment(context, new LocalizedText("en-US", "HighLimit exceeded."), currentUserId);
-                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State High & HighHigh set to: {0} & {1}", m_alarm.HighState.Value.Text, m_alarm.HighHighState.Value.Text));
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm ActiveState = {0}, State High & HighHigh = {1} & {2}", m_alarm.ActiveState.Value, m_alarm.HighState?.Value, m_alarm.HighHighState?.Value));
                     m_alarm.SetSeverity(context, EventSeverity.High);
                     updateRequired = true;
                 }
-                else if (m_alarm.ActiveState.Id.Value != false
+                else if (isAlarmActive != false
                          && m_alarm.LowLimit != null && newValue > m_alarm.LowLimit.Value
                          && m_alarm.HighLimit != null && newValue < m_alarm.HighLimit.Value)
                 {
@@ -120,27 +124,14 @@ namespace SampleServer.Alarms
                     m_alarm.HighHighState.Id.Value = false;
 
                     m_alarm.SetLimitState(context, LimitAlarmStates.Inactive);
-                    m_alarm.SetComment(context, new LocalizedText("en-US", "Alarm inactive."), currentUserId);
-                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm State set to {0}", LimitAlarmStates.Inactive));
-                    m_alarm.SetSeverity(context, 0);
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm ActiveState = {0}, State = {1}", m_alarm.ActiveState.Value, LimitAlarmStates.Inactive));
+                    m_alarm.SetSeverity(context, EventSeverity.Min);
 
                     updateRequired = true;
                 }
 
                 if (updateRequired)
                 {
-                    // Set event data
-                    m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
-                    m_alarm.Time.Value = DateTime.UtcNow;
-                    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-
-                    m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
-                    m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
-                    m_alarm.BranchId.Value = new NodeId();
-
-                    bool nonActiveState = newValue > m_alarm.LowLimit.Value && newValue < m_alarm.HighLimit.Value;
-                    m_alarm.SetActiveState(context, !nonActiveState);
-
                     // Not interested in disabled or inactive alarms
                     if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
                     {
@@ -177,22 +168,7 @@ namespace SampleServer.Alarms
                         m_alarm.LowLowState.Id.Value = false;
                     }
 
-                    // Reset the acknowledged flag
-                    m_alarm.SetAcknowledgedState(context, false);
-
-                    // Report changes to node attributes
-                    m_alarm.ClearChangeMasks(context, true);
-
-                    // Check if events are being monitored for the source
-                    if (m_alarm.AreEventsMonitored)
-                    {
-                        // Create a snapshot
-                        InstanceStateSnapshot e = new InstanceStateSnapshot();
-                        e.Initialize(context, m_alarm);
-
-                        // Report the event
-                        ReportEvent(context, e);
-                    }
+                    ProcessVariableValueUpdate(context, value);
                 }
             }
             catch (Exception exception)

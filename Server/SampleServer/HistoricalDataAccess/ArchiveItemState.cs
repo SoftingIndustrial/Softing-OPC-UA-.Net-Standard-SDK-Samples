@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  * 
  * ======================================================================*/
 
@@ -197,6 +197,51 @@ namespace SampleServer.HistoricalDataAccess
                     NewSamples(context);
                 }
             }
+        }
+
+        /// <summary>
+		/// Read previous values for specified data value source date time
+		/// </summary>
+		/// <param name="sourceTimestamp"></param>
+		/// <returns></returns>
+		public List<DataValue> ReadValues(DateTime sourceTimestamp)
+        {
+            List<DataValue> dataValues = new List<DataValue>();
+
+            string filter = String.Format(System.Globalization.CultureInfo.InvariantCulture, "SourceTimestamp = #{0}#", sourceTimestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", System.Globalization.DateTimeFormatInfo.InvariantInfo));
+
+            DataView view = new DataView(
+                m_archiveItem.DataSet.Tables[0], // CurrentData
+                filter,
+                null,
+                DataViewRowState.CurrentRows);
+
+            if (m_archiveItem.DataSet != null && m_archiveItem.DataSet.Tables.Count > 0)
+            {
+                DataTable dataTable = m_archiveItem.DataSet.Tables[0];
+                if (dataTable != null)
+                {
+                    foreach (DataRow dataRow in dataTable.Rows)
+                    {
+                        if (dataRow.ItemArray.Length > 2)
+                        {
+                            DataValue dataValue = dataRow.ItemArray[2] as DataValue;
+                            if (dataValue != null)
+                            {
+                                if (dataValue.SourceTimestamp == sourceTimestamp
+                                    //&& dataValue.ServerTimestamp == serverTimestamp
+                                    //&& dataValue.Value == value
+                                    )
+                                {
+                                    dataValues.Add(dataValue);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return dataValues;
         }
 
         /// <summary>
@@ -438,6 +483,9 @@ namespace SampleServer.HistoricalDataAccess
                 return StatusCodes.BadNoEntryExists;
             }
 
+            // accept all changes.
+            m_archiveItem.DataSet.AcceptChanges();
+
             return StatusCodes.Good;
         }
 
@@ -465,6 +513,9 @@ namespace SampleServer.HistoricalDataAccess
             {
                 return StatusCodes.BadNoEntryExists;
             }
+
+            // accept all changes.
+            m_archiveItem.DataSet.AcceptChanges();
 
             return StatusCodes.Good;
         }

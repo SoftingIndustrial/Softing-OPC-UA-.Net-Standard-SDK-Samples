@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  *  
  * ======================================================================*/
 
@@ -343,23 +343,18 @@ namespace SampleClient.StateMachine
             StateTransition addCommentAllarms = new StateTransition(State.Alarms, Command.AddCommentAlarms, "3", "Add comment to alarm");
             addCommentAllarms.ExecuteCommand += AddCommentAlarms_ExecuteCommand;
             m_transitions.Add(addCommentAllarms, State.Alarms);
-            StateTransition startTriggerAlarms = new StateTransition(State.Alarms, Command.StartTriggerAlarms, "4", "Trigger Alarms Menu");
-            startTriggerAlarms.ExecuteCommand += StartTriggerAlarms_ExecuteCommand;
-            m_transitions.Add(startTriggerAlarms, State.TriggerAlarms);
+
+            //commands for start/stop triggering alarms
+            StateTransition enableTriggerAlarms = new StateTransition(State.Alarms, Command.EnableTriggerAlarms, "4", "Enable Trigger Alarms (refresh timeout = 15 seconds)");
+            enableTriggerAlarms.ExecuteCommand += EnableTriggerAlarms_ExecuteCommand;
+            m_transitions.Add(enableTriggerAlarms, State.Alarms);
+            StateTransition disableTriggerAlarms = new StateTransition(State.Alarms, Command.DisableTriggerAlarms, "5", "Disable Trigger Alarms");
+            disableTriggerAlarms.ExecuteCommand += DisableTriggerAlarms_ExecuteCommand;
+            m_transitions.Add(disableTriggerAlarms, State.Alarms);
+
             StateTransition endAlarms = new StateTransition(State.Alarms, Command.EndAlarms, "0", "Back to MonitoredItem/Events Menu/Alarms Menu");
             endAlarms.ExecuteCommand += EndAlarms_ExecuteCommand;
             m_transitions.Add(endAlarms, State.MonitoredEventsAlarms);
-
-            //commands for trigger alarms
-            StateTransition enableTriggerAlarms = new StateTransition(State.TriggerAlarms, Command.EnableTriggerAlarms, "1", "Enable Trigger Alarms (refresh timeout = 10 seconds)");
-            enableTriggerAlarms.ExecuteCommand += EnableTriggerAlarms_ExecuteCommand;
-            m_transitions.Add(enableTriggerAlarms, State.TriggerAlarms);
-            StateTransition disableTriggerAlarms = new StateTransition(State.TriggerAlarms, Command.DisableTriggerAlarms, "2", "Disable Trigger Alarms");
-            disableTriggerAlarms.ExecuteCommand += DisableTriggerAlarms_ExecuteCommand;
-            m_transitions.Add(disableTriggerAlarms, State.TriggerAlarms);
-            StateTransition endTriggerAlarms = new StateTransition(State.TriggerAlarms, Command.EndTriggerAlarms, "0", "Back to Menu/Alarms Menu");
-            endTriggerAlarms.ExecuteCommand += EndTriggerAlarms_ExecuteCommand;
-            m_transitions.Add(endTriggerAlarms, State.Alarms);
 
             StateTransition end = new StateTransition(State.MonitoredEventsAlarms, Command.EndMonitoredEventsAlarms, "0", "Back to Main Menu");
             m_transitions.Add(end, State.Main);
@@ -473,6 +468,9 @@ namespace SampleClient.StateMachine
         {
             if (m_alarmsClient != null)
             {
+                // disable alarms
+                m_alarmsClient.CallTriggerAlarms(TriggerAlarmsOption.Disable);
+                
                 // disconnect
                 await m_alarmsClient.Disconnect().ConfigureAwait(false);
                 m_alarmsClient = null;
@@ -508,15 +506,6 @@ namespace SampleClient.StateMachine
         }
 
         private Task DisableTriggerAlarms_ExecuteCommand(object sender, EventArgs e)
-        {
-            if (m_alarmsClient != null)
-            {
-                m_alarmsClient.CallTriggerAlarms(TriggerAlarmsOption.Disable);
-            }
-            return Task.CompletedTask;
-        }
-
-        private Task EndTriggerAlarms_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_alarmsClient != null)
             {

@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  * 
  * ======================================================================*/
 
@@ -40,6 +40,7 @@ namespace SampleServer
         private const string OperatorUser2 = "operator2";
         private const string EngineerUser = "engineer";
         private const string TesterUser = "tester";
+        private const string SecurityAdmin = "admin";
         private const string UserCertificateThumbprint = "27bf2204fbbc1dc904ace3fee754f76e55369967";
 
         private Dictionary<string, string> m_userNameIdentities;
@@ -91,7 +92,14 @@ namespace SampleServer
 
             // set the supported aggregates
             NodeState aggregateFunctions = server.DiagnosticsNodeManager.FindNodeInAddressSpace(ObjectIds.Server_ServerCapabilities_AggregateFunctions);
-            HistoricalDataAccessNodeManager.SetTheRightSupportedAggregates(aggregateFunctions);            
+            HistoricalDataAccessNodeManager.SetTheRightSupportedAggregates(aggregateFunctions);
+
+            // Enable Server.Auditing flag to receive Auditing events 
+            BaseVariableState auditing = server.DiagnosticsNodeManager.FindNodeInAddressSpace(VariableIds.Server_Auditing) as BaseVariableState;
+            if (auditing != null)
+            {
+                auditing.Value = true;
+            }
         }
 
         /// <summary>
@@ -187,6 +195,14 @@ namespace SampleServer
         /// <param name="roleStateHelper">The helper class that implements roleSet methods</param>
         public override void OnRoleSetInitialized(IServerInternal server, IRoleStateHelper roleStateHelper)
         {
+            // add username identity mapping to security administrator role
+            roleStateHelper.AddIdentityToRoleState(ObjectIds.WellKnownRole_SecurityAdmin,
+               new IdentityMappingRuleType
+               {
+                   CriteriaType = IdentityCriteriaType.UserName,
+                   Criteria = SecurityAdmin
+               });
+
             // add username identity mapping to enigineer role
             roleStateHelper.AddIdentityToRoleState(ObjectIds.WellKnownRole_Engineer,
                new IdentityMappingRuleType {

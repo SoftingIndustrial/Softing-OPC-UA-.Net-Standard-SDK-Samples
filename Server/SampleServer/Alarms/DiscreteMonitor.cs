@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  * 
  * ======================================================================*/
 
@@ -25,8 +25,14 @@ namespace SampleServer.Alarms
         #endregion
 
         #region Constructors
-        public DiscreteMonitor(ISystemContext context, NodeState parent, ushort namespaceIndex, string name, string alarmName, double initialValue)
-           : base(context, parent, namespaceIndex, name, initialValue)
+        public DiscreteMonitor(ISystemContext context, 
+            NodeState parent, 
+            ushort namespaceIndex, 
+            string name, 
+            string alarmName, 
+            double initialValue,
+            AlarmsNodeManager alarmsNodeManager)
+           : base(context, parent, namespaceIndex, name, initialValue, alarmsNodeManager)
         {
             // Attach the alarm monitor.
             InitializeAlarmMonitor(
@@ -34,8 +40,6 @@ namespace SampleServer.Alarms
                 parent,
                 namespaceIndex,
                 alarmName);
-
-            m_alarm.OnAcknowledge += AlarmMonitor_OnAcknowledge;
         }
 
         #endregion
@@ -71,25 +75,8 @@ namespace SampleServer.Alarms
 
                 if (updateRequired)
                 {
-                    // Set event data
-                    m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
-                    m_alarm.Time.Value = DateTime.UtcNow;
-                    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-
-                    m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
-                    m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
-                    m_alarm.BranchId.Value = new NodeId();
-
                     // Generate alarm if number is even
-                    bool activeState = newValue % 2 == 0;
-                    m_alarm.SetActiveState(context, activeState);
-
-                    // Bring back AcknowledgedState and ConfirmedState
-                    if (m_alarm.AckedState.Id.Value && activeState)
-                    {
-                        m_alarm.SetAcknowledgedState(context, false);
-                        m_alarm.SetConfirmedState(context, false);
-                    }
+                    bool nonActiveState = newValue % 2 != 0;
 
                     // Not interested in disabled or inactive alarms
                     if (!m_alarm.EnabledState.Id.Value || !m_alarm.ActiveState.Id.Value)
@@ -101,23 +88,18 @@ namespace SampleServer.Alarms
                         m_alarm.Retain.Value = true;
                     }
 
-                    m_alarm.SetComment(context, new LocalizedText("en-US", String.Format("Alarm AckedState = {0}", m_alarm.AckedState.Value.Text)), currentUserId);
-                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm AckedState = {0}", m_alarm.AckedState.Value.Text));
-                    m_alarm.SetSeverity(context, 0);
+                    ValidateActiveStateFlags(context, m_alarm, nonActiveState);
 
-                    // Report changes to node attributes
-                    m_alarm.ClearChangeMasks(context, true);
+                    string message = String.Format("Alarm ActiveState = {0}, AckedState = {1}, ConfirmedState = {2}",
+                        m_alarm.ActiveState.Value,
+                        m_alarm.AckedState.Value.Text,
+                        m_alarm.ConfirmedState.Value.Text);
 
-                    // Check if events are being monitored for the source
-                    if (m_alarm.AreEventsMonitored)
-                    {
-                        // Create a snapshot
-                        InstanceStateSnapshot e = new InstanceStateSnapshot();
-                        e.Initialize(context, m_alarm);
+                    m_alarm.Message.Value = new LocalizedText("en-US", message);
 
-                        // Report the event
-                        ReportEvent(context, e);
-                    }
+                    m_alarm.SetSeverity(context, EventSeverity.Medium);
+
+                    base.ProcessVariableChanged(context, value);
                 }
             }
             catch (Exception exception)
@@ -151,16 +133,42 @@ namespace SampleServer.Alarms
             // Set input node
             m_alarm.InputNode.Value = NodeId;
 
-            // set acknowledge state
-            m_alarm.SetAcknowledgedState(context, false);
-            m_alarm.AckedState.Value = new LocalizedText("en-US", ConditionStateNames.Unacknowledged);
+            m_alarm.Retain.Value = false;
 
-            // Set state values
-            m_alarm.SetSuppressedState(context, false);
-            m_alarm.SetActiveState(context, false);
+            #region disable unused properties
 
-            // Disable this property 
-            m_alarm.LatchedState = null;
+            m_alarm.LatchedState = DisablePropertyUsage(m_alarm.LatchedState);
+
+            m_alarm.SuppressedState = DisablePropertyUsage(m_alarm.SuppressedState);
+            m_alarm.OutOfServiceState = DisablePropertyUsage(m_alarm.OutOfServiceState);
+
+            m_alarm.MaxTimeShelved = DisablePropertyUsage<double>(m_alarm.MaxTimeShelved);
+
+            m_alarm.AudibleEnabled = DisablePropertyUsage<bool>(m_alarm.AudibleEnabled);
+            m_alarm.AudibleSound = DisablePropertyUsage(m_alarm.AudibleSound);
+
+            m_alarm.SilenceState = DisablePropertyUsage(m_alarm.SilenceState);
+
+            m_alarm.OnDelay = DisablePropertyUsage<double>(m_alarm.OnDelay);
+            m_alarm.OffDelay = DisablePropertyUsage<double>(m_alarm.OffDelay);
+
+            m_alarm.FirstInGroupFlag = DisablePropertyUsage<bool>(m_alarm.FirstInGroupFlag);
+            m_alarm.FirstInGroup = DisablePropertyUsage(m_alarm.FirstInGroup);
+
+            m_alarm.ReAlarmTime = DisablePropertyUsage<double>(m_alarm.ReAlarmTime);
+            m_alarm.ReAlarmRepeatCount = DisablePropertyUsage<short>(m_alarm.ReAlarmRepeatCount);
+
+            m_alarm.Silence = DisablePropertyUsage(m_alarm.Silence);
+            m_alarm.Suppress = DisablePropertyUsage(m_alarm.Suppress);
+            m_alarm.Unsuppress = DisablePropertyUsage(m_alarm.Unsuppress);
+            m_alarm.RemoveFromService = DisablePropertyUsage(m_alarm.RemoveFromService);
+            m_alarm.PlaceInService = DisablePropertyUsage(m_alarm.PlaceInService);
+            m_alarm.Reset = DisablePropertyUsage(m_alarm.Reset);
+
+            m_alarm.ShelvingState = DisablePropertyUsage(m_alarm.ShelvingState);
+
+            #endregion
+
         }
 
         #endregion

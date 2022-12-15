@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  *  
  * ======================================================================*/
 
@@ -276,7 +276,7 @@ namespace SampleClient.Samples
         /// </summary>
         public void Dispose()
         {
-            // detach static event hadler
+            // detach static event handler
             m_application.Configuration.CertificateValidator.CertificateValidation -= Program.CertificateValidator_CertificateValidation;
         }
         #endregion

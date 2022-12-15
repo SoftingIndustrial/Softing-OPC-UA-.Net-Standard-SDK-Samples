@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  * 
  * ======================================================================*/
 
@@ -200,7 +200,14 @@ namespace SampleServer.NodeSetImport
         /// <returns></returns>
         private ServiceResult OnAddRefrigerator(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
-            return ImportNodeSetFromResource(ResourceNames.NodeSetImportSecondaryModel);
+            var result = ImportNodeSetFromResource(ResourceNames.NodeSetImportSecondaryModel);
+
+            // report update method audit event                        
+            ReportAuditUpdateMethodEvent(context, method.Parent?.NodeId, method.NodeId, inputArguments?.ToArray(),
+                "Execute AddSecondaryRefrigerator method.", result.StatusCode);
+
+            return result;
+
         }
 
         /// <summary>
@@ -213,6 +220,7 @@ namespace SampleServer.NodeSetImport
         /// <returns></returns>
         private ServiceResult OnImportNodeSet(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
         {
+            StatusCode result = StatusCodes.Good;
             try
             {
                 m_isExecutingImport = true;
@@ -223,20 +231,28 @@ namespace SampleServer.NodeSetImport
                 // save newNamespaceUris to out parameter
                 outputArguments[0] = newNamespaceUris;
 
-                return ServiceResult.Good;
+                result = StatusCodes.Good;
+                return result;
+
             }
             catch (ServiceResultException ex)
             {
+                result = StatusCodes.Bad;
                 Console.WriteLine("Error loading node set: {0}", ex.Message);
                 throw;
             }
             catch (Exception e)
             {
+                result = StatusCodes.Bad;
                 Console.WriteLine("Error loading node set: {0}", e.Message);
                 throw new ServiceResultException(StatusCodes.Bad, "ImportNodeSet error:" + e.Message);
             }
             finally
             {
+                // report update method audit event                        
+                ReportAuditUpdateMethodEvent(context, method.Parent?.NodeId, method.NodeId, inputArguments?.ToArray(),
+                    "Execute ImportNodeSet method.", result);
+
                 m_isExecutingImport = false;
             }
         }
@@ -316,13 +332,27 @@ namespace SampleServer.NodeSetImport
                 {
                     parentNode.AddChild(newNode);
                     AddPredefinedNode(SystemContext, newNode);
+
+                    // report update method audit event                        
+                    ReportAuditUpdateMethodEvent(context, method.Parent.NodeId, method.NodeId, inputArguments?.ToArray(),
+                        "Execute CreateInstance method.", StatusCodes.Good);
+
                     return ServiceResult.Good;
                 }
             }
             catch (Exception ex)
             {
+                // report update method audit event                        
+                ReportAuditUpdateMethodEvent(context, method.Parent.NodeId, method.NodeId, inputArguments?.ToArray(),
+                    "Execute CreateInstance method exception: " + ex.Message, StatusCodes.BadInternalError);
+
                 throw new ServiceResultException(StatusCodes.BadInternalError, "OnCreateInstance:" + ex.Message);
             }
+
+            // report update method audit event                        
+            ReportAuditUpdateMethodEvent(context, method.Parent.NodeId, method.NodeId, inputArguments?.ToArray(),
+               "Cannot create instance of type id:" + inputArguments[1], StatusCodes.BadInvalidArgument);
+    
             throw new ServiceResultException(StatusCodes.BadInvalidArgument, "Cannot create instance of type id:" + inputArguments[1]);
         }
        

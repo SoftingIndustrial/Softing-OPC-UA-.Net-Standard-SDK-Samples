@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  * 
  * ======================================================================*/
 
@@ -298,7 +298,20 @@ namespace SampleServer.Alarms
                 {
                     conditionTypeAddCommentNode.OnCallMethod += AddCommentCallMethod;
                 }
-                
+
+                MethodState acknowledgeTypeMethodNode = FindNodeInAddressSpace(Opc.Ua.Methods.AcknowledgeableConditionType_Acknowledge) as MethodState;
+                if (acknowledgeTypeMethodNode != null)
+                {
+                    acknowledgeTypeMethodNode.OnCallMethod += OnAcknowledgeCallMethod;
+                }
+
+                MethodState confirmTypeMethodNode = FindNodeInAddressSpace(Opc.Ua.Methods.AcknowledgeableConditionType_Confirm) as MethodState;
+                if (confirmTypeMethodNode != null)
+                {
+                    confirmTypeMethodNode.OnCallMethod += OnConfirmCallMethod;
+                }
+
+
                 // Add sub-notifiers
                 AddNotifier(ServerNode, root, false);
                 AddNotifier(root, machine, true);
@@ -343,34 +356,64 @@ namespace SampleServer.Alarms
         }
 
         /// <summary>
-        /// CustomNodeManager.Call override
+        /// Filter out the alarms properties/components from address space 
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="methodsToCall"></param>
-        /// <param name="results"></param>
-        /// <param name="errors"></param>
-        //public override void Call(
-        //    OperationContext context,
-        //    IList<CallMethodRequest> methodsToCall,
-        //    IList<CallMethodResult> results,
-        //    IList<ServiceResult> errors)
-        //{
-        //    if(methodsToCall.Count == 1)
-        //    {
-        //        CallMethodRequest callMethod = methodsToCall[0];
-        //        if(callMethod != null)
-        //        {
-        //            if(callMethod.MethodId == Opc.Ua.Methods.AcknowledgeableConditionType_Acknowledge &&
-        //                callMethod.ObjectId == ObjectTypeIds.ConditionType)
-        //            {
-        //                errors.Clear();
-        //                errors.Add(StatusCodes.BadNodeIdUnknown);
-        //            }
-        //        }
-        //    }
+        /// <param name="node"></param>
+        protected override void AddPredefinedNode(ISystemContext context, NodeState node)
+        {
+            BaseInstanceState instanceState = node as BaseInstanceState;
+            if (instanceState != null &&
+                instanceState.ReferenceTypeId == null)
+            {
+                return;
+            }
+            base.AddPredefinedNode(context, node);
+        }
 
-        //    base.Call(context, methodsToCall, results, errors);
-        //}
+        /// <summary>
+        /// Avoid alarm Acknowledge call on types
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="inputArguments"></param>
+        /// <param name="outputArguments"></param>
+        /// <returns></returns>
+        protected ServiceResult OnAcknowledgeCallMethod(
+           ISystemContext context,
+           MethodState method,
+           IList<object> inputArguments,
+           IList<object> outputArguments)
+        {
+            if (inputArguments.Count != 2)
+            {
+                return StatusCodes.BadInvalidArgument;
+            }
+
+            return StatusCodes.BadNodeIdInvalid;
+        }
+
+        /// <summary>
+        /// Avoid alarm Confirm call on types
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="inputArguments"></param>
+        /// <param name="outputArguments"></param>
+        /// <returns></returns>
+        protected ServiceResult OnConfirmCallMethod(
+           ISystemContext context,
+           MethodState method,
+           IList<object> inputArguments,
+           IList<object> outputArguments)
+        {
+            if (inputArguments.Count != 2)
+            {
+                return StatusCodes.BadInvalidArgument;
+            }
+
+            return StatusCodes.BadNodeIdInvalid;
+        }
 
         /// <summary>
         /// Create an instance of LimitAlarmConditionMonitor and set provided properties
@@ -404,15 +447,19 @@ namespace SampleServer.Alarms
                 highLimit,
                 highHighLimit,
                 lowLimit,
-                lowLowLimit);
+                lowLowLimit,
+                this);
 
             if (limitAlarmMonitor != null)
             {
                 m_conditionInstances.AddRange(limitAlarmMonitor.ConditionStates);
             }
 
+            var alarm = m_conditionInstances[0] as LimitAlarmState;
+
             //remember node in node manager list
             AddPredefinedNode(SystemContext, limitAlarmMonitor);
+
         }
 
         /// <summary>
@@ -446,7 +493,8 @@ namespace SampleServer.Alarms
                 highLimit,
                 highHighLimit,
                 lowLimit,
-                lowLowLimit);
+                lowLowLimit,
+                this);
 
             if(exclusiveLimitMonitor != null)
             {
@@ -488,7 +536,8 @@ namespace SampleServer.Alarms
                 highLimit,
                 highHighLimit,
                 lowLimit,
-                lowLowLimit);
+                lowLowLimit,
+                this);
 
             if (exclusiveLevelMonitor != null)
             {
@@ -530,7 +579,8 @@ namespace SampleServer.Alarms
                 highLimit,
                 highHighLimit,
                 lowLimit,
-                lowLowLimit);
+                lowLowLimit,
+                this);
 
             if (exclusiveDeviationMonitor != null)
             {
@@ -572,7 +622,8 @@ namespace SampleServer.Alarms
                 highLimit,
                 highHighLimit,
                 lowLimit,
-                lowLowLimit);
+                lowLowLimit,
+                this);
 
             if (exclusiveRateOfChangeMonitor != null)
             {
@@ -615,7 +666,8 @@ namespace SampleServer.Alarms
                 highLimit,
                 highHighLimit,
                 lowLimit,
-                lowLowLimit);
+                lowLowLimit,
+                this);
 
             if (nonExclusiveLimitMonitor != null)
             {
@@ -657,7 +709,8 @@ namespace SampleServer.Alarms
                 highLimit,
                 highHighLimit,
                 lowLimit,
-                lowLowLimit);
+                lowLowLimit,
+                this);
 
             if (nonExclusiveLevelMonitor != null)
             {
@@ -699,7 +752,8 @@ namespace SampleServer.Alarms
                 highLimit,
                 highHighLimit,
                 lowLimit,
-                lowLowLimit);
+                lowLowLimit,
+                this);
 
             if (nonExclusiveDeviationMonitor != null)
             {
@@ -741,7 +795,8 @@ namespace SampleServer.Alarms
                 highLimit,
                 highHighLimit,
                 lowLimit,
-                lowLowLimit);
+                lowLowLimit,
+                this);
 
             if (nonExclusiveRateOfChangeMonitor != null)
             {
@@ -772,7 +827,8 @@ namespace SampleServer.Alarms
                 NamespaceIndex,
                 name,
                 alarmName,
-                initialValue);
+                initialValue,
+                this);
 
             //if (conditionMonitor != null)
             //{
@@ -803,7 +859,8 @@ namespace SampleServer.Alarms
                 NamespaceIndex,
                 name,
                 alarmName,
-                initialValue);
+                initialValue,
+                this);
 
             if (acknowledgeableMonitor != null)
             {
@@ -834,7 +891,8 @@ namespace SampleServer.Alarms
                 NamespaceIndex,
                 name,
                 alarmName,
-                initialValue);
+                initialValue,
+                this);
 
             if (alarmConditionMonitor != null)
             {
@@ -865,7 +923,8 @@ namespace SampleServer.Alarms
                 NamespaceIndex,
                 name,
                 alarmName,
-                initialValue);
+                initialValue,
+                this);
 
             if (dialogConditionMonitor != null)
             {
@@ -896,7 +955,8 @@ namespace SampleServer.Alarms
                 NamespaceIndex,
                 name,
                 alarmName,
-                initialValue);
+                initialValue,
+                this);
 
             if (discrepancyAlarmMonitor != null)
             {
@@ -927,7 +987,8 @@ namespace SampleServer.Alarms
                 NamespaceIndex,
                 name,
                 alarmName,
-                initialValue);
+                initialValue,
+                this);
 
             if (discreteMonitor != null)
             {
@@ -952,13 +1013,13 @@ namespace SampleServer.Alarms
         {
             // Create an alarm monitor for a OffNormalAlarm sensor 1.
             OffNormalAlarmMonitor offNormalAlarmMonitor = new OffNormalAlarmMonitor(
-                this,
                 SystemContext,
                 parent,
                 NamespaceIndex,
                 name,
                 alarmName,
-                initialValue);
+                initialValue,
+                this);
 
             if (offNormalAlarmMonitor != null)
             {
@@ -982,13 +1043,14 @@ namespace SampleServer.Alarms
             double initialValue)
         {
             // Create an alarm monitor for a SystemOffNormalAlarm sensor 1.
-            SystemOffNormalAlarmMonitor systemOffNormalAlarmMonitor = new SystemOffNormalAlarmMonitor(this,
+            SystemOffNormalAlarmMonitor systemOffNormalAlarmMonitor = new SystemOffNormalAlarmMonitor(
                 SystemContext,
                 parent,
                 NamespaceIndex,
                 name,
                 alarmName,
-                initialValue);
+                initialValue,
+                this);
 
             if (systemOffNormalAlarmMonitor != null)
             {
@@ -1013,13 +1075,14 @@ namespace SampleServer.Alarms
         {
 
             // Create an alarm monitor for a CertificateExpiration sensor 1.
-            CertificateExpirationMonitor certificateExpirationMonitor = new CertificateExpirationMonitor(this,
+            CertificateExpirationMonitor certificateExpirationMonitor = new CertificateExpirationMonitor(
                 SystemContext,
                 parent,
                 NamespaceIndex,
                 name,
                 alarmName,
-                initialValue);
+                initialValue,
+                this);
 
             if (certificateExpirationMonitor != null)
             {
@@ -1044,13 +1107,14 @@ namespace SampleServer.Alarms
         {
 
             // Create an alarm monitor for a TrustListOutOfDate sensor 1.
-            TrustListOutOfDateMonitor trustListOutOfDateMonitor = new TrustListOutOfDateMonitor(this,
+            TrustListOutOfDateMonitor trustListOutOfDateMonitor = new TrustListOutOfDateMonitor(
                 SystemContext,
                 parent,
                 NamespaceIndex,
                 name,
                 alarmName,
-                initialValue);
+                initialValue,
+                this);
 
             if (trustListOutOfDateMonitor != null)
             {
@@ -1075,13 +1139,14 @@ namespace SampleServer.Alarms
         {
 
             // Create an alarm monitor for a InstrumentDiagnostic sensor 1.
-            InstrumentDiagnosticMonitor instrumentDiagnosticMonitor = new InstrumentDiagnosticMonitor(this,
+            InstrumentDiagnosticMonitor instrumentDiagnosticMonitor = new InstrumentDiagnosticMonitor(
                 SystemContext,
                 parent,
                 NamespaceIndex,
                 name,
                 alarmName,
-                initialValue);
+                initialValue,
+                this);
 
             if (instrumentDiagnosticMonitor != null)
             {
@@ -1106,13 +1171,14 @@ namespace SampleServer.Alarms
         {
 
             // Create an alarm monitor for a TripAlarm sensor 1.
-            TripAlarmMonitor tripAlarmMonitor = new TripAlarmMonitor(this,
+            TripAlarmMonitor tripAlarmMonitor = new TripAlarmMonitor(
                 SystemContext,
                 parent,
                 NamespaceIndex,
                 name,
                 alarmName,
-                initialValue);
+                initialValue,
+                this);
 
             if (tripAlarmMonitor != null)
             {
@@ -1139,13 +1205,14 @@ namespace SampleServer.Alarms
         {
 
             // Create an alarm monitor for a SystemDiagnosticAlarm sensor 1.
-            SystemDiagnosticAlarmMonitor systemDiagnosticAlarmMonitor = new SystemDiagnosticAlarmMonitor(this,
+            SystemDiagnosticAlarmMonitor systemDiagnosticAlarmMonitor = new SystemDiagnosticAlarmMonitor(
                 SystemContext,
                 parent,
                 NamespaceIndex,
                 name,
                 alarmName,
-                initialValue);
+                initialValue,
+                this);
 
             if (systemDiagnosticAlarmMonitor != null)
             {

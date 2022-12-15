@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  * 
  * ======================================================================*/
 
@@ -471,6 +471,12 @@ namespace SampleServer.HistoricalDataAccess
         /// <summary>
         /// Updates the data history for one or more nodes
         /// </summary>
+        /// <param name="context"></param>
+        /// <param name="nodesToUpdate"></param>
+        /// <param name="results"></param>
+        /// <param name="errors"></param>
+        /// <param name="nodesToProcess"></param>
+        /// <param name="cache"></param>
         protected override void HistoryUpdateData(
             ServerSystemContext context,
             IList<UpdateDataDetails> nodesToUpdate,
@@ -484,6 +490,7 @@ namespace SampleServer.HistoricalDataAccess
                 NodeHandle handle = nodesToProcess[ii];
                 UpdateDataDetails nodeToUpdate = nodesToUpdate[handle.Index];
                 HistoryUpdateResult result = results[handle.Index];
+                DataValueCollection oldValues = new DataValueCollection();
 
                 try
                 {
@@ -512,8 +519,14 @@ namespace SampleServer.HistoricalDataAccess
                     item.ReloadFromSource(context);
 
                     // Process each item
-                    for(int jj = 0; jj < nodeToUpdate.UpdateValues.Count; jj++)
+                    for (int jj = 0; jj < nodeToUpdate.UpdateValues.Count; jj++)
                     {
+                        List<DataValue> readValues = item.ReadValues(nodeToUpdate.UpdateValues[jj].SourceTimestamp);
+                        if (readValues.Count > 0)
+                        {
+                            oldValues.AddRange(readValues);
+                        }
+
                         StatusCode error = item.UpdateHistory(context, nodeToUpdate.UpdateValues[jj], nodeToUpdate.PerformInsertReplace);
                         result.OperationResults.Add(error);
                     }
@@ -524,12 +537,20 @@ namespace SampleServer.HistoricalDataAccess
                 {
                     errors[handle.Index] = ServiceResult.Create(e, StatusCodes.BadUnexpectedError, "Unexpected error processing request.");
                 }
+
+                ReportAuditHistoryValueUpdateEvent(context, nodeToUpdate, oldValues.ToArray(), errors[handle.Index].StatusCode);
             }
         }
 
         /// <summary>
         /// Updates the data history for one or more nodes
         /// </summary>
+        /// <param name="context"></param>
+        /// <param name="nodesToUpdate"></param>
+        /// <param name="results"></param>
+        /// <param name="errors"></param>
+        /// <param name="nodesToProcess"></param>
+        /// <param name="cache"></param>
         protected override void HistoryUpdateStructureData(
             ServerSystemContext context,
             IList<UpdateStructureDataDetails> nodesToUpdate,
@@ -543,6 +564,7 @@ namespace SampleServer.HistoricalDataAccess
                 NodeHandle handle = nodesToProcess[ii];
                 UpdateStructureDataDetails nodeToUpdate = nodesToUpdate[handle.Index];
                 HistoryUpdateResult result = results[handle.Index];
+                DataValueCollection oldValues = new DataValueCollection();
 
                 try
                 {
@@ -568,9 +590,17 @@ namespace SampleServer.HistoricalDataAccess
                         continue;
                     }
 
+                    oldValues = (DataValueCollection)nodeToUpdate.UpdateValues.MemberwiseClone();
+
                     // Process each item
-                    for(int jj = 0; jj < nodeToUpdate.UpdateValues.Count; jj++)
+                    for (int jj = 0; jj < nodeToUpdate.UpdateValues.Count; jj++)
                     {
+                        List<DataValue> readValues = item.ReadValues(nodeToUpdate.UpdateValues[jj].SourceTimestamp);
+                        if (readValues.Count > 0)
+                        {
+                            oldValues.AddRange(readValues);
+                        }
+
                         Annotation annotation = ExtensionObject.ToEncodeable(nodeToUpdate.UpdateValues[jj].Value as ExtensionObject) as Annotation;
 
                         if(annotation == null)
@@ -590,12 +620,20 @@ namespace SampleServer.HistoricalDataAccess
                 {
                     errors[handle.Index] = ServiceResult.Create(e, StatusCodes.BadUnexpectedError, "Unexpected error processing request.");
                 }
+
+                ReportAuditHistoryAnnotationUpdateEvent(context, nodeToUpdate, oldValues.ToArray(), errors[handle.Index].StatusCode);
             }
         }
 
         /// <summary>
         /// Deletes the data history for one or more nodes
         /// </summary>
+        /// <param name="context"></param>
+        /// <param name="nodesToUpdate"></param>
+        /// <param name="results"></param>
+        /// <param name="errors"></param>
+        /// <param name="nodesToProcess"></param>
+        /// <param name="cache"></param>
         protected override void HistoryDeleteRawModified(
             ServerSystemContext context,
             IList<DeleteRawModifiedDetails> nodesToUpdate,
@@ -609,6 +647,7 @@ namespace SampleServer.HistoricalDataAccess
                 NodeHandle handle = nodesToProcess[ii];
                 DeleteRawModifiedDetails nodeToUpdate = nodesToUpdate[handle.Index];
                 HistoryUpdateResult result = results[handle.Index];
+                DataValueCollection oldValues = new DataValueCollection();
 
                 try
                 {
@@ -630,6 +669,12 @@ namespace SampleServer.HistoricalDataAccess
 
                     item.ReloadFromSource(context);
 
+                    List<DataValue> readValues = item.ReadValues(nodeToUpdate.StartTime);
+                    if (readValues.Count > 0)
+                    {
+                        oldValues.AddRange(readValues);
+                    }
+
                     // Delete the history
                     errors[handle.Index] = item.DeleteHistory(context, nodeToUpdate.StartTime, nodeToUpdate.EndTime, nodeToUpdate.IsDeleteModified);
                 }
@@ -637,6 +682,8 @@ namespace SampleServer.HistoricalDataAccess
                 {
                     errors[handle.Index] = ServiceResult.Create(e, StatusCodes.BadUnexpectedError, "Error deleting data from archive.");
                 }
+
+                ReportAuditHistoryRawModifyDeleteEvent(context, nodeToUpdate, oldValues.ToArray(), errors[handle.Index].StatusCode);
             }
         }
 
@@ -656,6 +703,7 @@ namespace SampleServer.HistoricalDataAccess
                 NodeHandle handle = nodesToProcess[ii];
                 DeleteAtTimeDetails nodeToUpdate = nodesToUpdate[handle.Index];
                 HistoryUpdateResult result = results[handle.Index];
+                DataValueCollection oldValues = new DataValueCollection();
 
                 try
                 {
@@ -677,8 +725,17 @@ namespace SampleServer.HistoricalDataAccess
 
                     item.ReloadFromSource(context);
 
+                    foreach (DateTime reqTime in nodeToUpdate.ReqTimes)
+                    {
+                        List<DataValue> readValues = item.ReadValues(reqTime);
+                        if (readValues.Count > 0)
+                        {
+                            oldValues.AddRange(readValues);
+                        }
+                    }
+
                     // Process each item
-                    for(int jj = 0; jj < nodeToUpdate.ReqTimes.Count; jj++)
+                    for (int jj = 0; jj < nodeToUpdate.ReqTimes.Count; jj++)
                     {
                         StatusCode error = item.DeleteHistory(context, nodeToUpdate.ReqTimes[jj]);
                         result.OperationResults.Add(error);
@@ -690,6 +747,8 @@ namespace SampleServer.HistoricalDataAccess
                 {
                     errors[handle.Index] = ServiceResult.Create(e, StatusCodes.BadUnexpectedError, "Unexpected error processing request.");
                 }
+
+                ReportAuditHistoryAtTimeDeleteEvent(context, nodeToUpdate, oldValues.ToArray(), errors[handle.Index].StatusCode);
             }
         }
         #endregion

@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  * 
  * ======================================================================*/
 
@@ -35,14 +35,16 @@ namespace SampleServer.Alarms
         /// <param name="name"></param>
         /// <param name="alarmName"></param>
         /// <param name="initialValue"></param>
+        /// <param name="alarmsNodeManager"></param>
         public DialogConditionMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
             string name,
             string alarmName,
-            double initialValue)
-              : base(context, parent, namespaceIndex, name, initialValue)
+            double initialValue,
+            AlarmsNodeManager alarmsNodeManager)
+              : base(context, parent, namespaceIndex, name, initialValue, alarmsNodeManager)
         {
             // Attach the alarm monitor.
             InitializeAlarmMonitor(
@@ -85,14 +87,6 @@ namespace SampleServer.Alarms
 
                 if (updateRequired)
                 {
-                    // Set event data
-                    m_alarm.EventId.Value = Guid.NewGuid().ToByteArray();
-                    m_alarm.Time.Value = DateTime.UtcNow;
-                    m_alarm.ReceiveTime.Value = m_alarm.Time.Value;
-
-                    m_alarm.ConditionClassId.Value = ObjectTypeIds.BaseConditionClassType;
-                    m_alarm.ConditionClassName.Value = new LocalizedText("BaseConditionClassType");
-                    m_alarm.BranchId.Value = new NodeId();
 
                     bool dialogState = newValue % 2 == 0;
                     m_alarm.DialogState.Value = new LocalizedText("en", dialogState ? ConditionStateNames.Active : ConditionStateNames.Inactive);
@@ -114,23 +108,11 @@ namespace SampleServer.Alarms
 
                     LocalizedText[] responseOptions = m_alarm.ResponseOptionSet.Value;
 
-                    m_alarm.SetComment(context, new LocalizedText("en-US", String.Format("Alarm DialogState = {0}", m_alarm.DialogState.Value.Text)), currentUserId);
-                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm DialogState = {0} - Response answer as {1}", m_alarm.DialogState.Value.Text, responseOptions[selectedResponse].Text));
-                    m_alarm.SetSeverity(context, 0);
+                    m_alarm.Message.Value = new LocalizedText("en-US", String.Format("Alarm DialogState = {0} - Response answer as {1}", 
+                        m_alarm.DialogState?.Value, responseOptions[selectedResponse].Text));
+                    m_alarm.SetSeverity(context, EventSeverity.Low);
 
-                    // Report changes to node attributes
-                    m_alarm.ClearChangeMasks(context, true);
-
-                    // Check if events are being monitored for the source
-                    if (m_alarm.AreEventsMonitored)
-                    {
-                        // Create a snapshot
-                        InstanceStateSnapshot e = new InstanceStateSnapshot();
-                        e.Initialize(context, m_alarm);
-
-                        // Report the event
-                        ReportEvent(context, e);
-                    }
+                    base.ProcessVariableChanged(context, value);
 
                     //send dialog response - the DialogState is reset to Inactive
                     m_alarm.SetResponse(context, selectedResponse);
@@ -176,6 +158,12 @@ namespace SampleServer.Alarms
             m_alarm.OkResponse.Value = response;
             m_alarm.CancelResponse.Value = 1;
             m_alarm.SetResponse(context, response);
+
+            m_alarm.Retain.Value = false;
+
+            #region disable unused properties
+
+            #endregion
 
         }
 

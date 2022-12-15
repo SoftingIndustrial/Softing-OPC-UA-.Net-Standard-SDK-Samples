@@ -4,7 +4,7 @@
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
  * license agreement, which can be found here:
- * https://data-intelligence.softing.com/LA-SDK-en
+ * https://industrial.softing.com/LA-SDK-en
  * 
  * ======================================================================*/
 
@@ -28,14 +28,16 @@ namespace SampleServer.Alarms
         /// <param name="name"></param>
         /// <param name="alarmName"></param>
         /// <param name="initialValue"></param>
+        /// <param name="alarmsNodeManager"></param>
         public ConditionMonitor(
             ISystemContext context,
             NodeState parent,
             ushort namespaceIndex,
             string name,
             string alarmName,
-            double initialValue)
-             : base(context, parent, namespaceIndex, name, initialValue)
+            double initialValue,
+            AlarmsNodeManager alarmsNodeManager)
+             : base(context, parent, namespaceIndex, name, initialValue, alarmsNodeManager)
         {
 
             // Attach the alarm monitor.
@@ -119,6 +121,10 @@ namespace SampleServer.Alarms
             m_alarm = new ConditionState(this);
 
             base.InitializeAlarmMonitor(context, parent, namespaceIndex, alarmName);
+
+            #region disable unused properties
+
+            #endregion
         }
 
         #endregion
