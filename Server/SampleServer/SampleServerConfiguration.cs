@@ -1,5 +1,5 @@
 ﻿/* ========================================================================
- * Copyright © 2011-2022 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -20,7 +20,7 @@ namespace SampleServer
     {
         #region Private Members
         private uint m_timerInterval;
-        private uint m_clearCachedCertificatesInterval; 
+        private uint m_clearCachedCertificatesInterval;
         #endregion
 
         #region Constructors

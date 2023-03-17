@@ -205,13 +205,15 @@
       <MaxNodesPerNodeManagement>1000</MaxNodesPerNodeManagement>
       <MaxMonitoredItemsPerCall>1000</MaxMonitoredItemsPerCall>
     </OperationLimits>
+	<!-- Enable Server.Auditing flag to receive Auditing events -->
+	<AuditingEnabled>false</AuditingEnabled>
   </ServerConfiguration>
 
   <Extensions>
      <ua:XmlElement>
        <ServerToolkitConfiguration>
          <ServerCertificateLifeTime>24</ServerCertificateLifeTime>
-      </ServerToolkitConfiguration>
+       </ServerToolkitConfiguration>
     </ua:XmlElement>
     <ua:XmlElement>
       <SampleServerConfiguration>
@@ -219,6 +221,24 @@
         <ClearCachedCertificatesInterval>30000</ClearCachedCertificatesInterval>
       </SampleServerConfiguration>
     </ua:XmlElement>
+    <ua:XmlElement>
+     <ServerSecurityConfiguration xmlns="http://opcfoundation.org/UA/SDK/Configuration.xsd">
+          <BruteForceAttackPrevention>
+			  <!-- Enable brute force attack prevention -->
+              <Enable>false</Enable>
+		      <!-- A minimum interval (milliseconds) which has to pass until the user is allowed to retry to connect -->
+		      <MinimumRetryInterval>10000</MinimumRetryInterval>
+		      <!-- Allowed attempts per MinimumRetryInterval for same user until the interval is increased with value of IncrementTimeValue -->
+		      <NrAttemptsBeforeInc>3</NrAttemptsBeforeInc>
+		      <!-- Delay new connection if attack detected (milliseconds) -->
+		      <IncrementTimeValue>5000</IncrementTimeValue>
+		      <!-- Enable/Disable stop any new connection -->
+		      <StopNewConnections>true</StopNewConnections>
+		      <!-- Nr of delays before stopping any new connection while keeping the old connections alive -->
+			  <NrIncDelaysBeforeStop>2</NrIncDelaysBeforeStop>
+          </BruteForceAttackPrevention>
+	  </ServerSecurityConfiguration>
+	</ua:XmlElement>
   </Extensions>
   
   <TraceConfiguration>

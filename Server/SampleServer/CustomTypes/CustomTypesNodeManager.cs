@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2022 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -494,8 +494,8 @@ namespace SampleServer.CustomTypes
                 }
             }
 
-            // report update method audit event                        
-            ReportAuditUpdateMethodEvent(context, method.Parent.NodeId, method.NodeId, inputArguments?.ToArray(), "Execute AddVehicle method", result);
+            // report update method audit event
+            Server.ReportAuditUpdateMethodEvent(context, method.Parent.NodeId, method.NodeId, inputArguments?.ToArray(), "Execute AddVehicle method", result);
             return new ServiceResult(result);
 
         }

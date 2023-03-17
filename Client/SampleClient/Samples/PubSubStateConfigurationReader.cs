@@ -1,5 +1,5 @@
 ﻿/* ========================================================================
- * Copyright © 2011-2022 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -125,10 +125,7 @@ namespace SampleClient.Samples
                     var readPublishedData = new ReadValueId();
                     readPublishedData.NodeId = translateResults?.First();
                     readPublishedData.AttributeId = Attributes.Value;
-
-                   
                     
-
                     var results = clientSession.Read(new List<ReadValueId> { readConfigurationVersion, readDataSetMetaData, readPublishedData });
                     ConfigurationVersionDataType configurationVersionDataType = (ConfigurationVersionDataType)((ExtensionObject)results?.ElementAt(0).Value).Body;
                     DataSetMetaDataType dataSetMetaDataValue = (DataSetMetaDataType)((ExtensionObject)results?.ElementAt(1).Value).Body;
@@ -311,6 +308,12 @@ namespace SampleClient.Samples
                                          select refDsc;
             foreach (var readerGroupReference in readerGroupsReferences)
             {
+                if (HasPlaceHolderTags(readerGroupReference))
+                {
+                    // ignore the readerGroupReference with place holder tag
+                    continue;
+                }
+
                 NodeId readerGroupNodeId = (NodeId)readerGroupReference.NodeId;
                 var readerGroupReferenceDescriptions = clientSession.Browse(readerGroupNodeId);
 
@@ -380,6 +383,12 @@ namespace SampleClient.Samples
                                           select refDsc;
             foreach (var dataSetReaderReference in dataSetReaderReferences)
             {
+                if (HasPlaceHolderTags(dataSetReaderReference))
+                {
+                    // ignore the dataSetReaderReference with place holder tag
+                    continue;
+                }
+
                 NodeId dataSetReaderNodeId = (NodeId)dataSetReaderReference.NodeId;
                 var dataSetReaderReferenceDescriptions = clientSession.Browse(dataSetReaderNodeId);
 
@@ -683,6 +692,12 @@ namespace SampleClient.Samples
                                          select refDsc;
             foreach (var writerGroupReference in writerGroupsReferences)
             {
+                if (HasPlaceHolderTags(writerGroupReference))
+                {
+                    // ignore the writerGroupReference with place holder tag
+                    continue;
+                }
+
                 NodeId writerGroupNodeId = (NodeId)writerGroupReference.NodeId;
                 var writerGroupReferenceDescriptions = clientSession.Browse(writerGroupNodeId);
 
@@ -952,6 +967,12 @@ namespace SampleClient.Samples
                                          select refDsc;
             foreach (var dataSetWriterReference in dataSetWriterReferences)
             {
+                if (HasPlaceHolderTags(dataSetWriterReference))
+                {
+                    // ignore the dataSetWriterReference with place holder tag
+                    continue;
+                }
+
                 NodeId dataSetWriterNodeId = (NodeId)dataSetWriterReference.NodeId;
 
                 var dataSetWriterReferenceDescriptions = clientSession.Browse(dataSetWriterNodeId,
@@ -1168,6 +1189,21 @@ namespace SampleClient.Samples
                 writerGroup.DataSetWriters.Add(writerDataType);
 
             }
+        }
+
+        /// <summary>
+        /// Verify if the item includes a place holder
+        /// </summary>
+        /// <param name="referenceDescription"></param>
+        /// <returns></returns>
+        private static bool HasPlaceHolderTags(ReferenceDescriptionEx referenceDescription)
+        {
+            if (referenceDescription.BrowseName != null &&
+                referenceDescription.BrowseName.Name != null)
+            {
+                return System.Text.RegularExpressions.Regex.IsMatch(referenceDescription.BrowseName.Name, "<+[a-zA-Z1-9_]+>");
+            }
+            return false;
         }
         #endregion
     } 

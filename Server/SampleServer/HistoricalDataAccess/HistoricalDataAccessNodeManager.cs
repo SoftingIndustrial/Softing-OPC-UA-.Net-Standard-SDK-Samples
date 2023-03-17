@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2022 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -538,7 +538,7 @@ namespace SampleServer.HistoricalDataAccess
                     errors[handle.Index] = ServiceResult.Create(e, StatusCodes.BadUnexpectedError, "Unexpected error processing request.");
                 }
 
-                ReportAuditHistoryValueUpdateEvent(context, nodeToUpdate, oldValues.ToArray(), errors[handle.Index].StatusCode);
+                Server.ReportAuditHistoryValueUpdateEvent(context, nodeToUpdate, oldValues.ToArray(), errors[handle.Index].StatusCode);
             }
         }
 
@@ -621,7 +621,7 @@ namespace SampleServer.HistoricalDataAccess
                     errors[handle.Index] = ServiceResult.Create(e, StatusCodes.BadUnexpectedError, "Unexpected error processing request.");
                 }
 
-                ReportAuditHistoryAnnotationUpdateEvent(context, nodeToUpdate, oldValues.ToArray(), errors[handle.Index].StatusCode);
+                Server.ReportAuditHistoryAnnotationUpdateEvent(context, nodeToUpdate, oldValues.ToArray(), errors[handle.Index].StatusCode);
             }
         }
 
@@ -683,7 +683,7 @@ namespace SampleServer.HistoricalDataAccess
                     errors[handle.Index] = ServiceResult.Create(e, StatusCodes.BadUnexpectedError, "Error deleting data from archive.");
                 }
 
-                ReportAuditHistoryRawModifyDeleteEvent(context, nodeToUpdate, oldValues.ToArray(), errors[handle.Index].StatusCode);
+                Server.ReportAuditHistoryRawModifyDeleteEvent(context, nodeToUpdate, oldValues.ToArray(), errors[handle.Index].StatusCode);
             }
         }
 
@@ -748,7 +748,7 @@ namespace SampleServer.HistoricalDataAccess
                     errors[handle.Index] = ServiceResult.Create(e, StatusCodes.BadUnexpectedError, "Unexpected error processing request.");
                 }
 
-                ReportAuditHistoryAtTimeDeleteEvent(context, nodeToUpdate, oldValues.ToArray(), errors[handle.Index].StatusCode);
+                Server.ReportAuditHistoryAtTimeDeleteEvent(context, nodeToUpdate, oldValues.ToArray(), errors[handle.Index].StatusCode);
             }
         }
         #endregion

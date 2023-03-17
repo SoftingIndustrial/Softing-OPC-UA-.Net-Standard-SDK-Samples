@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2022 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -93,13 +93,7 @@ namespace SampleServer
             // set the supported aggregates
             NodeState aggregateFunctions = server.DiagnosticsNodeManager.FindNodeInAddressSpace(ObjectIds.Server_ServerCapabilities_AggregateFunctions);
             HistoricalDataAccessNodeManager.SetTheRightSupportedAggregates(aggregateFunctions);
-
-            // Enable Server.Auditing flag to receive Auditing events 
-            BaseVariableState auditing = server.DiagnosticsNodeManager.FindNodeInAddressSpace(VariableIds.Server_Auditing) as BaseVariableState;
-            if (auditing != null)
-            {
-                auditing.Value = true;
-            }
+            
         }
 
         /// <summary>

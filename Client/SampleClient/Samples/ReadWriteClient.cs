@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2022 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -685,7 +685,7 @@ namespace SampleClient.Samples
                 // read value for array node
                 readValueId.NodeId = StaticCustomStructureWithOptionalFieldsArrayNodeId;
                 readValueId.AttributeId = Attributes.Value;
-                Console.WriteLine("\n Read value for NodeId: {0} ", StaticCustomStructureWithOptionalFieldsNodeId);
+                Console.WriteLine("\n Read value for NodeId: {0} ", StaticCustomStructureWithOptionalFieldsArrayNodeId);
 
                 dataValue = m_session.Read(readValueId);
 
@@ -694,7 +694,7 @@ namespace SampleClient.Samples
                 ExtensionObject[] extensionObjectValueArray = dataValue.Value as ExtensionObject[];
                 if (extensionObjectValueArray != null)
                 {
-                    Console.Write("  The Value of NodeId {0} is an OptionalFieldsStructuredValue[{1}]:", StaticCustomStructureWithOptionalFieldsNodeId, extensionObjectValueArray.Length);
+                    Console.Write("  The Value of NodeId {0} is an OptionalFieldsStructuredValue[{1}]:", StaticCustomStructureWithOptionalFieldsArrayNodeId, extensionObjectValueArray.Length);
                     foreach (var extensionObject in extensionObjectValueArray)
                     {
                         optionalFieldsStructuredValue = extensionObject.Body as OptionalFieldsStructuredValue;

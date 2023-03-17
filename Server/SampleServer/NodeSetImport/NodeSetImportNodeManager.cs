@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2022 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -203,7 +203,7 @@ namespace SampleServer.NodeSetImport
             var result = ImportNodeSetFromResource(ResourceNames.NodeSetImportSecondaryModel);
 
             // report update method audit event                        
-            ReportAuditUpdateMethodEvent(context, method.Parent?.NodeId, method.NodeId, inputArguments?.ToArray(),
+            Server.ReportAuditUpdateMethodEvent(context, method.Parent?.NodeId, method.NodeId, inputArguments?.ToArray(),
                 "Execute AddSecondaryRefrigerator method.", result.StatusCode);
 
             return result;
@@ -250,7 +250,7 @@ namespace SampleServer.NodeSetImport
             finally
             {
                 // report update method audit event                        
-                ReportAuditUpdateMethodEvent(context, method.Parent?.NodeId, method.NodeId, inputArguments?.ToArray(),
+                Server.ReportAuditUpdateMethodEvent(context, method.Parent?.NodeId, method.NodeId, inputArguments?.ToArray(),
                     "Execute ImportNodeSet method.", result);
 
                 m_isExecutingImport = false;
@@ -334,7 +334,7 @@ namespace SampleServer.NodeSetImport
                     AddPredefinedNode(SystemContext, newNode);
 
                     // report update method audit event                        
-                    ReportAuditUpdateMethodEvent(context, method.Parent.NodeId, method.NodeId, inputArguments?.ToArray(),
+                    Server.ReportAuditUpdateMethodEvent(context, method.Parent.NodeId, method.NodeId, inputArguments?.ToArray(),
                         "Execute CreateInstance method.", StatusCodes.Good);
 
                     return ServiceResult.Good;
@@ -343,14 +343,14 @@ namespace SampleServer.NodeSetImport
             catch (Exception ex)
             {
                 // report update method audit event                        
-                ReportAuditUpdateMethodEvent(context, method.Parent.NodeId, method.NodeId, inputArguments?.ToArray(),
+                Server.ReportAuditUpdateMethodEvent(context, method.Parent.NodeId, method.NodeId, inputArguments?.ToArray(),
                     "Execute CreateInstance method exception: " + ex.Message, StatusCodes.BadInternalError);
 
                 throw new ServiceResultException(StatusCodes.BadInternalError, "OnCreateInstance:" + ex.Message);
             }
 
             // report update method audit event                        
-            ReportAuditUpdateMethodEvent(context, method.Parent.NodeId, method.NodeId, inputArguments?.ToArray(),
+            Server.ReportAuditUpdateMethodEvent(context, method.Parent.NodeId, method.NodeId, inputArguments?.ToArray(),
                "Cannot create instance of type id:" + inputArguments[1], StatusCodes.BadInvalidArgument);
     
             throw new ServiceResultException(StatusCodes.BadInvalidArgument, "Cannot create instance of type id:" + inputArguments[1]);
