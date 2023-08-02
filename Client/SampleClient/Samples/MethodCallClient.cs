@@ -8,12 +8,12 @@
  *  
  * ======================================================================*/
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
 using Softing.Opc.Ua.Client.Types;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SampleClient.Samples
 {
@@ -25,7 +25,7 @@ namespace SampleClient.Samples
         #region Private Fields
 
         private const string SessionName = "MethodCallClient Session";
-        private static readonly NodeId RefrgeratorStateEnumId = new NodeId("ns=12;i=15002");
+        private static readonly NodeId RefrigeratorStateEnumId = new NodeId("ns=12;i=15002");
         private readonly UaApplication m_application;
         private ClientSession m_session;
         private int m_callIdentifier;
@@ -45,16 +45,28 @@ namespace SampleClient.Samples
 
         #endregion
 
-        #region Method Call Methods
+        #region Call
+
+        /// <summary>
+        /// Call method with simple and complex parameters
+        /// </summary>
+        public void Call()
+        {
+            MethodCall();
+
+            CountRefrigeratorStatesMethodCall();
+            
+            MethodCallAsync();
+        }
 
         /// <summary>
         /// Call the a method on server.
         /// </summary>
-        internal void CallMethod()
+        private void MethodCall()
         {
             if (m_session == null)
             {
-                Console.WriteLine("CallMethod: The session is not initialized!");
+                Console.WriteLine("MethodCall: The session is not initialized!");
                 return;
             }
 
@@ -70,40 +82,39 @@ namespace SampleClient.Samples
             float arg1 = 123.123f;
             UInt32 arg2 = 100;
 
-            List<object> inputArguments = new List<object> {arg1, arg2};
+            List<object> inputArguments = new List<object> { arg1, arg2 };
             Console.WriteLine("\nMethod '{0}' is called with the following arguments:", methodPath);
             for (int i = 0; i < inputArguments.Count; i++)
             {
                 Console.WriteLine("input[{0}]= {1}", i, inputArguments[i]);
             }
-            
-            StatusCode statusCode = new StatusCode();
+
             try
             {
-                IList<object> outputArgs;
-                statusCode = m_session.Call(parentObjectId, methodId, inputArguments, out outputArgs);
+                IList<object> outputArguments;
+                StatusCode statusCode = m_session.Call(parentObjectId, methodId, inputArguments, out outputArguments);
+                Console.WriteLine($"Status Code is: {statusCode}");
 
                 Console.WriteLine("Output arguments are:");
-                for (int i = 0; i < outputArgs.Count; i++)
+                for (int i = 0; i < outputArguments.Count; i++)
                 {
-                    Console.WriteLine("output[{0}]= {1}", i, outputArgs[i]);
+                    Console.WriteLine($"  output[{i}]= {outputArguments[i]}");
                 }
-                Console.WriteLine("Status Code is: {0}", statusCode);
             }
             catch (Exception ex)
             {
-                Program.PrintException("CallMethod", ex);
+                Program.PrintException("MethodCall", ex);
             }
         }
 
         /// <summary>
         /// Call method with complex parameters
         /// </summary>
-        internal void CallCountRefrigeratorStatesMethod()
+        private void CountRefrigeratorStatesMethodCall()
         {
             if (m_session == null)
             {
-                Console.WriteLine("CallMethod: The session is not initialized!");
+                Console.WriteLine("CountRefrigeratorStatesMethodCall: The session is not initialized!");
                 return;
             }
 
@@ -115,49 +126,63 @@ namespace SampleClient.Samples
             string methodPath = "Root\\Objects\\Methods\\CountRefrigeratorStates";
             NodeId methodId = new NodeId("ns=5;i=11");
 
-            /*initialize input arguments*/       
+            /*initialize input arguments*/
             // initialize array of RefrigeratorState enum
-            EnumValue[] refrigeratorStateArray = m_session.GetDefaultValueForDatatype(RefrgeratorStateEnumId, ValueRanks.OneDimension, 3) as EnumValue[];           
+            EnumValue[] refrigeratorStateArray = m_session.GetDefaultValueForDatatype(RefrigeratorStateEnumId, ValueRanks.OneDimension, 3) as EnumValue[];
 
             Console.WriteLine("\nMethod '{0}' is called with the following arguments:", methodPath);
-            for (int i = 0; i < refrigeratorStateArray.Length; i++)
+            for (int i = 0; i < refrigeratorStateArray?.Length; i++)
             {
                 Console.WriteLine("RefrigeratorStateArray[{0}]= {1}", i, refrigeratorStateArray[i]);
             }
 
-            StatusCode statusCode = new StatusCode();
             try
             {
                 IList<object> outputArgs;
-                statusCode = m_session.Call(parentObjectId, methodId, new List<object> { refrigeratorStateArray }, out outputArgs);
+                StatusCode statusCode = m_session.Call(parentObjectId, methodId, new List<object> { refrigeratorStateArray }, out outputArgs);
+                Console.WriteLine($"Status Code is: {statusCode} \n");
 
                 Console.WriteLine("Output arguments are:");
                 for (int i = 0; i < outputArgs.Count; i++)
                 {
-                    Console.WriteLine("output[{0}]= {1}", i, outputArgs[i]);
+                    Console.WriteLine($"  output[{i}]= {outputArgs[i]}");
                 }
-                Console.WriteLine("Status Code is: {0}", statusCode);
             }
             catch (Exception ex)
             {
-                Program.PrintException("CallMethod", ex);
+                Program.PrintException("CountRefrigeratorStatesMethodCall", ex);
             }
+        }
+
+        #endregion
+
+        #region CallAsync
+
+        /// <summary>
+        /// Asynchronously call method with simple and complex parameters
+        /// </summary>
+        public async Task CallAsync()
+        {           
+            await MultiplyMethodCallAsync();
+
+            await CountRefrigeratorStatesMethodCallAsync();
         }
 
         /// <summary>
         /// Call a methods on server asynchronously
         /// </summary>
-        internal void AsyncCallMethod()
+        public void MethodCallAsync()
         {
             if (m_session == null)
             {
-                Console.WriteLine("AsyncCallMethod: The session is not initialized!");
+                Console.WriteLine("MethodCallAsync: The session is not initialized!");
                 return;
             }
 
             /*Select the method from the address space*/
             //Browse Path: Root\Objects\Methods
             NodeId parentObjectId = new NodeId(1, 5);
+
             //Browse Path: Root\Objects\Methods\Multiply
             string methodPath = "Root\\Objects\\Methods\\Multiply";
             NodeId methodId = new NodeId("ns=5;i=5");
@@ -166,12 +191,14 @@ namespace SampleClient.Samples
             Int16 arg1 = -34;
             UInt16 arg2 = 100;
 
-            List<object> inputArguments = new List<object> {arg1, arg2};
+            List<object> inputArguments = new List<object> { arg1, arg2 };
             m_callIdentifier++;
-            Console.WriteLine("\nMethod '{0}' (identifier ={1}) is called asynchronously with the following arguments:", methodPath, m_callIdentifier);
+
+            Console.WriteLine($"\nMethodCallAsync: Method '{methodPath}' (identifier ={m_callIdentifier}) is called with the following arguments:");
+
             for (int i = 0; i < inputArguments.Count; i++)
             {
-                Console.WriteLine("input[{0}]= {1}", i, inputArguments[i]);
+                Console.WriteLine($"  input[{i}]= {inputArguments[i]}");
             }
 
             try
@@ -180,10 +207,116 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Program.PrintException("CallMethodAsync", ex);
+                Program.PrintException("MethodCallAsync", ex);
             }
         }
 
+        /// <summary>
+        /// Asynchronously call a methods on server
+        /// </summary>
+        private async Task MultiplyMethodCallAsync()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("CallAsync: The session is not initialized!");
+                return;
+            }
+
+            /*Select the method from the address space*/
+            //Browse Path: Root\Objects\Methods
+            NodeId parentObjectId = new NodeId(1, 5);
+
+            //Browse Path: Root\Objects\Methods\Multiply
+            string methodPath = "Root\\Objects\\Methods\\Multiply";
+            NodeId methodId = new NodeId("ns=5;i=5");
+
+            /*initialize input arguments*/
+            Int16 arg1 = -34;
+            UInt16 arg2 = 100;
+
+            List<object> inputArguments = new List<object> { arg1, arg2 };
+            m_callIdentifier++;
+
+            Console.WriteLine($"\nCallAsync: Method '{methodPath}' (identifier ={m_callIdentifier}) is called with the following arguments:");
+            for (int i = 0; i < inputArguments.Count; i++)
+            {
+                Console.WriteLine($"  input[{i}]= {inputArguments[i]}");
+            }
+
+            try
+            {
+                CallResponse response = await m_session.CallAsync(parentObjectId, methodId, inputArguments).ConfigureAwait(false);
+                if (response != null)
+                {
+                    Console.WriteLine("Output arguments are:");
+                    for (int i = 0; i < response.Results?[0]?.OutputArguments?.Count; i++)
+                    {
+                        Console.WriteLine($"  output[{i}]= {response.Results[0].OutputArguments[i].Value}\n");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Method '{methodPath}' returned null.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("CallAsync", ex);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously call method with complex parameters
+        /// </summary>
+        private async Task CountRefrigeratorStatesMethodCallAsync()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("CountRefrigeratorStatesMethodCallAsync: The session is not initialized!");
+                return;
+            }
+
+            /*Select the method from the address space*/
+            //Browse Path: Root\Objects\Methods
+            NodeId parentObjectId = new NodeId("ns=5;i=1");
+
+            //Browse Path: Root\Objects\Methods\CountRefrigeratorStates
+            string methodPath = "Root\\Objects\\Methods\\CountRefrigeratorStates";
+            NodeId methodId = new NodeId("ns=5;i=11");
+
+            /*initialize input arguments*/
+            // initialize array of RefrigeratorState enum
+            EnumValue[] refrigeratorStateArray = m_session.GetDefaultValueForDatatype(RefrigeratorStateEnumId, ValueRanks.OneDimension, 3) as EnumValue[];
+
+            Console.WriteLine("\nMethod '{0}' is called with the following arguments:", methodPath);
+            for (int i = 0; i < refrigeratorStateArray?.Length; i++)
+            {
+                Console.WriteLine("RefrigeratorStateArray[{0}]= {1}", i, refrigeratorStateArray[i]);
+            }
+
+            try
+            {
+                CallResponse response = await m_session.CallAsync(parentObjectId, methodId, new List<object> { refrigeratorStateArray }).ConfigureAwait(false);
+                Console.WriteLine($"Status Code is: {response.ResponseHeader.ServiceResult}");
+
+                if (response != null)
+                {
+                    Console.WriteLine("Output arguments are:");
+                    for (int i = 0; i < response.Results?[0]?.OutputArguments?.Count; i++)
+                    {
+                        Console.WriteLine($"  output[{i}]= {response.Results[0].OutputArguments[i].Value}\n");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Method '{methodPath}' returned null.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("CountRefrigeratorStatesMethodCallAsync", ex);
+            }
+        }
         #endregion
 
         #region Initialize & DisconnectSession
@@ -199,6 +332,7 @@ namespace SampleClient.Samples
                 {
                     m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = true;
                     m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = true;
+                    m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy = false;
 
                     // create the session object with no security and anonymous login    
                     m_session = m_application.CreateSession(Program.ServerUrl);

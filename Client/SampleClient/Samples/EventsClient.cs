@@ -77,7 +77,7 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Program.PrintException("CreateSession", ex);            
+                Program.PrintException("CreateSession", ex);
 
                 if (m_session != null)
                 {
@@ -114,7 +114,7 @@ namespace SampleClient.Samples
             {
                 Program.PrintException("DisconnectSession", ex);
             }
-            
+
         }
 
         #endregion
@@ -189,7 +189,7 @@ namespace SampleClient.Samples
             catch (Exception ex)
             {
                 Program.PrintException("DeleteEventMonitoredItem", ex);
-            }            
+            }
         }
 
         #endregion
@@ -222,7 +222,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("Event notification received for {0}.\n", eventNotification.MonitoredItem.DisplayName);
 
                 StringBuilder displayNotification = new StringBuilder();
-                IList<SelectOperandEx> listOfOperands = ((EventFilterEx) m_eventMonitoredItem.Filter).SelectOperandList;
+                IList<SelectOperandEx> listOfOperands = ((EventFilterEx)m_eventMonitoredItem.Filter).SelectOperandList;
                 for (int i = 0; i < listOfOperands.Count; i++)
                 {
                     displayNotification.AppendFormat("{0}:{1}:{2}\n",

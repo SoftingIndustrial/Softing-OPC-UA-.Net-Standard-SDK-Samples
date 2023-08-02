@@ -107,7 +107,7 @@
     <Folder Include="UserAuthentication\" />
   </ItemGroup>
 
-  <ItemGroup >
+  <ItemGroup>
 	  <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
 	  <PackageReference Include="System.Security.Principal.Windows" Version="4.7.0" />
   </ItemGroup>

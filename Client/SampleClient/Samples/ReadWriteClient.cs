@@ -8,13 +8,14 @@
  *  
  * ======================================================================*/
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
 using Softing.Opc.Ua.Client.Nodes;
 using Softing.Opc.Ua.Client.Types;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SampleClient.Samples
 {
@@ -28,6 +29,11 @@ namespace SampleClient.Samples
         private readonly UaApplication m_application;
         private ClientSession m_session;
         private readonly Random m_random = new Random();
+
+        //Browse path: Root\Objects\NodeSetImport/Refrigerator1/SetPoint
+        const string SetPointNodeId = "ns=12;i=15039";
+        //Browse path: Root\Objects\CustomTypes\Vehicle
+        const string StaticCustomStructureVehicleNodeId = "ns=10;i=32";
 
         //Browse path: Root\Objects\CTT\Scalar\Scalar_Static\Int32
         const string StaticInt32NodeId = "ns=7;s=CTT_Scalar_Scalar_Static_Int32";
@@ -439,7 +445,7 @@ namespace SampleClient.Samples
                 {
                     Console.WriteLine("  Current session does not know DataType: {0} for NodeId: {1}. Please make sure that DataTypeDefinitions are loaded from DataTypeDefinition attribute or from data types dictionary.",
                         dataValueTypeNodeId, StaticCustomEnumerationNodeId);
-                   return;
+                    return;
                 }
 
                 if (dataValueTypeNodeId != null)
@@ -844,6 +850,7 @@ namespace SampleClient.Samples
                 Program.PrintException("ReadValuesForCustomStructuredValueDataType", ex);
             }
         }
+
         #endregion
 
         #region Public Methods - Write
@@ -1656,6 +1663,57 @@ namespace SampleClient.Samples
         }
         #endregion
 
+        #region Public Methods - WriteAsync
+
+        /// <summary>
+        /// Call all variants of WriteAsync methods to asynchronously write values to variable nodes.
+        /// </summary>
+        public async Task WriteAsync()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteAsync: The session is not initialized!");
+                return;
+            }
+            
+            await WriteVariableAsync();
+
+            await WriteListAsync(BuildWriteValueCollection());
+        }
+
+        #endregion WriteAsync
+
+        #region Public Methods - ReadAsync
+
+        /// <summary>
+        /// Call all variants of asynchronously read calls.
+        /// </summary>
+        public async Task ReadAsync()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("ReadAsync: The session is not initialized!");
+                return;
+            }
+
+            await ReadValueAsync();
+
+            await ReadNodesValuesAsync();
+
+            await ReadByValueIdAsync();
+
+            await ReadByValueCollectionAsync();
+
+            await ReadNodeAsync();
+
+            await ReadNodesAsync();
+
+            await ReadNodeWithNodeClassAsync();
+
+            await ReadNodesWithNodeClassAsync();
+        }
+        #endregion
+
         #region Public Methods - Register/UnregisterNodes
         /// <summary>
         /// Sample for Register/Unregister nodes 
@@ -1703,11 +1761,65 @@ namespace SampleClient.Samples
                 // unregister the nodes using the registered node id
                 m_session.UnregisterNodes(registeredNodeIds);
                 Console.WriteLine("\tUnregisterNodes returned.");
-
             }
             catch (Exception ex)
             {
                 Program.PrintException("RegisterNodesSample", ex);
+            }
+        }
+        #endregion
+
+        #region Public Methods - RegisterAsync/UnregisterNodesAsync
+        /// <summary>
+        /// Sample for Register/Unregister nodes 
+        /// </summary>
+        public async Task RegisterNodesSampleAsync()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("RegisterNodesSampleAsync: The session is not initialized!");
+                return;
+            }
+
+            try
+            {
+                // Register node RegisterNodeId0
+                NodeId registeredNodeId = await m_session.RegisterNodeAsync(RegisterNodeId0).ConfigureAwait(false);
+                Console.WriteLine("RegisterNodesAsync(\"{0}\") returned the assigned NodeId=\"{1}\".", RegisterNodeId0, registeredNodeId);
+
+                // read the value from RegisterNodeId0 using the returned registered node id
+                var value = m_session.Read(new ReadValueId() { NodeId = registeredNodeId, AttributeId = Attributes.Value });
+                Console.WriteLine("\tRead(\"{0}\"), Value= {1}, StatusCode:{2}.", registeredNodeId, value.Value, value.StatusCode);
+
+                // unregister the RegisterNodeId0 using the registered node id
+                await m_session.UnregisterNodeAsync(registeredNodeId).ConfigureAwait(false);
+                Console.WriteLine("\tUnregisterNodeAsync(\"{0}\") returned.", registeredNodeId);
+
+                // Register nodes RegisterNodeId0, RegisterNodeId1, RegisterNodeId2
+                NodeIdCollection nodesToRegister = new NodeIdCollection() { RegisterNodeId0, RegisterNodeId1, RegisterNodeId2 };
+                var registeredNodeIds = await m_session.RegisterNodesAsync(nodesToRegister).ConfigureAwait(false);
+
+                Console.WriteLine("\n\nRegisterNodesAsync returned:");
+
+                for (int i = 0; i < nodesToRegister.Count; i++)
+                {
+                    if (registeredNodeIds.Count > i)
+                    {
+                        Console.WriteLine("\tNodeId:\"{0}\" was assigned NodeId=\"{1}\".", nodesToRegister[i], registeredNodeIds[i]);
+
+                        // read the value from  registeredNodeIds[i] using the returned registered node id
+                        value = m_session.Read(new ReadValueId() { NodeId = registeredNodeIds[i], AttributeId = Attributes.Value });
+                        Console.WriteLine("\tRead(\"{0}\"), Value= {1}, StatusCode:{2}.", registeredNodeIds[i], value.Value, value.StatusCode);
+                    }
+                }
+
+                // unregister the nodes using the registered node id
+                await m_session.UnregisterNodesAsync(registeredNodeIds).ConfigureAwait(false);
+                Console.WriteLine("\tUnregisterNodesAsync returned.");
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("RegisterNodesSampleAsync", ex);
             }
         }
         #endregion
@@ -1768,7 +1880,7 @@ namespace SampleClient.Samples
 
             try
             {
-               await m_session.DisconnectAsync(true).ConfigureAwait(false);
+                await m_session.DisconnectAsync(true).ConfigureAwait(false);
                 m_session.Dispose();
                 m_session = null;
                 Console.WriteLine("Session is disconnected.");
@@ -1781,6 +1893,367 @@ namespace SampleClient.Samples
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Reads value async
+        /// </summary>
+        /// <returns></returns>
+        private async Task ReadValueAsync()
+        {
+            NodeId nodeToRead = new NodeId(StaticInt32NodeId);
+            DataValue value = await m_session.ReadValueAsync(nodeToRead).ConfigureAwait(false);
+            if (value.Value != null)
+            {
+                Console.WriteLine($"\nReadValueAsync: The value of NodeId {StaticInt32NodeId} is {value.Value} - DONE ");
+            }
+        }
+
+        /// <summary>
+        /// Reads multiple values async
+        /// </summary>
+        /// <returns></returns>
+        private async Task ReadNodesValuesAsync()
+        {
+            NodeIdCollection nodesToRead = new NodeIdCollection() { StaticGuidNodeId, StaticDateTimeNodeId };
+            DataValueCollection values = await m_session.ReadNodesValuesAsync(nodesToRead).ConfigureAwait(false);
+            Console.WriteLine("\nReadNodesValuesAsync: ");
+
+            for (int i = 0; i < values.Count; i++)
+            {
+                Console.WriteLine($"The value of NodeId {nodesToRead[i].Identifier} is {values[i].Value} - DONE ");
+            }
+        }
+
+        /// <summary>
+        /// Reads node async
+        /// </summary>
+        /// <returns></returns>
+        private async Task ReadNodeAsync()
+        {
+            NodeId nodeToRead = new NodeId(StaticUInt32NodeId);
+
+            Node node = await m_session.ReadNodeAsync(nodeToRead).ConfigureAwait(false);
+
+            BaseNode baseNode = await m_session.ReadBaseNodeAsync(node?.NodeId).ConfigureAwait(false);
+
+            if (baseNode == null)
+            {
+                Console.WriteLine("\n The NodeId:{0} does not exist in the Address Space", StaticUInt32NodeId);
+                return;
+            }
+
+            if (node != null && baseNode.NodeClass == NodeClass.Variable)
+            {
+                VariableNodeEx variableNode = baseNode as VariableNodeEx;
+                if (variableNode != null)
+                {
+                    Console.WriteLine("\nReadNodeAsync: Async read node of: NodeId: " + node.NodeId + ", DisplayName:"
+                        + node.DisplayName + ", Value: " + variableNode.Value.Value + " - DONE ");
+                }
+            }
+        }
+        /// <summary>
+        /// Reads node with node class async
+        /// </summary>
+        /// <returns></returns>
+        private async Task ReadNodeWithNodeClassAsync()
+        {
+            NodeId nodeToRead = new NodeId(StaticUInt32NodeId);
+            NodeClass nodeClass = NodeClass.Variable;
+
+            Node node = await m_session.ReadNodeAsync(nodeToRead, nodeClass).ConfigureAwait(false);
+
+            BaseNode baseNode = await m_session.ReadBaseNodeAsync(node?.NodeId).ConfigureAwait(false);
+
+            if (baseNode == null)
+            {
+                Console.WriteLine("\n The NodeId:{0} does not exist in the Address Space", StaticUInt32NodeId);
+                return;
+            }
+
+            if (node != null && baseNode.NodeClass == NodeClass.Variable)
+            {
+                VariableNodeEx variableNode = baseNode as VariableNodeEx;
+                if (variableNode != null)
+                {
+                    Console.WriteLine("\nReadNodeWithNodeClassAsync: Async read node of NodeId:" + node.NodeId + ", NodeClass: " + nodeClass + ", DisplayName:"
+                        + node.DisplayName + ", Value: " + variableNode.Value.Value + " - DONE ");
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Reads nodes async
+        /// </summary>
+        /// <returns></returns>
+        private async Task ReadNodesAsync()
+        {
+            NodeIdCollection nodesToRead = new NodeIdCollection() { SetPointNodeId, StaticInt32NodeId, StaticCustomStructureVehicleNodeId };
+            IList<Node> nodes = await m_session.ReadNodesAsync(nodesToRead).ConfigureAwait(false);
+
+            Console.WriteLine("\nReadNodesAsync: ");
+            foreach (Node node in nodes)
+            {
+                BaseNode baseNode = await m_session.ReadBaseNodeAsync(node.NodeId).ConfigureAwait(false);
+                if (baseNode == null)
+                {
+                    Console.WriteLine("\n The NodeId:{0} does not exist in the Address Space", StaticUInt32NodeId);
+                    return;
+                }
+
+                if (baseNode.NodeClass == NodeClass.Variable)
+                {
+                    VariableNodeEx variableNode = baseNode as VariableNodeEx;
+                    if (variableNode != null)
+                    {
+                        if (node.NodeId.ToString().Equals(StaticCustomStructureVehicleNodeId))
+                        {
+                            DisplayComplexType(variableNode);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Async read nodes of NodeId: " + node.NodeId + ", DisplayName:"
+                                + node.DisplayName + ", Value: " + variableNode.Value.Value);
+                        }
+
+                        Console.WriteLine(" - DONE ");
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Reads multiple nodes with node class async
+        /// </summary>
+        /// <returns></returns>
+        private async Task ReadNodesWithNodeClassAsync()
+        {
+            NodeIdCollection nodesToRead = new NodeIdCollection() { SetPointNodeId, StaticInt32NodeId, StaticCustomStructureVehicleNodeId };
+            NodeClass nodeClass = NodeClass.Variable;
+
+            IList<Node> nodes = await m_session.ReadNodesAsync(nodesToRead, nodeClass).ConfigureAwait(false);
+
+            Console.WriteLine("\nReadNodesWithNodeClassAsync: ");
+
+            foreach (Node node in nodes)
+            {
+                BaseNode baseNode = await m_session.ReadBaseNodeAsync(node.NodeId).ConfigureAwait(false);
+                if (baseNode == null)
+                {
+                    Console.WriteLine("\nThe NodeId:{0} does not exist in the Address Space", StaticUInt32NodeId);
+                    return;
+                }
+
+                if (baseNode.NodeClass == NodeClass.Variable)
+                {
+                    VariableNodeEx variableNode = baseNode as VariableNodeEx;
+                    if (variableNode != null)
+                    {
+                        if (node.NodeId.ToString().Equals(StaticCustomStructureVehicleNodeId))
+                        {
+                            DisplayComplexType(variableNode);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Async read nodes of NodeId: " + node.NodeId + ", NodeClass: " + nodeClass + ", DisplayName:"
+                                + node.DisplayName + ", Value: " + variableNode.Value.Value);
+                        }
+
+                        Console.WriteLine(" - DONE ");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reads node by node id async
+        /// </summary>
+        /// <returns></returns>
+        private async Task ReadByValueIdAsync()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("ReadByValueIdAsync: The session is not initialized!");
+                return;
+            }
+
+            ReadValueId nodeToRead = new ReadValueId();
+            nodeToRead.NodeId = new NodeId(StaticGuidNodeId);
+            nodeToRead.AttributeId = Attributes.Value;
+
+            try
+            {
+                DataValueEx dataValue = await m_session.ReadAsync(nodeToRead).ConfigureAwait(false);
+                Console.WriteLine($"\nReadByValueIdAsync: Value of NodeId {StaticGuidNodeId} is {dataValue.Value} - DONE ");
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("ReadByValueIdAsync", ex);
+            }
+        }
+
+        /// <summary>
+        /// Reads multiple nodes by node ids asyncs
+        /// </summary>
+        /// <returns></returns>
+        private async Task ReadByValueCollectionAsync()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("ReadByValueCollectionAsync: The session is not initialized!");
+                return;
+            }
+
+            ReadValueIdCollection valueIdsToRead = BuildReadValueIdCollection();
+
+            Console.WriteLine("\nReadByValueCollectionAsync: Read array value for NodeIds: {0}", string.Join(",", string.Join(",", valueIdsToRead.Select(x => x.NodeId))) + " - DONE ");
+            try
+            {
+                DataValueCollection dataValues = await m_session.ReadAsync(valueIdsToRead).ConfigureAwait(false);
+
+                foreach (DataValue dataValue in dataValues)
+                {
+                    Array array = dataValue.Value as Array;
+
+                    if (array != null)
+                    {
+                        foreach (object obj in array)
+                        {
+                            Console.WriteLine("  {0}", obj);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("ReadByValueCollectionAsync", ex);
+            }
+        }
+
+        /// <summary>
+        /// Builds read value id collection
+        /// </summary>
+        /// <returns>The resulted read value id collection</returns>
+        private static ReadValueIdCollection BuildReadValueIdCollection()
+        {
+            return new ReadValueIdCollection
+            {
+                new ReadValueId
+                {
+                    NodeId = new NodeId(StaticInt64ArrayNodeId),
+                    AttributeId = Attributes.Value
+                },
+                new ReadValueId
+                {
+                    NodeId = new NodeId(StaticDateTimeNodeId),
+                    AttributeId = Attributes.Value
+                }
+            };
+        }
+
+        /// <summary>
+        /// Writes node async
+        /// </summary>
+        /// <returns></returns>
+        private async Task WriteVariableAsync()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteAsyncVariableNode: The session is not initialized!");
+                return;
+            }
+
+            WriteValue writeValue = new WriteValue();
+            writeValue.AttributeId = Attributes.Value;
+            writeValue.NodeId = new NodeId(StaticUInt32NodeId);
+
+            DataValue valueToWrite = new DataValue();
+            valueToWrite.Value = (uint)m_random.Next(1, 1975109192);
+
+            writeValue.Value = valueToWrite;
+
+            try
+            {
+                StatusCode statusCode = await m_session.WriteAsync(writeValue).ConfigureAwait(false);
+                Console.WriteLine("\nWriteVariableAsync: The NodeId:{0} was written with the value {1} ", StaticUInt32NodeId, writeValue.Value.Value);
+                Console.WriteLine(" Status code is {0}", statusCode);
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("WriteVariableAsync", ex);
+            }
+        }
+
+        /// <summary>
+        /// Writes multiple nodes async
+        /// </summary>
+        /// <param name="listOfNodes">The list of nodes</param>
+        /// <returns></returns>
+        private async Task WriteListAsync(List<WriteValue> listOfNodes)
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("WriteMultipleNodesValuesAsync: The session is not initialized!");
+                return;
+            }
+            DataValue valueToWrite = new DataValue();
+            valueToWrite.Value = m_random.Next(1, 1975109192);
+            listOfNodes[0].Value = valueToWrite;
+
+            DataValue valueToWrite1 = new DataValue();
+            valueToWrite1.Value = Guid.NewGuid();
+            listOfNodes[1].Value = valueToWrite1;
+
+            DataValue valueToWrite2 = new DataValue();
+            valueToWrite2.Value = DateTime.Now;
+            listOfNodes[2].Value = valueToWrite2;
+
+            Console.WriteLine("\nWrite value for multiple nodes: ");
+            try
+            {
+                IList<StatusCode> statusCodes = await m_session.WriteListAsync(listOfNodes).ConfigureAwait(false);
+
+                for (int i = 0; i < listOfNodes.Count; i++)
+                {
+                    Console.WriteLine(" \n {0}. Write value for node {1}.", i, listOfNodes[i].NodeId);
+                    Console.WriteLine(" Written value is {0} ", listOfNodes[i].Value.ToString());
+                    Console.WriteLine(" Status code is {0}", statusCodes[i]);
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("WriteMultipleNodesValuesAsync", ex);
+            }
+        }
+
+        /// <summary>
+        /// Builds a write value collection
+        /// </summary>
+        /// <returns>The resulted write value collection</returns>
+        private List<WriteValue> BuildWriteValueCollection()
+        {
+            return new List<WriteValue>()
+            {
+                new WriteValue()
+                {
+                    NodeId = new NodeId(StaticInt32NodeId),
+                    AttributeId = Attributes.Value
+                },
+                new WriteValue()
+                {
+                    NodeId = new NodeId(StaticGuidNodeId),
+                    AttributeId = Attributes.Value
+                },
+                new WriteValue()
+                {
+                    NodeId = new NodeId(StaticDateTimeNodeId),
+                    AttributeId = Attributes.Value
+                }
+            };
+        }
+
         /// <summary>
         /// Displays information at console for a read DataValue.
         /// </summary>
@@ -1790,6 +2263,34 @@ namespace SampleClient.Samples
             Console.WriteLine("  Status Code is {0}.", dataValue.StatusCode);
             Console.WriteLine("  Data Value is {0}.", dataValue.Value);
         }
+
+        /// <summary>
+        /// Print a variable of complex data type
+        /// </summary>
+        /// <param name="variableNode">The variable</param>
+        private void DisplayComplexType(VariableNodeEx variableNode)
+        {
+            Console.WriteLine("Async read nodes of NodeId: " + variableNode.NodeId + ", DisplayName:" + variableNode.DisplayName + ", Value: \n ");
+
+            if (variableNode.Value.ProcessedValue == null)
+            {
+                Console.WriteLine(" 'Structured Value' is null ");
+            }
+            else
+            {
+                StructuredValue complexData = variableNode.Value.ProcessedValue as StructuredValue;
+                if (complexData != null)
+                {
+                    Console.WriteLine("  Value is 'Structured Value' with fields: ");
+                    foreach (StructuredField field in complexData.Fields)
+                    {
+                        Console.WriteLine("   Field: {0} Value:{1} Type:{2} ", field.Name, complexData[field.Name] == null ? "<null>" : complexData[field.Name],
+                            complexData[field.Name] == null ? "N/A" : complexData[field.Name].GetType().Name);
+                    }
+                }
+            }
+        }
+
         #endregion
     }
 }

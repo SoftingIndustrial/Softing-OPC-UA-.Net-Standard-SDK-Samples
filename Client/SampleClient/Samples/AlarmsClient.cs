@@ -48,10 +48,10 @@ namespace SampleClient.Samples
         private const string AlarmsNodeId = "ns=2;i=1";
         
         //Method browse path: Root\Objects\Alarms\StartAllChangeValues
-        private const string StartAllChangeValuesNodeId = "ns=2;i=2780";
+        private const string StartAllChangeValuesNodeId = "ns=2;i=2662";
 
         //Method browse path: Root\Objects\Alarms\StopAllChangeValues
-        private const string StopAllChangeValuesNodeId = "ns=2;i=2782";
+        private const string StopAllChangeValuesNodeId = "ns=2;i=2664";
 
         //Browse name for m_alarmsModuleNodeId: Objects\Alarms
         private static readonly string m_alarmsModuleNodeId = "ns=2;i=2";

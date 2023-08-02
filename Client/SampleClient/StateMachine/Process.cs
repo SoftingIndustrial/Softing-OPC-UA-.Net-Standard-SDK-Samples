@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using SampleClient.Samples;
 using Softing.Opc.Ua.Client;
@@ -64,9 +65,7 @@ namespace SampleClient.StateMachine
             //add alarms menu - 5
             InitializeAccessRightsTransitions();
             //add call methods menu - 6
-            StateTransition callMethods = new StateTransition(State.Main, Command.CallMethods, "6", "Call Methods on Server");
-            callMethods.ExecuteCommand += CallMethods_ExecuteCommand;
-            m_transitions.Add(callMethods, State.Main);
+            InitializeCallMethodsTransitions();
             //add history menu - 7
             InitializeHistoryTransitions();
             // add file transfer menu - 8
@@ -77,27 +76,34 @@ namespace SampleClient.StateMachine
             //add all exit commands
             StateTransition exit = new StateTransition(State.Main, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
+
             m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.Browse, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
+
             m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.DiscoveryConnectGds, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
-            m_transitions.Add(exit, State.Exit);           
+
+            m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.History, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
+
             m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.MonitoredEventsAlarms, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
             m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.Alarms, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
+
             m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.ReadWriteRegisterNodes, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
+
             m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.FileTransfer, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
+
             m_transitions.Add(exit, State.Exit);
 
 
@@ -114,7 +120,7 @@ namespace SampleClient.StateMachine
             DisplayListOfCommands();
         }
 
-      
+
         #endregion
 
         #region Properties
@@ -123,7 +129,7 @@ namespace SampleClient.StateMachine
         /// Get current state of process
         /// </summary>
         public State CurrentState { get; private set; }
-      
+
 
         #endregion
 
@@ -168,10 +174,10 @@ namespace SampleClient.StateMachine
         /// <summary>
         /// Initializes all sub menu transitions for BrowseClient (1)
         /// </summary>
-        private void  InitializeDiscoveryConnectTransitions()
+        private void InitializeDiscoveryConnectTransitions()
         {
             //commAands for browse
-            StateTransition startDCClient = new StateTransition(State.Main, Command.DiscoveryConnect, "1", "Enter Connect/Reverse Connect/Discovery/GDS Menu");            
+            StateTransition startDCClient = new StateTransition(State.Main, Command.DiscoveryConnect, "1", "Enter Connect/Reverse Connect/Discovery/GDS Menu");
             m_transitions.Add(startDCClient, State.DiscoveryConnectGds);
 
             //add connect menu item
@@ -184,13 +190,18 @@ namespace SampleClient.StateMachine
             reverseConnectSample.ExecuteCommand += ReverseConnectSample_ExecuteCommand;
             m_transitions.Add(reverseConnectSample, State.DiscoveryConnectGds);
 
+            //add reverse connect menu item with timeout
+            StateTransition reverseConnectSampleTimeout = new StateTransition(State.DiscoveryConnectGds, Command.ReverseConnectSampleTimeout, "3", "Execute Reverse Connect Sample into a specified time interval");
+            reverseConnectSampleTimeout.ExecuteCommand += ReverseConnectSampleTimeoutInterval_ExecuteCommand;
+            m_transitions.Add(reverseConnectSampleTimeout, State.DiscoveryConnectGds);
+
             //add async reverse connect menu item
-            StateTransition reverseConnectSampleAsync = new StateTransition(State.DiscoveryConnectGds, Command.ReverseConnectSampleAsync, "3", "Execute Reverse Connect Async Sample");
+            StateTransition reverseConnectSampleAsync = new StateTransition(State.DiscoveryConnectGds, Command.ReverseConnectSampleAsync, "4", "Execute Reverse Connect Async Sample");
             reverseConnectSampleAsync.ExecuteCommand += ReverseConnectSampleAsync_ExecuteCommand;
             m_transitions.Add(reverseConnectSampleAsync, State.DiscoveryConnectGds);
 
             //add discovery menu item
-            StateTransition discoveryMenu = new StateTransition(State.DiscoveryConnectGds, Command.StartDiscoverySample, "4", "Enter Discovery Menu");           
+            StateTransition discoveryMenu = new StateTransition(State.DiscoveryConnectGds, Command.StartDiscoverySample, "5", "Enter Discovery Menu");           
             m_transitions.Add(discoveryMenu, State.Discovery);
 
             //add discovery menu item
@@ -200,7 +211,7 @@ namespace SampleClient.StateMachine
 
             StateTransition discoverServersOnNetworkSample = new StateTransition(State.Discovery, Command.DiscoverServersOnNetworkSample, "2", "Execute DiscoverServersOnNetwork Sample");
             discoverServersOnNetworkSample.ExecuteCommand += DiscoverServersOnNetworkSample_ExecuteCommand;
-            m_transitions.Add(discoverServersOnNetworkSample, State.Discovery);          
+            m_transitions.Add(discoverServersOnNetworkSample, State.Discovery);
 
             //add discovery menu item
             StateTransition discoverServersSampleAsync = new StateTransition(State.Discovery, Command.DiscoverServersSampleAsync, "3", "Execute DiscoverServers Async Sample");
@@ -216,7 +227,7 @@ namespace SampleClient.StateMachine
             m_transitions.Add(endDiscoveryMenu, State.DiscoveryConnectGds);
 
             //add GDS menu item
-            StateTransition gdsSample = new StateTransition(State.DiscoveryConnectGds, Command.StartGDSSample, "5", "Enter GDS Sample Menu");            
+            StateTransition gdsSample = new StateTransition(State.DiscoveryConnectGds, Command.StartGDSSample, "6", "Enter GDS Sample Menu");            
             m_transitions.Add(gdsSample, State.GDS);
 
             //commands for GDS Pull Get Trust List
@@ -239,10 +250,10 @@ namespace SampleClient.StateMachine
             startGDSPushCertificateSample.ExecuteCommand += GDSPushCertificateSample_ExecuteCommand;
             m_transitions.Add(startGDSPushCertificateSample, State.GDS);
 
-            StateTransition endGDSSample = new StateTransition(State.GDS, Command.EndGDSSample, "0", "Back to Discovery/Connect Menu");           
+            StateTransition endGDSSample = new StateTransition(State.GDS, Command.EndGDSSample, "0", "Back to Discovery/Connect Menu");
             m_transitions.Add(endGDSSample, State.DiscoveryConnectGds);
 
-            StateTransition endDiscoveryConnect = new StateTransition(State.DiscoveryConnectGds, Command.EndDiscoveryConnect, "0", "Back to Main Menu");            
+            StateTransition endDiscoveryConnect = new StateTransition(State.DiscoveryConnectGds, Command.EndDiscoveryConnect, "0", "Back to Main Menu");
             m_transitions.Add(endDiscoveryConnect, State.Main);
         }
 
@@ -255,15 +266,31 @@ namespace SampleClient.StateMachine
             StateTransition startBrowseClient = new StateTransition(State.Main, Command.StartBrowse, "2", "Enter Browse Menu");
             startBrowseClient.ExecuteCommand += StartBrowseClient_ExecuteCommand;
             m_transitions.Add(startBrowseClient, State.Browse);
+
             StateTransition browseServer = new StateTransition(State.Browse, Command.BrowseServer, "1", "Browse server");
             browseServer.ExecuteCommand += BrowseServer_ExecuteCommand;
             m_transitions.Add(browseServer, State.Browse);
+
             StateTransition browseServerWithOptions = new StateTransition(State.Browse, Command.BrowseServerWithOptions, "2", "Browse server with options");
             browseServerWithOptions.ExecuteCommand += BrowseServerWithOptions_ExecuteCommand;
             m_transitions.Add(browseServerWithOptions, State.Browse);
+
             StateTransition translate = new StateTransition(State.Browse, Command.Translate, "3", "Translate BrowsePaths to NodeIds");
             translate.ExecuteCommand += Translate_ExecuteCommand;
             m_transitions.Add(translate, State.Browse);
+
+            StateTransition browseServerAsync = new StateTransition(State.Browse, Command.BrowseServerAsync, "4", "Browse server Asynchronously");
+            browseServerAsync.ExecuteCommand += BrowseServerAsync_ExecuteCommand;
+            m_transitions.Add(browseServerAsync, State.Browse);
+
+            StateTransition browseServerWithOptionsAsync = new StateTransition(State.Browse, Command.BrowseServerWithOptionsAsync, "5", "Browse server with options Asynchronously");
+            browseServerWithOptionsAsync.ExecuteCommand += BrowseServerWithOptionsAsync_ExecuteCommand;
+            m_transitions.Add(browseServerWithOptionsAsync, State.Browse);
+
+            StateTransition translateAsync = new StateTransition(State.Browse, Command.TranslateAsync, "6", "Translate BrowsePaths to NodeIds Asynchronously");
+            translateAsync.ExecuteCommand += TranslateAsync_ExecuteCommand;
+            m_transitions.Add(translateAsync, State.Browse);
+
             StateTransition endBrowseClient = new StateTransition(State.Browse, Command.EndBrowse, "0", "Back to Main Menu");
             endBrowseClient.ExecuteCommand += EndBrowseClient_ExecuteCommand;
             m_transitions.Add(endBrowseClient, State.Main);
@@ -278,15 +305,30 @@ namespace SampleClient.StateMachine
             StateTransition startReadWrite = new StateTransition(State.Main, Command.StartReadWriteRegister, "3", "Enter Read/Write/RegisterNodes Menu");
             startReadWrite.ExecuteCommand += StartReadWrite_ExecuteCommand;
             m_transitions.Add(startReadWrite, State.ReadWriteRegisterNodes);
+
             StateTransition read = new StateTransition(State.ReadWriteRegisterNodes, Command.Read, "1", "Read Nodes");
             read.ExecuteCommand += Read_ExecuteCommand;
             m_transitions.Add(read, State.ReadWriteRegisterNodes);
+
             StateTransition write = new StateTransition(State.ReadWriteRegisterNodes, Command.Write, "2", "Write Nodes");
             write.ExecuteCommand += Write_ExecuteCommand;
             m_transitions.Add(write, State.ReadWriteRegisterNodes);
+
             StateTransition registerNodes = new StateTransition(State.ReadWriteRegisterNodes, Command.RegisterNodes, "3", "Register Nodes");
             registerNodes.ExecuteCommand += RegisterNodes_ExecuteCommand;
             m_transitions.Add(registerNodes, State.ReadWriteRegisterNodes);
+
+            StateTransition registerNodesAsync = new StateTransition(State.ReadWriteRegisterNodes, Command.RegisterNodesAsync, "4", "Register Nodes Asynchronously");
+            registerNodesAsync.ExecuteCommand += RegisterNodesAsync_ExecuteCommand;
+            m_transitions.Add(registerNodesAsync, State.ReadWriteRegisterNodes);
+
+            StateTransition readAsync = new StateTransition(State.ReadWriteRegisterNodes, Command.ReadAsync, "5", "Read Nodes Asynchronously");
+            readAsync.ExecuteCommand += ReadAsync_ExecuteCommand;
+            m_transitions.Add(readAsync, State.ReadWriteRegisterNodes);
+
+            StateTransition writeAsync = new StateTransition(State.ReadWriteRegisterNodes, Command.WriteAsync, "6", "Write Nodes Asynchronously");
+            writeAsync.ExecuteCommand += WriteAsync_ExecuteCommand;
+            m_transitions.Add(writeAsync, State.ReadWriteRegisterNodes);
 
             StateTransition endReadWrite = new StateTransition(State.ReadWriteRegisterNodes, Command.EndReadWriteRegister, "0", "Back to Main Menu");
             endReadWrite.ExecuteCommand += EndReadWrite_ExecuteCommand;
@@ -298,7 +340,7 @@ namespace SampleClient.StateMachine
         /// </summary>
         private void InitializeMonitoredItemEventsTransitions()
         {
-            //commands for monitored item
+            //commands for monitored item - 4
             StateTransition start = new StateTransition(State.Main, Command.StartMonitoredEventsAlarms, "4", "Enter MonitoredItem/Events Menu/Alarms Menu");
             m_transitions.Add(start, State.MonitoredEventsAlarms);
 
@@ -306,40 +348,62 @@ namespace SampleClient.StateMachine
             StateTransition startMonitoredItem = new StateTransition(State.MonitoredEventsAlarms, Command.StartMonitoredItem, "1", "Enter MonitoredItem Menu");
             startMonitoredItem.ExecuteCommand += StartMonitoredItem_ExecuteCommand;
             m_transitions.Add(startMonitoredItem, State.MonitoredItem);
+
             StateTransition createMonitoredItem = new StateTransition(State.MonitoredItem, Command.CreateMonitoredItem, "1", "Create data change Monitored Items");
             createMonitoredItem.ExecuteCommand += CreateMonitoredItem_ExecuteCommand;
             m_transitions.Add(createMonitoredItem, State.MonitoredItem);
+
             StateTransition deleteMonitoredItem = new StateTransition(State.MonitoredItem, Command.DeleteMonitoredItem, "2", "Delete data change Monitored Items");
             deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItem_ExecuteCommand;
             m_transitions.Add(deleteMonitoredItem, State.MonitoredItem);
+
             StateTransition endMonitoredItem = new StateTransition(State.MonitoredItem, Command.EndMonitoredItem, "0", "Back to MonitoredItem/Events Menu/Alarms Menu");
             endMonitoredItem.ExecuteCommand += EndMonitoredItem_ExecuteCommand;
             m_transitions.Add(endMonitoredItem, State.MonitoredEventsAlarms);
 
+            EventsMenu();
+
+            AlarmsMenu();
+
+            StateTransition end = new StateTransition(State.MonitoredEventsAlarms, Command.EndMonitoredEventsAlarms, "0", "Back to Main Menu");
+            m_transitions.Add(end, State.Main);
+        }
+
+        private void EventsMenu()
+        {
             //commands for events
             StateTransition startEventsClient = new StateTransition(State.MonitoredEventsAlarms, Command.StartEvents, "2", "Enter Events Menu");
             startEventsClient.ExecuteCommand += StartEventsClient_ExecuteCommand;
             m_transitions.Add(startEventsClient, State.Events);
-            StateTransition createEventMonitorItem = new StateTransition(State.Events, Command.CreateEventMonitorItem, "1", "Create event Monitored Item");
-            createEventMonitorItem.ExecuteCommand += CreateEventMonitorItem_ExecuteCommand;
+
+            StateTransition createEventMonitorItem = new StateTransition(State.Events, Command.CreateEventMonitorItem, "1", "Create Event Monitored Item");
+            createEventMonitorItem.ExecuteCommand += CreateEventMonitoredItem_ExecuteCommand;
             m_transitions.Add(createEventMonitorItem, State.Events);
-            StateTransition deleteEventMonitorItem = new StateTransition(State.Events, Command.DeleteEventMonitorItem, "2", "Delete event Monitored Item");
-            deleteEventMonitorItem.ExecuteCommand += DeleteEventMonitorItem_ExecuteCommand;
+
+            StateTransition deleteEventMonitorItem = new StateTransition(State.Events, Command.DeleteEventMonitorItem, "2", "Delete Event Monitored Item");
+            deleteEventMonitorItem.ExecuteCommand += DeleteEventMonitoredItem_ExecuteCommand;
             m_transitions.Add(deleteEventMonitorItem, State.Events);
+
             StateTransition endEvents = new StateTransition(State.Events, Command.EndEvents, "0", "Back to MonitoredItem/Events Menu/Alarms Menu");
             endEvents.ExecuteCommand += EndEvents_ExecuteCommand;
             m_transitions.Add(endEvents, State.MonitoredEventsAlarms);
+        }
 
+        private void AlarmsMenu()
+        {
             //commands for alarms
             StateTransition startAlarms = new StateTransition(State.MonitoredEventsAlarms, Command.StartAlarms, "3", "Enter Alarms Menu");
             startAlarms.ExecuteCommand += StartAlarms_ExecuteCommand;
             m_transitions.Add(startAlarms, State.Alarms);
+
             StateTransition refreshAlarms = new StateTransition(State.Alarms, Command.RefreshAlarms, "1", "Refresh active alarms");
             refreshAlarms.ExecuteCommand += RefreshAlarms_ExecuteCommand;
             m_transitions.Add(refreshAlarms, State.Alarms);
+
             StateTransition acknowledgeAlarms = new StateTransition(State.Alarms, Command.AcknowledgeAlarms, "2", "Acknowledge alarm");
             acknowledgeAlarms.ExecuteCommand += AcknowledgeAlarms_ExecuteCommand;
             m_transitions.Add(acknowledgeAlarms, State.Alarms);
+
             StateTransition addCommentAllarms = new StateTransition(State.Alarms, Command.AddCommentAlarms, "3", "Add comment to alarm");
             addCommentAllarms.ExecuteCommand += AddCommentAlarms_ExecuteCommand;
             m_transitions.Add(addCommentAllarms, State.Alarms);
@@ -348,6 +412,7 @@ namespace SampleClient.StateMachine
             StateTransition enableTriggerAlarms = new StateTransition(State.Alarms, Command.EnableTriggerAlarms, "4", "Enable Trigger Alarms (refresh timeout = 15 seconds)");
             enableTriggerAlarms.ExecuteCommand += EnableTriggerAlarms_ExecuteCommand;
             m_transitions.Add(enableTriggerAlarms, State.Alarms);
+
             StateTransition disableTriggerAlarms = new StateTransition(State.Alarms, Command.DisableTriggerAlarms, "5", "Disable Trigger Alarms");
             disableTriggerAlarms.ExecuteCommand += DisableTriggerAlarms_ExecuteCommand;
             m_transitions.Add(disableTriggerAlarms, State.Alarms);
@@ -355,11 +420,7 @@ namespace SampleClient.StateMachine
             StateTransition endAlarms = new StateTransition(State.Alarms, Command.EndAlarms, "0", "Back to MonitoredItem/Events Menu/Alarms Menu");
             endAlarms.ExecuteCommand += EndAlarms_ExecuteCommand;
             m_transitions.Add(endAlarms, State.MonitoredEventsAlarms);
-
-            StateTransition end = new StateTransition(State.MonitoredEventsAlarms, Command.EndMonitoredEventsAlarms, "0", "Back to Main Menu");
-            m_transitions.Add(end, State.Main);
         }
-        
 
         /// <summary>
         /// Initializes all sub menu transitions for Alarms (5)
@@ -384,6 +445,27 @@ namespace SampleClient.StateMachine
         }
 
         /// <summary>
+        /// Initializes all sub menu transitions for CallMethod (6)
+        /// </summary>
+        private void InitializeCallMethodsTransitions()
+        {
+            //add call methods menu - 6
+            StateTransition startCallMethods = new StateTransition(State.Main, Command.StartCallMethods, "6", "Enter Call Methods Menu");
+            m_transitions.Add(startCallMethods, State.CallMethods);
+
+            StateTransition callMethods = new StateTransition(State.CallMethods, Command.CallMethods, "1", "Call Methods On Server");
+            callMethods.ExecuteCommand += CallMethods_ExecuteCommand;
+            m_transitions.Add(callMethods, State.CallMethods);
+
+            StateTransition callMethodsAsync = new StateTransition(State.CallMethods, Command.CallMethodsAsync, "2", "Call Methods on Server Asynchronously");
+            callMethodsAsync.ExecuteCommand += CallMethodsAsync_ExecuteCommand;
+            m_transitions.Add(callMethodsAsync, State.CallMethods);
+
+            StateTransition endCallMethods = new StateTransition(State.CallMethods, Command.EndCallMethods, "0", "Back to Main Menu");
+            m_transitions.Add(endCallMethods, State.Main);
+        }
+
+        /// <summary>
         /// Initializes all sub menu transitions for History (7)
         /// </summary>
         private void InitializeHistoryTransitions()
@@ -392,20 +474,35 @@ namespace SampleClient.StateMachine
             StateTransition startHistory = new StateTransition(State.Main, Command.StartHistory, "7", "Enter Read History Menu");
             startHistory.ExecuteCommand += StartHistory_ExecuteCommand;
             m_transitions.Add(startHistory, State.History);
+
             StateTransition historyReadRaw = new StateTransition(State.History, Command.HistoryReadRaw, "1", "History read raw");
             historyReadRaw.ExecuteCommand += HistoryReadRaw_ExecuteCommand;
             m_transitions.Add(historyReadRaw, State.History);
+
             StateTransition historyReadAtTime = new StateTransition(State.History, Command.HistoryReadAtTime, "2", "History read at time");
             historyReadAtTime.ExecuteCommand += HistoryReadAtTime_ExecuteCommand;
             m_transitions.Add(historyReadAtTime, State.History);
+
             StateTransition historyReadProcessed = new StateTransition(State.History, Command.HistoryReadProcessed, "3", "History read processed");
             historyReadProcessed.ExecuteCommand += HistoryReadProcessed_ExecuteCommand;
             m_transitions.Add(historyReadProcessed, State.History);
+
+            StateTransition historyReadAsyncRaw = new StateTransition(State.History, Command.HistoryReadRawAsync, "4", "History read raw Asynchronously");
+            historyReadAsyncRaw.ExecuteCommand += HistoryReadAsyncRaw_ExecuteCommand;
+            m_transitions.Add(historyReadAsyncRaw, State.History);
+
+            StateTransition historyReadAsyncAtTime = new StateTransition(State.History, Command.HistoryReadAtTimeAsync, "5", "History read async at time Asynchronously");
+            historyReadAsyncAtTime.ExecuteCommand += HistoryReadAsyncAtTime_ExecuteCommand;
+            m_transitions.Add(historyReadAsyncAtTime, State.History);
+
+            StateTransition historyReadAsyncProcessed = new StateTransition(State.History, Command.HistoryReadProcessedAsync, "6", "History read async processed Asynchronously");
+            historyReadAsyncProcessed.ExecuteCommand += HistoryReadAsyncProcessed_ExecuteCommand;
+            m_transitions.Add(historyReadAsyncProcessed, State.History);
+
             StateTransition endHistory = new StateTransition(State.History, Command.EndHistory, "0", "Back to Main Menu");
             endHistory.ExecuteCommand += EndHistory_ExecuteCommand;
             m_transitions.Add(endHistory, State.Main);
         }
-
 
         /// <summary>
         /// Initializes all sub menu transitions for file transfer (8)
@@ -428,7 +525,7 @@ namespace SampleClient.StateMachine
             StateTransition readByteArrayFileTransfer = new StateTransition(State.FileTransfer, Command.ReadByteArrayFileTransfer, "3", "Read Byte Array");
             readByteArrayFileTransfer.ExecuteCommand += ReadByteArrayFileTransfer_ExecuteCommand;
             m_transitions.Add(readByteArrayFileTransfer, State.FileTransfer);
-            
+
             StateTransition uploadTemporaryFileTransfer = new StateTransition(State.FileTransfer, Command.UploadTemporaryFileTransfer, "4", "Upload Temporary File");
             uploadTemporaryFileTransfer.ExecuteCommand += WriteTemporaryFileTransfer_ExecuteCommand;
             m_transitions.Add(uploadTemporaryFileTransfer, State.FileTransfer);
@@ -470,7 +567,7 @@ namespace SampleClient.StateMachine
             {
                 // disable alarms
                 m_alarmsClient.CallTriggerAlarms(TriggerAlarmsOption.Disable);
-                
+
                 // disconnect
                 await m_alarmsClient.Disconnect().ConfigureAwait(false);
                 m_alarmsClient = null;
@@ -558,7 +655,7 @@ namespace SampleClient.StateMachine
         {
             if (m_accessRightsClient == null)
             {
-                m_accessRightsClient = new AccessRightsClient();               
+                m_accessRightsClient = new AccessRightsClient();
             }
             return Task.CompletedTask;
         }
@@ -620,6 +717,17 @@ namespace SampleClient.StateMachine
             return Task.CompletedTask;
         }
 
+        private async Task TranslateAsync_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_browseClient != null)
+            {
+                //call translate single path
+                await m_browseClient.TranslateBrowsePathToNodeIdsAsync().ConfigureAwait(false);
+                //call translate multiple paths
+                await m_browseClient.TranslateBrowsePathsToNodeIdsAsync().ConfigureAwait(false);
+            }
+        }
+
         private Task BrowseServerWithOptions_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_browseClient != null)
@@ -627,6 +735,14 @@ namespace SampleClient.StateMachine
                 m_browseClient.BrowseWithOptions();
             }
             return Task.CompletedTask;
+        }
+
+        private async Task BrowseServerWithOptionsAsync_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_browseClient != null)
+            {
+                await m_browseClient.BrowseWithOptionsAsync().ConfigureAwait(false);
+            }
         }
 
         private Task BrowseServer_ExecuteCommand(object sender, EventArgs e)
@@ -638,18 +754,28 @@ namespace SampleClient.StateMachine
             return Task.CompletedTask;
         }
 
+        private async Task BrowseServerAsync_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_browseClient != null)
+            {
+                await m_browseClient.BrowseTheServerAsync().ConfigureAwait(false);
+            }
+        }
+
         #endregion
 
         #region ExecuteCommand Handlers for Connect
 
         private async Task ConnectSample_ExecuteCommand(object sender, EventArgs e)
         {
-            //ConnectClient sample does not need to lpad data type dictionaries or to decode custom data types
+            //ConnectClient sample does not need to load data type dictionaries or to decode custom data types
             bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
             bool rememberDecodeDataTypeDictionaries = m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries;
+            bool readNodesWithTypeNotInHierarchy = m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy;
 
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
+            m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy = false;
 
             ConnectClient connectClient = new ConnectClient(m_application);
 
@@ -670,9 +796,29 @@ namespace SampleClient.StateMachine
 
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
+            m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy = readNodesWithTypeNotInHierarchy;
         }
 
         private async Task ReverseConnectSample_ExecuteCommand(object sender, EventArgs e)
+        {
+            //ConnectClient sample does not need to load data type dictionaries or to decode custom data types
+            bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
+            bool rememberDecodeDataTypeDictionaries = m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries;
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
+            m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy = false;
+
+            ReverseConnectClient reverseConnectClient = new ReverseConnectClient(m_application);
+            //await reverseConnectClient.CreateOpcTcpSessionWithNoSecurity().ConfigureAwait(false);
+
+            // get all endpoints and create sessions that will be connected asynchronously
+            await reverseConnectClient.GetEndpointsAndReverseConnect(false).ConfigureAwait(false);
+
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
+        }
+
+        private async Task ReverseConnectSampleTimeoutInterval_ExecuteCommand(object sender, EventArgs e)
         {
             //ConnectClient sample does not need to lpad data type dictionaries or to decode custom data types
             bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
@@ -680,12 +826,10 @@ namespace SampleClient.StateMachine
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
 
-            
             ReverseConnectClient reverseConnectClient = new ReverseConnectClient(m_application);
-            //await reverseConnectClient.CreateOpcTcpSessionWithNoSecurity().ConfigureAwait(false);
-
-            // get all endpoints and create sessions that will be connected synchronously
-            await reverseConnectClient.GetEndpointsAndReverseConnect(false).ConfigureAwait(false);
+            
+            // get all endpoints and create sessions into a specified time interval
+            await reverseConnectClient.GetEndpointsAndReverseConnectTimeoutInterval(false).ConfigureAwait(false);
 
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
@@ -694,7 +838,7 @@ namespace SampleClient.StateMachine
         private async Task ReverseConnectSampleAsync_ExecuteCommand(object sender, EventArgs e)
         {
             ReverseConnectClient reverseConnectClient = new ReverseConnectClient(m_application);
-            
+
             await reverseConnectClient.GetEndpointsAndReverseConnect(true).ConfigureAwait(false);
         }
 
@@ -831,7 +975,7 @@ namespace SampleClient.StateMachine
             }
             if (m_gdsClient == null)
             {
-                m_gdsClient = new GdsClient(m_application);                
+                m_gdsClient = new GdsClient(m_application);
             }
         }
 
@@ -848,7 +992,7 @@ namespace SampleClient.StateMachine
             }
         }
 
-        private Task DeleteEventMonitorItem_ExecuteCommand(object sender, EventArgs e)
+        private Task DeleteEventMonitoredItem_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_eventsClient != null)
             {
@@ -857,7 +1001,7 @@ namespace SampleClient.StateMachine
             return Task.CompletedTask;
         }
 
-        private Task CreateEventMonitorItem_ExecuteCommand(object sender, EventArgs e)
+        private Task CreateEventMonitoredItem_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_eventsClient != null)
             {
@@ -913,6 +1057,30 @@ namespace SampleClient.StateMachine
                 m_historyClient.HistoryReadRaw();
             }
             return Task.CompletedTask;
+        }
+
+        private async Task HistoryReadAsyncProcessed_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_historyClient != null)
+            {
+                await m_historyClient.HistoryReadProcessedAsync().ConfigureAwait(false);
+            }
+        }
+
+        private async Task HistoryReadAsyncAtTime_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_historyClient != null)
+            {
+                await m_historyClient.HistoryReadAtTimeAsync().ConfigureAwait(false);
+            }
+        }
+
+        private async Task HistoryReadAsyncRaw_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_historyClient != null)
+            {
+                await m_historyClient.HistoryReadRawAsync().ConfigureAwait(false);
+            }
         }
 
         private async Task StartHistory_ExecuteCommand(object sender, EventArgs e)
@@ -980,15 +1148,33 @@ namespace SampleClient.StateMachine
 
             //initialize session
             await methodCallClient.InitializeSession().ConfigureAwait(false);
-            //call method 
-            methodCallClient.CallMethod();
 
-            methodCallClient.CallCountRefrigeratorStatesMethod();
-            //call async method 
-            methodCallClient.AsyncCallMethod();
+            methodCallClient.Call();
+            
+            //wait and close session
+            Task.Delay(1000).Wait();
+
+            await methodCallClient.DisconnectSession().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronous call methods on server
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async Task CallMethodsAsync_ExecuteCommand(object sender, EventArgs e)
+        {
+            //initialize method call sample
+            MethodCallClient methodCallClient = new MethodCallClient(m_application);
+
+            //initialize session
+            await methodCallClient.InitializeSession().ConfigureAwait(false);
+
+            await methodCallClient.CallAsync().ConfigureAwait(false);
 
             //wait and close session
             Task.Delay(1000).Wait();
+
             await methodCallClient.DisconnectSession().ConfigureAwait(false);
         }
 
@@ -1035,6 +1221,14 @@ namespace SampleClient.StateMachine
             return Task.CompletedTask;
         }
 
+        private async Task ReadAsync_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_readWriteClient != null)
+            {
+                await m_readWriteClient.ReadAsync().ConfigureAwait(false);
+            }
+        }
+
         private Task RegisterNodes_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_readWriteClient != null)
@@ -1044,12 +1238,28 @@ namespace SampleClient.StateMachine
             return Task.CompletedTask;
         }
 
+        private async Task RegisterNodesAsync_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_readWriteClient != null)
+            {
+                await m_readWriteClient.RegisterNodesSampleAsync().ConfigureAwait(false);
+            }
+        }
+
         private async Task StartReadWrite_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_readWriteClient == null)
-            {    
+            {
                 m_readWriteClient = new ReadWriteClient(m_application);
                 await m_readWriteClient.InitializeSession().ConfigureAwait(false);
+            }
+        }
+
+        private async Task WriteAsync_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_readWriteClient != null)
+            {
+                await m_readWriteClient.WriteAsync().ConfigureAwait(false);
             }
         }
 
@@ -1146,7 +1356,7 @@ namespace SampleClient.StateMachine
                 m_pubSubClient = null;
             }
         }
-        
+
 
         #endregion
 

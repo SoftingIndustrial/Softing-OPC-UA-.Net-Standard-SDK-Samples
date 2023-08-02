@@ -111,9 +111,11 @@ namespace SampleClient.Samples
                 Console.WriteLine("HistoryReadAtTime: The session is not connected!");
                 return;
             }
-            DateTimeCollection requiredTimes = new DateTimeCollection();
-            requiredTimes.Add(new DateTime(2011, 1, 1, 12, 0, 10, DateTimeKind.Utc));
-            requiredTimes.Add(new DateTime(2011, 7, 1, 12, 1, 0, DateTimeKind.Utc));
+            DateTimeCollection requiredTimes = new DateTimeCollection
+            {
+                new DateTime(2011, 1, 1, 12, 0, 10, DateTimeKind.Utc),
+                new DateTime(2011, 7, 1, 12, 1, 0, DateTimeKind.Utc)
+            };
             ReadAtTimeDetails argument = new ReadAtTimeDetails()
             {
                 ReqTimes = requiredTimes,
@@ -182,6 +184,168 @@ namespace SampleClient.Samples
             catch (Exception ex)
             {
                 Program.PrintException("HistoryReadProcessed", ex);
+            }
+
+            if (results == null || results.Count == 0)
+            {
+                Console.WriteLine("No results");
+                return;
+            }
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                string value = results[i].Value == null ? "NULL" : results[i].Value.ToString();
+                Console.WriteLine("[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r\t\tStatusCode: {4} HistoryInfo: {5}",
+                    i, value, results[i].ServerTimestamp, results[i].SourceTimestamp, results[i].StatusCode,
+                    results[i].StatusCode.AggregateBits);
+            }
+        }
+
+        #endregion
+
+        #region Read Async History
+
+        /// <summary>
+        /// Read asynchronous history Raw
+        /// </summary>
+        public async Task HistoryReadRawAsync()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("HistoryReadRawAsync: The session is not initialized!");
+                return;
+            }
+            if (m_session.CurrentState != State.Active)
+            {
+                Console.WriteLine("HistoryReadRawAsync: The session is not connected!");
+                return;
+            }
+            ReadRawModifiedDetails argument = new ReadRawModifiedDetails()
+            {
+                IsReadModified = false,
+                StartTime = new DateTime(2011, 1, 1, 12, 0, 0, DateTimeKind.Utc),
+                EndTime = new DateTime(2011, 1, 1, 12, 1, 0, DateTimeKind.Utc),
+                NumValuesPerNode = 3,
+                ReturnBounds = false
+            };
+
+            TimestampsToReturn timestampsToReturn = TimestampsToReturn.Both;
+
+            List<DataValueEx> results = null;
+            try
+            {
+                results = await m_session.HistoryReadRawAsync(m_historianNodeId, argument, timestampsToReturn).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("HistoryReadRawAsync", ex);
+            }
+
+            if (results == null || results.Count == 0)
+            {
+                Console.WriteLine("No results");
+                return;
+            }
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                string value = results[i].Value == null ? "NULL" : results[i].Value.ToString();
+                Console.WriteLine("[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r\t\tStatusCode: {4} HistoryInfo: {5}",
+                    i, value, results[i].ServerTimestamp, results[i].SourceTimestamp, results[i].StatusCode,
+                    results[i].StatusCode.AggregateBits);
+            }
+        }
+
+        /// <summary>
+        /// Read history asynchronous in interval
+        /// </summary>
+        public async Task HistoryReadAtTimeAsync()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("HistoryReadAtTimeAsync: The session is not initialized!");
+                return;
+            }
+            if (m_session.CurrentState != State.Active)
+            {
+                Console.WriteLine("HistoryReadAtTimeAsync: The session is not connected!");
+                return;
+            }
+            DateTimeCollection requiredTimes = new DateTimeCollection
+            {
+                new DateTime(2011, 1, 1, 12, 0, 10, DateTimeKind.Utc),
+                new DateTime(2011, 7, 1, 12, 1, 0, DateTimeKind.Utc)
+            };
+            ReadAtTimeDetails argument = new ReadAtTimeDetails()
+            {
+                ReqTimes = requiredTimes,
+                UseSimpleBounds = true
+            };
+
+            TimestampsToReturn timestampsToReturn = TimestampsToReturn.Both;
+
+            List<DataValueEx> results = null;
+            try
+            {
+                results = await m_session.HistoryReadAtTimeAsync(m_historianNodeId, argument, timestampsToReturn).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("HistoryReadAtTimeAsync", ex);
+            }
+
+            if (results == null || results.Count == 0)
+            {
+                Console.WriteLine("No results");
+                return;
+            }
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                string value = results[i].Value == null ? "NULL" : results[i].Value.ToString();
+                Console.WriteLine("[{0}] Value: {1} ServerTimestamp: {2} SourceTimestamp: {3} \n\r\t\tStatusCode: {4} HistoryInfo: {5}",
+                    i, value, results[i].ServerTimestamp, results[i].SourceTimestamp, results[i].StatusCode,
+                    results[i].StatusCode.AggregateBits);
+            }
+        }
+
+        /// <summary>
+        /// Read history asynchronous aggregates
+        /// </summary>
+        public async Task HistoryReadProcessedAsync()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("HistoryReadProcessedAsync: The session is not initialized!");
+                return;
+            }
+            if (m_session.CurrentState != State.Active)
+            {
+                Console.WriteLine("HistoryReadProcessedAsync: The session is not connected!");
+                return;
+            }
+            NodeIdCollection aggregateTypes = new NodeIdCollection
+            {
+                ObjectIds.AggregateFunction_Average //aggregate function average           
+            };
+
+            ReadProcessedDetails argument = new ReadProcessedDetails()
+            {
+                StartTime = new DateTime(2011, 1, 1, 12, 0, 10, DateTimeKind.Utc),
+                EndTime = new DateTime(2011, 1, 1, 12, 1, 40, DateTimeKind.Utc),
+                ProcessingInterval = 10000,
+                AggregateType = aggregateTypes
+            };
+            TimestampsToReturn timestampsToReturn = TimestampsToReturn.Both;
+
+            List<DataValueEx> results = null;
+            try
+            {
+                results = await m_session.HistoryReadProcessedAsync(m_historianNodeId, argument, timestampsToReturn).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("HistoryReadProcessedAsync", ex);
             }
 
             if (results == null || results.Count == 0)

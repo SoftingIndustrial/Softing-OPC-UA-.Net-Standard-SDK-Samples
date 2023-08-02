@@ -203,7 +203,8 @@ namespace SampleClient
                     {
                         DiscoveryOperationTimeout = 10000,
                         DecodeCustomDataTypes = true,
-                        DecodeDataTypeDictionaries = true
+                        DecodeDataTypeDictionaries = true,
+                        ReadNodesWithTypeNotInHierarchy = false
                     })
                 .SetTraceMasks(1)
                 .SetOutputFilePath("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleClient.log")

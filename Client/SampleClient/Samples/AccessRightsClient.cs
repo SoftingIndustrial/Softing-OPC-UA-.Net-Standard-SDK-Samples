@@ -66,6 +66,7 @@ namespace SampleClient.Samples
             // set the flags to avoid loading custom data types 
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
+            m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy = false;
         }
 
         #endregion

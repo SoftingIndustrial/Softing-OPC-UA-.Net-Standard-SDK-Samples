@@ -19,7 +19,7 @@ namespace SampleServer
         public const string DataAccess = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/DataAccessServer";
         public const string FileSystem = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/FileSystemServer";
         public const string HistoricalDataAccess = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/HistoricalDataAccess";
-        public const string Methods = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/MethodsServer";        
+        public const string Methods = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/MethodsServer";     
         public const string NodeManagement = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/NodeManagementServer";
         public const string ReferenceApplications = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/ReferenceApplications";
         public const string Refrigerators = "http://softing.com/Softing.Opc.Ua.Toolkit.Samples/Refrigerators";

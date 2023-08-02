@@ -25,10 +25,12 @@ namespace SampleClient.StateMachine
         MonitoredItem,
         Events,
         History,       
+        HistoryAsync,
         Alarms,
         AccessRights,
         RolePermissions,
         ReadWriteRegisterNodes,
+        CallMethods,
         FileTransfer,
         PubSub,
         Exit
@@ -47,6 +49,7 @@ namespace SampleClient.StateMachine
         DiscoverServersOnNetworkSampleAsync,
         ConnectSample,
         ReverseConnectSample,
+        ReverseConnectSampleTimeout,
         ReverseConnectSampleAsync,
         StartDiscoverySample,
         EndDiscoverySample,
@@ -61,8 +64,11 @@ namespace SampleClient.StateMachine
 
         StartBrowse,
         BrowseServer,
+        BrowseServerAsync,
         BrowseServerWithOptions,
+        BrowseServerWithOptionsAsync,
         Translate,
+        TranslateAsync,
         EndBrowse,
 
         StartEvents,
@@ -75,6 +81,10 @@ namespace SampleClient.StateMachine
         HistoryReadAtTime,
         HistoryReadProcessed,
         EndHistory,
+        
+        HistoryReadRawAsync,
+        HistoryReadAtTimeAsync,
+        HistoryReadProcessedAsync,
 
         StartMonitoredEventsAlarms,
         EndMonitoredEventsAlarms,
@@ -103,11 +113,17 @@ namespace SampleClient.StateMachine
 
         StartReadWriteRegister,
         Read,
+        ReadAsync,
         Write,
+        WriteAsync,
         RegisterNodes,
+        RegisterNodesAsync,
         EndReadWriteRegister,
 
+        StartCallMethods,
         CallMethods,
+        CallMethodsAsync,
+        EndCallMethods,
 
         StartFileTransfer,
         UploadFileTransfer,

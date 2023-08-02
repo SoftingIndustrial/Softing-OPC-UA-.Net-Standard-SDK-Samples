@@ -30,6 +30,10 @@ namespace SampleClient.Samples
         private string m_serverApplicationUri;
         private CertificateIdentifier m_reverseConnectServerCertificateIdentifier;
 
+        private int m_maximumWaitForReverseConnectRequest = 45000;
+        private static EndpointsDescriptionSearchingState m_endpointsDescriptionSearchingState;
+        private Dictionary<string, EndpointDescriptionEx> m_receivedEndpointsDescription = new Dictionary<string, EndpointDescriptionEx>();
+
         #endregion
 
         #region Constructor
@@ -96,14 +100,79 @@ namespace SampleClient.Samples
                     }
                     catch (Exception ex)
                     {
-                        Program.PrintException("ExecuteReverseConnectSample.CreateConnection to endpoint:" + endpoint, ex);
+                        Program.PrintException("GetEndpointsAndReverseConnect.CreateConnection to endpoint:" + endpoint, ex);
                     }
                     //break;
                 }
             }
             catch (Exception ex)
             {
-                Program.PrintException("ExecuteReverseConnectSample", ex);
+                Program.PrintException("GetEndpointsAndReverseConnect", ex);
+            }
+        }
+
+        /// <summary>
+        /// Get and connect to the reverse connections detected into a specified interval and then create a Reverse Connect session to each of them
+        /// </summary>
+        /// <param name="connectAsync">flag that indicates whether the connect will be performed asynchronously</param>
+        /// <returns></returns>
+        public async Task GetEndpointsAndReverseConnectTimeoutInterval(bool connectAsync)
+        {
+            try
+            {
+                Console.WriteLine("\nDetect reverse connection endpoints '{0}' into a specified time interval. \nPlease wait {1} milliseconds to receive detected connection endpoints.", m_reverseConnectUrl, m_maximumWaitForReverseConnectRequest);
+
+                m_receivedEndpointsDescription.Clear();
+
+                Console.WriteLine("\n\tDetecting active endpoints.\n");
+
+                m_endpointsDescriptionSearchingState = new EndpointsDescriptionSearchingState(m_maximumWaitForReverseConnectRequest);
+                m_application.GetEndpointsReceived += OnEndpointsReceived;
+                var endpoints = await m_application.GetEndpointsAsync(m_reverseConnectUrl, null, m_endpointsDescriptionSearchingState).ConfigureAwait(false);
+                m_application.GetEndpointsReceived -= OnEndpointsReceived;
+
+                Console.WriteLine("\n\tDetected active endpoints: {0}.", m_receivedEndpointsDescription.Count);
+               
+                int index = 0;
+                string endpointToString = string.Empty;
+                foreach (EndpointDescriptionEx endpoint in m_receivedEndpointsDescription.Values)
+                {
+                    try
+                    {
+                        endpointToString = string.Format("{0} - {1} - {2}",
+                               endpoint.EndpointUrl,
+                               endpoint.SecurityMode,
+                               endpoint.SecurityPolicy);
+
+                        Console.WriteLine("\n\tCreate session for endpoint: {0}", endpointToString);
+                        ClientSession session = CreateReverseConnectSession("ReverseConnectSession" + index++, endpoint.ApplicationUri,
+                            endpoint.SecurityMode, (SecurityPolicy)Enum.Parse(typeof(SecurityPolicy), endpoint.SecurityPolicy),
+                            endpoint.Encoding[0], new UserIdentity());
+
+                        // set discovery endpoint on session
+                        session.InitializeWithDiscoveryEndpointDescription(endpoint);
+                        if (connectAsync)
+                        {
+                            // trigger connect session asynchronously. The execution will continue immediately and will not wait for the method to complete
+                            _ = ConnectTestAsync(session).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            await ConnectTest(session).ConfigureAwait(false);
+                            // session was disconnected it is safe to dispose it
+                            session.Dispose();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Program.PrintException(string.Format("GetEndpointsAndReverseConnectTimeoutInterval.CreateConnection for endpoint {0}:", endpoint), ex);
+                    }
+                    //break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("GetEndpointsAndReverseConnectTimeoutInterval", ex);
             }
         }
 
@@ -140,7 +209,7 @@ namespace SampleClient.Samples
                         m_serverApplicationUri);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Program.PrintException("CreateOpcTcpSessionWithNoSecurity using configured ReverseConnectServerCertificateIdentifier", ex);
             }
@@ -204,7 +273,8 @@ namespace SampleClient.Samples
 
                 await session.ConnectAsync(false, true).ConfigureAwait(false);
 
-                Console.WriteLine("Session state = {0}. Success!", session.CurrentState);
+                //Console.WriteLine("Session state = {0}. Success!", session.CurrentState);
+                Console.WriteLine("Session state = {0} for endpoint = {1}. Success!", session.CurrentState, session.Url);
 
                 // Disconnect the session.
                 await session.DisconnectAsync(true).ConfigureAwait(false);
@@ -235,7 +305,7 @@ namespace SampleClient.Samples
                 session.StateChanged += AsyncSessionStateChanged;
 
                 Console.WriteLine("\nTrigger session.ConnectAsync for session {0}...", session.SessionName);
-                await session.ConnectAsync(false, true).ConfigureAwait(false);                
+                await session.ConnectAsync(false, true).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -257,7 +327,15 @@ namespace SampleClient.Samples
                 return;
             }
 
-            Console.WriteLine("Changed session '{0}' state = {1}", clientSession.SessionName, clientSession.CurrentState);
+            if (clientSession.CurrentState == State.Connecting)
+            {
+                Console.WriteLine("Changed session '{0}' state = {1}", clientSession.SessionName, clientSession.CurrentState);
+            }
+            else
+            {
+                Console.WriteLine("Changed session '{0}' state = {1} for endpoint = {2}", clientSession.SessionName, clientSession.CurrentState, clientSession.Url);
+            }
+
             try
             {
                 if (clientSession.CurrentState == State.Active)
@@ -278,10 +356,34 @@ namespace SampleClient.Samples
             }
             catch (Exception ex)
             {
-                Program.PrintException("ExecuteReverseConnectSample", ex);
+                Program.PrintException("AsyncSessionStateChanged", ex);
             }
         }
 
+        private void OnEndpointsReceived(object sender, EndpointsDescriptionEventArgs e)
+        {
+            string endpointToString = string.Empty;
+            foreach (var endpoint in e.Endpoints)
+            {
+                try
+                {
+                    endpointToString = string.Format("{0} - {1} - {2}",
+                           endpoint.EndpointUrl,
+                           endpoint.SecurityMode,
+                           endpoint.SecurityPolicyUri);
+
+                    if(!m_receivedEndpointsDescription.ContainsKey(endpointToString))
+                    {
+                        Console.WriteLine("\tDetected reverse connect endpoint: {0}", endpointToString);
+                        m_receivedEndpointsDescription.Add(endpointToString, new EndpointDescriptionEx(endpoint));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Program.PrintException(string.Format("ExecuteReverseConnectSample.OnEndpointsReceived endpoint {0} :", endpointToString), ex);
+                }
+            }
+        }
         #endregion
     }
 }

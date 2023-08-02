@@ -68,7 +68,7 @@ namespace SampleServer.CustomTypes
                 AddReference(m_rootCustomTypesFolder, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
                 // Add SubscribeToEvents EventNotifier
-                m_rootCustomTypesFolder.EventNotifier =  EventNotifiers.SubscribeToEvents;
+                m_rootCustomTypesFolder.EventNotifier = EventNotifiers.SubscribeToEvents;
                 AddRootNotifier(m_rootCustomTypesFolder);
 
                 m_arraysFolder = CreateObjectFromType(m_rootCustomTypesFolder, "Arrays", ObjectTypeIds.FolderType, ReferenceTypeIds.Organizes) as FolderState;
@@ -201,32 +201,32 @@ namespace SampleServer.CustomTypes
 
                 // Create Matrix variable nodes for defined DataTypes
                 var engineStateMatrixVariable = CreateVariable(matrixFolder, "EngineStates", engineStateType.NodeId, ValueRanks.OneOrMoreDimensions);
-                engineStateMatrixVariable.ArrayDimensions = new uint[] { 1, 2, 3 };  
+                engineStateMatrixVariable.ArrayDimensions = new uint[] { 1, 2, 3 };
                 // create matrix value
                 engineStateMatrixVariable.Value = GetDefaultValueForDatatype(engineStateType.NodeId, ValueRanks.OneOrMoreDimensions, 0, new int[] { 1, 2, 3 });
-                
+
                 var displayWarningMatrixVariable = CreateVariable(matrixFolder, "DisplayWarnings", displayWarningType.NodeId, ValueRanks.OneOrMoreDimensions);
                 displayWarningMatrixVariable.ArrayDimensions = new uint[] { 1, 2, 3 };
                 // create matrix value
                 displayWarningMatrixVariable.Value = GetDefaultValueForDatatype(displayWarningType.NodeId, ValueRanks.OneOrMoreDimensions, 0, new int[] { 1, 2, 3 });
-                
+
                 var featuresOptionSetMatrixVariable = CreateVariable(matrixFolder, "FeaturesOptionSets", featuresOptionSetType.NodeId, ValueRanks.OneOrMoreDimensions);
                 featuresOptionSetMatrixVariable.ArrayDimensions = new uint[] { 1, 2, 3 };
                 // create matrix value
                 featuresOptionSetMatrixVariable.Value = GetDefaultValueForDatatype(featuresOptionSetType.NodeId, ValueRanks.OneOrMoreDimensions, 0, new int[] { 1, 2, 3 });
-                
+
                 var ownerMatrixVariable = CreateVariable(matrixFolder, "Owners", ownerType.NodeId, ValueRanks.OneOrMoreDimensions);
                 ownerMatrixVariable.ArrayDimensions = new uint[] { 1, 2, 3 };
                 // create matrix value
                 ownerMatrixVariable.Value = GetDefaultValueForDatatype(ownerType.NodeId, ValueRanks.OneOrMoreDimensions, 0, new int[] { 1, 2, 3 });
-                
+
                 var fuelLevelMatrixVariable = CreateVariable(matrixFolder, "FuelLevels", fuelLevelDetailsType.NodeId, ValueRanks.OneOrMoreDimensions);
                 fuelLevelMatrixVariable.ArrayDimensions = new uint[] { 1, 2, 3 };
                 // create matrix value
                 fuelLevelMatrixVariable.Value = GetDefaultValueForDatatype(fuelLevelDetailsType.NodeId, ValueRanks.OneOrMoreDimensions, 0, new int[] { 1, 2, 3 });
 
                 var vehicleMatrixVariable = CreateVariable(matrixFolder, "Vehicles", vehicleType.NodeId, ValueRanks.OneOrMoreDimensions);
-                vehicleMatrixVariable.ArrayDimensions = new uint[] { 1, 2, 3 };               
+                vehicleMatrixVariable.ArrayDimensions = new uint[] { 1, 2, 3 };
                 // create matrix value
                 vehicleMatrixVariable.Value = GetDefaultValueForDatatype(vehicleType.NodeId, ValueRanks.OneOrMoreDimensions, 0, new int[] { 1, 2, 3 });
 
@@ -248,7 +248,7 @@ namespace SampleServer.CustomTypes
                     new StructureField() { Name = "VehicleOneDimension", DataType = vehicleType.NodeId, IsOptional = false, ValueRank = ValueRanks.OneDimension,
                             ArrayDimensions = new UInt32Collection(){5 } },
                     new StructureField() { Name = "Vehicle2D", DataType = vehicleType.NodeId, IsOptional = false, ValueRank = ValueRanks.TwoDimensions,
-                            ArrayDimensions = new UInt32Collection(){5, 5 } },                   
+                            ArrayDimensions = new UInt32Collection(){5, 5 } },
                     new StructureField() { Name = "OwnerDetailsScalar", DataType = ownerType.NodeId, IsOptional = false, ValueRank = ValueRanks.Scalar},
                     new StructureField() { Name = "OwnerDetailsOneDimension", DataType = ownerType.NodeId, IsOptional = false, ValueRank = ValueRanks.OneDimension,
                             ArrayDimensions = new UInt32Collection(){5 } },
@@ -261,14 +261,14 @@ namespace SampleServer.CustomTypes
                             ArrayDimensions = new UInt32Collection(){5, 5 } },
 
                 };
-                
+
                 // create the data type
                 var structureWithValueRanksType = CreateDataType(DataTypeIds.Structure, "StructureWithValueRanksType", simpleStructure);
-                
+
                 // create an instance of new data type
                 StructuredValue simpleStructureValue = GetDefaultValueForDatatype(structureWithValueRanksType.NodeId) as StructuredValue;
                 if (simpleStructureValue != null)
-                {               
+                {
                     EnumValue[] enumValues = (EnumValue[])simpleStructureValue["EngineStateOneDimension"];
                     for (int i = 0; i < enumValues.Length; i++)
                     {
@@ -405,11 +405,11 @@ namespace SampleServer.CustomTypes
                 propertyState.ModellingRuleId = Objects.ModellingRule_Optional;
 
                 // create a method and associate it with the object type
-                Argument[] addVehicleInputArguments = new Argument[] 
+                Argument[] addVehicleInputArguments = new Argument[]
                 {
                     new Argument() { Name = "NewVehicle", DataType = vehicleType.NodeId, ValueRank = ValueRanks.Scalar, Description = "Vehicle data type instance to be added to Vehicles folder" },
                 };
-                Argument[] addVehicleOutputArguments = new Argument[] 
+                Argument[] addVehicleOutputArguments = new Argument[]
                 {
                     new Argument() { Name = "NodeId", DataType = DataTypeIds.NodeId, ValueRank = ValueRanks.Scalar, Description ="New Vehicle NodeId" }
                 };
@@ -455,7 +455,7 @@ namespace SampleServer.CustomTypes
         /// <param name="dataType"></param>
         /// <param name="valueRank"></param>
         /// <returns></returns>
-        private BaseVariableState CreateVariableWithValue(NodeState parent, string name, NodeId dataType, int valueRank = ValueRanks.Scalar )
+        private BaseVariableState CreateVariableWithValue(NodeState parent, string name, NodeId dataType, int valueRank = ValueRanks.Scalar)
         {
             var variable = CreateVariable(parent, name, dataType, valueRank);
             variable.Value = GetDefaultValueForDatatype(dataType, valueRank);
@@ -485,7 +485,7 @@ namespace SampleServer.CustomTypes
                         // create new Vehicle variable instance inside Vehicles folders
                         var vehicleVariable = CreateVariable(vehiclesFolder, vehicle["Name"] as String, m_vehicleDataTypeNodeId);
                         vehicleVariable.Description = "Variable instance added by AddVehicleMethod";
-                        vehicleVariable.Value = vehicle;                        
+                        vehicleVariable.Value = vehicle;
 
                         // set output arguments as the NodeId of the created Vehicle variable
                         outputArguments[0] = vehicleVariable.NodeId;

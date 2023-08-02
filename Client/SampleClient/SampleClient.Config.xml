@@ -165,6 +165,9 @@
         <DecodeDataTypeDictionaries>true</DecodeDataTypeDictionaries>
         <ClientCertificateLifeTime>24</ClientCertificateLifeTime>
         <ReuseCustomDataTypeInfoAtReconnect>true</ReuseCustomDataTypeInfoAtReconnect>
+		  
+		<!-- Enable/Disable reading of custom datatype nodes that are not defined in the data types hierarchy structure. This change may impact the timing of the service calls." -->
+		<ReadNodesWithTypeNotInHierarchy>false</ReadNodesWithTypeNotInHierarchy>
       </ClientToolkitConfiguration>
     </ua:XmlElement>
     <ua:XmlElement>

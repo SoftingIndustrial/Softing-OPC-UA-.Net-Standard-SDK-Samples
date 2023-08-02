@@ -46,6 +46,7 @@ namespace SampleClient.Samples
            
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
+            m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy = false;
         }
 
         /// <summary>

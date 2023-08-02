@@ -9,8 +9,11 @@
  * ======================================================================*/
 
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Opc.Ua;
+using Opc.Ua.Client;
 using Softing.Opc.Ua.Client;
 
 namespace SampleClient.Samples
@@ -80,8 +83,8 @@ namespace SampleClient.Samples
             catch (Exception ex)
             {
                 Program.PrintException("CreateSession", ex);
-            
-            if (m_session != null)
+
+                if (m_session != null)
                 {
                     m_session.Dispose();
                     m_session = null;
@@ -116,7 +119,7 @@ namespace SampleClient.Samples
             catch (Exception ex)
             {
                 Program.PrintException("DisconnectSession", ex);
-            }            
+            }
         }
 
         #endregion
@@ -173,7 +176,7 @@ namespace SampleClient.Samples
                 {
                     Console.WriteLine("Monitored item '{0}' created with state {1}", m_miInt64.DisplayName, m_miInt64.CurrentState);
                 }
-                
+
             }
             catch (Exception ex)
             {
