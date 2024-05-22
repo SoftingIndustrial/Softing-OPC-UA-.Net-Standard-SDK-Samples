@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2024 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -831,87 +831,89 @@ namespace SampleClient.Samples
 
             // get bytes from trust list
             MemoryStream strm = new MemoryStream();
-            BinaryEncoder encoder = new BinaryEncoder(strm, uaServerSession.CoreSession.MessageContext);
-            encoder.WriteEncodeable(null, trustList, null);
-            strm.Position = 0;
+            using (BinaryEncoder encoder = new BinaryEncoder(strm, uaServerSession.CoreSession.MessageContext, false))
+            {
+                encoder.WriteEncodeable(null, trustList, null);
+                strm.Position = 0;
 
-            List<object> inputArgumentsOpenTrustList = new List<object>()
+                List<object> inputArgumentsOpenTrustList = new List<object>()
                 {
                     (byte)(OpenFileMode.Write | OpenFileMode.EraseExisting)
                 };
-            IList<object> outputArgumentsOpenTrustList = new List<object>();
-            // open trust list on push server
-            uaServerSession.Call(
-               Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList,
-               Opc.Ua.MethodIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList_Open,
-               inputArgumentsOpenTrustList,
-               out outputArgumentsOpenTrustList);
-            uint fileHandle = (uint)outputArgumentsOpenTrustList[0];
+                IList<object> outputArgumentsOpenTrustList = new List<object>();
+                // open trust list on push server
+                uaServerSession.Call(
+                   Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList,
+                   Opc.Ua.MethodIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList_Open,
+                   inputArgumentsOpenTrustList,
+                   out outputArgumentsOpenTrustList);
+                uint fileHandle = (uint)outputArgumentsOpenTrustList[0];
 
-            try
-            {
-                bool writing = true;
-                byte[] buffer = new byte[256];
-
-                while (writing)
+                try
                 {
-                    int bytesWritten = strm.Read(buffer, 0, buffer.Length);
+                    bool writing = true;
+                    byte[] buffer = new byte[256];
 
-                    if (bytesWritten != buffer.Length)
+                    while (writing)
                     {
-                        byte[] copy = new byte[bytesWritten];
-                        Array.Copy(buffer, copy, bytesWritten);
-                        buffer = copy;
-                        writing = false;
-                    }
+                        int bytesWritten = strm.Read(buffer, 0, buffer.Length);
 
-                    List<object> inputArgumentsWriteTrustList = new List<object>()
+                        if (bytesWritten != buffer.Length)
+                        {
+                            byte[] copy = new byte[bytesWritten];
+                            Array.Copy(buffer, copy, bytesWritten);
+                            buffer = copy;
+                            writing = false;
+                        }
+
+                        List<object> inputArgumentsWriteTrustList = new List<object>()
                         {
                             fileHandle,  buffer
                         };
-                    IList<object> outputArgumentsWriteTrustList = new List<object>();
-                    // write chuncks of trust list until ready
-                    uaServerSession.Call(
-                        Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList,
-                        Opc.Ua.MethodIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList_Write,
-                        inputArgumentsWriteTrustList,
-                        out outputArgumentsWriteTrustList);
-                }
+                        IList<object> outputArgumentsWriteTrustList = new List<object>();
+                        // write chuncks of trust list until ready
+                        uaServerSession.Call(
+                            Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList,
+                            Opc.Ua.MethodIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList_Write,
+                            inputArgumentsWriteTrustList,
+                            out outputArgumentsWriteTrustList);
+                    }
 
-                List<object> inputArgumentsCloseAndUpdateTrustList = new List<object>()
+                    List<object> inputArgumentsCloseAndUpdateTrustList = new List<object>()
                         {
                             fileHandle
                         };
-                IList<object> outputArgumentsCloseAndUpdateTrustList = new List<object>();
-                // Call CloseAndUpdate
-               var status = uaServerSession.Call(
-                    Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList,
-                    Opc.Ua.MethodIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList_CloseAndUpdate,
-                    inputArgumentsCloseAndUpdateTrustList, 
-                    out outputArgumentsCloseAndUpdateTrustList);
-                if (StatusCode.IsGood(status))
-                {
-                    return (bool)outputArgumentsCloseAndUpdateTrustList[0];
+                    IList<object> outputArgumentsCloseAndUpdateTrustList = new List<object>();
+                    // Call CloseAndUpdate
+                    var status = uaServerSession.Call(
+                         Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList,
+                         Opc.Ua.MethodIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList_CloseAndUpdate,
+                         inputArgumentsCloseAndUpdateTrustList,
+                         out outputArgumentsCloseAndUpdateTrustList);
+                    if (StatusCode.IsGood(status))
+                    {
+                        return (bool)outputArgumentsCloseAndUpdateTrustList[0];
+                    }
+                    else
+                    {
+                        throw new ServiceResultException(status.Code, "CloseAndUpdate returned status code:" + status);
+                    }
                 }
-                else
+                catch (Exception)
                 {
-                    throw new ServiceResultException(status.Code, "CloseAndUpdate returned status code:" + status);
-                }
-            }
-            catch (Exception)
-            {
-                // close the trust list 
-                List<object> inputArgumentsCloseTrustList = new List<object>()
+                    // close the trust list 
+                    List<object> inputArgumentsCloseTrustList = new List<object>()
                                 {
                                     fileHandle
                                 };
-                IList<object> outputArgumentsCloseTrustList = new List<object>();
-                uaServerSession.Call(Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList,
-                        Opc.Ua.MethodIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList_Close,
-                        outputArgumentsCloseTrustList,
-                        out outputArgumentsCloseTrustList);
+                    IList<object> outputArgumentsCloseTrustList = new List<object>();
+                    uaServerSession.Call(Opc.Ua.ObjectIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList,
+                            Opc.Ua.MethodIds.ServerConfiguration_CertificateGroups_DefaultApplicationGroup_TrustList_Close,
+                            outputArgumentsCloseTrustList,
+                            out outputArgumentsCloseTrustList);
 
-                throw;
+                    throw;
+                }
             }
         }
         #endregion

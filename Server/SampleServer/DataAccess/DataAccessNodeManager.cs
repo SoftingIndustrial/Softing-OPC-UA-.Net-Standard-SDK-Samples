@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2024 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -241,5 +241,24 @@ namespace SampleServer.DataAccess
             return random.NextDouble() * (maximum - minimum) + minimum;
         }
         #endregion       
+
+        #region IDisposable Implementation
+        /// <summary>
+        /// /// <summary>
+        /// An overrideable version of the Dispose
+        /// </summary>
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Utils.SilentDispose(m_simulationTimer);
+                m_simulationTimer = null;
+            }
+
+            base.Dispose(disposing);
+        }
+        #endregion
     }
 }

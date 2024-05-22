@@ -9,11 +9,11 @@
     <RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net462|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net462|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
@@ -30,18 +30,18 @@
     </Content>
   </ItemGroup>
 	
-	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-		<Reference Include="Softing.Opc.Ua.Client">
-			<HintPath>..\..\..\..\bin\net6.0\Softing.Opc.Ua.Client.dll</HintPath>
-		</Reference>
-	</ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+	<Reference Include="Softing.Opc.Ua.Client">
+		<HintPath>..\..\..\..\bin\net6.0\Softing.Opc.Ua.Client.dll</HintPath>
+	</Reference>
+  </ItemGroup>
 	
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <Reference Include="Softing.Opc.Ua.Client">
-      <HintPath>..\..\..\..\bin\net462\Softing.Opc.Ua.Client.dll</HintPath>
+      <HintPath>..\..\..\..\bin\net48\Softing.Opc.Ua.Client.dll</HintPath>
     </Reference>
   </ItemGroup>
-
+	
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
     <Reference Include="Softing.Opc.Ua.Client">
       <HintPath>..\..\..\..\bin\netstandard2.1\Softing.Opc.Ua.Client.dll</HintPath>
@@ -49,15 +49,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.4.371.96" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.374.36" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.Expressions" Version="4.0.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
-
+ 
   <!--<ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Bindings.Https" Version="1.4.371.96" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Bindings.Https" Version="1.5.374.36" />
   </ItemGroup>-->
 
   <ItemGroup>
     <None Update="Files\opcuser.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\opcuserPwd.pfx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SampleClient.Config.xml">

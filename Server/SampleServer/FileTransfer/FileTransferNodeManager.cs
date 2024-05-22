@@ -1,5 +1,5 @@
 ﻿/* ========================================================================
- * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2024 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -35,6 +35,9 @@ namespace SampleServer.FileTransfer
         private const string FileTransferName = "FileTransfer";
         private const string ByteStringName = "ByteString";
         private const string TemporaryFileName = "TemporaryFile";
+
+        private Tuple<FileState, FileStateHandler> m_downloadFileData;
+        private Tuple<FileState, FileStateHandler> m_uploadFileState;
 
         /// <summary>
         /// The maximum time in milliseconds the Server accepts between Method calls necessary
@@ -76,8 +79,8 @@ namespace SampleServer.FileTransfer
                 FolderState root = CreateFolder(null, FileTransferName);
                 AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
-                CreateFileState(root, DownloadFilePath, false);
-                CreateFileState(root, UploadFilePath, true);
+                m_downloadFileData = CreateFileStateWithHandler(root, DownloadFilePath, false);
+                m_uploadFileState = CreateFileStateWithHandler(root, UploadFilePath, true);
 
                 CreateByteStringVariable(root, ByteStringName, ByteStringFilePath);
 
@@ -127,6 +130,34 @@ namespace SampleServer.FileTransfer
                 }
 
                 return fileState;
+            }
+            catch (FileNotFoundException)
+            {
+                throw new Exception("File state could not found be created exception.");
+            }
+        }
+
+        /// <summary>
+        /// Creates file state node using handler 
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="filename"></param>
+        /// <param name="writePermission"></param>
+        /// <returns></returns>
+        private Tuple<FileState, FileStateHandler> CreateFileStateWithHandler(FolderState root, string filename, bool writePermission)
+        {
+            try
+            {
+                FileStateHandler fileTypeHandler = null;
+                FileState fileState =
+                    CreateObjectFromType(root, Path.GetFileName(filename), ObjectTypeIds.FileType) as FileState;
+                if (fileState != null)
+                {
+                    fileTypeHandler = new FileStateHandler(filename, fileState, writePermission);
+                    fileTypeHandler.Initialize();
+                }
+
+                return Tuple.Create(fileState, fileTypeHandler);
             }
             catch (FileNotFoundException)
             {
@@ -484,6 +515,34 @@ namespace SampleServer.FileTransfer
             return StatusCodes.Good;
         }
 
+        #endregion
+
+        #region IDisposable Implementation
+        /// <summary>
+        /// /// <summary>
+        /// An overrideable version of the Dispose
+        /// </summary>
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (m_downloadFileData.Item2 != null)
+                {
+                    m_downloadFileData.Item2.Dispose();
+                    m_downloadFileData = null;
+                }
+
+                if (m_uploadFileState.Item2 != null)
+                {
+                    m_uploadFileState.Item2.Dispose();
+                    m_uploadFileState = null;
+                }
+            }
+
+            base.Dispose(disposing);
+        }
         #endregion
     }
 }

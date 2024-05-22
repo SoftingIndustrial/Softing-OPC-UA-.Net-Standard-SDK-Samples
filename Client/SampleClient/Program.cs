@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2024 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -17,6 +17,10 @@ using Softing.Opc.Ua.Client;
 using Softing.Opc.Ua.Configuration;
 using SampleClient.StateMachine;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
+using static Opc.Ua.Utils;
 
 
 namespace SampleClient
@@ -31,13 +35,17 @@ namespace SampleClient
         /// </summary>
         static void Main()
         {
-            // todo: to define a way to use it
-
             // Load client default (customized) configuration build with a fluent API
             // ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration().Result;
 
+            // Load client default (customized) configuration build with a fluent API using a certificate password provider
+            // ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration(new CertificatePasswordProvider("Client_Pwd")).Result;
+
             // Create the UaApplication object from application configuration build with a fluent API
             // UaApplication application = UaApplication.Create(defaultConfiguration).Result;
+
+            // Create the UaApplication object from config file and certificate password provider 
+            // UaApplication application = UaApplication.Create("SampleClient.Config.xml", new CertificatePasswordProvider("Client_Pwd")).Result;
 
             // Create the UaApplication object from config file
             UaApplication application = UaApplication.Create("SampleClient.Config.xml").Result;
@@ -53,6 +61,16 @@ namespace SampleClient
 
             // Subscribe to certificate validation error event
             application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);
+
+            SerilogConfiguration serilogConfiguration = application.Configuration.ParseExtension<SerilogConfiguration>();
+            if (serilogConfiguration != null)
+            {
+                if (serilogConfiguration.Enable)
+                {
+                    // setup the Serilog logging
+                    SetLogger(application.Configuration, application.Configuration.ApplicationName, false, LogLevel.Error);
+                }
+            }
 
             LicensingStatus clientLicensingStatus = LicensingStatus.Ok;
 
@@ -133,7 +151,7 @@ namespace SampleClient
         public static void PrintException(string message, Exception ex)
         {
             Console.Write("-----------------------------------\nException - {0}:\n", message);
-            while(ex != null)
+            while (ex != null)
             {
                 if (ex is ServiceResultException)
                 {
@@ -151,7 +169,7 @@ namespace SampleClient
         /// Load default configuration
         /// </summary>
         /// <returns></returns>
-        private static async Task<ApplicationConfigurationBuilderEx> LoadDefaultConfiguration()
+        private static async Task<ApplicationConfigurationBuilderEx> LoadDefaultConfiguration(ICertificatePasswordProvider certificatePasswordProvider = null)
         {
 
             ApplicationConfigurationBuilderEx applicationConfigurationBuilder =
@@ -184,6 +202,8 @@ namespace SampleClient
                     "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki")
                     .SetRejectSHA1SignedCertificates(false)
                     .SetUserRoleDirectory("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles")
+                    .SetAddAppCertToTrustedStore(true)
+                    .AddCertificatePasswordProvider(certificatePasswordProvider)
                 .AddExtension<SampleClientConfiguration>(new XmlQualifiedName("SampleClientConfiguration"),
                     new SampleClientConfiguration()
                     {
@@ -204,8 +224,21 @@ namespace SampleClient
                         DiscoveryOperationTimeout = 10000,
                         DecodeCustomDataTypes = true,
                         DecodeDataTypeDictionaries = true,
-                        ReadNodesWithTypeNotInHierarchy = false
+                        ReadNodesWithTypeNotInHierarchy = false,
+                        CheckPortOnConnect = false
                     })
+                 .AddExtension<SerilogConfiguration>(new XmlQualifiedName("SerilogConfiguration"),
+                 new SerilogConfiguration()
+                 {
+                     Enable = false,
+                     FilePath = "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleClient.log",
+                     RollingFile = true,
+                     RollingTypeOption = SerilogConfiguration.RollingOptions.Size,
+                     RollingFileSizeLimit = 10485760,
+                     RollingFilesCountLimit = 10,
+                     RollingInterval = SerilogConfiguration.RollInterval.Day,
+                     MinimumLevel = LogLevel.Error
+                 })
                 .SetTraceMasks(1)
                 .SetOutputFilePath("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleClient.log")
                 .SetDeleteOnLoad(true)
@@ -213,6 +246,118 @@ namespace SampleClient
 
             return applicationConfigurationBuilder;
 
+        }
+
+        /// <summary>
+        /// Creates, configures and sets the logger
+        /// </summary>
+        /// <param name="configuration">the application configuration</param>
+        /// <param name="context">the context</param>
+        /// <param name="logConsole">log to console or not</param>
+        /// <param name="consoleLogLevel">default loglevel</param>
+        private static void SetLogger(ApplicationConfiguration configuration,
+            string context,
+            bool logConsole,
+            LogLevel consoleLogLevel)
+        {
+            if (!Enum.IsDefined(typeof(LogLevel), consoleLogLevel.ToString()))
+            {
+                Trace("Invalid 'LogLevel' parameter of the SetLogger method.");
+                return;
+            }
+
+            LoggerConfiguration loggerConfiguration = new LoggerConfiguration()
+                            //This statement is used to dynamically add and remove properties from the ambient execution context.
+                            //Additions are done down below
+                            .Enrich.FromLogContext();
+            bool enable = false;
+            SerilogConfiguration serilogConfiguration = configuration.ParseExtension<SerilogConfiguration>();
+            if (serilogConfiguration != null)
+            {
+                enable = serilogConfiguration.Enable;
+                if (enable)
+                {
+                    //if the loaded MinimumLevel is not a defined LogLevel the default one will be used from the method parameter
+                    if (!Enum.IsDefined(typeof(LogEventLevel), (int)serilogConfiguration.MinimumLevel))
+                        Trace("Invalid SerilogConfiguration {0} value: {1} set in configuration file.", nameof(serilogConfiguration.MinimumLevel), serilogConfiguration.MinimumLevel);
+                    else
+                        consoleLogLevel = serilogConfiguration.MinimumLevel;
+
+                    loggerConfiguration.MinimumLevel.Is((LogEventLevel)consoleLogLevel);
+                    if (string.IsNullOrEmpty(serilogConfiguration.FilePath))
+                    {
+                        serilogConfiguration.FilePath = configuration.TraceConfiguration.OutputFilePath;
+                    }
+
+                    if (serilogConfiguration.RollingFile == true)
+                    {
+                        switch (serilogConfiguration.RollingTypeOption)
+                        {
+
+                            case SerilogConfiguration.RollingOptions.Size:
+
+                                loggerConfiguration.WriteTo.File(
+                                    ReplaceSpecialFolderNames(serilogConfiguration.FilePath),
+                                    rollOnFileSizeLimit: serilogConfiguration.RollingFile,
+                                    fileSizeLimitBytes: serilogConfiguration.RollingFileSizeLimit,
+                                    retainedFileCountLimit: serilogConfiguration.RollingFilesCountLimit);
+                                break;
+
+                            case SerilogConfiguration.RollingOptions.Time:
+                                loggerConfiguration.WriteTo.File(
+                                    ReplaceSpecialFolderNames(serilogConfiguration.FilePath),
+                                    rollOnFileSizeLimit: serilogConfiguration.RollingFile,
+                                    rollingInterval: (RollingInterval)serilogConfiguration.RollingInterval);
+                                break;
+
+                            case SerilogConfiguration.RollingOptions.TimeAndSize:
+                                loggerConfiguration.WriteTo.File(
+                                    ReplaceSpecialFolderNames(serilogConfiguration.FilePath),
+                                    rollingInterval: (RollingInterval)serilogConfiguration.RollingInterval,
+                                    rollOnFileSizeLimit: serilogConfiguration.RollingFile,
+                                    fileSizeLimitBytes: serilogConfiguration.RollingFileSizeLimit,
+                                    retainedFileCountLimit: serilogConfiguration.RollingFilesCountLimit);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        loggerConfiguration.WriteTo.File(
+                            ReplaceSpecialFolderNames(serilogConfiguration.FilePath));
+                    }
+
+                    if (logConsole)
+                    {
+                        loggerConfiguration.WriteTo.Console(
+                            restrictedToMinimumLevel: (LogEventLevel)consoleLogLevel
+                            );
+                    }
+
+#if DEBUG
+                    else
+                    {
+                        loggerConfiguration
+                            .WriteTo.Debug(restrictedToMinimumLevel: (LogEventLevel)consoleLogLevel);
+                    }
+#endif
+
+                    // create the serilog logger
+                    Serilog.Core.Logger serilogger = loggerConfiguration
+                        .CreateLogger();
+
+                    // create the ILogger for Opc.Ua.Core
+                    Microsoft.Extensions.Logging.ILogger logger = LoggerFactory.Create(builder => builder.SetMinimumLevel(consoleLogLevel))
+                        .AddSerilog(serilogger)
+                        .CreateLogger(context);
+
+                    // set logger interface, disables TraceEvent
+                    Utils.SetLogger(logger);
+                }
+                else
+                {
+                    return;
+                }
+            }
         }
 
         #endregion

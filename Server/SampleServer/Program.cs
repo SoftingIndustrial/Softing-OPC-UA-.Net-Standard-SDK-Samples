@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2024 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -14,8 +14,12 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-
 using Opc.Ua;
+using Serilog;
+using Serilog.Events;
+using Serilog.Templates;
+using static Opc.Ua.Utils;
+using Microsoft.Extensions.Logging;
 using Softing.Opc.Ua.Configuration;
 
 namespace SampleServer
@@ -62,22 +66,38 @@ namespace SampleServer
                 // Load server default (customized) configuration build with a fluent API
                 // ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration().Result;
 
+                // Load server default (customized) configuration build with a fluent API using a certificate password provider
+                // ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration(new CertificatePasswordProvider("Server_Pwd")).Result;
+
                 // Start the server using an ApplicationConfiguration build with a fluent API
                 // await sampleServer.Start(defaultConfiguration).ConfigureAwait(false);
+
+                // Start the server using a configuration file and certificate password provider
+                // await sampleServer.Start(configurationFile, new CertificatePasswordProvider("Server_Pwd")).ConfigureAwait(false);
 
                 // Start the server using a configuration file
                 await sampleServer.Start(configurationFile).ConfigureAwait(false);
 
+                SerilogConfiguration serilogConfiguration = sampleServer.Configuration.ParseExtension<SerilogConfiguration>();
+                if (serilogConfiguration != null)
+                {
+                    if (serilogConfiguration.Enable)
+                    {
+                        // setup the Serilog logging
+                        SetLogger(sampleServer.Configuration, sampleServer.Configuration.ApplicationName, false, LogLevel.Error);
+                    }
+                }
+
                 PrintServerInformation(sampleServer);
 
                 PrintCommandParameters();
-                
+
                 // wait for console commands
                 bool exit = false;
                 while (!exit)
                 {
                     ConsoleKeyInfo key = Console.ReadKey();
-                    
+
                     if (key.KeyChar == 'q' || key.KeyChar == 'x')
                     {
                         Console.WriteLine("\nShutting down...");
@@ -118,9 +138,9 @@ namespace SampleServer
         /// Load default configuration
         /// </summary>
         /// <returns></returns>
-        private static async Task<ApplicationConfigurationBuilderEx> LoadDefaultConfiguration()
+        private static async Task<ApplicationConfigurationBuilderEx> LoadDefaultConfiguration(ICertificatePasswordProvider certificatePasswordProvider = null)
         {
-            ApplicationConfigurationBuilderEx applicationConfigurationBuilder = 
+            ApplicationConfigurationBuilderEx applicationConfigurationBuilder =
                 new ApplicationConfigurationBuilderEx(ApplicationType.Server);
 
             await applicationConfigurationBuilder
@@ -182,14 +202,139 @@ namespace SampleServer
                     "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki")
                     .SetRejectSHA1SignedCertificates(false)
                     .SetUserRoleDirectory("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles")
+                    .SetAddAppCertToTrustedStore(true)
+                    .AddCertificatePasswordProvider(certificatePasswordProvider)
                 .AddExtension<SampleServerConfiguration>(new XmlQualifiedName("SampleServerConfiguration"),
                     new SampleServerConfiguration() { TimerInterval = 1000, ClearCachedCertificatesInterval = 30000 })
+                .AddExtension<SerilogConfiguration>(new XmlQualifiedName("SerilogConfiguration"),
+                 new SerilogConfiguration()
+                 {
+                     Enable = false,
+                     FilePath = "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleServer.log",
+                     RollingFile = true,
+                     RollingTypeOption = SerilogConfiguration.RollingOptions.Size,
+                     RollingFileSizeLimit = 10485760,
+                     RollingFilesCountLimit = 10,
+                     RollingInterval = SerilogConfiguration.RollInterval.Day,
+                     MinimumLevel = LogLevel.Error
+                 })
                 .SetTraceMasks(1)
                 .SetOutputFilePath("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleServer.log")
                 .SetDeleteOnLoad(true)
                 .Create();
 
             return applicationConfigurationBuilder;
+        }
+
+        /// <summary>
+        /// Creates, configures and sets the logger
+        /// </summary>
+        /// <param name="configuration">the application configuration</param>
+        /// <param name="context">the context</param>
+        /// <param name="logConsole">log to console or not</param>
+        /// <param name="consoleLogLevel">default loglevel</param>
+        private static void SetLogger(ApplicationConfiguration configuration,
+            string context,
+            bool logConsole,
+            LogLevel consoleLogLevel)
+        {
+            if (!Enum.IsDefined(typeof(LogLevel), consoleLogLevel.ToString()))
+            {
+                Trace("Invalid 'LogLevel' parameter of the SetLogger method.");
+                return;
+            }
+
+            LoggerConfiguration loggerConfiguration = new LoggerConfiguration()
+                            //This statement is used to dynamically add and remove properties from the ambient execution context.
+                            //Additions are done down below
+                            .Enrich.FromLogContext();
+            bool enable = false;
+            SerilogConfiguration serilogConfiguration = configuration.ParseExtension<SerilogConfiguration>();
+            if (serilogConfiguration != null)
+            {
+                enable = serilogConfiguration.Enable;
+                if (enable)
+                {
+                    //if the loaded MinimumLevel is not a defined LogLevel the default one will be used from the method parameter
+                    if (!Enum.IsDefined(typeof(LogEventLevel), (int)serilogConfiguration.MinimumLevel))
+                        Trace("Invalid SerilogConfiguration {0} value: {1} set in configuration file.", nameof(serilogConfiguration.MinimumLevel), serilogConfiguration.MinimumLevel);
+                    else
+                        consoleLogLevel = serilogConfiguration.MinimumLevel;
+
+                    loggerConfiguration.MinimumLevel.Is((LogEventLevel)consoleLogLevel);
+                    if (string.IsNullOrEmpty(serilogConfiguration.FilePath))
+                    {
+                        serilogConfiguration.FilePath = configuration.TraceConfiguration.OutputFilePath;
+                    }
+
+                    if (serilogConfiguration.RollingFile == true)
+                    {
+                        switch (serilogConfiguration.RollingTypeOption)
+                        {
+
+                            case SerilogConfiguration.RollingOptions.Size:
+
+                                loggerConfiguration.WriteTo.File(
+                                    ReplaceSpecialFolderNames(serilogConfiguration.FilePath),
+                                    rollOnFileSizeLimit: serilogConfiguration.RollingFile,
+                                    fileSizeLimitBytes: serilogConfiguration.RollingFileSizeLimit,
+                                    retainedFileCountLimit: serilogConfiguration.RollingFilesCountLimit);
+                                break;
+
+                            case SerilogConfiguration.RollingOptions.Time:
+                                loggerConfiguration.WriteTo.File(
+                                    ReplaceSpecialFolderNames(serilogConfiguration.FilePath),
+                                    rollOnFileSizeLimit: serilogConfiguration.RollingFile,
+                                    rollingInterval: (RollingInterval)serilogConfiguration.RollingInterval);
+                                break;
+
+                            case SerilogConfiguration.RollingOptions.TimeAndSize:
+                                loggerConfiguration.WriteTo.File(
+                                    ReplaceSpecialFolderNames(serilogConfiguration.FilePath),
+                                    rollingInterval: (RollingInterval)serilogConfiguration.RollingInterval,
+                                    rollOnFileSizeLimit: serilogConfiguration.RollingFile,
+                                    fileSizeLimitBytes: serilogConfiguration.RollingFileSizeLimit,
+                                    retainedFileCountLimit: serilogConfiguration.RollingFilesCountLimit);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        loggerConfiguration.WriteTo.File(
+                            ReplaceSpecialFolderNames(serilogConfiguration.FilePath));
+                    }
+
+                    if (logConsole)
+                    {
+                        loggerConfiguration.WriteTo.Console(
+                            restrictedToMinimumLevel: (LogEventLevel)consoleLogLevel
+                            );
+                    }
+#if DEBUG
+                    else
+                    {
+                        loggerConfiguration
+                            .WriteTo.Debug(restrictedToMinimumLevel: (LogEventLevel)consoleLogLevel);
+                    }
+#endif
+
+                    // create the serilog logger
+                    Serilog.Core.Logger serilogger = loggerConfiguration
+                        .CreateLogger();
+
+                    // create the ILogger for Opc.Ua.Core
+                    Microsoft.Extensions.Logging.ILogger logger = LoggerFactory.Create(builder => builder.SetMinimumLevel(consoleLogLevel))
+                        .AddSerilog(serilogger)
+                        .CreateLogger(context);
+
+                    // set logger interface, disables TraceEvent
+                    Utils.SetLogger(logger);
+                }
+                else
+                {
+                    return;
+                }
+            }
         }
 
         #endregion
@@ -205,7 +350,7 @@ namespace SampleServer
             // print configured reverse connections
             var reverseConnections = sampleServer.GetReverseConnections();
             if (reverseConnections?.Count > 0)
-            {                
+            {
                 Console.WriteLine("Configured Reverse Connections:");
                 foreach (var connection in reverseConnections)
                 {
@@ -287,7 +432,7 @@ namespace SampleServer
             {
                 Console.WriteLine("\nSessions list: empty");
             }
-            
+
         }
 
         #endregion

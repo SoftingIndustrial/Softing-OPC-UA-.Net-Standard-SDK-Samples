@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2024 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -788,7 +788,8 @@ namespace SampleClient.StateMachine
             await connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Aes256_Sha256_RsaPss).ConfigureAwait(false);
             await connectClient.CreateOpcTcpSessionWithUserId().ConfigureAwait(false);
             await connectClient.CreateOpcTcpSessionWithCertificate().ConfigureAwait(false);
-
+            await connectClient.CreateOpcTcpSessionWithCertificatePassword().ConfigureAwait(false);
+            
             //await connectClient.CreateHttpsSessionWithAnonymousUserId().ConfigureAwait(false);
             //await connectClient.CreateHttpsSessionWithUserId().ConfigureAwait(false);
 

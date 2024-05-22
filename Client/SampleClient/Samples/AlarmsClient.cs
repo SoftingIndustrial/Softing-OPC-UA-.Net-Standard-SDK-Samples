@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2024 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -48,10 +48,10 @@ namespace SampleClient.Samples
         private const string AlarmsNodeId = "ns=2;i=1";
         
         //Method browse path: Root\Objects\Alarms\StartAllChangeValues
-        private const string StartAllChangeValuesNodeId = "ns=2;i=2662";
+        private const string StartAllChangeValuesNodeId = "ns=2;i=2630";
 
         //Method browse path: Root\Objects\Alarms\StopAllChangeValues
-        private const string StopAllChangeValuesNodeId = "ns=2;i=2664";
+        private const string StopAllChangeValuesNodeId = "ns=2;i=2632";
 
         //Browse name for m_alarmsModuleNodeId: Objects\Alarms
         private static readonly string m_alarmsModuleNodeId = "ns=2;i=2";

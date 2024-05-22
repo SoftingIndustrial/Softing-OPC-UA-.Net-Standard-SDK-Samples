@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2024 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -1370,7 +1370,26 @@ namespace SampleServer.Alarms
                 return new ServiceResult(StatusCodes.BadInvalidArgument);
             }
         }
-       
+
+        #endregion
+
+        #region IDisposable Implementation
+        /// <summary>
+        /// /// <summary>
+        /// An overrideable version of the Dispose
+        /// </summary>
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Utils.SilentDispose(m_allAlarmsChangeValues);
+                m_allAlarmsChangeValues = null;
+            }
+
+            base.Dispose(disposing);
+        }
         #endregion
     }
 }

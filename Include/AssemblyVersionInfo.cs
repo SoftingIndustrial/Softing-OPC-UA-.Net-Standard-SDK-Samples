@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2023 Softing Industrial Automation GmbH.
+ * Copyright © 2011-2024 Softing Industrial Automation GmbH.
  * All rights reserved.
  *
  * The Software is subject to the Softing Industrial Automation GmbH’s
@@ -41,10 +41,10 @@ internal static class AssemblyVersionInfo
 
     /// BEWARE THAT IN VS 2017 THE USAGE OF * PLACEHOLDER IS NOT ALLOWED
     /// <summary> The current build version. </summary>
-    public const string CurrentVersion = "3.50.0.6910";
+    public const string CurrentVersion = "3.60.0.7137";
 
     /// <summary> The current build file version. </summary>
-    public const string CurrentFileVersion = "3.50.0.6910";
+    public const string CurrentFileVersion = "3.60.0.7137";
 
     /// <summary>The assembly copyright owner.</summary>
     public const string AssemblyCompany = "Softing Industrial Automation GmbH";
@@ -53,5 +53,5 @@ internal static class AssemblyVersionInfo
     public const string AssemblyProduct = "Softing OPC UA .NET Standard SDK";
 
 	/// <summary>The product release date.</summary>
-    public const string ReleaseDate = "2023/08/02 11:21:34";
+    public const string ReleaseDate = "2024/05/21 13:17:41";
 }

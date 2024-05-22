@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2024 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -28,13 +28,13 @@ namespace SampleClient.Samples
         private const string DownloadNodeID = "ns=9;i=2";
 
         // the nodeId of the UploadFile from the server
-        private const string UploadNodeID = "ns=9;i=24";
+        private const string UploadNodeID = "ns=9;i=25";
 
         // the nodeId of the ByteString element from the server
-        private const string ByteStringNodeID = "ns=9;i=46";
+        private const string ByteStringNodeID = "ns=9;i=48";
 
         // the nodeId of the TemporaryFile element from the server
-        private const string TemporaryFileNodeID = "ns=9;i=47";
+        private const string TemporaryFileNodeID = "ns=9;i=49";
 
         private string DownloadFilePath = Path.Combine("Files", "DownloadFile.xml");
         private string UploadFilePath = Path.Combine("Files", "UploadClientFile.xml");

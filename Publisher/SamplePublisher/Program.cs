@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2024 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -8,12 +8,15 @@
  * 
  * ======================================================================*/
 
-using System;
-using System.IO;
 using Opc.Ua;
 using Opc.Ua.PubSub;
 using Opc.Ua.PubSub.Configuration;
+using Opc.Ua.PubSub.Encoding;
 using Opc.Ua.PubSub.Transport;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace SamplePublisher
 {
@@ -24,6 +27,9 @@ namespace SamplePublisher
         private static readonly DateTime kTimeOfConfiguration = new DateTime(2021, 11, 1, 0, 0, 0, DateTimeKind.Utc);
 
         private const string SamplePublisherLogFile = "Softing/OpcUaNetStandardToolkit/logs/SamplePublisher.log";
+
+        protected static object m_lock = new object();
+
         #endregion
 
         /// <summary>
@@ -32,13 +38,14 @@ namespace SamplePublisher
         static void Main()
         {
             DataStoreValuesGenerator dataStoreValuesGenerator = null;
+
             try
             {
                 LoadTraceLogger();
 
-                string configurationFileName = "SamplePublisher_MQTT_JSON.Config.xml";
+                //string configurationFileName = "SamplePublisher_MQTT_JSON.Config.xml";
                 //string configurationFileName = "SamplePublisher_UDP_UADP.Config.xml";
-                //string configurationFileName = "SamplePublisher_UDP_UADP.AllTypes.Config.xml";
+                string configurationFileName = "SamplePublisher_UDP_UADP.AllTypes.Config.xml";
                 //string configurationFileName = "SamplePublisher_MQTT_UADP.Config.xml";
 
                 string[] commandLineArguments = Environment.GetCommandLineArgs();
@@ -56,7 +63,7 @@ namespace SamplePublisher
 
                 // Create the PubSub application
                 using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(configurationFileName))
-                { 
+                {
                     // the PubSub application can be also created from an instance of PubSubConfigurationDataType returned by CreateConfiguration() method
                     //PubSubConfigurationDataType pubSubConfiguration = CreateConfiguration_MqttJson();
                     //using (UaPubSubApplication uaPubSubApplication = UaPubSubApplication.Create(pubSubConfiguration)){
@@ -71,6 +78,11 @@ namespace SamplePublisher
 
                     // start application
                     uaPubSubApplication.Start();
+
+                    GetPublisherEndpointsData(uaPubSubApplication);
+
+                    GetDataSetWriterConfigurationData(uaPubSubApplication);
+
                     do
                     {
                         ConsoleKeyInfo key = Console.ReadKey();
@@ -94,6 +106,14 @@ namespace SamplePublisher
                             // list connection status
                             DisableConfigurationObjectById(uaPubSubApplication.UaPubSubConfigurator);
                         }
+                        else if (key.KeyChar == 'p')
+                        {
+                            PublisherEndpoints(uaPubSubApplication);
+                        }
+                        else if (key.KeyChar == 'c')
+                        {
+                            PublishDataSetWriterConfiguration(uaPubSubApplication);
+                        }
                         else
                         {
                             PrintCommandParameters();
@@ -113,6 +133,79 @@ namespace SamplePublisher
                 if (dataStoreValuesGenerator != null)
                 {
                     dataStoreValuesGenerator.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set DataSetWriter Configuration to be sent to the subscriber
+        /// </summary>
+        /// <param name="uaPubSubApplication"></param>
+        private static void GetDataSetWriterConfigurationData(UaPubSubApplication uaPubSubApplication)
+        {
+            foreach (IUaPubSubConnection publisherConnection in uaPubSubApplication.PubSubConnections)
+            {
+                if (publisherConnection is IUadpDiscoveryMessages)
+                {
+                    ((IUadpDiscoveryMessages)publisherConnection).GetDataSetWriterConfigurationCallback(GetDataSetWriterConfiguration);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set Publisher Endpoints to be sent to the subscriber
+        /// </summary>
+        /// <param name="uaPubSubApplication"></param>
+        private static void GetPublisherEndpointsData(UaPubSubApplication uaPubSubApplication)
+        {
+            foreach (IUaPubSubConnection publisherConnection in uaPubSubApplication.PubSubConnections)
+            {
+                if (publisherConnection is IUadpDiscoveryMessages)
+                {
+                    ((IUadpDiscoveryMessages)publisherConnection).GetPublisherEndpointsCallback(GetPublisherEndpoints);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get PublisherEndpoints called during subscriber discovery request
+        /// </summary>
+        /// <returns></returns>
+        private static List<EndpointDescription> GetPublisherEndpoints()
+        {
+            return CreateEndpointDescriptionsList();
+        }
+
+        /// <summary>
+        /// Get DataSetWriterConfiguration called during subscriber discovery request
+        /// </summary>
+        /// <returns></returns>
+        private static IList<UInt16> GetDataSetWriterConfiguration(UaPubSubApplication uaPubSubApplication)
+        {
+            return CreateDataSetWriterIdsList(uaPubSubApplication);
+        }
+
+        /// <summary>
+        /// Publishes the datasetwriter configuration
+        /// </summary>
+        /// <param name="uaPubSubApplication"></param>
+        private static void PublishDataSetWriterConfiguration(UaPubSubApplication uaPubSubApplication)
+        {
+            PubSubConnectionDataTypeCollection connections = uaPubSubApplication.UaPubSubConfigurator.PubSubConfiguration.Connections;
+            foreach (IUaPubSubConnection publisherConnection in uaPubSubApplication.PubSubConnections)
+            {
+                var writerGroups = connections.SelectMany(c => c.WriterGroups).ToList();
+                foreach (WriterGroupDataType writerGroup in writerGroups)
+                {
+                    ushort[] ids = writerGroup.DataSetWriters.Select(x => x.DataSetWriterId).ToArray();
+                    StatusCode[] statusCodes = ids.Select(_ => new StatusCode() { Code = StatusCodes.Good }).ToArray();
+                    UadpNetworkMessage message = new UadpNetworkMessage(ids, writerGroup, statusCodes);
+                    message.PublisherId = publisherConnection.PubSubConnectionConfiguration?.PublisherId;
+
+                    UaNetworkMessage uaNetworkMessage = CreateDataSetWriterConfigurationNetworkMessage(writerGroup, ids,
+                        statusCodes, message.PublisherId);
+
+                    publisherConnection.PublishNetworkMessage(message);
                 }
             }
         }
@@ -266,7 +359,7 @@ namespace SamplePublisher
             writerGroup11.DataSetWriters.Add(dataSetWriter113);
 
             pubSubConnection1.WriterGroups.Add(writerGroup11);
-            #endregion          
+            #endregion
 
             //create  pub sub configuration root object
             PubSubConfigurationDataType pubSubConfiguration = new PubSubConfigurationDataType();
@@ -326,11 +419,11 @@ namespace SamplePublisher
             {
                 DataSetOrdering = DataSetOrderingType.Undefined,
                 GroupVersion = 0,
-                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId 
+                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId
                     | UadpNetworkMessageContentMask.GroupHeader
-                    | UadpNetworkMessageContentMask.WriterGroupId 
+                    | UadpNetworkMessageContentMask.WriterGroupId
                     | UadpNetworkMessageContentMask.GroupVersion
-                    | UadpNetworkMessageContentMask.NetworkMessageNumber 
+                    | UadpNetworkMessageContentMask.NetworkMessageNumber
                     | UadpNetworkMessageContentMask.SequenceNumber
                     | UadpNetworkMessageContentMask.PayloadHeader)
             };
@@ -387,7 +480,7 @@ namespace SamplePublisher
             writerGroup21.DataSetWriters.Add(dataSetReaderMassTest1);
 
             pubSubConnection1.WriterGroups.Add(writerGroup21);
-            #endregion                        
+            #endregion
 
             //create  pub sub configuration root object
             PubSubConfigurationDataType pubSubConfiguration = new PubSubConfigurationDataType();
@@ -510,7 +603,7 @@ namespace SamplePublisher
             writerGroup24.DataSetWriters.Add(dataSetReaderAllTypes2);
 
             pubSubConnection4.WriterGroups.Add(writerGroup24);
-            #endregion                        
+            #endregion
 
             //create  pub sub configuration root object
             PubSubConfigurationDataType pubSubConfiguration = new PubSubConfigurationDataType();
@@ -525,7 +618,7 @@ namespace SamplePublisher
 
             return pubSubConfiguration;
         }
-                
+
         /// <summary>
         /// Create a PubSubConfigurationDataType object programmatically for MqttUadp profile
         /// </summary>
@@ -573,11 +666,11 @@ namespace SamplePublisher
             {
                 DataSetOrdering = DataSetOrderingType.Undefined,
                 GroupVersion = 0,
-                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId 
+                NetworkMessageContentMask = (uint)(UadpNetworkMessageContentMask.PublisherId
                     | UadpNetworkMessageContentMask.GroupHeader
-                    | UadpNetworkMessageContentMask.WriterGroupId 
+                    | UadpNetworkMessageContentMask.WriterGroupId
                     | UadpNetworkMessageContentMask.GroupVersion
-                    | UadpNetworkMessageContentMask.NetworkMessageNumber 
+                    | UadpNetworkMessageContentMask.NetworkMessageNumber
                     | UadpNetworkMessageContentMask.SequenceNumber
                     | UadpNetworkMessageContentMask.PayloadHeader)
             };
@@ -613,7 +706,7 @@ namespace SamplePublisher
                 MetaDataUpdateTime = 60000
             };
             dataSetWriter1.TransportSettings = new ExtensionObject(uadpDataSetWriterTransport);
-            
+
             writerGroup1.DataSetWriters.Add(dataSetWriter1);
 
             // Define DataSetWriter 'AllTypes'
@@ -673,7 +766,7 @@ namespace SamplePublisher
 
             return pubSubConfiguration;
         }
-        
+
         /// <summary>
         /// Creates and returns an instance of <see cref="PublishedDataSetDataType"/> for Simple DataSet
         /// </summary>
@@ -681,7 +774,7 @@ namespace SamplePublisher
         {
             PublishedDataSetDataType publishedDataSetSimple = new PublishedDataSetDataType();
             publishedDataSetSimple.Name = "Simple"; //name shall be unique in a configuration
-            // Define  publishedDataSetSimple.DataSetMetaData
+                                                    // Define  publishedDataSetSimple.DataSetMetaData
             publishedDataSetSimple.DataSetMetaData = new DataSetMetaDataType();
             publishedDataSetSimple.DataSetMetaData.DataSetClassId = Uuid.Empty;
             publishedDataSetSimple.DataSetMetaData.Name = publishedDataSetSimple.Name;
@@ -784,7 +877,7 @@ namespace SamplePublisher
         {
             PublishedDataSetDataType publishedDataSetAllTypes = new PublishedDataSetDataType();
             publishedDataSetAllTypes.Name = "AllTypes"; //name shall be unique in a configuration
-            // Define  publishedDataSetAllTypes.DataSetMetaData
+                                                        // Define  publishedDataSetAllTypes.DataSetMetaData
             publishedDataSetAllTypes.DataSetMetaData = new DataSetMetaDataType();
             publishedDataSetAllTypes.DataSetMetaData.DataSetClassId = Uuid.Empty;
             publishedDataSetAllTypes.DataSetMetaData.Name = publishedDataSetAllTypes.Name;
@@ -863,7 +956,7 @@ namespace SamplePublisher
                         ValueRank = ValueRanks.Scalar
                     },
                 };
-            
+
             // set the ConfigurationVersion relative to kTimeOfConfiguration constant
             publishedDataSetAllTypes.DataSetMetaData.ConfigurationVersion = new ConfigurationVersionDataType()
             {
@@ -894,7 +987,7 @@ namespace SamplePublisher
         {
             PublishedDataSetDataType publishedDataSetMassTest = new PublishedDataSetDataType();
             publishedDataSetMassTest.Name = "MassTest"; //name shall be unique in a configuration
-            // Define  publishedDataSetMassTest.DataSetMetaData
+                                                        // Define  publishedDataSetMassTest.DataSetMetaData
             publishedDataSetMassTest.DataSetMetaData = new DataSetMetaDataType();
             publishedDataSetMassTest.DataSetMetaData.DataSetClassId = Uuid.Empty;
             publishedDataSetMassTest.DataSetMetaData.Name = publishedDataSetMassTest.Name;
@@ -937,6 +1030,125 @@ namespace SamplePublisher
 
         #endregion Create configuration objects
 
+        #region Send UADP PublisherEndpoints Message 
+        /// <summary>
+        /// Send the UADP Publisher Endpoint Network Message to a subscriber
+        /// </summary>
+        /// <param name="uaPubSubApplication">OPC UA PubSub application instance started in order to be used in the PubSub connection.</param>
+        private static void PublisherEndpoints(UaPubSubApplication uaPubSubApplication)
+        {
+            foreach (var connection in uaPubSubApplication.PubSubConnections)
+            {
+                List<EndpointDescription> endpointDescriptions = CreateEndpointDescriptionsList();
+
+                if (endpointDescriptions != null)
+                {
+                    Console.WriteLine("\n\tSend UADP PublisherEndpoints on PublisherId = {0}:", connection.PubSubConnectionConfiguration.PublisherId);
+                    int i = 1;
+
+                    foreach (EndpointDescription endpointDescription in endpointDescriptions)
+                    {
+                        Console.WriteLine(i + $". UADP Network PublisherEndpoint: " +
+                            $"\n\tEndpointUrl = {endpointDescription.EndpointUrl}, " +
+                            $"\n\tSecurityMode = {endpointDescription.SecurityMode}, " +
+                            $"\n\tSecurityPolicyUri = {endpointDescription.SecurityPolicyUri}");
+
+                        i++;
+                    }
+                }
+
+                UaNetworkMessage uaNetworkMessage = CreatePublisherEndpointsNetworkMessage(endpointDescriptions.ToArray(),
+                        StatusCodes.Good, connection.PubSubConnectionConfiguration.PublisherId.Value);
+
+                connection.PublishNetworkMessage(uaNetworkMessage);
+            }
+        }
+
+        /// <summary>
+        /// Create and return the Publisher Endpoints network message to be used only by UADP Discovery response messages
+        /// </summary>
+        /// <param name="endpoints"></param>
+        /// <param name="publisherProvideEndpointsStatusCode"></param>
+        /// <param name="publisherId"></param>
+        /// <returns></returns>
+        private static UaNetworkMessage CreatePublisherEndpointsNetworkMessage(
+            EndpointDescription[] endpoints, StatusCode publisherProvideEndpointsStatusCode, object publisherId)
+        {
+            UadpNetworkMessage networkMessage = new UadpNetworkMessage(endpoints, publisherProvideEndpointsStatusCode);
+            networkMessage.PublisherId = publisherId;
+
+            return networkMessage;
+        }
+
+        /// <summary>
+        /// Create and return the DataSetWriterConfiguration network message to be used only by UADP Discovery response messages
+        /// </summary>
+        /// <param name="dataSetWriterIds"></param>
+        /// <param name="dataSetWriterStatusCode"></param>
+        /// <param name="publisherId"></param>
+        /// <returns></returns>
+        private static UaNetworkMessage CreateDataSetWriterConfigurationNetworkMessage(
+            WriterGroupDataType writerGroup, ushort[] dataSetWriterIds, StatusCode[] dataSetWriterStatusCodes, object publisherId)
+        {
+            UadpNetworkMessage networkMessage = new UadpNetworkMessage(dataSetWriterIds, writerGroup, dataSetWriterStatusCodes);
+            networkMessage.PublisherId = publisherId;
+
+            return networkMessage;
+        }
+
+        /// <summary>
+        /// Create endpoint descriptions list for the Publisher Endpoints Network Message. 
+        /// Contains:
+        /// - EndpointUrl: The URL for the Endpoint described.
+        /// - SecurityMode: The type of security to apply to the messages.
+        /// - SecurityPolicyUri: The URI for SecurityPolicy to use when securing messages.
+        /// - Server: The description for the Server that the Endpoint belongs to.
+        /// </summary>
+        private static List<EndpointDescription> CreateEndpointDescriptionsList()
+        {
+            return new List<EndpointDescription>()
+            {
+                new EndpointDescription() {
+                    EndpointUrl = "opc.tcp://server1:4840/Test",
+                    SecurityMode = MessageSecurityMode.None,
+                    SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#None",
+                    Server = new ApplicationDescription() { ApplicationName = "Test security mode None", ApplicationUri = "urn:localhost:Server" }
+                },
+                new EndpointDescription() {
+                    EndpointUrl = "opc.tcp://server1:4840/Test",
+                    SecurityMode = MessageSecurityMode.Sign,
+                    SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256",
+                    Server = new ApplicationDescription() { ApplicationName = "Test security mode Sign", ApplicationUri = "urn:localhost:Server" }
+                },
+                new EndpointDescription() {
+                    EndpointUrl = "opc.tcp://server1:4840/Test",
+                    SecurityMode = MessageSecurityMode.SignAndEncrypt,
+                    SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256",
+                    Server = new ApplicationDescription() { ApplicationName = "Test security mode SignAndEncrypt", ApplicationUri = "urn:localhost:Server" }
+                }
+            };
+        }
+
+        /// <summary>
+        /// Create data set writer ids list from the PubSubConnectionDataType configuration
+        /// </summary>
+        /// <param name="uaPubSubApplication"></param>
+        /// <returns></returns>
+        private static IList<UInt16> CreateDataSetWriterIdsList(UaPubSubApplication uaPubSubApplication)
+        {
+            List<UInt16> ids = new List<UInt16>();
+
+            foreach (var connection in uaPubSubApplication.UaPubSubConfigurator.PubSubConfiguration.Connections)
+            {
+                ids.AddRange(connection.WriterGroups
+                    .Select(group => group.DataSetWriters)
+                    .SelectMany(writer => writer.Select(x => x.DataSetWriterId))
+                    .ToList());
+            }
+            return ids;
+        }
+        #endregion Send UADP PublisherEndpoints Message 
+
         #region Private methods
 
         /// <summary>
@@ -947,6 +1159,8 @@ namespace SamplePublisher
             Console.WriteLine("Press:\n\ts: display configuration status");
             Console.WriteLine("\te: enable configuration object specified by id");
             Console.WriteLine("\td: disable configuration object specified by id");
+            Console.WriteLine("\tp: send publisher endpoints");
+            Console.WriteLine("\tc: send dataSetWriter configuration");
             Console.WriteLine("\tx,q: shutdown the Publisher\n\n");
         }
 
@@ -1033,7 +1247,7 @@ namespace SamplePublisher
                 }
             }
         }
-        
+
         /// <summary>
         /// Load trace configuration for logging
         /// </summary>

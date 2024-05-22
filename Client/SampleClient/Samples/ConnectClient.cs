@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2024 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -112,7 +112,7 @@ namespace SampleClient.Samples
                     // create UserIdentity from certificate
                     UserIdentity certificateUserIdentity = new UserIdentity(certificate);
 
-                    Console.WriteLine("Create session using certificate located at '{0}'", certificateFilePath);
+                    Console.WriteLine("\r\nCreate session using certificate located at '{0}'", certificateFilePath);
                     // create the session object.
                     using (ClientSession session = CreateSession("UaBinaryUserCertificateSession", Program.ServerUrl,
                         MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, certificateUserIdentity))
@@ -128,6 +128,49 @@ namespace SampleClient.Samples
             catch(Exception ex)
             {
                 Program.PrintException("CreateOpcTcpSessionWithCertificate", ex);
+            }
+        }
+
+        /// <summary>
+        /// Creates and connects a session on opc.tcp protocol with no security and a certificate with password user identity.
+        /// </summary>
+        public async Task CreateOpcTcpSessionWithCertificatePassword()
+        {
+            try
+            {
+                // use the opcuserPwd.pfx certificate file located in Files folder
+                string certificateFilePath = Path.Combine("Files", "opcuserPwd.pfx");
+                if (!File.Exists(certificateFilePath))
+                {
+                    Console.WriteLine("The user certificate file is missing ('{0}').", certificateFilePath);
+                    return;
+                }
+                // load the certificate with password from file
+                X509Certificate2 certificate = new X509Certificate2(certificateFilePath,
+                               "User_Pwd",
+                               X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.Exportable);
+
+                if (certificate != null)
+                {
+                    // create UserIdentity from certificate
+                    UserIdentity certificateUserIdentity = new UserIdentity(certificate);
+
+                    Console.WriteLine("\r\nCreate session using certificate located at '{0}'", certificateFilePath);
+                    // create the session object.
+                    using (ClientSession session = CreateSession("UaBinaryUserCertificateWithPasswordSession", Program.ServerUrl,
+                        MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, certificateUserIdentity))
+                    {
+                        await ConnectTest(session).ConfigureAwait(false);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Cannot load certificate from '{0}'", certificateFilePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("UaBinaryUserCertificateWithPasswordSession", ex);
             }
         }
 

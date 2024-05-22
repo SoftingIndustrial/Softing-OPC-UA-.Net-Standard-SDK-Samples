@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2024 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -15,9 +15,8 @@ using Opc.Ua.PubSub.Encoding;
 using Opc.Ua.PubSub.PublishedData;
 using Opc.Ua.PubSub.Transport;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
 
 namespace SampleSubscriber
 {
@@ -43,11 +42,11 @@ namespace SampleSubscriber
             {
                 LoadTraceLogger();
 
-                string configurationFileName = "SampleSubscriber_MQTT_JSON.Config.xml";
+                //string configurationFileName = "SampleSubscriber_MQTT_JSON.Config.xml";
                 //string configurationFileName = "SampleSubscriber_UDP_UADP.Config.xml";
-                //string configurationFileName = "SampleSubscriber_UDP_UADP.AllTypes.Config.xml";
+                string configurationFileName = "SampleSubscriber_UDP_UADP.AllTypes.Config.xml";
                 //string configurationFileName = "SampleSubscriber_MQTT_UADP.Config.xml";
-                
+
                 string[] commandLineArguments = Environment.GetCommandLineArgs();
                 if (commandLineArguments.Length > 1)
                 {
@@ -72,12 +71,15 @@ namespace SampleSubscriber
                     uaPubSubApplication.DataReceived += PubSubApplication_DataReceived;
                     uaPubSubApplication.RawDataReceived += PubSubApplication_RawDataReceived;
                     uaPubSubApplication.MetaDataReceived += PubSubApplication_MetaDataReceived;
+                    uaPubSubApplication.PublisherEndpointsReceived += PubSubApplication_PublisherEndpointsReceived;
+                    uaPubSubApplication.DataSetWriterConfigurationReceived += PubSubApplication_DataSetWriterConfigurationReceived;
 
                     //start application
                     uaPubSubApplication.Start();
 
                     Console.WriteLine("SampleSubscriber started at:{0} with configurationFileName:{1}",
                         DateTime.Now.ToLongTimeString(), configurationFileName);
+
                     PrintCommandParameters();
 
                     do
@@ -103,6 +105,14 @@ namespace SampleSubscriber
                             // list connection status
                             DisableConfigurationObjectById(uaPubSubApplication.UaPubSubConfigurator);
                         }
+                        else if (key.KeyChar == 'p')
+                        {
+                            RequestPublisherEndpoints(uaPubSubApplication);
+                        }
+                        else if (key.KeyChar == 'c')
+                        {
+                            RequestDataSetWriterConfiguration(uaPubSubApplication);
+                        }
                         else
                         {
                             PrintCommandParameters();
@@ -116,6 +126,30 @@ namespace SampleSubscriber
                 Console.WriteLine(e.ToString());
                 Console.ReadKey();
                 Environment.Exit(-1);
+            }
+        }
+
+        private static void RequestDataSetWriterConfiguration(UaPubSubApplication uaPubSubApplication)
+        {
+            var subscriberConnection = uaPubSubApplication.PubSubConnections.First();
+            if (subscriberConnection is IUadpDiscoveryMessages)
+            {
+                ((IUadpDiscoveryMessages)subscriberConnection).RequestDataSetWriterConfiguration();
+            }
+        }
+
+        /// <summary>
+        /// Request UADP Discovery Publisher endpoints only
+        /// </summary>
+        /// <param name="uaPubSubApplication">OPC UA PubSub application instance started in order to be used in the PubSub connection.</param>
+        private static void RequestPublisherEndpoints(UaPubSubApplication uaPubSubApplication)
+        {
+            foreach (IUaPubSubConnection subscriberConnection in uaPubSubApplication.PubSubConnections)
+            {
+                if (subscriberConnection is IUadpDiscoveryMessages)
+                {
+                    ((IUadpDiscoveryMessages)subscriberConnection).RequestPublisherEndpoints();
+                }
             }
         }
 
@@ -186,7 +220,7 @@ namespace SampleSubscriber
                 Console.WriteLine("MetaDataDataReceived event:");
                 if (e.NetworkMessage is JsonNetworkMessage)
                 {
-                    Console.WriteLine("JSON Network MetaData Message: Source={0}, PublisherId={1}, DataSetWriterId={2} Fields count={3}\n",
+                    Console.WriteLine("JSON Network MetaData Message: Source={0}, PublisherId={1}, DataSetWriterId={2}, Fields count={3}\n",
                          e.Source,
                          ((JsonNetworkMessage)e.NetworkMessage).PublisherId,
                          ((JsonNetworkMessage)e.NetworkMessage).DataSetWriterId,
@@ -194,14 +228,14 @@ namespace SampleSubscriber
                 }
                 if (e.NetworkMessage is UadpNetworkMessage)
                 {
-                    Console.WriteLine("UADP Network MetaData Message: Source={0}, PublisherId={1}, DataSetWriterId={2} Fields count={3}\n",
+                    Console.WriteLine("UADP Network MetaData Message: Source={0}, PublisherId={1}, DataSetWriterId={2}, Fields count={3}\n",
                          e.Source,
                          ((UadpNetworkMessage)e.NetworkMessage).PublisherId,
                          ((UadpNetworkMessage)e.NetworkMessage).DataSetWriterId,
                          e.NetworkMessage.DataSetMetaData.Fields.Count);
                 }
 
-                Console.WriteLine("\tMetaData.Name={0}, MajorVersion={1} MinorVersion={2}",
+                Console.WriteLine("\tMetaData.Name={0}, MajorVersion={1}, MinorVersion={2}",
                     e.NetworkMessage.DataSetMetaData.Name,
                     e.NetworkMessage.DataSetMetaData.ConfigurationVersion.MajorVersion,
                     e.NetworkMessage.DataSetMetaData.ConfigurationVersion.MinorVersion);
@@ -214,6 +248,93 @@ namespace SampleSubscriber
                     {
                         Console.WriteLine("\t\t... the rest of {0} elements are omitted.", e.NetworkMessage.DataSetMetaData.Fields.Count - i);
                         break;
+                    }
+                }
+                Console.WriteLine("------------------------------------------------");
+            }
+        }
+
+        /// <summary>
+        ///  Handler for <see cref="UaPubSubApplication.DataSetWriterConfigurationReceived" /> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void PubSubApplication_DataSetWriterConfigurationReceived(object sender, DataSetWriterConfigurationEventArgs e)
+        {
+            lock (m_lock)
+            {
+                Console.WriteLine("DataSetWriterConfiguration received");
+                WriterGroupDataType writerGroup = e.DataSetWriterConfiguration;
+
+                if (writerGroup != null)
+                {
+                    foreach (var statusCode in e.StatusCodes)
+                    {
+                        Console.WriteLine(
+                            $"UADP DataSetWriterConfiguration Message: " +
+                            $"Source={e.Source}, " +
+                            $"WriterGroupId={writerGroup.WriterGroupId}, " +
+                            $"Name={writerGroup.Name}, " +
+                            $"Writers count={writerGroup.DataSetWriters.Count}," +
+                            $"Message settings={writerGroup.MessageSettings}\n");
+
+                        for (int i = 0; i < writerGroup.DataSetWriters.Count; i++)
+                        {
+                            DataSetWriterDataType writer = writerGroup.DataSetWriters[i];
+                            Console.WriteLine("DataSetName:{0}, Name:{1}", writer.DataSetName, writer.Name);
+                            if (i > MaximumNumberOfFieldsDisplayed)
+                            {
+                                Console.WriteLine("\t\t... the rest of {0} elements are omitted.", writerGroup.DataSetWriters.Count - i);
+                                break;
+                            }
+                        }
+
+                        writerGroup.DataSetWriters.ForEach(dataSet => Console.WriteLine($"DataSetWriterId: {dataSet.DataSetWriterId}"));
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Any work group found for:");
+                    Console.WriteLine($"Source: {e.Source}");
+                    e.DataSetWriterIds.ToList().ForEach(ids => Console.WriteLine($"DataSetWriterIds: {ids}"));
+                    e.StatusCodes.ToList().ForEach(statusCode => Console.WriteLine($"StatusCode: {statusCode.ToString()}"));
+                }
+
+                Console.WriteLine("------------------------------------------------");
+            }
+        }
+
+        /// <summary>
+        /// Handler for <see cref="UaPubSubApplication.PublisherEndpointsReceived" /> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void PubSubApplication_PublisherEndpointsReceived(object sender, PublisherEndpointsEventArgs e)
+        {
+            lock (m_lock)
+            {
+                Console.WriteLine("PublisherEndpointsReceived event");
+
+                if (e.PublisherEndpoints != null && e.PublisherEndpoints.Any())
+                {
+                    Console.WriteLine("UADP Discovery Network PublisherEndpoints Messages received:");
+
+                    int i = 1;
+                    foreach (EndpointDescription endpointDescription in e.PublisherEndpoints)
+                    {
+                        Console.WriteLine(i + $". UADP Discovery Network PublisherEndpoint ({e.Source}) details: " +
+                                            $"\n\tPublisherId={e.PublisherId}, " +
+                                            $"\n\tSecurityPolicy = {endpointDescription.SecurityPolicyUri}, " +
+                                            $"\n\tSecurityMode = {endpointDescription.SecurityMode}, " +
+                                            $"\n\tPublisher Endpoint={endpointDescription.EndpointUrl}\n");
+                        i++;
+                    }
+                }
+                else
+                {
+                    if (e.StatusCode == StatusCodes.BadNotFound)
+                    {
+                        Console.WriteLine($"PublisherId={e.PublisherId}\nUADP Discovery Network PublisherEndpoints not found!");
                     }
                 }
                 Console.WriteLine("------------------------------------------------");
@@ -244,7 +365,7 @@ namespace SampleSubscriber
             // Configure the mqtt specific configuration with the MQTTbroker
             ITransportProtocolConfiguration mqttConfiguration = new MqttClientProtocolConfiguration(version: EnumMqttProtocolVersion.V500);
             pubSubConnection1.ConnectionProperties = mqttConfiguration.ConnectionProperties;
-            
+
             // set the BrokerConnectionTransportDataType TransportSettings
             pubSubConnection1.TransportSettings = new ExtensionObject()
             {
@@ -294,7 +415,7 @@ namespace SampleSubscriber
                         | JsonDataSetMessageContentMask.Status | JsonDataSetMessageContentMask.Timestamp),
             };
             dataSetReaderSimple.MessageSettings = new ExtensionObject(jsonDataSetReaderMessage);
-            
+
             #endregion
             readerGroup1.DataSetReaders.Add(dataSetReaderSimple);
 
@@ -329,7 +450,7 @@ namespace SampleSubscriber
                         | JsonDataSetMessageContentMask.Status | JsonDataSetMessageContentMask.Timestamp),
             };
             dataSetReaderAllTypes.MessageSettings = new ExtensionObject(jsonDataSetReaderMessage);
-            
+
             #endregion
             readerGroup1.DataSetReaders.Add(dataSetReaderAllTypes);
 
@@ -363,7 +484,7 @@ namespace SampleSubscriber
                 MetaDataQueueName = metaDataQueueName
             };
 
-            dataSetReaderMassTest.TransportSettings = new ExtensionObject(brokerTransportSettings);            
+            dataSetReaderMassTest.TransportSettings = new ExtensionObject(brokerTransportSettings);
             #endregion
             readerGroup1.DataSetReaders.Add(dataSetReaderMassTest);
             #endregion
@@ -426,17 +547,17 @@ namespace SampleSubscriber
             dataSetReaderSimple1.DataSetWriterId = 211;
             dataSetReaderSimple1.Enabled = true;
             dataSetReaderSimple1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetReaderSimple1.KeyFrameCount = 1;           
+            dataSetReaderSimple1.KeyFrameCount = 1;
 
             UadpDataSetReaderMessageDataType uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
                 NetworkMessageNumber = 0,
-                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId 
+                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId
                     | UadpNetworkMessageContentMask.GroupHeader
-                    | UadpNetworkMessageContentMask.WriterGroupId 
+                    | UadpNetworkMessageContentMask.WriterGroupId
                     | UadpNetworkMessageContentMask.GroupVersion
-                    | UadpNetworkMessageContentMask.NetworkMessageNumber 
+                    | UadpNetworkMessageContentMask.NetworkMessageNumber
                     | UadpNetworkMessageContentMask.SequenceNumber
                     | UadpNetworkMessageContentMask.PayloadHeader),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
@@ -455,21 +576,21 @@ namespace SampleSubscriber
             dataSetReaderAllTypes1.DataSetWriterId = 212;
             dataSetReaderAllTypes1.Enabled = true;
             dataSetReaderAllTypes1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetReaderAllTypes1.KeyFrameCount = 1;            
+            dataSetReaderAllTypes1.KeyFrameCount = 1;
 
             uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
                 NetworkMessageNumber = 0,
-                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId 
+                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId
                     | UadpNetworkMessageContentMask.GroupHeader
-                    | UadpNetworkMessageContentMask.WriterGroupId 
+                    | UadpNetworkMessageContentMask.WriterGroupId
                     | UadpNetworkMessageContentMask.GroupVersion
-                    | UadpNetworkMessageContentMask.NetworkMessageNumber 
+                    | UadpNetworkMessageContentMask.NetworkMessageNumber
                     | UadpNetworkMessageContentMask.SequenceNumber),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetReaderAllTypes1.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);            
+            dataSetReaderAllTypes1.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
             #endregion
             readerGroup21.DataSetReaders.Add(dataSetReaderAllTypes1);
 
@@ -481,26 +602,26 @@ namespace SampleSubscriber
             dataSetReaderMassTest1.DataSetWriterId = 213;
             dataSetReaderMassTest1.Enabled = true;
             dataSetReaderMassTest1.DataSetFieldContentMask = (uint)DataSetFieldContentMask.RawData;
-            dataSetReaderMassTest1.KeyFrameCount = 1;          
+            dataSetReaderMassTest1.KeyFrameCount = 1;
 
             uadpDataSetReaderMessage = new UadpDataSetReaderMessageDataType()
             {
                 GroupVersion = 0,
                 NetworkMessageNumber = 0,
-                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId 
+                NetworkMessageContentMask = (uint)(uint)(UadpNetworkMessageContentMask.PublisherId
                     | UadpNetworkMessageContentMask.GroupHeader
-                    | UadpNetworkMessageContentMask.WriterGroupId 
+                    | UadpNetworkMessageContentMask.WriterGroupId
                     | UadpNetworkMessageContentMask.GroupVersion
-                    | UadpNetworkMessageContentMask.NetworkMessageNumber 
+                    | UadpNetworkMessageContentMask.NetworkMessageNumber
                     | UadpNetworkMessageContentMask.SequenceNumber),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetReaderMassTest1.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);            
+            dataSetReaderMassTest1.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
             #endregion
             readerGroup21.DataSetReaders.Add(dataSetReaderMassTest1);
             #endregion
             pubSubConnection1.ReaderGroups.Add(readerGroup21);
-           
+
             //create  pub sub configuration root object
             PubSubConfigurationDataType pubSubConfiguration = new PubSubConfigurationDataType();
             pubSubConfiguration.Connections = new PubSubConnectionDataTypeCollection()
@@ -557,7 +678,7 @@ namespace SampleSubscriber
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
             dataSetReaderAllTypes1.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
-            
+
             #endregion
             readerGroup23.DataSetReaders.Add(dataSetReaderAllTypes1);
 
@@ -671,7 +792,7 @@ namespace SampleSubscriber
                        | UadpNetworkMessageContentMask.SequenceNumber),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetReaderSimple.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);            
+            dataSetReaderSimple.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
             #endregion
             readerGroup1.DataSetReaders.Add(dataSetReaderSimple);
 
@@ -709,7 +830,7 @@ namespace SampleSubscriber
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
             dataSetReaderAllTypes.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
-            
+
             #endregion
             readerGroup1.DataSetReaders.Add(dataSetReaderAllTypes);
 
@@ -744,8 +865,8 @@ namespace SampleSubscriber
                        | UadpNetworkMessageContentMask.SequenceNumber),
                 DataSetMessageContentMask = (uint)(UadpDataSetMessageContentMask.Status | UadpDataSetMessageContentMask.SequenceNumber),
             };
-            dataSetReaderMassTest.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);            
-            
+            dataSetReaderMassTest.MessageSettings = new ExtensionObject(uadpDataSetReaderMessage);
+
             #endregion
             readerGroup1.DataSetReaders.Add(dataSetReaderMassTest);
             #endregion
@@ -773,6 +894,8 @@ namespace SampleSubscriber
             Console.WriteLine("Press:\n\ts: display configuration status");
             Console.WriteLine("\te: enable configuration object specified by id");
             Console.WriteLine("\td: disable configuration object specified by id");
+            Console.WriteLine("\tp: request publisher endpoints");
+            Console.WriteLine("\tc: request dataSetWriter configuration");
             Console.WriteLine("\tx,q: shutdown the Subscriber\n\n");
         }
 

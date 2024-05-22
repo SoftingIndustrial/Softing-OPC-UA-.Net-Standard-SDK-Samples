@@ -1,781 +1,781 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PubSubConfigurationDataType xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-  <PublishedDataSets />
-  <Connections>
-    <PubSubConnectionDataType>
-      <Name>UdpUadpConection</Name>
-      <Enabled>true</Enabled>
-      <PublisherId>
-        <Value>
-          <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
-        </Value>
-      </PublisherId>
-      <TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp</TransportProfileUri>
-      <Address>
-        <TypeId>
-          <Identifier>i=21176</Identifier>
-        </TypeId>
-        <Body>
-          <NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-            <NetworkInterface />
-            <Url>opc.udp://239.0.0.13:4840</Url>
-          </NetworkAddressUrlDataType>
-        </Body>
-      </Address>
-      <ConnectionProperties />
-      <TransportSettings i:nil="true" />
-      <WriterGroups />
-      <ReaderGroups>
-        <ReaderGroupDataType>
-          <Name>ReaderGroup 23</Name>
-          <Enabled>true</Enabled>
-          <SecurityMode>Invalid_0</SecurityMode>
-          <SecurityGroupId i:nil="true" />
-          <SecurityKeyServices />
-          <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
-          <GroupProperties />
-          <TransportSettings>
-            <TypeId>
-              <Identifier>i=15995</Identifier>
-            </TypeId>
-            <Body>
-              <ReaderGroupTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
-            </Body>
-          </TransportSettings>
-          <MessageSettings>
-            <TypeId>
-              <Identifier>i=15996</Identifier>
-            </TypeId>
-            <Body>
-              <ReaderGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
-            </Body>
-          </MessageSettings>
-          <DataSetReaders>
-            <DataSetReaderDataType>
-              <Name>Reader For Writer 231</Name>
-              <Enabled>true</Enabled>
-              <PublisherId>
-                <Value>
-                  <UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
-                </Value>
-              </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>0</DataSetWriterId>
-              <DataSetMetaData>
-                <Namespaces />
-                <StructureDataTypes />
-                <EnumDataTypes />
-                <SimpleDataTypes />
-                <Name>AllTypes</Name>
-                <Description i:nil="true" />
-                <Fields>
-                  <FieldMetaData>
-                    <Name>BoolToggle</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>1</BuiltInType>
-                    <DataType>
-                      <Identifier>i=1</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>48164cce-15fa-439a-b7c8-fb9c4a241108</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>Byte</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>3</BuiltInType>
-                    <DataType>
-                      <Identifier>i=3</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>bf036e11-f5a1-41ec-a75c-15c08083016a</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>Int16</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>4</BuiltInType>
-                    <DataType>
-                      <Identifier>i=4</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>ffd51c9e-b5ec-466b-bff8-145c2099ed39</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>Int32</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>6</BuiltInType>
-                    <DataType>
-                      <Identifier>i=6</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>b387cfdb-864a-4d22-a485-da9376541662</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>SByte</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>2</BuiltInType>
-                    <DataType>
-                      <Identifier>i=2</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>3b995553-95f0-4823-b2ab-6e83fdc5dc92</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>UInt16</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>5</BuiltInType>
-                    <DataType>
-                      <Identifier>i=5</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>df69e870-c68a-4207-8909-271fc63dd49b</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>UInt32</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>7</BuiltInType>
-                    <DataType>
-                      <Identifier>i=7</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>4a4cc2d3-28b9-4dd2-a69b-79ff46de033f</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>Float</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>10</BuiltInType>
-                    <DataType>
-                      <Identifier>i=10</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>04c3347a-7071-468c-b9bc-9f830f46d0f6</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>Double</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>11</BuiltInType>
-                    <DataType>
-                      <Identifier>i=11</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>ff870464-81c0-4e9f-aa56-db9f772f0f74</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                </Fields>
-                <DataSetClassId>
-                  <String>00000000-0000-0000-0000-000000000000</String>
-                </DataSetClassId>
-                <ConfigurationVersion>
-                  <MajorVersion>1</MajorVersion>
-                  <MinorVersion>1</MinorVersion>
-                </ConfigurationVersion>
-              </DataSetMetaData>
-              <DataSetFieldContentMask>32</DataSetFieldContentMask>
-              <MessageReceiveTimeout>0</MessageReceiveTimeout>
-              <KeyFrameCount>1</KeyFrameCount>
-              <HeaderLayoutUri i:nil="true" />
-              <SecurityMode>Invalid_0</SecurityMode>
-              <SecurityGroupId i:nil="true" />
-              <SecurityKeyServices />
-              <DataSetReaderProperties />
-              <TransportSettings i:nil="true" />
-              <MessageSettings>
-                <TypeId>
-                  <Identifier>i=16016</Identifier>
-                </TypeId>
-                <Body>
-                  <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <GroupVersion>0</GroupVersion>
-                    <NetworkMessageNumber>0</NetworkMessageNumber>
-                    <DataSetOffset>15</DataSetOffset>
-                    <DataSetClassId>
-                      <String>00000000-0000-0000-0000-000000000000</String>
-                    </DataSetClassId>
-                    <NetworkMessageContentMask>63</NetworkMessageContentMask>
-                    <DataSetMessageContentMask>36</DataSetMessageContentMask>
-                    <PublishingInterval>0</PublishingInterval>
-                    <ReceiveOffset>0</ReceiveOffset>
-                    <ProcessingOffset>0</ProcessingOffset>
-                  </UadpDataSetReaderMessageDataType>
-                </Body>
-              </MessageSettings>
-              <SubscribedDataSet>
-                <TypeId>
-                  <Identifier>i=16011</Identifier>
-                </TypeId>
-                <Body>
-                  <TargetVariablesDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <TargetVariables>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>48164cce-15fa-439a-b7c8-fb9c4a241108</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=BoolToggle</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <Boolean>false</Boolean>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>bf036e11-f5a1-41ec-a75c-15c08083016a</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=Byte</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <Byte>0</Byte>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>ffd51c9e-b5ec-466b-bff8-145c2099ed39</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=Int16</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <Int16>0</Int16>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>b387cfdb-864a-4d22-a485-da9376541662</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=Int32</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <Int32>0</Int32>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>3b995553-95f0-4823-b2ab-6e83fdc5dc92</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=SByte</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <SByte>0</SByte>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>df69e870-c68a-4207-8909-271fc63dd49b</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=UInt16</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <UInt16>0</UInt16>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>4a4cc2d3-28b9-4dd2-a69b-79ff46de033f</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=UInt32</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <UInt32>0</UInt32>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>04c3347a-7071-468c-b9bc-9f830f46d0f6</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=Float</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <Float>0</Float>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>ff870464-81c0-4e9f-aa56-db9f772f0f74</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=Double</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <Double>0</Double>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                    </TargetVariables>
-                  </TargetVariablesDataType>
-                </Body>
-              </SubscribedDataSet>
-            </DataSetReaderDataType>
-          </DataSetReaders>
-        </ReaderGroupDataType>
-        <ReaderGroupDataType>
-          <Name>ReaderGroup 24</Name>
-          <Enabled>true</Enabled>
-          <SecurityMode>Invalid_0</SecurityMode>
-          <SecurityGroupId i:nil="true" />
-          <SecurityKeyServices />
-          <MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
-          <GroupProperties />
-          <TransportSettings>
-            <TypeId>
-              <Identifier>i=15995</Identifier>
-            </TypeId>
-            <Body>
-              <ReaderGroupTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
-            </Body>
-          </TransportSettings>
-          <MessageSettings>
-            <TypeId>
-              <Identifier>i=15996</Identifier>
-            </TypeId>
-            <Body>
-              <ReaderGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
-            </Body>
-          </MessageSettings>
-          <DataSetReaders>
-            <DataSetReaderDataType>
-              <Name>Reader For Writer 241</Name>
-              <Enabled>true</Enabled>
-              <PublisherId>
-                <Value>
-                  <UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
-                </Value>
-              </PublisherId>
-              <WriterGroupId>0</WriterGroupId>
-              <DataSetWriterId>241</DataSetWriterId>
-              <DataSetMetaData>
-                <Namespaces />
-                <StructureDataTypes />
-                <EnumDataTypes />
-                <SimpleDataTypes />
-                <Name>AllTypes</Name>
-                <Description i:nil="true" />
-                <Fields>
-                  <FieldMetaData>
-                    <Name>BoolToggle</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>1</BuiltInType>
-                    <DataType>
-                      <Identifier>i=1</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>48164cce-15fa-439a-b7c8-fb9c4a241108</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>Byte</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>3</BuiltInType>
-                    <DataType>
-                      <Identifier>i=3</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>bf036e11-f5a1-41ec-a75c-15c08083016a</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>Int16</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>4</BuiltInType>
-                    <DataType>
-                      <Identifier>i=4</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>ffd51c9e-b5ec-466b-bff8-145c2099ed39</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>Int32</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>6</BuiltInType>
-                    <DataType>
-                      <Identifier>i=6</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>b387cfdb-864a-4d22-a485-da9376541662</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>SByte</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>2</BuiltInType>
-                    <DataType>
-                      <Identifier>i=2</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>3b995553-95f0-4823-b2ab-6e83fdc5dc92</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>UInt16</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>5</BuiltInType>
-                    <DataType>
-                      <Identifier>i=5</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>df69e870-c68a-4207-8909-271fc63dd49b</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>UInt32</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>7</BuiltInType>
-                    <DataType>
-                      <Identifier>i=7</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>4a4cc2d3-28b9-4dd2-a69b-79ff46de033f</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>Float</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>10</BuiltInType>
-                    <DataType>
-                      <Identifier>i=10</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>04c3347a-7071-468c-b9bc-9f830f46d0f6</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                  <FieldMetaData>
-                    <Name>Double</Name>
-                    <Description i:nil="true" />
-                    <FieldFlags>0</FieldFlags>
-                    <BuiltInType>11</BuiltInType>
-                    <DataType>
-                      <Identifier>i=11</Identifier>
-                    </DataType>
-                    <ValueRank>-1</ValueRank>
-                    <ArrayDimensions />
-                    <MaxStringLength>0</MaxStringLength>
-                    <DataSetFieldId>
-                      <String>ff870464-81c0-4e9f-aa56-db9f772f0f74</String>
-                    </DataSetFieldId>
-                    <Properties />
-                  </FieldMetaData>
-                </Fields>
-                <DataSetClassId>
-                  <String>00000000-0000-0000-0000-000000000000</String>
-                </DataSetClassId>
-                <ConfigurationVersion>
-                  <MajorVersion>1</MajorVersion>
-                  <MinorVersion>1</MinorVersion>
-                </ConfigurationVersion>
-              </DataSetMetaData>
-              <DataSetFieldContentMask>32</DataSetFieldContentMask>
-              <MessageReceiveTimeout>0</MessageReceiveTimeout>
-              <KeyFrameCount>1</KeyFrameCount>
-              <HeaderLayoutUri i:nil="true" />
-              <SecurityMode>Invalid_0</SecurityMode>
-              <SecurityGroupId i:nil="true" />
-              <SecurityKeyServices />
-              <DataSetReaderProperties />
-              <TransportSettings i:nil="true" />
-              <MessageSettings>
-                <TypeId>
-                  <Identifier>i=16016</Identifier>
-                </TypeId>
-                <Body>
-                  <UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <GroupVersion>0</GroupVersion>
-                    <NetworkMessageNumber>0</NetworkMessageNumber>
-                    <DataSetOffset>0</DataSetOffset>
-                    <DataSetClassId>
-                      <String>00000000-0000-0000-0000-000000000000</String>
-                    </DataSetClassId>
-                    <NetworkMessageContentMask>65</NetworkMessageContentMask>
-                    <DataSetMessageContentMask>53</DataSetMessageContentMask>
-                    <PublishingInterval>0</PublishingInterval>
-                    <ReceiveOffset>0</ReceiveOffset>
-                    <ProcessingOffset>0</ProcessingOffset>
-                  </UadpDataSetReaderMessageDataType>
-                </Body>
-              </MessageSettings>
-              <SubscribedDataSet>
-                <TypeId>
-                  <Identifier>i=16011</Identifier>
-                </TypeId>
-                <Body>
-                  <TargetVariablesDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
-                    <TargetVariables>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>48164cce-15fa-439a-b7c8-fb9c4a241108</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=BoolToggle</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <Boolean>false</Boolean>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>bf036e11-f5a1-41ec-a75c-15c08083016a</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=Byte</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <Byte>0</Byte>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>ffd51c9e-b5ec-466b-bff8-145c2099ed39</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=Int16</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <Int16>0</Int16>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>b387cfdb-864a-4d22-a485-da9376541662</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=Int32</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <Int32>0</Int32>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>3b995553-95f0-4823-b2ab-6e83fdc5dc92</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=SByte</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <SByte>0</SByte>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>df69e870-c68a-4207-8909-271fc63dd49b</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=UInt16</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <UInt16>0</UInt16>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>4a4cc2d3-28b9-4dd2-a69b-79ff46de033f</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=UInt32</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <UInt32>0</UInt32>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>04c3347a-7071-468c-b9bc-9f830f46d0f6</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=Float</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <Float>0</Float>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                      <FieldTargetDataType>
-                        <DataSetFieldId>
-                          <String>ff870464-81c0-4e9f-aa56-db9f772f0f74</String>
-                        </DataSetFieldId>
-                        <TargetNodeId>
-                          <Identifier>ns=3;s=Double</Identifier>
-                        </TargetNodeId>
-                        <AttributeId>13</AttributeId>
-                        <OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
-                        <OverrideValue>
-                          <Value>
-                            <Double>0</Double>
-                          </Value>
-                        </OverrideValue>
-                      </FieldTargetDataType>
-                    </TargetVariables>
-                  </TargetVariablesDataType>
-                </Body>
-              </SubscribedDataSet>
-            </DataSetReaderDataType>
-          </DataSetReaders>
-        </ReaderGroupDataType>
-      </ReaderGroups>
-    </PubSubConnectionDataType>
-  </Connections>
-  <Enabled>true</Enabled>
+	<PublishedDataSets />
+	<Connections>
+		<PubSubConnectionDataType>
+			<Name>UdpUadpConection</Name>
+			<Enabled>true</Enabled>
+			<PublisherId>
+				<Value>
+					<UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
+				</Value>
+			</PublisherId>
+			<TransportProfileUri>http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp</TransportProfileUri>
+			<Address>
+				<TypeId>
+					<Identifier>i=21176</Identifier>
+				</TypeId>
+				<Body>
+					<NetworkAddressUrlDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+						<NetworkInterface />
+						<Url>opc.udp://239.0.0.13:4840</Url>
+					</NetworkAddressUrlDataType>
+				</Body>
+			</Address>
+			<ConnectionProperties />
+			<TransportSettings i:nil="true" />
+			<WriterGroups />
+			<ReaderGroups>
+				<ReaderGroupDataType>
+					<Name>ReaderGroup 23</Name>
+					<Enabled>true</Enabled>
+					<SecurityMode>Invalid_0</SecurityMode>
+					<SecurityGroupId i:nil="true" />
+					<SecurityKeyServices />
+					<MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
+					<GroupProperties />
+					<TransportSettings>
+						<TypeId>
+							<Identifier>i=15995</Identifier>
+						</TypeId>
+						<Body>
+							<ReaderGroupTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+						</Body>
+					</TransportSettings>
+					<MessageSettings>
+						<TypeId>
+							<Identifier>i=15996</Identifier>
+						</TypeId>
+						<Body>
+							<ReaderGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+						</Body>
+					</MessageSettings>
+					<DataSetReaders>
+						<DataSetReaderDataType>
+							<Name>Reader For Writer 231</Name>
+							<Enabled>true</Enabled>
+							<PublisherId>
+								<Value>
+									<UInt16 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt16>
+								</Value>
+							</PublisherId>
+							<WriterGroupId>0</WriterGroupId>
+							<DataSetWriterId>0</DataSetWriterId>
+							<DataSetMetaData>
+								<Namespaces />
+								<StructureDataTypes />
+								<EnumDataTypes />
+								<SimpleDataTypes />
+								<Name>AllTypes</Name>
+								<Description i:nil="true" />
+								<Fields>
+									<FieldMetaData>
+										<Name>BoolToggle</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>1</BuiltInType>
+										<DataType>
+											<Identifier>i=1</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>48164cce-15fa-439a-b7c8-fb9c4a241108</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>Byte</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>3</BuiltInType>
+										<DataType>
+											<Identifier>i=3</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>bf036e11-f5a1-41ec-a75c-15c08083016a</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>Int16</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>4</BuiltInType>
+										<DataType>
+											<Identifier>i=4</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>ffd51c9e-b5ec-466b-bff8-145c2099ed39</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>Int32</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>6</BuiltInType>
+										<DataType>
+											<Identifier>i=6</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>b387cfdb-864a-4d22-a485-da9376541662</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>SByte</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>2</BuiltInType>
+										<DataType>
+											<Identifier>i=2</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>3b995553-95f0-4823-b2ab-6e83fdc5dc92</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>UInt16</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>5</BuiltInType>
+										<DataType>
+											<Identifier>i=5</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>df69e870-c68a-4207-8909-271fc63dd49b</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>UInt32</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>7</BuiltInType>
+										<DataType>
+											<Identifier>i=7</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>4a4cc2d3-28b9-4dd2-a69b-79ff46de033f</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>Float</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>10</BuiltInType>
+										<DataType>
+											<Identifier>i=10</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>04c3347a-7071-468c-b9bc-9f830f46d0f6</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>Double</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>11</BuiltInType>
+										<DataType>
+											<Identifier>i=11</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>ff870464-81c0-4e9f-aa56-db9f772f0f74</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+								</Fields>
+								<DataSetClassId>
+									<String>00000000-0000-0000-0000-000000000000</String>
+								</DataSetClassId>
+								<ConfigurationVersion>
+									<MajorVersion>1</MajorVersion>
+									<MinorVersion>1</MinorVersion>
+								</ConfigurationVersion>
+							</DataSetMetaData>
+							<DataSetFieldContentMask>32</DataSetFieldContentMask>
+							<MessageReceiveTimeout>0</MessageReceiveTimeout>
+							<KeyFrameCount>1</KeyFrameCount>
+							<HeaderLayoutUri i:nil="true" />
+							<SecurityMode>Invalid_0</SecurityMode>
+							<SecurityGroupId i:nil="true" />
+							<SecurityKeyServices />
+							<DataSetReaderProperties />
+							<TransportSettings i:nil="true" />
+							<MessageSettings>
+								<TypeId>
+									<Identifier>i=16016</Identifier>
+								</TypeId>
+								<Body>
+									<UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+										<GroupVersion>0</GroupVersion>
+										<NetworkMessageNumber>0</NetworkMessageNumber>
+										<DataSetOffset>15</DataSetOffset>
+										<DataSetClassId>
+											<String>00000000-0000-0000-0000-000000000000</String>
+										</DataSetClassId>
+										<NetworkMessageContentMask>63</NetworkMessageContentMask>
+										<DataSetMessageContentMask>36</DataSetMessageContentMask>
+										<PublishingInterval>0</PublishingInterval>
+										<ReceiveOffset>0</ReceiveOffset>
+										<ProcessingOffset>0</ProcessingOffset>
+									</UadpDataSetReaderMessageDataType>
+								</Body>
+							</MessageSettings>
+							<SubscribedDataSet>
+								<TypeId>
+									<Identifier>i=16011</Identifier>
+								</TypeId>
+								<Body>
+									<TargetVariablesDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+										<TargetVariables>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>48164cce-15fa-439a-b7c8-fb9c4a241108</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=BoolToggle</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<Boolean>false</Boolean>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>bf036e11-f5a1-41ec-a75c-15c08083016a</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=Byte</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<Byte>0</Byte>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>ffd51c9e-b5ec-466b-bff8-145c2099ed39</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=Int16</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<Int16>0</Int16>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>b387cfdb-864a-4d22-a485-da9376541662</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=Int32</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<Int32>0</Int32>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>3b995553-95f0-4823-b2ab-6e83fdc5dc92</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=SByte</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<SByte>0</SByte>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>df69e870-c68a-4207-8909-271fc63dd49b</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=UInt16</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<UInt16>0</UInt16>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>4a4cc2d3-28b9-4dd2-a69b-79ff46de033f</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=UInt32</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<UInt32>0</UInt32>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>04c3347a-7071-468c-b9bc-9f830f46d0f6</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=Float</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<Float>0</Float>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>ff870464-81c0-4e9f-aa56-db9f772f0f74</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=Double</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<Double>0</Double>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+										</TargetVariables>
+									</TargetVariablesDataType>
+								</Body>
+							</SubscribedDataSet>
+						</DataSetReaderDataType>
+					</DataSetReaders>
+				</ReaderGroupDataType>
+				<ReaderGroupDataType>
+					<Name>ReaderGroup 24</Name>
+					<Enabled>true</Enabled>
+					<SecurityMode>Invalid_0</SecurityMode>
+					<SecurityGroupId i:nil="true" />
+					<SecurityKeyServices />
+					<MaxNetworkMessageSize>1500</MaxNetworkMessageSize>
+					<GroupProperties />
+					<TransportSettings>
+						<TypeId>
+							<Identifier>i=15995</Identifier>
+						</TypeId>
+						<Body>
+							<ReaderGroupTransportDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+						</Body>
+					</TransportSettings>
+					<MessageSettings>
+						<TypeId>
+							<Identifier>i=15996</Identifier>
+						</TypeId>
+						<Body>
+							<ReaderGroupMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd" />
+						</Body>
+					</MessageSettings>
+					<DataSetReaders>
+						<DataSetReaderDataType>
+							<Name>Reader For Writer 241</Name>
+							<Enabled>true</Enabled>
+							<PublisherId>
+								<Value>
+									<UInt64 xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">20</UInt64>
+								</Value>
+							</PublisherId>
+							<WriterGroupId>0</WriterGroupId>
+							<DataSetWriterId>241</DataSetWriterId>
+							<DataSetMetaData>
+								<Namespaces />
+								<StructureDataTypes />
+								<EnumDataTypes />
+								<SimpleDataTypes />
+								<Name>AllTypes</Name>
+								<Description i:nil="true" />
+								<Fields>
+									<FieldMetaData>
+										<Name>BoolToggle</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>1</BuiltInType>
+										<DataType>
+											<Identifier>i=1</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>48164cce-15fa-439a-b7c8-fb9c4a241108</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>Byte</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>3</BuiltInType>
+										<DataType>
+											<Identifier>i=3</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>bf036e11-f5a1-41ec-a75c-15c08083016a</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>Int16</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>4</BuiltInType>
+										<DataType>
+											<Identifier>i=4</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>ffd51c9e-b5ec-466b-bff8-145c2099ed39</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>Int32</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>6</BuiltInType>
+										<DataType>
+											<Identifier>i=6</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>b387cfdb-864a-4d22-a485-da9376541662</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>SByte</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>2</BuiltInType>
+										<DataType>
+											<Identifier>i=2</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>3b995553-95f0-4823-b2ab-6e83fdc5dc92</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>UInt16</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>5</BuiltInType>
+										<DataType>
+											<Identifier>i=5</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>df69e870-c68a-4207-8909-271fc63dd49b</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>UInt32</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>7</BuiltInType>
+										<DataType>
+											<Identifier>i=7</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>4a4cc2d3-28b9-4dd2-a69b-79ff46de033f</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>Float</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>10</BuiltInType>
+										<DataType>
+											<Identifier>i=10</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>04c3347a-7071-468c-b9bc-9f830f46d0f6</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+									<FieldMetaData>
+										<Name>Double</Name>
+										<Description i:nil="true" />
+										<FieldFlags>0</FieldFlags>
+										<BuiltInType>11</BuiltInType>
+										<DataType>
+											<Identifier>i=11</Identifier>
+										</DataType>
+										<ValueRank>-1</ValueRank>
+										<ArrayDimensions />
+										<MaxStringLength>0</MaxStringLength>
+										<DataSetFieldId>
+											<String>ff870464-81c0-4e9f-aa56-db9f772f0f74</String>
+										</DataSetFieldId>
+										<Properties />
+									</FieldMetaData>
+								</Fields>
+								<DataSetClassId>
+									<String>00000000-0000-0000-0000-000000000000</String>
+								</DataSetClassId>
+								<ConfigurationVersion>
+									<MajorVersion>1</MajorVersion>
+									<MinorVersion>1</MinorVersion>
+								</ConfigurationVersion>
+							</DataSetMetaData>
+							<DataSetFieldContentMask>32</DataSetFieldContentMask>
+							<MessageReceiveTimeout>0</MessageReceiveTimeout>
+							<KeyFrameCount>1</KeyFrameCount>
+							<HeaderLayoutUri i:nil="true" />
+							<SecurityMode>Invalid_0</SecurityMode>
+							<SecurityGroupId i:nil="true" />
+							<SecurityKeyServices />
+							<DataSetReaderProperties />
+							<TransportSettings i:nil="true" />
+							<MessageSettings>
+								<TypeId>
+									<Identifier>i=16016</Identifier>
+								</TypeId>
+								<Body>
+									<UadpDataSetReaderMessageDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+										<GroupVersion>0</GroupVersion>
+										<NetworkMessageNumber>0</NetworkMessageNumber>
+										<DataSetOffset>0</DataSetOffset>
+										<DataSetClassId>
+											<String>00000000-0000-0000-0000-000000000000</String>
+										</DataSetClassId>
+										<NetworkMessageContentMask>65</NetworkMessageContentMask>
+										<DataSetMessageContentMask>53</DataSetMessageContentMask>
+										<PublishingInterval>0</PublishingInterval>
+										<ReceiveOffset>0</ReceiveOffset>
+										<ProcessingOffset>0</ProcessingOffset>
+									</UadpDataSetReaderMessageDataType>
+								</Body>
+							</MessageSettings>
+							<SubscribedDataSet>
+								<TypeId>
+									<Identifier>i=16011</Identifier>
+								</TypeId>
+								<Body>
+									<TargetVariablesDataType xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd">
+										<TargetVariables>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>48164cce-15fa-439a-b7c8-fb9c4a241108</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=BoolToggle</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<Boolean>false</Boolean>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>bf036e11-f5a1-41ec-a75c-15c08083016a</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=Byte</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<Byte>0</Byte>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>ffd51c9e-b5ec-466b-bff8-145c2099ed39</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=Int16</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<Int16>0</Int16>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>b387cfdb-864a-4d22-a485-da9376541662</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=Int32</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<Int32>0</Int32>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>3b995553-95f0-4823-b2ab-6e83fdc5dc92</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=SByte</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<SByte>0</SByte>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>df69e870-c68a-4207-8909-271fc63dd49b</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=UInt16</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<UInt16>0</UInt16>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>4a4cc2d3-28b9-4dd2-a69b-79ff46de033f</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=UInt32</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<UInt32>0</UInt32>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>04c3347a-7071-468c-b9bc-9f830f46d0f6</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=Float</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<Float>0</Float>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+											<FieldTargetDataType>
+												<DataSetFieldId>
+													<String>ff870464-81c0-4e9f-aa56-db9f772f0f74</String>
+												</DataSetFieldId>
+												<TargetNodeId>
+													<Identifier>ns=3;s=Double</Identifier>
+												</TargetNodeId>
+												<AttributeId>13</AttributeId>
+												<OverrideValueHandling>OverrideValue_2</OverrideValueHandling>
+												<OverrideValue>
+													<Value>
+														<Double>0</Double>
+													</Value>
+												</OverrideValue>
+											</FieldTargetDataType>
+										</TargetVariables>
+									</TargetVariablesDataType>
+								</Body>
+							</SubscribedDataSet>
+						</DataSetReaderDataType>
+					</DataSetReaders>
+				</ReaderGroupDataType>
+			</ReaderGroups>
+		</PubSubConnectionDataType>
+	</Connections>
+	<Enabled>true</Enabled>
 </PubSubConfigurationDataType>

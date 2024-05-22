@@ -1,5 +1,5 @@
 ﻿/* ========================================================================
- * Copyright © 2011-2023 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2024 Softing Industrial Automation GmbH. 
  * All rights reserved.
  * 
  * The Software is subject to the Softing Industrial Automation GmbH’s 
@@ -84,7 +84,7 @@ namespace SampleServer.FileTransfer
 
         #endregion
 
-        #region IDisposable implementation
+        #region IDisposable Implementation
 
         /// <summary>
         /// Dispose the opened session or/and file handlers
@@ -94,6 +94,7 @@ namespace SampleServer.FileTransfer
             if (m_timer != null)
             {
                 m_timer.Dispose();
+                m_timer = null;
             }
         }
 
