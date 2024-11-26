@@ -160,6 +160,52 @@ namespace SampleServer.DataAccess
         }
 
         /// <summary>
+        /// Transfers a collection of monitored items, ensuring their state is updated and resending initial values as needed. 
+        /// Already processed items are skipped.
+        /// </summary>
+        /// <param name="context">The current operation context.</param>
+        /// <param name="sendInitialValues">Indicates if the subscription should resend initial values after transfer.</param>
+        /// <param name="monitoredItems">The set of monitoring items to update.</param>
+        /// <param name="processedItems">A list of bool indicating items that have already been processed.</param>
+        /// <param name="errors">Any errors that occur.</param>
+        public override void TransferMonitoredItems(
+            OperationContext context,
+            bool sendInitialValues,
+            IList<IMonitoredItem> monitoredItems,
+            IList<bool> processedItems,
+            IList<ServiceResult> errors)
+        {
+            var transferredMonitoredItems = new List<IMonitoredItem>();
+
+            lock (Lock)
+            {
+                int index = 0;
+                foreach (var monitoredItem in monitoredItems)
+                {
+                    // Skip already processed or null items
+                    if (processedItems[index] || monitoredItem == null || monitoredItem.ManagerHandle == null)
+                    {
+                        index++;
+                        continue;
+                    }
+
+                    errors[index] = StatusCodes.Good;
+                    processedItems[index] = true;
+                    transferredMonitoredItems.Add(monitoredItem);
+
+                    if (sendInitialValues)
+                    {
+                        monitoredItem.SetupResendDataTrigger();
+                    }
+
+                    index++;
+                }
+
+            }
+            OnMonitoredItemsTransferred(SystemContext.Copy(context), transferredMonitoredItems);
+        }
+
+        /// <summary>
         /// Handles the method call of the OpenCloseDoor method
         /// </summary>
         /// <param name="context">The context.</param>

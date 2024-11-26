@@ -6,7 +6,7 @@
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<RootNamespace>SampleClient</RootNamespace>
 		<AssemblyName>SampleClient</AssemblyName>
-		<RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
+		<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
 	</PropertyGroup>
 
 	<ItemGroup>

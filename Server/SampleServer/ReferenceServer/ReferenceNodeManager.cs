@@ -8,24 +8,24 @@
  * 
  * ======================================================================*/
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Xml;
 using Opc.Ua;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.Server;
-
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Threading;
+using System.Xml;
 using Range = Opc.Ua.Range;
+using TypeInfo = Opc.Ua.TypeInfo;
 
 namespace SampleServer.ReferenceServer
 {
     public class ReferenceNodeManager : NodeManager
     {
         #region Private Members
-        
+
         private Opc.Ua.Test.DataGenerator m_generator;
         private Timer m_simulationTimer;
         private UInt16 m_simulationInterval = 1000;
@@ -67,7 +67,7 @@ namespace SampleServer.ReferenceServer
         public override NodeId New(ISystemContext context, NodeState node)
         {
             BaseInstanceState instance = node as BaseInstanceState;
-            
+
             if (instance != null && instance.Parent != null && instance.Parent.NodeId != null)
             {
                 string id = instance.Parent.NodeId.Identifier as string;
@@ -89,7 +89,7 @@ namespace SampleServer.ReferenceServer
                     }
                 }
             }
-            else if (node!= null)
+            else if (node != null)
             {
                 if (node.BrowseName != null && !m_usedIdentifiers.ContainsKey(node.BrowseName.Name))
                 {
@@ -484,7 +484,7 @@ namespace SampleServer.ReferenceServer
                                 item.EURange.Value.Low = 0;
                             }
 
-                            
+
                         }
                     }
 
@@ -742,7 +742,7 @@ namespace SampleServer.ReferenceServer
 
                     // sub folder for "RolePermissions"
                     FolderState folderRolePermissions = CreateFolder(folderAccessRights, "RolePermissions");
-                    
+
                     // create a Variable nodes that has RolePermissions
                     BaseDataVariableState variableAnonymousAccess = CreateVariable(folderRolePermissions, "AnonymousAccess", BuiltInType.Int16);
                     variableAnonymousAccess.Description = "This node can be accessed by users that have Anonymous Role";
@@ -769,7 +769,7 @@ namespace SampleServer.ReferenceServer
                         },
                     };
                     variables.Add(variableAuthenticatedAccess);
-                    
+
                     BaseDataVariableState variableOperatorRoleAccess = CreateVariable(folderRolePermissions, "OperatorAccess", BuiltInType.Int16);
                     variableOperatorRoleAccess.Description = "This node can be accessed by users that have Operator Role";
                     variableOperatorRoleAccess.RolePermissions = new RolePermissionTypeCollection()
@@ -779,7 +779,7 @@ namespace SampleServer.ReferenceServer
                         {
                             RoleId = ObjectIds.WellKnownRole_Operator,
                             Permissions = (uint)( PermissionType.Browse |PermissionType.Read|PermissionType.ReadRolePermissions | PermissionType.Write)
-                        },                        
+                        },
                     };
                     variables.Add(variableOperatorRoleAccess);
 
@@ -824,7 +824,7 @@ namespace SampleServer.ReferenceServer
 
                     // create a Variable node that has UserRolePermissions and will asign all permissions for user Operator 
                     BaseDataVariableState variableUserRolePermissionsForOperator = CreateVariable(folderRolePermissions, "UserRolePermissionsForOperator", BuiltInType.Int16);
-                    variableUserRolePermissionsForOperator.OnReadUserRolePermissions = OnReadUserRolePermissions;                    
+                    variableUserRolePermissionsForOperator.OnReadUserRolePermissions = OnReadUserRolePermissions;
                     variables.Add(variableUserRolePermissionsForOperator);
 
                     // create a Variable node that has UserRolePermissions and will asign only Browse and Read permissions for user Engineer 
@@ -863,24 +863,24 @@ namespace SampleServer.ReferenceServer
 
                     #region NodeIds
 
-                    FolderState nodeIdsFolder = CreateFolder(root,  "NodeIds");
+                    FolderState nodeIdsFolder = CreateFolder(root, "NodeIds");
 
                     BaseDataVariableState nodeIdsInstructions = CreateVariable(nodeIdsFolder, "Instructions", DataTypeIds.String);
                     nodeIdsInstructions.Value = "All supported Node types are available except whichever is in use for the other nodes.";
                     variables.Add(nodeIdsInstructions);
 
                     NodeId integerNodeIdNodeId = new NodeId((uint)9202, NamespaceIndex);
-                    BaseDataVariableState integerNodeId = CreateVariable(nodeIdsFolder,  "Int16Integer", DataTypeIds.Int16, nodeId: integerNodeIdNodeId);                   
+                    BaseDataVariableState integerNodeId = CreateVariable(nodeIdsFolder, "Int16Integer", DataTypeIds.Int16, nodeId: integerNodeIdNodeId);
                     variables.Add(integerNodeId);
 
-                    variables.Add(CreateVariable(nodeIdsFolder,  "Int16String", DataTypeIds.Int16));
+                    variables.Add(CreateVariable(nodeIdsFolder, "Int16String", DataTypeIds.Int16));
 
                     NodeId guidNodeIdNodeId = new NodeId(new Guid("00000000-0000-0000-0000-000000009204"), NamespaceIndex);
-                    BaseDataVariableState guidNodeId = CreateVariable(nodeIdsFolder,  "Int16GUID", DataTypeIds.Int16, nodeId: guidNodeIdNodeId);
+                    BaseDataVariableState guidNodeId = CreateVariable(nodeIdsFolder, "Int16GUID", DataTypeIds.Int16, nodeId: guidNodeIdNodeId);
                     variables.Add(guidNodeId);
 
                     NodeId opaqueNodeIdNodeId = new NodeId(new byte[] { 9, 2, 0, 5 }, NamespaceIndex);
-                    BaseDataVariableState opaqueNodeId = CreateVariable(nodeIdsFolder,  "Int16Opaque", DataTypeIds.Int16, nodeId: opaqueNodeIdNodeId);
+                    BaseDataVariableState opaqueNodeId = CreateVariable(nodeIdsFolder, "Int16Opaque", DataTypeIds.Int16, nodeId: opaqueNodeIdNodeId);
                     variables.Add(opaqueNodeId);
 
                     #endregion
@@ -939,7 +939,7 @@ namespace SampleServer.ReferenceServer
                         new Argument() {Name = "Divide Result", Description = "Divide Result", DataType = DataTypeIds.Float, ValueRank = ValueRanks.Scalar}
                     };
 
-                    MethodState divideMethod = CreateMethod(methodsFolder,  "Divide", inputDivide, outputDivide, OnDivideCall);
+                    MethodState divideMethod = CreateMethod(methodsFolder, "Divide", inputDivide, outputDivide, OnDivideCall);
 
                     #endregion
 
@@ -956,7 +956,7 @@ namespace SampleServer.ReferenceServer
                         new Argument() {Name = "Subtract Result", Description = "Subtract Result", DataType = DataTypeIds.Int16, ValueRank = ValueRanks.Scalar}
                     };
 
-                    MethodState subtractMethod = CreateMethod(methodsFolder,  "Subtract", inputSubtract, outputSubtract, OnSubtractCall);
+                    MethodState subtractMethod = CreateMethod(methodsFolder, "Subtract", inputSubtract, outputSubtract, OnSubtractCall);
 
                     #endregion
 
@@ -980,7 +980,7 @@ namespace SampleServer.ReferenceServer
                      {
                         new Argument() {Name = "String value", Description = "String value", DataType = DataTypeIds.String, ValueRank = ValueRanks.Scalar}
                     };
-                    MethodState inputMethod = CreateMethod(methodsFolder, "Input", inputInput, onCallHandler:OnInputCall);
+                    MethodState inputMethod = CreateMethod(methodsFolder, "Input", inputInput, onCallHandler: OnInputCall);
 
                     #endregion
 
@@ -997,10 +997,10 @@ namespace SampleServer.ReferenceServer
 
                     #region Views
 
-                    FolderState viewsFolder = CreateFolder(root,  "Views");
+                    FolderState viewsFolder = CreateFolder(root, "Views");
 
                     ViewState viewStateOperations = CreateView(viewsFolder, externalReferences, "Operations");
-                    ViewState viewStateEngineering = CreateView(viewsFolder, externalReferences,  "Engineering");
+                    ViewState viewStateEngineering = CreateView(viewsFolder, externalReferences, "Engineering");
 
                     #endregion
 
@@ -1008,11 +1008,11 @@ namespace SampleServer.ReferenceServer
 
                     FolderState localesFolder = CreateFolder(root, "Locales");
 
-                    BaseDataVariableState qnEnglishVariable = CreateVariable(localesFolder,  "QNEnglish", DataTypeIds.QualifiedName);
+                    BaseDataVariableState qnEnglishVariable = CreateVariable(localesFolder, "QNEnglish", DataTypeIds.QualifiedName);
                     qnEnglishVariable.Description = new LocalizedText("en", "English");
                     qnEnglishVariable.Value = new QualifiedName("Hello World", NamespaceIndex);
                     variables.Add(qnEnglishVariable);
-                    BaseDataVariableState ltEnglishVariable = CreateVariable(localesFolder,  "LTEnglish", DataTypeIds.LocalizedText);
+                    BaseDataVariableState ltEnglishVariable = CreateVariable(localesFolder, "LTEnglish", DataTypeIds.LocalizedText);
                     ltEnglishVariable.Description = new LocalizedText("en", "English");
                     ltEnglishVariable.Value = new LocalizedText("en", "Hello World");
                     variables.Add(ltEnglishVariable);
@@ -1021,12 +1021,12 @@ namespace SampleServer.ReferenceServer
                     qnFrancaisVariable.Description = new LocalizedText("en", "Francais");
                     qnFrancaisVariable.Value = new QualifiedName("Salut tout le monde", NamespaceIndex);
                     variables.Add(qnFrancaisVariable);
-                    BaseDataVariableState ltFrancaisVariable = CreateVariable(localesFolder,  "LTFrancais", DataTypeIds.LocalizedText);
+                    BaseDataVariableState ltFrancaisVariable = CreateVariable(localesFolder, "LTFrancais", DataTypeIds.LocalizedText);
                     ltFrancaisVariable.Description = new LocalizedText("en", "Francais");
                     ltFrancaisVariable.Value = new LocalizedText("fr", "Salut tout le monde");
                     variables.Add(ltFrancaisVariable);
 
-                    BaseDataVariableState qnDeutschVariable = CreateVariable(localesFolder,  "QNDeutsch", DataTypeIds.QualifiedName);
+                    BaseDataVariableState qnDeutschVariable = CreateVariable(localesFolder, "QNDeutsch", DataTypeIds.QualifiedName);
                     qnDeutschVariable.Description = new LocalizedText("en", "Deutsch");
                     qnDeutschVariable.Value = new QualifiedName("Hallo Welt", NamespaceIndex);
                     variables.Add(qnDeutschVariable);
@@ -1035,7 +1035,7 @@ namespace SampleServer.ReferenceServer
                     ltDeutschVariable.Value = new LocalizedText("de", "Hallo Welt");
                     variables.Add(ltDeutschVariable);
 
-                    BaseDataVariableState qnEspanolVariable = CreateVariable(localesFolder,  "QNEspanol", DataTypeIds.QualifiedName);
+                    BaseDataVariableState qnEspanolVariable = CreateVariable(localesFolder, "QNEspanol", DataTypeIds.QualifiedName);
                     qnEspanolVariable.Description = new LocalizedText("en", "Espanol");
                     qnEspanolVariable.Value = new QualifiedName("Hola mundo", NamespaceIndex);
                     variables.Add(qnEspanolVariable);
@@ -1048,12 +1048,12 @@ namespace SampleServer.ReferenceServer
                     qnJapaneseVariable.Description = new LocalizedText("en", "Japanese");
                     qnJapaneseVariable.Value = new QualifiedName("ハローワールド", NamespaceIndex);
                     variables.Add(qnJapaneseVariable);
-                    BaseDataVariableState ltJapaneseVariable = CreateVariable(localesFolder,  "LT日本の", DataTypeIds.LocalizedText);
+                    BaseDataVariableState ltJapaneseVariable = CreateVariable(localesFolder, "LT日本の", DataTypeIds.LocalizedText);
                     ltJapaneseVariable.Description = new LocalizedText("en", "Japanese");
                     ltJapaneseVariable.Value = new LocalizedText("jp", "ハローワールド");
                     variables.Add(ltJapaneseVariable);
 
-                    BaseDataVariableState qnChineseVariable = CreateVariable(localesFolder,  "QN中國的", DataTypeIds.QualifiedName);
+                    BaseDataVariableState qnChineseVariable = CreateVariable(localesFolder, "QN中國的", DataTypeIds.QualifiedName);
                     qnChineseVariable.Description = new LocalizedText("en", "Chinese");
                     qnChineseVariable.Value = new QualifiedName("世界您好", NamespaceIndex);
                     variables.Add(qnChineseVariable);
@@ -1062,7 +1062,7 @@ namespace SampleServer.ReferenceServer
                     ltChineseVariable.Value = new LocalizedText("ch", "世界您好");
                     variables.Add(ltChineseVariable);
 
-                    BaseDataVariableState qnRussianVariable = CreateVariable(localesFolder,  "QNрусский", DataTypeIds.QualifiedName);
+                    BaseDataVariableState qnRussianVariable = CreateVariable(localesFolder, "QNрусский", DataTypeIds.QualifiedName);
                     qnRussianVariable.Description = new LocalizedText("en", "Russian");
                     qnRussianVariable.Value = new QualifiedName("LTрусский", NamespaceIndex);
                     variables.Add(qnRussianVariable);
@@ -1075,16 +1075,16 @@ namespace SampleServer.ReferenceServer
                     qnArabicVariable.Description = new LocalizedText("en", "Arabic");
                     qnArabicVariable.Value = new QualifiedName("مرحبا بالعال", NamespaceIndex);
                     variables.Add(qnArabicVariable);
-                    BaseDataVariableState ltArabicVariable = CreateVariable(localesFolder,  "LTالعربية", DataTypeIds.LocalizedText);
+                    BaseDataVariableState ltArabicVariable = CreateVariable(localesFolder, "LTالعربية", DataTypeIds.LocalizedText);
                     ltArabicVariable.Description = new LocalizedText("en", "Arabic");
                     ltArabicVariable.Value = new LocalizedText("ae", "مرحبا بالعال");
                     variables.Add(ltArabicVariable);
 
-                    BaseDataVariableState qnKlingonVariable = CreateVariable(localesFolder,  "QNtlhIngan", DataTypeIds.QualifiedName);
+                    BaseDataVariableState qnKlingonVariable = CreateVariable(localesFolder, "QNtlhIngan", DataTypeIds.QualifiedName);
                     qnKlingonVariable.Description = new LocalizedText("en", "Klingon");
                     qnKlingonVariable.Value = new QualifiedName("qo' vIvan", NamespaceIndex);
                     variables.Add(qnKlingonVariable);
-                    BaseDataVariableState ltKlingonVariable = CreateVariable(localesFolder,  "LTtlhIngan", DataTypeIds.LocalizedText);
+                    BaseDataVariableState ltKlingonVariable = CreateVariable(localesFolder, "LTtlhIngan", DataTypeIds.LocalizedText);
                     ltKlingonVariable.Description = new LocalizedText("en", "Klingon");
                     ltKlingonVariable.Value = new LocalizedText("ko", "qo' vIvan");
                     variables.Add(ltKlingonVariable);
@@ -1093,13 +1093,13 @@ namespace SampleServer.ReferenceServer
 
                     #region Attributes
 
-                    FolderState folderAttributes = CreateFolder(root,  "Attributes");
+                    FolderState folderAttributes = CreateFolder(root, "Attributes");
 
                     #region AccessAll
 
-                    FolderState folderAttributesAccessAll = CreateFolder(folderAttributes,  "AccessAll");
+                    FolderState folderAttributesAccessAll = CreateFolder(folderAttributes, "AccessAll");
 
-                    BaseDataVariableState accessLevelAccessAll = CreateVariable(folderAttributesAccessAll,  "AccessLevel", DataTypeIds.Double);
+                    BaseDataVariableState accessLevelAccessAll = CreateVariable(folderAttributesAccessAll, "AccessLevel", DataTypeIds.Double);
                     accessLevelAccessAll.WriteMask = AttributeWriteMask.AccessLevel;
                     accessLevelAccessAll.UserWriteMask = AttributeWriteMask.AccessLevel;
                     variables.Add(accessLevelAccessAll);
@@ -1119,17 +1119,17 @@ namespace SampleServer.ReferenceServer
                     containsNoLoopsAccessLevel.UserWriteMask = AttributeWriteMask.ContainsNoLoops;
                     variables.Add(containsNoLoopsAccessLevel);
 
-                    BaseDataVariableState dataTypeAccessLevel = CreateVariable(folderAttributesAccessAll,  "DataType", DataTypeIds.Double);
+                    BaseDataVariableState dataTypeAccessLevel = CreateVariable(folderAttributesAccessAll, "DataType", DataTypeIds.Double);
                     dataTypeAccessLevel.WriteMask = AttributeWriteMask.DataType;
                     dataTypeAccessLevel.UserWriteMask = AttributeWriteMask.DataType;
                     variables.Add(dataTypeAccessLevel);
 
-                    BaseDataVariableState descriptionAccessLevel = CreateVariable(folderAttributesAccessAll,  "Description", DataTypeIds.Double);
+                    BaseDataVariableState descriptionAccessLevel = CreateVariable(folderAttributesAccessAll, "Description", DataTypeIds.Double);
                     descriptionAccessLevel.WriteMask = AttributeWriteMask.Description;
                     descriptionAccessLevel.UserWriteMask = AttributeWriteMask.Description;
                     variables.Add(descriptionAccessLevel);
 
-                    BaseDataVariableState eventNotifierAccessLevel = CreateVariable(folderAttributesAccessAll,  "EventNotifier", DataTypeIds.Double);
+                    BaseDataVariableState eventNotifierAccessLevel = CreateVariable(folderAttributesAccessAll, "EventNotifier", DataTypeIds.Double);
                     eventNotifierAccessLevel.WriteMask = AttributeWriteMask.EventNotifier;
                     eventNotifierAccessLevel.UserWriteMask = AttributeWriteMask.EventNotifier;
                     variables.Add(eventNotifierAccessLevel);
@@ -1139,12 +1139,12 @@ namespace SampleServer.ReferenceServer
                     executableAccessLevel.UserWriteMask = AttributeWriteMask.Executable;
                     variables.Add(executableAccessLevel);
 
-                    BaseDataVariableState historizingAccessLevel = CreateVariable(folderAttributesAccessAll,"Historizing", DataTypeIds.Double);
+                    BaseDataVariableState historizingAccessLevel = CreateVariable(folderAttributesAccessAll, "Historizing", DataTypeIds.Double);
                     historizingAccessLevel.WriteMask = AttributeWriteMask.Historizing;
                     historizingAccessLevel.UserWriteMask = AttributeWriteMask.Historizing;
                     variables.Add(historizingAccessLevel);
 
-                    BaseDataVariableState inverseNameAccessLevel = CreateVariable(folderAttributesAccessAll,  "InverseName", DataTypeIds.Double);
+                    BaseDataVariableState inverseNameAccessLevel = CreateVariable(folderAttributesAccessAll, "InverseName", DataTypeIds.Double);
                     inverseNameAccessLevel.WriteMask = AttributeWriteMask.InverseName;
                     inverseNameAccessLevel.UserWriteMask = AttributeWriteMask.InverseName;
                     variables.Add(inverseNameAccessLevel);
@@ -1154,7 +1154,7 @@ namespace SampleServer.ReferenceServer
                     isAbstractAccessLevel.UserWriteMask = AttributeWriteMask.IsAbstract;
                     variables.Add(isAbstractAccessLevel);
 
-                    BaseDataVariableState minimumSamplingIntervalAccessLevel = CreateVariable(folderAttributesAccessAll,  "MinimumSamplingInterval", DataTypeIds.Double);
+                    BaseDataVariableState minimumSamplingIntervalAccessLevel = CreateVariable(folderAttributesAccessAll, "MinimumSamplingInterval", DataTypeIds.Double);
                     minimumSamplingIntervalAccessLevel.WriteMask = AttributeWriteMask.MinimumSamplingInterval;
                     minimumSamplingIntervalAccessLevel.UserWriteMask = AttributeWriteMask.MinimumSamplingInterval;
                     variables.Add(minimumSamplingIntervalAccessLevel);
@@ -1169,12 +1169,12 @@ namespace SampleServer.ReferenceServer
                     nodeIdAccessLevel.UserWriteMask = AttributeWriteMask.NodeId;
                     variables.Add(nodeIdAccessLevel);
 
-                    BaseDataVariableState symmetricAccessLevel = CreateVariable(folderAttributesAccessAll,  "Symmetric", DataTypeIds.Double);
+                    BaseDataVariableState symmetricAccessLevel = CreateVariable(folderAttributesAccessAll, "Symmetric", DataTypeIds.Double);
                     symmetricAccessLevel.WriteMask = AttributeWriteMask.Symmetric;
                     symmetricAccessLevel.UserWriteMask = AttributeWriteMask.Symmetric;
                     variables.Add(symmetricAccessLevel);
 
-                    BaseDataVariableState userAccessLevelAccessLevel = CreateVariable(folderAttributesAccessAll,  "UserAccessLevel", DataTypeIds.Double);
+                    BaseDataVariableState userAccessLevelAccessLevel = CreateVariable(folderAttributesAccessAll, "UserAccessLevel", DataTypeIds.Double);
                     userAccessLevelAccessLevel.WriteMask = AttributeWriteMask.UserAccessLevel;
                     userAccessLevelAccessLevel.UserWriteMask = AttributeWriteMask.UserAccessLevel;
                     variables.Add(userAccessLevelAccessLevel);
@@ -1184,22 +1184,22 @@ namespace SampleServer.ReferenceServer
                     userExecutableAccessLevel.UserWriteMask = AttributeWriteMask.UserExecutable;
                     variables.Add(userExecutableAccessLevel);
 
-                    BaseDataVariableState valueRankAccessLevel = CreateVariable(folderAttributesAccessAll,  "ValueRank", DataTypeIds.Double);
+                    BaseDataVariableState valueRankAccessLevel = CreateVariable(folderAttributesAccessAll, "ValueRank", DataTypeIds.Double);
                     valueRankAccessLevel.WriteMask = AttributeWriteMask.ValueRank;
                     valueRankAccessLevel.UserWriteMask = AttributeWriteMask.ValueRank;
                     variables.Add(valueRankAccessLevel);
 
-                    BaseDataVariableState writeMaskAccessLevel = CreateVariable(folderAttributesAccessAll,  "WriteMask", DataTypeIds.Double);
+                    BaseDataVariableState writeMaskAccessLevel = CreateVariable(folderAttributesAccessAll, "WriteMask", DataTypeIds.Double);
                     writeMaskAccessLevel.WriteMask = AttributeWriteMask.WriteMask;
                     writeMaskAccessLevel.UserWriteMask = AttributeWriteMask.WriteMask;
                     variables.Add(writeMaskAccessLevel);
 
-                    BaseDataVariableState valueForVariableTypeAccessLevel = CreateVariable(folderAttributesAccessAll,  "ValueForVariableType", DataTypeIds.Double);
+                    BaseDataVariableState valueForVariableTypeAccessLevel = CreateVariable(folderAttributesAccessAll, "ValueForVariableType", DataTypeIds.Double);
                     valueForVariableTypeAccessLevel.WriteMask = AttributeWriteMask.ValueForVariableType;
                     valueForVariableTypeAccessLevel.UserWriteMask = AttributeWriteMask.ValueForVariableType;
                     variables.Add(valueForVariableTypeAccessLevel);
 
-                    BaseDataVariableState allAccessLevel = CreateVariable(folderAttributesAccessAll,  "All", DataTypeIds.Double);
+                    BaseDataVariableState allAccessLevel = CreateVariable(folderAttributesAccessAll, "All", DataTypeIds.Double);
                     allAccessLevel.WriteMask = AttributeWriteMask.AccessLevel | AttributeWriteMask.ArrayDimensions | AttributeWriteMask.BrowseName | AttributeWriteMask.ContainsNoLoops | AttributeWriteMask.DataType |
                                                AttributeWriteMask.Description | AttributeWriteMask.DisplayName | AttributeWriteMask.EventNotifier | AttributeWriteMask.Executable | AttributeWriteMask.Historizing | AttributeWriteMask.InverseName |
                                                AttributeWriteMask.IsAbstract |
@@ -1217,7 +1217,7 @@ namespace SampleServer.ReferenceServer
                     #endregion
 
                     #region AccessUser1
-                    
+
                     FolderState folderAttributesAccessUser1 = CreateFolder(folderAttributes, "AccessUser1");
 
                     BaseDataVariableState accessLevelAccessUser1 = CreateVariable(folderAttributesAccessUser1, "AccessLevel", DataTypeIds.Double);
@@ -1235,7 +1235,7 @@ namespace SampleServer.ReferenceServer
                     browseNameAccessUser1.UserWriteMask = AttributeWriteMask.BrowseName;
                     variables.Add(browseNameAccessUser1);
 
-                    BaseDataVariableState containsNoLoopsAccessUser1 = CreateVariable(folderAttributesAccessUser1,  "ContainsNoLoops", DataTypeIds.Double);
+                    BaseDataVariableState containsNoLoopsAccessUser1 = CreateVariable(folderAttributesAccessUser1, "ContainsNoLoops", DataTypeIds.Double);
                     containsNoLoopsAccessUser1.WriteMask = AttributeWriteMask.ContainsNoLoops;
                     containsNoLoopsAccessUser1.UserWriteMask = AttributeWriteMask.ContainsNoLoops;
                     variables.Add(containsNoLoopsAccessUser1);
@@ -1250,7 +1250,7 @@ namespace SampleServer.ReferenceServer
                     descriptionAccessUser1.UserWriteMask = AttributeWriteMask.Description;
                     variables.Add(descriptionAccessUser1);
 
-                    BaseDataVariableState eventNotifierAccessUser1 = CreateVariable(folderAttributesAccessUser1,  "EventNotifier", DataTypeIds.Double);
+                    BaseDataVariableState eventNotifierAccessUser1 = CreateVariable(folderAttributesAccessUser1, "EventNotifier", DataTypeIds.Double);
                     eventNotifierAccessUser1.WriteMask = AttributeWriteMask.EventNotifier;
                     eventNotifierAccessUser1.UserWriteMask = AttributeWriteMask.EventNotifier;
                     variables.Add(eventNotifierAccessUser1);
@@ -1275,22 +1275,22 @@ namespace SampleServer.ReferenceServer
                     isAbstractAccessUser1.UserWriteMask = AttributeWriteMask.IsAbstract;
                     variables.Add(isAbstractAccessUser1);
 
-                    BaseDataVariableState minimumSamplingIntervalAccessUser1 = CreateVariable(folderAttributesAccessUser1,  "MinimumSamplingInterval", DataTypeIds.Double);
+                    BaseDataVariableState minimumSamplingIntervalAccessUser1 = CreateVariable(folderAttributesAccessUser1, "MinimumSamplingInterval", DataTypeIds.Double);
                     minimumSamplingIntervalAccessUser1.WriteMask = AttributeWriteMask.MinimumSamplingInterval;
                     minimumSamplingIntervalAccessUser1.UserWriteMask = AttributeWriteMask.MinimumSamplingInterval;
                     variables.Add(minimumSamplingIntervalAccessUser1);
 
-                    BaseDataVariableState nodeClassIntervalAccessUser1 = CreateVariable(folderAttributesAccessUser1,  "NodeClass", DataTypeIds.Double);
+                    BaseDataVariableState nodeClassIntervalAccessUser1 = CreateVariable(folderAttributesAccessUser1, "NodeClass", DataTypeIds.Double);
                     nodeClassIntervalAccessUser1.WriteMask = AttributeWriteMask.NodeClass;
                     nodeClassIntervalAccessUser1.UserWriteMask = AttributeWriteMask.NodeClass;
                     variables.Add(nodeClassIntervalAccessUser1);
 
-                    BaseDataVariableState nodeIdAccessUser1 = CreateVariable(folderAttributesAccessUser1,  "NodeId", DataTypeIds.Double);
+                    BaseDataVariableState nodeIdAccessUser1 = CreateVariable(folderAttributesAccessUser1, "NodeId", DataTypeIds.Double);
                     nodeIdAccessUser1.WriteMask = AttributeWriteMask.NodeId;
                     nodeIdAccessUser1.UserWriteMask = AttributeWriteMask.NodeId;
                     variables.Add(nodeIdAccessUser1);
 
-                    BaseDataVariableState symmetricAccessUser1 = CreateVariable(folderAttributesAccessUser1,  "Symmetric", DataTypeIds.Double);
+                    BaseDataVariableState symmetricAccessUser1 = CreateVariable(folderAttributesAccessUser1, "Symmetric", DataTypeIds.Double);
                     symmetricAccessUser1.WriteMask = AttributeWriteMask.Symmetric;
                     symmetricAccessUser1.UserWriteMask = AttributeWriteMask.Symmetric;
                     variables.Add(symmetricAccessUser1);
@@ -1305,17 +1305,17 @@ namespace SampleServer.ReferenceServer
                     userExecutableAccessUser1.UserWriteMask = AttributeWriteMask.UserExecutable;
                     variables.Add(userExecutableAccessUser1);
 
-                    BaseDataVariableState valueRankAccessUser1 = CreateVariable(folderAttributesAccessUser1,  "ValueRank", DataTypeIds.Double);
+                    BaseDataVariableState valueRankAccessUser1 = CreateVariable(folderAttributesAccessUser1, "ValueRank", DataTypeIds.Double);
                     valueRankAccessUser1.WriteMask = AttributeWriteMask.ValueRank;
                     valueRankAccessUser1.UserWriteMask = AttributeWriteMask.ValueRank;
                     variables.Add(valueRankAccessUser1);
 
-                    BaseDataVariableState writeMaskAccessUser1 = CreateVariable(folderAttributesAccessUser1,  "WriteMask", DataTypeIds.Double);
+                    BaseDataVariableState writeMaskAccessUser1 = CreateVariable(folderAttributesAccessUser1, "WriteMask", DataTypeIds.Double);
                     writeMaskAccessUser1.WriteMask = AttributeWriteMask.WriteMask;
                     writeMaskAccessUser1.UserWriteMask = AttributeWriteMask.WriteMask;
                     variables.Add(writeMaskAccessUser1);
 
-                    BaseDataVariableState valueForVariableTypeAccessUser1 = CreateVariable(folderAttributesAccessUser1,  "ValueForVariableType", DataTypeIds.Double);
+                    BaseDataVariableState valueForVariableTypeAccessUser1 = CreateVariable(folderAttributesAccessUser1, "ValueForVariableType", DataTypeIds.Double);
                     valueForVariableTypeAccessUser1.WriteMask = AttributeWriteMask.ValueForVariableType;
                     valueForVariableTypeAccessUser1.UserWriteMask = AttributeWriteMask.ValueForVariableType;
                     variables.Add(valueForVariableTypeAccessUser1);
@@ -1334,7 +1334,7 @@ namespace SampleServer.ReferenceServer
                                                    AttributeWriteMask.UserExecutable |
                                                    AttributeWriteMask.UserWriteMask | AttributeWriteMask.ValueForVariableType | AttributeWriteMask.ValueRank | AttributeWriteMask.WriteMask;
                     variables.Add(allAccessUser1);
-                    
+
                     #endregion
 
                     #endregion
@@ -1357,7 +1357,7 @@ namespace SampleServer.ReferenceServer
                 m_simulationTimer = new Timer(DoSimulation, null, 1000, 1000);
 
                 // Import a node set file containing structured data types.
-                ImportNodeSet();                
+                ImportNodeSet();
             }
         }
 
@@ -1503,7 +1503,7 @@ namespace SampleServer.ReferenceServer
         /// <returns></returns>
         private AnalogItemState CreateAnalogVariable(NodeState parent, string name, BuiltInType dataType, int valueRank = ValueRanks.Scalar, Range valueRange = null, object initialValues = null)
         {
-            return CreateAnalogVariable(parent,  name, (uint)dataType, valueRank, valueRange, initialValues);
+            return CreateAnalogVariable(parent, name, (uint)dataType, valueRank, valueRange, initialValues);
         }
 
         /// <summary>
@@ -1536,7 +1536,7 @@ namespace SampleServer.ReferenceServer
             newRange.Low = Math.Max(newRange.Low, -10);
             variable.InstrumentRange.Value = newRange;
 
-            if (initialValues != null)            
+            if (initialValues != null)
             {
                 variable.Value = initialValues;
             }
@@ -1544,8 +1544,8 @@ namespace SampleServer.ReferenceServer
             variable.Definition.Value = "Analog variable for data type: " + name;
 
 
-           // The latest UNECE version (Rev 11, published in 2015) is available here:
-           // http://www.opcfoundation.org/UA/EngineeringUnits/UNECE/rec20_latest_08052015.zip
+            // The latest UNECE version (Rev 11, published in 2015) is available here:
+            // http://www.opcfoundation.org/UA/EngineeringUnits/UNECE/rec20_latest_08052015.zip
             variable.EngineeringUnits.Value = new EUInformation("mV", "millivolt", "http://www.opcfoundation.org/UA/units/un/cefact");
             // The mapping of the UNECE codes to OPC UA(EUInformation.unitId) is available here:
             // http://www.opcfoundation.org/UA/EngineeringUnits/UNECE/UNECE_to_OPCUA.csv
@@ -1571,11 +1571,11 @@ namespace SampleServer.ReferenceServer
         /// <param name="trueState"></param>
         /// <param name="falseState"></param>
         /// <returns></returns>
-        private new DataItemState CreateTwoStateDiscreteVariable(NodeState parent,  string name, string trueState, string falseState)
+        private new DataItemState CreateTwoStateDiscreteVariable(NodeState parent, string name, string trueState, string falseState)
         {
             TwoStateDiscreteState variable = base.CreateTwoStateDiscreteVariable(parent, name, trueState, falseState);
- 
-            variable.Value = (bool) GetNewValue(variable);
+
+            variable.Value = (bool)GetNewValue(variable);
 
             variable.TrueState.Value = trueState;
             variable.TrueState.AccessLevel = AccessLevels.CurrentReadOrWrite;
@@ -1602,9 +1602,9 @@ namespace SampleServer.ReferenceServer
             variable.Value = TypeInfo.GetDefaultValue(variable.DataType, variable.ValueRank);
 
 
-            variable.OnWriteValue = OnWriteDiscrete;           
+            variable.OnWriteValue = OnWriteDiscrete;
             variable.EnumStrings.AccessLevel = AccessLevels.CurrentReadOrWrite;
-            variable.EnumStrings.UserAccessLevel = AccessLevels.CurrentReadOrWrite;            
+            variable.EnumStrings.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
 
             return variable;
         }
@@ -1618,10 +1618,10 @@ namespace SampleServer.ReferenceServer
         /// <param name="dataType"></param>
         /// <param name="enumNames"></param>
         /// <returns></returns>
-        private MultiStateValueDiscreteState CreateMultiStateValueDiscreteVariable(NodeState parent,  string name, NodeId dataType = null, params string[] enumNames)
+        private MultiStateValueDiscreteState CreateMultiStateValueDiscreteVariable(NodeState parent, string name, NodeId dataType = null, params string[] enumNames)
         {
             MultiStateValueDiscreteState variable = new MultiStateValueDiscreteState(parent);
-           
+
             variable.BrowseName = new QualifiedName(name, NamespaceIndex);
             variable.DisplayName = new LocalizedText("en", name);
             variable.SymbolicName = name;
@@ -1629,14 +1629,14 @@ namespace SampleServer.ReferenceServer
             variable.UserWriteMask = AttributeWriteMask.None;
             // Create method will assign also the NodeId calling New method and it ensures node id uniqueness.
             variable.Create(SystemContext, null, variable.BrowseName, null, true);
-           
+
             variable.ReferenceTypeId = ReferenceTypes.Organizes;
             variable.DataType = (dataType == null) ? DataTypeIds.UInt32 : dataType;
             variable.ValueRank = ValueRanks.Scalar;
             variable.AccessLevel = AccessLevels.CurrentReadOrWrite;
             variable.UserAccessLevel = AccessLevels.CurrentReadOrWrite;
             variable.Historizing = false;
-            variable.Value = (uint) 0;
+            variable.Value = (uint)0;
             variable.StatusCode = StatusCodes.Good;
             variable.Timestamp = DateTime.UtcNow;
             variable.OnWriteValue = OnWriteMultiStateDiscrete;
@@ -1685,9 +1685,9 @@ namespace SampleServer.ReferenceServer
         /// <param name="valueRank"></param>
         /// <param name="numVariables"></param>
         /// <returns></returns>
-        private BaseDataVariableState[] CreateVariables(NodeState parent,  string name, BuiltInType dataType, int valueRank, UInt16 numVariables)
+        private BaseDataVariableState[] CreateVariables(NodeState parent, string name, BuiltInType dataType, int valueRank, UInt16 numVariables)
         {
-            return CreateVariables(parent, name, (uint) dataType, valueRank, numVariables);
+            return CreateVariables(parent, name, (uint)dataType, valueRank, numVariables);
         }
 
         /// <summary>
@@ -1699,7 +1699,7 @@ namespace SampleServer.ReferenceServer
         /// <param name="valueRank"></param>
         /// <param name="numVariables"></param>
         /// <returns></returns>
-        private BaseDataVariableState[] CreateVariables(NodeState parent,  string name, NodeId dataType, int valueRank, UInt16 numVariables)
+        private BaseDataVariableState[] CreateVariables(NodeState parent, string name, NodeId dataType, int valueRank, UInt16 numVariables)
         {
             // first, create a new Parent folder for this data-type
             FolderState newParentFolder = CreateFolder(parent, name);
@@ -1709,7 +1709,7 @@ namespace SampleServer.ReferenceServer
             for (uint i = 0; i < numVariables; i++)
             {
                 string newName = string.Format("{0}_{1}", name, i.ToString("00"));
-                itemsCreated.Add(CreateVariable(newParentFolder,  newName, dataType, valueRank));
+                itemsCreated.Add(CreateVariable(newParentFolder, newName, dataType, valueRank));
             }
             return (itemsCreated.ToArray());
         }
@@ -1722,9 +1722,9 @@ namespace SampleServer.ReferenceServer
         /// <param name="dataType"></param>
         /// <param name="valueRank"></param>
         /// <returns></returns>
-        private BaseDataVariableState CreateDynamicVariable(NodeState parent,  string name, BuiltInType dataType, int valueRank = ValueRanks.Scalar)
+        private BaseDataVariableState CreateDynamicVariable(NodeState parent, string name, BuiltInType dataType, int valueRank = ValueRanks.Scalar)
         {
-            return CreateDynamicVariable(parent, name, (uint) dataType, valueRank);
+            return CreateDynamicVariable(parent, name, (uint)dataType, valueRank);
         }
 
         /// <summary>
@@ -1753,7 +1753,7 @@ namespace SampleServer.ReferenceServer
         /// <returns></returns>
         private BaseDataVariableState[] CreateDynamicVariables(NodeState parent, string name, BuiltInType dataType, int valueRank, uint numVariables)
         {
-            return CreateDynamicVariables(parent,  name, (uint) dataType, valueRank, numVariables);
+            return CreateDynamicVariables(parent, name, (uint)dataType, valueRank, numVariables);
 
         }
 
@@ -1766,7 +1766,7 @@ namespace SampleServer.ReferenceServer
         /// <param name="valueRank"></param>
         /// <param name="numVariables"></param>
         /// <returns></returns>
-        private BaseDataVariableState[] CreateDynamicVariables(NodeState parent,  string name, NodeId dataType, int valueRank, uint numVariables)
+        private BaseDataVariableState[] CreateDynamicVariables(NodeState parent, string name, NodeId dataType, int valueRank, uint numVariables)
         {
             // first, create a new Parent folder for this data-type
             FolderState newParentFolder = CreateFolder(parent, name);
@@ -1776,7 +1776,7 @@ namespace SampleServer.ReferenceServer
             for (uint i = 0; i < numVariables; i++)
             {
                 string newName = string.Format("{0}_{1}", name, i.ToString("00"));
-                itemsCreated.Add(CreateDynamicVariable(newParentFolder,  newName, dataType, valueRank));
+                itemsCreated.Add(CreateDynamicVariable(newParentFolder, newName, dataType, valueRank));
             } //for i
             return (itemsCreated.ToArray());
         }
@@ -1797,7 +1797,7 @@ namespace SampleServer.ReferenceServer
             ViewState viewState = new ViewState();
 
             viewState.SymbolicName = name;
-           
+
             viewState.BrowseName = new QualifiedName(name, NamespaceIndex);
             viewState.DisplayName = viewState.BrowseName.Name;
             viewState.WriteMask = AttributeWriteMask.None;
@@ -1836,7 +1836,7 @@ namespace SampleServer.ReferenceServer
         private ServiceResult ImportNodeSet()
         {
             try
-            {           
+            {
                 System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
                 Stream stream = assembly.GetManifestResourceStream(ResourceNames.ReferenceNodeSet2);
 
@@ -2155,7 +2155,7 @@ namespace SampleServer.ReferenceServer
             else if (userIdentity != null && node.BrowseName.Name == "UserRolePermissionsForEngineeer" &&
                      context.UserIdentity.GrantedRoleIds.Contains(ObjectIds.WellKnownRole_Engineer))
             {
-                //asign only Browse and Read permissions for user Engineer
+                //assign only Browse and Read permissions for user Engineer
                 value = new RolePermissionTypeCollection()
                 {
                     new RolePermissionType()
@@ -2181,6 +2181,51 @@ namespace SampleServer.ReferenceServer
             return ServiceResult.Good;
         }
 
+        /// <summary>
+        /// Transfers a collection of monitored items, ensuring their state is updated and resending initial values as needed. 
+        /// Already processed items are skipped.
+        /// </summary>
+        /// <param name="context">The current operation context.</param>
+        /// <param name="sendInitialValues">Indicates if the subscription should resend initial values after transfer.</param>
+        /// <param name="monitoredItems">The set of monitoring items to update.</param>
+        /// <param name="processedItems">A list of bool indicating items that have already been processed.</param>
+        /// <param name="errors">Any errors that occur.</param>
+        public override void TransferMonitoredItems(
+            OperationContext context,
+            bool sendInitialValues,
+            IList<IMonitoredItem> monitoredItems,
+            IList<bool> processedItems,
+            IList<ServiceResult> errors)
+        {
+            var transferredMonitoredItems = new List<IMonitoredItem>();
+
+            lock (Lock)
+            {
+                int index = 0;
+                foreach (var monitoredItem in monitoredItems)
+                {
+                    // Skip already processed or null items
+                    if (processedItems[index] || monitoredItem == null || monitoredItem.ManagerHandle == null)
+                    {
+                        index++;
+                        continue;
+                    }
+
+                    errors[index] = StatusCodes.Good;
+                    processedItems[index] = true;
+                    transferredMonitoredItems.Add(monitoredItem);
+
+                    if (sendInitialValues)
+                    {
+                        monitoredItem.SetupResendDataTrigger();
+                    }
+
+                    index++;
+                }
+
+            }
+            OnMonitoredItemsTransferred(SystemContext.Copy(context), transferredMonitoredItems);
+        }
         #endregion
 
         #region Execute Handles for Methods

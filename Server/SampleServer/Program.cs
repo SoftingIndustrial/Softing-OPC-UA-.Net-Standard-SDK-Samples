@@ -21,6 +21,8 @@ using Serilog.Templates;
 using static Opc.Ua.Utils;
 using Microsoft.Extensions.Logging;
 using Softing.Opc.Ua.Configuration;
+using System.IO;
+using System.Linq;
 
 namespace SampleServer
 {
@@ -49,7 +51,6 @@ namespace SampleServer
 
             try
             {
-
                 Softing.Opc.Ua.Server.LicensingStatus serverLicensingStatus = Softing.Opc.Ua.Server.LicensingStatus.Ok;
 
                 // TODO - Server binary license activation
@@ -402,13 +403,14 @@ namespace SampleServer
         /// <param name="session"></param>
         private static void PrintSessionList(SampleServer sampleServer)
         {
-
             // list active sessions
             var sessions = sampleServer.CurrentInstance.SessionManager.GetSessions();
             var subscriptions = sampleServer.CurrentInstance.SubscriptionManager.GetSubscriptions();
 
             if (sessions.Count > 0)
             {
+                List<(NodeId SessionId, int MonitoredItemCount)> kSessionMonitoredItems = GetSessionMonitoredItems(subscriptions);
+
                 Console.WriteLine("\nSessions list:");
                 foreach (var session in sessions)
                 {
@@ -425,6 +427,7 @@ namespace SampleServer
                     }
                     line.AppendFormat(";Session ID:{0}", session.Id);
                     line.AppendFormat(";Subscriptions:{0}", session.SessionDiagnostics.CurrentSubscriptionsCount);
+                    line.AppendFormat(";Monitor Items:{0}", kSessionMonitoredItems?.FirstOrDefault(item => item.SessionId == session.Id).MonitoredItemCount);
                     Console.WriteLine(line);
                 }
             }
@@ -433,6 +436,35 @@ namespace SampleServer
                 Console.WriteLine("\nSessions list: empty");
             }
 
+        }
+
+        public static List<(NodeId SessionId, int MonitoredItemCount)> GetSessionMonitoredItems(IList<Opc.Ua.Server.Subscription> subscriptions)
+        {
+            var result = new List<(NodeId, int)>();
+
+            if (subscriptions != null && subscriptions.Count > 0)
+            {
+                var sessionDictionary = new Dictionary<NodeId, int>();
+
+                foreach (var subscription in subscriptions)
+                {
+                    if (subscription.Session != null)
+                    {
+                        var sessionId = subscription.Session.Id;
+                        if (!sessionDictionary.ContainsKey(sessionId))
+                        {
+                            sessionDictionary[sessionId] = subscription.MonitoredItemCount;
+                        }
+                    }
+                }
+
+                foreach (var kvp in sessionDictionary)
+                {
+                    result.Add((kvp.Key, kvp.Value));
+                }
+            }
+
+            return result;
         }
 
         #endregion

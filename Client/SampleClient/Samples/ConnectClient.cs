@@ -8,13 +8,13 @@
  * 
  * ======================================================================*/
 
+using Opc.Ua;
+using Softing.Opc.Ua.Client;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Opc.Ua;
-using Softing.Opc.Ua.Client;
 
 namespace SampleClient.Samples
 {
@@ -43,7 +43,7 @@ namespace SampleClient.Samples
             // ApplicationConfiguration configuration = CreateAplicationConfiguration();
             // m_application = UaApplication.Create(configuration).Result;
             m_application = UaApplication.Create("SampleClient.Config.xml").Result;
-           
+
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
             m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy = false;
@@ -61,6 +61,27 @@ namespace SampleClient.Samples
         #endregion
 
         #region Connect Methods
+
+        /// <summary>
+        /// Creates and connects a session on opc.tcp or https protocol using endpoint and discovery URLs.
+        /// </summary>
+        public async Task CreateSessionAndConnectToEndpointWithDiscovery()
+        {
+            string discoveryUrl = Program.ServerUrl;
+            string endpointUrl = Program.ServerUrl;
+
+            var session = m_application.CreateSession(
+                discoveryUrl, 
+                endpointUrl,
+                MessageSecurityMode.None,
+                SecurityPolicy.None, 
+                MessageEncoding.Binary,
+                new UserIdentity(),
+                null);
+
+            // Connect the session.
+            await ConnectTest(session).ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Creates and connects a session on opc.tcp protocol with no security and anonymous user identity.
@@ -125,7 +146,7 @@ namespace SampleClient.Samples
                     Console.WriteLine("Cannot load certificate from '{0}'", certificateFilePath);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Program.PrintException("CreateOpcTcpSessionWithCertificate", ex);
             }
@@ -212,7 +233,7 @@ namespace SampleClient.Samples
             using (ClientSession session = CreateSession("HttpsUserIdSession", Program.ServerUrlHttps,
                 MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic256Sha256, MessageEncoding.Binary, new UserIdentity("usr", "pwd")))
             {
-               await ConnectTest(session).ConfigureAwait(false);
+                await ConnectTest(session).ConfigureAwait(false);
             }
         }
 
@@ -281,7 +302,7 @@ namespace SampleClient.Samples
             configuration.TransportConfigurations = new TransportConfigurationCollection();
             configuration.TransportQuotas = new TransportQuotas { OperationTimeout = 15000 };
             configuration.ClientConfiguration = new ClientConfiguration { DefaultSessionTimeout = 60000 };
-            
+
             ClientToolkitConfiguration clientTkConfiguration = new ClientToolkitConfiguration();
             clientTkConfiguration.DiscoveryOperationTimeout = 10000;
             configuration.UpdateExtension<ClientToolkitConfiguration>(new System.Xml.XmlQualifiedName("ClientToolkitConfiguration"), clientTkConfiguration);
@@ -331,7 +352,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("\r\nCreating the session {0} (SecurityMode = {1}, SecurityPolicy = {2}, \r\n\t\t\t\t\t\tUserIdentity = {3})...",
                     sessionName, securityMode, securityPolicy, userId.GetIdentityToken());
                 // Create the Session object.
-                ClientSession session = m_application.CreateSession(serverUrl, securityMode, securityPolicy, messageEncoding, userId);
+                ClientSession session = m_application.CreateSession(serverUrl, serverUrl, securityMode, securityPolicy, messageEncoding, userId);
 
                 session.SessionName = sessionName;
                 return session;

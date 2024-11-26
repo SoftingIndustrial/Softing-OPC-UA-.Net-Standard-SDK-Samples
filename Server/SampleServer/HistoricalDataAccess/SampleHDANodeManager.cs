@@ -25,6 +25,7 @@ namespace SampleServer.HistoricalDataAccess
         #region Private Members
         private Timer m_simulationTimer;
         readonly List<ArchiveItemState> m_simulatedNodes;
+        private BaseEventState m_historicalDataItemDoubleEvent;
         #endregion
 
         #region Constructor
@@ -53,16 +54,16 @@ namespace SampleServer.HistoricalDataAccess
             {
                 // Create a root node and add a reference to external Server Objects Folder
                 FolderState root = CreateFolder(null, "HistoricalDataAccess");
-                AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);                
+                AddReference(root, ReferenceTypeIds.Organizes, true, ObjectIds.ObjectsFolder, true);
 
                 // Historical Access
                 FolderState dynamicHistoricals = CreateFolder(root, "DynamicHistoricalDataItems");
-              //  AddReference(dynamicHistoricals, ReferenceTypeIds.Organizes, true, dynamicHistoricals.NodeId, true);
+                // AddReference(dynamicHistoricals, ReferenceTypeIds.Organizes, true, dynamicHistoricals.NodeId, true);
 
                 CreateDynamicHistoricalVariables(dynamicHistoricals);
 
                 FolderState staticHistoricals = CreateFolder(root, "StaticHistoricalDataItems");
-               // AddReference(root, ReferenceTypeIds.Organizes, true, staticHistoricals.NodeId, true);
+                // AddReference(root, ReferenceTypeIds.Organizes, true, staticHistoricals.NodeId, true);
 
                 CreateStaticHistoricalVariables(staticHistoricals);
 
@@ -183,6 +184,19 @@ namespace SampleServer.HistoricalDataAccess
             AddPredefinedNode(SystemContext, nodeDouble);
             AddReference(root, ReferenceTypeIds.Organizes, false, nodeDouble.NodeId, true);
 
+            try
+            {
+                root.EventNotifier |= EventNotifiers.SubscribeToEvents;
+
+                // enable event notifications
+                root.AddChild(nodeDouble);
+            }
+            catch
+            { }
+
+            // create an instance of BaseEventType to be used when reporting HistoricalDataItemDouble event
+            m_historicalDataItemDoubleEvent = CreateObjectFromType(nodeDouble, "HistoricalDataItemDoubleEvent", ObjectTypeIds.BaseEventType) as BaseEventState;
+
             m_simulatedNodes.Add(nodeDouble);
 
             ArchiveItem itemInt32 = new ArchiveItem("DynamicHistoricalDataItem_Int32", new FileInfo(Path.Combine("HistoricalDataAccess", "Data", "Dynamic", "Int32.txt")));
@@ -241,6 +255,10 @@ namespace SampleServer.HistoricalDataAccess
                             item.ClearChangeMasks(SystemContext, true);
                         }
                     }
+
+                    // Report an event at on DataAccess node
+                    string eventMessage = String.Format("Dynamic Historical Double data changed to {0}", m_simulatedNodes[0].Value);
+                    ReportEvent(m_simulatedNodes[0], m_historicalDataItemDoubleEvent, new LocalizedText(eventMessage), EventSeverity.Medium);
                 }
             }
             catch(Exception ex)

@@ -7,7 +7,7 @@
  * https://industrial.softing.com/LA-SDK-en
  *  
  * ======================================================================*/
- 
+
 
 namespace SampleClient.StateMachine
 {
@@ -22,9 +22,18 @@ namespace SampleClient.StateMachine
         GDS,
         Browse,
         MonitoredEventsAlarms,
+        MonitoredItems,
         MonitoredItem,
+        MonitoredItemWithoutConnect,
+        MonitoredItemAddNewAfterConnect,
+		MonitoredTransferEventsAlarms,
+        MonitoredEvents,
+        TransferSubscriptions,
+        TransferSubscriptionsConnectionType,
         Events,
-        History,       
+        EventsWithoutConnect,
+        EventsAddNewAfterConnect,
+        History,
         HistoryAsync,
         Alarms,
         AccessRights,
@@ -71,17 +80,30 @@ namespace SampleClient.StateMachine
         TranslateAsync,
         EndBrowse,
 
+        StartMonitoredEvents,
+        EndMonitoredEvents,
+
         StartEvents,
         CreateEventMonitorItem,
         DeleteEventMonitorItem,
         EndEvents,
 
-        StartHistory, 
+        StartEventsWithoutConnect,
+        CreateEventMonitorItemWithoutConnect,
+        DeleteEventMonitorItemWithoutConnect,
+        EndEventsWithoutConnect,
+
+        StartEventsAddNewAfterConnect,
+        CreateEventMonitorItemAddNewAfterConnect,
+        DeleteEventMonitorItemAddNewAfterConnect,
+        EndEventsAddNewAfterConnect,
+
+        StartHistory,
         HistoryReadRaw,
         HistoryReadAtTime,
         HistoryReadProcessed,
         EndHistory,
-        
+
         HistoryReadRawAsync,
         HistoryReadAtTimeAsync,
         HistoryReadProcessedAsync,
@@ -89,10 +111,42 @@ namespace SampleClient.StateMachine
         StartMonitoredEventsAlarms,
         EndMonitoredEventsAlarms,
 
-        StartMonitoredItem, 
+        StartMonitoredTransferEventsAlarms,
+        EndMonitoredTransferEventsAlarms,
+
+        StartMonitoredItems,
+        EndMonitoredItems,
+
+        StartTransferSubscriptions,
+        EndTransferSubscriptions,
+        
+        StartTransferSubscriptionsConnectionType,
+        EndTransferSubscriptionsConnectionType,
+
+        StartMonitoredItem,
         CreateMonitoredItem,
         DeleteMonitoredItem,
         EndMonitoredItem,
+        TransferSubscriptions,
+        TransferSubscriptionsAsync,
+        TransferSubscriptionsSessionClosed,
+        SaveSubscriptions,
+        LoadSubscriptions,
+        TransferSubscriptionsDetached,
+        TransferSubscriptionsUserIdentity,
+        TransferSubscriptionsCertificate,
+        TransferSubscriptionsCertificatePassword,
+        TransferSubscriptionsSecurity,
+
+        StartMonitoredItemsWithoutConnect,
+        CreateMonitoredItemsWithoutConnect,
+        DeleteMonitoredItemsWithoutConnect,
+        EndMonitoredItemsWithoutConnect,
+
+        StartMonitoredItemsAddNewAfterConnect,
+        CreateMonitoredItemsAddNewAfterConnect,
+        DeleteMonitoredItemsAddNewAfterConnect,
+        EndMonitoredItemsAddNewAfterConnect,
 
         StartAlarms,
         RefreshAlarms,

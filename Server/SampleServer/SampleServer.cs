@@ -8,10 +8,6 @@
  * 
  * ======================================================================*/
 
-using System;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using Opc.Ua;
 using Opc.Ua.Server;
 using SampleServer.Alarms;
@@ -21,11 +17,12 @@ using SampleServer.FileTransfer;
 using SampleServer.HistoricalDataAccess;
 using SampleServer.Methods;
 using SampleServer.NodeSetImport;
-using SampleServer.PubSub;
 using SampleServer.ReferenceServer;
 using SampleServer.UserAuthentication;
 using Softing.Opc.Ua.Server;
-
+using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using X509Certificate2Collection = System.Security.Cryptography.X509Certificates.X509Certificate2Collection;
 
 namespace SampleServer
@@ -45,6 +42,8 @@ namespace SampleServer
 
         private Dictionary<string, string> m_userNameIdentities;
         private Timer m_certificatesTimer;
+
+        private List<INodeManagerFactory> m_nodeManagerFactories;
         #endregion
 
         #region Constructor
@@ -62,6 +61,8 @@ namespace SampleServer
             m_userNameIdentities.Add("usr", "pwd");
             m_userNameIdentities.Add("admin", "admin");
             ManufacturerName = "Softing";
+
+            m_nodeManagerFactories = new List<INodeManagerFactory>();
         }
 
         #endregion
@@ -121,6 +122,7 @@ namespace SampleServer
         /// always creates a CoreNodeManager which handles the built-in nodes defined by the specification.
         /// Any additional NodeManagers are expected to handle application specific nodes.
         /// </remarks>
+        /// 
         protected override MasterNodeManager CreateMasterNodeManager(IServerInternal server, ApplicationConfiguration configuration)
         {
             Utils.Trace(Utils.TraceMasks.Information, "SampleServer.CreateMasterNodeManager: Creating the Node Managers.");

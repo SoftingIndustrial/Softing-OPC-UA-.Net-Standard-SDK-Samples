@@ -90,7 +90,7 @@ namespace SampleClient.StateMachine
             exit.ExecuteCommand += Exit_ExecuteCommand;
 
             m_transitions.Add(exit, State.Exit);
-            exit = new StateTransition(State.MonitoredEventsAlarms, Command.Exit, "x", "Exit Client Application");
+            exit = new StateTransition(State.MonitoredTransferEventsAlarms, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
             m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.Alarms, Command.Exit, "x", "Exit Client Application");
@@ -201,7 +201,7 @@ namespace SampleClient.StateMachine
             m_transitions.Add(reverseConnectSampleAsync, State.DiscoveryConnectGds);
 
             //add discovery menu item
-            StateTransition discoveryMenu = new StateTransition(State.DiscoveryConnectGds, Command.StartDiscoverySample, "5", "Enter Discovery Menu");           
+            StateTransition discoveryMenu = new StateTransition(State.DiscoveryConnectGds, Command.StartDiscoverySample, "5", "Enter Discovery Menu");
             m_transitions.Add(discoveryMenu, State.Discovery);
 
             //add discovery menu item
@@ -227,7 +227,7 @@ namespace SampleClient.StateMachine
             m_transitions.Add(endDiscoveryMenu, State.DiscoveryConnectGds);
 
             //add GDS menu item
-            StateTransition gdsSample = new StateTransition(State.DiscoveryConnectGds, Command.StartGDSSample, "6", "Enter GDS Sample Menu");            
+            StateTransition gdsSample = new StateTransition(State.DiscoveryConnectGds, Command.StartGDSSample, "6", "Enter GDS Sample Menu");
             m_transitions.Add(gdsSample, State.GDS);
 
             //commands for GDS Pull Get Trust List
@@ -341,41 +341,104 @@ namespace SampleClient.StateMachine
         private void InitializeMonitoredItemEventsTransitions()
         {
             //commands for monitored item - 4
-            StateTransition start = new StateTransition(State.Main, Command.StartMonitoredEventsAlarms, "4", "Enter MonitoredItem/Events Menu/Alarms Menu");
-            m_transitions.Add(start, State.MonitoredEventsAlarms);
+            StateTransition start = new StateTransition(State.Main, Command.StartMonitoredTransferEventsAlarms, "4", "Enter MonitoredItem/TransferSubscriptions/Events/Alarms Menu");
+            m_transitions.Add(start, State.MonitoredTransferEventsAlarms);
 
-            //commands for monitored item
-            StateTransition startMonitoredItem = new StateTransition(State.MonitoredEventsAlarms, Command.StartMonitoredItem, "1", "Enter MonitoredItem Menu");
-            startMonitoredItem.ExecuteCommand += StartMonitoredItem_ExecuteCommand;
-            m_transitions.Add(startMonitoredItem, State.MonitoredItem);
-
-            StateTransition createMonitoredItem = new StateTransition(State.MonitoredItem, Command.CreateMonitoredItem, "1", "Create data change Monitored Items");
-            createMonitoredItem.ExecuteCommand += CreateMonitoredItem_ExecuteCommand;
-            m_transitions.Add(createMonitoredItem, State.MonitoredItem);
-
-            StateTransition deleteMonitoredItem = new StateTransition(State.MonitoredItem, Command.DeleteMonitoredItem, "2", "Delete data change Monitored Items");
-            deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItem_ExecuteCommand;
-            m_transitions.Add(deleteMonitoredItem, State.MonitoredItem);
-
-            StateTransition endMonitoredItem = new StateTransition(State.MonitoredItem, Command.EndMonitoredItem, "0", "Back to MonitoredItem/Events Menu/Alarms Menu");
-            endMonitoredItem.ExecuteCommand += EndMonitoredItem_ExecuteCommand;
-            m_transitions.Add(endMonitoredItem, State.MonitoredEventsAlarms);
+            MonitorMenu();
 
             EventsMenu();
 
             AlarmsMenu();
 
-            StateTransition end = new StateTransition(State.MonitoredEventsAlarms, Command.EndMonitoredEventsAlarms, "0", "Back to Main Menu");
+            TransferSubscriptionsMenu();
+
+            StateTransition end = new StateTransition(State.MonitoredTransferEventsAlarms, Command.EndMonitoredTransferEventsAlarms, "0", "Back to Main Menu");
             m_transitions.Add(end, State.Main);
+        }
+
+        private void MonitorMenu()
+        {
+            //commands for monitored items
+            StateTransition startMonitoredItems = new StateTransition(State.MonitoredTransferEventsAlarms, Command.StartMonitoredItems, "1", "Enter MonitoredItem Menu");
+            m_transitions.Add(startMonitoredItems, State.MonitoredItems);
+
+            StateTransition startMonitoredItemsWithConnect = new StateTransition(State.MonitoredItems, Command.StartMonitoredItem, "1", "Enter MonitoredItem with implicit Subscription connect Menu (Legacy behavior)");
+            startMonitoredItemsWithConnect.ExecuteCommand += StartMonitoredItem_ExecuteCommand;
+            m_transitions.Add(startMonitoredItemsWithConnect, State.MonitoredItem);
+
+            StateTransition startMonitoredItemsWithoutConnect = new StateTransition(State.MonitoredItems, Command.StartMonitoredItemsWithoutConnect, "2", "Enter MonitoredItem before Subscription connect Menu");
+            startMonitoredItemsWithoutConnect.ExecuteCommand += StartMonitoredItemsWithoutConnect_ExecuteCommand;
+            m_transitions.Add(startMonitoredItemsWithoutConnect, State.MonitoredItemWithoutConnect);
+
+            StateTransition startAddNewMonitoredItemsAfterConnect = new StateTransition(State.MonitoredItems, Command.StartMonitoredItemsAddNewAfterConnect, "3", "Enter add new MonitoredItem while Subscription is connected Menu");
+            startAddNewMonitoredItemsAfterConnect.ExecuteCommand += StartAddNewMonitoredItemsAfterConnect_ExecuteCommand;
+            m_transitions.Add(startAddNewMonitoredItemsAfterConnect, State.MonitoredItemAddNewAfterConnect);
+
+            #region Monitored Items with connect
+            StateTransition createMonitoredItem = new StateTransition(State.MonitoredItem, Command.CreateMonitoredItem, "1", "Create data change Monitored Items");
+            createMonitoredItem.ExecuteCommand += CreateMonitoredItem_ExecuteCommand;
+            m_transitions.Add(createMonitoredItem, State.MonitoredItem);
+
+            StateTransition deleteMonitoredItem = new StateTransition(State.MonitoredItem, Command.DeleteMonitoredItem, "2", "Delete data change Monitored Items");
+            deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItems_ExecuteCommand;
+            m_transitions.Add(deleteMonitoredItem, State.MonitoredItem);
+
+            StateTransition endMonitoredItem = new StateTransition(State.MonitoredItem, Command.EndMonitoredItem, "0", "Back to MonitoredItem Menu");
+            endMonitoredItem.ExecuteCommand += EndMonitoredItem_ExecuteCommand;
+            m_transitions.Add(endMonitoredItem, State.MonitoredItems);
+            #endregion Monitored Items with connect
+
+            #region Monitored Items without connect
+            StateTransition createMonitoredItemWithoutConnect = new StateTransition(State.MonitoredItemWithoutConnect, Command.CreateMonitoredItemsWithoutConnect, "1", "Create data change Monitored Items before Subscription is connected");
+            createMonitoredItemWithoutConnect.ExecuteCommand += CreateMonitoredItemWithoutConnect_ExecuteCommand;
+            m_transitions.Add(createMonitoredItemWithoutConnect, State.MonitoredItemWithoutConnect);
+
+            StateTransition deleteMonitoredItemWithoutConnect = new StateTransition(State.MonitoredItemWithoutConnect, Command.DeleteMonitoredItemsWithoutConnect, "2", "Delete data change Monitored Items before Subscription is connected");
+            deleteMonitoredItemWithoutConnect.ExecuteCommand += DeleteMonitoredItemsWithoutConnect_ExecuteCommand;
+            m_transitions.Add(deleteMonitoredItemWithoutConnect, State.MonitoredItemWithoutConnect);
+
+            StateTransition endMonitoredItemWithoutConnect = new StateTransition(State.MonitoredItemWithoutConnect, Command.EndMonitoredItemsWithoutConnect, "0", "Back to MonitoredItem Menu");
+            endMonitoredItemWithoutConnect.ExecuteCommand += EndMonitoredItemsWithoutConnect_ExecuteCommand;
+            m_transitions.Add(endMonitoredItemWithoutConnect, State.MonitoredItems);
+            #endregion Monitored Items without connect
+
+            #region Add Monitored Items after connect
+            StateTransition createAddNewMonitoredItemAfterConnect = new StateTransition(State.MonitoredItemAddNewAfterConnect, Command.CreateMonitoredItemsAddNewAfterConnect, "1", "Create new data change Monitored Items while Subscription is connected");
+            createAddNewMonitoredItemAfterConnect.ExecuteCommand += CreateAddNewMonitoredItemsAfterConnect_ExecuteCommand;
+            m_transitions.Add(createAddNewMonitoredItemAfterConnect, State.MonitoredItemAddNewAfterConnect);
+
+            StateTransition deleteAddNewMonitoredItemAfterConnect = new StateTransition(State.MonitoredItemAddNewAfterConnect, Command.DeleteMonitoredItemsAddNewAfterConnect, "2", "Delete new data change Monitored Items while Subscription is connected");
+            deleteAddNewMonitoredItemAfterConnect.ExecuteCommand += DeleteAddNewMonitoredItemsAfterConnect_ExecuteCommand;
+            m_transitions.Add(deleteAddNewMonitoredItemAfterConnect, State.MonitoredItemAddNewAfterConnect);
+
+            StateTransition endAddNewMonitoredItemAfterConnect = new StateTransition(State.MonitoredItemAddNewAfterConnect, Command.EndMonitoredItemsAddNewAfterConnect, "0", "Back to MonitoredItems Menu");
+            endAddNewMonitoredItemAfterConnect.ExecuteCommand += EndAddNewMonitoredItemsAfterConnect_ExecuteCommand;
+            m_transitions.Add(endAddNewMonitoredItemAfterConnect, State.MonitoredItems);
+            #endregion Add Monitored Items after connect
+
+            StateTransition endMonitoredItems = new StateTransition(State.MonitoredItems, Command.EndMonitoredItems, "0", "Back to MonitoredItem/TransferSubscriptions/Events/Alarms Menu");
+            m_transitions.Add(endMonitoredItems, State.MonitoredTransferEventsAlarms);
         }
 
         private void EventsMenu()
         {
             //commands for events
-            StateTransition startEventsClient = new StateTransition(State.MonitoredEventsAlarms, Command.StartEvents, "2", "Enter Events Menu");
-            startEventsClient.ExecuteCommand += StartEventsClient_ExecuteCommand;
-            m_transitions.Add(startEventsClient, State.Events);
+            StateTransition startMonitoredItems = new StateTransition(State.MonitoredTransferEventsAlarms, Command.StartMonitoredEvents, "2", "Enter Events Menu");
+            m_transitions.Add(startMonitoredItems, State.MonitoredEvents);
 
+            StateTransition startMonitoredItemsWithConnect = new StateTransition(State.MonitoredEvents, Command.StartEvents, "1", "Enter Event Monitored with implicit Subscription connect Menu (Legacy behavior)");
+            startMonitoredItemsWithConnect.ExecuteCommand += StartEventsClient_ExecuteCommand;
+            m_transitions.Add(startMonitoredItemsWithConnect, State.Events);
+
+            StateTransition startMonitoredItemsWithoutConnect = new StateTransition(State.MonitoredEvents, Command.StartEventsWithoutConnect, "2", "Enter Event Monitored before Subscription connect Menu");
+            startMonitoredItemsWithoutConnect.ExecuteCommand += StartEventsClientWithoutConnect_ExecuteCommand;
+            m_transitions.Add(startMonitoredItemsWithoutConnect, State.EventsWithoutConnect);
+
+            StateTransition startAddNewMonitoredItemsAfterConnect = new StateTransition(State.MonitoredEvents, Command.StartEventsAddNewAfterConnect, "3", "Enter add new Event MonitoredItem while Subscription is connected Menu");
+            startAddNewMonitoredItemsAfterConnect.ExecuteCommand += StartAddNewEventsClientAfterConnect_ExecuteCommand;
+            m_transitions.Add(startAddNewMonitoredItemsAfterConnect, State.EventsAddNewAfterConnect);
+
+            #region Event Monitored Items with connect
             StateTransition createEventMonitorItem = new StateTransition(State.Events, Command.CreateEventMonitorItem, "1", "Create Event Monitored Item");
             createEventMonitorItem.ExecuteCommand += CreateEventMonitoredItem_ExecuteCommand;
             m_transitions.Add(createEventMonitorItem, State.Events);
@@ -384,15 +447,47 @@ namespace SampleClient.StateMachine
             deleteEventMonitorItem.ExecuteCommand += DeleteEventMonitoredItem_ExecuteCommand;
             m_transitions.Add(deleteEventMonitorItem, State.Events);
 
-            StateTransition endEvents = new StateTransition(State.Events, Command.EndEvents, "0", "Back to MonitoredItem/Events Menu/Alarms Menu");
+            StateTransition endEvents = new StateTransition(State.Events, Command.EndEvents, "0", "Back to Monitored Events Menu");
             endEvents.ExecuteCommand += EndEvents_ExecuteCommand;
-            m_transitions.Add(endEvents, State.MonitoredEventsAlarms);
+            m_transitions.Add(endEvents, State.MonitoredEvents);
+            #endregion Event Monitored Items with connect
+
+            #region Event Monitored Items before Subscription connect
+            StateTransition createEventMonitorItemWithoutConnect = new StateTransition(State.EventsWithoutConnect, Command.CreateEventMonitorItemWithoutConnect, "1", "Create Event Monitored Item before Subscription connect");
+            createEventMonitorItemWithoutConnect.ExecuteCommand += CreateEventMonitoredItemWithoutConnect_ExecuteCommand;
+            m_transitions.Add(createEventMonitorItemWithoutConnect, State.EventsWithoutConnect);
+
+            StateTransition deleteEventMonitorItemWithoutConnect = new StateTransition(State.EventsWithoutConnect, Command.DeleteEventMonitorItemWithoutConnect, "2", "Delete Event Monitored Item before Subscription connect");
+            deleteEventMonitorItemWithoutConnect.ExecuteCommand += DeleteEventMonitoredItemWithoutConnect_ExecuteCommand;
+            m_transitions.Add(deleteEventMonitorItemWithoutConnect, State.EventsWithoutConnect);
+
+            StateTransition endEventsWithoutConnect = new StateTransition(State.EventsWithoutConnect, Command.EndEvents, "0", "Back to Monitored Events Menu");
+            endEventsWithoutConnect.ExecuteCommand += EndEventsWithoutConnect_ExecuteCommand;
+            m_transitions.Add(endEventsWithoutConnect, State.MonitoredEvents);
+            #endregion Event Monitored Items without connect
+
+            #region Event Add New Monitored Items while Subscription is connected
+            StateTransition createAddNewEventMonitorItemAfterConnect = new StateTransition(State.EventsAddNewAfterConnect, Command.CreateEventMonitorItemAddNewAfterConnect, "1", "Create add new Event Monitored Item while Subscription is connected");
+            createAddNewEventMonitorItemAfterConnect.ExecuteCommand += CreateAddNewEventMonitoredItemAfterConnect_ExecuteCommand;
+            m_transitions.Add(createAddNewEventMonitorItemAfterConnect, State.EventsAddNewAfterConnect);
+
+            StateTransition deleteAddNewEventMonitorItemAfterConnect = new StateTransition(State.EventsAddNewAfterConnect, Command.DeleteEventMonitorItemAddNewAfterConnect, "2", "Delete add new Event Monitored Item while Subscription is connected");
+            deleteAddNewEventMonitorItemAfterConnect.ExecuteCommand += DeleteAddNewEventMonitoredItemAfterConnect_ExecuteCommand;
+            m_transitions.Add(deleteAddNewEventMonitorItemAfterConnect, State.EventsAddNewAfterConnect);
+
+            StateTransition endAddNewEventsAfterConnect = new StateTransition(State.EventsAddNewAfterConnect, Command.EndEvents, "0", "Back to Monitored Events Menu");
+            endAddNewEventsAfterConnect.ExecuteCommand += EndAddNewEventsAfterConnect_ExecuteCommand;
+            m_transitions.Add(endAddNewEventsAfterConnect, State.MonitoredEvents);
+            #endregion Event Add New Monitored Items after connect
+
+            StateTransition endMonitoredItems = new StateTransition(State.MonitoredEvents, Command.EndMonitoredItems, "0", "Back to MonitoredItem/TransferSubscriptions/Events/Alarms Menu");
+            m_transitions.Add(endMonitoredItems, State.MonitoredTransferEventsAlarms);
         }
 
         private void AlarmsMenu()
         {
             //commands for alarms
-            StateTransition startAlarms = new StateTransition(State.MonitoredEventsAlarms, Command.StartAlarms, "3", "Enter Alarms Menu");
+            StateTransition startAlarms = new StateTransition(State.MonitoredTransferEventsAlarms, Command.StartAlarms, "3", "Enter Alarms Menu");
             startAlarms.ExecuteCommand += StartAlarms_ExecuteCommand;
             m_transitions.Add(startAlarms, State.Alarms);
 
@@ -417,9 +512,83 @@ namespace SampleClient.StateMachine
             disableTriggerAlarms.ExecuteCommand += DisableTriggerAlarms_ExecuteCommand;
             m_transitions.Add(disableTriggerAlarms, State.Alarms);
 
-            StateTransition endAlarms = new StateTransition(State.Alarms, Command.EndAlarms, "0", "Back to MonitoredItem/Events Menu/Alarms Menu");
+            StateTransition endAlarms = new StateTransition(State.Alarms, Command.EndAlarms, "0", "Back to MonitoredItem/TransferSubscriptions/Events/Alarms Menu");
             endAlarms.ExecuteCommand += EndAlarms_ExecuteCommand;
-            m_transitions.Add(endAlarms, State.MonitoredEventsAlarms);
+            m_transitions.Add(endAlarms, State.MonitoredTransferEventsAlarms);
+        }
+
+        private void TransferSubscriptionsMenu()
+        {
+            StateTransition startMonitoredItems = new StateTransition(State.MonitoredTransferEventsAlarms, Command.StartTransferSubscriptions, "4", "Enter Transfer Subscriptions Menu");
+            startMonitoredItems.ExecuteCommand += StartMonitoredItem_ExecuteCommand;
+            m_transitions.Add(startMonitoredItems, State.TransferSubscriptions);
+
+            StateTransition createMonitoredItem = new StateTransition(State.TransferSubscriptions, Command.CreateMonitoredItem, "1", "Create data change Monitored Items");
+            createMonitoredItem.ExecuteCommand += CreateMonitoredItem_ExecuteCommand;
+            m_transitions.Add(createMonitoredItem, State.TransferSubscriptions);
+
+            StateTransition deleteMonitoredItem = new StateTransition(State.TransferSubscriptions, Command.DeleteMonitoredItem, "2", "Delete data change Monitored Items");
+            deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItems_ExecuteCommand;
+            m_transitions.Add(deleteMonitoredItem, State.TransferSubscriptions);
+
+            StateTransition transferSubscriptions = new StateTransition(State.TransferSubscriptions, Command.TransferSubscriptions, "3", "Transfer subscriptions");
+            transferSubscriptions.ExecuteCommand += TransferSubscriptions_ExecuteCommand;
+            m_transitions.Add(transferSubscriptions, State.TransferSubscriptions);
+
+            StateTransition transferSubscriptionsAsync = new StateTransition(State.TransferSubscriptions, Command.TransferSubscriptionsAsync, "4", "Transfer subscriptions async");
+            transferSubscriptionsAsync.ExecuteCommand += TransferSubscriptionsAsync_ExecuteCommand;
+            m_transitions.Add(transferSubscriptionsAsync, State.TransferSubscriptions);
+
+            StateTransition transferSubscriptionSessionClosed = new StateTransition(State.TransferSubscriptions, Command.TransferSubscriptionsSessionClosed, "5", "Transfer subscriptions session closed");
+            transferSubscriptionSessionClosed.ExecuteCommand += TransferSubscriptionSessionClosed_ExecuteCommand;
+            m_transitions.Add(transferSubscriptionSessionClosed, State.TransferSubscriptions);
+
+            StateTransition saveSubscriptions = new StateTransition(State.TransferSubscriptions, Command.SaveSubscriptions, "6", "Save Subscriptions for transfer");
+            saveSubscriptions.ExecuteCommand += SaveSubscriptionsForTransfer_ExecuteCommand;
+            m_transitions.Add(saveSubscriptions, State.TransferSubscriptions);
+
+            StateTransition loadSubscriptions = new StateTransition(State.TransferSubscriptions, Command.LoadSubscriptions, "7", "Load Subscriptions for transfer");
+            loadSubscriptions.ExecuteCommand += LoadSubscriptionsForTransfer_ExecuteCommand;
+            m_transitions.Add(loadSubscriptions, State.TransferSubscriptions);
+
+            TransferSubscriptionsDifferentConnectionsMenu();
+
+            StateTransition endTransferSubscriptions = new StateTransition(State.TransferSubscriptions, Command.EndTransferSubscriptions, "0", "Back to MonitoredItem/TransferSubscriptions/Events/Alarms Menu");
+            endTransferSubscriptions.ExecuteCommand += EndMonitoredItem_ExecuteCommand; 
+            m_transitions.Add(endTransferSubscriptions, State.MonitoredTransferEventsAlarms);
+        }
+
+        private void TransferSubscriptionsDifferentConnectionsMenu()
+        {
+            StateTransition startMonitoredItems = new StateTransition(State.TransferSubscriptions, Command.StartTransferSubscriptionsConnectionType, "8", "Transfer Subscriptions with different connections");
+            m_transitions.Add(startMonitoredItems, State.TransferSubscriptionsConnectionType);
+
+            StateTransition createMonitoredItem = new StateTransition(State.TransferSubscriptionsConnectionType, Command.CreateMonitoredItem, "1", "Create data change Monitored Items");
+            createMonitoredItem.ExecuteCommand += CreateMonitoredItem_ExecuteCommand;
+            m_transitions.Add(createMonitoredItem, State.TransferSubscriptionsConnectionType);
+
+            StateTransition deleteMonitoredItem = new StateTransition(State.TransferSubscriptionsConnectionType, Command.DeleteMonitoredItem, "2", "Delete data change Monitored Items");
+            deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItems_ExecuteCommand;
+            m_transitions.Add(deleteMonitoredItem, State.TransferSubscriptionsConnectionType);
+
+            StateTransition transferSubscriptionsSessionSecrets = new StateTransition(State.TransferSubscriptionsConnectionType, Command.TransferSubscriptionsUserIdentity, "3", "Transfer subscriptions - Session with user identity");
+            transferSubscriptionsSessionSecrets.ExecuteCommand += TransferSubscriptionsWithUserId_ExecuteCommand;
+            m_transitions.Add(transferSubscriptionsSessionSecrets, State.TransferSubscriptionsConnectionType);
+
+            StateTransition transferSubscriptionsCertificate = new StateTransition(State.TransferSubscriptionsConnectionType, Command.TransferSubscriptionsCertificate, "4", "Transfer subscriptions - Session with certificate");
+            transferSubscriptionsCertificate.ExecuteCommand += TransferSubscriptionsWithCertificate_ExecuteCommand;
+            m_transitions.Add(transferSubscriptionsCertificate, State.TransferSubscriptionsConnectionType);
+
+            StateTransition transferSubscriptionsCertificatePassword = new StateTransition(State.TransferSubscriptionsConnectionType, Command.TransferSubscriptionsCertificatePassword, "5", "Transfer subscriptions - Session with certificate password");
+            transferSubscriptionsCertificatePassword.ExecuteCommand += TransferSubscriptionsWithCertificatePassword_ExecuteCommand;
+            m_transitions.Add(transferSubscriptionsCertificatePassword, State.TransferSubscriptionsConnectionType);
+
+            StateTransition transferSubscriptionsWithSecurity = new StateTransition(State.TransferSubscriptionsConnectionType, Command.TransferSubscriptionsSecurity, "6", "Transfer subscriptions - Session with security");
+            transferSubscriptionsWithSecurity.ExecuteCommand += TransferSubscriptionsWithSecurity_ExecuteCommand;
+            m_transitions.Add(transferSubscriptionsWithSecurity, State.TransferSubscriptionsConnectionType);
+
+            StateTransition endTransferSubscriptions = new StateTransition(State.TransferSubscriptionsConnectionType, Command.EndTransferSubscriptionsConnectionType, "0", "Back to TransferSubscriptions Menu");
+            m_transitions.Add(endTransferSubscriptions, State.TransferSubscriptions);
         }
 
         /// <summary>
@@ -768,7 +937,7 @@ namespace SampleClient.StateMachine
 
         private async Task ConnectSample_ExecuteCommand(object sender, EventArgs e)
         {
-            //ConnectClient sample does not need to load data type dictionaries or to decode custom data types
+            // ConnectClient sample does not need to load data type dictionaries or to decode custom data types
             bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
             bool rememberDecodeDataTypeDictionaries = m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries;
             bool readNodesWithTypeNotInHierarchy = m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy;
@@ -779,6 +948,7 @@ namespace SampleClient.StateMachine
 
             ConnectClient connectClient = new ConnectClient(m_application);
 
+            await connectClient.CreateSessionAndConnectToEndpointWithDiscovery().ConfigureAwait(false);
             await connectClient.CreateOpcTcpSessionWithNoSecurity().ConfigureAwait(false);
             await connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.Sign, SecurityPolicy.Basic256Sha256).ConfigureAwait(false);
             await connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.SignAndEncrypt, SecurityPolicy.Basic256Sha256).ConfigureAwait(false);
@@ -789,11 +959,11 @@ namespace SampleClient.StateMachine
             await connectClient.CreateOpcTcpSessionWithUserId().ConfigureAwait(false);
             await connectClient.CreateOpcTcpSessionWithCertificate().ConfigureAwait(false);
             await connectClient.CreateOpcTcpSessionWithCertificatePassword().ConfigureAwait(false);
-            
-            //await connectClient.CreateHttpsSessionWithAnonymousUserId().ConfigureAwait(false);
-            //await connectClient.CreateHttpsSessionWithUserId().ConfigureAwait(false);
 
-            await connectClient.CreateSessionUsingDiscovery().ConfigureAwait(false);
+            // await connectClient.CreateHttpsSessionWithAnonymousUserId().ConfigureAwait(false);
+            // await connectClient.CreateHttpsSessionWithUserId().ConfigureAwait(false);
+
+            // await connectClient.CreateSessionUsingDiscovery().ConfigureAwait(false);
 
             m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
@@ -828,7 +998,7 @@ namespace SampleClient.StateMachine
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
 
             ReverseConnectClient reverseConnectClient = new ReverseConnectClient(m_application);
-            
+
             // get all endpoints and create sessions into a specified time interval
             await reverseConnectClient.GetEndpointsAndReverseConnectTimeoutInterval(false).ConfigureAwait(false);
 
@@ -1022,6 +1192,88 @@ namespace SampleClient.StateMachine
 
         #endregion
 
+        #region  ExecuteCommand Handlers for Events without connect
+
+        private async Task StartEventsClientWithoutConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient == null)
+            {
+                m_eventsClient = new EventsClient(m_application);
+                await m_eventsClient.Initialize().ConfigureAwait(false);
+            }
+        }
+
+        private Task CreateEventMonitoredItemWithoutConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient != null)
+            {
+                m_eventsClient.CreateEventMonitoredItemBeforeSubscriptionConnect();
+            }
+            return Task.CompletedTask;
+        }
+
+        private Task DeleteEventMonitoredItemWithoutConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient != null)
+            {
+                m_eventsClient.DeleteEventMonitoredItemCreatedBeforeSubscriptionConnect();
+            }
+            return Task.CompletedTask;
+        }
+
+        private async Task EndEventsWithoutConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient != null)
+            {
+                await m_eventsClient.Disconnect().ConfigureAwait(false);
+                m_eventsClient = null;
+            }
+        }
+
+        #endregion
+
+        #region  ExecuteCommand Handlers for Events without connect
+
+        private async Task StartAddNewEventsClientAfterConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient == null)
+            {
+                m_eventsClient = new EventsClient(m_application);
+                await m_eventsClient.Initialize().ConfigureAwait(false);
+            }
+        }
+
+        private Task CreateAddNewEventMonitoredItemAfterConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient != null)
+            {
+                m_eventsClient.CreateEventMonitoredItemBeforeSubscriptionConnect();
+                m_eventsClient.CreateNewEventMonitoredItemAfterSubscriptionConnect();
+            }
+            return Task.CompletedTask;
+        }
+
+        private Task DeleteAddNewEventMonitoredItemAfterConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient != null)
+            {
+                m_eventsClient.DeleteNewEventMonitoredItemCreatedAfterSubscriptionConnect();
+                m_eventsClient.DeleteEventMonitoredItemCreatedBeforeSubscriptionConnect();
+            }
+            return Task.CompletedTask;
+        }
+
+        private async Task EndAddNewEventsAfterConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient != null)
+            {
+                await m_eventsClient.Disconnect().ConfigureAwait(false);
+                m_eventsClient = null;
+            }
+        }
+
+        #endregion
+
         #region  ExecuteCommand Handlers for History
 
         private async Task EndHistory_ExecuteCommand(object sender, EventArgs e)
@@ -1095,7 +1347,7 @@ namespace SampleClient.StateMachine
 
         #endregion
 
-        #region  ExecuteCommand Handlers for MonitoredItem
+        #region  ExecuteCommand Handlers for MonitoredItem with connect
 
         private async Task StartMonitoredItem_ExecuteCommand(object sender, EventArgs e)
         {
@@ -1106,20 +1358,25 @@ namespace SampleClient.StateMachine
             }
         }
 
-        private Task CreateMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        private async Task CreateMonitoredItem_ExecuteCommand(object sender, EventArgs e)
         {
+            if (m_monitoredItemClient == null)
+            {
+                m_monitoredItemClient = new MonitoredItemClient(m_application);
+                await m_monitoredItemClient.Initialize().ConfigureAwait(false);
+            }
+
             if (m_monitoredItemClient != null)
             {
-                m_monitoredItemClient.CreateMonitoredItem();
+                m_monitoredItemClient.CreateMonitoredItems();
             }
-            return Task.CompletedTask;
         }
 
-        private Task DeleteMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        private Task DeleteMonitoredItems_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_monitoredItemClient != null)
             {
-                m_monitoredItemClient.DeleteMonitoredItem();
+                m_monitoredItemClient.DeleteMonitoredItems();
             }
             return Task.CompletedTask;
         }
@@ -1133,6 +1390,166 @@ namespace SampleClient.StateMachine
             }
         }
 
+        #endregion
+
+        #region  ExecuteCommand TransferSubscriptions
+        private Task TransferSubscriptions_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                m_monitoredItemClient.TransferSubscription();
+            }
+            return Task.CompletedTask;
+
+        }
+
+        private async Task TransferSubscriptionsAsync_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                await m_monitoredItemClient.TransferSubscriptionAsync().ConfigureAwait(false);
+            }
+        }
+
+        private async Task TransferSubscriptionSessionClosed_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                await m_monitoredItemClient.TransferSubscriptionSessionClosed().ConfigureAwait(false);
+            }
+        }
+
+        private Task SaveSubscriptionsForTransfer_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                m_monitoredItemClient.SaveSubscriptionsForTransfer();
+            }
+            return Task.CompletedTask;
+        }
+
+        private async Task LoadSubscriptionsForTransfer_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient == null)
+            {
+                m_monitoredItemClient = new MonitoredItemClient(m_application);
+                await m_monitoredItemClient.Initialize(withSubscription: false).ConfigureAwait(false);
+            }
+            await m_monitoredItemClient.LoadSubscriptionsForTransfer().ConfigureAwait(false);
+        }
+
+        private async Task TransferSubscriptionsWithUserId_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                await m_monitoredItemClient.TransferSubscriptionsWithUserId().ConfigureAwait(false);
+            }
+        }
+
+        private async Task TransferSubscriptionsWithCertificate_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                await m_monitoredItemClient.TransferSubscriptionsWithCertificate().ConfigureAwait(false);
+            }
+        }
+
+        private async Task TransferSubscriptionsWithCertificatePassword_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                await m_monitoredItemClient.TransferSubscriptionsWithCertificatePassword().ConfigureAwait(false);
+            }
+        }
+
+        private async Task TransferSubscriptionsWithSecurity_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                await m_monitoredItemClient.TransferSubscriptionsWithSecurity().ConfigureAwait(false);
+            }
+        }
+        #endregion
+
+        #region  ExecuteCommand Handlers for MonitoredItem without connect
+
+        private async Task StartMonitoredItemsWithoutConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient == null)
+            {
+                m_monitoredItemClient = new MonitoredItemClient(m_application);
+                await m_monitoredItemClient.Initialize().ConfigureAwait(false);
+            }
+        }
+
+        private Task CreateMonitoredItemWithoutConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                m_monitoredItemClient.CreateMonitoredItemsBeforeSubscriptionConnect();
+            }
+            return Task.CompletedTask;
+        }
+
+        private Task DeleteMonitoredItemsWithoutConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                m_monitoredItemClient.DeleteMonitoredItemsCreatedBeforeSubscriptionConnect();
+            }
+            return Task.CompletedTask;
+        }
+
+        private async Task EndMonitoredItemsWithoutConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                await m_monitoredItemClient.Disconnect().ConfigureAwait(false);
+                m_monitoredItemClient = null;
+            }
+        }
+        #endregion
+
+        #region  ExecuteCommand Handlers for MonitoredItem add new after connect
+
+        private async Task StartAddNewMonitoredItemsAfterConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient == null)
+            {
+                m_monitoredItemClient = new MonitoredItemClient(m_application);
+                await m_monitoredItemClient.Initialize().ConfigureAwait(false);
+            }
+        }
+
+        private Task CreateAddNewMonitoredItemsAfterConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                m_monitoredItemClient.CreateMonitoredItemsBeforeSubscriptionConnect();
+                m_monitoredItemClient.CreateNewMonitoredItemsAfterSubscriptionConnect();
+            }
+            return Task.CompletedTask;
+        }
+
+        private Task DeleteAddNewMonitoredItemsAfterConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                m_monitoredItemClient.DeleteNewMonitoredItemsCreatedAfterSubscriptionConnect();
+                m_monitoredItemClient.DeleteMonitoredItemsCreatedBeforeSubscriptionConnect();
+
+            }
+            return Task.CompletedTask;
+        }
+
+        private async Task EndAddNewMonitoredItemsAfterConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_monitoredItemClient != null)
+            {
+                await m_monitoredItemClient.Disconnect().ConfigureAwait(false);
+                m_monitoredItemClient = null;
+            }
+        }
         #endregion
 
         #region ExecuteCommand Handler for Method Calls
@@ -1151,7 +1568,7 @@ namespace SampleClient.StateMachine
             await methodCallClient.InitializeSession().ConfigureAwait(false);
 
             methodCallClient.Call();
-            
+
             //wait and close session
             Task.Delay(1000).Wait();
 

@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Opc.Ua;
 using Softing.Opc.Ua.Client;
@@ -34,6 +35,10 @@ namespace SampleClient.Samples
         private ClientSubscription m_subscription;
         private ClientMonitoredItem m_eventMonitoredItem;
         private ServerState m_currentServerState = ServerState.Unknown;
+
+        // "\\HistoricalDataAccess\DynamicHistoricalDataItems EventNotifier=SubscribeToEvents folder";
+        private readonly NodeId m_eventDoubleNodeId = new NodeId("ns=4;s=HistoricalDataAccess?DynamicHistoricalDataItems");
+        private ClientMonitoredItem m_eventMonitoredItemAddNew;
 
         #endregion
 
@@ -133,7 +138,7 @@ namespace SampleClient.Samples
             }
             if (m_subscription != null && m_subscription.CurrentState == State.Disconnected)
             {
-                Console.WriteLine("CreateMonitoredItem: The session is not connected!");
+                Console.WriteLine("CreateEventMonitoredItem: The session is not connected!");
                 return;
             }
             if (m_eventMonitoredItem != null)
@@ -148,7 +153,7 @@ namespace SampleClient.Samples
                 m_eventMonitoredItem = new ClientMonitoredItem(m_subscription, ObjectIds.Server, "Sample Event Monitored Item", null);
                 m_eventMonitoredItem.EventsReceived += EventMonitoredItem_EventsReceived;
 
-                Console.WriteLine("Event Monitored Item is created and with state {0}.", m_eventMonitoredItem.CurrentState);
+                Console.WriteLine("Event Monitored Item is created with state {0}.", m_eventMonitoredItem.CurrentState);
             }
             catch (Exception ex)
             {
@@ -192,6 +197,159 @@ namespace SampleClient.Samples
             }
         }
 
+        /// <summary>
+        /// Creates the event monitored item before subscription connect.
+        /// </summary>
+        public void CreateEventMonitoredItemBeforeSubscriptionConnect()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("The session is not initialized!");
+                return;
+            }
+            if (m_subscription != null && m_subscription.CurrentState == State.Disconnected)
+            {
+                Console.WriteLine("CreateEventMonitoredItemBeforeSubscriptionConnect: The session is not connected!");
+                return;
+            }
+            if (m_eventMonitoredItem != null)
+            {
+                Console.WriteLine("EventMonitoredItem is already created.");
+                return;
+            }
+
+            try
+            {
+                //ObjectIds.Server BrowsePath: Root\Objects\Server
+                m_eventMonitoredItem = new ClientMonitoredItem(m_subscription, ObjectIds.Server, "Sample Event Monitored Item", null, false);
+                m_eventMonitoredItem.EventsReceived += EventMonitoredItem_EventsReceived;
+
+                Console.WriteLine("Event Monitored Item is created with state {0}.", m_eventMonitoredItem.CurrentState);
+
+                m_subscription.ConnectAsync(true, true).ConfigureAwait(false);
+                Console.WriteLine("Subscription is connected.");
+
+                Thread.Sleep(1000);
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("CreateEventMonitoredItemBeforeSubscriptionConnect", ex);
+            }
+        }
+
+        /// <summary>
+        /// Deletes the event monitored item for a previous event monitor items that was not connected.
+        /// </summary>
+        public void DeleteEventMonitoredItemCreatedBeforeSubscriptionConnect()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("The session is not initialized!");
+                return;
+            }
+            if (m_subscription != null && m_subscription.CurrentState == State.Disconnected)
+            {
+                Console.WriteLine("DeleteEventMonitoredItemCreatedBeforeSubscriptionConnect: The session is not connected!");
+                return;
+            }
+            try
+            {
+                if (m_eventMonitoredItem != null)
+                {
+                    //delete event monitored item
+                    m_eventMonitoredItem.EventsReceived -= EventMonitoredItem_EventsReceived;
+                    Console.WriteLine("Event Monitored item: '{0}' unsubscribed from receiving event notifications.", m_eventMonitoredItem.DisplayName);
+
+                    m_subscription.DeleteItems(new List<ClientMonitoredItem>() { m_eventMonitoredItem });
+                    Console.WriteLine("Event Monitored item: '{0}' was deleted.", m_eventMonitoredItem.DisplayName);
+                    m_eventMonitoredItem = null;
+                }
+                else
+                {
+                    Console.WriteLine("There was no Event Monitored Item to be deleted.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("DeleteEventMonitoredItemCreatedBeforeSubscriptionConnect", ex);
+            }
+        }
+
+        /// <summary>
+        /// Creates new event monitored item on the active subscription that was already connected.
+        /// </summary>
+        internal void CreateNewEventMonitoredItemAfterSubscriptionConnect()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("The session is not initialized!");
+                return;
+            }
+            if (m_subscription != null && m_subscription.CurrentState == State.Disconnected)
+            {
+                Console.WriteLine("CreateNewEventMonitoredItemAfterSubscriptionConnect: The session is not connected!");
+                return;
+            }
+            if (m_eventMonitoredItemAddNew != null)
+            {
+                Console.WriteLine("EventMonitoredItem is already created.");
+                return;
+            }
+
+            try
+            {
+                // Double.NodeId BrowsePath: Root\Objects\HistoricalDataAccess\DynamicHistoricalDataItems\Double
+                m_eventMonitoredItemAddNew = new ClientMonitoredItem(m_subscription, m_eventDoubleNodeId, "Sample History Event Monitored Item", null, false);
+                m_eventMonitoredItemAddNew.EventsReceived += EventMonitoredItem_EventsReceived;
+
+                Console.WriteLine("Event Monitored Item is created with state {0}.", m_eventMonitoredItemAddNew.CurrentState);
+
+                m_subscription.ApplyMonitoredItemsChanges();
+                Console.WriteLine("Subscription was updated with new event monitor item added.");
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("CreateNewEventMonitoredItemAfterSubscriptionConnect", ex);
+            }
+        }
+
+        /// <summary>
+        /// Deletes the event monitored items on the subscription that was connected after all monitor items were previously added.
+        /// </summary>
+        internal void DeleteNewEventMonitoredItemCreatedAfterSubscriptionConnect()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("The session is not initialized!");
+                return;
+            }
+            if (m_subscription != null && m_subscription.CurrentState == State.Disconnected)
+            {
+                Console.WriteLine("DeleteNewEventMonitoredItemCreatedAfterSubscriptionConnect: The session is not connected!");
+                return;
+            }
+            try
+            {
+                if (m_eventMonitoredItemAddNew != null)
+                {
+                    //delete event monitored item
+                    m_eventMonitoredItemAddNew.EventsReceived -= EventMonitoredItem_EventsReceived;
+                    Console.WriteLine("Event Monitored item: '{0}' unsubscribed from receiving event notifications.", m_eventMonitoredItemAddNew.DisplayName);
+
+                    m_subscription.DeleteItems(new List<ClientMonitoredItem>() { m_eventMonitoredItemAddNew });
+                    Console.WriteLine("Event Monitored item: '{0}' was deleted.", m_eventMonitoredItemAddNew.DisplayName);
+                    m_eventMonitoredItemAddNew = null;
+                }
+                else
+                {
+                    Console.WriteLine("There was no Event Monitored Item to be deleted.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("DeleteNewEventMonitoredItemCreatedAfterSubscriptionConnect", ex);
+            }
+        }
         #endregion
 
         #region Event Handlers
