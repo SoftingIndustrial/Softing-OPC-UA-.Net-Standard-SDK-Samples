@@ -70,8 +70,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.PubSub" Version="1.5.374.126-beta" />
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Server" Version="1.5.374.126" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.PubSub" Version="1.5.375.457-beta" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Server" Version="1.5.375.457" />
     <PackageReference Include="Serilog" Version="3.1.1" />
     <PackageReference Include="Serilog.Expressions" Version="4.0.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
@@ -88,9 +88,15 @@
   </ItemGroup>
 
   <!--<ItemGroup >
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Bindings.Https" Version="1.5.374.126" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Bindings.Https" Version="1.5.375.457" />
   </ItemGroup>-->
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+    <Reference Include="Softing.Opc.Ua.Server">
+      <HintPath>..\..\..\..\bin\net9.0\Softing.Opc.Ua.Server.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
 	<Reference Include="Softing.Opc.Ua.Server">
 		<HintPath>..\..\..\..\bin\net8.0\Softing.Opc.Ua.Server.dll</HintPath>

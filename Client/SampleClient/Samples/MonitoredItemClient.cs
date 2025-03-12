@@ -108,6 +108,7 @@ namespace SampleClient.Samples
                 {
                     m_session.DeleteSubscriptionsOnClose = false;
                     m_session.RepublishAfterTransfer = true;
+                    m_session.TransferSubscriptionsOnReconnect = true;
 
                     //create the subscription
                     m_subscription = new ClientSubscription(m_session, SubscriptionName);
@@ -278,7 +279,7 @@ namespace SampleClient.Samples
             if (m_miCurrentTime == null || m_miInt64 == null)
             {
                 Console.WriteLine("Monitored items are not created.");
-                if (m_transfer_session.CurrentState == State.Active)
+                if (m_transfer_session?.CurrentState == State.Active)
                 {
                     List<ClientMonitoredItem> monitoredItems = m_transfer_session.Subscriptions.SelectMany(subscription => subscription.MonitoredItems).ToList();
 
@@ -624,6 +625,7 @@ namespace SampleClient.Samples
 
                 await m_transfer_session.ConnectAsync(false, false).ConfigureAwait(false);
 
+                // support transfer
                 m_transfer_session.RepublishAfterTransfer = true;
 
                 Func<List<ClientSubscription>> createSubscriptionList = () => new List<ClientSubscription>();
@@ -1028,7 +1030,7 @@ namespace SampleClient.Samples
 
                     ClientSession session = CreateSession(
                         sessionName, MessageSecurityMode.None, SecurityPolicy.None, certificateUserIdentity);
-                    
+
                     session.SessionName = sessionName;
 
 
@@ -1220,7 +1222,7 @@ namespace SampleClient.Samples
             {
                 Console.WriteLine(" {0} Received data value change for '{1}':", dataChangeNotification.SequenceNo, dataChangeNotification.MonitoredItem.DisplayName);
                 Console.WriteLine("    Value : {0} ", dataChangeNotification.Value);
-                Console.WriteLine("    SessionId : {0} ", dataChangeNotification.MonitoredItem.Subscription.Session.Id);
+                Console.WriteLine("    SessionId : {0} ", dataChangeNotification.MonitoredItem.Subscription.Session?.Id);
                 Console.WriteLine("    SubscriptionId : {0} ", dataChangeNotification.MonitoredItem.Subscription.Id);
                 Console.WriteLine("    StatusCode : {0} ", dataChangeNotification.Value.StatusCode);
                 Console.WriteLine("    ServerTimestamp : {0:hh:mm:ss.fff tt}", dataChangeNotification.Value.ServerTimestamp.ToLocalTime());

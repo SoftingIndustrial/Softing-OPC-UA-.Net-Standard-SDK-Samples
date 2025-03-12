@@ -34,6 +34,9 @@ namespace SampleClient.Samples
         private ClientSession m_session;
         private ClientSubscription m_subscription;
         private ClientMonitoredItem m_eventMonitoredItem;
+        private ClientMonitoredItem m_doubleFilteringEventMonitoredItem;
+        private static readonly NodeId m_doubleFilteringEventMonitoredItemNodeId = new NodeId("ns=10;i=1");
+        private static readonly NodeId m_doubleFilteringEventTypeNodeId = new NodeId("ns=10;s=106");
         private ServerState m_currentServerState = ServerState.Unknown;
 
         // "\\HistoricalDataAccess\DynamicHistoricalDataItems EventNotifier=SubscribeToEvents folder";
@@ -350,6 +353,101 @@ namespace SampleClient.Samples
                 Program.PrintException("DeleteNewEventMonitoredItemCreatedAfterSubscriptionConnect", ex);
             }
         }
+
+        /// <summary>
+        /// Creates the double filtering event monitored item.
+        /// </summary>
+        public void CreateDoubleFilteringEventMonitoredItem()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("The session is not initialized!");
+                return;
+            }
+            if (m_subscription != null && m_subscription.CurrentState == State.Disconnected)
+            {
+                Console.WriteLine("CreateEventMonitoredItem: The session is not connected!");
+                return;
+            }
+            if (m_doubleFilteringEventMonitoredItem != null)
+            {
+                Console.WriteLine("DoubleFilteringEventMonitoredItem is already created.");
+                return;
+            }
+
+            try
+            {
+                // Configure the event filter
+                EventFilterEx filter = new EventFilterEx();
+
+                // specify the required fields of the events
+                filter.AddSelectClause(ObjectTypes.BaseEventType, String.Empty, Attributes.NodeId);
+                filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.Time);
+                filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.ReceiveTime);
+                filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.Severity);
+                filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.EventType);
+                filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.Message);
+                filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.SourceNode);
+                filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.EventId);
+                filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.SourceName);
+
+                m_doubleFilteringEventMonitoredItem = new ClientMonitoredItem(m_subscription, m_doubleFilteringEventMonitoredItemNodeId, "Double Filtering Sample Event Monitored Item", filter);
+                m_doubleFilteringEventMonitoredItem.EventsReceived += EventDoubleFilteringMonitoredItem_EventsReceived;
+
+                int selectClausePos = 0;
+                // based on the entry log above first time is added the clause 'DoubleFiltering' with namespaceindex = 10 followed by 'Count' property
+                filter.AddSelectClause(m_doubleFilteringEventTypeNodeId, new QualifiedName("DoubleFiltering", 10));
+                selectClausePos = filter.SelectClauses.Count - 1;
+                filter.SelectOperandList[selectClausePos].BrowsePath.Add(new QualifiedName("Count", 10));
+
+                m_doubleFilteringEventMonitoredItem.Filter = filter;
+
+                // this is a must
+                m_doubleFilteringEventMonitoredItem.ApplyFilter();
+
+                Console.WriteLine("Double filtering Event Monitored Item is created with state {0}.", m_doubleFilteringEventMonitoredItem.CurrentState);
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("CreateDoubleFilteringEventMonitoredItem", ex);
+            }
+        }
+
+        /// <summary>
+        /// Deletes the event monitored item.
+        /// </summary>
+        public void DeleteDoubleFilteringEventMonitoredItem()
+        {
+            if (m_session == null)
+            {
+                Console.WriteLine("The session is not initialized!");
+                return;
+            }
+            if (m_subscription != null && m_subscription.CurrentState == State.Disconnected)
+            {
+                Console.WriteLine("DeleteDoubleFilteringEventMonitoredItem: The session is not connected!");
+                return;
+            }
+            try
+            {
+                if (m_doubleFilteringEventMonitoredItem != null)
+                {
+                    //delete event monitored item
+                    m_doubleFilteringEventMonitoredItem.EventsReceived -= EventDoubleFilteringMonitoredItem_EventsReceived;
+                    m_doubleFilteringEventMonitoredItem.Delete();
+                    m_doubleFilteringEventMonitoredItem = null;
+                    Console.WriteLine("Double filtering Event Monitored Item was disconnected and deleted.");
+                }
+                else
+                {
+                    Console.WriteLine("There was no Event Monitored Item to be deleted.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("DeleteDoubleFilteringEventMonitoredItem", ex);
+            }
+        }
         #endregion
 
         #region Event Handlers
@@ -381,6 +479,31 @@ namespace SampleClient.Samples
 
                 StringBuilder displayNotification = new StringBuilder();
                 IList<SelectOperandEx> listOfOperands = ((EventFilterEx)m_eventMonitoredItem.Filter).SelectOperandList;
+                for (int i = 0; i < listOfOperands.Count; i++)
+                {
+                    displayNotification.AppendFormat("{0}:{1}:{2}\n",
+                        listOfOperands[i].PropertyName.NamespaceIndex,
+                        listOfOperands[i].PropertyName.Name,
+                        eventNotification.EventFields[i]);
+                }
+
+                Console.WriteLine(displayNotification);
+            }
+        }
+
+        /// <summary>
+        /// Handles the Notification event of the doubleFilteringEventMonitoredItem.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EventDoubleFilteringMonitoredItem_EventsReceived(object sender, EventsNotificationEventArgs e)
+        {
+            foreach (var eventNotification in e.EventNotifications)
+            {
+                Console.WriteLine("Double Filtering Event notification received for {0}.\n", eventNotification.MonitoredItem.DisplayName);
+
+                StringBuilder displayNotification = new StringBuilder();
+                IList<SelectOperandEx> listOfOperands = ((EventFilterEx)m_doubleFilteringEventMonitoredItem.Filter).SelectOperandList;
                 for (int i = 0; i < listOfOperands.Count; i++)
                 {
                     displayNotification.AppendFormat("{0}:{1}:{2}\n",

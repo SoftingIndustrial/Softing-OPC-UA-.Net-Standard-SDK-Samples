@@ -96,7 +96,7 @@ namespace SampleServer.NodeSetImport
                         //create instance of variable node with data type from imported nodeset dictionary
                         FolderState referenceServerVariables = CreateFolder(nodeSetImportNode, "Imported Types Variables");
 
-                        var dataTypeRefrigeratorStatus = PredefinedNodes.Values.FirstOrDefault(x => x.BrowseName.Name == "RefrigeratorStatusDataType");
+                        var dataTypeRefrigeratorStatus = PredefinedNodes.Values.FirstOrDefault(x => x.BrowseName.Name == "RefrigeratorStatusDataType" && x.NodeClass == NodeClass.DataType);
                        
                         StructuredValue refrigeratorStatusValue = GetDefaultValueForDatatype(dataTypeRefrigeratorStatus.NodeId) as StructuredValue;
                         refrigeratorStatusValue["MotorTemperature"] = 5.6;

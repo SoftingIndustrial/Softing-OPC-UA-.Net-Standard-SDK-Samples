@@ -21,7 +21,6 @@ using Serilog.Templates;
 using static Opc.Ua.Utils;
 using Microsoft.Extensions.Logging;
 using Softing.Opc.Ua.Configuration;
-using System.IO;
 using System.Linq;
 
 namespace SampleServer
@@ -363,13 +362,27 @@ namespace SampleServer
             List<string> activeListenersUris = sampleServer.GetActiveListenersUris();
             if (activeListenersUris?.Count > 0)
             {
-                Console.WriteLine("\nServer Addresses:");
+                Console.WriteLine("\nServer Addresses: ");
                 for (int i = 0; i < sampleServer.Configuration.ServerConfiguration.BaseAddresses.Count; i++)
                 {
                     if (activeListenersUris.Contains(sampleServer.Configuration.ServerConfiguration.BaseAddresses[i]))
                     {
-                        // the configured base address is available
-                        Console.WriteLine(sampleServer.Configuration.ServerConfiguration.BaseAddresses[i]);
+                        //if(!string.IsNullOrEmpty(sampleServer.Configuration.SecurityConfiguration.ApplicationCertificate.CertificateTypeString))
+                        //{
+                        //    // the configured base address is available
+                        //    Console.WriteLine("{0} using application certificate type: {1}", 
+                        //        sampleServer.Configuration.ServerConfiguration.BaseAddresses[i],
+                        //        sampleServer.Configuration.SecurityConfiguration.ApplicationCertificate.CertificateTypeString);
+                        //}
+                        Console.WriteLine("{0} using application certificate types: ", sampleServer.Configuration.ServerConfiguration.BaseAddresses[i]);
+                        if (sampleServer.Configuration.SecurityConfiguration.ApplicationCertificates != null)
+                        {
+                            foreach (CertificateIdentifier certificateIdentifier in sampleServer.Configuration.SecurityConfiguration.ApplicationCertificates)
+                            {
+                                // the configured used application certificates
+                                Console.WriteLine("\t {0}", certificateIdentifier.CertificateTypeString);
+                            }
+                        }
                     }
                     else
                     {

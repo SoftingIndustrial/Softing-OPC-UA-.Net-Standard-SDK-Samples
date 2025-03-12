@@ -6,12 +6,12 @@
 	<!-- Note: .NET Standard 2.0 deprecated for 1.5.374, removed netstandard2.0 from any target. -->
     <When  Condition="'$(VisualStudioVersion)' == '17.0'">
       <PropertyGroup>
-        <AppTargetFrameworks>net8.0;net6.0;netcoreapp3.1;net48</AppTargetFrameworks>
-        <AppTargetFramework>net8.0;net6.0</AppTargetFramework>
-        <TestsTargetFrameworks>net48;netcoreapp3.1;net6.0;net8.0</TestsTargetFrameworks>
-        <LibTargetFrameworks>net48;netstandard2.1;net6.0;net8.0</LibTargetFrameworks>
-        <LibxTargetFrameworks>net48;netstandard2.1;net6.0;net8.0</LibxTargetFrameworks>
-        <HttpsTargetFrameworks>net48;netcoreapp3.1;net6.0;net8.0</HttpsTargetFrameworks>
+        <AppTargetFrameworks>net9.0;net8.0;net6.0;netcoreapp3.1;net48</AppTargetFrameworks>
+        <AppTargetFramework>net9.0;net8.0;net6.0</AppTargetFramework>
+        <TestsTargetFrameworks>net48;netcoreapp3.1;net6.0;net8.0;net9.0</TestsTargetFrameworks>
+        <LibTargetFrameworks>net48;netstandard2.1;net6.0;net8.0;net9.0</LibTargetFrameworks>
+        <LibxTargetFrameworks>net48;netstandard2.1;net6.0;net8.0;net9.0</LibxTargetFrameworks>
+        <HttpsTargetFrameworks>net48;netcoreapp3.1;net6.0;net8.0;net9.0</HttpsTargetFrameworks>
       </PropertyGroup>
     </When>
     <!-- Visual Studio 2019, supports .NET Framework 4.8 and .NET Core 3.1 -->

@@ -10,11 +10,45 @@
 	<ApplicationType>Server_0</ApplicationType>
 	<SecurityConfiguration>
 		<!-- Where the application instance certificate is stored -->
-		<ApplicationCertificate>
+		<!--<ApplicationCertificate>
 			<StoreType>Directory</StoreType>
 			<StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
 			<SubjectName>SoftingOpcUaSampleServer</SubjectName>
-		</ApplicationCertificate>
+		</ApplicationCertificate>-->
+
+		<ApplicationCertificates>
+			<CertificateIdentifier>
+				<StoreType>Directory</StoreType>
+				<StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
+				<SubjectName>SoftingOpcUaSampleServer</SubjectName>
+				<CertificateTypeString>RsaSha256</CertificateTypeString>
+			</CertificateIdentifier>
+			<CertificateIdentifier>
+				<StoreType>Directory</StoreType>
+				<StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
+				<SubjectName>SoftingOpcUaSampleServer</SubjectName>
+				<CertificateTypeString>NistP256</CertificateTypeString>
+			</CertificateIdentifier>
+			<CertificateIdentifier>
+				<StoreType>Directory</StoreType>
+				<StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
+				<SubjectName>SoftingOpcUaSampleServer</SubjectName>
+				<CertificateTypeString>NistP384</CertificateTypeString>
+			</CertificateIdentifier>
+			<CertificateIdentifier>
+				<StoreType>Directory</StoreType>
+				<StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
+				<SubjectName>SoftingOpcUaSampleServer</SubjectName>
+				<CertificateTypeString>BrainpoolP256r1</CertificateTypeString>
+			</CertificateIdentifier>
+			<CertificateIdentifier>
+				<StoreType>Directory</StoreType>
+				<StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
+				<SubjectName>SoftingOpcUaSampleServer</SubjectName>
+				<CertificateTypeString>BrainpoolP384r1</CertificateTypeString>
+			</CertificateIdentifier>
+		</ApplicationCertificates>
+		
 		<!-- Where the issuer certificate are stored (certificate authorities) -->
 		<TrustedIssuerCertificates>
 			<StoreType>Directory</StoreType>
@@ -71,8 +105,8 @@
 	</TransportQuotas>
 	<ServerConfiguration>
 		<BaseAddresses>
-      <ua:String>opc.tcp://localhost:61510/SampleServer</ua:String>
-      <!--<ua:String>https://localhost:61511/SampleServer/</ua:String>-->
+		  <ua:String>opc.tcp://localhost:61510/SampleServer</ua:String>
+		  <!--<ua:String>https://localhost:61511/SampleServer/</ua:String>-->
 		</BaseAddresses>
 		<SecurityPolicies>
 			<ServerSecurityPolicy>
@@ -105,6 +139,38 @@
 				<SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#Aes256_Sha256_RsaPss</SecurityPolicyUri>
 				<SecurityLevel>5</SecurityLevel>
 			</ServerSecurityPolicy>
+			<ServerSecurityPolicy>
+				<SecurityMode>Sign_2</SecurityMode>
+				<SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_nistP256</SecurityPolicyUri>
+			</ServerSecurityPolicy>
+			<ServerSecurityPolicy>
+				<SecurityMode>SignAndEncrypt_3</SecurityMode>
+				<SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_nistP256</SecurityPolicyUri>
+			</ServerSecurityPolicy>
+			<ServerSecurityPolicy>
+				<SecurityMode>Sign_2</SecurityMode>
+				<SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_nistP384</SecurityPolicyUri>
+			</ServerSecurityPolicy>
+			<ServerSecurityPolicy>
+				<SecurityMode>SignAndEncrypt_3</SecurityMode>
+				<SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_nistP384</SecurityPolicyUri>
+			</ServerSecurityPolicy>
+			<ServerSecurityPolicy>
+				<SecurityMode>Sign_2</SecurityMode>
+				<SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_brainpoolP256r1</SecurityPolicyUri>
+			</ServerSecurityPolicy>
+			<ServerSecurityPolicy>
+				<SecurityMode>SignAndEncrypt_3</SecurityMode>
+				<SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_brainpoolP256r1</SecurityPolicyUri>
+			</ServerSecurityPolicy>
+			<ServerSecurityPolicy>
+				<SecurityMode>Sign_2</SecurityMode>
+				<SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_brainpoolP384r1</SecurityPolicyUri>
+			</ServerSecurityPolicy>
+			<ServerSecurityPolicy>
+				<SecurityMode>SignAndEncrypt_3</SecurityMode>
+				<SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_brainpoolP384r1</SecurityPolicyUri>
+			</ServerSecurityPolicy>
 		</SecurityPolicies>
 		<UserTokenPolicies>
 			<!-- Allows anonymous users -->
@@ -118,11 +184,28 @@
 				<!-- passwords must be encrypted - this specifies what algorithm to use -->
 				<ua:SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256</ua:SecurityPolicyUri>
 			</ua:UserTokenPolicy>
+			<!-- Allows username/password -->
+			<ua:UserTokenPolicy>
+				<ua:TokenType>UserName_1</ua:TokenType>
+				<!-- passwords must be encrypted - this specifies what algorithm to use -->
+				<ua:SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_nistP256</ua:SecurityPolicyUri>
+				<!--<ua:SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_nistP384</ua:SecurityPolicyUri>-->
+				<!--<ua:SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_brainpoolP256r1</ua:SecurityPolicyUri>-->
+				<!--<ua:SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_brainpoolP384r1</ua:SecurityPolicyUri>-->
+			</ua:UserTokenPolicy>
 			<!-- Allows user certificates -->
 			<ua:UserTokenPolicy>
 				<ua:TokenType>Certificate_2</ua:TokenType>
 				<!-- certificate possession must be proven with a digital signature - this specifies what algorithm to use -->
 				<ua:SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256</ua:SecurityPolicyUri>
+			</ua:UserTokenPolicy>
+			<ua:UserTokenPolicy>
+				<ua:TokenType>Certificate_2</ua:TokenType>
+				<!-- certificate possession must be proven with a digital signature - this specifies what algorithm to use -->
+				<ua:SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_nistP256</ua:SecurityPolicyUri>
+				<!--<ua:SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_nistP384</ua:SecurityPolicyUri>-->
+				<!--<ua:SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_brainpoolP256r1</ua:SecurityPolicyUri>-->
+				<!--<ua:SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#ECC_brainpoolP384r1</ua:SecurityPolicyUri>-->
 			</ua:UserTokenPolicy>
 		</UserTokenPolicies>
 		<DiagnosticsEnabled>true</DiagnosticsEnabled>

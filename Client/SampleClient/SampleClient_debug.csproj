@@ -40,6 +40,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="Files\ECC\opcuser_nistP256.pfx">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="Files\opcuser.pfx">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>

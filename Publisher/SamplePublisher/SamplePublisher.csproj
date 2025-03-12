@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.PubSub" Version="1.5.374.126-beta" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.PubSub" Version="1.5.375.457-beta" />
   </ItemGroup>
 
   <ItemGroup>

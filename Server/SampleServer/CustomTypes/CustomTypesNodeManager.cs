@@ -16,7 +16,7 @@ using Softing.Opc.Ua.Server.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
 
 namespace SampleServer.CustomTypes
 {
@@ -30,10 +30,15 @@ namespace SampleServer.CustomTypes
         private FolderState m_rootCustomTypesFolder;
         private FolderState m_arraysFolder;
         private BaseEventState m_customEventInstance;
+        private BaseEventState m_doubleFilterEventInstance;
 
         private NodeId m_vehicleDataTypeNodeId;
         private NodeId m_customEventTypeNodeId;
+
+        private NodeId m_doubleFilteringEventTypeNodeId;
         private int m_customEventCounter = 0;
+        private int m_doubleFilteringEventCounter = 0;
+        private Timer m_doubleFilteringUpdateEventTimer;
         #endregion
 
         #region Constructors
@@ -432,6 +437,34 @@ namespace SampleServer.CustomTypes
                 // create an instance of a custom event type
                 m_customEventInstance = CreateObjectFromType(m_rootCustomTypesFolder, "CustomEventInstance", m_customEventTypeNodeId) as BaseEventState;
 
+                // create double filtering custom event type
+                BaseObjectTypeState doubleFilteringEventType = CreateObjectType(ObjectTypeIds.BaseEventType, "DoubleFilteringEventType", false);
+                // remember CustomEventType id
+                m_doubleFilteringEventTypeNodeId = doubleFilteringEventType.NodeId;
+                doubleFilteringEventType.Description = "Double Filtering Custom EventType with one property";
+
+                // Create an object type for double filtering
+                BaseObjectTypeState doubleFilteringObjectType = CreateObjectType(ObjectTypeIds.BaseObjectType, "DoubleFilteringObjectType", true);
+
+                // Add a property to the new type that will be (Second filter name)
+                propertyState = CreateProperty(doubleFilteringObjectType, "Count", DataTypeIds.Int32);
+                // for properties that need to be created on instances of type the modelling rule has to be specified
+                propertyState.ModellingRuleId = Objects.ModellingRule_Mandatory;
+
+                // create the object from type with a name that will be (First filter name)
+                BaseObjectState doubleFilteringState = CreateObjectFromType(doubleFilteringObjectType, "DoubleFiltering", doubleFilteringObjectType.NodeId);
+                doubleFilteringEventType.AddChild(doubleFilteringState);
+
+                // create method for raising custom event of d\custom defined type
+                MethodState raiseDoubleFilteringEventMethodInstance = CreateMethod(m_rootCustomTypesFolder, "RaiseDoubleFilteringEvent", null, null, RaiseDoubleFilteringEventOnCallHandler);
+
+                // create an instance of a custom event type
+                m_doubleFilterEventInstance = CreateObjectFromType(m_rootCustomTypesFolder, "DoubleFilteringEventInstance", m_doubleFilteringEventTypeNodeId) as BaseEventState;
+                m_doubleFilterEventInstance.AddChild(doubleFilteringState);
+                // m_doubleFilterEventInstance.EventNotifier |= EventNotifiers.SubscribeToEvents;
+
+                m_doubleFilteringUpdateEventTimer = new Timer(new TimerCallback(OnDoubleFilteringEventValuesUpdate), null, 5000, 5000);
+
                 #endregion
             }
         }
@@ -533,6 +566,88 @@ namespace SampleServer.CustomTypes
             return new ServiceResult(StatusCodes.BadNodeIdInvalid);
         }
 
+        /// <summary>
+        /// Hander for RaiseDoubleFilteringEvent method
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="method"></param>
+        /// <param name="inputArguments"></param>
+        /// <param name="outputArguments"></param>
+        /// <returns></returns>
+        private ServiceResult RaiseDoubleFilteringEventOnCallHandler(ISystemContext context, MethodState method, IList<object> inputArguments, IList<object> outputArguments)
+        {
+            if (m_doubleFilterEventInstance != null)
+            {
+                // Set custom properties
+                BaseObjectState doubleFilteringObject = m_doubleFilterEventInstance.FindChildBySymbolicName(SystemContext, "DoubleFiltering") as BaseObjectState;
+                if (doubleFilteringObject != null)
+                {
+                    BaseVariableState countVariable = doubleFilteringObject.FindChildBySymbolicName(SystemContext, "Count") as BaseVariableState;
+                    if (countVariable != null)
+                    {
+                        countVariable.Value = ++m_doubleFilteringEventCounter;
+                    }
+                }
+
+                LocalizedText eventMessage = new LocalizedText($"RaiseDoubleFilteringEvent method changed DoubleFiltering.Count to {m_doubleFilteringEventCounter}");
+                ReportEvent(m_rootCustomTypesFolder, m_doubleFilterEventInstance, eventMessage, EventSeverity.Medium);
+
+                return new ServiceResult(StatusCodes.Good);
+            }
+
+            return new ServiceResult(StatusCodes.BadNodeIdInvalid);
+        }
+
+        /// <summary>
+        /// Generate new value in provided bounds
+        /// </summary>
+        /// <param name="minimum"></param>
+        /// <param name="maximum"></param>
+        /// <returns></returns>
+        private int GetNewValue(int minimum, int maximum)
+        {
+            Random random = new Random();
+            return random.Next(minimum, maximum);
+        }
+
+        /// <summary>
+        /// Update double filtering event values
+        /// </summary>
+        /// <param name="state"></param>
+        private void OnDoubleFilteringEventValuesUpdate(object state)
+        {
+            try
+            {
+                lock (Lock)
+                {
+
+                    int doubleFilterCounter = 0;
+                    if (m_doubleFilterEventInstance != null)
+                    {
+                        // Set custom properties
+                        BaseObjectState doubleFilteringObject = m_doubleFilterEventInstance.FindChildBySymbolicName(SystemContext, "DoubleFiltering") as BaseObjectState;
+                        if (doubleFilteringObject != null)
+                        {
+                            BaseVariableState countVariable = doubleFilteringObject.FindChildBySymbolicName(SystemContext, "Count") as BaseVariableState;
+                            if (countVariable != null)
+                            {
+                                countVariable.Value = GetNewValue(0, 100);
+                                doubleFilterCounter = Convert.ToInt32(countVariable.Value);
+                            }
+                        }
+
+                        LocalizedText eventMessage = new LocalizedText($"DoubleFiltering.Count changed to {doubleFilterCounter}");
+                        ReportEvent(m_rootCustomTypesFolder, m_doubleFilterEventInstance, eventMessage, EventSeverity.Medium);
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Utils.Trace(e, "CustomTypes.CustomTypesNodeManager.OnDoubleFilteringEventValuesUpdate: Unexpected error doing double filtering event update.");
+            }
+
+        }
         #endregion
     }
 }

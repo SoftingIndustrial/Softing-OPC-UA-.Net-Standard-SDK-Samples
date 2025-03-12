@@ -25,6 +25,11 @@ namespace SampleClient.Samples
     /// </summary>
     public class ConnectClient
     {
+        /// <summary>
+        /// The default reconnect period in ms.
+        /// </summary>
+        public const int DefaultReconnectPeriod = 10000;
+
         #region Private Fields
 
         private readonly UaApplication m_application;
@@ -71,10 +76,10 @@ namespace SampleClient.Samples
             string endpointUrl = Program.ServerUrl;
 
             var session = m_application.CreateSession(
-                discoveryUrl, 
+                discoveryUrl,
                 endpointUrl,
                 MessageSecurityMode.None,
-                SecurityPolicy.None, 
+                SecurityPolicy.None,
                 MessageEncoding.Binary,
                 new UserIdentity(),
                 null);
@@ -137,6 +142,99 @@ namespace SampleClient.Samples
                     // create the session object.
                     using (ClientSession session = CreateSession("UaBinaryUserCertificateSession", Program.ServerUrl,
                         MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, certificateUserIdentity))
+                    {
+                        await ConnectTest(session).ConfigureAwait(false);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Cannot load certificate from '{0}'", certificateFilePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.PrintException("CreateOpcTcpSessionWithCertificate", ex);
+            }
+        }
+
+        /// <summary>
+        /// Creates and connects a session on opc.tcp protocol with user identity and ECC.
+        /// </summary>
+        /// <param name="securityPolicy"></param>
+        /// <returns></returns>
+        public async Task CreateOpcTcpSessionWithUserIdUsingECC(SecurityPolicy securityPolicy)
+        {
+            bool isECCSupported = false;
+            switch (securityPolicy)
+            {
+                case SecurityPolicy.ECC_nistP256:
+                case SecurityPolicy.ECC_nistP384:
+                case SecurityPolicy.ECC_brainpoolP256r1:
+                case SecurityPolicy.ECC_brainpoolP384r1:
+                    isECCSupported = true;
+                    break;
+            }
+
+            if (!isECCSupported)
+            {
+                Console.WriteLine("The user certificate file with specified ECC security policy ('{0}') not supported.", securityPolicy);
+                return;
+            }
+
+            // create the session object.
+            using (ClientSession session = CreateSession("UaBinaryUserIdSession", Program.ServerUrl,
+                MessageSecurityMode.SignAndEncrypt, securityPolicy, MessageEncoding.Binary, new UserIdentity("usr", "pwd")))
+            {
+                await ConnectTest(session).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Creates and connects a session on opc.tcp protocol with no security and a certificate user identity using ECC.
+        /// </summary>
+        public async Task CreateOpcTcpSessionWithCertificateUsingECC(SecurityPolicy securityPolicy)
+        {
+            try
+            {
+                bool isECCSupported = false;
+                switch (securityPolicy)
+                {
+                    case SecurityPolicy.ECC_nistP256:
+                    case SecurityPolicy.ECC_nistP384:
+                    case SecurityPolicy.ECC_brainpoolP256r1:
+                    case SecurityPolicy.ECC_brainpoolP384r1:
+                        isECCSupported = true;
+                        break;
+                }
+
+                if (!isECCSupported)
+                {
+                    Console.WriteLine("The user certificate file with specified ECC security policy ('{0}') not supported.", securityPolicy);
+                    return;
+                }
+
+                // use the opcuser.pfx certificate file located in Files folder
+                string certificateFilePath = Path.Combine(@"Files\ECC", "opcuser_nistP256.pfx");
+                if (!File.Exists(certificateFilePath))
+                {
+                    Console.WriteLine("The user certificate file is missing ('{0}').", certificateFilePath);
+                    return;
+                }
+                // load the certificate from file
+                X509Certificate2 certificate = new X509Certificate2(certificateFilePath,
+                               null as string,
+                               X509KeyStorageFlags.EphemeralKeySet | X509KeyStorageFlags.Exportable);
+
+                if (certificate != null)
+                {
+                    // create UserIdentity from certificate
+                    UserIdentity certificateUserIdentity = new UserIdentity(certificate);
+
+
+                    Console.WriteLine("\r\nCreate session using certificate located at '{0}'", certificateFilePath);
+                    // create the session object.
+                    using (ClientSession session = CreateSession("UaBinaryUserCertificateSession", Program.ServerUrl,
+                        MessageSecurityMode.SignAndEncrypt, securityPolicy, MessageEncoding.Binary, certificateUserIdentity))
                     {
                         await ConnectTest(session).ConfigureAwait(false);
                     }
@@ -283,6 +381,25 @@ namespace SampleClient.Samples
                 Program.PrintException("ConnectClient.CreateSessionUsingDiscovery", ex);
             }
         }
+
+        /// <summary>
+        /// Create session, Connect and Reconnect using SessionReconnectHandler
+        /// </summary>
+        /// <returns></returns>
+        public async Task ConnectAndReconnectUsingSessionReconnectHandler()
+        {
+            ClientSession session = CreateSession("SessionReconnectHandler", Program.ServerUrl,
+                MessageSecurityMode.None, SecurityPolicy.None, MessageEncoding.Binary, new UserIdentity());
+
+            ClientSession.CurrentReconnectMode = ReconnectMode.SessionReconnectHandler;
+
+            session.ReconnectPeriod = DefaultReconnectPeriod;
+
+            Console.WriteLine("Connecting session {0}...", session.SessionName);
+            await session.ConnectAsync(false, true).ConfigureAwait(false);
+            Console.WriteLine("Session state = {0}. Success!", session.CurrentState);
+        }
+
         #endregion
 
         #region Private Helper Methods
@@ -371,6 +488,8 @@ namespace SampleClient.Samples
         {
             try
             {
+                ClientSession.CurrentReconnectMode = ReconnectMode.LegacyImplementation;
+
                 // Attempt to connect to server.
                 Console.WriteLine("Connecting session {0}...", session.SessionName);
                 await session.ConnectAsync(false, true).ConfigureAwait(false);

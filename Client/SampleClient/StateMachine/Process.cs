@@ -180,10 +180,37 @@ namespace SampleClient.StateMachine
             StateTransition startDCClient = new StateTransition(State.Main, Command.DiscoveryConnect, "1", "Enter Connect/Reverse Connect/Discovery/GDS Menu");
             m_transitions.Add(startDCClient, State.DiscoveryConnectGds);
 
+            //add Connect menu item
+            StateTransition connectMenuSample = new StateTransition(State.DiscoveryConnectGds, Command.ConnectSample, "1", "Enter Connect Sample Menu");
+            m_transitions.Add(connectMenuSample, State.Connects);
+
             //add connect menu item
-            StateTransition connectSample = new StateTransition(State.DiscoveryConnectGds, Command.ConnectSample, "1", "Execute Connect Sample");
+            StateTransition connectSample = new StateTransition(State.Connects, Command.ConnectSampleRSA, "1", "Execute Connect Sample using RSA");
             connectSample.ExecuteCommand += ConnectSample_ExecuteCommand;
-            m_transitions.Add(connectSample, State.DiscoveryConnectGds);
+            m_transitions.Add(connectSample, State.Connects);
+
+            //add ECC NistP256 connect menu item
+            StateTransition connectSampleEccNistP256 = new StateTransition(State.Connects, Command.ConnectSampleECCNistP256, "2", "Execute Connect Sample using ECC NistP256");
+            connectSampleEccNistP256.ExecuteCommand += ConnectSample_ECC_NistP256_ExecuteCommand;
+            m_transitions.Add(connectSampleEccNistP256, State.Connects);
+
+            //add ECC NistP384 connect menu item
+            StateTransition connectSampleEccNistP384 = new StateTransition(State.Connects, Command.ConnectSampleECCNistP384, "3", "Execute Connect Sample using ECC NistP384");
+            connectSampleEccNistP384.ExecuteCommand += ConnectSample_ECC_NistP384_ExecuteCommand;
+            m_transitions.Add(connectSampleEccNistP384, State.Connects);
+
+            //add ECC BrainpoolP256r1 connect menu item
+            StateTransition connectSampleEccBrainpoolP256r1 = new StateTransition(State.Connects, Command.ConnectSampleECCBrainpoolP256r1, "4", "Execute Connect Sample using ECC BrainpoolP256r1");
+            connectSampleEccBrainpoolP256r1.ExecuteCommand += ConnectSample_ECC_BrainpoolP256r1_ExecuteCommand;
+            m_transitions.Add(connectSampleEccBrainpoolP256r1, State.Connects);
+
+            //add ECC BrainpoolP384r1 connect menu item
+            StateTransition connectSampleEccBrainpoolP384r1 = new StateTransition(State.Connects, Command.ConnectSampleECCBrainpoolP384r1, "5", "Execute Connect Sample using ECC BrainpoolP384r1");
+            connectSampleEccBrainpoolP384r1.ExecuteCommand += ConnectSample_ECC_BrainpoolP384r1_ExecuteCommand;
+            m_transitions.Add(connectSampleEccBrainpoolP384r1, State.Connects);
+
+            StateTransition endConnectSample = new StateTransition(State.Connects, Command.EndConnectSample, "0", "Back to Discovery/Connect/GDS Menu");
+            m_transitions.Add(endConnectSample, State.DiscoveryConnectGds);
 
             //add reverse connect menu item
             StateTransition reverseConnectSample = new StateTransition(State.DiscoveryConnectGds, Command.ReverseConnectSample, "2", "Execute Reverse Connect Sample");
@@ -229,6 +256,14 @@ namespace SampleClient.StateMachine
             //add GDS menu item
             StateTransition gdsSample = new StateTransition(State.DiscoveryConnectGds, Command.StartGDSSample, "6", "Enter GDS Sample Menu");
             m_transitions.Add(gdsSample, State.GDS);
+
+            StateTransition connectAndReconnectSample = new StateTransition(State.DiscoveryConnectGds, Command.ConnectAndReconnectSample, "7", "Execute Connect and Reconnect using SessionReconnectHandler");
+            connectAndReconnectSample.ExecuteCommand += ConnectAndReconnectUsingSessionReconnectHandlerSample_ExecuteCommand;
+            m_transitions.Add(connectAndReconnectSample, State.DiscoveryConnectGds);
+
+            StateTransition reverseConnectAndReconnectSample = new StateTransition(State.DiscoveryConnectGds, Command.ReverseConnectAndReconnectSample, "8", "Execute Reverse Connect and Reconnect using SessionReconnectHandler");
+            reverseConnectAndReconnectSample.ExecuteCommand += ReverseConnectReconnectUsingSessionReconnectHandler_ExecuteCommand;
+            m_transitions.Add(reverseConnectAndReconnectSample, State.DiscoveryConnectGds);
 
             //commands for GDS Pull Get Trust List
             StateTransition startGDSGetTrustListSample = new StateTransition(State.GDS, Command.StartGDSPullGetTrustListSample, "1", "Execute GDS Pull Get Trust List Sample");
@@ -438,6 +473,10 @@ namespace SampleClient.StateMachine
             startAddNewMonitoredItemsAfterConnect.ExecuteCommand += StartAddNewEventsClientAfterConnect_ExecuteCommand;
             m_transitions.Add(startAddNewMonitoredItemsAfterConnect, State.EventsAddNewAfterConnect);
 
+            StateTransition startDoubleFilteringMonitoredItemsWithConnect = new StateTransition(State.MonitoredEvents, Command.StartDoubleFilteringEvents, "4", "Enter Double Filtering Event Monitored with implicit Subscription connect Menu");
+            startDoubleFilteringMonitoredItemsWithConnect.ExecuteCommand += StartDoubleFilteringEventsClient_ExecuteCommand;
+            m_transitions.Add(startDoubleFilteringMonitoredItemsWithConnect, State.EventsDoubleFilteringWithConnect);
+
             #region Event Monitored Items with connect
             StateTransition createEventMonitorItem = new StateTransition(State.Events, Command.CreateEventMonitorItem, "1", "Create Event Monitored Item");
             createEventMonitorItem.ExecuteCommand += CreateEventMonitoredItem_ExecuteCommand;
@@ -479,6 +518,20 @@ namespace SampleClient.StateMachine
             endAddNewEventsAfterConnect.ExecuteCommand += EndAddNewEventsAfterConnect_ExecuteCommand;
             m_transitions.Add(endAddNewEventsAfterConnect, State.MonitoredEvents);
             #endregion Event Add New Monitored Items after connect
+
+            #region Double Filtering Event Monitored Items with connect
+            StateTransition createDoubleFilteringEventMonitorItem = new StateTransition(State.EventsDoubleFilteringWithConnect, Command.CreateDoubleFilteringEventMonitorItem, "1", "Create Double Filtering Event Monitored Item");
+            createDoubleFilteringEventMonitorItem.ExecuteCommand += CreateDoubleFilteringEventMonitoredItem_ExecuteCommand;
+            m_transitions.Add(createDoubleFilteringEventMonitorItem, State.EventsDoubleFilteringWithConnect);
+
+            StateTransition deleteDoubleFilteringEventMonitorItem = new StateTransition(State.EventsDoubleFilteringWithConnect, Command.DeleteDoubleFilteringEventMonitorItem, "2", "Delete Double Filtering Event Monitored Item");
+            deleteDoubleFilteringEventMonitorItem.ExecuteCommand += DeleteDoubleFilteringEventMonitoredItem_ExecuteCommand;
+            m_transitions.Add(deleteDoubleFilteringEventMonitorItem, State.EventsDoubleFilteringWithConnect);
+
+            StateTransition endDoubleFilteringEvents = new StateTransition(State.EventsDoubleFilteringWithConnect, Command.EndEvents, "0", "Back to Monitored Events Menu");
+            endDoubleFilteringEvents.ExecuteCommand += EndDoubleFilteringEvents_ExecuteCommand;
+            m_transitions.Add(endDoubleFilteringEvents, State.MonitoredEvents);
+            #endregion Double Filtering Event Monitored Items with connect
 
             StateTransition endMonitoredItems = new StateTransition(State.MonitoredEvents, Command.EndMonitoredItems, "0", "Back to MonitoredItem/TransferSubscriptions/Events/Alarms Menu");
             m_transitions.Add(endMonitoredItems, State.MonitoredTransferEventsAlarms);
@@ -554,7 +607,7 @@ namespace SampleClient.StateMachine
             TransferSubscriptionsDifferentConnectionsMenu();
 
             StateTransition endTransferSubscriptions = new StateTransition(State.TransferSubscriptions, Command.EndTransferSubscriptions, "0", "Back to MonitoredItem/TransferSubscriptions/Events/Alarms Menu");
-            endTransferSubscriptions.ExecuteCommand += EndMonitoredItem_ExecuteCommand; 
+            endTransferSubscriptions.ExecuteCommand += EndMonitoredItem_ExecuteCommand;
             m_transitions.Add(endTransferSubscriptions, State.MonitoredTransferEventsAlarms);
         }
 
@@ -970,6 +1023,26 @@ namespace SampleClient.StateMachine
             m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy = readNodesWithTypeNotInHierarchy;
         }
 
+        private async Task ConnectAndReconnectUsingSessionReconnectHandlerSample_ExecuteCommand(object sender, EventArgs e)
+        {
+            // ConnectClient sample does not need to load data type dictionaries or to decode custom data types
+            bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
+            bool rememberDecodeDataTypeDictionaries = m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries;
+            bool readNodesWithTypeNotInHierarchy = m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy;
+
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
+            m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy = false;
+
+            ConnectClient connectClient = new ConnectClient(m_application);
+
+            await connectClient.ConnectAndReconnectUsingSessionReconnectHandler().ConfigureAwait(false);
+
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
+            m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy = readNodesWithTypeNotInHierarchy;
+        }
+
         private async Task ReverseConnectSample_ExecuteCommand(object sender, EventArgs e)
         {
             //ConnectClient sample does not need to load data type dictionaries or to decode custom data types
@@ -989,6 +1062,67 @@ namespace SampleClient.StateMachine
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
         }
 
+        private async Task SampleConnectECC(SecurityPolicy securityPolicy)
+        {
+            //ConnectClient sample does not need to load data type dictionaries or to decode custom data types
+            bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
+            bool rememberDecodeDataTypeDictionaries = m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries;
+            bool readNodesWithTypeNotInHierarchy = m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy;
+
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
+            m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy = false;
+
+            ConnectClient connectClient = new ConnectClient(m_application);
+
+            await connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.Sign, securityPolicy).ConfigureAwait(false);
+            await connectClient.CreateOpcTcpSessionWithSecurity(Opc.Ua.MessageSecurityMode.SignAndEncrypt, securityPolicy).ConfigureAwait(false);
+
+            await connectClient.CreateOpcTcpSessionWithUserIdUsingECC(securityPolicy).ConfigureAwait(false);
+            await connectClient.CreateOpcTcpSessionWithCertificateUsingECC(securityPolicy).ConfigureAwait(false);
+
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
+            m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy = readNodesWithTypeNotInHierarchy;
+        }
+
+        private async Task ConnectSample_ECC_NistP256_ExecuteCommand(object sender, EventArgs e)
+        {
+            await SampleConnectECC(SecurityPolicy.ECC_nistP256);
+        }
+
+        private async Task ConnectSample_ECC_NistP384_ExecuteCommand(object sender, EventArgs e)
+        {
+            await SampleConnectECC(SecurityPolicy.ECC_nistP384);
+        }
+
+        private async Task ConnectSample_ECC_BrainpoolP256r1_ExecuteCommand(object sender, EventArgs e)
+        {
+            await SampleConnectECC(SecurityPolicy.ECC_brainpoolP256r1);
+        }
+
+        private async Task ConnectSample_ECC_BrainpoolP384r1_ExecuteCommand(object sender, EventArgs e)
+        {
+            await SampleConnectECC(SecurityPolicy.ECC_brainpoolP384r1);
+        }
+
+        private async Task ReverseConnectReconnectUsingSessionReconnectHandler_ExecuteCommand(object sender, EventArgs e)
+        {
+            //ConnectClient sample does not need to load data type dictionaries or to decode custom data types
+            bool rememberDecodeCustomDataTypes = m_application.ClientToolkitConfiguration.DecodeCustomDataTypes;
+            bool rememberDecodeDataTypeDictionaries = m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries;
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = false;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
+            m_application.ClientToolkitConfiguration.ReadNodesWithTypeNotInHierarchy = false;
+
+            ReverseConnectClient reverseConnectClient = new ReverseConnectClient(m_application);
+
+            await reverseConnectClient.ReverseConnectReconnectUsingSessionReconnectHandler().ConfigureAwait(false);
+
+            m_application.ClientToolkitConfiguration.DecodeCustomDataTypes = rememberDecodeCustomDataTypes;
+            m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = rememberDecodeDataTypeDictionaries;
+        }
+
         private async Task ReverseConnectSampleTimeoutInterval_ExecuteCommand(object sender, EventArgs e)
         {
             //ConnectClient sample does not need to lpad data type dictionaries or to decode custom data types
@@ -998,6 +1132,7 @@ namespace SampleClient.StateMachine
             m_application.ClientToolkitConfiguration.DecodeDataTypeDictionaries = false;
 
             ReverseConnectClient reverseConnectClient = new ReverseConnectClient(m_application);
+
 
             // get all endpoints and create sessions into a specified time interval
             await reverseConnectClient.GetEndpointsAndReverseConnectTimeoutInterval(false).ConfigureAwait(false);
@@ -1264,6 +1399,46 @@ namespace SampleClient.StateMachine
         }
 
         private async Task EndAddNewEventsAfterConnect_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient != null)
+            {
+                await m_eventsClient.Disconnect().ConfigureAwait(false);
+                m_eventsClient = null;
+            }
+        }
+
+        #endregion
+
+        #region  ExecuteCommand Handlers for Double Filtering Events with connect
+
+        private async Task StartDoubleFilteringEventsClient_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient == null)
+            {
+                m_eventsClient = new EventsClient(m_application);
+                await m_eventsClient.Initialize().ConfigureAwait(false);
+            }
+        }
+
+        private Task CreateDoubleFilteringEventMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient != null)
+            {
+                m_eventsClient.CreateDoubleFilteringEventMonitoredItem();
+            }
+            return Task.CompletedTask;
+        }
+
+        private Task DeleteDoubleFilteringEventMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_eventsClient != null)
+            {
+                m_eventsClient.DeleteDoubleFilteringEventMonitoredItem();
+            }
+            return Task.CompletedTask;
+        }
+
+        private async Task EndDoubleFilteringEvents_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_eventsClient != null)
             {
