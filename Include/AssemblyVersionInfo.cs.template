@@ -1,5 +1,5 @@
 /* ========================================================================
- * Copyright © 2011-2024 Softing Industrial Automation GmbH.
+ * Copyright © 2011-2025 Softing Industrial Automation GmbH.
  * All rights reserved.
  *
  * The Software is subject to the Softing Industrial Automation GmbH’s
