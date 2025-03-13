@@ -1,11 +1,11 @@
 /* ========================================================================
- * Copyright © 2011-2024 Softing Industrial Automation GmbH. 
+ * Copyright © 2011-2025 Softing Industrial Automation GmbH.
  * All rights reserved.
- * 
- * The Software is subject to the Softing Industrial Automation GmbH’s 
+ *
+ * The Software is subject to the Softing Industrial Automation GmbH’s
  * license agreement, which can be found here:
  * https://industrial.softing.com/LA-SDK-en
- * 
+ *
  * ======================================================================*/
 
 using System;
@@ -30,7 +30,7 @@ namespace SampleServer.HistoricalDataAccess
         {
         }
 
-        #endregion      
+        #endregion
         #region INodeIdFactory Members
         /// <summary>
         /// Creates the NodeId for the specified node.
@@ -40,7 +40,7 @@ namespace SampleServer.HistoricalDataAccess
         /// <returns>The new NodeId.</returns>
         /// <remarks>
         /// This method is called by the NodeState.Create() method which initializes a Node from
-        /// the type model. During initialization a number of child nodes are created and need to 
+        /// the type model. During initialization a number of child nodes are created and need to
         /// have NodeIds assigned to them. This implementation constructs NodeIds by constructing
         /// strings. Other implementations could assign unique integers or Guids and save the new
         /// Node in a dictionary for later lookup.
@@ -92,11 +92,11 @@ namespace SampleServer.HistoricalDataAccess
                 // Add Support for Event Notifiers
                 // Creating notifier ensures events propagate up the hierarchy when they are produced
                 AddRootNotifier(root);
-                
+
                 // Historical Access
                 FolderState dynamicHistoricals = CreateFolder(root, "DynamicHistoricalDataItems");
                 dynamicHistoricals.EventNotifier = EventNotifiers.SubscribeToEvents;
-               
+
                 FolderState staticHistoricals = CreateFolder(root, "StaticHistoricalDataItems");
                 staticHistoricals.EventNotifier = EventNotifiers.SubscribeToEvents;
             }
