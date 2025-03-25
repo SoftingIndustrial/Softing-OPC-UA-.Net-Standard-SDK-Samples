@@ -107,7 +107,6 @@ namespace SampleClient.Samples
                 if (withSubscription)
                 {
                     m_session.DeleteSubscriptionsOnClose = false;
-                    m_session.RepublishAfterTransfer = true;
                     m_session.TransferSubscriptionsOnReconnect = true;
 
                     //create the subscription
@@ -115,6 +114,9 @@ namespace SampleClient.Samples
 
                     // set the Publishing interval for this subscription
                     m_subscription.PublishingInterval = 500;
+
+                    m_subscription.RepublishAfterTransfer = true;
+
                     Console.WriteLine("Subscription created");
                 }
             }
@@ -626,7 +628,7 @@ namespace SampleClient.Samples
                 await m_transfer_session.ConnectAsync(false, false).ConfigureAwait(false);
 
                 // support transfer
-                m_transfer_session.RepublishAfterTransfer = true;
+                m_subscription.RepublishAfterTransfer = true;
 
                 Func<List<ClientSubscription>> createSubscriptionList = () => new List<ClientSubscription>();
 
@@ -746,7 +748,7 @@ namespace SampleClient.Samples
             Console.WriteLine($"{m_transfer_session.SessionName} is connected.");
 
             m_transfer_session.DeleteSubscriptionsOnClose = false;
-            m_transfer_session.RepublishAfterTransfer = true;
+            m_subscription.RepublishAfterTransfer = true;
 
             Console.WriteLine("Loading subscriptions for transfer...");
 
@@ -804,7 +806,7 @@ namespace SampleClient.Samples
                 Console.WriteLine($"{m_transfer_session.SessionName} is connected.");
 
                 m_transfer_session.DeleteSubscriptionsOnClose = false;
-                m_transfer_session.RepublishAfterTransfer = true;
+                m_subscription.RepublishAfterTransfer = true;
 
                 List<ClientSubscription> transferSubscriptions = new List<ClientSubscription> { m_subscription };
 
@@ -847,7 +849,7 @@ namespace SampleClient.Samples
                 Console.WriteLine($"{m_transfer_session.SessionName} is connected.");
 
                 m_transfer_session.DeleteSubscriptionsOnClose = false;
-                m_transfer_session.RepublishAfterTransfer = true;
+                m_subscription.RepublishAfterTransfer = true;
 
                 List<ClientSubscription> transferSubscriptions = new List<ClientSubscription> { m_subscription };
 
@@ -889,7 +891,7 @@ namespace SampleClient.Samples
                 Console.WriteLine($"{m_transfer_session.SessionName} is connected.");
 
                 m_transfer_session.DeleteSubscriptionsOnClose = false;
-                m_transfer_session.RepublishAfterTransfer = true;
+                m_subscription.RepublishAfterTransfer = true;
 
                 List<ClientSubscription> transferSubscriptions = new List<ClientSubscription> { m_subscription };
 
@@ -931,7 +933,7 @@ namespace SampleClient.Samples
                 Console.WriteLine($"{m_transfer_session.SessionName} is connected.");
 
                 m_transfer_session.DeleteSubscriptionsOnClose = false;
-                m_transfer_session.RepublishAfterTransfer = true;
+                m_subscription.RepublishAfterTransfer = true;
 
                 List<ClientSubscription> transferSubscriptions = new List<ClientSubscription> { m_subscription };
 
