@@ -90,7 +90,7 @@ namespace SampleServer.Alarms
                 return null;
             }
             // load the certificate from file
-            X509Certificate2 certificate = new X509Certificate2(certificateFilePath,
+            X509Certificate2 certificate = X509CertificateLoader.LoadPkcs12FromFile(certificateFilePath,
                            null as string,
                            X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.Exportable);
 

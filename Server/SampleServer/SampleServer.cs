@@ -13,16 +13,18 @@ using Opc.Ua.Server;
 using SampleServer.Alarms;
 using SampleServer.CustomTypes;
 using SampleServer.DataAccess;
+using SampleServer.DurableSubscriptions;
 using SampleServer.FileTransfer;
 using SampleServer.HistoricalDataAccess;
 using SampleServer.Methods;
 using SampleServer.NodeSetImport;
-using SampleServer.ReferenceServer;
 using SampleServer.UserAuthentication;
 using Softing.Opc.Ua.Server;
+using Softing.Opc.Ua.Server.DurableSubscriptions;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using TestServer.ReferenceServer;
 using X509Certificate2Collection = System.Security.Cryptography.X509Certificates.X509Certificate2Collection;
 
 namespace SampleServer
@@ -44,6 +46,10 @@ namespace SampleServer
         private Timer m_certificatesTimer;
 
         private List<INodeManagerFactory> m_nodeManagerFactories;
+
+        private const int DefaultMaxDurableNotificationQueueSize = 1000;
+        private const int DefaultMaxDurableEventQueueSize = 1000;
+
         #endregion
 
         #region Constructor
@@ -112,6 +118,32 @@ namespace SampleServer
         }
         #endregion
 
+        #region OnServerStopping
+        /// <summary>
+        /// Called when the server has been stopped.
+        /// </summary>
+        /// <param name="server">The server.</param>
+        protected override void OnServerStopping()
+        {
+            if (ServerInternal != null)
+            {
+                if (ServerInternal?.SubscriptionManager.GetSubscriptions().Count == 0)
+                {
+                    if (ServerInternal?.SubscriptionStore is DurableSubscriptionsManager)
+                    {
+                        DurableSubscriptionsManager subscriptionsManager = ServerInternal?.SubscriptionStore as DurableSubscriptionsManager;
+                        if (subscriptionsManager != null)
+                        {
+                            subscriptionsManager.RemoveStorageData();
+                        }
+                    }
+                }
+            }
+
+            base.OnServerStopping();
+        }
+        #endregion
+
         #region Override CreateMasterNodeManager
 
         /// <summary>
@@ -122,10 +154,9 @@ namespace SampleServer
         /// always creates a CoreNodeManager which handles the built-in nodes defined by the specification.
         /// Any additional NodeManagers are expected to handle application specific nodes.
         /// </remarks>
-        /// 
         protected override MasterNodeManager CreateMasterNodeManager(IServerInternal server, ApplicationConfiguration configuration)
         {
-            Utils.Trace(Utils.TraceMasks.Information, "SampleServer.CreateMasterNodeManager: Creating the Node Managers.");
+            Opc.Ua.Utils.Trace(Opc.Ua.Utils.TraceMasks.Information, "SampleServer.CreateMasterNodeManager: Creating the Node Managers.");
 
             List<INodeManager> nodeManagers = new List<INodeManager>();
             // add RolesNodeManager to support Role based permission handling in this server
@@ -147,6 +178,63 @@ namespace SampleServer
             // Create master node manager
             return new MasterNodeManager(server, configuration, null, nodeManagers.ToArray());
         }
+        #endregion
+
+        #region Override CreateMIQueueFactory
+
+        /// <summary>
+        /// Creates the (durable) monitored item queue factory for the server.
+        /// </summary>
+        /// <param name="server">The server.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <returns>Returns a (durable) monitored item queue factory for a server, the return type is <seealso cref="IMonitoredItemQueueFactory"/>.</returns>
+        protected override IMonitoredItemQueueFactory CreateMonitoredItemQueueFactory(IServerInternal server, ApplicationConfiguration configuration)
+        {
+            if (configuration?.ServerConfiguration?.DurableSubscriptionsEnabled == true)
+            {
+                int maxDurableNotificationQueueSize = DefaultMaxDurableNotificationQueueSize;
+                if (configuration?.ServerConfiguration.MaxDurableNotificationQueueSize != null)
+                {
+                    maxDurableNotificationQueueSize = configuration.ServerConfiguration.MaxDurableNotificationQueueSize;
+                }
+                int maxDurableEventQueueSize = DefaultMaxDurableEventQueueSize;
+                if (configuration?.ServerConfiguration.MaxDurableEventQueueSize != null)
+                {
+                    maxDurableEventQueueSize = configuration.ServerConfiguration.MaxDurableEventQueueSize;
+                }
+                return new DurableMonitoredItemsManager(maxDurableNotificationQueueSize, maxDurableEventQueueSize);
+
+            }
+            return base.CreateMonitoredItemQueueFactory(server, configuration);
+        }
+
+        /// <summary>
+        /// Creates the subscriptionStore for the server.
+        /// </summary>
+        /// <param name="server">The server.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <returns>Returns a subscriptionStore for a server, the return type is <seealso cref="ISubscriptionStore"/>.</returns>
+        protected override ISubscriptionStore CreateSubscriptionStore(IServerInternal server, ApplicationConfiguration configuration)
+        {
+            if (configuration?.ServerConfiguration?.DurableSubscriptionsEnabled == true)
+            {
+                // parse custom server durable configuration extension 
+                ServerDurableConfiguration serverDurableConfiguration = configuration.ParseExtension<ServerDurableConfiguration>();
+                if (serverDurableConfiguration == null)
+                {
+                    Utils.Trace(Utils.TraceMasks.Information, "SampleServer.CreateSubscriptionStore: missing ServerDurableConfiguration.");
+                }
+                else
+                {
+                    DurableSubscriptionsManager durableSubscriptionsManager = new DurableSubscriptionsManager(server, serverDurableConfiguration);
+                    durableSubscriptionsManager.Initialize();
+
+                    return durableSubscriptionsManager;
+                }
+            }
+            return base.CreateSubscriptionStore(server, configuration);
+        }
+
         #endregion
 
         #region UserAuthentication Custom Implementation
@@ -322,7 +410,7 @@ namespace SampleServer
         {
             if (disposing)
             {
-                Utils.SilentDispose(m_certificatesTimer);
+                Opc.Ua.Utils.SilentDispose(m_certificatesTimer);
                 m_certificatesTimer = null;
             }
 

@@ -21,59 +21,61 @@
   <SecurityConfiguration>
 
 
-		<!-- The location of the application instance certificate in the Windows certificate store -->
-		<!--<ApplicationCertificate>
+    <!-- The location of the application instance certificate in the Windows certificate store -->
+    <!--<ApplicationCertificate>
 			<StoreType>Directory</StoreType>
 			<StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
 
-			--><!-- The subject for the certificate 
+			-->
+    <!-- The subject for the certificate 
            Note that subject names are complex structures. Only text that appears here is treated as the CommonName component.
            The first certificate found is used if multiple certificates with the same CommonName and a matching hostname exist.
            Also a complete distinguished name can be specified here: 'CN=UA Sample Client, DC=localhost'.
            In this case the first certificate matching the complete distinguished name is used. localhost is replaced with the hostname.
            If no certificate is found, a new self signed application certificate is created.
-           The Thumbprint should be specified if the CN or DN does not uniquely identify a certificate. --><!--
+           The Thumbprint should be specified if the CN or DN does not uniquely identify a certificate. -->
+    <!--
 			<SubjectName>SoftingOpcUaSampleClient</SubjectName>
 		</ApplicationCertificate>-->
 
-		<ApplicationCertificates>
-			<CertificateIdentifier>
-				<StoreType>Directory</StoreType>
-				<StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
-				<SubjectName>SoftingOpcUaSampleClient</SubjectName>
-				<CertificateTypeString>RsaSha256</CertificateTypeString>
-			</CertificateIdentifier>
-			<CertificateIdentifier>
-				<StoreType>Directory</StoreType>
-				<StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
-				<SubjectName>SoftingOpcUaSampleClient</SubjectName>
-				<CertificateTypeString>NistP256</CertificateTypeString>
-			</CertificateIdentifier>
-			<CertificateIdentifier>
-				<StoreType>Directory</StoreType>
-				<StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
-				<SubjectName>SoftingOpcUaSampleClient</SubjectName>
-				<CertificateTypeString>NistP384</CertificateTypeString>
-			</CertificateIdentifier>
-			<CertificateIdentifier>
-				<StoreType>Directory</StoreType>
-				<StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
-				<SubjectName>SoftingOpcUaSampleClient</SubjectName>
-				<CertificateTypeString>BrainpoolP256r1</CertificateTypeString>
-			</CertificateIdentifier>
-			<CertificateIdentifier>
-				<StoreType>Directory</StoreType>
-				<StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
-				<SubjectName>SoftingOpcUaSampleClient</SubjectName>
-				<CertificateTypeString>BrainpoolP384r1</CertificateTypeString>
-			</CertificateIdentifier>
-		</ApplicationCertificates>
-		
-		<TrustedIssuerCertificates>
-			<StoreType>Directory</StoreType>
-			<StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/issuer</StorePath>
-		</TrustedIssuerCertificates>
-		<!-- The list of trusted certificates.
+    <ApplicationCertificates>
+      <CertificateIdentifier>
+        <StoreType>Directory</StoreType>
+        <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
+        <SubjectName>SoftingOpcUaSampleClient</SubjectName>
+        <CertificateTypeString>RsaSha256</CertificateTypeString>
+      </CertificateIdentifier>
+      <CertificateIdentifier>
+        <StoreType>Directory</StoreType>
+        <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
+        <SubjectName>SoftingOpcUaSampleClient</SubjectName>
+        <CertificateTypeString>NistP256</CertificateTypeString>
+      </CertificateIdentifier>
+      <CertificateIdentifier>
+        <StoreType>Directory</StoreType>
+        <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
+        <SubjectName>SoftingOpcUaSampleClient</SubjectName>
+        <CertificateTypeString>NistP384</CertificateTypeString>
+      </CertificateIdentifier>
+      <CertificateIdentifier>
+        <StoreType>Directory</StoreType>
+        <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
+        <SubjectName>SoftingOpcUaSampleClient</SubjectName>
+        <CertificateTypeString>BrainpoolP256r1</CertificateTypeString>
+      </CertificateIdentifier>
+      <CertificateIdentifier>
+        <StoreType>Directory</StoreType>
+        <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own</StorePath>
+        <SubjectName>SoftingOpcUaSampleClient</SubjectName>
+        <CertificateTypeString>BrainpoolP384r1</CertificateTypeString>
+      </CertificateIdentifier>
+    </ApplicationCertificates>
+
+    <TrustedIssuerCertificates>
+      <StoreType>Directory</StoreType>
+      <StorePath>%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/issuer</StorePath>
+    </TrustedIssuerCertificates>
+    <!-- The list of trusted certificates.
          Some UA applications will use self-signed certificates (certificates without a CA)
          which means that every application which communicates with it must be configured to 
          trust it.
@@ -100,15 +102,15 @@
 
     <!-- WARNING: The following setting (to automatically accept untrusted certificates) should 
     be used for easy debugging purposes ONLY and turned off for production deployments! -->
-		<AutoAcceptUntrustedCertificates>false</AutoAcceptUntrustedCertificates>
-		<RejectSHA1SignedCertificates>false</RejectSHA1SignedCertificates>
-		<RejectUnknownRevocationStatus>true</RejectUnknownRevocationStatus>
-		<MinimumCertificateKeySize>2048</MinimumCertificateKeySize>
-		<MinimumECCertificateKeySize>256</MinimumECCertificateKeySize>
-		<!--Indicates whether the application cert should be copied to the trusted store.-->
-		<AddAppCertToTrustedStore>true</AddAppCertToTrustedStore>
-		<SendCertificateChain>true</SendCertificateChain>
-	</SecurityConfiguration>
+    <AutoAcceptUntrustedCertificates>false</AutoAcceptUntrustedCertificates>
+    <RejectSHA1SignedCertificates>false</RejectSHA1SignedCertificates>
+    <RejectUnknownRevocationStatus>true</RejectUnknownRevocationStatus>
+    <MinimumCertificateKeySize>2048</MinimumCertificateKeySize>
+    <MinimumECCertificateKeySize>256</MinimumECCertificateKeySize>
+    <!--Indicates whether the application cert should be copied to the trusted store.-->
+    <AddAppCertToTrustedStore>true</AddAppCertToTrustedStore>
+    <SendCertificateChain>true</SendCertificateChain>
+  </SecurityConfiguration>
 
   <TransportConfigurations></TransportConfigurations>
 
@@ -211,7 +213,25 @@
 
         <!-- Enable/Disable check port validation during connect. (session port vs. detected endpoints port) -->
         <CheckPortOnConnect>false</CheckPortOnConnect>
+        
+        <!-- Local client repository for storing temporary data related to durable subscriptions meta data and revised lifetime. 
+             This data persists even after the client shuts down. 
+             The customer should specify a secure location for these paths. -->
+        <!--Indicates the durable subscriptions folder where the meta data and revised lifetime are saved on the client when the client stops. -->
+        <DurableSubscriptionsPath>Durable Subscriptions</DurableSubscriptionsPath>
+        
+        <!--Indicates the file name where the durable subscriptions meta data are saved on the client when the client stops. -->
+        <DurableSubscriptionMetadataFileName>DurableSubscriptionsMetadata.txt</DurableSubscriptionMetadataFileName>
+        
+        <!--Indicates the file name where the durable subscriptions revised lifetime (in hours) are saved on the client when the client stops. -->
+        <DurableSubscriptionsRevisedLifetimeFileName>DurableSubscriptionsRevisedLifetime.txt</DurableSubscriptionsRevisedLifetimeFileName>
 
+        <!-- The file path containing the subscriptions for transfer. -->
+        <TransferSubscriptionsPath>Transfer Subscriptions</TransferSubscriptionsPath>
+
+        <!-- The default subscriptions file name used by subscriptions for transfer. -->
+        <TransferSubscriptionsFileName>TransferSubscriptions.txt</TransferSubscriptionsFileName>
+        
       </ClientToolkitConfiguration>
     </ua:XmlElement>
     <ua:XmlElement>

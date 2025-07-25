@@ -114,7 +114,7 @@ namespace SampleClient.Samples
                         {
                             foreach (byte[] certif in trustListDataInGroup.TrustedCertificates)
                             {
-                                X509Certificate2 aCertif = new X509Certificate2(certif);
+                                X509Certificate2 aCertif = X509CertificateLoader.LoadCertificate(certif);
                                 Console.WriteLine("Certificate with Issuer '{0}' and SubjectName '{1}' received in Trust List", aCertif.Issuer, aCertif.Subject);
                             }
                         }

@@ -250,7 +250,7 @@
 		<NodeManagerSaveFile>SampleServer.nodes.xml</NodeManagerSaveFile>
 		<MinSubscriptionLifetime>10000</MinSubscriptionLifetime>
 		<MaxPublishRequestCount>100</MaxPublishRequestCount>
-		<MaxSubscriptionCount>250</MaxSubscriptionCount>
+		<MaxSubscriptionCount>250</MaxSubscriptionCount>  
 		<MaxEventQueueSize>10000</MaxEventQueueSize>
 		<!-- see https://opcfoundation-onlineapplications.org/profilereporting/ for list of available profiles -->
 		<ServerProfileArray>
@@ -274,6 +274,18 @@
 			<ConnectTimeout>30000</ConnectTimeout>
 			<RejectTimeout>20000</RejectTimeout>
 		</ReverseConnect>
+		
+		<!--Enable/Disable support for durable subscriptions -->
+		<DurableSubscriptionsEnabled>true</DurableSubscriptionsEnabled>
+		<!--The maximum number of notifications saved in the durable queue for each monitored item. 
+					If large values are assigned to the queues, test the application to check for potential performance issues.-->
+		<MaxDurableNotificationQueueSize>10000</MaxDurableNotificationQueueSize>
+		<!--The maximum size of the durable event queue. 
+					If large values are assigned to the queues, test the application to check for potential performance issues.-->
+		<MaxDurableEventQueueSize>10000</MaxDurableEventQueueSize>
+		<!--How long the durable subscriptions will remain open without a publish from the client.-->
+		<MaxDurableSubscriptionLifetimeInHours>1</MaxDurableSubscriptionLifetimeInHours>
+		
 		<OperationLimits>
 			<MaxNodesPerRead>1000</MaxNodesPerRead>
 			<MaxNodesPerHistoryReadData>1000</MaxNodesPerHistoryReadData>
@@ -290,13 +302,15 @@
 		</OperationLimits>
 		<!-- Enable Server.Auditing flag to receive Auditing events -->
 		<AuditingEnabled>false</AuditingEnabled>
+   
+    
 	</ServerConfiguration>
 
 	<Extensions>
 		<ua:XmlElement>
 			<ServerToolkitConfiguration>
-				<ServerCertificateLifeTime>24</ServerCertificateLifeTime>
-			</ServerToolkitConfiguration>
+        <ServerCertificateLifeTime>24</ServerCertificateLifeTime>
+      </ServerToolkitConfiguration>
 		</ua:XmlElement>
 		<ua:XmlElement>
 			<SampleServerConfiguration>
@@ -304,7 +318,25 @@
 				<ClearCachedCertificatesInterval>30000</ClearCachedCertificatesInterval>
 			</SampleServerConfiguration>
 		</ua:XmlElement>
-		<ua:XmlElement>
+    <ua:XmlElement>
+      <ServerDurableConfiguration>
+        <!-- Local server repository for storing temporary data related to durable subscriptions meta data and queues data changes. 
+             This data persists even after the server shuts down. 
+             The customer should specify a secure location for these paths. -->
+        <!--Indicates the durable subscriptions folder where the meta data and queues data changes are saved on the server when the it stops. -->
+        <DurableSubscriptionsPath>Durable Subscriptions</DurableSubscriptionsPath>
+
+        <!--Indicates the durable subscriptions folder where the revised lifetime of the subscriptions are saved on the server when the it stops. -->
+        <DurableSubscriptionsRevisedPath>Durable Subscriptions Revised</DurableSubscriptionsRevisedPath>
+
+        <!--Indicates the file name where the durable subscriptions meta data are saved on the server when it stops. -->
+        <DurableSubscriptionsStoreFilePath>SubscriptionsStore.txt</DurableSubscriptionsStoreFilePath>
+
+        <!--Indicates the file name where the durable subscriptions revised lifetime (in hours) are saved on the server when it stops. -->
+        <DurableSubscriptionsRevisedLifetimeFilePath>DurableSubscriptionsRevisedLifetime.txt</DurableSubscriptionsRevisedLifetimeFilePath>
+      </ServerDurableConfiguration>
+    </ua:XmlElement>
+    <ua:XmlElement>
 			<ServerSecurityConfiguration xmlns="http://opcfoundation.org/UA/SDK/Configuration.xsd">
 				<BruteForceAttackPrevention>
 					<!-- Enable brute force attack prevention -->

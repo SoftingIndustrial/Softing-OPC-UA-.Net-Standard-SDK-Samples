@@ -8,13 +8,12 @@
  *  
  * ======================================================================*/
 
+using SampleClient.Samples;
+using Softing.Opc.Ua.Client;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using SampleClient.Samples;
-using Softing.Opc.Ua.Client;
 
 namespace SampleClient.StateMachine
 {
@@ -34,6 +33,8 @@ namespace SampleClient.StateMachine
         private HistoryClient m_historyClient;
         private ReadWriteClient m_readWriteClient;
         private MonitoredItemClient m_monitoredItemClient;
+        private TransferSubscriptionClient m_transferSubscriptionClient;
+        private DurableSubscriptionsClient m_durableSubscriptionsClient;
         private AlarmsClient m_alarmsClient;
         private AccessRightsClient m_accessRightsClient;
         private FileTransferClient m_fileTransferClient;
@@ -90,7 +91,7 @@ namespace SampleClient.StateMachine
             exit.ExecuteCommand += Exit_ExecuteCommand;
 
             m_transitions.Add(exit, State.Exit);
-            exit = new StateTransition(State.MonitoredTransferEventsAlarms, Command.Exit, "x", "Exit Client Application");
+            exit = new StateTransition(State.MonitoredTransferDurableEventsAlarms, Command.Exit, "x", "Exit Client Application");
             exit.ExecuteCommand += Exit_ExecuteCommand;
             m_transitions.Add(exit, State.Exit);
             exit = new StateTransition(State.Alarms, Command.Exit, "x", "Exit Client Application");
@@ -376,8 +377,8 @@ namespace SampleClient.StateMachine
         private void InitializeMonitoredItemEventsTransitions()
         {
             //commands for monitored item - 4
-            StateTransition start = new StateTransition(State.Main, Command.StartMonitoredTransferEventsAlarms, "4", "Enter MonitoredItem/TransferSubscriptions/Events/Alarms Menu");
-            m_transitions.Add(start, State.MonitoredTransferEventsAlarms);
+            StateTransition start = new StateTransition(State.Main, Command.StartMonitoredEventsAlarmsTransferDurable, "4", "Enter MonitoredItem/Events/Alarms/TransferSubscriptions/DurableSubscriptions Menu");
+            m_transitions.Add(start, State.MonitoredTransferDurableEventsAlarms);
 
             MonitorMenu();
 
@@ -387,17 +388,20 @@ namespace SampleClient.StateMachine
 
             TransferSubscriptionsMenu();
 
-            StateTransition end = new StateTransition(State.MonitoredTransferEventsAlarms, Command.EndMonitoredTransferEventsAlarms, "0", "Back to Main Menu");
+            DurableSubscriptionsMenu();
+
+
+            StateTransition end = new StateTransition(State.MonitoredTransferDurableEventsAlarms, Command.EndMonitoredTransferEventsAlarms, "0", "Back to Main Menu");
             m_transitions.Add(end, State.Main);
         }
 
         private void MonitorMenu()
         {
             //commands for monitored items
-            StateTransition startMonitoredItems = new StateTransition(State.MonitoredTransferEventsAlarms, Command.StartMonitoredItems, "1", "Enter MonitoredItem Menu");
+            StateTransition startMonitoredItems = new StateTransition(State.MonitoredTransferDurableEventsAlarms, Command.StartMonitoredItems, "1", "Enter MonitoredItem Menu");
             m_transitions.Add(startMonitoredItems, State.MonitoredItems);
 
-            StateTransition startMonitoredItemsWithConnect = new StateTransition(State.MonitoredItems, Command.StartMonitoredItem, "1", "Enter MonitoredItem with implicit Subscription connect Menu (Legacy behavior)");
+            StateTransition startMonitoredItemsWithConnect = new StateTransition(State.MonitoredItems, Command.StartMonitoredItem, "1", "Enter MonitoredItem with implicit Subscription connect Menu (Legacy behavior) - DeleteOnDisconnect = true");
             startMonitoredItemsWithConnect.ExecuteCommand += StartMonitoredItem_ExecuteCommand;
             m_transitions.Add(startMonitoredItemsWithConnect, State.MonitoredItem);
 
@@ -452,13 +456,13 @@ namespace SampleClient.StateMachine
             #endregion Add Monitored Items after connect
 
             StateTransition endMonitoredItems = new StateTransition(State.MonitoredItems, Command.EndMonitoredItems, "0", "Back to MonitoredItem/TransferSubscriptions/Events/Alarms Menu");
-            m_transitions.Add(endMonitoredItems, State.MonitoredTransferEventsAlarms);
+            m_transitions.Add(endMonitoredItems, State.MonitoredTransferDurableEventsAlarms);
         }
 
         private void EventsMenu()
         {
             //commands for events
-            StateTransition startMonitoredItems = new StateTransition(State.MonitoredTransferEventsAlarms, Command.StartMonitoredEvents, "2", "Enter Events Menu");
+            StateTransition startMonitoredItems = new StateTransition(State.MonitoredTransferDurableEventsAlarms, Command.StartMonitoredEvents, "2", "Enter Events Menu");
             m_transitions.Add(startMonitoredItems, State.MonitoredEvents);
 
             StateTransition startMonitoredItemsWithConnect = new StateTransition(State.MonitoredEvents, Command.StartEvents, "1", "Enter Event Monitored with implicit Subscription connect Menu (Legacy behavior)");
@@ -534,13 +538,13 @@ namespace SampleClient.StateMachine
             #endregion Double Filtering Event Monitored Items with connect
 
             StateTransition endMonitoredItems = new StateTransition(State.MonitoredEvents, Command.EndMonitoredItems, "0", "Back to MonitoredItem/TransferSubscriptions/Events/Alarms Menu");
-            m_transitions.Add(endMonitoredItems, State.MonitoredTransferEventsAlarms);
+            m_transitions.Add(endMonitoredItems, State.MonitoredTransferDurableEventsAlarms);
         }
 
         private void AlarmsMenu()
         {
             //commands for alarms
-            StateTransition startAlarms = new StateTransition(State.MonitoredTransferEventsAlarms, Command.StartAlarms, "3", "Enter Alarms Menu");
+            StateTransition startAlarms = new StateTransition(State.MonitoredTransferDurableEventsAlarms, Command.StartAlarms, "3", "Enter Alarms Menu");
             startAlarms.ExecuteCommand += StartAlarms_ExecuteCommand;
             m_transitions.Add(startAlarms, State.Alarms);
 
@@ -567,21 +571,21 @@ namespace SampleClient.StateMachine
 
             StateTransition endAlarms = new StateTransition(State.Alarms, Command.EndAlarms, "0", "Back to MonitoredItem/TransferSubscriptions/Events/Alarms Menu");
             endAlarms.ExecuteCommand += EndAlarms_ExecuteCommand;
-            m_transitions.Add(endAlarms, State.MonitoredTransferEventsAlarms);
+            m_transitions.Add(endAlarms, State.MonitoredTransferDurableEventsAlarms);
         }
 
         private void TransferSubscriptionsMenu()
         {
-            StateTransition startMonitoredItems = new StateTransition(State.MonitoredTransferEventsAlarms, Command.StartTransferSubscriptions, "4", "Enter Transfer Subscriptions Menu");
-            startMonitoredItems.ExecuteCommand += StartMonitoredItem_ExecuteCommand;
+            StateTransition startMonitoredItems = new StateTransition(State.MonitoredTransferDurableEventsAlarms, Command.StartTransferSubscriptions, "4", "Enter Transfer Subscriptions Menu");
+            startMonitoredItems.ExecuteCommand += StartTransferSubcription_ExecuteCommand;
             m_transitions.Add(startMonitoredItems, State.TransferSubscriptions);
 
             StateTransition createMonitoredItem = new StateTransition(State.TransferSubscriptions, Command.CreateMonitoredItem, "1", "Create data change Monitored Items");
-            createMonitoredItem.ExecuteCommand += CreateMonitoredItem_ExecuteCommand;
+            createMonitoredItem.ExecuteCommand += CreateMonitoredItem_TransferSubscription_ExecuteCommand;
             m_transitions.Add(createMonitoredItem, State.TransferSubscriptions);
 
             StateTransition deleteMonitoredItem = new StateTransition(State.TransferSubscriptions, Command.DeleteMonitoredItem, "2", "Delete data change Monitored Items");
-            deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItems_ExecuteCommand;
+            deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItems_TransferSubscription_ExecuteCommand;
             m_transitions.Add(deleteMonitoredItem, State.TransferSubscriptions);
 
             StateTransition transferSubscriptions = new StateTransition(State.TransferSubscriptions, Command.TransferSubscriptions, "3", "Transfer subscriptions");
@@ -607,21 +611,67 @@ namespace SampleClient.StateMachine
             TransferSubscriptionsDifferentConnectionsMenu();
 
             StateTransition endTransferSubscriptions = new StateTransition(State.TransferSubscriptions, Command.EndTransferSubscriptions, "0", "Back to MonitoredItem/TransferSubscriptions/Events/Alarms Menu");
-            endTransferSubscriptions.ExecuteCommand += EndMonitoredItem_ExecuteCommand;
-            m_transitions.Add(endTransferSubscriptions, State.MonitoredTransferEventsAlarms);
+            endTransferSubscriptions.ExecuteCommand += EndTransferSubscription_ExecuteCommand;
+            m_transitions.Add(endTransferSubscriptions, State.MonitoredTransferDurableEventsAlarms);
         }
 
+        private void DurableSubscriptionsMenu()
+        {
+            StateTransition startMonitoredItems = new StateTransition(State.MonitoredTransferDurableEventsAlarms, Command.StartDurableSubscriptions, "5", "Enter Durable Subscriptions Menu");
+            startMonitoredItems.ExecuteCommand += StartDurableMonitoredItem_ExecuteCommand;
+            m_transitions.Add(startMonitoredItems, State.DurableSubscriptions);
+
+            StateTransition createSubscriptions = new StateTransition(State.DurableSubscriptions, Command.CreateDurableSubscriptions, "1", "Create subscriptions");
+            createSubscriptions.ExecuteCommand += CreateDurableSubscriptions_ExecuteCommand;
+            m_transitions.Add(createSubscriptions, State.DurableSubscriptions);
+
+            StateTransition createMonitoredItem = new StateTransition(State.DurableSubscriptions, Command.CreateDurableMonitoredItem, "2", "Create data change Monitored Items");
+            createMonitoredItem.ExecuteCommand += CreateDurableMonitoredItem_ExecuteCommand;
+            m_transitions.Add(createMonitoredItem, State.DurableSubscriptions);
+
+            StateTransition createMonitoredItemAndEvents = new StateTransition(State.DurableSubscriptions, Command.CreateDurableMonitoredItemAndEvents, "3", "Create data change Monitored Items and Event Monitored Items");
+            createMonitoredItemAndEvents.ExecuteCommand += CreateDurableMonitoredItemAndEvents_ExecuteCommand;
+            m_transitions.Add(createMonitoredItemAndEvents, State.DurableSubscriptions);
+
+            StateTransition deleteMonitoredItem = new StateTransition(State.DurableSubscriptions, Command.DeleteDurableMonitoredItem, "4", "Delete data change Monitored Items");
+            deleteMonitoredItem.ExecuteCommand += DeleteDurableMonitoredItems_ExecuteCommand;
+            m_transitions.Add(deleteMonitoredItem, State.DurableSubscriptions);
+
+            StateTransition durableSubscriptionsCurrentSession = new StateTransition(State.DurableSubscriptions, Command.TransferDurableSubscriptionsCurrentSession, "5", "Transfer Durable Subscriptions on current Session");
+            durableSubscriptionsCurrentSession.ExecuteCommand += DurableSubscriptionsCurrentSession_ExecuteCommand;
+            m_transitions.Add(durableSubscriptionsCurrentSession, State.DurableSubscriptions);
+
+            StateTransition durableSubscriptionsNewSession = new StateTransition(State.DurableSubscriptions, Command.TransferDurableSubscriptionsNewSession, "6", "Transfer Durable Subscriptions on new Session");
+            durableSubscriptionsNewSession.ExecuteCommand += DurableSubscriptionsNewSession_ExecuteCommand;
+            m_transitions.Add(durableSubscriptionsNewSession, State.DurableSubscriptions);
+
+            StateTransition durableCustomSessionSaveLoad = new StateTransition(State.DurableSubscriptions, Command.DurableCustomSessionModelSaveLoad, "7", "Sample for Custom Save/Load Session Model");
+            durableCustomSessionSaveLoad.ExecuteCommand += DurableCustomSaveLoadSessionModel;
+            m_transitions.Add(durableCustomSessionSaveLoad, State.DurableSubscriptions);
+
+            StateTransition durableCustomSubscriptionSaveLoad = new StateTransition(State.DurableSubscriptions, Command.DurableCustomSubscriptionModelSaveLoad, "8", "Sample for Custom Save/Load Subscription Model");
+            durableCustomSubscriptionSaveLoad.ExecuteCommand += DurableCustomSaveLoadSubscriptionModel;
+            m_transitions.Add(durableCustomSubscriptionSaveLoad, State.DurableSubscriptions);
+
+            StateTransition durableCustomMonitoredItemSaveLoad = new StateTransition(State.DurableSubscriptions, Command.DurableCustomMonitoredItemModelSaveLoad, "9", "Sample for Custom Save/Load Monitored Item Model");
+            durableCustomMonitoredItemSaveLoad.ExecuteCommand += DurableCustomSaveLoadMonitoredItemsModel;
+            m_transitions.Add(durableCustomMonitoredItemSaveLoad, State.DurableSubscriptions);
+
+            StateTransition endDurableSubscriptions = new StateTransition(State.DurableSubscriptions, Command.EndDurableSubscriptions, "0", "Back to MonitoredItem/TransferSubscriptions/DurableSubscriptions/Events/Alarms Menu");
+            endDurableSubscriptions.ExecuteCommand += EndDurableMonitoredItem_ExecuteCommand;
+            m_transitions.Add(endDurableSubscriptions, State.MonitoredTransferDurableEventsAlarms);
+        }
         private void TransferSubscriptionsDifferentConnectionsMenu()
         {
             StateTransition startMonitoredItems = new StateTransition(State.TransferSubscriptions, Command.StartTransferSubscriptionsConnectionType, "8", "Transfer Subscriptions with different connections");
             m_transitions.Add(startMonitoredItems, State.TransferSubscriptionsConnectionType);
 
             StateTransition createMonitoredItem = new StateTransition(State.TransferSubscriptionsConnectionType, Command.CreateMonitoredItem, "1", "Create data change Monitored Items");
-            createMonitoredItem.ExecuteCommand += CreateMonitoredItem_ExecuteCommand;
+            createMonitoredItem.ExecuteCommand += CreateMonitoredItem_TransferSubscription_ExecuteCommand;
             m_transitions.Add(createMonitoredItem, State.TransferSubscriptionsConnectionType);
 
             StateTransition deleteMonitoredItem = new StateTransition(State.TransferSubscriptionsConnectionType, Command.DeleteMonitoredItem, "2", "Delete data change Monitored Items");
-            deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItems_ExecuteCommand;
+            deleteMonitoredItem.ExecuteCommand += DeleteMonitoredItems_TransferSubscription_ExecuteCommand;
             m_transitions.Add(deleteMonitoredItem, State.TransferSubscriptionsConnectionType);
 
             StateTransition transferSubscriptionsSessionSecrets = new StateTransition(State.TransferSubscriptionsConnectionType, Command.TransferSubscriptionsUserIdentity, "3", "Transfer subscriptions - Session with user identity");
@@ -1547,6 +1597,37 @@ namespace SampleClient.StateMachine
             }
         }
 
+        #region  ExecuteCommand DurableSubscriptions
+
+        private async Task StartDurableMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_durableSubscriptionsClient == null)
+            {
+                m_durableSubscriptionsClient = new DurableSubscriptionsClient(m_application);
+                await m_durableSubscriptionsClient.Initialize().ConfigureAwait(false);
+            }
+        }
+
+        private Task CreateDurableSubscriptions_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_durableSubscriptionsClient != null)
+            {
+                m_durableSubscriptionsClient.CreateDurableSubscriptions();
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private Task CreateDurableMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_durableSubscriptionsClient != null)
+            {
+                m_durableSubscriptionsClient.CreateMonitoredItems(withEvents: false);
+            }
+
+            return Task.CompletedTask;
+        }
+
         private Task DeleteMonitoredItems_ExecuteCommand(object sender, EventArgs e)
         {
             if (m_monitoredItemClient != null)
@@ -1567,81 +1648,213 @@ namespace SampleClient.StateMachine
 
         #endregion
 
-        #region  ExecuteCommand TransferSubscriptions
-        private Task TransferSubscriptions_ExecuteCommand(object sender, EventArgs e)
+        private Task CreateDurableMonitoredItemAndEvents_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_monitoredItemClient != null)
+            if (m_durableSubscriptionsClient != null)
             {
-                m_monitoredItemClient.TransferSubscription();
+                m_durableSubscriptionsClient.CreateMonitoredItems(withEvents: true);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private Task DurableCustomSaveLoadSessionModel(object sender, EventArgs e)
+        {
+            if (m_durableSubscriptionsClient != null)
+            {
+                m_durableSubscriptionsClient.CustomSaveLoadSessionModel(withEvents: true);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private Task DurableCustomSaveLoadSubscriptionModel(object sender, EventArgs e)
+        {
+            if (m_durableSubscriptionsClient != null)
+            {
+                m_durableSubscriptionsClient.CustomSaveLoadSubscriptionModel(withEvents: true);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private Task DurableCustomSaveLoadMonitoredItemsModel(object sender, EventArgs e)
+        {
+            if (m_durableSubscriptionsClient != null)
+            {
+                m_durableSubscriptionsClient.CustomSaveLoadMonitoredItemsModel(withEvents: true);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private Task DeleteDurableMonitoredItems_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_durableSubscriptionsClient != null)
+            {
+                m_durableSubscriptionsClient.DeleteMonitoredItems();
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private Task DurableSubscriptionsCurrentSession_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_durableSubscriptionsClient != null)
+            {
+                m_durableSubscriptionsClient.TransferDurableSubscriptionsOnCurrentSession();
             }
             return Task.CompletedTask;
+        }
 
+        private Task DurableSubscriptionsNewSession_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_durableSubscriptionsClient != null)
+            {
+                m_durableSubscriptionsClient.TransferDurableSubscriptionsOnNewSession();
+            }
+            return Task.CompletedTask;
+        }
+
+        private async Task EndDurableMonitoredItem_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_durableSubscriptionsClient != null)
+            {
+                await m_durableSubscriptionsClient.Disconnect().ConfigureAwait(false);
+                m_durableSubscriptionsClient = null;
+            }
+        }
+
+        #endregion
+
+        #region  ExecuteCommand TransferSubscriptions
+
+        private async Task StartTransferSubcription_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_transferSubscriptionClient == null)
+            {
+                m_transferSubscriptionClient = new TransferSubscriptionClient(m_application);
+                await m_transferSubscriptionClient.Initialize().ConfigureAwait(false);
+            }
+        }
+
+        private async Task CreateMonitoredItem_TransferSubscription_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_transferSubscriptionClient == null)
+            {
+                m_transferSubscriptionClient = new TransferSubscriptionClient(m_application);
+                await m_transferSubscriptionClient.Initialize().ConfigureAwait(false);
+            }
+
+            if (m_transferSubscriptionClient != null)
+            {
+                m_transferSubscriptionClient.CreateMonitoredItems();
+            }
+        }
+
+        private Task DeleteMonitoredItems_TransferSubscription_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_transferSubscriptionClient != null)
+            {
+                m_transferSubscriptionClient.DeleteMonitoredItems();
+            }
+            return Task.CompletedTask;
+        }
+
+        private async Task EndTransferSubscription_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_transferSubscriptionClient != null)
+            {
+                await m_transferSubscriptionClient.DisconnectAndDispose().ConfigureAwait(false);
+                m_transferSubscriptionClient = null;
+            }
+        }
+
+        private Task TransferSubscriptions_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_transferSubscriptionClient == null)
+            {
+                m_transferSubscriptionClient = new TransferSubscriptionClient(m_application);
+            }
+
+            if (m_transferSubscriptionClient != null)
+            {
+                m_transferSubscriptionClient.TransferSubscription();
+            }
+            return Task.CompletedTask;
         }
 
         private async Task TransferSubscriptionsAsync_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_monitoredItemClient != null)
+            if (m_transferSubscriptionClient == null)
             {
-                await m_monitoredItemClient.TransferSubscriptionAsync().ConfigureAwait(false);
+                m_transferSubscriptionClient = new TransferSubscriptionClient(m_application);
+            }
+
+            if (m_transferSubscriptionClient != null)
+            {
+                await m_transferSubscriptionClient.TransferSubscriptionAsync().ConfigureAwait(false);
             }
         }
 
-        private async Task TransferSubscriptionSessionClosed_ExecuteCommand(object sender, EventArgs e)
+        private Task TransferSubscriptionSessionClosed_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_monitoredItemClient != null)
+            if (m_transferSubscriptionClient != null)
             {
-                await m_monitoredItemClient.TransferSubscriptionSessionClosed().ConfigureAwait(false);
-            }
-        }
-
-        private Task SaveSubscriptionsForTransfer_ExecuteCommand(object sender, EventArgs e)
-        {
-            if (m_monitoredItemClient != null)
-            {
-                m_monitoredItemClient.SaveSubscriptionsForTransfer();
+                m_transferSubscriptionClient.TransferSubscriptionSessionClosed();
             }
             return Task.CompletedTask;
         }
 
-        private async Task LoadSubscriptionsForTransfer_ExecuteCommand(object sender, EventArgs e)
+        private Task SaveSubscriptionsForTransfer_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_monitoredItemClient == null)
+            if (m_transferSubscriptionClient != null)
             {
-                m_monitoredItemClient = new MonitoredItemClient(m_application);
-                await m_monitoredItemClient.Initialize(withSubscription: false).ConfigureAwait(false);
+                m_transferSubscriptionClient.SaveSubscriptionsForTransfer();
             }
-            await m_monitoredItemClient.LoadSubscriptionsForTransfer().ConfigureAwait(false);
+            return Task.CompletedTask;
+        }
+
+        private Task LoadSubscriptionsForTransfer_ExecuteCommand(object sender, EventArgs e)
+        {
+            if (m_transferSubscriptionClient == null)
+            {
+                m_transferSubscriptionClient = new TransferSubscriptionClient(m_application);
+            }
+            m_transferSubscriptionClient.LoadSubscriptionsForTransfer();
+
+            return Task.CompletedTask;
         }
 
         private async Task TransferSubscriptionsWithUserId_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_monitoredItemClient != null)
+            if (m_transferSubscriptionClient != null)
             {
-                await m_monitoredItemClient.TransferSubscriptionsWithUserId().ConfigureAwait(false);
+                await m_transferSubscriptionClient.TransferSubscriptionsWithUserId().ConfigureAwait(false);
             }
         }
 
         private async Task TransferSubscriptionsWithCertificate_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_monitoredItemClient != null)
+            if (m_transferSubscriptionClient != null)
             {
-                await m_monitoredItemClient.TransferSubscriptionsWithCertificate().ConfigureAwait(false);
+                await m_transferSubscriptionClient.TransferSubscriptionsWithCertificate().ConfigureAwait(false);
             }
         }
 
         private async Task TransferSubscriptionsWithCertificatePassword_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_monitoredItemClient != null)
+            if (m_transferSubscriptionClient != null)
             {
-                await m_monitoredItemClient.TransferSubscriptionsWithCertificatePassword().ConfigureAwait(false);
+                await m_transferSubscriptionClient.TransferSubscriptionsWithCertificatePassword().ConfigureAwait(false);
             }
         }
 
         private async Task TransferSubscriptionsWithSecurity_ExecuteCommand(object sender, EventArgs e)
         {
-            if (m_monitoredItemClient != null)
+            if (m_transferSubscriptionClient != null)
             {
-                await m_monitoredItemClient.TransferSubscriptionsWithSecurity().ConfigureAwait(false);
+                await m_transferSubscriptionClient.TransferSubscriptionsWithSecurity().ConfigureAwait(false);
             }
         }
         #endregion
@@ -1984,6 +2197,10 @@ namespace SampleClient.StateMachine
             if (m_readWriteClient != null)
             {
                 await m_readWriteClient.DisconnectSession().ConfigureAwait(false);
+            }
+            if (m_transferSubscriptionClient != null)
+            {
+                await m_transferSubscriptionClient.DisconnectAndDispose().ConfigureAwait(false);
             }
         }
 

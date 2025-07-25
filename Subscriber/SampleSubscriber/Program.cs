@@ -166,10 +166,10 @@ namespace SampleSubscriber
                     Console.WriteLine("UADP Network message was received from Source={0}, SequenceNumber={1}, DataSet count={2}",
                             e.Source, ((UadpNetworkMessage)e.NetworkMessage).SequenceNumber, e.NetworkMessage.DataSetMessages.Count);
                 }
-                else if (e.NetworkMessage is JsonNetworkMessage)
+                else if (e.NetworkMessage is Opc.Ua.PubSub.Encoding.JsonNetworkMessage)
                 {
                     Console.WriteLine("JSON Network message was received from Source={0}, MessageId={1}, DataSet count={2}",
-                            e.Source, ((JsonNetworkMessage)e.NetworkMessage).MessageId, e.NetworkMessage.DataSetMessages.Count);
+                            e.Source, ((Opc.Ua.PubSub.Encoding.JsonNetworkMessage)e.NetworkMessage).MessageId, e.NetworkMessage.DataSetMessages.Count);
                 }
 
                 foreach (UaDataSetMessage dataSetMessage in e.NetworkMessage.DataSetMessages)
@@ -218,12 +218,12 @@ namespace SampleSubscriber
             lock (m_lock)
             {
                 Console.WriteLine("MetaDataDataReceived event:");
-                if (e.NetworkMessage is JsonNetworkMessage)
+                if (e.NetworkMessage is Opc.Ua.PubSub.Encoding.JsonNetworkMessage)
                 {
                     Console.WriteLine("JSON Network MetaData Message: Source={0}, PublisherId={1}, DataSetWriterId={2}, Fields count={3}\n",
                          e.Source,
-                         ((JsonNetworkMessage)e.NetworkMessage).PublisherId,
-                         ((JsonNetworkMessage)e.NetworkMessage).DataSetWriterId,
+                         ((Opc.Ua.PubSub.Encoding.JsonNetworkMessage)e.NetworkMessage).PublisherId,
+                         ((Opc.Ua.PubSub.Encoding.JsonNetworkMessage)e.NetworkMessage).DataSetWriterId,
                          e.NetworkMessage.DataSetMetaData.Fields.Count);
                 }
                 if (e.NetworkMessage is UadpNetworkMessage)

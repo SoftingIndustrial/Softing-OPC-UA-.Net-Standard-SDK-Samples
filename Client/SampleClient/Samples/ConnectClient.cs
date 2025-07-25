@@ -129,7 +129,7 @@ namespace SampleClient.Samples
                     return;
                 }
                 // load the certificate from file
-                X509Certificate2 certificate = new X509Certificate2(certificateFilePath,
+                X509Certificate2 certificate = X509CertificateLoader.LoadPkcs12FromFile(certificateFilePath,
                                null as string,
                                X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.Exportable);
 
@@ -221,7 +221,7 @@ namespace SampleClient.Samples
                     return;
                 }
                 // load the certificate from file
-                X509Certificate2 certificate = new X509Certificate2(certificateFilePath,
+                X509Certificate2 certificate = X509CertificateLoader.LoadPkcs12FromFile(certificateFilePath,
                                null as string,
                                X509KeyStorageFlags.EphemeralKeySet | X509KeyStorageFlags.Exportable);
 
@@ -265,7 +265,7 @@ namespace SampleClient.Samples
                     return;
                 }
                 // load the certificate with password from file
-                X509Certificate2 certificate = new X509Certificate2(certificateFilePath,
+                X509Certificate2 certificate = X509CertificateLoader.LoadPkcs12FromFile(certificateFilePath,
                                "User_Pwd",
                                X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.Exportable);
 

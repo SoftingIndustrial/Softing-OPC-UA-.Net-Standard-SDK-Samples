@@ -8,13 +8,12 @@
  * 
  * ======================================================================*/
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Opc.Ua;
 using Opc.Ua.Server;
 using Softing.Opc.Ua.Server;
-using SampleServer;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace SampleServer.UserAuthentication
 {

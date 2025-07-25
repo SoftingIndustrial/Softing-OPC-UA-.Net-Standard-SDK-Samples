@@ -69,6 +69,10 @@ namespace SampleClient.Samples
             {
                 // create the session object with no security and anonymous login    
                 m_session = m_application.CreateSession(Program.ServerUrl);
+                if (m_session != null)
+                {
+                    m_session.DeleteOnDisconnect = false;
+                }
                 m_session.SessionName = SessionName;
 
                 m_session.KeepAlive += Session_KeepAlive;
@@ -77,7 +81,7 @@ namespace SampleClient.Samples
                 Console.WriteLine("Session is connected.");
 
                 //create the subscription
-                m_subscription = new ClientSubscription(m_session, SubscriptionName);
+                m_subscription = new ClientSubscription(m_session, SubscriptionName) { DeleteOnDisconnect = false };
 
                 // set the Publishing interval for this subscription
                 m_subscription.PublishingInterval = 500;
@@ -153,7 +157,7 @@ namespace SampleClient.Samples
             try
             {
                 //ObjectIds.Server BrowsePath: Root\Objects\Server
-                m_eventMonitoredItem = new ClientMonitoredItem(m_subscription, ObjectIds.Server, "Sample Event Monitored Item", null);
+                m_eventMonitoredItem = new ClientMonitoredItem(m_subscription, ObjectIds.Server, "Sample Event Monitored Item", null) { DeleteOnDisconnect = false };
                 m_eventMonitoredItem.EventsReceived += EventMonitoredItem_EventsReceived;
 
                 Console.WriteLine("Event Monitored Item is created with state {0}.", m_eventMonitoredItem.CurrentState);
@@ -224,7 +228,7 @@ namespace SampleClient.Samples
             try
             {
                 //ObjectIds.Server BrowsePath: Root\Objects\Server
-                m_eventMonitoredItem = new ClientMonitoredItem(m_subscription, ObjectIds.Server, "Sample Event Monitored Item", null, false);
+                m_eventMonitoredItem = new ClientMonitoredItem(m_subscription, ObjectIds.Server, "Sample Event Monitored Item", null, false) { DeleteOnDisconnect = false };
                 m_eventMonitoredItem.EventsReceived += EventMonitoredItem_EventsReceived;
 
                 Console.WriteLine("Event Monitored Item is created with state {0}.", m_eventMonitoredItem.CurrentState);
@@ -302,7 +306,7 @@ namespace SampleClient.Samples
             try
             {
                 // Double.NodeId BrowsePath: Root\Objects\HistoricalDataAccess\DynamicHistoricalDataItems\Double
-                m_eventMonitoredItemAddNew = new ClientMonitoredItem(m_subscription, m_eventDoubleNodeId, "Sample History Event Monitored Item", null, false);
+                m_eventMonitoredItemAddNew = new ClientMonitoredItem(m_subscription, m_eventDoubleNodeId, "Sample History Event Monitored Item", null, false) { DeleteOnDisconnect = false };
                 m_eventMonitoredItemAddNew.EventsReceived += EventMonitoredItem_EventsReceived;
 
                 Console.WriteLine("Event Monitored Item is created with state {0}.", m_eventMonitoredItemAddNew.CurrentState);
@@ -391,7 +395,8 @@ namespace SampleClient.Samples
                 filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.EventId);
                 filter.AddSelectClause(ObjectTypes.BaseEventType, BrowseNames.SourceName);
 
-                m_doubleFilteringEventMonitoredItem = new ClientMonitoredItem(m_subscription, m_doubleFilteringEventMonitoredItemNodeId, "Double Filtering Sample Event Monitored Item", filter);
+                m_doubleFilteringEventMonitoredItem = new ClientMonitoredItem(m_subscription, m_doubleFilteringEventMonitoredItemNodeId, 
+                    "Double Filtering Sample Event Monitored Item", filter) { DeleteOnDisconnect = false };
                 m_doubleFilteringEventMonitoredItem.EventsReceived += EventDoubleFilteringMonitoredItem_EventsReceived;
 
                 int selectClausePos = 0;

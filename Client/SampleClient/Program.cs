@@ -35,11 +35,32 @@ namespace SampleClient
         /// </summary>
         static void Main()
         {
+            string configurationFile = "SampleClient.Config.xml";
             // Load client default (customized) configuration build with a fluent API
             // ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration().Result;
 
             // Load client default (customized) configuration build with a fluent API using a certificate password provider
             // ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultConfiguration(new CertificatePasswordProvider("Client_Pwd")).Result;
+
+            // Load client default (customized) configuration build with a fluent API using the new multiple certificates api
+            // ApplicationConfigurationBuilderEx defaultConfiguration = LoadDefaultMultiCertConfiguration().Result;
+
+            // Load the configuration and set the Serilog logging service
+            // ApplicationConfiguration appConf = defaultConfiguration.ApplicationConfiguration;
+            ApplicationConfiguration appConf = ConfigUtils.GetApplicationConfiguration(configurationFile, true, ApplicationType.Client).Result;
+
+            if (appConf != null)
+            {
+                SerilogConfiguration serilogConfiguration = appConf.ParseExtension<SerilogConfiguration>();
+                if (serilogConfiguration != null)
+                {
+                    if (serilogConfiguration.Enable)
+                    {
+                        // setup the Serilog logging
+                        SetLogger(appConf, appConf.ApplicationName, false, LogLevel.Error);
+                    }
+                }
+            }
 
             // Create the UaApplication object from application configuration build with a fluent API
             // UaApplication application = UaApplication.Create(defaultConfiguration).Result;
@@ -48,7 +69,7 @@ namespace SampleClient
             // UaApplication application = UaApplication.Create("SampleClient.Config.xml", new CertificatePasswordProvider("Client_Pwd")).Result;
 
             // Create the UaApplication object from config file
-            UaApplication application = UaApplication.Create("SampleClient.Config.xml").Result;
+            UaApplication application = UaApplication.Create(configurationFile).Result;
 
             // Get the Sample Client custom parameters
             SampleClientConfiguration sampleClientConfiguration = application.Configuration.ParseExtension<SampleClientConfiguration>();
@@ -61,16 +82,6 @@ namespace SampleClient
 
             // Subscribe to certificate validation error event
             application.Configuration.CertificateValidator.CertificateValidation += new CertificateValidationEventHandler(CertificateValidator_CertificateValidation);
-
-            SerilogConfiguration serilogConfiguration = application.Configuration.ParseExtension<SerilogConfiguration>();
-            if (serilogConfiguration != null)
-            {
-                if (serilogConfiguration.Enable)
-                {
-                    // setup the Serilog logging
-                    SetLogger(application.Configuration, application.Configuration.ApplicationName, false, LogLevel.Error);
-                }
-            }
 
             LicensingStatus clientLicensingStatus = LicensingStatus.Ok;
 
@@ -198,6 +209,118 @@ namespace SampleClient
                 .AddSecurityConfigurationExt(
                     "SoftingOpcUaSampleClient",
                     "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
+                    "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
+                    "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki")
+                    .SetRejectSHA1SignedCertificates(false)
+                    .SetUserRoleDirectory("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/userRoles")
+                    .SetAddAppCertToTrustedStore(true)
+                    .AddCertificatePasswordProvider(certificatePasswordProvider)
+                .AddExtension<SampleClientConfiguration>(new XmlQualifiedName("SampleClientConfiguration"),
+                    new SampleClientConfiguration()
+                    {
+                        ServerUrl = "opc.tcp://localhost:61510/SampleServer",
+                        ServerUrlHttps = "https://localhost:61511/SampleServer",
+                        ReverseConnectUrl = "opc.tcp://localhost:61512",
+                        ReverseConnectServerApplicationUri = "urn:localhost:Softing:UANETStandardToolkit:SampleServer",
+                        ReverseConnectServerCertificateIdentifier = new CertificateIdentifier()
+                        {
+                            StoreType = "Directory",
+                            StorePath = "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki/own",
+                            SubjectName = "SoftingOpcUaSampleServer"
+                        }
+                    })
+                .AddExtension<ClientToolkitConfiguration>(new XmlQualifiedName("ClientToolkitConfiguration"),
+                    new ClientToolkitConfiguration()
+                    {
+                        DiscoveryOperationTimeout = 10000,
+                        DecodeCustomDataTypes = true,
+                        DecodeDataTypeDictionaries = true,
+                        ReadNodesWithTypeNotInHierarchy = false,
+                        CheckPortOnConnect = false
+                    })
+                 .AddExtension<SerilogConfiguration>(new XmlQualifiedName("SerilogConfiguration"),
+                 new SerilogConfiguration()
+                 {
+                     Enable = false,
+                     FilePath = "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleClient.log",
+                     RollingFile = true,
+                     RollingTypeOption = SerilogConfiguration.RollingOptions.Size,
+                     RollingFileSizeLimit = 10485760,
+                     RollingFilesCountLimit = 10,
+                     RollingInterval = SerilogConfiguration.RollInterval.Day,
+                     MinimumLevel = LogLevel.Error
+                 })
+                .SetTraceMasks(1)
+                .SetOutputFilePath("%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/logs/SampleClient.log")
+                .SetDeleteOnLoad(true)
+                .Create().ConfigureAwait(false);
+
+            return applicationConfigurationBuilder;
+
+        }
+
+        /// <summary>
+        /// Load default multi certificates configuration
+        /// </summary>
+        /// <returns></returns>
+        private static async Task<ApplicationConfigurationBuilderEx> LoadDefaultMultiCertConfiguration(ICertificatePasswordProvider certificatePasswordProvider = null)
+        {
+
+            ApplicationConfigurationBuilderEx applicationConfigurationBuilder =
+                   new ApplicationConfigurationBuilderEx(ApplicationType.Client);
+
+            await applicationConfigurationBuilder
+                .Initialize("urn:localhost:Softing:UANETStandardToolkit:SampleClient",
+                        "http://industrial.softing.com/OpcUaNetStandardToolkit/SampleClient")
+                .SetApplicationName("Softing .NET Standard Sample Client")
+                .DisableHiResClock(true)
+                .SetTransportQuotas(new Opc.Ua.TransportQuotas()
+                {
+                    OperationTimeout = 120000,
+                    MaxStringLength = 1048576,
+                    MaxByteStringLength = 4194304,
+                    MaxArrayLength = 65535,
+                    MaxMessageSize = 4194304,
+                    MaxBufferSize = 65535,
+                    ChannelLifetime = 300000,
+                    SecurityTokenLifetime = 3600000
+                })
+                .AsClient()
+                    .SetDefaultSessionTimeout(610000)
+                    .SetMinSubscriptionLifetime(11000)
+                    .AddWellKnownDiscoveryUrls("opc.tcp://{0}:4840/UADiscovery")
+                .AddSecurityConfigurationExt(
+                    new CertificateIdentifierCollection()
+                    {
+                       new CertificateIdentifier()
+                       {
+                            StoreType = CertificateStoreType.Directory,
+                            StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\own",
+                            SubjectName = "SoftingOpcUaSampleClient",
+                            CertificateTypeString = "RsaSha256"
+                       },
+                       new CertificateIdentifier()
+                       {
+                            StoreType = CertificateStoreType.Directory,
+                            StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\own",
+                            SubjectName = "SoftingOpcUaSampleClient",
+                            CertificateTypeString = "NistP256"
+                       },
+                       new CertificateIdentifier()
+                       {
+                            StoreType = CertificateStoreType.Directory,
+                            StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\own",
+                            SubjectName = "SoftingOpcUaSampleClient",
+                            CertificateTypeString = "NistP384"
+                       },
+                       new CertificateIdentifier()
+                       {
+                            StoreType = CertificateStoreType.Directory,
+                            StorePath = @"%CommonApplicationData%\Softing\OpcUaNetStandardToolkit\pki\own",
+                            SubjectName = "SoftingOpcUaSampleClient",
+                            CertificateTypeString = "BrainpoolP256r1"
+                       }
+                    },
                     "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki",
                     "%CommonApplicationData%/Softing/OpcUaNetStandardToolkit/pki")
                     .SetRejectSHA1SignedCertificates(false)
